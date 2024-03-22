@@ -11,13 +11,13 @@ using Xunit.Abstractions;
 
 namespace OpenApiKiotaEndToEndTests.QueryStrings;
 
-public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringsDbContext>, QueryStringsDbContext>>
+public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>
 {
-    private readonly IntegrationTestContext<OpenApiStartup<QueryStringsDbContext>, QueryStringsDbContext> _testContext;
+    private readonly IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
     private readonly TestableHttpClientRequestAdapterFactory _requestAdapterFactory;
     private readonly QueryStringFakers _fakers = new();
 
-    public FilterTests(IntegrationTestContext<OpenApiStartup<QueryStringsDbContext>, QueryStringsDbContext> testContext, ITestOutputHelper testOutputHelper)
+    public FilterTests(IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> testContext, ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
         _requestAdapterFactory = new TestableHttpClientRequestAdapterFactory(testOutputHelper);
@@ -164,6 +164,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
             // Assert
             ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
             exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.BadRequest);
+            exception.Message.Should().Be($"Exception of type '{typeof(ErrorResponseDocument).FullName}' was thrown.");
             exception.Links.ShouldNotBeNull();
             exception.Links.Describedby.Should().Be("swagger/v1/swagger.json");
             exception.Errors.ShouldHaveCount(1);

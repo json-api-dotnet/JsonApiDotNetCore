@@ -5,11 +5,11 @@ using Xunit;
 
 namespace OpenApiTests.QueryStrings;
 
-public sealed class QueryStringTests : IClassFixture<OpenApiTestContext<OpenApiStartup<QueryStringsDbContext>, QueryStringsDbContext>>
+public sealed class QueryStringTests : IClassFixture<OpenApiTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>
 {
-    private readonly OpenApiTestContext<OpenApiStartup<QueryStringsDbContext>, QueryStringsDbContext> _testContext;
+    private readonly OpenApiTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
 
-    public QueryStringTests(OpenApiTestContext<OpenApiStartup<QueryStringsDbContext>, QueryStringsDbContext> testContext)
+    public QueryStringTests(OpenApiTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
     {
         _testContext = testContext;
 

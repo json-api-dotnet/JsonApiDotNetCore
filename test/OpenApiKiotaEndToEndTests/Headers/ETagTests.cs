@@ -14,13 +14,13 @@ using Xunit.Abstractions;
 
 namespace OpenApiKiotaEndToEndTests.Headers;
 
-public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStartup<HeadersDbContext>, HeadersDbContext>>
+public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext>>
 {
-    private readonly IntegrationTestContext<OpenApiStartup<HeadersDbContext>, HeadersDbContext> _testContext;
+    private readonly IntegrationTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext> _testContext;
     private readonly TestableHttpClientRequestAdapterFactory _requestAdapterFactory;
     private readonly HeaderFakers _fakers = new();
 
-    public ETagTests(IntegrationTestContext<OpenApiStartup<HeadersDbContext>, HeadersDbContext> testContext, ITestOutputHelper testOutputHelper)
+    public ETagTests(IntegrationTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext> testContext, ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
         _requestAdapterFactory = new TestableHttpClientRequestAdapterFactory(testOutputHelper);
@@ -55,7 +55,9 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         // Assert
         response.Should().BeNullOrEmpty();
 
-        headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().NotBeNullOrEmpty();
+        string[] eTagHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
+        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues[0].Should().Match("\"*\"");
     }
 
     [Fact]
@@ -85,13 +87,17 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         // Assert
         response.ShouldNotBeNull();
 
-        headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().NotBeNullOrEmpty();
+        string[] eTagHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
+        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues[0].Should().Match("\"*\"");
     }
 
     [Fact]
     public async Task Returns_no_ETag_for_failed_GET_request()
     {
         // Arrange
+        string unknownCountryId = Unknown.StringId.For<Country, Guid>();
+
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new HeadersClient(requestAdapter);
 
@@ -101,13 +107,18 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         };
 
         // Act
-        Func<Task<CountryPrimaryResponseDocument?>> action = () => apiClient.Countries[Unknown.StringId.For<Country, Guid>()]
-            .GetAsync(configuration => configuration.Options.Add(headerInspector));
+        Func<Task> action = async () => await apiClient.Countries[unknownCountryId].GetAsync(configuration => configuration.Options.Add(headerInspector));
 
         // Assert
         ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
+        exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.NotFound);
+        exception.Message.Should().Be($"Exception of type '{typeof(ErrorResponseDocument).FullName}' was thrown.");
         exception.Errors.ShouldHaveCount(1);
-        exception.Errors[0].Status.Should().Be(((int)HttpStatusCode.NotFound).ToString());
+
+        ErrorObject error = exception.Errors.ElementAt(0);
+        error.Status.Should().Be("404");
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'countries' with ID '{unknownCountryId}' does not exist.");
 
         headerInspector.ResponseHeaders.Should().NotContainKey(HeaderNames.ETag);
     }
@@ -126,8 +137,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
             InspectResponseHeaders = true
         };
 
-        // Act
-        CountryPrimaryResponseDocument? response = await apiClient.Countries.PostAsync(new CountryPostRequestDocument
+        var requestBody = new CountryPostRequestDocument
         {
             Data = new CountryDataInPostRequest
             {
@@ -138,7 +148,11 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
                     Population = newCountry.Population
                 }
             }
-        }, configuration => configuration.Options.Add(headerInspector));
+        };
+
+        // Act
+        CountryPrimaryResponseDocument? response =
+            await apiClient.Countries.PostAsync(requestBody, configuration => configuration.Options.Add(headerInspector));
 
         // Assert
         response.ShouldNotBeNull();
@@ -173,7 +187,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         headerInspector.ResponseHeaders.Clear();
 
         // Act
-        Func<Task<CountryCollectionResponseDocument?>> action = () => apiClient.Countries.GetAsync(configuration =>
+        Func<Task> action = async () => await apiClient.Countries.GetAsync(configuration =>
         {
             configuration.Headers.Add(HeaderNames.IfNoneMatch, responseETag);
             configuration.Options.Add(headerInspector);
@@ -181,9 +195,12 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
 
         // Assert
         ApiException exception = (await action.Should().ThrowExactlyAsync<ApiException>()).Which;
+        exception.Message.Should().Be("The server returned an unexpected status code and no error factory is registered for this code: 304");
         exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.NotModified);
 
-        headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().Equal([responseETag]);
+        string[] eTagHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
+        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues[0].Should().Be(responseETag);
     }
 
     [Fact]
@@ -217,6 +234,8 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         // Assert
         response.ShouldNotBeNull();
 
-        headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().NotBeNullOrEmpty();
+        string[] eTagHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
+        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues[0].Should().Match("\"*\"");
     }
 }

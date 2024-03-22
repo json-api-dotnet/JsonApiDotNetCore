@@ -12,11 +12,11 @@ using Xunit;
 
 namespace OpenApiTests.QueryStrings;
 
-public sealed class IncludeTests : IClassFixture<OpenApiTestContext<OpenApiStartup<QueryStringsDbContext>, QueryStringsDbContext>>
+public sealed class IncludeTests : IClassFixture<OpenApiTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>
 {
-    private readonly OpenApiTestContext<OpenApiStartup<QueryStringsDbContext>, QueryStringsDbContext> _testContext;
+    private readonly OpenApiTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
 
-    public IncludeTests(OpenApiTestContext<OpenApiStartup<QueryStringsDbContext>, QueryStringsDbContext> testContext)
+    public IncludeTests(OpenApiTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
     {
         _testContext = testContext;
 

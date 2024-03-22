@@ -5,13 +5,13 @@ using Xunit;
 
 namespace OpenApiTests.DocComments;
 
-public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<DocCommentsStartup<DocCommentsDbContext>, DocCommentsDbContext>>
+public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<DocCommentStartup<DocCommentDbContext>, DocCommentDbContext>>
 {
     private const string EscapedJsonApiMediaType = "['application/vnd.api+json']";
 
-    private readonly OpenApiTestContext<DocCommentsStartup<DocCommentsDbContext>, DocCommentsDbContext> _testContext;
+    private readonly OpenApiTestContext<DocCommentStartup<DocCommentDbContext>, DocCommentDbContext> _testContext;
 
-    public ErrorResponseTests(OpenApiTestContext<DocCommentsStartup<DocCommentsDbContext>, DocCommentsDbContext> testContext)
+    public ErrorResponseTests(OpenApiTestContext<DocCommentStartup<DocCommentDbContext>, DocCommentDbContext> testContext)
     {
         _testContext = testContext;
 
@@ -53,11 +53,12 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<DocCom
             skyscrapersElement.Should().ContainPath("post.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.ShouldHaveCount(3);
+                errorStatusCodeProperties.ShouldHaveCount(4);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
-                errorStatusCodeProperties[1].Name.Should().Be("409");
-                errorStatusCodeProperties[2].Name.Should().Be("422");
+                errorStatusCodeProperties[1].Name.Should().Be("404");
+                errorStatusCodeProperties[2].Name.Should().Be("409");
+                errorStatusCodeProperties[3].Name.Should().Be("422");
 
                 errorStatusCodeProperties.Should().AllSatisfy(property =>
                     property.Value.Should().ContainPath($"content.{EscapedJsonApiMediaType}.schema.$ref").ShouldBeSchemaReferenceId("errorResponseDocument"));
@@ -282,12 +283,13 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<DocCom
         document.Should().ContainPath("paths./elevators.post.responses").With(responsesElement =>
         {
             JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-            errorStatusCodeProperties.ShouldHaveCount(4);
+            errorStatusCodeProperties.ShouldHaveCount(5);
 
             errorStatusCodeProperties[0].Name.Should().Be("400");
             errorStatusCodeProperties[1].Name.Should().Be("403");
-            errorStatusCodeProperties[2].Name.Should().Be("409");
-            errorStatusCodeProperties[3].Name.Should().Be("422");
+            errorStatusCodeProperties[2].Name.Should().Be("404");
+            errorStatusCodeProperties[3].Name.Should().Be("409");
+            errorStatusCodeProperties[4].Name.Should().Be("422");
 
             errorStatusCodeProperties.Should().AllSatisfy(property =>
                 property.Value.Should().ContainPath($"content.{EscapedJsonApiMediaType}.schema.$ref").ShouldBeSchemaReferenceId("errorResponseDocument"));

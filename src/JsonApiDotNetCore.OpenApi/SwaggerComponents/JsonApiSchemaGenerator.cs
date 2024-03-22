@@ -1,6 +1,7 @@
 using System.Reflection;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
+using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -10,6 +11,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 
 internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
 {
+    // List of all the root types we're being called for, that need to be handled by our custom schema generators.
     private static readonly Type[] JsonApiDocumentTypes =
     [
         typeof(ResourceCollectionResponseDocument<>),
@@ -21,7 +23,10 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         typeof(ResourceIdentifierCollectionResponseDocument<>),
         typeof(ResourceIdentifierResponseDocument<>),
         typeof(NullableResourceIdentifierResponseDocument<>),
-        typeof(ErrorResponseDocument)
+        typeof(ErrorResponseDocument),
+        typeof(ToManyRelationshipInRequest<>),
+        typeof(ToOneRelationshipInRequest<>),
+        typeof(NullableToOneRelationshipInRequest<>)
     ];
 
     private static readonly OpenApiSchema IdTypeSchema = new()

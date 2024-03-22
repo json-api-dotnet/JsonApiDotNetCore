@@ -35,6 +35,8 @@ public sealed class RestrictionTests : IClassFixture<OpenApiTestContext<OpenApiS
         testContext.UseController<WriteOnlyChannelsController>();
         testContext.UseController<RelationshipChannelsController>();
         testContext.UseController<ReadOnlyResourceChannelsController>();
+
+        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
     [Theory]
@@ -64,6 +66,8 @@ public sealed class RestrictionTests : IClassFixture<OpenApiTestContext<OpenApiS
             [
                 $"/{resourceName}/{{id}}/audioStreams.get",
                 $"/{resourceName}/{{id}}/audioStreams.head",
+                $"/{resourceName}/{{id}}/ultraHighDefinitionVideoStream.get",
+                $"/{resourceName}/{{id}}/ultraHighDefinitionVideoStream.head",
                 $"/{resourceName}/{{id}}/videoStream.get",
                 $"/{resourceName}/{{id}}/videoStream.head"
             ],
@@ -71,6 +75,8 @@ public sealed class RestrictionTests : IClassFixture<OpenApiTestContext<OpenApiS
             [
                 $"/{resourceName}/{{id}}/relationships/audioStreams.get",
                 $"/{resourceName}/{{id}}/relationships/audioStreams.head",
+                $"/{resourceName}/{{id}}/relationships/ultraHighDefinitionVideoStream.get",
+                $"/{resourceName}/{{id}}/relationships/ultraHighDefinitionVideoStream.head",
                 $"/{resourceName}/{{id}}/relationships/videoStream.get",
                 $"/{resourceName}/{{id}}/relationships/videoStream.head"
             ],
@@ -80,6 +86,7 @@ public sealed class RestrictionTests : IClassFixture<OpenApiTestContext<OpenApiS
             [JsonApiEndpoints.PatchRelationship] =
             [
                 $"/{resourceName}/{{id}}/relationships/audioStreams.patch",
+                $"/{resourceName}/{{id}}/relationships/ultraHighDefinitionVideoStream.patch",
                 $"/{resourceName}/{{id}}/relationships/videoStream.patch"
             ],
             [JsonApiEndpoints.Delete] = [$"/{resourceName}/{{id}}.delete"],

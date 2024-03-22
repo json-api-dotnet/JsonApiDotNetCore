@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text.Json;
 using Humanizer;
 using JsonApiDotNetCore.Configuration;
@@ -50,7 +51,8 @@ internal sealed class JsonApiOperationIdSelector
     {
         ArgumentGuard.NotNull(endpoint);
 
-        ResourceType? primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(endpoint.ActionDescriptor.GetActionMethod().ReflectedType);
+        MethodInfo actionMethod = endpoint.ActionDescriptor.GetActionMethod();
+        ResourceType? primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(actionMethod.ReflectedType);
 
         if (primaryResourceType == null)
         {

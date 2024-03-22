@@ -81,8 +81,18 @@
               }
             }
           },
+          "404": {
+            "description": "A related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
           "409": {
-            "description": "A resource type in the request body is incompatible.",
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -185,8 +195,18 @@
               }
             }
           },
+          "404": {
+            "description": "A related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
           "409": {
-            "description": "A resource type in the request body is incompatible.",
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -279,8 +299,18 @@
               }
             }
           },
+          "404": {
+            "description": "A related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
           "409": {
-            "description": "A resource type in the request body is incompatible.",
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -498,9 +528,6 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
-            "required": [
-              "links"
-            ],
             "type": "object",
             "properties": {
               "attributes": {
@@ -728,9 +755,6 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
-            "required": [
-              "links"
-            ],
             "type": "object",
             "properties": {
               "attributes": {
@@ -820,9 +844,6 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
-            "required": [
-              "links"
-            ],
             "type": "object",
             "properties": {
               "attributes": {

@@ -86,6 +86,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems {
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>> {
                 {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
                 {"403", ErrorResponseDocument.CreateFromDiscriminatorValue},
+                {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
                 {"409", ErrorResponseDocument.CreateFromDiscriminatorValue},
                 {"422", ErrorResponseDocument.CreateFromDiscriminatorValue},
             };

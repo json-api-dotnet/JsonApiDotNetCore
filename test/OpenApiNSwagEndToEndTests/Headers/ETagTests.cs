@@ -11,13 +11,13 @@ using Xunit.Abstractions;
 
 namespace OpenApiNSwagEndToEndTests.Headers;
 
-public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStartup<HeadersDbContext>, HeadersDbContext>>
+public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext>>
 {
-    private readonly IntegrationTestContext<OpenApiStartup<HeadersDbContext>, HeadersDbContext> _testContext;
+    private readonly IntegrationTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext> _testContext;
     private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
     private readonly HeaderFakers _fakers = new();
 
-    public ETagTests(IntegrationTestContext<OpenApiStartup<HeadersDbContext>, HeadersDbContext> testContext, ITestOutputHelper testOutputHelper)
+    public ETagTests(IntegrationTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext> testContext, ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
         _logHttpMessageHandler = new XUnitLogHttpMessageHandler(testOutputHelper);
@@ -42,12 +42,14 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         var apiClient = new HeadersClient(httpClient);
 
         // Act
-        ApiResponse response = await ApiResponse.TranslateAsync(() => apiClient.HeadCountryCollectionAsync(null, null));
+        ApiResponse response = await ApiResponse.TranslateAsync(async () => await apiClient.HeadCountryCollectionAsync(null, null));
 
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
-        response.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().NotBeNullOrEmpty();
+        string[] eTagHeaderValues = response.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
+        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues[0].Should().Match("\"*\"");
     }
 
     [Fact]
@@ -67,12 +69,15 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         var apiClient = new HeadersClient(httpClient);
 
         // Act
-        ApiResponse<CountryCollectionResponseDocument?> response = await ApiResponse.TranslateAsync(() => apiClient.GetCountryCollectionAsync(null, null));
+        ApiResponse<CountryCollectionResponseDocument?> response =
+            await ApiResponse.TranslateAsync(async () => await apiClient.GetCountryCollectionAsync(null, null));
 
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
-        response.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().NotBeNullOrEmpty();
+        string[] eTagHeaderValues = response.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
+        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues[0].Should().Match("\"*\"");
 
         response.Result.ShouldNotBeNull();
     }
@@ -81,17 +86,25 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
     public async Task Returns_no_ETag_for_failed_GET_request()
     {
         // Arrange
+        string unknownCountryId = Unknown.StringId.For<Country, Guid>();
+
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new HeadersClient(httpClient);
 
         // Act
-        Func<Task<ApiResponse<CountryPrimaryResponseDocument?>>> action = () =>
-            ApiResponse.TranslateAsync(() => apiClient.GetCountryAsync(Unknown.StringId.For<Country, Guid>(), null, null));
+        Func<Task> action = async () => await ApiResponse.TranslateAsync(async () => await apiClient.GetCountryAsync(unknownCountryId, null, null));
 
         // Assert
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
+        exception.Message.Should().Be("HTTP 404: The country does not exist.");
         exception.Headers.Should().NotContainKey(HeaderNames.ETag);
+        exception.Result.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("404");
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'countries' with ID '{unknownCountryId}' does not exist.");
     }
 
     [Fact]
@@ -103,19 +116,21 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new HeadersClient(httpClient);
 
-        // Act
-        ApiResponse<CountryPrimaryResponseDocument?> response = await ApiResponse.TranslateAsync(() => apiClient.PostCountryAsync(null,
-            new CountryPostRequestDocument
+        var requestBody = new CountryPostRequestDocument
+        {
+            Data = new CountryDataInPostRequest
             {
-                Data = new CountryDataInPostRequest
+                Attributes = new CountryAttributesInPostRequest
                 {
-                    Attributes = new CountryAttributesInPostRequest
-                    {
-                        Name = newCountry.Name,
-                        Population = newCountry.Population
-                    }
+                    Name = newCountry.Name,
+                    Population = newCountry.Population
                 }
-            }));
+            }
+        };
+
+        // Act
+        ApiResponse<CountryPrimaryResponseDocument?> response =
+            await ApiResponse.TranslateAsync(async () => await apiClient.PostCountryAsync(null, requestBody));
 
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.Created);
@@ -141,18 +156,21 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new HeadersClient(httpClient);
 
-        ApiResponse<CountryCollectionResponseDocument?> response1 = await ApiResponse.TranslateAsync(() => apiClient.GetCountryCollectionAsync(null, null));
+        ApiResponse<CountryCollectionResponseDocument?> response1 =
+            await ApiResponse.TranslateAsync(async () => await apiClient.GetCountryCollectionAsync(null, null));
 
         string responseETag = response1.Headers[HeaderNames.ETag].Single();
 
         // Act
         ApiResponse<CountryCollectionResponseDocument?> response2 =
-            await ApiResponse.TranslateAsync(() => apiClient.GetCountryCollectionAsync(null, responseETag));
+            await ApiResponse.TranslateAsync(async () => await apiClient.GetCountryCollectionAsync(null, responseETag));
 
         // Assert
         response2.StatusCode.Should().Be((int)HttpStatusCode.NotModified);
 
-        response2.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().Equal([responseETag]);
+        string[] eTagHeaderValues = response2.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
+        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues[0].Should().Be(responseETag);
 
         response2.Result.Should().BeNull();
     }
@@ -175,12 +193,14 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
 
         // Act
         ApiResponse<CountryCollectionResponseDocument?> response =
-            await ApiResponse.TranslateAsync(() => apiClient.GetCountryCollectionAsync(null, "\"Not-a-matching-value\""));
+            await ApiResponse.TranslateAsync(async () => await apiClient.GetCountryCollectionAsync(null, "\"Not-a-matching-value\""));
 
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
-        response.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().NotBeNullOrEmpty();
+        string[] eTagHeaderValues = response.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
+        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues[0].Should().Match("\"*\"");
 
         response.Result.ShouldNotBeNull();
     }

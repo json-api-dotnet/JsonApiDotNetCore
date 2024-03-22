@@ -79,7 +79,7 @@ public sealed class UpdateResourceTests : BaseOpenApiNSwagClientTests
         using IDisposable _ = apiClient.WithPartialAttributeSerialization<ResourcePatchRequestDocument, ResourceAttributesInPatchRequest>(requestDocument);
 
         // Act
-        await ApiResponse.TranslateAsync(() => apiClient.PatchResourceAsync(requestDocument.Data.Id, null, requestDocument));
+        await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(requestDocument.Data.Id, null, requestDocument));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
@@ -120,7 +120,7 @@ public sealed class UpdateResourceTests : BaseOpenApiNSwagClientTests
         var apiClient = new NrtOffMsvOffClient(wrapper.HttpClient);
 
         // Act
-        await ApiResponse.TranslateAsync(() => apiClient.PatchResourceAsync(requestDocument.Data.Id, null, requestDocument));
+        await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(requestDocument.Data.Id, null, requestDocument));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();

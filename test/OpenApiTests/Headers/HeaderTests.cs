@@ -5,11 +5,11 @@ using Xunit;
 
 namespace OpenApiTests.Headers;
 
-public sealed class HeaderTests : IClassFixture<OpenApiTestContext<OpenApiStartup<HeadersDbContext>, HeadersDbContext>>
+public sealed class HeaderTests : IClassFixture<OpenApiTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext>>
 {
-    private readonly OpenApiTestContext<OpenApiStartup<HeadersDbContext>, HeadersDbContext> _testContext;
+    private readonly OpenApiTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext> _testContext;
 
-    public HeaderTests(OpenApiTestContext<OpenApiStartup<HeadersDbContext>, HeadersDbContext> testContext)
+    public HeaderTests(OpenApiTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext> testContext)
     {
         _testContext = testContext;
 

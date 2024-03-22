@@ -50,7 +50,7 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
         using IDisposable _ = apiClient.WithPartialAttributeSerialization(requestDocument, includeAttributeSelector);
 
         // Act
-        await ApiResponse.TranslateAsync(() => apiClient.PostResourceAsync(null, requestDocument));
+        await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(null, requestDocument));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
@@ -92,7 +92,7 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
         using IDisposable _ = apiClient.WithPartialAttributeSerialization(requestDocument, includeAttributeSelector);
 
         // Act
-        Func<Task<ResourcePrimaryResponseDocument?>> action = () => apiClient.PostResourceAsync(null, requestDocument);
+        Func<Task> action = async () => await apiClient.PostResourceAsync(null, requestDocument);
 
         // Assert
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
@@ -131,7 +131,7 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
         using IDisposable _ = apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument);
 
         // Act
-        await ApiResponse.TranslateAsync(() => apiClient.PostResourceAsync(null, requestDocument));
+        await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(null, requestDocument));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
@@ -171,7 +171,7 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
         using IDisposable _ = apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument);
 
         // Act
-        Func<Task<ResourcePrimaryResponseDocument?>> action = () => apiClient.PostResourceAsync(null, requestDocument);
+        Func<Task> action = async () => await apiClient.PostResourceAsync(null, requestDocument);
 
         // Assert
         ExceptionAssertions<InvalidOperationException> assertion = await action.Should().ThrowExactlyAsync<InvalidOperationException>();
@@ -206,7 +206,7 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
         // Act
-        await ApiResponse.TranslateAsync(() => apiClient.PostResourceAsync(null, requestDocument));
+        await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(null, requestDocument));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
@@ -245,7 +245,7 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
         // Act
-        Func<Task<ResourcePrimaryResponseDocument?>> action = () => apiClient.PostResourceAsync(null, requestDocument);
+        Func<Task> action = async () => await apiClient.PostResourceAsync(null, requestDocument);
 
         // Assert
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
@@ -282,7 +282,7 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
         // Act
-        await ApiResponse.TranslateAsync(() => apiClient.PostResourceAsync(null, requestDocument));
+        await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(null, requestDocument));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
@@ -319,7 +319,7 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
         // Act
-        Func<Task<ResourcePrimaryResponseDocument?>> action = () => apiClient.PostResourceAsync(null, requestDocument);
+        Func<Task> action = async () => await apiClient.PostResourceAsync(null, requestDocument);
 
         // Assert
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();

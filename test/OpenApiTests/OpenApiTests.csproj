@@ -8,7 +8,7 @@
   <Import Project="..\..\package-versions.props" />
 
   <ItemGroup>
-    <EmbeddedResource Include="LegacyOpenApiIntegration\swagger.json" />
+    <EmbeddedResource Include="LegacyOpenApi\expected-swagger.json" />
   </ItemGroup>
 
   <ItemGroup>

@@ -232,8 +232,18 @@
               }
             }
           },
+          "404": {
+            "description": "A related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
+          },
           "409": {
-            "description": "A resource type in the request body is incompatible.",
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -785,8 +795,18 @@
               }
             }
           },
+          "404": {
+            "description": "A related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
+          },
           "409": {
-            "description": "A resource type in the request body is incompatible.",
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1510,7 +1530,7 @@
             }
           },
           "404": {
-            "description": "The supermarket does not exist.",
+            "description": "The supermarket or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1520,7 +1540,7 @@
             }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible.",
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1926,7 +1946,7 @@
             }
           },
           "404": {
-            "description": "The supermarket does not exist.",
+            "description": "The supermarket or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1936,7 +1956,7 @@
             }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible.",
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1994,7 +2014,7 @@
             }
           },
           "404": {
-            "description": "The supermarket does not exist.",
+            "description": "The supermarket or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2004,7 +2024,7 @@
             }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible.",
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2062,7 +2082,7 @@
             }
           },
           "404": {
-            "description": "The supermarket does not exist.",
+            "description": "The supermarket or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2072,7 +2092,7 @@
             }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible.",
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2478,7 +2498,7 @@
             }
           },
           "404": {
-            "description": "The supermarket does not exist.",
+            "description": "The supermarket or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2488,7 +2508,7 @@
             }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible.",
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -3083,9 +3103,6 @@
             "$ref": "#/components/schemas/data-in-response"
           },
           {
-            "required": [
-              "links"
-            ],
             "type": "object",
             "properties": {
               "attributes": {
@@ -3491,9 +3508,6 @@
             "$ref": "#/components/schemas/data-in-response"
           },
           {
-            "required": [
-              "links"
-            ],
             "type": "object",
             "properties": {
               "attributes": {

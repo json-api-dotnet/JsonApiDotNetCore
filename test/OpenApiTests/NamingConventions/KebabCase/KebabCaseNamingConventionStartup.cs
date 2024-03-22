@@ -1,7 +1,6 @@
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
-using OpenApiTests.LegacyOpenApiIntegration;
 using TestBuildingBlocks;
 
 namespace OpenApiTests.NamingConventions.KebabCase;
