@@ -164,6 +164,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
             // Assert
             ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
             exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.BadRequest);
+            exception.Message.Should().Be($"Exception of type '{typeof(ErrorResponseDocument).FullName}' was thrown.");
             exception.Links.ShouldNotBeNull();
             exception.Links.Describedby.Should().Be("swagger/v1/swagger.json");
             exception.Errors.ShouldHaveCount(1);

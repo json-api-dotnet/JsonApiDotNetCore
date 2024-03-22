@@ -85,17 +85,26 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
     public async Task Returns_no_ETag_for_failed_GET_request()
     {
         // Arrange
+        string unknownCountryId = Unknown.StringId.For<Country, Guid>();
+
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new HeadersClient(httpClient);
 
         // Act
         Func<Task<ApiResponse<CountryPrimaryResponseDocument?>>> action = () =>
-            ApiResponse.TranslateAsync(() => apiClient.GetCountryAsync(Unknown.StringId.For<Country, Guid>(), null, null));
+            ApiResponse.TranslateAsync(() => apiClient.GetCountryAsync(unknownCountryId, null, null));
 
         // Assert
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
+        exception.Message.Should().Be("HTTP 404: The country does not exist.");
         exception.Headers.Should().NotContainKey(HeaderNames.ETag);
+        exception.Result.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("404");
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'countries' with ID '{unknownCountryId}' does not exist.");
     }
 
     [Fact]

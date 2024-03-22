@@ -155,6 +155,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
             // Assert
             ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
             exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.BadRequest);
+            exception.Message.Should().Be($"Exception of type '{typeof(ErrorResponseDocument).FullName}' was thrown.");
             exception.Errors.ShouldHaveCount(1);
 
             ErrorObject error = exception.Errors.ElementAt(0);

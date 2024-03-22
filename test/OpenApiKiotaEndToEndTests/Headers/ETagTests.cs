@@ -96,6 +96,8 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
     public async Task Returns_no_ETag_for_failed_GET_request()
     {
         // Arrange
+        string unknownCountryId = Unknown.StringId.For<Country, Guid>();
+
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new HeadersClient(requestAdapter);
 
@@ -105,13 +107,19 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         };
 
         // Act
-        Func<Task<CountryPrimaryResponseDocument?>> action = () => apiClient.Countries[Unknown.StringId.For<Country, Guid>()]
-            .GetAsync(configuration => configuration.Options.Add(headerInspector));
+        Func<Task<CountryPrimaryResponseDocument?>> action = () =>
+            apiClient.Countries[unknownCountryId].GetAsync(configuration => configuration.Options.Add(headerInspector));
 
         // Assert
         ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
+        exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.NotFound);
+        exception.Message.Should().Be($"Exception of type '{typeof(ErrorResponseDocument).FullName}' was thrown.");
         exception.Errors.ShouldHaveCount(1);
-        exception.Errors[0].Status.Should().Be(((int)HttpStatusCode.NotFound).ToString());
+
+        ErrorObject error = exception.Errors.ElementAt(0);
+        error.Status.Should().Be("404");
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'countries' with ID '{unknownCountryId}' does not exist.");
 
         headerInspector.ResponseHeaders.Should().NotContainKey(HeaderNames.ETag);
     }
@@ -188,6 +196,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
 
         // Assert
         ApiException exception = (await action.Should().ThrowExactlyAsync<ApiException>()).Which;
+        exception.Message.Should().Be("The server returned an unexpected status code and no error factory is registered for this code: 304");
         exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.NotModified);
 
         string[] eTagHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
