@@ -166,8 +166,8 @@ public abstract class MessagingGroupDefinition(
 
     protected abstract Task FlushMessageAsync(OutgoingMessage message, CancellationToken cancellationToken);
 
-    protected virtual Task<DomainGroup?> GetGroupToDeleteAsync(Guid groupId, CancellationToken cancellationToken)
+    protected virtual async Task<DomainGroup?> GetGroupToDeleteAsync(Guid groupId, CancellationToken cancellationToken)
     {
-        return _groupSet.Include(group => group.Users).FirstOrDefaultAsync(group => group.Id == groupId, cancellationToken);
+        return await _groupSet.Include(group => group.Users).FirstOrDefaultAsync(group => group.Id == groupId, cancellationToken);
     }
 }

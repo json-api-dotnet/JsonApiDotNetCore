@@ -244,19 +244,19 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         }
     }
 
-    protected virtual Task InitializeResourceAsync(TResource resourceForDatabase, CancellationToken cancellationToken)
+    protected virtual async Task InitializeResourceAsync(TResource resourceForDatabase, CancellationToken cancellationToken)
     {
-        return _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceForDatabase, WriteOperationKind.CreateResource, cancellationToken);
+        await _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceForDatabase, WriteOperationKind.CreateResource, cancellationToken);
     }
 
-    private Task AccurizeResourceTypesInHierarchyToAssignInRelationshipsAsync(TResource primaryResource, CancellationToken cancellationToken)
+    private async Task AccurizeResourceTypesInHierarchyToAssignInRelationshipsAsync(TResource primaryResource, CancellationToken cancellationToken)
     {
-        return ValidateResourcesToAssignInRelationshipsExistWithRefreshAsync(primaryResource, true, cancellationToken);
+        await ValidateResourcesToAssignInRelationshipsExistWithRefreshAsync(primaryResource, true, cancellationToken);
     }
 
-    protected Task AssertResourcesToAssignInRelationshipsExistAsync(TResource primaryResource, CancellationToken cancellationToken)
+    protected async Task AssertResourcesToAssignInRelationshipsExistAsync(TResource primaryResource, CancellationToken cancellationToken)
     {
-        return ValidateResourcesToAssignInRelationshipsExistWithRefreshAsync(primaryResource, false, cancellationToken);
+        await ValidateResourcesToAssignInRelationshipsExistWithRefreshAsync(primaryResource, false, cancellationToken);
     }
 
     private async Task ValidateResourcesToAssignInRelationshipsExistWithRefreshAsync(TResource primaryResource, bool onlyIfTypeHierarchy,

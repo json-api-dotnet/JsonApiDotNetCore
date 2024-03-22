@@ -22,40 +22,40 @@ public abstract class IntegrationTest : IAsyncLifetime
         ThrottleSemaphore = new SemaphoreSlim(maxConcurrentTestRuns);
     }
 
-    public Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteHeadAsync<TResponseDocument>(string requestUrl,
+    public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteHeadAsync<TResponseDocument>(string requestUrl,
         Action<HttpRequestHeaders>? setRequestHeaders = null)
     {
-        return ExecuteRequestAsync<TResponseDocument>(HttpMethod.Head, requestUrl, null, null, setRequestHeaders);
+        return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Head, requestUrl, null, null, setRequestHeaders);
     }
 
-    public Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteGetAsync<TResponseDocument>(string requestUrl,
+    public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteGetAsync<TResponseDocument>(string requestUrl,
         Action<HttpRequestHeaders>? setRequestHeaders = null)
     {
-        return ExecuteRequestAsync<TResponseDocument>(HttpMethod.Get, requestUrl, null, null, setRequestHeaders);
+        return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Get, requestUrl, null, null, setRequestHeaders);
     }
 
-    public Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecutePostAsync<TResponseDocument>(string requestUrl,
+    public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecutePostAsync<TResponseDocument>(string requestUrl,
         object requestBody, string contentType = HeaderConstants.MediaType, Action<HttpRequestHeaders>? setRequestHeaders = null)
     {
-        return ExecuteRequestAsync<TResponseDocument>(HttpMethod.Post, requestUrl, requestBody, contentType, setRequestHeaders);
+        return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Post, requestUrl, requestBody, contentType, setRequestHeaders);
     }
 
-    public Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecutePostAtomicAsync<TResponseDocument>(string requestUrl,
+    public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecutePostAtomicAsync<TResponseDocument>(string requestUrl,
         object requestBody, string contentType = HeaderConstants.AtomicOperationsMediaType, Action<HttpRequestHeaders>? setRequestHeaders = null)
     {
-        return ExecuteRequestAsync<TResponseDocument>(HttpMethod.Post, requestUrl, requestBody, contentType, setRequestHeaders);
+        return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Post, requestUrl, requestBody, contentType, setRequestHeaders);
     }
 
-    public Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecutePatchAsync<TResponseDocument>(string requestUrl,
+    public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecutePatchAsync<TResponseDocument>(string requestUrl,
         object requestBody, string contentType = HeaderConstants.MediaType, Action<HttpRequestHeaders>? setRequestHeaders = null)
     {
-        return ExecuteRequestAsync<TResponseDocument>(HttpMethod.Patch, requestUrl, requestBody, contentType, setRequestHeaders);
+        return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Patch, requestUrl, requestBody, contentType, setRequestHeaders);
     }
 
-    public Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteDeleteAsync<TResponseDocument>(string requestUrl,
+    public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteDeleteAsync<TResponseDocument>(string requestUrl,
         object? requestBody = null, string contentType = HeaderConstants.MediaType, Action<HttpRequestHeaders>? setRequestHeaders = null)
     {
-        return ExecuteRequestAsync<TResponseDocument>(HttpMethod.Delete, requestUrl, requestBody, contentType, setRequestHeaders);
+        return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Delete, requestUrl, requestBody, contentType, setRequestHeaders);
     }
 
     private async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteRequestAsync<TResponseDocument>(HttpMethod method,
@@ -116,9 +116,9 @@ public abstract class IntegrationTest : IAsyncLifetime
         }
     }
 
-    public Task InitializeAsync()
+    public async Task InitializeAsync()
     {
-        return ThrottleSemaphore.WaitAsync();
+        await ThrottleSemaphore.WaitAsync();
     }
 
     public virtual Task DisposeAsync()
