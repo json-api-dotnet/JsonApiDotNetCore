@@ -51,7 +51,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        Func<Task<PlayerPrimaryResponseDocument?>> action = () => ApiResponse.TranslateAsync(() => apiClient.PostPlayerAsync(null, requestBody));
+        Func<Task> action = async () => await ApiResponse.TranslateAsync(async () => await apiClient.PostPlayerAsync(null, requestBody));
 
         // Assert
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
@@ -81,7 +81,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        PlayerPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(() => apiClient.PostPlayerAsync(null, requestBody));
+        PlayerPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PostPlayerAsync(null, requestBody));
 
         // Assert
         document.Should().BeNull();
@@ -116,7 +116,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        GamePrimaryResponseDocument? document = await ApiResponse.TranslateAsync(() => apiClient.PostGameAsync(null, requestBody));
+        GamePrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PostGameAsync(null, requestBody));
 
         // Assert
         document.ShouldNotBeNull();
@@ -157,7 +157,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        GamePrimaryResponseDocument? document = await ApiResponse.TranslateAsync(() => apiClient.PostGameAsync(null, requestBody));
+        GamePrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PostGameAsync(null, requestBody));
 
         // Assert
         document.Should().BeNull();
@@ -235,7 +235,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        PlayerGroupPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(() => apiClient.PostPlayerGroupAsync(null, requestBody));
+        PlayerGroupPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PostPlayerGroupAsync(null, requestBody));
 
         // Assert
         document.ShouldNotBeNull();

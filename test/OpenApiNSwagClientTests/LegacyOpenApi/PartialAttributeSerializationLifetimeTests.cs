@@ -31,13 +31,13 @@ public sealed class PartialAttributeSerializationLifetimeTests
         using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
             airplane => airplane.AirtimeInHours))
         {
-            _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
+            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
         }
 
         wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
 
         // Act
-        _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
 
         // Assert
         wrapper.RequestBody.Should().BeJson($$"""
@@ -78,14 +78,14 @@ public sealed class PartialAttributeSerializationLifetimeTests
         using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
             airplane => airplane.AirtimeInHours))
         {
-            _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
+            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
 
             wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
 
             requestDocument.Data.Attributes.AirtimeInHours = null;
 
             // Act
-            _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
+            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
         }
 
         // Assert
@@ -142,7 +142,7 @@ public sealed class PartialAttributeSerializationLifetimeTests
             }
 
             // Act
-            _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId2, null, requestDocument2));
+            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId2, null, requestDocument2));
         }
 
         // Assert
@@ -187,7 +187,7 @@ public sealed class PartialAttributeSerializationLifetimeTests
             requestDocument.Data.Attributes.IsInMaintenance = false;
 
             // Act
-            _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
+            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
         }
 
         // Assert
@@ -239,7 +239,7 @@ public sealed class PartialAttributeSerializationLifetimeTests
                 airplane => airplane.AirtimeInHours))
             {
                 // Act
-                _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId1, null, requestDocument1));
+                _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId1, null, requestDocument1));
             }
         }
 
@@ -279,7 +279,7 @@ public sealed class PartialAttributeSerializationLifetimeTests
         using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
             airplane => airplane.AirtimeInHours))
         {
-            _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId1, null, requestDocument1));
+            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId1, null, requestDocument1));
         }
 
         const string airplaneId2 = "DJy1u";
@@ -303,7 +303,7 @@ public sealed class PartialAttributeSerializationLifetimeTests
             airplane => airplane.SerialNumber))
         {
             // Act
-            _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId2, null, requestDocument2));
+            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId2, null, requestDocument2));
         }
 
         // Assert
@@ -343,7 +343,7 @@ public sealed class PartialAttributeSerializationLifetimeTests
         using (apiClient.WithPartialAttributeSerialization<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument1,
             airplane => airplane.AirtimeInHours))
         {
-            _ = await ApiResponse.TranslateAsync(() => apiClient.PostAirplaneAsync(null, requestDocument1));
+            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostAirplaneAsync(null, requestDocument1));
         }
 
         const string airplaneId = "DJy1u";
@@ -367,7 +367,7 @@ public sealed class PartialAttributeSerializationLifetimeTests
             airplane => airplane.SerialNumber))
         {
             // Act
-            _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument2));
+            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument2));
         }
 
         // Assert
@@ -423,7 +423,7 @@ public sealed class PartialAttributeSerializationLifetimeTests
                 airplane => airplane.IsInMaintenance, airplane => airplane.AirtimeInHours))
             {
                 // Act
-                _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId2, null, requestDocument2));
+                _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId2, null, requestDocument2));
             }
         }
 

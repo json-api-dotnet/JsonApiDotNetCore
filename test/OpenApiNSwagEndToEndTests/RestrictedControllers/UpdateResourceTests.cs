@@ -90,8 +90,8 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         };
 
         // Act
-        WriteOnlyChannelPrimaryResponseDocument? response =
-            await ApiResponse.TranslateAsync(() => apiClient.PatchWriteOnlyChannelAsync(existingChannel.StringId!, queryString, requestBody));
+        WriteOnlyChannelPrimaryResponseDocument? response = await ApiResponse.TranslateAsync(async () =>
+            await apiClient.PatchWriteOnlyChannelAsync(existingChannel.StringId!, queryString, requestBody));
 
         response.ShouldNotBeNull();
 
@@ -165,7 +165,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
 
         // Act
         WriteOnlyChannelPrimaryResponseDocument? response =
-            await ApiResponse.TranslateAsync(() => apiClient.PatchWriteOnlyChannelAsync(existingChannel.StringId!, null, requestBody));
+            await ApiResponse.TranslateAsync(async () => await apiClient.PatchWriteOnlyChannelAsync(existingChannel.StringId!, null, requestBody));
 
         response.ShouldNotBeNull();
 

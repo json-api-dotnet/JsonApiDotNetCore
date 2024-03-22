@@ -84,7 +84,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
 
         // Act
         WriteOnlyChannelPrimaryResponseDocument? response =
-            await ApiResponse.TranslateAsync(() => apiClient.PostWriteOnlyChannelAsync(queryString, requestBody));
+            await ApiResponse.TranslateAsync(async () => await apiClient.PostWriteOnlyChannelAsync(queryString, requestBody));
 
         response.ShouldNotBeNull();
 

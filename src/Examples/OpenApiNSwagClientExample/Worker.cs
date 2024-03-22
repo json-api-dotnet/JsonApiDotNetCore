@@ -45,7 +45,7 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
     private static Task<ApiResponse<PersonCollectionResponseDocument?>> GetPeopleAsync(ExampleApiClient apiClient, IDictionary<string, string?> queryString,
         string? ifNoneMatch, CancellationToken cancellationToken)
     {
-        return ApiResponse.TranslateAsync(() => apiClient.GetPersonCollectionAsync(queryString, ifNoneMatch, cancellationToken));
+        return ApiResponse.TranslateAsync(async () => await apiClient.GetPersonCollectionAsync(queryString, ifNoneMatch, cancellationToken));
     }
 
     private async Task UpdatePersonAsync(CancellationToken cancellationToken)
@@ -66,7 +66,7 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
         using (_apiClient.WithPartialAttributeSerialization<PersonPatchRequestDocument, PersonAttributesInPatchRequest>(patchRequest,
             person => person.FirstName))
         {
-            _ = await ApiResponse.TranslateAsync(() => _apiClient.PatchPersonAsync(patchRequest.Data.Id, null, patchRequest, cancellationToken));
+            _ = await ApiResponse.TranslateAsync(async () => await _apiClient.PatchPersonAsync(patchRequest.Data.Id, null, patchRequest, cancellationToken));
         }
     }
 }

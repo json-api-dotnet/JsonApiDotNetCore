@@ -107,8 +107,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         };
 
         // Act
-        Func<Task<CountryPrimaryResponseDocument?>> action = () =>
-            apiClient.Countries[unknownCountryId].GetAsync(configuration => configuration.Options.Add(headerInspector));
+        Func<Task> action = async () => await apiClient.Countries[unknownCountryId].GetAsync(configuration => configuration.Options.Add(headerInspector));
 
         // Assert
         ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
@@ -188,7 +187,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         headerInspector.ResponseHeaders.Clear();
 
         // Act
-        Func<Task<CountryCollectionResponseDocument?>> action = () => apiClient.Countries.GetAsync(configuration =>
+        Func<Task> action = async () => await apiClient.Countries.GetAsync(configuration =>
         {
             configuration.Headers.Add(HeaderNames.IfNoneMatch, responseETag);
             configuration.Options.Add(headerInspector);
