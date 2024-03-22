@@ -29,7 +29,10 @@ public sealed class ResponseMetaTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Returns_top_level_meta()
     {
         // Arrange
-        await _testContext.RunOnDatabaseAsync(dbContext => dbContext.ClearTableAsync<SupportTicket>());
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<SupportTicket>();
+        });
 
         const string route = "/supportTickets";
 
