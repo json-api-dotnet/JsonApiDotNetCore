@@ -125,7 +125,6 @@ internal sealed class ResourceDataSchemaGenerator
         if (!fullSchemaForAttributes.Properties.Any())
         {
             fullSchemaForResourceData.Properties.Remove(JsonApiPropertyName.Attributes);
-            schemaRepository.Schemas.Remove(referenceSchemaForAttributes.Reference.Id);
         }
         else
         {
@@ -143,7 +142,6 @@ internal sealed class ResourceDataSchemaGenerator
         if (!fullSchemaForRelationships.Properties.Any())
         {
             fullSchemaForResourceData.Properties.Remove(JsonApiPropertyName.Relationships);
-            schemaRepository.Schemas.Remove(referenceSchemaForRelationships.Reference.Id);
         }
         else
         {

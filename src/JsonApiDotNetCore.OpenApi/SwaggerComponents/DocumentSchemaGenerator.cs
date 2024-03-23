@@ -163,7 +163,6 @@ internal sealed class DocumentSchemaGenerator
             if (!_options.IncludeJsonApiVersion)
             {
                 fullSchemaForDocument.Properties.Remove(JsonApiPropertyName.Jsonapi);
-                schemaRepository.Schemas.Remove(jsonapiSchemaId);
             }
             else
             {
