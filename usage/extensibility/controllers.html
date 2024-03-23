@@ -83,6 +83,7 @@
 <h1 id="controllers">Controllers</h1>
 
 <p>To expose API endpoints, ASP.NET controllers need to be defined.</p>
+<h2 id="auto-generated-controllers">Auto-generated controllers</h2>
 <p><em>since v5</em></p>
 <p>Controllers are auto-generated (using <a href="https://docs.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview">source generators</a>) when you add <code>[Resource]</code> on your model class:</p>
 <pre><code class="lang-c#">[Resource] // Generates ArticlesController.g.cs
@@ -91,7 +92,13 @@ public class Article : Identifiable&lt;Guid&gt;
     // ...
 }
 </code></pre>
-<h2 id="resource-access-control">Resource Access Control</h2>
+<div class="NOTE">
+<h5>Note</h5>
+<p>Auto-generated controllers are convenient to get started, but may not work as expected with certain customizations.
+For example, when model classes are defined in a separate project, the controllers are generated in that project as well, which is probably not what you want.
+In such cases, it's perfectly fine to use <a href="#explicit-controllers">explicit controllers</a> instead.</p>
+</div>
+<h3 id="resource-access-control">Resource Access Control</h3>
 <p>It is often desirable to limit which endpoints are exposed on your controller.
 A subset can be specified too:</p>
 <pre><code class="lang-c#">[Resource(GenerateControllerEndpoints =
@@ -119,7 +126,7 @@ public class Article : Identifiable&lt;Guid&gt;
   ]
 }
 </code></pre>
-<h2 id="augmenting-controllers">Augmenting controllers</h2>
+<h3 id="augmenting-controllers">Augmenting controllers</h3>
 <p>Auto-generated controllers can easily be augmented because they are partial classes. For example:</p>
 <pre><code class="lang-c#">[DisableRoutingConvention]
 [Route(&quot;some/custom/route&quot;)]
@@ -150,8 +157,8 @@ partial class ArticlesController
 </code></pre>
 <p>In case you don't want to use auto-generated controllers and define them yourself (see below), remove
 <code>[Resource]</code> from your models or use <code>[Resource(GenerateControllerEndpoints = JsonApiEndpoints.None)]</code>.</p>
-<h2 id="earlier-versions">Earlier versions</h2>
-<p>In earlier versions of JsonApiDotNetCore, you needed to create controllers that inherit from <code>JsonApiController&lt;TResource, TId&gt;</code>. For example:</p>
+<h2 id="explicit-controllers">Explicit controllers</h2>
+<p>To define your own controller class, inherit from <code>JsonApiController&lt;TResource, TId&gt;</code>. For example:</p>
 <pre><code class="lang-c#">public class ArticlesController : JsonApiController&lt;Article, Guid&gt;
 {
     public ArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph,
