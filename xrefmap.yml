@@ -14955,6 +14955,12 @@ references:
   commentId: F:JsonApiDotNetCore.Resources.Annotations.LinkTypes.All
   fullName: JsonApiDotNetCore.Resources.Annotations.LinkTypes.All
   nameWithType: LinkTypes.All
+- uid: JsonApiDotNetCore.Resources.Annotations.LinkTypes.DescribedBy
+  name: DescribedBy
+  href: api/JsonApiDotNetCore.Resources.Annotations.LinkTypes.html#JsonApiDotNetCore_Resources_Annotations_LinkTypes_DescribedBy
+  commentId: F:JsonApiDotNetCore.Resources.Annotations.LinkTypes.DescribedBy
+  fullName: JsonApiDotNetCore.Resources.Annotations.LinkTypes.DescribedBy
+  nameWithType: LinkTypes.DescribedBy
 - uid: JsonApiDotNetCore.Resources.Annotations.LinkTypes.None
   name: None
   href: api/JsonApiDotNetCore.Resources.Annotations.LinkTypes.html#JsonApiDotNetCore_Resources_Annotations_LinkTypes_None
