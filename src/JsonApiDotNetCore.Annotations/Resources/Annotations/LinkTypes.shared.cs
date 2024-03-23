@@ -3,10 +3,11 @@ namespace JsonApiDotNetCore.Resources.Annotations;
 [Flags]
 public enum LinkTypes
 {
-    Self = 1 << 0,
-    Related = 1 << 1,
-    Pagination = 1 << 2,
-    NotConfigured = 1 << 3,
-    None = 1 << 4,
-    All = Self | Related | Pagination
+    NotConfigured = 0,
+    None = 1 << 0,
+    Self = 1 << 1,
+    Related = 1 << 2,
+    DescribedBy = 1 << 3,
+    Pagination = 1 << 4,
+    All = Self | Related | DescribedBy | Pagination
 }

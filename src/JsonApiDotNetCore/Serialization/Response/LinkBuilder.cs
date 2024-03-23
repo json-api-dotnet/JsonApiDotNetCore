@@ -100,12 +100,15 @@ public class LinkBuilder : ILinkBuilder
             SetPaginationInTopLevelLinks(resourceType!, links);
         }
 
-        string? documentDescriptionUrl = _documentDescriptionLinkProvider.GetUrl();
-
-        if (!string.IsNullOrEmpty(documentDescriptionUrl))
+        if (ShouldIncludeTopLevelLink(LinkTypes.DescribedBy, resourceType))
         {
-            var requestUri = new Uri(HttpContext.Request.GetEncodedUrl());
-            links.DescribedBy = UriNormalizer.Normalize(documentDescriptionUrl, _options.UseRelativeLinks, requestUri);
+            string? documentDescriptionUrl = _documentDescriptionLinkProvider.GetUrl();
+
+            if (!string.IsNullOrEmpty(documentDescriptionUrl))
+            {
+                var requestUri = new Uri(HttpContext.Request.GetEncodedUrl());
+                links.DescribedBy = UriNormalizer.Normalize(documentDescriptionUrl, _options.UseRelativeLinks, requestUri);
+            }
         }
 
         return links.HasValue() ? links : null;

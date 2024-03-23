@@ -70,7 +70,7 @@ public abstract class RelationshipAttribute : ResourceFieldAttribute
     /// Configures which links to write in the relationship-level links object for this relationship. Defaults to <see cref="LinkTypes.NotConfigured" />,
     /// which falls back to <see cref="ResourceLinksAttribute.RelationshipLinks" /> and then falls back to RelationshipLinks in global options.
     /// </summary>
-    public LinkTypes Links { get; set; } = LinkTypes.NotConfigured;
+    public LinkTypes Links { get; set; }
 
     /// <summary>
     /// Whether or not this relationship can be included using the <c>include</c> query string parameter. This is <c>true</c> by default.

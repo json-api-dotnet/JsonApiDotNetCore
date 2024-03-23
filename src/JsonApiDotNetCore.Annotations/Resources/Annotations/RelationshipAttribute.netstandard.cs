@@ -9,7 +9,7 @@ namespace JsonApiDotNetCore.Resources.Annotations;
 public abstract class RelationshipAttribute : ResourceFieldAttribute
 {
     /// <summary />
-    public LinkTypes Links { get; set; } = LinkTypes.NotConfigured;
+    public LinkTypes Links { get; set; }
 
     /// <summary />
     [Obsolete("Use AllowInclude in Capabilities instead.")]
