@@ -2693,13 +2693,9 @@
         "additionalProperties": false
       },
       "LinksInErrorDocument": {
-        "required": [
-          "self"
-        ],
         "type": "object",
         "properties": {
           "self": {
-            "minLength": 1,
             "type": "string"
           },
           "describedby": {
@@ -2709,31 +2705,21 @@
         "additionalProperties": false
       },
       "LinksInRelationship": {
-        "required": [
-          "related",
-          "self"
-        ],
         "type": "object",
         "properties": {
           "self": {
-            "minLength": 1,
             "type": "string"
           },
           "related": {
-            "minLength": 1,
             "type": "string"
           }
         },
         "additionalProperties": false
       },
       "LinksInResourceCollectionDocument": {
-        "required": [
-          "self"
-        ],
         "type": "object",
         "properties": {
           "self": {
-            "minLength": 1,
             "type": "string"
           },
           "describedby": {
@@ -2755,26 +2741,18 @@
         "additionalProperties": false
       },
       "LinksInResourceData": {
-        "required": [
-          "self"
-        ],
         "type": "object",
         "properties": {
           "self": {
-            "minLength": 1,
             "type": "string"
           }
         },
         "additionalProperties": false
       },
       "LinksInResourceDocument": {
-        "required": [
-          "self"
-        ],
         "type": "object",
         "properties": {
           "self": {
-            "minLength": 1,
             "type": "string"
           },
           "describedby": {
@@ -2784,18 +2762,12 @@
         "additionalProperties": false
       },
       "LinksInResourceIdentifierCollectionDocument": {
-        "required": [
-          "related",
-          "self"
-        ],
         "type": "object",
         "properties": {
           "self": {
-            "minLength": 1,
             "type": "string"
           },
           "related": {
-            "minLength": 1,
             "type": "string"
           },
           "describedby": {
@@ -2817,18 +2789,12 @@
         "additionalProperties": false
       },
       "LinksInResourceIdentifierDocument": {
-        "required": [
-          "related",
-          "self"
-        ],
         "type": "object",
         "properties": {
           "self": {
-            "minLength": 1,
             "type": "string"
           },
           "related": {
-            "minLength": 1,
             "type": "string"
           },
           "describedby": {
