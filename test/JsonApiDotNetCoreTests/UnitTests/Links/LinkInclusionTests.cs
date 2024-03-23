@@ -22,36 +22,49 @@ public sealed class LinkInclusionTests
     [InlineData(LinkTypes.NotConfigured, LinkTypes.None, LinkTypes.None)]
     [InlineData(LinkTypes.NotConfigured, LinkTypes.Self, LinkTypes.Self)]
     [InlineData(LinkTypes.NotConfigured, LinkTypes.Related, LinkTypes.Related)]
+    [InlineData(LinkTypes.NotConfigured, LinkTypes.DescribedBy, LinkTypes.DescribedBy)]
     [InlineData(LinkTypes.NotConfigured, LinkTypes.Pagination, LinkTypes.Pagination)]
     [InlineData(LinkTypes.NotConfigured, LinkTypes.All, LinkTypes.All)]
     [InlineData(LinkTypes.None, LinkTypes.NotConfigured, LinkTypes.None)]
     [InlineData(LinkTypes.None, LinkTypes.None, LinkTypes.None)]
     [InlineData(LinkTypes.None, LinkTypes.Self, LinkTypes.None)]
     [InlineData(LinkTypes.None, LinkTypes.Related, LinkTypes.None)]
+    [InlineData(LinkTypes.None, LinkTypes.DescribedBy, LinkTypes.None)]
     [InlineData(LinkTypes.None, LinkTypes.Pagination, LinkTypes.None)]
     [InlineData(LinkTypes.None, LinkTypes.All, LinkTypes.None)]
     [InlineData(LinkTypes.Self, LinkTypes.NotConfigured, LinkTypes.Self)]
     [InlineData(LinkTypes.Self, LinkTypes.None, LinkTypes.Self)]
     [InlineData(LinkTypes.Self, LinkTypes.Self, LinkTypes.Self)]
     [InlineData(LinkTypes.Self, LinkTypes.Related, LinkTypes.Self)]
+    [InlineData(LinkTypes.Self, LinkTypes.DescribedBy, LinkTypes.Self)]
     [InlineData(LinkTypes.Self, LinkTypes.Pagination, LinkTypes.Self)]
     [InlineData(LinkTypes.Self, LinkTypes.All, LinkTypes.Self)]
     [InlineData(LinkTypes.Related, LinkTypes.NotConfigured, LinkTypes.Related)]
     [InlineData(LinkTypes.Related, LinkTypes.None, LinkTypes.Related)]
     [InlineData(LinkTypes.Related, LinkTypes.Self, LinkTypes.Related)]
     [InlineData(LinkTypes.Related, LinkTypes.Related, LinkTypes.Related)]
+    [InlineData(LinkTypes.Related, LinkTypes.DescribedBy, LinkTypes.Related)]
     [InlineData(LinkTypes.Related, LinkTypes.Pagination, LinkTypes.Related)]
     [InlineData(LinkTypes.Related, LinkTypes.All, LinkTypes.Related)]
+    [InlineData(LinkTypes.DescribedBy, LinkTypes.NotConfigured, LinkTypes.DescribedBy)]
+    [InlineData(LinkTypes.DescribedBy, LinkTypes.None, LinkTypes.DescribedBy)]
+    [InlineData(LinkTypes.DescribedBy, LinkTypes.Self, LinkTypes.DescribedBy)]
+    [InlineData(LinkTypes.DescribedBy, LinkTypes.Related, LinkTypes.DescribedBy)]
+    [InlineData(LinkTypes.DescribedBy, LinkTypes.DescribedBy, LinkTypes.DescribedBy)]
+    [InlineData(LinkTypes.DescribedBy, LinkTypes.Pagination, LinkTypes.DescribedBy)]
+    [InlineData(LinkTypes.DescribedBy, LinkTypes.All, LinkTypes.DescribedBy)]
     [InlineData(LinkTypes.Pagination, LinkTypes.NotConfigured, LinkTypes.Pagination)]
     [InlineData(LinkTypes.Pagination, LinkTypes.None, LinkTypes.Pagination)]
     [InlineData(LinkTypes.Pagination, LinkTypes.Self, LinkTypes.Pagination)]
     [InlineData(LinkTypes.Pagination, LinkTypes.Related, LinkTypes.Pagination)]
+    [InlineData(LinkTypes.Pagination, LinkTypes.DescribedBy, LinkTypes.Pagination)]
     [InlineData(LinkTypes.Pagination, LinkTypes.Pagination, LinkTypes.Pagination)]
     [InlineData(LinkTypes.Pagination, LinkTypes.All, LinkTypes.Pagination)]
     [InlineData(LinkTypes.All, LinkTypes.NotConfigured, LinkTypes.All)]
     [InlineData(LinkTypes.All, LinkTypes.None, LinkTypes.All)]
     [InlineData(LinkTypes.All, LinkTypes.Self, LinkTypes.All)]
     [InlineData(LinkTypes.All, LinkTypes.Related, LinkTypes.All)]
+    [InlineData(LinkTypes.All, LinkTypes.DescribedBy, LinkTypes.All)]
     [InlineData(LinkTypes.All, LinkTypes.Pagination, LinkTypes.All)]
     [InlineData(LinkTypes.All, LinkTypes.All, LinkTypes.All)]
     public void Applies_cascading_settings_for_top_level_links(LinkTypes linksInResourceType, LinkTypes linksInOptions, LinkTypes expected)
@@ -88,7 +101,7 @@ public sealed class LinkInclusionTests
         var linkGenerator = new FakeLinkGenerator();
         var controllerResourceMapping = new FakeControllerResourceMapping();
         var paginationParser = new PaginationParser();
-        var documentDescriptionLinkProvider = new NoDocumentDescriptionLinkProvider();
+        var documentDescriptionLinkProvider = new NonEmptyDocumentDescriptionLinkProvider();
 
         var linkBuilder = new LinkBuilder(options, request, paginationContext, httpContextAccessor, linkGenerator, controllerResourceMapping, paginationParser,
             documentDescriptionLinkProvider);
@@ -433,6 +446,14 @@ public sealed class LinkInclusionTests
             PathString pathBase = new(), FragmentString fragment = new(), LinkOptions? options = null)
         {
             throw new NotImplementedException();
+        }
+    }
+
+    private sealed class NonEmptyDocumentDescriptionLinkProvider : IDocumentDescriptionLinkProvider
+    {
+        public string GetUrl()
+        {
+            return "openapi.yaml";
         }
     }
 }

@@ -13,18 +13,18 @@ public sealed class ResourceLinksAttribute : Attribute
     /// Configures which links to write in the top-level links object for this resource type. Defaults to <see cref="LinkTypes.NotConfigured" />, which falls
     /// back to TopLevelLinks in global options.
     /// </summary>
-    public LinkTypes TopLevelLinks { get; set; } = LinkTypes.NotConfigured;
+    public LinkTypes TopLevelLinks { get; set; }
 
     /// <summary>
     /// Configures which links to write in the resource-level links object for this resource type. Defaults to <see cref="LinkTypes.NotConfigured" />, which
     /// falls back to ResourceLinks in global options.
     /// </summary>
-    public LinkTypes ResourceLinks { get; set; } = LinkTypes.NotConfigured;
+    public LinkTypes ResourceLinks { get; set; }
 
     /// <summary>
     /// Configures which links to write in the relationship-level links object for all relationships of this resource type. Defaults to
     /// <see cref="LinkTypes.NotConfigured" />, which falls back to RelationshipLinks in global options. This can be overruled per relationship by setting
     /// <see cref="RelationshipAttribute.Links" />.
     /// </summary>
-    public LinkTypes RelationshipLinks { get; set; } = LinkTypes.NotConfigured;
+    public LinkTypes RelationshipLinks { get; set; }
 }

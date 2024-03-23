@@ -2,6 +2,8 @@
 
 To expose API endpoints, ASP.NET controllers need to be defined.
 
+## Auto-generated controllers
+
 _since v5_
 
 Controllers are auto-generated (using [source generators](https://docs.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview)) when you add `[Resource]` on your model class:
@@ -14,7 +16,12 @@ public class Article : Identifiable<Guid>
 }
 ```
 
-## Resource Access Control
+> [!NOTE]
+> Auto-generated controllers are convenient to get started, but may not work as expected with certain customizations.
+> For example, when model classes are defined in a separate project, the controllers are generated in that project as well, which is probably not what you want.
+> In such cases, it's perfectly fine to use [explicit controllers](#explicit-controllers) instead.
+
+### Resource Access Control
 
 It is often desirable to limit which endpoints are exposed on your controller.
 A subset can be specified too:
@@ -52,7 +59,7 @@ DELETE http://localhost:14140/articles/1 HTTP/1.1
 }
 ```
 
-## Augmenting controllers
+### Augmenting controllers
 
 Auto-generated controllers can easily be augmented because they are partial classes. For example:
 
@@ -91,9 +98,9 @@ partial class ArticlesController
 In case you don't want to use auto-generated controllers and define them yourself (see below), remove
 `[Resource]` from your models or use `[Resource(GenerateControllerEndpoints = JsonApiEndpoints.None)]`.
 
-## Earlier versions
+## Explicit controllers
 
-In earlier versions of JsonApiDotNetCore, you needed to create controllers that inherit from `JsonApiController<TResource, TId>`. For example:
+To define your own controller class, inherit from `JsonApiController<TResource, TId>`. For example:
 
 ```c#
 public class ArticlesController : JsonApiController<Article, Guid>
