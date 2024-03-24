@@ -1180,7 +1180,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+                "$ref": "#/components/schemas/resourceCollectionTopLevelLinks"
               }
             ]
           },
@@ -1288,7 +1288,7 @@
               "links": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/linksInResourceData"
+                    "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
               },
@@ -1347,7 +1347,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceDocument"
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
               }
             ]
           },
@@ -1516,7 +1516,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInErrorDocument"
+                "$ref": "#/components/schemas/errorTopLevelLinks"
               }
             ]
           },
@@ -1554,6 +1554,18 @@
         },
         "additionalProperties": false
       },
+      "errorTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "languageAttributesInResponse": {
         "type": "object",
         "properties": {
@@ -1576,7 +1588,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+                "$ref": "#/components/schemas/resourceCollectionTopLevelLinks"
               }
             ]
           },
@@ -1620,7 +1632,7 @@
               "links": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/linksInResourceData"
+                    "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
               },
@@ -1664,7 +1676,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceIdentifierCollectionDocument"
+                "$ref": "#/components/schemas/resourceIdentifierCollectionTopLevelLinks"
               }
             ]
           },
@@ -1691,19 +1703,7 @@
         "type": "string",
         "additionalProperties": false
       },
-      "linksInErrorDocument": {
-        "type": "object",
-        "properties": {
-          "self": {
-            "type": "string"
-          },
-          "describedby": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "linksInRelationship": {
+      "relationshipLinks": {
         "type": "object",
         "properties": {
           "self": {
@@ -1715,7 +1715,7 @@
         },
         "additionalProperties": false
       },
-      "linksInResourceCollectionDocument": {
+      "resourceCollectionTopLevelLinks": {
         "type": "object",
         "properties": {
           "self": {
@@ -1739,28 +1739,7 @@
         },
         "additionalProperties": false
       },
-      "linksInResourceData": {
-        "type": "object",
-        "properties": {
-          "self": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "linksInResourceDocument": {
-        "type": "object",
-        "properties": {
-          "self": {
-            "type": "string"
-          },
-          "describedby": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "linksInResourceIdentifierCollectionDocument": {
+      "resourceIdentifierCollectionTopLevelLinks": {
         "type": "object",
         "properties": {
           "self": {
@@ -1782,6 +1761,27 @@
             "type": "string"
           },
           "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
             "type": "string"
           }
         },
@@ -1811,7 +1811,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInRelationship"
+                "$ref": "#/components/schemas/relationshipLinks"
               }
             ]
           },

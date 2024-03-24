@@ -17,7 +17,7 @@ internal sealed class ResourceDataInResponse<TResource> : ResourceData
 
     // This would normally be { "self": "/people/5" } for GET /todoItems/1/assignee, but it is null when PeopleController is unavailable.
     [JsonPropertyName("links")]
-    public LinksInResourceData Links { get; set; } = null!;
+    public ResourceLinks Links { get; set; } = null!;
 
     [JsonPropertyName("meta")]
     public IDictionary<string, object> Meta { get; set; } = null!;

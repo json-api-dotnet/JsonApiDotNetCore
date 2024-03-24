@@ -16,7 +16,7 @@ internal sealed class NullableSecondaryResourceResponseDocument<TResource> : Nul
 
     [Required]
     [JsonPropertyName("links")]
-    public LinksInResourceDocument Links { get; set; } = null!;
+    public ResourceTopLevelLinks Links { get; set; } = null!;
 
     [JsonPropertyName("included")]
     public IList<ResourceData> Included { get; set; } = null!;

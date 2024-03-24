@@ -432,7 +432,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInErrorDocument"
+                "$ref": "#/components/schemas/errorTopLevelLinks"
               }
             ]
           },
@@ -466,6 +466,18 @@
           "header": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -540,7 +552,7 @@
               "links": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/linksInResourceData"
+                    "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
               },
@@ -600,7 +612,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceDocument"
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
               }
             ]
           },
@@ -632,51 +644,6 @@
           "games"
         ],
         "type": "string",
-        "additionalProperties": false
-      },
-      "linksInErrorDocument": {
-        "type": "object",
-        "properties": {
-          "self": {
-            "type": "string"
-          },
-          "describedby": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "linksInRelationship": {
-        "type": "object",
-        "properties": {
-          "self": {
-            "type": "string"
-          },
-          "related": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "linksInResourceData": {
-        "type": "object",
-        "properties": {
-          "self": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "linksInResourceDocument": {
-        "type": "object",
-        "properties": {
-          "self": {
-            "type": "string"
-          },
-          "describedby": {
-            "type": "string"
-          }
-        },
         "additionalProperties": false
       },
       "playerAttributesInPostRequest": {
@@ -756,7 +723,7 @@
               "links": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/linksInResourceData"
+                    "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
               },
@@ -845,7 +812,7 @@
               "links": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/linksInResourceData"
+                    "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
               },
@@ -905,7 +872,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceDocument"
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
               }
             ]
           },
@@ -1008,7 +975,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceDocument"
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
               }
             ]
           },
@@ -1082,6 +1049,39 @@
         "type": "string",
         "additionalProperties": false
       },
+      "relationshipLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "related": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "toManyGameInRequest": {
         "required": [
           "data"
@@ -1106,7 +1106,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInRelationship"
+                "$ref": "#/components/schemas/relationshipLinks"
               }
             ]
           },
@@ -1150,7 +1150,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInRelationship"
+                "$ref": "#/components/schemas/relationshipLinks"
               }
             ]
           },
@@ -1194,7 +1194,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInRelationship"
+                "$ref": "#/components/schemas/relationshipLinks"
               }
             ]
           },

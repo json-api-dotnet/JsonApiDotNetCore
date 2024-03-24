@@ -26,14 +26,14 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public LinksInResourceIdentifierDocument? Links {
-            get { return BackingStore?.Get<LinksInResourceIdentifierDocument?>("links"); }
+        public ResourceIdentifierTopLevelLinks? Links {
+            get { return BackingStore?.Get<ResourceIdentifierTopLevelLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public LinksInResourceIdentifierDocument Links {
-            get { return BackingStore?.Get<LinksInResourceIdentifierDocument>("links"); }
+        public ResourceIdentifierTopLevelLinks Links {
+            get { return BackingStore?.Get<ResourceIdentifierTopLevelLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
@@ -71,7 +71,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         public virtual IDictionary<string, Action<IParseNode>> GetFieldDeserializers() {
             return new Dictionary<string, Action<IParseNode>> {
                 {"data", n => { Data = n.GetObjectValue<PersonIdentifier>(PersonIdentifier.CreateFromDiscriminatorValue); } },
-                {"links", n => { Links = n.GetObjectValue<LinksInResourceIdentifierDocument>(LinksInResourceIdentifierDocument.CreateFromDiscriminatorValue); } },
+                {"links", n => { Links = n.GetObjectValue<ResourceIdentifierTopLevelLinks>(ResourceIdentifierTopLevelLinks.CreateFromDiscriminatorValue); } },
                 {"meta", n => { Meta = n.GetObjectValue<PersonIdentifierResponseDocument_meta>(PersonIdentifierResponseDocument_meta.CreateFromDiscriminatorValue); } },
             };
         }
@@ -82,7 +82,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer) {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteObjectValue<PersonIdentifier>("data", Data);
-            writer.WriteObjectValue<LinksInResourceIdentifierDocument>("links", Links);
+            writer.WriteObjectValue<ResourceIdentifierTopLevelLinks>("links", Links);
             writer.WriteObjectValue<PersonIdentifierResponseDocument_meta>("meta", Meta);
         }
     }

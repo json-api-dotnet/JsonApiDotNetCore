@@ -27,14 +27,14 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public LinksInErrorDocument? Links {
-            get { return BackingStore?.Get<LinksInErrorDocument?>("links"); }
+        public ErrorTopLevelLinks? Links {
+            get { return BackingStore?.Get<ErrorTopLevelLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public LinksInErrorDocument Links {
-            get { return BackingStore?.Get<LinksInErrorDocument>("links"); }
+        public ErrorTopLevelLinks Links {
+            get { return BackingStore?.Get<ErrorTopLevelLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
@@ -74,7 +74,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
         public virtual IDictionary<string, Action<IParseNode>> GetFieldDeserializers() {
             return new Dictionary<string, Action<IParseNode>> {
                 {"errors", n => { Errors = n.GetCollectionOfObjectValues<ErrorObject>(ErrorObject.CreateFromDiscriminatorValue)?.ToList(); } },
-                {"links", n => { Links = n.GetObjectValue<LinksInErrorDocument>(LinksInErrorDocument.CreateFromDiscriminatorValue); } },
+                {"links", n => { Links = n.GetObjectValue<ErrorTopLevelLinks>(ErrorTopLevelLinks.CreateFromDiscriminatorValue); } },
                 {"meta", n => { Meta = n.GetObjectValue<ErrorResponseDocument_meta>(ErrorResponseDocument_meta.CreateFromDiscriminatorValue); } },
             };
         }
@@ -85,7 +85,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer) {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteCollectionOfObjectValues<ErrorObject>("errors", Errors);
-            writer.WriteObjectValue<LinksInErrorDocument>("links", Links);
+            writer.WriteObjectValue<ErrorTopLevelLinks>("links", Links);
             writer.WriteObjectValue<ErrorResponseDocument_meta>("meta", Meta);
         }
     }

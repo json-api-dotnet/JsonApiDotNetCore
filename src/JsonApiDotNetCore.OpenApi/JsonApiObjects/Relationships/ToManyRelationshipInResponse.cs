@@ -13,7 +13,7 @@ internal sealed class ToManyRelationshipInResponse<TResource> : ManyData<Resourc
 {
     [Required]
     [JsonPropertyName("links")]
-    public LinksInRelationship Links { get; set; } = null!;
+    public RelationshipLinks Links { get; set; } = null!;
 
     [JsonPropertyName("meta")]
     public IDictionary<string, object> Meta { get; set; } = null!;

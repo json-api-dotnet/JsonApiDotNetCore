@@ -40,21 +40,21 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
 
         document.Should().ContainPath("components.schemas").With(schemasElement =>
         {
-            string? linksInResourceCollectionDocumentSchemaRefId = null;
+            string? topLevelLinksSchemaRefId = null;
             string? resourceDataSchemaRefId = null;
 
             schemasElement.Should().ContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainPath("jsonapi.allOf[0].$ref").ShouldBeSchemaReferenceId("jsonapi");
 
-                linksInResourceCollectionDocumentSchemaRefId = propertiesElement.Should().ContainPath("links.allOf[0].$ref")
-                    .ShouldBeSchemaReferenceId("linksInResourceCollectionDocument").SchemaReferenceId;
+                topLevelLinksSchemaRefId = propertiesElement.Should().ContainPath("links.allOf[0].$ref")
+                    .ShouldBeSchemaReferenceId("resourceCollectionTopLevelLinks").SchemaReferenceId;
 
                 resourceDataSchemaRefId = propertiesElement.Should().ContainPath("data.items.$ref").ShouldBeSchemaReferenceId("supermarketDataInResponse")
                     .SchemaReferenceId;
             });
 
-            schemasElement.Should().ContainPath($"{linksInResourceCollectionDocumentSchemaRefId}.properties").With(propertiesElement =>
+            schemasElement.Should().ContainPath($"{topLevelLinksSchemaRefId}.properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainProperty("self");
                 propertiesElement.Should().ContainProperty("describedby");
@@ -64,7 +64,7 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
                 propertiesElement.Should().ContainProperty("next");
             });
 
-            string? linksInResourceDataSchemaRefId = null;
+            string? resourceLinksSchemaRefId = null;
             string? resourceAttributesInResponseSchemaRefId = null;
             string? resourceRelationshipInResponseSchemaRefId = null;
 
@@ -79,7 +79,7 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
 
             schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.allOf[1].properties").With(propertiesElement =>
             {
-                linksInResourceDataSchemaRefId = propertiesElement.Should().ContainPath("links.allOf[0].$ref").ShouldBeSchemaReferenceId("linksInResourceData")
+                resourceLinksSchemaRefId = propertiesElement.Should().ContainPath("links.allOf[0].$ref").ShouldBeSchemaReferenceId("resourceLinks")
                     .SchemaReferenceId;
 
                 resourceAttributesInResponseSchemaRefId = propertiesElement.Should().ContainPath("attributes.allOf[0].$ref")
@@ -89,7 +89,7 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
                     .ShouldBeSchemaReferenceId("supermarketRelationshipsInResponse").SchemaReferenceId;
             });
 
-            schemasElement.Should().ContainPath($"{linksInResourceDataSchemaRefId}.properties").With(propertiesElement =>
+            schemasElement.Should().ContainPath($"{resourceLinksSchemaRefId}.properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainProperty("self");
             });
@@ -116,19 +116,19 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
                 propertiesElement.Should().ContainPath("cashiers.allOf[0].$ref").ShouldBeSchemaReferenceId("toManyStaffMemberInResponse");
             });
 
-            string? linksInRelationshipSchemaRefId = null;
+            string? relationshipLinksSchemaRefId = null;
             string? relatedResourceIdentifierSchemaRefId = null;
 
             schemasElement.Should().ContainPath($"{nullableToOneResourceResponseDataSchemaRefId}.properties").With(propertiesElement =>
             {
-                linksInRelationshipSchemaRefId = propertiesElement.Should().ContainPath("links.allOf[0].$ref").ShouldBeSchemaReferenceId("linksInRelationship")
+                relationshipLinksSchemaRefId = propertiesElement.Should().ContainPath("links.allOf[0].$ref").ShouldBeSchemaReferenceId("relationshipLinks")
                     .SchemaReferenceId;
 
                 relatedResourceIdentifierSchemaRefId = propertiesElement.Should().ContainPath("data.allOf[0].$ref")
                     .ShouldBeSchemaReferenceId("staffMemberIdentifier").SchemaReferenceId;
             });
 
-            schemasElement.Should().ContainPath($"{linksInRelationshipSchemaRefId}.properties").With(propertiesElement =>
+            schemasElement.Should().ContainPath($"{relationshipLinksSchemaRefId}.properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainProperty("self");
                 propertiesElement.Should().ContainProperty("related");
@@ -171,15 +171,15 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
 
         document.Should().ContainPath("components.schemas").With(schemasElement =>
         {
-            string? linksInResourceDocumentSchemaRefId = null;
+            string? topLevelLinksSchemaRefId = null;
 
             schemasElement.Should().ContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
-                linksInResourceDocumentSchemaRefId = propertiesElement.Should().ContainPath("links.allOf[0].$ref")
-                    .ShouldBeSchemaReferenceId("linksInResourceDocument").SchemaReferenceId;
+                topLevelLinksSchemaRefId = propertiesElement.Should().ContainPath("links.allOf[0].$ref").ShouldBeSchemaReferenceId("resourceTopLevelLinks")
+                    .SchemaReferenceId;
             });
 
-            schemasElement.Should().ContainPath($"{linksInResourceDocumentSchemaRefId}.properties").With(propertiesElement =>
+            schemasElement.Should().ContainPath($"{topLevelLinksSchemaRefId}.properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainProperty("self");
                 propertiesElement.Should().ContainProperty("describedby");
@@ -284,15 +284,15 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
 
         document.Should().ContainPath("components.schemas").With(schemasElement =>
         {
-            string? linksInResourceIdentifierDocumentSchemaRefId = null;
+            string? topLevelLinksSchemaRefId = null;
 
             schemasElement.Should().ContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
-                linksInResourceIdentifierDocumentSchemaRefId = propertiesElement.Should().ContainPath("links.allOf[0].$ref")
-                    .ShouldBeSchemaReferenceId("linksInResourceIdentifierDocument").SchemaReferenceId;
+                topLevelLinksSchemaRefId = propertiesElement.Should().ContainPath("links.allOf[0].$ref")
+                    .ShouldBeSchemaReferenceId("resourceIdentifierTopLevelLinks").SchemaReferenceId;
             });
 
-            schemasElement.Should().ContainPath($"{linksInResourceIdentifierDocumentSchemaRefId}.properties").With(propertiesElement =>
+            schemasElement.Should().ContainPath($"{topLevelLinksSchemaRefId}.properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainProperty("self");
                 propertiesElement.Should().ContainProperty("describedby");
@@ -342,15 +342,15 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
 
         document.Should().ContainPath("components.schemas").With(schemasElement =>
         {
-            string? linksInResourceIdentifierCollectionDocumentSchemaRefId = null;
+            string? topLevelLinksSchemaRefId = null;
 
             schemasElement.Should().ContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
-                linksInResourceIdentifierCollectionDocumentSchemaRefId = propertiesElement.Should().ContainPath("links.allOf[0].$ref")
-                    .ShouldBeSchemaReferenceId("linksInResourceIdentifierCollectionDocument").SchemaReferenceId;
+                topLevelLinksSchemaRefId = propertiesElement.Should().ContainPath("links.allOf[0].$ref")
+                    .ShouldBeSchemaReferenceId("resourceIdentifierCollectionTopLevelLinks").SchemaReferenceId;
             });
 
-            schemasElement.Should().ContainPath($"{linksInResourceIdentifierCollectionDocumentSchemaRefId}.properties").With(propertiesElement =>
+            schemasElement.Should().ContainPath($"{topLevelLinksSchemaRefId}.properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainProperty("self");
                 propertiesElement.Should().ContainProperty("describedby");
@@ -559,6 +559,6 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
 
         // Assert
         document.Should().ContainPath("components.schemas.errorResponseDocument");
-        document.Should().ContainPath("components.schemas.linksInErrorDocument");
+        document.Should().ContainPath("components.schemas.errorTopLevelLinks");
     }
 }

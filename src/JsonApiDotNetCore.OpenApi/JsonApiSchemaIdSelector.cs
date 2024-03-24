@@ -84,7 +84,7 @@ internal sealed class JsonApiSchemaIdSelector
             }
         }
 
-        // Used for a fixed set of non-generic types, such as Jsonapi, LinksInResourceCollectionDocument etc.
+        // Used for a fixed set of non-generic types, such as Jsonapi, ResourceCollectionTopLevelLinks etc.
         return ApplySchemaTemplate(type.Name, null);
     }
 

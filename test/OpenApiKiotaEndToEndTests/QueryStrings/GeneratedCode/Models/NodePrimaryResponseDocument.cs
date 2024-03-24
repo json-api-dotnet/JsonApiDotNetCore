@@ -40,14 +40,14 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public LinksInResourceDocument? Links {
-            get { return BackingStore?.Get<LinksInResourceDocument?>("links"); }
+        public ResourceTopLevelLinks? Links {
+            get { return BackingStore?.Get<ResourceTopLevelLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public LinksInResourceDocument Links {
-            get { return BackingStore?.Get<LinksInResourceDocument>("links"); }
+        public ResourceTopLevelLinks Links {
+            get { return BackingStore?.Get<ResourceTopLevelLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
@@ -86,7 +86,7 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
             return new Dictionary<string, Action<IParseNode>> {
                 {"data", n => { Data = n.GetObjectValue<Nodes>(Nodes.CreateFromDiscriminatorValue); } },
                 {"included", n => { Included = n.GetCollectionOfObjectValues<DataInResponse>(DataInResponse.CreateFromDiscriminatorValue)?.ToList(); } },
-                {"links", n => { Links = n.GetObjectValue<LinksInResourceDocument>(LinksInResourceDocument.CreateFromDiscriminatorValue); } },
+                {"links", n => { Links = n.GetObjectValue<ResourceTopLevelLinks>(ResourceTopLevelLinks.CreateFromDiscriminatorValue); } },
                 {"meta", n => { Meta = n.GetObjectValue<NodePrimaryResponseDocument_meta>(NodePrimaryResponseDocument_meta.CreateFromDiscriminatorValue); } },
             };
         }
@@ -98,7 +98,7 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteObjectValue<Nodes>("data", Data);
             writer.WriteCollectionOfObjectValues<DataInResponse>("included", Included);
-            writer.WriteObjectValue<LinksInResourceDocument>("links", Links);
+            writer.WriteObjectValue<ResourceTopLevelLinks>("links", Links);
             writer.WriteObjectValue<NodePrimaryResponseDocument_meta>("meta", Meta);
         }
     }

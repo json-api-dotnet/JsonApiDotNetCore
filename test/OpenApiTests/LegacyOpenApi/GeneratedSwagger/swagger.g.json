@@ -5998,7 +5998,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-resource-collection-document"
+                "$ref": "#/components/schemas/resource-collection-top-level-links"
               }
             ]
           },
@@ -6106,7 +6106,7 @@
               "links": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/links-in-resource-data"
+                    "$ref": "#/components/schemas/resource-links"
                   }
                 ]
               },
@@ -6172,7 +6172,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-resource-document"
+                "$ref": "#/components/schemas/resource-top-level-links"
               }
             ]
           },
@@ -6358,7 +6358,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-error-document"
+                "$ref": "#/components/schemas/error-top-level-links"
               }
             ]
           },
@@ -6392,6 +6392,18 @@
           "header": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "error-top-level-links": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -6480,7 +6492,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-resource-collection-document"
+                "$ref": "#/components/schemas/resource-collection-top-level-links"
               }
             ]
           },
@@ -6588,7 +6600,7 @@
               "links": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/links-in-resource-data"
+                    "$ref": "#/components/schemas/resource-links"
                   }
                 ]
               },
@@ -6639,7 +6651,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-resource-identifier-collection-document"
+                "$ref": "#/components/schemas/resource-identifier-collection-top-level-links"
               }
             ]
           },
@@ -6676,7 +6688,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-resource-identifier-document"
+                "$ref": "#/components/schemas/resource-identifier-top-level-links"
               }
             ]
           },
@@ -6746,7 +6758,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-resource-document"
+                "$ref": "#/components/schemas/resource-top-level-links"
               }
             ]
           },
@@ -6857,7 +6869,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-resource-document"
+                "$ref": "#/components/schemas/resource-top-level-links"
               }
             ]
           },
@@ -6961,7 +6973,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-resource-collection-document"
+                "$ref": "#/components/schemas/resource-collection-top-level-links"
               }
             ]
           },
@@ -7062,7 +7074,7 @@
               "links": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/links-in-resource-data"
+                    "$ref": "#/components/schemas/resource-links"
                   }
                 ]
               },
@@ -7113,7 +7125,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-resource-identifier-collection-document"
+                "$ref": "#/components/schemas/resource-identifier-collection-top-level-links"
               }
             ]
           },
@@ -7182,7 +7194,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-resource-document"
+                "$ref": "#/components/schemas/resource-top-level-links"
               }
             ]
           },
@@ -7349,117 +7361,6 @@
         },
         "additionalProperties": false
       },
-      "links-in-error-document": {
-        "type": "object",
-        "properties": {
-          "self": {
-            "type": "string"
-          },
-          "describedby": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "links-in-relationship": {
-        "type": "object",
-        "properties": {
-          "self": {
-            "type": "string"
-          },
-          "related": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "links-in-resource-collection-document": {
-        "type": "object",
-        "properties": {
-          "self": {
-            "type": "string"
-          },
-          "describedby": {
-            "type": "string"
-          },
-          "first": {
-            "type": "string"
-          },
-          "last": {
-            "type": "string"
-          },
-          "prev": {
-            "type": "string"
-          },
-          "next": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "links-in-resource-data": {
-        "type": "object",
-        "properties": {
-          "self": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "links-in-resource-document": {
-        "type": "object",
-        "properties": {
-          "self": {
-            "type": "string"
-          },
-          "describedby": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "links-in-resource-identifier-collection-document": {
-        "type": "object",
-        "properties": {
-          "self": {
-            "type": "string"
-          },
-          "related": {
-            "type": "string"
-          },
-          "describedby": {
-            "type": "string"
-          },
-          "first": {
-            "type": "string"
-          },
-          "last": {
-            "type": "string"
-          },
-          "prev": {
-            "type": "string"
-          },
-          "next": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "links-in-resource-identifier-document": {
-        "type": "object",
-        "properties": {
-          "self": {
-            "type": "string"
-          },
-          "related": {
-            "type": "string"
-          },
-          "describedby": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "nullable-flight-attendant-identifier-response-document": {
         "required": [
           "data",
@@ -7477,7 +7378,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-resource-identifier-document"
+                "$ref": "#/components/schemas/resource-identifier-top-level-links"
               }
             ]
           },
@@ -7516,7 +7417,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-resource-document"
+                "$ref": "#/components/schemas/resource-top-level-links"
               }
             ]
           },
@@ -7570,7 +7471,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-relationship"
+                "$ref": "#/components/schemas/relationship-links"
               }
             ]
           },
@@ -7649,7 +7550,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-resource-collection-document"
+                "$ref": "#/components/schemas/resource-collection-top-level-links"
               }
             ]
           },
@@ -7736,7 +7637,7 @@
               "links": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/links-in-resource-data"
+                    "$ref": "#/components/schemas/resource-links"
                   }
                 ]
               },
@@ -7787,7 +7688,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-resource-identifier-collection-document"
+                "$ref": "#/components/schemas/resource-identifier-collection-top-level-links"
               }
             ]
           },
@@ -7856,7 +7757,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-resource-document"
+                "$ref": "#/components/schemas/resource-top-level-links"
               }
             ]
           },
@@ -7890,6 +7791,105 @@
         "type": "string",
         "additionalProperties": false
       },
+      "relationship-links": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "related": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resource-collection-top-level-links": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "first": {
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          },
+          "prev": {
+            "type": "string"
+          },
+          "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resource-identifier-collection-top-level-links": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "related": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "first": {
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          },
+          "prev": {
+            "type": "string"
+          },
+          "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resource-identifier-top-level-links": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "related": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resource-links": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resource-top-level-links": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "to-many-flight-attendant-in-request": {
         "required": [
           "data"
@@ -7914,7 +7914,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-relationship"
+                "$ref": "#/components/schemas/relationship-links"
               }
             ]
           },
@@ -7958,7 +7958,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-relationship"
+                "$ref": "#/components/schemas/relationship-links"
               }
             ]
           },
@@ -8002,7 +8002,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-relationship"
+                "$ref": "#/components/schemas/relationship-links"
               }
             ]
           },
@@ -8047,7 +8047,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-relationship"
+                "$ref": "#/components/schemas/relationship-links"
               }
             ]
           },

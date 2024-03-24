@@ -26,14 +26,14 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public LinksInResourceIdentifierCollectionDocument? Links {
-            get { return BackingStore?.Get<LinksInResourceIdentifierCollectionDocument?>("links"); }
+        public ResourceIdentifierCollectionTopLevelLinks? Links {
+            get { return BackingStore?.Get<ResourceIdentifierCollectionTopLevelLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public LinksInResourceIdentifierCollectionDocument Links {
-            get { return BackingStore?.Get<LinksInResourceIdentifierCollectionDocument>("links"); }
+        public ResourceIdentifierCollectionTopLevelLinks Links {
+            get { return BackingStore?.Get<ResourceIdentifierCollectionTopLevelLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
@@ -71,7 +71,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         public virtual IDictionary<string, Action<IParseNode>> GetFieldDeserializers() {
             return new Dictionary<string, Action<IParseNode>> {
                 {"data", n => { Data = n.GetCollectionOfObjectValues<TodoItemIdentifier>(TodoItemIdentifier.CreateFromDiscriminatorValue)?.ToList(); } },
-                {"links", n => { Links = n.GetObjectValue<LinksInResourceIdentifierCollectionDocument>(LinksInResourceIdentifierCollectionDocument.CreateFromDiscriminatorValue); } },
+                {"links", n => { Links = n.GetObjectValue<ResourceIdentifierCollectionTopLevelLinks>(ResourceIdentifierCollectionTopLevelLinks.CreateFromDiscriminatorValue); } },
                 {"meta", n => { Meta = n.GetObjectValue<TodoItemIdentifierCollectionResponseDocument_meta>(TodoItemIdentifierCollectionResponseDocument_meta.CreateFromDiscriminatorValue); } },
             };
         }
@@ -82,7 +82,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer) {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteCollectionOfObjectValues<TodoItemIdentifier>("data", Data);
-            writer.WriteObjectValue<LinksInResourceIdentifierCollectionDocument>("links", Links);
+            writer.WriteObjectValue<ResourceIdentifierCollectionTopLevelLinks>("links", Links);
             writer.WriteObjectValue<TodoItemIdentifierCollectionResponseDocument_meta>("meta", Meta);
         }
     }
