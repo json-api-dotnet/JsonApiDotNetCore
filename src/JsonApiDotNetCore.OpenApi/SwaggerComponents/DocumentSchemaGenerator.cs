@@ -31,17 +31,19 @@ internal sealed class DocumentSchemaGenerator
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly AbstractResourceDataSchemaGenerator _abstractResourceDataSchemaGenerator;
     private readonly ResourceDataSchemaGenerator _resourceDataSchemaGenerator;
+    private readonly LinksVisibilitySchemaGenerator _linksVisibilitySchemaGenerator;
     private readonly IncludeDependencyScanner _includeDependencyScanner;
     private readonly IResourceGraph _resourceGraph;
     private readonly IJsonApiOptions _options;
 
     public DocumentSchemaGenerator(SchemaGenerator defaultSchemaGenerator, AbstractResourceDataSchemaGenerator abstractResourceDataSchemaGenerator,
-        ResourceDataSchemaGenerator resourceDataSchemaGenerator, IncludeDependencyScanner includeDependencyScanner, IResourceGraph resourceGraph,
-        IJsonApiOptions options)
+        ResourceDataSchemaGenerator resourceDataSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator,
+        IncludeDependencyScanner includeDependencyScanner, IResourceGraph resourceGraph, IJsonApiOptions options)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);
         ArgumentGuard.NotNull(abstractResourceDataSchemaGenerator);
         ArgumentGuard.NotNull(resourceDataSchemaGenerator);
+        ArgumentGuard.NotNull(linksVisibilitySchemaGenerator);
         ArgumentGuard.NotNull(includeDependencyScanner);
         ArgumentGuard.NotNull(resourceGraph);
         ArgumentGuard.NotNull(options);
@@ -49,6 +51,7 @@ internal sealed class DocumentSchemaGenerator
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _abstractResourceDataSchemaGenerator = abstractResourceDataSchemaGenerator;
         _resourceDataSchemaGenerator = resourceDataSchemaGenerator;
+        _linksVisibilitySchemaGenerator = linksVisibilitySchemaGenerator;
         _includeDependencyScanner = includeDependencyScanner;
         _resourceGraph = resourceGraph;
         _options = options;
@@ -65,9 +68,11 @@ internal sealed class DocumentSchemaGenerator
 
         OpenApiSchema fullSchemaForDocument = schemaRepository.Schemas[referenceSchemaForDocument.Reference.Id];
 
-        fullSchemaForDocument.SetValuesInMetaToNullable();
-
         SetJsonApiVersion(fullSchemaForDocument, schemaRepository);
+
+        _linksVisibilitySchemaGenerator.UpdateSchemaForTopLevel(modelType, fullSchemaForDocument, schemaRepository);
+
+        fullSchemaForDocument.SetValuesInMetaToNullable();
 
         return referenceSchemaForDocument;
     }

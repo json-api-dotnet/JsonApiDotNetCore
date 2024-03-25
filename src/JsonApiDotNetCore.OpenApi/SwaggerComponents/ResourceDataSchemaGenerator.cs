@@ -22,6 +22,7 @@ internal sealed class ResourceDataSchemaGenerator
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly ResourceTypeSchemaGenerator _resourceTypeSchemaGenerator;
     private readonly ResourceIdentifierSchemaGenerator _resourceIdentifierSchemaGenerator;
+    private readonly LinksVisibilitySchemaGenerator _linksVisibilitySchemaGenerator;
     private readonly IResourceGraph _resourceGraph;
     private readonly IJsonApiOptions _options;
     private readonly ResourceFieldValidationMetadataProvider _resourceFieldValidationMetadataProvider;
@@ -29,13 +30,14 @@ internal sealed class ResourceDataSchemaGenerator
     private readonly ResourceDocumentationReader _resourceDocumentationReader;
 
     public ResourceDataSchemaGenerator(SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator,
-        ResourceIdentifierSchemaGenerator resourceIdentifierSchemaGenerator, IResourceGraph resourceGraph, IJsonApiOptions options,
-        ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider, RelationshipTypeFactory relationshipTypeFactory,
-        ResourceDocumentationReader resourceDocumentationReader)
+        ResourceIdentifierSchemaGenerator resourceIdentifierSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator,
+        IResourceGraph resourceGraph, IJsonApiOptions options, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider,
+        RelationshipTypeFactory relationshipTypeFactory, ResourceDocumentationReader resourceDocumentationReader)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);
         ArgumentGuard.NotNull(resourceTypeSchemaGenerator);
         ArgumentGuard.NotNull(resourceIdentifierSchemaGenerator);
+        ArgumentGuard.NotNull(linksVisibilitySchemaGenerator);
         ArgumentGuard.NotNull(resourceGraph);
         ArgumentGuard.NotNull(options);
         ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
@@ -45,6 +47,7 @@ internal sealed class ResourceDataSchemaGenerator
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _resourceTypeSchemaGenerator = resourceTypeSchemaGenerator;
         _resourceIdentifierSchemaGenerator = resourceIdentifierSchemaGenerator;
+        _linksVisibilitySchemaGenerator = linksVisibilitySchemaGenerator;
         _resourceGraph = resourceGraph;
         _options = options;
         _resourceFieldValidationMetadataProvider = resourceFieldValidationMetadataProvider;
@@ -68,7 +71,7 @@ internal sealed class ResourceDataSchemaGenerator
 
         var resourceTypeInfo = ResourceTypeInfo.Create(resourceDataConstructedType, _resourceGraph);
 
-        var fieldSchemaBuilder = new ResourceFieldSchemaBuilder(_defaultSchemaGenerator, _resourceIdentifierSchemaGenerator,
+        var fieldSchemaBuilder = new ResourceFieldSchemaBuilder(_defaultSchemaGenerator, _resourceIdentifierSchemaGenerator, _linksVisibilitySchemaGenerator,
             _resourceFieldValidationMetadataProvider, _relationshipTypeFactory, resourceTypeInfo);
 
         OpenApiSchema effectiveFullSchemaForResourceData =
@@ -82,10 +85,12 @@ internal sealed class ResourceDataSchemaGenerator
 
         fullSchemaForResourceData.Description = _resourceDocumentationReader.GetDocumentationForType(resourceTypeInfo.ResourceType);
 
-        effectiveFullSchemaForResourceData.SetValuesInMetaToNullable();
-
         SetResourceAttributes(effectiveFullSchemaForResourceData, fieldSchemaBuilder, schemaRepository);
         SetResourceRelationships(effectiveFullSchemaForResourceData, fieldSchemaBuilder, schemaRepository);
+
+        _linksVisibilitySchemaGenerator.UpdateSchemaForResource(resourceTypeInfo, effectiveFullSchemaForResourceData, schemaRepository);
+
+        effectiveFullSchemaForResourceData.SetValuesInMetaToNullable();
 
         effectiveFullSchemaForResourceData.ReorderProperties(ResourceDataPropertyNamesInOrder);
 

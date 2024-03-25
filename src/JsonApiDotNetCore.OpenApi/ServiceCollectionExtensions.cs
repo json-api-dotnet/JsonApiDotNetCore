@@ -92,5 +92,6 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<ResourceIdentifierSchemaGenerator>();
         services.TryAddSingleton<AbstractResourceDataSchemaGenerator>();
         services.TryAddSingleton<ResourceDataSchemaGenerator>();
+        services.TryAddSingleton<LinksVisibilitySchemaGenerator>();
     }
 }
