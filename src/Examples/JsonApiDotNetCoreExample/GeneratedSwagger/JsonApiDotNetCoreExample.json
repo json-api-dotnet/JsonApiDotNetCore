@@ -4977,9 +4977,6 @@
         "additionalProperties": false
       },
       "nullableToOnePersonInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
@@ -5854,9 +5851,6 @@
         "additionalProperties": false
       },
       "toManyTagInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
@@ -5898,9 +5892,6 @@
         "additionalProperties": false
       },
       "toManyTodoItemInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
@@ -5943,9 +5934,6 @@
         "additionalProperties": false
       },
       "toOnePersonInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {

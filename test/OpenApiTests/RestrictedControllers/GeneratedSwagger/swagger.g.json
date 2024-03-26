@@ -4464,9 +4464,6 @@
         "additionalProperties": false
       },
       "nullableToOneDataStreamInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
@@ -4929,9 +4926,6 @@
         "additionalProperties": false
       },
       "toManyDataStreamInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
@@ -4974,9 +4968,6 @@
         "additionalProperties": false
       },
       "toOneDataStreamInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {

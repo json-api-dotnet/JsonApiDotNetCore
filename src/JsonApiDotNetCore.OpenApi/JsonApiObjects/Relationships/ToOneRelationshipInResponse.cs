@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Links;
@@ -11,7 +10,7 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 internal sealed class ToOneRelationshipInResponse<TResource> : SingleData<ResourceIdentifier<TResource>>
     where TResource : IIdentifiable
 {
-    [Required]
+    // Non-required because the related controller may be unavailable when used in an include.
     [JsonPropertyName("links")]
     public RelationshipLinks Links { get; set; } = null!;
 

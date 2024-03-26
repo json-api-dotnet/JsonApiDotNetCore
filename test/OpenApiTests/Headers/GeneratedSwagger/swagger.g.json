@@ -1803,9 +1803,6 @@
         "additionalProperties": false
       },
       "toManyLanguageInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {

@@ -3764,9 +3764,6 @@
         "additionalProperties": false
       },
       "nullableToOneEmptyInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
@@ -4395,9 +4392,6 @@
         "additionalProperties": false
       },
       "toManyEmptyInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
@@ -4440,9 +4434,6 @@
         "additionalProperties": false
       },
       "toOneEmptyInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {

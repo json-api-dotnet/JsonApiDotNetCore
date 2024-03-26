@@ -4100,9 +4100,6 @@
         "additionalProperties": false
       },
       "nullableToOneNodeInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
@@ -4245,9 +4242,6 @@
         "additionalProperties": false
       },
       "toManyNameValuePairInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
@@ -4289,9 +4283,6 @@
         "additionalProperties": false
       },
       "toManyNodeInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
@@ -4334,9 +4325,6 @@
         "additionalProperties": false
       },
       "toOneNodeInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {

@@ -1098,9 +1098,6 @@
         "additionalProperties": false
       },
       "toManyGameInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
@@ -1142,9 +1139,6 @@
         "additionalProperties": false
       },
       "toManyPlayerGroupInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
@@ -1186,9 +1180,6 @@
         "additionalProperties": false
       },
       "toManyPlayerInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {

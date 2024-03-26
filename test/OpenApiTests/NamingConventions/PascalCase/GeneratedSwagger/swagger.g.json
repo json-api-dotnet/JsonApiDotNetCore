@@ -2806,9 +2806,6 @@
         "additionalProperties": false
       },
       "NullableToOneStaffMemberInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
@@ -3701,9 +3698,6 @@
         "additionalProperties": false
       },
       "ToManyStaffMemberInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
@@ -3746,9 +3740,6 @@
         "additionalProperties": false
       },
       "ToOneStaffMemberInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {

@@ -2806,9 +2806,6 @@
         "additionalProperties": false
       },
       "nullable-to-one-staff-member-in-response": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
@@ -3701,9 +3698,6 @@
         "additionalProperties": false
       },
       "to-many-staff-member-in-response": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
@@ -3746,9 +3740,6 @@
         "additionalProperties": false
       },
       "to-one-staff-member-in-response": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {

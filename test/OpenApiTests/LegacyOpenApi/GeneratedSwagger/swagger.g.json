@@ -7463,9 +7463,6 @@
         "additionalProperties": false
       },
       "nullable-to-one-flight-attendant-in-response": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
@@ -7906,9 +7903,6 @@
         "additionalProperties": false
       },
       "to-many-flight-attendant-in-response": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
@@ -7950,9 +7944,6 @@
         "additionalProperties": false
       },
       "to-many-flight-in-response": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
@@ -7994,9 +7985,6 @@
         "additionalProperties": false
       },
       "to-many-passenger-in-response": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
@@ -8039,9 +8027,6 @@
         "additionalProperties": false
       },
       "to-one-flight-attendant-in-response": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
