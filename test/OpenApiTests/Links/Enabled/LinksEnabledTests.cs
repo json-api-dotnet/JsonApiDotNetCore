@@ -18,6 +18,8 @@ public sealed class LinksEnabledTests : IClassFixture<OpenApiTestContext<OpenApi
         testContext.UseController<AccommodationsController>();
         testContext.UseController<TransportsController>();
         testContext.UseController<ExcursionsController>();
+
+        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
     [Theory]

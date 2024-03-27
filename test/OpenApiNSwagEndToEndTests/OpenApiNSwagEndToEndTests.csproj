@@ -51,5 +51,12 @@
       <CodeGenerator>NSwagCSharp</CodeGenerator>
       <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag /GenerateNullableReferenceTypes:true</Options>
     </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\Links\Enabled\GeneratedSwagger\swagger.g.json">
+      <Namespace>OpenApiNSwagEndToEndTests.Links.GeneratedCode</Namespace>
+      <ClassName>LinksClient</ClassName>
+      <OutputPath>LinksClient.cs</OutputPath>
+      <CodeGenerator>NSwagCSharp</CodeGenerator>
+      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag /GenerateNullableReferenceTypes:true</Options>
+    </OpenApiReference>
   </ItemGroup>
 </Project>
