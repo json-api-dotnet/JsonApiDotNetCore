@@ -16,7 +16,7 @@ internal sealed class ResourceIdentifierResponseDocument<TResource> : SingleData
 
     [Required]
     [JsonPropertyName("links")]
-    public LinksInResourceIdentifierDocument Links { get; set; } = null!;
+    public ResourceIdentifierTopLevelLinks Links { get; set; } = null!;
 
     [JsonPropertyName("meta")]
     public IDictionary<string, object> Meta { get; set; } = null!;

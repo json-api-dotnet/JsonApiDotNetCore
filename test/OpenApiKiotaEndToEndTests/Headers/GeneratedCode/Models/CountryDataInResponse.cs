@@ -23,14 +23,14 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public LinksInResourceData? Links {
-            get { return BackingStore?.Get<LinksInResourceData?>("links"); }
+        public ResourceLinks? Links {
+            get { return BackingStore?.Get<ResourceLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public LinksInResourceData Links {
-            get { return BackingStore?.Get<LinksInResourceData>("links"); }
+        public ResourceLinks Links {
+            get { return BackingStore?.Get<ResourceLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
@@ -76,7 +76,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
         public override IDictionary<string, Action<IParseNode>> GetFieldDeserializers() {
             return new Dictionary<string, Action<IParseNode>>(base.GetFieldDeserializers()) {
                 {"attributes", n => { Attributes = n.GetObjectValue<CountryAttributesInResponse>(CountryAttributesInResponse.CreateFromDiscriminatorValue); } },
-                {"links", n => { Links = n.GetObjectValue<LinksInResourceData>(LinksInResourceData.CreateFromDiscriminatorValue); } },
+                {"links", n => { Links = n.GetObjectValue<ResourceLinks>(ResourceLinks.CreateFromDiscriminatorValue); } },
                 {"meta", n => { Meta = n.GetObjectValue<CountryDataInResponse_meta>(CountryDataInResponse_meta.CreateFromDiscriminatorValue); } },
                 {"relationships", n => { Relationships = n.GetObjectValue<CountryRelationshipsInResponse>(CountryRelationshipsInResponse.CreateFromDiscriminatorValue); } },
             };
@@ -89,7 +89,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             base.Serialize(writer);
             writer.WriteObjectValue<CountryAttributesInResponse>("attributes", Attributes);
-            writer.WriteObjectValue<LinksInResourceData>("links", Links);
+            writer.WriteObjectValue<ResourceLinks>("links", Links);
             writer.WriteObjectValue<CountryDataInResponse_meta>("meta", Meta);
             writer.WriteObjectValue<CountryRelationshipsInResponse>("relationships", Relationships);
         }

@@ -66,13 +66,13 @@ public sealed class GeneratedTypesTests
     [Fact]
     public void Generated_link_types_are_named_as_expected()
     {
-        _ = nameof(LinksInResourceCollectionDocument);
-        _ = nameof(LinksInResourceDocument);
-        _ = nameof(LinksInResourceIdentifierCollectionDocument);
-        _ = nameof(LinksInResourceIdentifierDocument);
-        _ = nameof(LinksInResourceData);
-        _ = nameof(LinksInRelationship);
-        _ = nameof(LinksInErrorDocument);
+        _ = nameof(ResourceTopLevelLinks);
+        _ = nameof(ResourceCollectionTopLevelLinks);
+        _ = nameof(ResourceIdentifierTopLevelLinks);
+        _ = nameof(ResourceIdentifierCollectionTopLevelLinks);
+        _ = nameof(ErrorTopLevelLinks);
+        _ = nameof(ResourceLinks);
+        _ = nameof(RelationshipLinks);
     }
 
     [Fact]

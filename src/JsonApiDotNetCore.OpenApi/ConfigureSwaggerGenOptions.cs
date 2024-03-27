@@ -47,6 +47,7 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
         options.DocumentFilter<ServerDocumentFilter>();
         options.DocumentFilter<EndpointOrderingFilter>();
         options.OperationFilter<JsonApiOperationDocumentationFilter>();
+        options.DocumentFilter<UnusedComponentSchemaCleaner>();
     }
 
     private IEnumerable<Type> GetConstructedTypesForResourceData(Type baseType)

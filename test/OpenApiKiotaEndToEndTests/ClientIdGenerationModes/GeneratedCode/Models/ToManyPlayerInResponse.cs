@@ -26,14 +26,14 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public LinksInRelationship? Links {
-            get { return BackingStore?.Get<LinksInRelationship?>("links"); }
+        public RelationshipLinks? Links {
+            get { return BackingStore?.Get<RelationshipLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public LinksInRelationship Links {
-            get { return BackingStore?.Get<LinksInRelationship>("links"); }
+        public RelationshipLinks Links {
+            get { return BackingStore?.Get<RelationshipLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
@@ -71,7 +71,7 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         public virtual IDictionary<string, Action<IParseNode>> GetFieldDeserializers() {
             return new Dictionary<string, Action<IParseNode>> {
                 {"data", n => { Data = n.GetCollectionOfObjectValues<PlayerIdentifier>(PlayerIdentifier.CreateFromDiscriminatorValue)?.ToList(); } },
-                {"links", n => { Links = n.GetObjectValue<LinksInRelationship>(LinksInRelationship.CreateFromDiscriminatorValue); } },
+                {"links", n => { Links = n.GetObjectValue<RelationshipLinks>(RelationshipLinks.CreateFromDiscriminatorValue); } },
                 {"meta", n => { Meta = n.GetObjectValue<ToManyPlayerInResponse_meta>(ToManyPlayerInResponse_meta.CreateFromDiscriminatorValue); } },
             };
         }
@@ -82,7 +82,7 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         public virtual void Serialize(ISerializationWriter writer) {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteCollectionOfObjectValues<PlayerIdentifier>("data", Data);
-            writer.WriteObjectValue<LinksInRelationship>("links", Links);
+            writer.WriteObjectValue<RelationshipLinks>("links", Links);
             writer.WriteObjectValue<ToManyPlayerInResponse_meta>("meta", Meta);
         }
     }

@@ -23,14 +23,14 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public LinksInResourceData? Links {
-            get { return BackingStore?.Get<LinksInResourceData?>("links"); }
+        public ResourceLinks? Links {
+            get { return BackingStore?.Get<ResourceLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public LinksInResourceData Links {
-            get { return BackingStore?.Get<LinksInResourceData>("links"); }
+        public ResourceLinks Links {
+            get { return BackingStore?.Get<ResourceLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
@@ -76,7 +76,7 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         public override IDictionary<string, Action<IParseNode>> GetFieldDeserializers() {
             return new Dictionary<string, Action<IParseNode>>(base.GetFieldDeserializers()) {
                 {"attributes", n => { Attributes = n.GetObjectValue<NodeAttributesInResponse>(NodeAttributesInResponse.CreateFromDiscriminatorValue); } },
-                {"links", n => { Links = n.GetObjectValue<LinksInResourceData>(LinksInResourceData.CreateFromDiscriminatorValue); } },
+                {"links", n => { Links = n.GetObjectValue<ResourceLinks>(ResourceLinks.CreateFromDiscriminatorValue); } },
                 {"meta", n => { Meta = n.GetObjectValue<NodeDataInResponse_meta>(NodeDataInResponse_meta.CreateFromDiscriminatorValue); } },
                 {"relationships", n => { Relationships = n.GetObjectValue<NodeRelationshipsInResponse>(NodeRelationshipsInResponse.CreateFromDiscriminatorValue); } },
             };
@@ -89,7 +89,7 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             base.Serialize(writer);
             writer.WriteObjectValue<NodeAttributesInResponse>("attributes", Attributes);
-            writer.WriteObjectValue<LinksInResourceData>("links", Links);
+            writer.WriteObjectValue<ResourceLinks>("links", Links);
             writer.WriteObjectValue<NodeDataInResponse_meta>("meta", Meta);
             writer.WriteObjectValue<NodeRelationshipsInResponse>("relationships", Relationships);
         }

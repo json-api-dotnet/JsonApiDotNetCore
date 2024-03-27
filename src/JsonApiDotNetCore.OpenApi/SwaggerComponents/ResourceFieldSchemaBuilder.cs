@@ -33,6 +33,7 @@ internal sealed class ResourceFieldSchemaBuilder
 
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly ResourceIdentifierSchemaGenerator _resourceIdentifierSchemaGenerator;
+    private readonly LinksVisibilitySchemaGenerator _linksVisibilitySchemaGenerator;
     private readonly ResourceTypeInfo _resourceTypeInfo;
     private readonly ResourceFieldValidationMetadataProvider _resourceFieldValidationMetadataProvider;
     private readonly RelationshipTypeFactory _relationshipTypeFactory;
@@ -42,17 +43,19 @@ internal sealed class ResourceFieldSchemaBuilder
     private readonly IDictionary<string, OpenApiSchema> _schemasForResourceFields;
 
     public ResourceFieldSchemaBuilder(SchemaGenerator defaultSchemaGenerator, ResourceIdentifierSchemaGenerator resourceIdentifierSchemaGenerator,
-        ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider, RelationshipTypeFactory relationshipTypeFactory,
-        ResourceTypeInfo resourceTypeInfo)
+        LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider,
+        RelationshipTypeFactory relationshipTypeFactory, ResourceTypeInfo resourceTypeInfo)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);
         ArgumentGuard.NotNull(resourceIdentifierSchemaGenerator);
+        ArgumentGuard.NotNull(linksVisibilitySchemaGenerator);
         ArgumentGuard.NotNull(resourceTypeInfo);
         ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
         ArgumentGuard.NotNull(relationshipTypeFactory);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _resourceIdentifierSchemaGenerator = resourceIdentifierSchemaGenerator;
+        _linksVisibilitySchemaGenerator = linksVisibilitySchemaGenerator;
         _resourceTypeInfo = resourceTypeInfo;
         _resourceFieldValidationMetadataProvider = resourceFieldValidationMetadataProvider;
         _relationshipTypeFactory = relationshipTypeFactory;
@@ -216,6 +219,8 @@ internal sealed class ResourceFieldSchemaBuilder
 
         if (IsRelationshipInResponseType(relationshipSchemaType))
         {
+            _linksVisibilitySchemaGenerator.UpdateSchemaForRelationship(relationshipSchemaType, fullSchema, schemaRepository);
+
             fullSchema.Required.Remove(JsonApiPropertyName.Data);
 
             fullSchema.SetValuesInMetaToNullable();

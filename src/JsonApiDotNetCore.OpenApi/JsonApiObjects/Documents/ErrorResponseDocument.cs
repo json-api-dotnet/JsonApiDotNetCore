@@ -14,7 +14,7 @@ internal sealed class ErrorResponseDocument
 
     [Required]
     [JsonPropertyName("links")]
-    public LinksInErrorDocument Links { get; set; } = null!;
+    public ErrorTopLevelLinks Links { get; set; } = null!;
 
     [Required]
     [JsonPropertyName("errors")]

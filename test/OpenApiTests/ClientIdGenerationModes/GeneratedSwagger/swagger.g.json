@@ -432,7 +432,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInErrorDocument"
+                "$ref": "#/components/schemas/errorTopLevelLinks"
               }
             ]
           },
@@ -466,6 +466,18 @@
           "header": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -540,7 +552,7 @@
               "links": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/linksInResourceData"
+                    "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
               },
@@ -600,7 +612,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceDocument"
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
               }
             ]
           },
@@ -632,69 +644,6 @@
           "games"
         ],
         "type": "string",
-        "additionalProperties": false
-      },
-      "linksInErrorDocument": {
-        "required": [
-          "self"
-        ],
-        "type": "object",
-        "properties": {
-          "self": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "describedby": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "linksInRelationship": {
-        "required": [
-          "related",
-          "self"
-        ],
-        "type": "object",
-        "properties": {
-          "self": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "related": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "linksInResourceData": {
-        "required": [
-          "self"
-        ],
-        "type": "object",
-        "properties": {
-          "self": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "linksInResourceDocument": {
-        "required": [
-          "self"
-        ],
-        "type": "object",
-        "properties": {
-          "self": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "describedby": {
-            "type": "string"
-          }
-        },
         "additionalProperties": false
       },
       "playerAttributesInPostRequest": {
@@ -774,7 +723,7 @@
               "links": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/linksInResourceData"
+                    "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
               },
@@ -863,7 +812,7 @@
               "links": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/linksInResourceData"
+                    "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
               },
@@ -923,7 +872,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceDocument"
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
               }
             ]
           },
@@ -1026,7 +975,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceDocument"
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
               }
             ]
           },
@@ -1100,6 +1049,39 @@
         "type": "string",
         "additionalProperties": false
       },
+      "relationshipLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "related": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "toManyGameInRequest": {
         "required": [
           "data"
@@ -1116,15 +1098,12 @@
         "additionalProperties": false
       },
       "toManyGameInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInRelationship"
+                "$ref": "#/components/schemas/relationshipLinks"
               }
             ]
           },
@@ -1160,15 +1139,12 @@
         "additionalProperties": false
       },
       "toManyPlayerGroupInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInRelationship"
+                "$ref": "#/components/schemas/relationshipLinks"
               }
             ]
           },
@@ -1204,15 +1180,12 @@
         "additionalProperties": false
       },
       "toManyPlayerInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInRelationship"
+                "$ref": "#/components/schemas/relationshipLinks"
               }
             ]
           },

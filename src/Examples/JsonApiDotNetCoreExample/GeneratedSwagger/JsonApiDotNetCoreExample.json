@@ -4839,7 +4839,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInErrorDocument"
+                "$ref": "#/components/schemas/errorTopLevelLinks"
               }
             ]
           },
@@ -4877,143 +4877,10 @@
         },
         "additionalProperties": false
       },
-      "linksInErrorDocument": {
-        "required": [
-          "self"
-        ],
+      "errorTopLevelLinks": {
         "type": "object",
         "properties": {
           "self": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "describedby": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "linksInRelationship": {
-        "required": [
-          "related",
-          "self"
-        ],
-        "type": "object",
-        "properties": {
-          "self": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "related": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "linksInResourceCollectionDocument": {
-        "required": [
-          "self"
-        ],
-        "type": "object",
-        "properties": {
-          "self": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "describedby": {
-            "type": "string"
-          },
-          "first": {
-            "type": "string"
-          },
-          "last": {
-            "type": "string"
-          },
-          "prev": {
-            "type": "string"
-          },
-          "next": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "linksInResourceData": {
-        "required": [
-          "self"
-        ],
-        "type": "object",
-        "properties": {
-          "self": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "linksInResourceDocument": {
-        "required": [
-          "self"
-        ],
-        "type": "object",
-        "properties": {
-          "self": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "describedby": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "linksInResourceIdentifierCollectionDocument": {
-        "required": [
-          "related",
-          "self"
-        ],
-        "type": "object",
-        "properties": {
-          "self": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "related": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "describedby": {
-            "type": "string"
-          },
-          "first": {
-            "type": "string"
-          },
-          "last": {
-            "type": "string"
-          },
-          "prev": {
-            "type": "string"
-          },
-          "next": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "linksInResourceIdentifierDocument": {
-        "required": [
-          "related",
-          "self"
-        ],
-        "type": "object",
-        "properties": {
-          "self": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "related": {
-            "minLength": 1,
             "type": "string"
           },
           "describedby": {
@@ -5032,7 +4899,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
+                "$ref": "#/components/schemas/resourceIdentifierTopLevelLinks"
               }
             ]
           },
@@ -5064,7 +4931,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceDocument"
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
               }
             ]
           },
@@ -5110,15 +4977,12 @@
         "additionalProperties": false
       },
       "nullableToOnePersonInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInRelationship"
+                "$ref": "#/components/schemas/relationshipLinks"
               }
             ]
           },
@@ -5196,7 +5060,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+                "$ref": "#/components/schemas/resourceCollectionTopLevelLinks"
               }
             ]
           },
@@ -5304,7 +5168,7 @@
               "links": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/linksInResourceData"
+                    "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
               },
@@ -5348,7 +5212,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
+                "$ref": "#/components/schemas/resourceIdentifierTopLevelLinks"
               }
             ]
           },
@@ -5411,7 +5275,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceDocument"
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
               }
             ]
           },
@@ -5515,7 +5379,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceDocument"
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
               }
             ]
           },
@@ -5538,6 +5402,105 @@
               "type": "object",
               "nullable": true
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "relationshipLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "related": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceCollectionTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "first": {
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          },
+          "prev": {
+            "type": "string"
+          },
+          "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceIdentifierCollectionTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "related": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "first": {
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          },
+          "prev": {
+            "type": "string"
+          },
+          "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceIdentifierTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "related": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -5585,7 +5548,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+                "$ref": "#/components/schemas/resourceCollectionTopLevelLinks"
               }
             ]
           },
@@ -5693,7 +5656,7 @@
               "links": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/linksInResourceData"
+                    "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
               },
@@ -5737,7 +5700,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceIdentifierCollectionDocument"
+                "$ref": "#/components/schemas/resourceIdentifierCollectionTopLevelLinks"
               }
             ]
           },
@@ -5799,7 +5762,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceDocument"
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
               }
             ]
           },
@@ -5888,15 +5851,12 @@
         "additionalProperties": false
       },
       "toManyTagInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInRelationship"
+                "$ref": "#/components/schemas/relationshipLinks"
               }
             ]
           },
@@ -5932,15 +5892,12 @@
         "additionalProperties": false
       },
       "toManyTodoItemInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInRelationship"
+                "$ref": "#/components/schemas/relationshipLinks"
               }
             ]
           },
@@ -5977,15 +5934,12 @@
         "additionalProperties": false
       },
       "toOnePersonInResponse": {
-        "required": [
-          "links"
-        ],
         "type": "object",
         "properties": {
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInRelationship"
+                "$ref": "#/components/schemas/relationshipLinks"
               }
             ]
           },
@@ -6092,7 +6046,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+                "$ref": "#/components/schemas/resourceCollectionTopLevelLinks"
               }
             ]
           },
@@ -6200,7 +6154,7 @@
               "links": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/linksInResourceData"
+                    "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
               },
@@ -6244,7 +6198,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceIdentifierCollectionDocument"
+                "$ref": "#/components/schemas/resourceIdentifierCollectionTopLevelLinks"
               }
             ]
           },
@@ -6306,7 +6260,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceDocument"
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
               }
             ]
           },

@@ -40,14 +40,14 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public LinksInResourceCollectionDocument? Links {
-            get { return BackingStore?.Get<LinksInResourceCollectionDocument?>("links"); }
+        public ResourceCollectionTopLevelLinks? Links {
+            get { return BackingStore?.Get<ResourceCollectionTopLevelLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public LinksInResourceCollectionDocument Links {
-            get { return BackingStore?.Get<LinksInResourceCollectionDocument>("links"); }
+        public ResourceCollectionTopLevelLinks Links {
+            get { return BackingStore?.Get<ResourceCollectionTopLevelLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
@@ -86,7 +86,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
             return new Dictionary<string, Action<IParseNode>> {
                 {"data", n => { Data = n.GetCollectionOfObjectValues<ReadOnlyChannelDataInResponse>(ReadOnlyChannelDataInResponse.CreateFromDiscriminatorValue)?.ToList(); } },
                 {"included", n => { Included = n.GetCollectionOfObjectValues<DataInResponse>(DataInResponse.CreateFromDiscriminatorValue)?.ToList(); } },
-                {"links", n => { Links = n.GetObjectValue<LinksInResourceCollectionDocument>(LinksInResourceCollectionDocument.CreateFromDiscriminatorValue); } },
+                {"links", n => { Links = n.GetObjectValue<ResourceCollectionTopLevelLinks>(ResourceCollectionTopLevelLinks.CreateFromDiscriminatorValue); } },
                 {"meta", n => { Meta = n.GetObjectValue<ReadOnlyChannelCollectionResponseDocument_meta>(ReadOnlyChannelCollectionResponseDocument_meta.CreateFromDiscriminatorValue); } },
             };
         }
@@ -98,7 +98,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteCollectionOfObjectValues<ReadOnlyChannelDataInResponse>("data", Data);
             writer.WriteCollectionOfObjectValues<DataInResponse>("included", Included);
-            writer.WriteObjectValue<LinksInResourceCollectionDocument>("links", Links);
+            writer.WriteObjectValue<ResourceCollectionTopLevelLinks>("links", Links);
             writer.WriteObjectValue<ReadOnlyChannelCollectionResponseDocument_meta>("meta", Meta);
         }
     }
