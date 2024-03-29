@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-internal sealed class ResourceIdentifierResponseDocument<TResource> : SingleData<ResourceIdentifier<TResource>>
+internal sealed class ResourceIdentifierResponseDocument<TResource>
     where TResource : IIdentifiable
 {
     [JsonPropertyName("jsonapi")]
@@ -17,6 +17,10 @@ internal sealed class ResourceIdentifierResponseDocument<TResource> : SingleData
     [Required]
     [JsonPropertyName("links")]
     public ResourceIdentifierTopLevelLinks Links { get; set; } = null!;
+
+    [Required]
+    [JsonPropertyName("data")]
+    public ResourceIdentifier<TResource> Data { get; set; } = null!;
 
     [JsonPropertyName("meta")]
     public IDictionary<string, object> Meta { get; set; } = null!;

@@ -24,13 +24,6 @@ internal sealed class ResourceFieldSchemaBuilder
         typeof(NullableToOneRelationshipInResponse<>)
     ];
 
-    private static readonly string[] RelationshipPropertyNamesInOrder =
-    [
-        JsonApiPropertyName.Links,
-        JsonApiPropertyName.Data,
-        JsonApiPropertyName.Meta
-    ];
-
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly ResourceIdentifierSchemaGenerator _resourceIdentifierSchemaGenerator;
     private readonly LinksVisibilitySchemaGenerator _linksVisibilitySchemaGenerator;
@@ -224,8 +217,6 @@ internal sealed class ResourceFieldSchemaBuilder
             fullSchema.Required.Remove(JsonApiPropertyName.Data);
 
             fullSchema.SetValuesInMetaToNullable();
-
-            fullSchema.ReorderProperties(RelationshipPropertyNamesInOrder);
         }
 
         return referenceSchema;

@@ -11,7 +11,5 @@ internal static class JsonApiPropertyName
     public const string Id = "id";
     public const string Attributes = "attributes";
     public const string Relationships = "relationships";
-    public const string Errors = "errors";
-    public const string Included = "included";
     public const string Meta = "meta";
 }
