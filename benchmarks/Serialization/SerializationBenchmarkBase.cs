@@ -41,7 +41,7 @@ public abstract class SerializationBenchmarkBase
 
         var linkBuilder = new FakeLinkBuilder();
         var metaBuilder = new NoMetaBuilder();
-        IQueryConstraintProvider[] constraintProviders = Array.Empty<IQueryConstraintProvider>();
+        IQueryConstraintProvider[] constraintProviders = [];
         var resourceDefinitionAccessor = new NeverResourceDefinitionAccessor();
         var sparseFieldSetCache = new SparseFieldSetCache(constraintProviders, resourceDefinitionAccessor);
         var requestQueryStringAccessor = new FakeRequestQueryStringAccessor();
