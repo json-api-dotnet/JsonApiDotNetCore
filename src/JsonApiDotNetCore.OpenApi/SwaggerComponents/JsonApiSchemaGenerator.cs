@@ -1,7 +1,6 @@
 using System.Reflection;
 using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
+using JsonApiDotNetCore.OpenApi.JsonApiObjects;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -11,24 +10,6 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 
 internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
 {
-    // List of all the root types we're being called for, that need to be handled by our custom schema generators.
-    private static readonly Type[] JsonApiDocumentTypes =
-    [
-        typeof(ResourceCollectionResponseDocument<>),
-        typeof(PrimaryResourceResponseDocument<>),
-        typeof(SecondaryResourceResponseDocument<>),
-        typeof(NullableSecondaryResourceResponseDocument<>),
-        typeof(ResourcePostRequestDocument<>),
-        typeof(ResourcePatchRequestDocument<>),
-        typeof(ResourceIdentifierCollectionResponseDocument<>),
-        typeof(ResourceIdentifierResponseDocument<>),
-        typeof(NullableResourceIdentifierResponseDocument<>),
-        typeof(ErrorResponseDocument),
-        typeof(ToManyRelationshipInRequest<>),
-        typeof(ToOneRelationshipInRequest<>),
-        typeof(NullableToOneRelationshipInRequest<>)
-    ];
-
     private static readonly OpenApiSchema IdTypeSchema = new()
     {
         Type = "string"
@@ -66,7 +47,7 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
                 : jsonApiDocumentSchema;
         }
 
-        if (IsJsonApiDocument(modelType))
+        if (JsonApiSchemaFacts.RequiresCustomSchemaGenerator(modelType))
         {
             _ = _documentSchemaGenerator.GenerateSchema(modelType, schemaRepository);
 
@@ -79,11 +60,5 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
     private static bool IsJsonApiParameter(ParameterInfo parameter)
     {
         return parameter.Member.DeclaringType != null && parameter.Member.DeclaringType.IsAssignableTo(typeof(CoreJsonApiController));
-    }
-
-    private static bool IsJsonApiDocument(Type type)
-    {
-        Type documentType = type.IsConstructedGenericType ? type.GetGenericTypeDefinition() : type;
-        return JsonApiDocumentTypes.Contains(documentType);
     }
 }

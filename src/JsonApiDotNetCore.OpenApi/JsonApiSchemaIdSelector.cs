@@ -64,10 +64,10 @@ internal sealed class JsonApiSchemaIdSelector
             return resourceType.PublicName.Singularize();
         }
 
-        if (type.IsConstructedGenericType)
-        {
-            Type openType = type.GetGenericTypeDefinition();
+        Type openType = type.ConstructedToOpenType();
 
+        if (openType != type)
+        {
             if (TypeToSchemaTemplateMap.TryGetValue(openType, out string? schemaTemplate))
             {
                 Type resourceClrType = type.GetGenericArguments().First();

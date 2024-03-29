@@ -1,7 +1,6 @@
 using System.Reflection;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
+using JsonApiDotNetCore.OpenApi.JsonApiObjects;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -11,13 +10,6 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 
 internal sealed class DocumentSchemaGenerator
 {
-    private static readonly Type[] JsonApiDocumentWithNullableDataOpenTypes =
-    [
-        typeof(NullableSecondaryResourceResponseDocument<>),
-        typeof(NullableResourceIdentifierResponseDocument<>),
-        typeof(NullableToOneRelationshipInRequest<>)
-    ];
-
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly AbstractResourceDataSchemaGenerator _abstractResourceDataSchemaGenerator;
     private readonly ResourceDataSchemaGenerator _resourceDataSchemaGenerator;
@@ -86,7 +78,7 @@ internal sealed class DocumentSchemaGenerator
         OpenApiSchema referenceSchemaForDocument = _defaultSchemaGenerator.GenerateSchema(documentType, schemaRepository);
         OpenApiSchema fullSchemaForDocument = schemaRepository.Schemas[referenceSchemaForDocument.Reference.Id];
 
-        if (IsDataPropertyNullableInDocument(documentType))
+        if (JsonApiSchemaFacts.HasNullableDataProperty(documentType))
         {
             SetDataSchemaToNullable(fullSchemaForDocument);
         }
@@ -103,7 +95,7 @@ internal sealed class DocumentSchemaGenerator
             throw new UnreachableCodeException();
         }
 
-        return dataProperty.PropertyType.GetGenericTypeDefinition().IsAssignableTo(typeof(ICollection<>))
+        return dataProperty.PropertyType.ConstructedToOpenType().IsAssignableTo(typeof(ICollection<>))
             ? dataProperty.PropertyType.GenericTypeArguments[0]
             : dataProperty.PropertyType;
     }
@@ -127,13 +119,6 @@ internal sealed class DocumentSchemaGenerator
                 _abstractResourceDataSchemaGenerator.MapDiscriminator(nextResourceDataConstructedType, nextReferenceSchemaForResourceData, schemaRepository);
             }
         }
-    }
-
-    private static bool IsDataPropertyNullableInDocument(Type documentType)
-    {
-        Type documentOpenType = documentType.GetGenericTypeDefinition();
-
-        return JsonApiDocumentWithNullableDataOpenTypes.Contains(documentOpenType);
     }
 
     private static void SetDataSchemaToNullable(OpenApiSchema fullSchemaForDocument)

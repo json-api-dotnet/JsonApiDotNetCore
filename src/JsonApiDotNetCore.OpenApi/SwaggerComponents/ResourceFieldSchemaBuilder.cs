@@ -1,6 +1,6 @@
 using System.Reflection;
 using JsonApiDotNetCore.OpenApi.JsonApiMetadata;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
+using JsonApiDotNetCore.OpenApi.JsonApiObjects;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.OpenApi.Models;
@@ -11,19 +11,6 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 
 internal sealed class ResourceFieldSchemaBuilder
 {
-    private static readonly Type[] RelationshipSchemaInResponseOpenTypes =
-    [
-        typeof(ToOneRelationshipInResponse<>),
-        typeof(ToManyRelationshipInResponse<>),
-        typeof(NullableToOneRelationshipInResponse<>)
-    ];
-
-    private static readonly Type[] NullableRelationshipSchemaOpenTypes =
-    [
-        typeof(NullableToOneRelationshipInRequest<>),
-        typeof(NullableToOneRelationshipInResponse<>)
-    ];
-
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly ResourceIdentifierSchemaGenerator _resourceIdentifierSchemaGenerator;
     private readonly LinksVisibilitySchemaGenerator _linksVisibilitySchemaGenerator;
@@ -141,8 +128,8 @@ internal sealed class ResourceFieldSchemaBuilder
 
     private bool IsFieldRequired(ResourceFieldAttribute field)
     {
-        bool isSchemaForPostResourceRequest = _resourceTypeInfo.ResourceDataOpenType == typeof(ResourceDataInPostRequest<>);
-        return isSchemaForPostResourceRequest && _resourceFieldValidationMetadataProvider.IsRequired(field);
+        bool isPostRequestSchemaType = _resourceTypeInfo.ResourceDataOpenType == typeof(ResourceDataInPostRequest<>);
+        return isPostRequestSchemaType && _resourceFieldValidationMetadataProvider.IsRequired(field);
     }
 
     public void SetMembersOfRelationships(OpenApiSchema fullSchemaForRelationships, SchemaRepository schemaRepository)
@@ -189,9 +176,8 @@ internal sealed class ResourceFieldSchemaBuilder
 
     private Type GetRelationshipSchemaType(RelationshipAttribute relationship, Type resourceDataConstructedType)
     {
-        return resourceDataConstructedType.GetGenericTypeDefinition().IsAssignableTo(typeof(ResourceDataInResponse<>))
-            ? _relationshipTypeFactory.GetForResponse(relationship)
-            : _relationshipTypeFactory.GetForRequest(relationship);
+        bool isResponseSchemaType = resourceDataConstructedType.ConstructedToOpenType().IsAssignableTo(typeof(ResourceDataInResponse<>));
+        return isResponseSchemaType ? _relationshipTypeFactory.GetForResponse(relationship) : _relationshipTypeFactory.GetForRequest(relationship);
     }
 
     private OpenApiSchema? GetReferenceSchemaForRelationship(Type relationshipSchemaType, SchemaRepository schemaRepository)
@@ -205,12 +191,12 @@ internal sealed class ResourceFieldSchemaBuilder
 
         OpenApiSchema fullSchema = schemaRepository.Schemas[referenceSchema.Reference.Id];
 
-        if (IsDataPropertyNullableInRelationshipSchemaType(relationshipSchemaType))
+        if (JsonApiSchemaFacts.HasNullableDataProperty(relationshipSchemaType))
         {
             fullSchema.Properties[JsonApiPropertyName.Data].Nullable = true;
         }
 
-        if (IsRelationshipInResponseType(relationshipSchemaType))
+        if (JsonApiSchemaFacts.IsRelationshipInResponseType(relationshipSchemaType))
         {
             _linksVisibilitySchemaGenerator.UpdateSchemaForRelationship(relationshipSchemaType, fullSchema, schemaRepository);
 
@@ -220,18 +206,5 @@ internal sealed class ResourceFieldSchemaBuilder
         }
 
         return referenceSchema;
-    }
-
-    private static bool IsRelationshipInResponseType(Type relationshipSchemaType)
-    {
-        Type relationshipSchemaOpenType = relationshipSchemaType.GetGenericTypeDefinition();
-
-        return RelationshipSchemaInResponseOpenTypes.Contains(relationshipSchemaOpenType);
-    }
-
-    private static bool IsDataPropertyNullableInRelationshipSchemaType(Type relationshipSchemaType)
-    {
-        Type relationshipSchemaOpenType = relationshipSchemaType.GetGenericTypeDefinition();
-        return NullableRelationshipSchemaOpenTypes.Contains(relationshipSchemaOpenType);
     }
 }
