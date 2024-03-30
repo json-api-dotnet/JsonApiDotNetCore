@@ -9,16 +9,6 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 
 internal sealed class ResourceDataSchemaGenerator
 {
-    private static readonly string[] ResourceDataPropertyNamesInOrder =
-    [
-        JsonApiPropertyName.Type,
-        JsonApiPropertyName.Id,
-        JsonApiPropertyName.Attributes,
-        JsonApiPropertyName.Relationships,
-        JsonApiPropertyName.Links,
-        JsonApiPropertyName.Meta
-    ];
-
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly ResourceTypeSchemaGenerator _resourceTypeSchemaGenerator;
     private readonly ResourceIdentifierSchemaGenerator _resourceIdentifierSchemaGenerator;
@@ -91,8 +81,6 @@ internal sealed class ResourceDataSchemaGenerator
         _linksVisibilitySchemaGenerator.UpdateSchemaForResource(resourceTypeInfo, effectiveFullSchemaForResourceData, schemaRepository);
 
         effectiveFullSchemaForResourceData.SetValuesInMetaToNullable();
-
-        effectiveFullSchemaForResourceData.ReorderProperties(ResourceDataPropertyNamesInOrder);
 
         return referenceSchemaForResourceData;
     }

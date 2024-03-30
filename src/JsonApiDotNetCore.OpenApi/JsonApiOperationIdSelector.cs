@@ -86,9 +86,7 @@ internal sealed class JsonApiOperationIdSelector
         }
 
         ControllerParameterDescriptor? requestBodyDescriptor = endpoint.ActionDescriptor.GetBodyParameterDescriptor();
-
-        Type documentType = requestBodyDescriptor?.ParameterType.GetGenericTypeDefinition() ??
-            GetGenericTypeDefinition(producesResponseTypeAttribute.Type) ?? producesResponseTypeAttribute.Type;
+        Type documentType = (requestBodyDescriptor?.ParameterType ?? producesResponseTypeAttribute.Type).ConstructedToOpenType();
 
         if (documentType == typeof(ResourceCollectionResponseDocument<>) && endpoint.ParameterDescriptions.Count > 0)
         {
@@ -96,11 +94,6 @@ internal sealed class JsonApiOperationIdSelector
         }
 
         return documentType;
-    }
-
-    private static Type? GetGenericTypeDefinition(Type type)
-    {
-        return type.IsConstructedGenericType ? type.GetGenericTypeDefinition() : null;
     }
 
     private string ApplyTemplate(string operationIdTemplate, ResourceType resourceType, ApiDescription endpoint)

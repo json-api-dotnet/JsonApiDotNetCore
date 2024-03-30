@@ -28,7 +28,7 @@ internal sealed class LinksVisibilitySchemaGenerator
     private const LinkTypes RelationshipLinkTypes = LinkTypes.Self | LinkTypes.Related;
     private const LinkTypes ResourceLinkTypes = LinkTypes.Self;
 
-    private static readonly Dictionary<Type, LinkTypes> LinksInJsonApiComponentTypes = new()
+    private static readonly Dictionary<Type, LinkTypes> LinksInJsonApiSchemaTypes = new()
     {
         [typeof(NullableSecondaryResourceResponseDocument<>)] = ResourceTopLinkTypes,
         [typeof(PrimaryResourceResponseDocument<>)] = ResourceTopLinkTypes,
@@ -73,9 +73,9 @@ internal sealed class LinksVisibilitySchemaGenerator
         ArgumentGuard.NotNull(modelType);
         ArgumentGuard.NotNull(fullSchemaForLinksContainer);
 
-        Type lookupType = modelType.IsConstructedGenericType ? modelType.GetGenericTypeDefinition() : modelType;
+        Type lookupType = modelType.ConstructedToOpenType();
 
-        if (LinksInJsonApiComponentTypes.TryGetValue(lookupType, out LinkTypes possibleLinkTypes))
+        if (LinksInJsonApiSchemaTypes.TryGetValue(lookupType, out LinkTypes possibleLinkTypes))
         {
             UpdateLinksProperty(fullSchemaForLinksContainer, _lazyLinksVisibility.Value.TopLevelLinks, possibleLinkTypes, schemaRepository);
         }
@@ -86,7 +86,7 @@ internal sealed class LinksVisibilitySchemaGenerator
         ArgumentGuard.NotNull(resourceTypeInfo);
         ArgumentGuard.NotNull(fullSchemaForResourceData);
 
-        if (LinksInJsonApiComponentTypes.TryGetValue(resourceTypeInfo.ResourceDataOpenType, out LinkTypes possibleLinkTypes))
+        if (LinksInJsonApiSchemaTypes.TryGetValue(resourceTypeInfo.ResourceDataOpenType, out LinkTypes possibleLinkTypes))
         {
             UpdateLinksProperty(fullSchemaForResourceData, _lazyLinksVisibility.Value.ResourceLinks, possibleLinkTypes, schemaRepository);
         }
@@ -97,9 +97,9 @@ internal sealed class LinksVisibilitySchemaGenerator
         ArgumentGuard.NotNull(modelType);
         ArgumentGuard.NotNull(fullSchemaForRelationship);
 
-        Type lookupType = modelType.GetGenericTypeDefinition();
+        Type lookupType = modelType.ConstructedToOpenType();
 
-        if (LinksInJsonApiComponentTypes.TryGetValue(lookupType, out LinkTypes possibleLinkTypes))
+        if (LinksInJsonApiSchemaTypes.TryGetValue(lookupType, out LinkTypes possibleLinkTypes))
         {
             UpdateLinksProperty(fullSchemaForRelationship, _lazyLinksVisibility.Value.RelationshipLinks, possibleLinkTypes, schemaRepository);
         }

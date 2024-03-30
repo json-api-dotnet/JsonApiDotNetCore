@@ -1,6 +1,5 @@
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
+using JsonApiDotNetCore.OpenApi.JsonApiObjects;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
@@ -9,15 +8,6 @@ namespace JsonApiDotNetCore.OpenApi;
 
 internal sealed class JsonApiRequestFormatMetadataProvider : IInputFormatter, IApiRequestFormatMetadataProvider
 {
-    private static readonly Type[] JsonApiRequestOpenTypes =
-    [
-        typeof(ToManyRelationshipInRequest<>),
-        typeof(ToOneRelationshipInRequest<>),
-        typeof(NullableToOneRelationshipInRequest<>),
-        typeof(ResourcePostRequestDocument<>),
-        typeof(ResourcePatchRequestDocument<>)
-    ];
-
     /// <inheritdoc />
     public bool CanRead(InputFormatterContext context)
     {
@@ -36,8 +26,7 @@ internal sealed class JsonApiRequestFormatMetadataProvider : IInputFormatter, IA
         ArgumentGuard.NotNullNorEmpty(contentType);
         ArgumentGuard.NotNull(objectType);
 
-        if (contentType == HeaderConstants.MediaType && objectType.IsConstructedGenericType &&
-            JsonApiRequestOpenTypes.Contains(objectType.GetGenericTypeDefinition()))
+        if (contentType == HeaderConstants.MediaType && JsonApiSchemaFacts.IsRequestSchemaType(objectType))
         {
             return new MediaTypeCollection
             {

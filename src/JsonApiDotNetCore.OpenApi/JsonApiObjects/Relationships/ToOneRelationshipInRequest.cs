@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.Resources;
@@ -5,5 +7,10 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-internal sealed class ToOneRelationshipInRequest<TResource> : SingleData<ResourceIdentifier<TResource>>
-    where TResource : IIdentifiable;
+internal sealed class ToOneRelationshipInRequest<TResource>
+    where TResource : IIdentifiable
+{
+    [Required]
+    [JsonPropertyName("data")]
+    public ResourceIdentifier<TResource> Data { get; set; } = null!;
+}
