@@ -49,7 +49,7 @@ public sealed class FieldChainPattern
     /// </summary>
     /// <remarks>
     /// Patterns are similar to regular expressions, but a lot simpler. They consist of a sequence of terms. A term can be a single character or a character
-    /// choice, optionally followed by a quantifier.
+    /// choice. A term is optionally followed by a quantifier.
     /// <p>
     /// The following characters can be used:
     /// <list type="table">
@@ -58,18 +58,26 @@ public sealed class FieldChainPattern
     /// <description>
     /// Matches a to-many relationship.
     /// </description>
+    /// </item>
+    /// <item>
     /// <term>O</term>
     /// <description>
     /// Matches a to-one relationship.
     /// </description>
+    /// </item>
+    /// <item>
     /// <term>R</term>
     /// <description>
     /// Matches a relationship.
     /// </description>
+    /// </item>
+    /// <item>
     /// <term>A</term>
     /// <description>
     /// Matches an attribute.
     /// </description>
+    /// </item>
+    /// <item>
     /// <term>F</term>
     /// <description>
     /// Matches a field.
@@ -86,15 +94,19 @@ public sealed class FieldChainPattern
     /// <item>
     /// <term>?</term>
     /// <description>
-    /// Matches its term zero or one times.
+    /// Matches its preceding term zero or one times.
     /// </description>
+    /// </item>
+    /// <item>
     /// <term>*</term>
     /// <description>
-    /// Matches its term zero or more times.
+    /// Matches its preceding term zero or more times.
     /// </description>
+    /// </item>
+    /// <item>
     /// <term>+</term>
     /// <description>
-    /// Matches its term one or more times.
+    /// Matches its preceding term one or more times.
     /// </description>
     /// </item>
     /// </list>
