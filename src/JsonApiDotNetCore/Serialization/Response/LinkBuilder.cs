@@ -214,7 +214,7 @@ public class LinkBuilder : ILinkBuilder
         };
 
         UriComponents components = _options.UseRelativeLinks ? UriComponents.PathAndQuery : UriComponents.AbsoluteUri;
-        return builder.Uri.GetComponents(components, UriFormat.SafeUnescaped);
+        return builder.Uri.GetComponents(components, UriFormat.UriEscaped);
     }
 
     private string GetQueryStringInPaginationLink(int pageOffset, string? pageSizeValue)
