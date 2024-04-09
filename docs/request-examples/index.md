@@ -1,3 +1,7 @@
+---
+_disableToc: true
+---
+
 # Example requests
 
 These requests have been generated against the "GettingStarted" application and are updated on every deployment.
