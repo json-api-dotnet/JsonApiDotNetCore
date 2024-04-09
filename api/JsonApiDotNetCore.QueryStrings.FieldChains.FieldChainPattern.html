@@ -2,12 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Class FieldChainPattern
- </title>
+      <title>Class FieldChainPattern </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Class FieldChainPattern
- ">
+      <meta name="title" content="Class FieldChainPattern ">
       
+      <meta name="description" content="A pattern that can be matched against a dot-separated resource field chain.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -30,15 +29,15 @@
       <meta name="loc:changeTheme" content="Change theme">
       <meta name="loc:copy" content="Copy">
       <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
   </head>
-
-  <script type="module" src="./../public/docfx.min.js"></script>
-
-  <script>
-    const theme = localStorage.getItem('theme') || 'auto'
-    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
-  </script>
-
 
   <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
     <header class="bg-body border-bottom">
@@ -86,8 +85,7 @@
 
 
   <h1 id="JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPattern" data-uid="JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern" class="text-break">
-    Class FieldChainPattern
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryStrings/FieldChains/FieldChainPattern.cs/#L11"><i class="bi bi-code-slash"></i></a>
+Class FieldChainPattern  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryStrings/FieldChains/FieldChainPattern.cs/#L11"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -117,7 +115,7 @@ public sealed class FieldChainPattern</code></pre>
 
 
 
-  <dl class="typelist derived">
+  <dl class="typelist inheritedMembers">
     <dt>Inherited Members</dt>
     <dd>
     <div>
@@ -150,7 +148,7 @@ public sealed class FieldChainPattern</code></pre>
 
   <h3 id="JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPattern_GetDescription" data-uid="JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern.GetDescription">
   GetDescription()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryStrings/FieldChains/FieldChainPattern.cs/#L163"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryStrings/FieldChains/FieldChainPattern.cs/#L175"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets a human-readable description of this pattern.</p>
@@ -182,7 +180,7 @@ public sealed class FieldChainPattern</code></pre>
 
   <h3 id="JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPattern_Match_System_String_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPatternMatchOptions_Microsoft_Extensions_Logging_ILoggerFactory_" data-uid="JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern.Match(System.String,JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPatternMatchOptions,Microsoft.Extensions.Logging.ILoggerFactory)">
   Match(string, ResourceType, FieldChainPatternMatchOptions, ILoggerFactory?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryStrings/FieldChains/FieldChainPattern.cs/#L132"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryStrings/FieldChains/FieldChainPattern.cs/#L144"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Matches the specified resource field chain against this pattern.</p>
@@ -230,7 +228,7 @@ public sealed class FieldChainPattern</code></pre>
 
   <h3 id="JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPattern_Parse_System_String_" data-uid="JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern.Parse(System.String)">
   Parse(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryStrings/FieldChains/FieldChainPattern.cs/#L108"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryStrings/FieldChains/FieldChainPattern.cs/#L120"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a pattern from the specified text that can be matched against.</p>
@@ -261,34 +259,31 @@ public sealed class FieldChainPattern</code></pre>
 
   <h4 class="section" id="JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPattern_Parse_System_String__remarks">Remarks</h4>
   <div class="markdown level1 remarks"><p>Patterns are similar to regular expressions, but a lot simpler. They consist of a sequence of terms. A term can be a single character or a character
-choice, optionally followed by a quantifier.</p>
+choice. A term is optionally followed by a quantifier.</p>
 <p>
 The following characters can be used:
-<table><tbody><tr><td class="term">M</td><td class="term">O</td><td class="term">R</td><td class="term">A</td><td class="term">F</td><td class="description">
+<table><tbody><tr><td class="term">M</td><td class="description">
 Matches a to-many relationship.
-</td><td class="description">
+</td></tr><tr><td class="term">O</td><td class="description">
 Matches a to-one relationship.
-</td><td class="description">
+</td></tr><tr><td class="term">R</td><td class="description">
 Matches a relationship.
-</td><td class="description">
+</td></tr><tr><td class="term">A</td><td class="description">
 Matches an attribute.
-</td><td class="description">
+</td></tr><tr><td class="term">F</td><td class="description">
 Matches a field.
-</td></tr></tbody></table>
-
-<p>
+</td></tr></tbody></table><p>
 A character choice contains a set of characters, surrounded by brackets. One of the choices must match. For example, "[MO]" matches a relationship,
 but not at attribute.
 </p>
 A quantifier is used to indicate how many times its term directly to the left can occur.
-<table><tbody><tr><td class="term">?</td><td class="term">*</td><td class="term">+</td><td class="description">
-Matches its term zero or one times.
-</td><td class="description">
-Matches its term zero or more times.
-</td><td class="description">
-Matches its term one or more times.
-</td></tr></tbody></table>
-<example>
+<table><tbody><tr><td class="term">?</td><td class="description">
+Matches its preceding term zero or one times.
+</td></tr><tr><td class="term">*</td><td class="description">
+Matches its preceding term zero or more times.
+</td></tr><tr><td class="term">+</td><td class="description">
+Matches its preceding term one or more times.
+</td></tr></tbody></table><example>
 For example, the pattern "M?O*A" matches "children.parent.name", "parent.parent.name" and "name".
 </example>
 </div>
@@ -306,7 +301,7 @@ For example, the pattern "M?O*A" matches "children.parent.name", "parent.parent.
 
   <h3 id="JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPattern_ToString" data-uid="JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern.ToString">
   ToString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryStrings/FieldChains/FieldChainPattern.cs/#L154"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryStrings/FieldChains/FieldChainPattern.cs/#L166"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the text representation of this pattern.</p>

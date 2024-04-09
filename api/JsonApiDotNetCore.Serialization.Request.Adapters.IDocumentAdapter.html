@@ -2,12 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Interface IDocumentAdapter
- </title>
+      <title>Interface IDocumentAdapter </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Interface IDocumentAdapter
- ">
+      <meta name="title" content="Interface IDocumentAdapter ">
       
+      <meta name="description" content="The entry point for validating and converting the deserialized  from the request body into a model. The produced models are used in ASP.NET Model Binding.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -30,15 +29,15 @@
       <meta name="loc:changeTheme" content="Change theme">
       <meta name="loc:copy" content="Copy">
       <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
   </head>
-
-  <script type="module" src="./../public/docfx.min.js"></script>
-
-  <script>
-    const theme = localStorage.getItem('theme') || 'auto'
-    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
-  </script>
-
 
   <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
     <header class="bg-body border-bottom">
@@ -86,8 +85,7 @@
 
 
   <h1 id="JsonApiDotNetCore_Serialization_Request_Adapters_IDocumentAdapter" data-uid="JsonApiDotNetCore.Serialization.Request.Adapters.IDocumentAdapter" class="text-break">
-    Interface IDocumentAdapter
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Request/Adapters/IDocumentAdapter.cs/#L9"><i class="bi bi-code-slash"></i></a>
+Interface IDocumentAdapter  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Request/Adapters/IDocumentAdapter.cs/#L9"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -128,14 +126,10 @@ used in ASP.NET Model Binding.</p>
   </h3>
 
   <div class="markdown level1 summary"><p>Validates and converts the specified <code class="paramref">document</code>. Possible return values:</p>
-<ul><li>
-<pre><code class="lang-csharp">IList&lt;OperationContainer&gt;</code></pre> (operations)
-</li><li>
-<pre><code class="lang-csharp">ISet&lt;IIdentifiable&gt;</code></pre> (to-many relationship, unknown relationship)
-</li><li>
-<pre><code class="lang-csharp">IIdentifiable</code></pre> (resource, to-one relationship)
-</li><li>
-<pre><code class="lang-csharp">null</code></pre> (to-one relationship)
+<ul><li><code>IList&lt;OperationContainer&gt;</code> (operations)
+</li><li><code>ISet&lt;IIdentifiable&gt;</code> (to-many relationship, unknown relationship)
+</li><li><code>IIdentifiable</code> (resource, to-one relationship)
+</li><li><code>null</code> (to-one relationship)
 </li></ul>
 </div>
   <div class="markdown level1 conceptual"></div>

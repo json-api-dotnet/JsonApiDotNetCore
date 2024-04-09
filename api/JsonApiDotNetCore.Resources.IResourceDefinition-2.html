@@ -2,12 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Interface IResourceDefinition&lt;TResource, TId&gt;
- </title>
+      <title>Interface IResourceDefinition&lt;TResource, TId&gt; </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Interface IResourceDefinition&lt;TResource, TId&gt;
- ">
+      <meta name="title" content="Interface IResourceDefinition&lt;TResource, TId&gt; ">
       
+      <meta name="description" content="Provides an extensibility point to add business logic that is resource-oriented instead of endpoint-oriented.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -30,15 +29,15 @@
       <meta name="loc:changeTheme" content="Change theme">
       <meta name="loc:copy" content="Copy">
       <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
   </head>
-
-  <script type="module" src="./../public/docfx.min.js"></script>
-
-  <script>
-    const theme = localStorage.getItem('theme') || 'auto'
-    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
-  </script>
-
 
   <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
     <header class="bg-body border-bottom">
@@ -86,8 +85,7 @@
 
 
   <h1 id="JsonApiDotNetCore_Resources_IResourceDefinition_2" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2" class="text-break">
-    Interface IResourceDefinition&lt;TResource, TId&gt;
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L18"><i class="bi bi-code-slash"></i></a>
+Interface IResourceDefinition&lt;TResource, TId&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L18"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -190,8 +188,7 @@ Implementing this method enables to perform validations and make changes to <cod
     <dd><p>Identifier of the left resource. The indication &quot;left&quot; specifies that <code class="paramref">hasManyRelationship</code> is declared on
 <code class="typeparamref">TResource</code>. In contrast to other relationship methods, this value is not retrieved from the underlying data store, except in
 the following two cases:</p>
-<ul><li>
-<code class="paramref">hasManyRelationship</code> is a many-to-many relationship. This is required to prevent failure when already assigned.
+<ul><li><code class="paramref">hasManyRelationship</code> is a many-to-many relationship. This is required to prevent failure when already assigned.
 </li><li>
 The left resource type is part of a type hierarchy. This ensures your business logic runs against the actually stored type.
 </li></ul>
@@ -472,8 +469,7 @@ properties whose value depends on a field that is not in the sparse fieldset.</p
 <p>
 Implementing this method enables to perform validations and make changes to <code class="paramref">resource</code>, before the fields from the request are
 copied into it.
-</p>
-<p>
+</p><p>
 For POST resource requests, this method is typically used to assign property default values or to set required relationships by side-loading the
 related resources and linking them.
 </p>
@@ -823,11 +819,9 @@ Implementing this method enables to run additional logic, for example enqueue a 
 <p>
 Implementing this method enables to perform validations and make changes to <code class="paramref">resource</code>, after the fields from the request have been
 copied into it.
-</p>
-<p>
+</p><p>
 An example usage is to set the last-modification timestamp, overwriting the value from the incoming request.
-</p>
-<p>
+</p><p>
 Another use case is to add a notification message to an outbox table, which gets committed along with the resource write in a single transaction (see
 https://microservices.io/patterns/data/transactional-outbox.html).
 </p>

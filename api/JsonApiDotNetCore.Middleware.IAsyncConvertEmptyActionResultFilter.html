@@ -2,12 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Interface IAsyncConvertEmptyActionResultFilter
- </title>
+      <title>Interface IAsyncConvertEmptyActionResultFilter </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Interface IAsyncConvertEmptyActionResultFilter
- ">
+      <meta name="title" content="Interface IAsyncConvertEmptyActionResultFilter ">
       
+      <meta name="description" content="Converts action result without parameters into action result with null parameter.  return NotFound() -&amp;gt; return NotFound(null) This ensures our formatter is invoked, where we&#39;ll build a JSON:API compliant response. For details, see: https://github.com/dotnet/aspnetcore/issues/16969">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -30,15 +29,15 @@
       <meta name="loc:changeTheme" content="Change theme">
       <meta name="loc:copy" content="Copy">
       <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
   </head>
-
-  <script type="module" src="./../public/docfx.min.js"></script>
-
-  <script>
-    const theme = localStorage.getItem('theme') || 'auto'
-    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
-  </script>
-
 
   <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
     <header class="bg-body border-bottom">
@@ -86,8 +85,7 @@
 
 
   <h1 id="JsonApiDotNetCore_Middleware_IAsyncConvertEmptyActionResultFilter" data-uid="JsonApiDotNetCore.Middleware.IAsyncConvertEmptyActionResultFilter" class="text-break">
-    Interface IAsyncConvertEmptyActionResultFilter
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/IAsyncConvertEmptyActionResultFilter.cs/#L16"><i class="bi bi-code-slash"></i></a>
+Interface IAsyncConvertEmptyActionResultFilter  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/IAsyncConvertEmptyActionResultFilter.cs/#L16"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -96,11 +94,10 @@
   </div>
 
   <div class="markdown summary"><p>Converts action result without parameters into action result with null parameter.
-<example></example></p>
-<pre><code class="lang-csharp">return NotFound() -&gt; return NotFound(null)</code></pre>
-
+<example>
+<pre><code class="lang-csharp">return NotFound() -&gt; return NotFound(null)</code></pre></example>
 This ensures our formatter is invoked, where we'll build a JSON:API compliant response. For details, see:
-https://github.com/dotnet/aspnetcore/issues/16969
+<a href="https://github.com/dotnet/aspnetcore/issues/16969">https://github.com/dotnet/aspnetcore/issues/16969</a></p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -115,7 +112,7 @@ public interface IAsyncConvertEmptyActionResultFilter : IAsyncAlwaysRunResultFil
 
 
 
-  <dl class="typelist derived">
+  <dl class="typelist inheritedMembers">
     <dt>Inherited Members</dt>
     <dd>
     <div>

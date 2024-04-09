@@ -2,12 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Class JsonApiResourceDefinition&lt;TResource, TId&gt;
- </title>
+      <title>Class JsonApiResourceDefinition&lt;TResource, TId&gt; </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Class JsonApiResourceDefinition&lt;TResource, TId&gt;
- ">
+      <meta name="title" content="Class JsonApiResourceDefinition&lt;TResource, TId&gt; ">
       
+      <meta name="description" content="Provides an extensibility point to add business logic that is resource-oriented instead of endpoint-oriented.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -30,15 +29,15 @@
       <meta name="loc:changeTheme" content="Change theme">
       <meta name="loc:copy" content="Copy">
       <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
   </head>
-
-  <script type="module" src="./../public/docfx.min.js"></script>
-
-  <script>
-    const theme = localStorage.getItem('theme') || 'auto'
-    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
-  </script>
-
 
   <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
     <header class="bg-body border-bottom">
@@ -86,8 +85,7 @@
 
 
   <h1 id="JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2" data-uid="JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2" class="text-break">
-    Class JsonApiResourceDefinition&lt;TResource, TId&gt;
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/JsonApiResourceDefinition.cs/#L16"><i class="bi bi-code-slash"></i></a>
+Class JsonApiResourceDefinition&lt;TResource, TId&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/JsonApiResourceDefinition.cs/#L16"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -132,7 +130,7 @@ public class JsonApiResourceDefinition&lt;TResource, TId&gt; : IResourceDefiniti
   </dl>
 
 
-  <dl class="typelist derived">
+  <dl class="typelist inheritedMembers">
     <dt>Inherited Members</dt>
     <dd>
     <div>
@@ -373,7 +371,7 @@ Implementing this method enables to perform validations and make changes to <cod
   <dl class="parameters">
     <dt><code>leftResource</code> <span class="xref">TResource</span></dt>
     <dd><p>Identifier of the left resource. The indication &quot;left&quot; specifies that <code class="paramref">hasManyRelationship</code> is declared on
-TResource. In contrast to other relationship methods, this value is not retrieved from the underlying data store, except in
+<code class="typeparamref">TResource</code>. In contrast to other relationship methods, this value is not retrieved from the underlying data store, except in
 the following two cases:</p>
 <ul><li><code class="paramref">hasManyRelationship</code> is a many-to-many relationship. This is required to prevent failure when already assigned.
 </li><li>
@@ -728,24 +726,22 @@ primary resource requests, such as /articles, but not on /blogs/1/articles or /b
 
 
   <h4 class="section" id="JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_OnRegisterQueryableHandlersForQueryStringParameters_examples">Examples</h4>
-  <pre>
-  <code class="lang-csharp">protected override QueryStringParameterHandlers OnRegisterQueryableHandlersForQueryStringParameters()
-                       {
-                           return new QueryStringParameterHandlers
-                           {
-                               ["isActive"] = (source, parameterValue) =&gt; source
-                                   .Include(model =&gt; model.Children)
-                                   .Where(model =&gt; model.LastUpdateTime &gt; DateTime.Now.AddMonths(-1)),
-                               ["isHighRisk"] = FilterByHighRisk
-                           };
-                       }
+  <pre><code class="lang-csharp">protected override QueryStringParameterHandlers OnRegisterQueryableHandlersForQueryStringParameters()
+{
+    return new QueryStringParameterHandlers
+    {
+        ["isActive"] = (source, parameterValue) =&gt; source
+            .Include(model =&gt; model.Children)
+            .Where(model =&gt; model.LastUpdateTime &gt; DateTime.Now.AddMonths(-1)),
+        ["isHighRisk"] = FilterByHighRisk
+    };
+}
 
-                       private static IQueryable&lt;Model&gt; FilterByHighRisk(IQueryable&lt;Model&gt; source, StringValues parameterValue)
-                       {
-                           bool isFilterOnHighRisk = bool.Parse(parameterValue);
-                           return isFilterOnHighRisk ? source.Where(model =&gt; model.RiskLevel &gt;= 5) : source.Where(model =&gt; model.RiskLevel &lt; 5);
-                       }</code>
-</pre>
+private static IQueryable&lt;Model&gt; FilterByHighRisk(IQueryable&lt;Model&gt; source, StringValues parameterValue)
+{
+    bool isFilterOnHighRisk = bool.Parse(parameterValue);
+    return isFilterOnHighRisk ? source.Where(model =&gt; model.RiskLevel &gt;= 5) : source.Where(model =&gt; model.RiskLevel &lt; 5);
+}</code></pre>
 
 
 
@@ -774,7 +770,7 @@ Implementing this method enables to perform validations and make changes to <cod
   <dl class="parameters">
     <dt><code>leftResource</code> <span class="xref">TResource</span></dt>
     <dd><p>Identifier of the left resource. The indication &quot;left&quot; specifies that <code class="paramref">hasManyRelationship</code> is declared on
-TResource. In contrast to other relationship methods, only the left ID and only the subset of right resources to be removed
+<code class="typeparamref">TResource</code>. In contrast to other relationship methods, only the left ID and only the subset of right resources to be removed
 are retrieved from the underlying data store.</p>
 </dd>
     <dt><code>hasManyRelationship</code> <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html">HasManyAttribute</a></dt>
@@ -859,7 +855,7 @@ Implementing this method enables to perform validations and make changes to <cod
   <dl class="parameters">
     <dt><code>leftResource</code> <span class="xref">TResource</span></dt>
     <dd><p>The original resource as retrieved from the underlying data store. The indication &quot;left&quot; specifies that <code class="paramref">hasManyRelationship</code> is
-declared on TResource.</p>
+declared on <code class="typeparamref">TResource</code>.</p>
 </dd>
     <dt><code>hasManyRelationship</code> <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html">HasManyAttribute</a></dt>
     <dd><p>The to-many relationship being set.</p>
@@ -914,7 +910,7 @@ Implementing this method enables to perform validations and change <code class="
   <dl class="parameters">
     <dt><code>leftResource</code> <span class="xref">TResource</span></dt>
     <dd><p>The original resource as retrieved from the underlying data store. The indication &quot;left&quot; specifies that <code class="paramref">hasOneRelationship</code> is
-declared on TResource.</p>
+declared on <code class="typeparamref">TResource</code>.</p>
 </dd>
     <dt><code>hasOneRelationship</code> <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html">HasOneAttribute</a></dt>
     <dd><p>The to-one relationship being set.</p>
