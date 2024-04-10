@@ -201,7 +201,7 @@ internal sealed class TraceLogWriter<T>(ILoggerFactory loggerFactory) : TraceLog
 
     private static bool HasToStringOverload(Type type)
     {
-        MethodInfo? toStringMethod = type.GetMethod("ToString", Array.Empty<Type>());
+        MethodInfo? toStringMethod = type.GetMethod("ToString", []);
         return toStringMethod != null && toStringMethod.DeclaringType != typeof(object);
     }
 

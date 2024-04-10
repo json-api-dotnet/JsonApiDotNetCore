@@ -12,32 +12,32 @@ public interface IResponseModelAdapter
     /// <list type="bullet">
     /// <item>
     /// <description>
-    /// <code><![CDATA[IEnumerable<IIdentifiable>]]></code>
+    /// <c><![CDATA[IEnumerable<IIdentifiable>]]></c>
     /// </description>
     /// </item>
     /// <item>
     /// <description>
-    /// <code><![CDATA[IIdentifiable]]></code>
+    /// <c><![CDATA[IIdentifiable]]></c>
     /// </description>
     /// </item>
     /// <item>
     /// <description>
-    /// <code><![CDATA[null]]></code>
+    /// <c><![CDATA[null]]></c>
     /// </description>
     /// </item>
     /// <item>
     /// <description>
-    /// <code><![CDATA[IEnumerable<OperationContainer?>]]></code>
+    /// <c><![CDATA[IEnumerable<OperationContainer?>]]></c>
     /// </description>
     /// </item>
     /// <item>
     /// <description>
-    /// <code><![CDATA[IEnumerable<ErrorObject>]]></code>
+    /// <c><![CDATA[IEnumerable<ErrorObject>]]></c>
     /// </description>
     /// </item>
     /// <item>
     /// <description>
-    /// <code><![CDATA[ErrorObject]]></code>
+    /// <c><![CDATA[ErrorObject]]></c>
     /// </description>
     /// </item>
     /// </list>

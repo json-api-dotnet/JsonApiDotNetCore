@@ -82,7 +82,7 @@ public sealed class ResourceTypeCapturingDefinition<TResource, TId> : JsonApiRes
 
     private void EnsureSnapshot(TResource leftType, IIdentifiable? rightResourceId = null)
     {
-        IIdentifiable[] rightResourceIds = rightResourceId != null ? [rightResourceId] : Array.Empty<IIdentifiable>();
+        IIdentifiable[] rightResourceIds = rightResourceId != null ? [rightResourceId] : [];
 
         EnsureSnapshot(leftType, rightResourceIds);
     }
