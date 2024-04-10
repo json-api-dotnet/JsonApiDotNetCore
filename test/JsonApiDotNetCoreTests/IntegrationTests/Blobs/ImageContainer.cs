@@ -12,7 +12,7 @@ public sealed class ImageContainer : Identifiable<long>
     public string FileName { get; set; } = null!;
 
     [Attr]
-    public byte[] Data { get; set; } = Array.Empty<byte>();
+    public byte[] Data { get; set; } = [];
 
     [Attr]
     public byte[]? Thumbnail { get; set; }

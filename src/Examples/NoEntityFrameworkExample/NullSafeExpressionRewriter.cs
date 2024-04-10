@@ -300,7 +300,7 @@ public sealed class NullSafeExpressionRewriter : ExpressionVisitor
 
             if (getter != null)
             {
-                object? value = getter.Invoke(null, Array.Empty<object>());
+                object? value = getter.Invoke(null, []);
                 return Expression.Constant(value, type);
             }
         }

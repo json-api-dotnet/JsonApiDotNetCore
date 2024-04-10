@@ -85,6 +85,10 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Data.ManyValue.ShouldHaveCount(1);
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someString").With(value => value.Should().Be(resource.SomeString));
+
+        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Self.Should().Be("http://localhost/filterableResources?filter=equals(someString,'This%2c+that+%26+more+%2b+some')");
+        responseDocument.Links.First.Should().Be("http://localhost/filterableResources?filter=equals(someString,%27This,%20that%20%26%20more%20%2B%20some%27)");
     }
 
     [Fact]

@@ -13,22 +13,22 @@ public interface IDocumentAdapter
     /// <list type="bullet">
     /// <item>
     /// <description>
-    /// <code><![CDATA[IList<OperationContainer>]]></code> (operations)
+    /// <c><![CDATA[IList<OperationContainer>]]></c> (operations)
     /// </description>
     /// </item>
     /// <item>
     /// <description>
-    /// <code><![CDATA[ISet<IIdentifiable>]]></code> (to-many relationship, unknown relationship)
+    /// <c><![CDATA[ISet<IIdentifiable>]]></c> (to-many relationship, unknown relationship)
     /// </description>
     /// </item>
     /// <item>
     /// <description>
-    /// <code><![CDATA[IIdentifiable]]></code> (resource, to-one relationship)
+    /// <c><![CDATA[IIdentifiable]]></c> (resource, to-one relationship)
     /// </description>
     /// </item>
     /// <item>
     /// <description>
-    /// <code><![CDATA[null]]></code> (to-one relationship)
+    /// <c><![CDATA[null]]></c> (to-one relationship)
     /// </description>
     /// </item>
     /// </list>

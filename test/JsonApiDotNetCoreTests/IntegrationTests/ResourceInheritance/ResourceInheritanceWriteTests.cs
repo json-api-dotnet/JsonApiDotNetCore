@@ -1766,7 +1766,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         });
 
         tandemStore.AssertLeftType<Tandem>();
-        tandemStore.AssertRightTypes(Array.Empty<Type>());
+        tandemStore.AssertRightTypes([]);
     }
 
     [Fact]
