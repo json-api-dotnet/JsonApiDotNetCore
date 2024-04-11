@@ -30,6 +30,13 @@
       <CodeGenerator>NSwagCSharp</CodeGenerator>
       <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag /GenerateNullableReferenceTypes:true</Options>
     </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\ModelValidation\GeneratedSwagger\swagger.g.json">
+      <Namespace>OpenApiNSwagEndToEndTests.ModelValidation.GeneratedCode</Namespace>
+      <ClassName>ModelValidationClient</ClassName>
+      <OutputPath>ModelValidationClient.cs</OutputPath>
+      <CodeGenerator>NSwagCSharp</CodeGenerator>
+      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag /GenerateNullableReferenceTypes:true</Options>
+    </OpenApiReference>
     <OpenApiReference Include="..\OpenApiTests\Headers\GeneratedSwagger\swagger.g.json">
       <Namespace>OpenApiNSwagEndToEndTests.Headers.GeneratedCode</Namespace>
       <ClassName>HeadersClient</ClassName>

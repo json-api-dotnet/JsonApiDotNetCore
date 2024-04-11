@@ -722,12 +722,6 @@
             "format": "int32",
             "nullable": true
           },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "profilePicture": {
             "type": "string",
             "format": "uri",
@@ -755,18 +749,13 @@
             "type": "string",
             "format": "time",
             "nullable": true
-          },
-          "signature": {
-            "type": "string",
-            "nullable": true
           }
         },
         "additionalProperties": false
       },
       "fingerprintAttributesInPostRequest": {
         "required": [
-          "lastName",
-          "tags"
+          "lastName"
         ],
         "type": "object",
         "properties": {
@@ -807,12 +796,6 @@
             "format": "int32",
             "nullable": true
           },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "profilePicture": {
             "type": "string",
             "format": "uri",
@@ -839,10 +822,6 @@
           "validatedTimeAt": {
             "type": "string",
             "format": "time",
-            "nullable": true
-          },
-          "signature": {
-            "type": "string",
             "nullable": true
           }
         },
@@ -888,12 +867,6 @@
             "format": "int32",
             "nullable": true
           },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "profilePicture": {
             "type": "string",
             "format": "uri",
@@ -920,10 +893,6 @@
           "validatedTimeAt": {
             "type": "string",
             "format": "time",
-            "nullable": true
-          },
-          "signature": {
-            "type": "string",
             "nullable": true
           }
         },
@@ -1201,16 +1170,6 @@
             "format": "int32",
             "readOnly": true
           },
-          "microseconds": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "nanoseconds": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
           "minutes": {
             "type": "integer",
             "format": "int32",
@@ -1232,16 +1191,6 @@
             "readOnly": true
           },
           "totalMilliseconds": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalMicroseconds": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalNanoseconds": {
             "type": "number",
             "format": "double",
             "readOnly": true

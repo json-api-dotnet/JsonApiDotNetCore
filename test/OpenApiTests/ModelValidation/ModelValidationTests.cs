@@ -19,7 +19,7 @@ public sealed class ModelValidationTests : IClassFixture<OpenApiTestContext<Open
 
     [Theory]
     [MemberData(nameof(ModelNames))]
-    public async Task String(string modelName)
+    public async Task Nullable_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -34,7 +34,7 @@ public sealed class ModelValidationTests : IClassFixture<OpenApiTestContext<Open
 
     [Theory]
     [MemberData(nameof(ModelNames))]
-    public async Task Non_nullable_string(string modelName)
+    public async Task Required_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -50,7 +50,7 @@ public sealed class ModelValidationTests : IClassFixture<OpenApiTestContext<Open
 
     [Theory]
     [MemberData(nameof(ModelNames))]
-    public async Task String_length_and_regex(string modelName)
+    public async Task StringLength_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -60,6 +60,21 @@ public sealed class ModelValidationTests : IClassFixture<OpenApiTestContext<Open
         {
             userNameEl.Should().HaveProperty("maxLength", 18);
             userNameEl.Should().HaveProperty("minLength", 3);
+            userNameEl.Should().HaveProperty("type", "string");
+            userNameEl.Should().HaveProperty("nullable", true);
+        });
+    }
+
+    [Theory]
+    [MemberData(nameof(ModelNames))]
+    public async Task RegularExpression_annotation_on_resource_property_produces_expected_schema(string modelName)
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        document.Should().ContainPath($"components.schemas.{modelName}.properties.userName").With(userNameEl =>
+        {
             userNameEl.Should().HaveProperty("pattern", "^[a-zA-Z]+$");
             userNameEl.Should().HaveProperty("type", "string");
             userNameEl.Should().HaveProperty("nullable", true);
@@ -68,7 +83,7 @@ public sealed class ModelValidationTests : IClassFixture<OpenApiTestContext<Open
 
     [Theory]
     [MemberData(nameof(ModelNames))]
-    public async Task Credit_card(string modelName)
+    public async Task CreditCard_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -84,7 +99,7 @@ public sealed class ModelValidationTests : IClassFixture<OpenApiTestContext<Open
 
     [Theory]
     [MemberData(nameof(ModelNames))]
-    public async Task Email(string modelName)
+    public async Task Email_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -100,7 +115,7 @@ public sealed class ModelValidationTests : IClassFixture<OpenApiTestContext<Open
 
     [Theory]
     [MemberData(nameof(ModelNames))]
-    public async Task Phone(string modelName)
+    public async Task Phone_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -116,7 +131,7 @@ public sealed class ModelValidationTests : IClassFixture<OpenApiTestContext<Open
 
     [Theory]
     [MemberData(nameof(ModelNames))]
-    public async Task Age(string modelName)
+    public async Task Range_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -125,7 +140,9 @@ public sealed class ModelValidationTests : IClassFixture<OpenApiTestContext<Open
         document.Should().ContainPath($"components.schemas.{modelName}.properties.age").With(ageEl =>
         {
             ageEl.Should().HaveProperty("maximum", 123);
+            ageEl.Should().NotContainPath("exclusiveMaximum");
             ageEl.Should().HaveProperty("minimum", 0);
+            ageEl.Should().NotContainPath("exclusiveMinimum");
             ageEl.Should().HaveProperty("type", "integer");
             ageEl.Should().HaveProperty("format", "int32");
             ageEl.Should().HaveProperty("nullable", true);
@@ -134,26 +151,7 @@ public sealed class ModelValidationTests : IClassFixture<OpenApiTestContext<Open
 
     [Theory]
     [MemberData(nameof(ModelNames))]
-    public async Task Tags(string modelName)
-    {
-        // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
-
-        // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.tags").With(tagsEl =>
-        {
-            tagsEl.Should().HaveProperty("type", "array");
-            tagsEl.Should().ContainPath("items").With(itemsEl =>
-            {
-                itemsEl.Should().HaveProperty("type", "string");
-                // TODO: no length constraint?
-            });
-        });
-    }
-
-    [Theory]
-    [MemberData(nameof(ModelNames))]
-    public async Task Profile_picture(string modelName)
+    public async Task Url_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -169,7 +167,7 @@ public sealed class ModelValidationTests : IClassFixture<OpenApiTestContext<Open
 
     [Theory]
     [MemberData(nameof(ModelNames))]
-    public async Task Next_revalidation(string modelName)
+    public async Task TimeSpan_range_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -184,7 +182,7 @@ public sealed class ModelValidationTests : IClassFixture<OpenApiTestContext<Open
 
     [Theory]
     [MemberData(nameof(ModelNames))]
-    public async Task Validated_at(string modelName)
+    public async Task DateTime_type_produces_expected_schema(string modelName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -200,7 +198,7 @@ public sealed class ModelValidationTests : IClassFixture<OpenApiTestContext<Open
 
     [Theory]
     [MemberData(nameof(ModelNames))]
-    public async Task Validated_date_at(string modelName)
+    public async Task DateOnly_type_produces_expected_schema(string modelName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -216,7 +214,7 @@ public sealed class ModelValidationTests : IClassFixture<OpenApiTestContext<Open
 
     [Theory]
     [MemberData(nameof(ModelNames))]
-    public async Task Validated_time_at(string modelName)
+    public async Task TimeOnly_type_produces_expected_schema(string modelName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -227,22 +225,6 @@ public sealed class ModelValidationTests : IClassFixture<OpenApiTestContext<Open
             validatedTimeAtEl.Should().HaveProperty("type", "string");
             validatedTimeAtEl.Should().HaveProperty("format", "time");
             validatedTimeAtEl.Should().HaveProperty("nullable", true);
-        });
-    }
-
-    [Theory]
-    [MemberData(nameof(ModelNames))]
-    public async Task Signature(string modelName)
-    {
-        // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
-
-        // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.signature").With(signatureEl =>
-        {
-            signatureEl.Should().HaveProperty("type", "string");
-            // TODO: no format?
-            signatureEl.Should().HaveProperty("nullable", true);
         });
     }
 
