@@ -1,7 +1,10 @@
 using System.Diagnostics;
+using GettingStarted;
 using GettingStarted.Data;
 using GettingStarted.Models;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Repositories;
+using JsonApiDotNetCore.Serialization.Response;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
@@ -9,17 +12,32 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddDbContext<SampleDbContext>(options =>
+builder.Services.AddDbContext<SqliteSampleDbContext>(options =>
 {
     options.UseSqlite("Data Source=SampleDb.db;Pooling=False");
     SetDbContextDebugOptions(options);
 });
 
-builder.Services.AddJsonApi<SampleDbContext>(options =>
+builder.Services.AddDbContext<PostgreSqlSampleDbContext>(options =>
+{
+    options.UseNpgsql("Host=localhost;Database=ExampleDb;User ID=postgres;Password=postgres;Include Error Detail=true");
+    SetDbContextDebugOptions(options);
+});
+
+// EntityFrameworkCoreRepository injects IDbContextResolver to obtain the DbContext during a request.
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IDbContextResolver, QueryStringDbContextResolver>();
+
+// Make rendered links contain the dbType query string parameter.
+builder.Services.AddScoped<ILinkBuilder, DbAwareLinkBuilder>();
+
+// DbContext is used to scan the model at app startup. Pick any, since their entities are identical.
+builder.Services.AddJsonApi<SqliteSampleDbContext>(options =>
 {
     options.Namespace = "api";
     options.UseRelativeLinks = true;
     options.IncludeTotalResourceCount = true;
+    options.AllowUnknownQueryStringParameters = true;
 
 #if DEBUG
     options.IncludeExceptionStackTraceInErrors = true;
@@ -36,7 +54,8 @@ app.UseRouting();
 app.UseJsonApi();
 app.MapControllers();
 
-await CreateDatabaseAsync(app.Services);
+await CreateSqliteDatabaseAsync(app.Services);
+await CreatePostgreSqlDatabaseAsync(app.Services);
 
 app.Run();
 
@@ -48,21 +67,19 @@ static void SetDbContextDebugOptions(DbContextOptionsBuilder options)
     options.ConfigureWarnings(builder => builder.Ignore(CoreEventId.SensitiveDataLoggingEnabledWarning));
 }
 
-static async Task CreateDatabaseAsync(IServiceProvider serviceProvider)
+static async Task CreateSqliteDatabaseAsync(IServiceProvider serviceProvider)
 {
     await using AsyncServiceScope scope = serviceProvider.CreateAsyncScope();
 
-    var dbContext = scope.ServiceProvider.GetRequiredService<SampleDbContext>();
+    var dbContext = scope.ServiceProvider.GetRequiredService<SqliteSampleDbContext>();
     await dbContext.Database.EnsureDeletedAsync();
     await dbContext.Database.EnsureCreatedAsync();
 
-    await CreateSampleDataAsync(dbContext);
+    await CreateSqliteSampleDataAsync(dbContext);
 }
 
-static async Task CreateSampleDataAsync(SampleDbContext dbContext)
+static async Task CreateSqliteSampleDataAsync(SqliteSampleDbContext dbContext)
 {
-    // Note: The generate-examples.ps1 script (to create example requests in documentation) depends on these.
-
     dbContext.Books.AddRange(new Book
     {
         Title = "Frankenstein",
@@ -86,6 +103,40 @@ static async Task CreateSampleDataAsync(SampleDbContext dbContext)
         Author = new Person
         {
             Name = "Jonathan Swift"
+        }
+    });
+
+    await dbContext.SaveChangesAsync();
+}
+
+static async Task CreatePostgreSqlDatabaseAsync(IServiceProvider serviceProvider)
+{
+    await using AsyncServiceScope scope = serviceProvider.CreateAsyncScope();
+
+    var dbContext = scope.ServiceProvider.GetRequiredService<PostgreSqlSampleDbContext>();
+    await dbContext.Database.EnsureDeletedAsync();
+    await dbContext.Database.EnsureCreatedAsync();
+
+    await CreatePostgreSqlSampleDataAsync(dbContext);
+}
+
+static async Task CreatePostgreSqlSampleDataAsync(PostgreSqlSampleDbContext dbContext)
+{
+    dbContext.Books.AddRange(new Book
+    {
+        Title = "Wolf Hall",
+        PublishYear = 2009,
+        Author = new Person
+        {
+            Name = "Hilary Mantel"
+        }
+    }, new Book
+    {
+        Title = "Gilead",
+        PublishYear = 2004,
+        Author = new Person
+        {
+            Name = "Marilynne Robinson"
         }
     });
 
