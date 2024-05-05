@@ -6,14 +6,14 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy;
 
-internal sealed class MultiTenancyFakers : FakerContainer
+internal sealed class MultiTenancyFakers
 {
     private readonly Lazy<Faker<WebShop>> _lazyWebShopFaker = new(() => new Faker<WebShop>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(webShop => webShop.Url, faker => faker.Internet.Url()));
 
     private readonly Lazy<Faker<WebProduct>> _lazyWebProductFaker = new(() => new Faker<WebProduct>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(webProduct => webProduct.Name, faker => faker.Commerce.ProductName())
         .RuleFor(webProduct => webProduct.Price, faker => faker.Finance.Amount()));
 

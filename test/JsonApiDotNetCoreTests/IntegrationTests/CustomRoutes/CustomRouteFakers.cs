@@ -6,16 +6,16 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes;
 
-internal sealed class CustomRouteFakers : FakerContainer
+internal sealed class CustomRouteFakers
 {
     private readonly Lazy<Faker<Town>> _lazyTownFaker = new(() => new Faker<Town>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(town => town.Name, faker => faker.Address.City())
         .RuleFor(town => town.Latitude, faker => faker.Address.Latitude())
         .RuleFor(town => town.Longitude, faker => faker.Address.Longitude()));
 
     private readonly Lazy<Faker<Civilian>> _lazyCivilianFaker = new(() => new Faker<Civilian>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(civilian => civilian.Name, faker => faker.Person.FullName));
 
     public Faker<Town> Town => _lazyTownFaker.Value;

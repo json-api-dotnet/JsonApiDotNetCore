@@ -6,31 +6,31 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading;
 
-internal sealed class EagerLoadingFakers : FakerContainer
+internal sealed class EagerLoadingFakers
 {
     private readonly Lazy<Faker<State>> _lazyStateFaker = new(() => new Faker<State>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(state => state.Name, faker => faker.Address.City()));
 
     private readonly Lazy<Faker<City>> _lazyCityFaker = new(() => new Faker<City>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(city => city.Name, faker => faker.Address.City()));
 
     private readonly Lazy<Faker<Street>> _lazyStreetFaker = new(() => new Faker<Street>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(street => street.Name, faker => faker.Address.StreetName()));
 
     private readonly Lazy<Faker<Building>> _lazyBuildingFaker = new(() => new Faker<Building>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(building => building.Number, faker => faker.Address.BuildingNumber()));
 
     private readonly Lazy<Faker<Window>> _lazyWindowFaker = new(() => new Faker<Window>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(window => window.HeightInCentimeters, faker => faker.Random.Number(30, 199))
         .RuleFor(window => window.WidthInCentimeters, faker => faker.Random.Number(30, 199)));
 
     private readonly Lazy<Faker<Door>> _lazyDoorFaker = new(() => new Faker<Door>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(door => door.Color, faker => faker.Commerce.Color()));
 
     public Faker<State> State => _lazyStateFaker.Value;

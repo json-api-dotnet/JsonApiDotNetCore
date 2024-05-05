@@ -6,19 +6,19 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Logging;
 
-internal sealed class LoggingFakers : FakerContainer
+internal sealed class LoggingFakers
 {
     private readonly Lazy<Faker<AuditEntry>> _lazyAuditEntryFaker = new(() => new Faker<AuditEntry>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(auditEntry => auditEntry.UserName, faker => faker.Internet.UserName())
         .RuleFor(auditEntry => auditEntry.CreatedAt, faker => faker.Date.PastOffset().TruncateToWholeMilliseconds()));
 
     private readonly Lazy<Faker<Banana>> _lazyBananaFaker = new(() => new Faker<Banana>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(banana => banana.LengthInCentimeters, faker => faker.Random.Double(10, 25)));
 
     private readonly Lazy<Faker<Peach>> _lazyPeachFaker = new(() => new Faker<Peach>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(peach => peach.DiameterInCentimeters, faker => faker.Random.Double(6, 7.5)));
 
     public Faker<AuditEntry> AuditEntry => _lazyAuditEntryFaker.Value;

@@ -4,7 +4,8 @@ namespace TestBuildingBlocks;
 
 public sealed class FrozenSystemClock : ISystemClock
 {
-    private static readonly DateTimeOffset DefaultTime = 1.January(2020).At(1, 1, 1).AsUtc();
+    internal static readonly DateTime DefaultDateTimeUtc = 1.January(2020).At(1, 1, 1).AsUtc();
+    public static readonly DateTimeOffset DefaultDateTimeOffsetUtc = DefaultDateTimeUtc;
 
-    public DateTimeOffset UtcNow { get; set; } = DefaultTime;
+    public DateTimeOffset UtcNow { get; set; } = DefaultDateTimeOffsetUtc;
 }

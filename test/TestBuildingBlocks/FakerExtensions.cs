@@ -1,21 +1,26 @@
 using System.Diagnostics;
 using System.Reflection;
-using Bogus.DataSets;
-using FluentAssertions.Extensions;
+using Bogus;
 using Xunit;
 
 namespace TestBuildingBlocks;
 
-public abstract class FakerContainer
+public static class FakerExtensions
 {
-    static FakerContainer()
+    public static Faker<T> MakeDeterministic<T>(this Faker<T> faker)
+        where T : class
     {
+        int seed = GetFakerSeed();
+        faker.UseSeed(seed);
+
         // Setting the system DateTime to kind Utc, so that faker calls like PastOffset() don't depend on the system time zone.
         // See https://docs.microsoft.com/en-us/dotnet/api/system.datetimeoffset.op_implicit?view=net-6.0#remarks
-        Date.SystemClock = () => 1.January(2020).At(1, 1, 1).AsUtc();
+        faker.UseDateTimeReference(FrozenSystemClock.DefaultDateTimeUtc);
+
+        return faker;
     }
 
-    protected static int GetFakerSeed()
+    private static int GetFakerSeed()
     {
         // The goal here is to have stable data over multiple test runs, but at the same time different data per test case.
 

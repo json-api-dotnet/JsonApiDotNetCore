@@ -6,14 +6,14 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion;
 
-internal sealed class SoftDeletionFakers : FakerContainer
+internal sealed class SoftDeletionFakers
 {
     private readonly Lazy<Faker<Company>> _lazyCompanyFaker = new(() => new Faker<Company>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(company => company.Name, faker => faker.Company.CompanyName()));
 
     private readonly Lazy<Faker<Department>> _lazyDepartmentFaker = new(() => new Faker<Department>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(department => department.Name, faker => faker.Commerce.Department()));
 
     public Faker<Company> Company => _lazyCompanyFaker.Value;
