@@ -16,8 +16,7 @@
     <InheritDocVersion>2.0.*</InheritDocVersion>
     <SourceLinkVersion>8.0.*</SourceLinkVersion>
     <TestSdkVersion>17.9.*</TestSdkVersion>
-    <XunitVersion>2.6.*</XunitVersion>
-    <XunitVisualStudioVersion>2.5.*</XunitVisualStudioVersion>
+    <XunitVersion>2.8.*</XunitVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
