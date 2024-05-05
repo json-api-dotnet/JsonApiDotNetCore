@@ -6,18 +6,18 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions;
 
-internal sealed class NamingFakers : FakerContainer
+internal sealed class NamingFakers
 {
     private readonly Lazy<Faker<SwimmingPool>> _lazySwimmingPoolFaker = new(() => new Faker<SwimmingPool>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(swimmingPool => swimmingPool.IsIndoor, faker => faker.Random.Bool()));
 
     private readonly Lazy<Faker<WaterSlide>> _lazyWaterSlideFaker = new(() => new Faker<WaterSlide>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(waterSlide => waterSlide.LengthInMeters, faker => faker.Random.Decimal(3, 100)));
 
     private readonly Lazy<Faker<DivingBoard>> _lazyDivingBoardFaker = new(() => new Faker<DivingBoard>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(divingBoard => divingBoard.HeightInMeters, faker => faker.Random.Decimal(1, 15)));
 
     public Faker<SwimmingPool> SwimmingPool => _lazySwimmingPoolFaker.Value;

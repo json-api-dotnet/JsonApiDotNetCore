@@ -7,15 +7,15 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serialization;
 
-internal sealed class SerializationFakers : FakerContainer
+internal sealed class SerializationFakers
 {
     private readonly Lazy<Faker<Student>> _lazyStudentFaker = new(() => new Faker<Student>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(student => student.Name, faker => faker.Person.FullName)
         .RuleFor(student => student.SocialSecurityNumber, faker => faker.Person.Ssn()));
 
     private readonly Lazy<Faker<Scholarship>> _lazyScholarshipFaker = new(() => new Faker<Scholarship>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(scholarship => scholarship.ProgramName, faker => faker.Commerce.Department())
         .RuleFor(scholarship => scholarship.Amount, faker => faker.Finance.Amount()));
 

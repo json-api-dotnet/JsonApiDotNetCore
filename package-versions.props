@@ -7,7 +7,7 @@
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
     <BenchmarkDotNetVersion>0.13.*</BenchmarkDotNetVersion>
-    <BogusVersion>35.2.*</BogusVersion>
+    <BogusVersion>35.5.*</BogusVersion>
     <CodeAnalysisVersion>4.9.*</CodeAnalysisVersion>
     <CoverletVersion>6.0.*</CoverletVersion>
     <DapperVersion>2.1.*</DapperVersion>
@@ -15,9 +15,8 @@
     <GitHubActionsTestLoggerVersion>2.3.*</GitHubActionsTestLoggerVersion>
     <InheritDocVersion>2.0.*</InheritDocVersion>
     <SourceLinkVersion>8.0.*</SourceLinkVersion>
-    <TestSdkVersion>17.8.*</TestSdkVersion>
-    <XunitVersion>2.6.*</XunitVersion>
-    <XunitVisualStudioVersion>2.5.*</XunitVisualStudioVersion>
+    <TestSdkVersion>17.9.*</TestSdkVersion>
+    <XunitVersion>2.8.*</XunitVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
@@ -26,7 +25,7 @@
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
     <AspNetCoreVersion>8.0.*</AspNetCoreVersion>
-    <EntityFrameworkCoreVersion>8.0.*-*</EntityFrameworkCoreVersion>
+    <EntityFrameworkCoreVersion>8.0.*</EntityFrameworkCoreVersion>
     <SystemTextJsonVersion>$(AspNetCoreVersion)</SystemTextJsonVersion>
   </PropertyGroup>
 
