@@ -3,6 +3,7 @@
 using Example;
 using JsonApiDotNetCoreClientExample;
 using JsonApiDotNetCoreClientExample.Config;
+using JsonApiDotNetCoreClientExample.Models;
 using Environment = JsonApiDotNetCoreClientExample.Http.Environment;
 
 var config = new JsonApiDotNetCoreClientExampleConfig
@@ -17,5 +18,10 @@ var response = await client.People.GetPersonCollectionAsync();
 
 // Commented out because it does not work due to broken inheritance.
 //PeopleMessageFormatter.PrintPeople(response);
+
+var postResponse = await client.People.PostPersonAsync(new PersonPostRequestDocument(new PersonDataInPostRequest(PersonResourceType.People)
+{
+    Attributes = new PersonAttributesInPostRequest("Doe", "John")
+}));
 
 Console.WriteLine(response);
