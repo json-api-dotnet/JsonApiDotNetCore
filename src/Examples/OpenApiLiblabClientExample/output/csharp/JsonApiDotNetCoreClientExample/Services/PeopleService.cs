@@ -21,7 +21,8 @@ public class PeopleService : BaseService
     )
     {
         var request = new RequestBuilder(HttpMethod.Get, "api/people")
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -49,7 +50,8 @@ public class PeopleService : BaseService
         ArgumentNullException.ThrowIfNull(input, nameof(input));
 
         var request = new RequestBuilder(HttpMethod.Post, "api/people")
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetContentAsJson(input, _jsonSerializerOptions)
             .Build();
 
@@ -76,7 +78,8 @@ public class PeopleService : BaseService
     )
     {
         var request = new RequestBuilder(HttpMethod.Head, "api/people")
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -100,7 +103,8 @@ public class PeopleService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Get, "api/people/{id}")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -132,7 +136,8 @@ public class PeopleService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Patch, "api/people/{id}")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetContentAsJson(input, _jsonSerializerOptions)
             .Build();
 
@@ -179,7 +184,8 @@ public class PeopleService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Head, "api/people/{id}")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -203,7 +209,8 @@ public class PeopleService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Get, "api/people/{id}/assignedTodoItems")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -235,7 +242,8 @@ public class PeopleService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Head, "api/people/{id}/assignedTodoItems")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -262,7 +270,8 @@ public class PeopleService : BaseService
             "api/people/{id}/relationships/assignedTodoItems"
         )
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -372,7 +381,8 @@ public class PeopleService : BaseService
             "api/people/{id}/relationships/assignedTodoItems"
         )
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -396,7 +406,8 @@ public class PeopleService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Get, "api/people/{id}/ownedTodoItems")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -428,7 +439,8 @@ public class PeopleService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Head, "api/people/{id}/ownedTodoItems")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -455,7 +467,8 @@ public class PeopleService : BaseService
             "api/people/{id}/relationships/ownedTodoItems"
         )
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -565,7 +578,8 @@ public class PeopleService : BaseService
             "api/people/{id}/relationships/ownedTodoItems"
         )
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 

@@ -21,7 +21,8 @@ public class TagsService : BaseService
     )
     {
         var request = new RequestBuilder(HttpMethod.Get, "api/tags")
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -49,7 +50,8 @@ public class TagsService : BaseService
         ArgumentNullException.ThrowIfNull(input, nameof(input));
 
         var request = new RequestBuilder(HttpMethod.Post, "api/tags")
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetContentAsJson(input, _jsonSerializerOptions)
             .Build();
 
@@ -76,7 +78,8 @@ public class TagsService : BaseService
     )
     {
         var request = new RequestBuilder(HttpMethod.Head, "api/tags")
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -100,7 +103,8 @@ public class TagsService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Get, "api/tags/{id}")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -132,7 +136,8 @@ public class TagsService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Patch, "api/tags/{id}")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetContentAsJson(input, _jsonSerializerOptions)
             .Build();
 
@@ -179,7 +184,8 @@ public class TagsService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Head, "api/tags/{id}")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -203,7 +209,8 @@ public class TagsService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Get, "api/tags/{id}/todoItems")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -235,7 +242,8 @@ public class TagsService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Head, "api/tags/{id}/todoItems")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -259,7 +267,8 @@ public class TagsService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Get, "api/tags/{id}/relationships/todoItems")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -357,7 +366,8 @@ public class TagsService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Head, "api/tags/{id}/relationships/todoItems")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 

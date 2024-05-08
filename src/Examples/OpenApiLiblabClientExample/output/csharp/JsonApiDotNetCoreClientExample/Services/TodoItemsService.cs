@@ -21,7 +21,8 @@ public class TodoItemsService : BaseService
     )
     {
         var request = new RequestBuilder(HttpMethod.Get, "api/todoItems")
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -49,7 +50,8 @@ public class TodoItemsService : BaseService
         ArgumentNullException.ThrowIfNull(input, nameof(input));
 
         var request = new RequestBuilder(HttpMethod.Post, "api/todoItems")
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetContentAsJson(input, _jsonSerializerOptions)
             .Build();
 
@@ -76,7 +78,8 @@ public class TodoItemsService : BaseService
     )
     {
         var request = new RequestBuilder(HttpMethod.Head, "api/todoItems")
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -100,7 +103,8 @@ public class TodoItemsService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Get, "api/todoItems/{id}")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -132,7 +136,8 @@ public class TodoItemsService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Patch, "api/todoItems/{id}")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetContentAsJson(input, _jsonSerializerOptions)
             .Build();
 
@@ -179,7 +184,8 @@ public class TodoItemsService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Head, "api/todoItems/{id}")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -203,7 +209,8 @@ public class TodoItemsService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Get, "api/todoItems/{id}/assignee")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -235,7 +242,8 @@ public class TodoItemsService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Head, "api/todoItems/{id}/assignee")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -262,7 +270,8 @@ public class TodoItemsService : BaseService
             "api/todoItems/{id}/relationships/assignee"
         )
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -322,7 +331,8 @@ public class TodoItemsService : BaseService
             "api/todoItems/{id}/relationships/assignee"
         )
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -346,7 +356,8 @@ public class TodoItemsService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Get, "api/todoItems/{id}/owner")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -378,7 +389,8 @@ public class TodoItemsService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Head, "api/todoItems/{id}/owner")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -402,7 +414,8 @@ public class TodoItemsService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Get, "api/todoItems/{id}/relationships/owner")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -456,7 +469,8 @@ public class TodoItemsService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Head, "api/todoItems/{id}/relationships/owner")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -480,7 +494,8 @@ public class TodoItemsService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Get, "api/todoItems/{id}/tags")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -512,7 +527,8 @@ public class TodoItemsService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Head, "api/todoItems/{id}/tags")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -536,7 +552,8 @@ public class TodoItemsService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Get, "api/todoItems/{id}/relationships/tags")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 
@@ -634,7 +651,8 @@ public class TodoItemsService : BaseService
 
         var request = new RequestBuilder(HttpMethod.Head, "api/todoItems/{id}/relationships/tags")
             .SetPathParameter("id", id)
-            .SetQueryParameter("query", query)
+            // Commented out to workaround bug: It sends ?query= instead of key-value pairs, resulting in HTTP 400.
+            //.SetQueryParameter("query", query)
             .SetOptionalHeader("If-None-Match", ifNoneMatch)
             .Build();
 

@@ -12,6 +12,6 @@ var config = new JsonApiDotNetCoreClientExampleConfig
 
 var client = new JsonApiDotNetCoreClientExampleClient(config);
 
-var response = await client.People.GetPersonCollectionAsync(new object(), "If-None-Match");
+var response = await client.People.GetPersonCollectionAsync();
 
 Console.WriteLine(response);
