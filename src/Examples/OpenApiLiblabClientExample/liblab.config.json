@@ -1,0 +1,45 @@
+{
+  "sdkName": "JsonApiDotNetCoreClientExample",
+  "apiVersion": "1.0.0",
+  "apiName": "test-api",
+  "specFilePath": "../JsonApiDotNetCoreExample/GeneratedSwagger/JsonApiDotNetCoreExample.json",
+  "languages": [
+    "csharp"
+  ],
+  "auth": [
+    "bearer"
+  ],
+  "customizations": {
+    "includeOptionalSnippetParameters": true,
+    "authentication": {
+      "access": {
+        "prefix": "Bearer"
+      }
+    },
+    "devContainer": false,
+    "generateEnv": true,
+    "inferServiceNames": false,
+    "injectedModels": [],
+    "license": {
+      "type": "MIT"
+    },
+    "responseHeaders": false,
+    "retry": {
+      "enabled": true,
+      "maxAttempts": 3,
+      "retryDelay": 150
+    }
+  },
+  "languageOptions": {
+    "csharp": {
+      "packageId": "",
+      "githubRepoName": "",
+      "ignoreFiles": [],
+      "sdkVersion": "1.0.0",
+      "liblabVersion": "2"
+    }
+  },
+  "publishing": {
+    "githubOrg": ""
+  }
+}

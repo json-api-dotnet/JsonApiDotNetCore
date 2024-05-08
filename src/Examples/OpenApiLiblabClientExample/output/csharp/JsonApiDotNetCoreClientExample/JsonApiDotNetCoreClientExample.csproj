@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>JsonApiDotNetCoreClientExample</RootNamespace>
+    <Version>1.0.0</Version>
+    <PackageId>JsonApiDotNetCoreClientExample</PackageId>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+      <PackageReference Include="Polly" Version="8.2.1" />
+  </ItemGroup>
+
+</Project>
