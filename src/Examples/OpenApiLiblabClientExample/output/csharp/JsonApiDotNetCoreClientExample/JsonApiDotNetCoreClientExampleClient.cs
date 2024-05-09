@@ -18,7 +18,10 @@ public class JsonApiDotNetCoreClientExampleClient : IDisposable
 
     public JsonApiDotNetCoreClientExampleClient(JsonApiDotNetCoreClientExampleConfig? config = null)
     {
-        var retryHandler = new RetryHandler();
+        // HACK: Enable logging of HTTP requests and responses.
+        //var retryHandler = new RetryHandler();
+        var retryHandler = new RetryHandler(new ColoredConsoleLogHttpMessageHandler { InnerHandler = new SocketsHttpHandler() });
+
         _accessTokenHandler = new TokenHandler(retryHandler)
         {
             Header = "Authorization",
