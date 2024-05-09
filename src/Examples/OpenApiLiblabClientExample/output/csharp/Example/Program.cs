@@ -24,4 +24,9 @@ var postResponse = await client.People.PostPersonAsync(new PersonPostRequestDocu
     Attributes = new PersonAttributesInPostRequest("Doe", "John")
 }));
 
+var patchResponse = await client.People.PatchPersonAsync(new PersonPatchRequestDocument(new PersonDataInPatchRequest(PersonResourceType.People, "1")
+{
+    Attributes = new PersonAttributesInPatchRequest("Mister2", "Smith")
+}), "1");
+
 Console.WriteLine(response);
