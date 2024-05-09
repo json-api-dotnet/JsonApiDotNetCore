@@ -82,7 +82,7 @@ internal static class CollectionExtensions
 
     public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T>? source)
     {
-        return source ?? Enumerable.Empty<T>();
+        return source ?? [];
     }
 
     public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> source)
