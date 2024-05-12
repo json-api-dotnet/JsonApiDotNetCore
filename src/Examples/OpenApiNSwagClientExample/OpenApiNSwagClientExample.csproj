@@ -24,7 +24,11 @@
       <ClassName>ExampleApiClient</ClassName>
       <OutputPath>ExampleApiClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/GenerateExceptionClasses:false /WrapResponses:true /GenerateResponseClasses:false /ResponseClass:ApiResponse /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag</Options>
+      <NSwagGenerateExceptionClasses>false</NSwagGenerateExceptionClasses>
+      <NSwagWrapResponses>true</NSwagWrapResponses>
+      <NSwagGenerateResponseClasses>false</NSwagGenerateResponseClasses>
+      <NSwagResponseClass>ApiResponse</NSwagResponseClass>
+      <NSwagAdditionalNamespaceUsages>JsonApiDotNetCore.OpenApi.Client.NSwag</NSwagAdditionalNamespaceUsages>
     </OpenApiReference>
   </ItemGroup>
 </Project>

@@ -28,5 +28,7 @@
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
     <RunSettingsFilePath>$(MSBuildThisFileDirectory)tests.runsettings</RunSettingsFilePath>
     <JsonApiDotNetCoreVersionPrefix>5.5.2</JsonApiDotNetCoreVersionPrefix>
+    <!-- Requires checkout of https://github.com/RicoSuter/NSwag/pull/4888 in sibling directory of JsonApiDotNetCore repository -->
+    <NSwagTemplateDirectory>$(MSBuildThisFileDirectory)..\NSwag\src\NSwag.CodeGeneration.CSharp\Templates</NSwagTemplateDirectory>
   </PropertyGroup>
 </Project>
