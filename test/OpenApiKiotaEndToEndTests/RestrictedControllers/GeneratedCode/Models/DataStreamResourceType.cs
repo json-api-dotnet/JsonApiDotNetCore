@@ -2,8 +2,13 @@
 using System.Runtime.Serialization;
 using System;
 namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
-    public enum DataStreamResourceType {
+    #pragma warning disable CS1591
+    public enum DataStreamResourceType
+    #pragma warning restore CS1591
+    {
         [EnumMember(Value = "dataStreams")]
+        #pragma warning disable CS1591
         DataStreams,
+        #pragma warning restore CS1591
     }
 }

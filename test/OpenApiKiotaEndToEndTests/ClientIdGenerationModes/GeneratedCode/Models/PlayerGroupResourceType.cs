@@ -2,8 +2,13 @@
 using System.Runtime.Serialization;
 using System;
 namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models {
-    public enum PlayerGroupResourceType {
+    #pragma warning disable CS1591
+    public enum PlayerGroupResourceType
+    #pragma warning restore CS1591
+    {
         [EnumMember(Value = "playerGroups")]
+        #pragma warning disable CS1591
         PlayerGroups,
+        #pragma warning restore CS1591
     }
 }

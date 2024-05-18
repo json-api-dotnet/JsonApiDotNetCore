@@ -2,8 +2,13 @@
 using System.Runtime.Serialization;
 using System;
 namespace OpenApiKiotaClientExample.GeneratedCode.Models {
-    public enum PersonResourceType {
+    #pragma warning disable CS1591
+    public enum PersonResourceType
+    #pragma warning restore CS1591
+    {
         [EnumMember(Value = "people")]
+        #pragma warning disable CS1591
         People,
+        #pragma warning restore CS1591
     }
 }

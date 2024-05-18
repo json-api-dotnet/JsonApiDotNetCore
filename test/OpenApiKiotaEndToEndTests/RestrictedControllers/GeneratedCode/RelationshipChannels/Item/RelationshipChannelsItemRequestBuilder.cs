@@ -10,24 +10,28 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Relation
     /// <summary>
     /// Builds and executes requests for operations under \relationshipChannels\{id}
     /// </summary>
-    public class RelationshipChannelsItemRequestBuilder : BaseRequestBuilder {
+    public class RelationshipChannelsItemRequestBuilder : BaseRequestBuilder 
+    {
         /// <summary>The relationships property</summary>
-        public RelationshipsRequestBuilder Relationships { get =>
-            new RelationshipsRequestBuilder(PathParameters, RequestAdapter);
+        public RelationshipsRequestBuilder Relationships
+        {
+            get => new RelationshipsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new RelationshipChannelsItemRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="RelationshipChannelsItemRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public RelationshipChannelsItemRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/relationshipChannels/{id}", pathParameters) {
+        public RelationshipChannelsItemRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/relationshipChannels/{id}", pathParameters)
+        {
         }
         /// <summary>
-        /// Instantiates a new RelationshipChannelsItemRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="RelationshipChannelsItemRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public RelationshipChannelsItemRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/relationshipChannels/{id}", rawUrl) {
+        public RelationshipChannelsItemRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/relationshipChannels/{id}", rawUrl)
+        {
         }
     }
 }

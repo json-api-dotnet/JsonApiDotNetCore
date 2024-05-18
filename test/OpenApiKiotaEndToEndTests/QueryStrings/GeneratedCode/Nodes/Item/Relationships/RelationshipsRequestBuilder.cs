@@ -12,32 +12,38 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Relati
     /// <summary>
     /// Builds and executes requests for operations under \nodes\{id}\relationships
     /// </summary>
-    public class RelationshipsRequestBuilder : BaseRequestBuilder {
+    public class RelationshipsRequestBuilder : BaseRequestBuilder 
+    {
         /// <summary>The children property</summary>
-        public ChildrenRequestBuilder Children { get =>
-            new ChildrenRequestBuilder(PathParameters, RequestAdapter);
+        public ChildrenRequestBuilder Children
+        {
+            get => new ChildrenRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The parent property</summary>
-        public ParentRequestBuilder Parent { get =>
-            new ParentRequestBuilder(PathParameters, RequestAdapter);
+        public ParentRequestBuilder Parent
+        {
+            get => new ParentRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The values property</summary>
-        public ValuesRequestBuilder Values { get =>
-            new ValuesRequestBuilder(PathParameters, RequestAdapter);
+        public ValuesRequestBuilder Values
+        {
+            get => new ValuesRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new RelationshipsRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="RelationshipsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public RelationshipsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/nodes/{id}/relationships", pathParameters) {
+        public RelationshipsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/nodes/{id}/relationships", pathParameters)
+        {
         }
         /// <summary>
-        /// Instantiates a new RelationshipsRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="RelationshipsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public RelationshipsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/nodes/{id}/relationships", rawUrl) {
+        public RelationshipsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/nodes/{id}/relationships", rawUrl)
+        {
         }
     }
 }

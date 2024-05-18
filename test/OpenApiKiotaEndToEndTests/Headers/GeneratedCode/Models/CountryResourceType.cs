@@ -2,8 +2,13 @@
 using System.Runtime.Serialization;
 using System;
 namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
-    public enum CountryResourceType {
+    #pragma warning disable CS1591
+    public enum CountryResourceType
+    #pragma warning restore CS1591
+    {
         [EnumMember(Value = "countries")]
+        #pragma warning disable CS1591
         Countries,
+        #pragma warning restore CS1591
     }
 }

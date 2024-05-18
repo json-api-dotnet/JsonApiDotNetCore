@@ -6,7 +6,10 @@ using System.IO;
 using System.Linq;
 using System;
 namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
-    public class NodeAttributesInPostRequest : IBackedModel, IParsable {
+    #pragma warning disable CS1591
+    public class NodeAttributesInPostRequest : IBackedModel, IParsable 
+    #pragma warning restore CS1591
+    {
         /// <summary>Stores model information.</summary>
         public IBackingStore BackingStore { get; private set; }
         /// <summary>The comment property</summary>
@@ -38,24 +41,30 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         }
 #endif
         /// <summary>
-        /// Instantiates a new nodeAttributesInPostRequest and sets the default values.
+        /// Instantiates a new <see cref="NodeAttributesInPostRequest"/> and sets the default values.
         /// </summary>
-        public NodeAttributesInPostRequest() {
+        public NodeAttributesInPostRequest()
+        {
             BackingStore = BackingStoreFactorySingleton.Instance.CreateBackingStore();
         }
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
+        /// <returns>A <see cref="NodeAttributesInPostRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static NodeAttributesInPostRequest CreateFromDiscriminatorValue(IParseNode parseNode) {
+        public static NodeAttributesInPostRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
             return new NodeAttributesInPostRequest();
         }
         /// <summary>
         /// The deserialization information for the current model
         /// </summary>
-        public virtual IDictionary<string, Action<IParseNode>> GetFieldDeserializers() {
-            return new Dictionary<string, Action<IParseNode>> {
+        /// <returns>A IDictionary&lt;string, Action&lt;IParseNode&gt;&gt;</returns>
+        public virtual IDictionary<string, Action<IParseNode>> GetFieldDeserializers()
+        {
+            return new Dictionary<string, Action<IParseNode>>
+            {
                 {"comment", n => { Comment = n.GetStringValue(); } },
                 {"name", n => { Name = n.GetStringValue(); } },
             };
@@ -64,7 +73,8 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         /// Serializes information the current object
         /// </summary>
         /// <param name="writer">Serialization writer to use to serialize this model</param>
-        public virtual void Serialize(ISerializationWriter writer) {
+        public virtual void Serialize(ISerializationWriter writer)
+        {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteStringValue("comment", Comment);
             writer.WriteStringValue("name", Name);

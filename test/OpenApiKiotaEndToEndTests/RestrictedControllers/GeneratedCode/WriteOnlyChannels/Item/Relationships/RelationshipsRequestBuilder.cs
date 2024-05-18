@@ -12,32 +12,38 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
     /// <summary>
     /// Builds and executes requests for operations under \writeOnlyChannels\{id}\relationships
     /// </summary>
-    public class RelationshipsRequestBuilder : BaseRequestBuilder {
+    public class RelationshipsRequestBuilder : BaseRequestBuilder 
+    {
         /// <summary>The audioStreams property</summary>
-        public AudioStreamsRequestBuilder AudioStreams { get =>
-            new AudioStreamsRequestBuilder(PathParameters, RequestAdapter);
+        public AudioStreamsRequestBuilder AudioStreams
+        {
+            get => new AudioStreamsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The ultraHighDefinitionVideoStream property</summary>
-        public UltraHighDefinitionVideoStreamRequestBuilder UltraHighDefinitionVideoStream { get =>
-            new UltraHighDefinitionVideoStreamRequestBuilder(PathParameters, RequestAdapter);
+        public UltraHighDefinitionVideoStreamRequestBuilder UltraHighDefinitionVideoStream
+        {
+            get => new UltraHighDefinitionVideoStreamRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The videoStream property</summary>
-        public VideoStreamRequestBuilder VideoStream { get =>
-            new VideoStreamRequestBuilder(PathParameters, RequestAdapter);
+        public VideoStreamRequestBuilder VideoStream
+        {
+            get => new VideoStreamRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new RelationshipsRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="RelationshipsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public RelationshipsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/writeOnlyChannels/{id}/relationships", pathParameters) {
+        public RelationshipsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/writeOnlyChannels/{id}/relationships", pathParameters)
+        {
         }
         /// <summary>
-        /// Instantiates a new RelationshipsRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="RelationshipsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public RelationshipsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/writeOnlyChannels/{id}/relationships", rawUrl) {
+        public RelationshipsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/writeOnlyChannels/{id}/relationships", rawUrl)
+        {
         }
     }
 }

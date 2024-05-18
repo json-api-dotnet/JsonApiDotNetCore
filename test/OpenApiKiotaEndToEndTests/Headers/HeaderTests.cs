@@ -88,11 +88,9 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         };
 
         // Act
-        Stream? response = await apiClient.Countries.HeadAsync(configuration => configuration.Options.Add(headerInspector));
+        await apiClient.Countries.HeadAsync(configuration => configuration.Options.Add(headerInspector));
 
         // Assert
-        response.Should().BeNullOrEmpty();
-
         string[] contentLengthHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ContentLength).WhoseValue.ToArray();
         contentLengthHeaderValues.ShouldHaveCount(1);
         long.Parse(contentLengthHeaderValues[0]).Should().BeGreaterThan(0);
@@ -119,11 +117,9 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         };
 
         // Act
-        Stream? response = await apiClient.Countries[existingCountry.StringId].HeadAsync(configuration => configuration.Options.Add(headerInspector));
+        await apiClient.Countries[existingCountry.StringId].HeadAsync(configuration => configuration.Options.Add(headerInspector));
 
         // Assert
-        response.Should().BeNullOrEmpty();
-
         string[] contentLengthHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ContentLength).WhoseValue.ToArray();
         contentLengthHeaderValues.ShouldHaveCount(1);
         long.Parse(contentLengthHeaderValues[0]).Should().BeGreaterThan(0);
@@ -151,11 +147,9 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         };
 
         // Act
-        Stream? response = await apiClient.Countries[existingCountry.StringId].Languages.HeadAsync(configuration => configuration.Options.Add(headerInspector));
+        await apiClient.Countries[existingCountry.StringId].Languages.HeadAsync(configuration => configuration.Options.Add(headerInspector));
 
         // Assert
-        response.Should().BeNullOrEmpty();
-
         string[] contentLengthHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ContentLength).WhoseValue.ToArray();
         contentLengthHeaderValues.ShouldHaveCount(1);
         long.Parse(contentLengthHeaderValues[0]).Should().BeGreaterThan(0);
@@ -183,12 +177,9 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         };
 
         // Act
-        Stream? response = await apiClient.Countries[existingCountry.StringId].Relationships.Languages
-            .HeadAsync(configuration => configuration.Options.Add(headerInspector));
+        await apiClient.Countries[existingCountry.StringId].Relationships.Languages.HeadAsync(configuration => configuration.Options.Add(headerInspector));
 
         // Assert
-        response.Should().BeNullOrEmpty();
-
         string[] contentLengthHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ContentLength).WhoseValue.ToArray();
         contentLengthHeaderValues.ShouldHaveCount(1);
         long.Parse(contentLengthHeaderValues[0]).Should().BeGreaterThan(0);

@@ -12,32 +12,38 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Relations
     /// <summary>
     /// Builds and executes requests for operations under \vacations\{id}\relationships
     /// </summary>
-    public class RelationshipsRequestBuilder : BaseRequestBuilder {
+    public class RelationshipsRequestBuilder : BaseRequestBuilder 
+    {
         /// <summary>The accommodation property</summary>
-        public AccommodationRequestBuilder Accommodation { get =>
-            new AccommodationRequestBuilder(PathParameters, RequestAdapter);
+        public AccommodationRequestBuilder Accommodation
+        {
+            get => new AccommodationRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The excursions property</summary>
-        public ExcursionsRequestBuilder Excursions { get =>
-            new ExcursionsRequestBuilder(PathParameters, RequestAdapter);
+        public ExcursionsRequestBuilder Excursions
+        {
+            get => new ExcursionsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The transport property</summary>
-        public TransportRequestBuilder Transport { get =>
-            new TransportRequestBuilder(PathParameters, RequestAdapter);
+        public TransportRequestBuilder Transport
+        {
+            get => new TransportRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new RelationshipsRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="RelationshipsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public RelationshipsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/vacations/{id}/relationships", pathParameters) {
+        public RelationshipsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/vacations/{id}/relationships", pathParameters)
+        {
         }
         /// <summary>
-        /// Instantiates a new RelationshipsRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="RelationshipsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public RelationshipsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/vacations/{id}/relationships", rawUrl) {
+        public RelationshipsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/vacations/{id}/relationships", rawUrl)
+        {
         }
     }
 }

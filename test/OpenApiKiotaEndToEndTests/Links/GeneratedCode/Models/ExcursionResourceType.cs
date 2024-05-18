@@ -2,8 +2,13 @@
 using System.Runtime.Serialization;
 using System;
 namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
-    public enum ExcursionResourceType {
+    #pragma warning disable CS1591
+    public enum ExcursionResourceType
+    #pragma warning restore CS1591
+    {
         [EnumMember(Value = "excursions")]
+        #pragma warning disable CS1591
         Excursions,
+        #pragma warning restore CS1591
     }
 }

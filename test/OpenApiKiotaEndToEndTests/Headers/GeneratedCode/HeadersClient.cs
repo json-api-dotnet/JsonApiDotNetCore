@@ -16,17 +16,20 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode {
     /// <summary>
     /// The main entry point of the SDK, exposes the configuration and the fluent API.
     /// </summary>
-    public class HeadersClient : BaseRequestBuilder {
+    public class HeadersClient : BaseRequestBuilder 
+    {
         /// <summary>The countries property</summary>
-        public CountriesRequestBuilder Countries { get =>
-            new CountriesRequestBuilder(PathParameters, RequestAdapter);
+        public CountriesRequestBuilder Countries
+        {
+            get => new CountriesRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new HeadersClient and sets the default values.
+        /// Instantiates a new <see cref="HeadersClient"/> and sets the default values.
         /// </summary>
         /// <param name="backingStore">The backing store to use for the models.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public HeadersClient(IRequestAdapter requestAdapter, IBackingStoreFactory backingStore = default) : base(requestAdapter, "{+baseurl}", new Dictionary<string, object>()) {
+        public HeadersClient(IRequestAdapter requestAdapter, IBackingStoreFactory backingStore = default) : base(requestAdapter, "{+baseurl}", new Dictionary<string, object>())
+        {
             ApiClientBuilder.RegisterDefaultSerializer<JsonSerializationWriterFactory>();
             ApiClientBuilder.RegisterDefaultSerializer<TextSerializationWriterFactory>();
             ApiClientBuilder.RegisterDefaultSerializer<FormSerializationWriterFactory>();
@@ -34,7 +37,8 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode {
             ApiClientBuilder.RegisterDefaultDeserializer<JsonParseNodeFactory>();
             ApiClientBuilder.RegisterDefaultDeserializer<TextParseNodeFactory>();
             ApiClientBuilder.RegisterDefaultDeserializer<FormParseNodeFactory>();
-            if (string.IsNullOrEmpty(RequestAdapter.BaseUrl)) {
+            if (string.IsNullOrEmpty(RequestAdapter.BaseUrl))
+            {
                 RequestAdapter.BaseUrl = "http://localhost";
             }
             PathParameters.TryAdd("baseurl", RequestAdapter.BaseUrl);

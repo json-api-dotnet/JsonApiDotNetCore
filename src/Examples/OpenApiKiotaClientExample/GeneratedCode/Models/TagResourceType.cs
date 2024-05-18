@@ -2,8 +2,13 @@
 using System.Runtime.Serialization;
 using System;
 namespace OpenApiKiotaClientExample.GeneratedCode.Models {
-    public enum TagResourceType {
+    #pragma warning disable CS1591
+    public enum TagResourceType
+    #pragma warning restore CS1591
+    {
         [EnumMember(Value = "tags")]
+        #pragma warning disable CS1591
         Tags,
+        #pragma warning restore CS1591
     }
 }
