@@ -3,13 +3,13 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace OpenApiTests.DocComments;
+namespace OpenApiTests.Documentation;
 
 /// <summary>
 /// An elevator within a skyscraper.
 /// </summary>
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "OpenApiTests.DocComments", ClientIdGeneration = ClientIdGenerationMode.Forbidden)]
+[Resource(ControllerNamespace = "OpenApiTests.Documentation", ClientIdGeneration = ClientIdGenerationMode.Forbidden)]
 public sealed class Elevator : Identifiable<long>
 {
     /// <summary>

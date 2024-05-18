@@ -6,31 +6,31 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite;
 
-internal sealed class ReadWriteFakers : FakerContainer
+internal sealed class ReadWriteFakers
 {
     private readonly Lazy<Faker<WorkItem>> _lazyWorkItemFaker = new(() => new Faker<WorkItem>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(workItem => workItem.Description, faker => faker.Lorem.Sentence())
         .RuleFor(workItem => workItem.DueAt, faker => faker.Date.Future().TruncateToWholeMilliseconds())
         .RuleFor(workItem => workItem.Priority, faker => faker.PickRandom<WorkItemPriority>()));
 
     private readonly Lazy<Faker<WorkTag>> _lazyWorkTagFaker = new(() => new Faker<WorkTag>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(workTag => workTag.Text, faker => faker.Lorem.Word())
         .RuleFor(workTag => workTag.IsBuiltIn, faker => faker.Random.Bool()));
 
     private readonly Lazy<Faker<UserAccount>> _lazyUserAccountFaker = new(() => new Faker<UserAccount>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(userAccount => userAccount.FirstName, faker => faker.Name.FirstName())
         .RuleFor(userAccount => userAccount.LastName, faker => faker.Name.LastName()));
 
     private readonly Lazy<Faker<WorkItemGroup>> _lazyWorkItemGroupFaker = new(() => new Faker<WorkItemGroup>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(group => group.Name, faker => faker.Lorem.Word())
         .RuleFor(group => group.IsPublic, faker => faker.Random.Bool()));
 
     private readonly Lazy<Faker<RgbColor>> _lazyRgbColorFaker = new(() => new Faker<RgbColor>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(color => color.Id, faker => faker.Random.Hexadecimal(6))
         .RuleFor(color => color.DisplayName, faker => faker.Commerce.Color()));
 

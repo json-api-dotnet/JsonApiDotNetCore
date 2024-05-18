@@ -12,35 +12,44 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Accommoda
     /// <summary>
     /// Builds and executes requests for operations under \vacations\{id}\accommodation
     /// </summary>
-    public class AccommodationRequestBuilder : BaseRequestBuilder {
+    public class AccommodationRequestBuilder : BaseRequestBuilder 
+    {
         /// <summary>
-        /// Instantiates a new AccommodationRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="AccommodationRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public AccommodationRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/vacations/{id}/accommodation{?query*}", pathParameters) {
+        public AccommodationRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/vacations/{id}/accommodation{?query*}", pathParameters)
+        {
         }
         /// <summary>
-        /// Instantiates a new AccommodationRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="AccommodationRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public AccommodationRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/vacations/{id}/accommodation{?query*}", rawUrl) {
+        public AccommodationRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/vacations/{id}/accommodation{?query*}", rawUrl)
+        {
         }
         /// <summary>
         /// Retrieves the related accommodation of an individual vacation&apos;s accommodation relationship.
         /// </summary>
+        /// <returns>A <see cref="AccommodationSecondaryResponseDocument"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
+        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<AccommodationSecondaryResponseDocument?> GetAsync(Action<RequestConfiguration<AccommodationRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task<AccommodationSecondaryResponseDocument?> GetAsync(Action<RequestConfiguration<AccommodationRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #nullable restore
 #else
-        public async Task<AccommodationSecondaryResponseDocument> GetAsync(Action<RequestConfiguration<AccommodationRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task<AccommodationSecondaryResponseDocument> GetAsync(Action<RequestConfiguration<AccommodationRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
-            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>> {
+            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
+            {
                 {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
                 {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
             };
@@ -53,24 +62,29 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Accommoda
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<Stream?> HeadAsync(Action<RequestConfiguration<AccommodationRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task HeadAsync(Action<RequestConfiguration<AccommodationRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #nullable restore
 #else
-        public async Task<Stream> HeadAsync(Action<RequestConfiguration<AccommodationRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task HeadAsync(Action<RequestConfiguration<AccommodationRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #endif
             var requestInfo = ToHeadRequestInformation(requestConfiguration);
-            return await RequestAdapter.SendPrimitiveAsync<Stream>(requestInfo, default, cancellationToken).ConfigureAwait(false);
+            await RequestAdapter.SendNoContentAsync(requestInfo, default, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Retrieves the related accommodation of an individual vacation&apos;s accommodation relationship.
         /// </summary>
+        /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<AccommodationRequestBuilderGetQueryParameters>>? requestConfiguration = default) {
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<AccommodationRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<AccommodationRequestBuilderGetQueryParameters>> requestConfiguration = default) {
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<AccommodationRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
@@ -80,13 +94,16 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Accommoda
         /// <summary>
         /// Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.
         /// </summary>
+        /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<AccommodationRequestBuilderHeadQueryParameters>>? requestConfiguration = default) {
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<AccommodationRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
+        {
 #nullable restore
 #else
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<AccommodationRequestBuilderHeadQueryParameters>> requestConfiguration = default) {
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<AccommodationRequestBuilderHeadQueryParameters>> requestConfiguration = default)
+        {
 #endif
             var requestInfo = new RequestInformation(Method.HEAD, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
@@ -95,14 +112,17 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Accommoda
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
+        /// <returns>A <see cref="AccommodationRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public AccommodationRequestBuilder WithUrl(string rawUrl) {
+        public AccommodationRequestBuilder WithUrl(string rawUrl)
+        {
             return new AccommodationRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Retrieves the related accommodation of an individual vacation&apos;s accommodation relationship.
         /// </summary>
-        public class AccommodationRequestBuilderGetQueryParameters {
+        public class AccommodationRequestBuilderGetQueryParameters 
+        {
             /// <summary>For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -117,7 +137,8 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Accommoda
         /// <summary>
         /// Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.
         /// </summary>
-        public class AccommodationRequestBuilderHeadQueryParameters {
+        public class AccommodationRequestBuilderHeadQueryParameters 
+        {
             /// <summary>For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable

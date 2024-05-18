@@ -2,8 +2,13 @@
 using System.Runtime.Serialization;
 using System;
 namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
-    public enum TransportResourceType {
+    #pragma warning disable CS1591
+    public enum TransportResourceType
+    #pragma warning restore CS1591
+    {
         [EnumMember(Value = "transports")]
+        #pragma warning disable CS1591
         Transports,
+        #pragma warning restore CS1591
     }
 }

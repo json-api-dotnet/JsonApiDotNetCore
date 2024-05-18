@@ -50,11 +50,9 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         };
 
         // Act
-        Stream? response = await apiClient.Countries.HeadAsync(configuration => configuration.Options.Add(headerInspector));
+        await apiClient.Countries.HeadAsync(configuration => configuration.Options.Add(headerInspector));
 
         // Assert
-        response.Should().BeNullOrEmpty();
-
         string[] eTagHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
         eTagHeaderValues.ShouldHaveCount(1);
         eTagHeaderValues[0].Should().Match("\"*\"");

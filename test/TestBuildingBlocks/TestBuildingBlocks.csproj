@@ -20,6 +20,6 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(EntityFrameworkCoreVersion)" />
     <PackageReference Include="xunit" Version="$(XunitVersion)" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitVisualStudioVersion)" PrivateAssets="All" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitVersion)" PrivateAssets="All" />
   </ItemGroup>
 </Project>

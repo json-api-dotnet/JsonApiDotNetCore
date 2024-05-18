@@ -8,15 +8,15 @@ using TestBuildingBlocks;
 namespace OpenApiTests.QueryStrings;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class QueryStringFakers : FakerContainer
+public sealed class QueryStringFakers
 {
     private readonly Lazy<Faker<Node>> _lazyNodeFaker = new(() => new Faker<Node>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(node => node.Name, faker => faker.Lorem.Word())
         .RuleFor(node => node.Comment, faker => faker.Lorem.Sentence()));
 
     private readonly Lazy<Faker<NameValuePair>> _lazyNameValuePairFaker = new(() => new Faker<NameValuePair>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(node => node.Name, faker => faker.Lorem.Word())
         .RuleFor(node => node.Value, faker => faker.Lorem.Sentence()));
 

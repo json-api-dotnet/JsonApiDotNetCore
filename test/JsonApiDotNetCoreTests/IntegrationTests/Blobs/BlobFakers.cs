@@ -6,10 +6,10 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Blobs;
 
-internal sealed class BlobFakers : FakerContainer
+internal sealed class BlobFakers
 {
     private readonly Lazy<Faker<ImageContainer>> _lazyImageContainerFaker = new(() => new Faker<ImageContainer>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(imageContainer => imageContainer.FileName, faker => faker.System.FileName())
         .RuleFor(imageContainer => imageContainer.Data, faker => faker.Random.Bytes(128))
         .RuleFor(imageContainer => imageContainer.Thumbnail, faker => faker.Random.Bytes(64)));

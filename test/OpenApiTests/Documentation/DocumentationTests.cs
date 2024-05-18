@@ -4,9 +4,9 @@ using Xunit;
 
 // @formatter:max_line_length 250
 
-namespace OpenApiTests.DocComments;
+namespace OpenApiTests.Documentation;
 
-public sealed class DocCommentTests : IClassFixture<OpenApiTestContext<DocCommentStartup<DocCommentDbContext>, DocCommentDbContext>>
+public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<DocumentationStartup<DocumentationDbContext>, DocumentationDbContext>>
 {
     private const string ResourceTextQueryString =
         "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.";
@@ -14,9 +14,9 @@ public sealed class DocCommentTests : IClassFixture<OpenApiTestContext<DocCommen
     private const string RelationshipTextQueryString =
         "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.";
 
-    private readonly OpenApiTestContext<DocCommentStartup<DocCommentDbContext>, DocCommentDbContext> _testContext;
+    private readonly OpenApiTestContext<DocumentationStartup<DocumentationDbContext>, DocumentationDbContext> _testContext;
 
-    public DocCommentTests(OpenApiTestContext<DocCommentStartup<DocCommentDbContext>, DocCommentDbContext> testContext)
+    public DocumentationTests(OpenApiTestContext<DocumentationStartup<DocumentationDbContext>, DocumentationDbContext> testContext)
     {
         _testContext = testContext;
 

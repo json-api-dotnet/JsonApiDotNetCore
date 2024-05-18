@@ -12,35 +12,44 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Childr
     /// <summary>
     /// Builds and executes requests for operations under \nodes\{id}\children
     /// </summary>
-    public class ChildrenRequestBuilder : BaseRequestBuilder {
+    public class ChildrenRequestBuilder : BaseRequestBuilder 
+    {
         /// <summary>
-        /// Instantiates a new ChildrenRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="ChildrenRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public ChildrenRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/nodes/{id}/children{?query*}", pathParameters) {
+        public ChildrenRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/nodes/{id}/children{?query*}", pathParameters)
+        {
         }
         /// <summary>
-        /// Instantiates a new ChildrenRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="ChildrenRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public ChildrenRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/nodes/{id}/children{?query*}", rawUrl) {
+        public ChildrenRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/nodes/{id}/children{?query*}", rawUrl)
+        {
         }
         /// <summary>
         /// Retrieves the related nodes of an individual node&apos;s children relationship.
         /// </summary>
+        /// <returns>A <see cref="NodeCollectionResponseDocument"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
+        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<NodeCollectionResponseDocument?> GetAsync(Action<RequestConfiguration<ChildrenRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task<NodeCollectionResponseDocument?> GetAsync(Action<RequestConfiguration<ChildrenRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #nullable restore
 #else
-        public async Task<NodeCollectionResponseDocument> GetAsync(Action<RequestConfiguration<ChildrenRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task<NodeCollectionResponseDocument> GetAsync(Action<RequestConfiguration<ChildrenRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
-            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>> {
+            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
+            {
                 {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
                 {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
             };
@@ -53,24 +62,29 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Childr
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<Stream?> HeadAsync(Action<RequestConfiguration<ChildrenRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task HeadAsync(Action<RequestConfiguration<ChildrenRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #nullable restore
 #else
-        public async Task<Stream> HeadAsync(Action<RequestConfiguration<ChildrenRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task HeadAsync(Action<RequestConfiguration<ChildrenRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #endif
             var requestInfo = ToHeadRequestInformation(requestConfiguration);
-            return await RequestAdapter.SendPrimitiveAsync<Stream>(requestInfo, default, cancellationToken).ConfigureAwait(false);
+            await RequestAdapter.SendNoContentAsync(requestInfo, default, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Retrieves the related nodes of an individual node&apos;s children relationship.
         /// </summary>
+        /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<ChildrenRequestBuilderGetQueryParameters>>? requestConfiguration = default) {
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<ChildrenRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<ChildrenRequestBuilderGetQueryParameters>> requestConfiguration = default) {
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<ChildrenRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
@@ -80,13 +94,16 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Childr
         /// <summary>
         /// Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.
         /// </summary>
+        /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<ChildrenRequestBuilderHeadQueryParameters>>? requestConfiguration = default) {
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<ChildrenRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
+        {
 #nullable restore
 #else
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<ChildrenRequestBuilderHeadQueryParameters>> requestConfiguration = default) {
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<ChildrenRequestBuilderHeadQueryParameters>> requestConfiguration = default)
+        {
 #endif
             var requestInfo = new RequestInformation(Method.HEAD, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
@@ -95,14 +112,17 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Childr
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
+        /// <returns>A <see cref="ChildrenRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public ChildrenRequestBuilder WithUrl(string rawUrl) {
+        public ChildrenRequestBuilder WithUrl(string rawUrl)
+        {
             return new ChildrenRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Retrieves the related nodes of an individual node&apos;s children relationship.
         /// </summary>
-        public class ChildrenRequestBuilderGetQueryParameters {
+        public class ChildrenRequestBuilderGetQueryParameters 
+        {
             /// <summary>For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -117,7 +137,8 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Childr
         /// <summary>
         /// Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.
         /// </summary>
-        public class ChildrenRequestBuilderHeadQueryParameters {
+        public class ChildrenRequestBuilderHeadQueryParameters 
+        {
             /// <summary>For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable

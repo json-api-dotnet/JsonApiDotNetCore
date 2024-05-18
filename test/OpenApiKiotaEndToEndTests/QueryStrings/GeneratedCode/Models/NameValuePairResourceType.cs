@@ -2,8 +2,13 @@
 using System.Runtime.Serialization;
 using System;
 namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
-    public enum NameValuePairResourceType {
+    #pragma warning disable CS1591
+    public enum NameValuePairResourceType
+    #pragma warning restore CS1591
+    {
         [EnumMember(Value = "nameValuePairs")]
+        #pragma warning disable CS1591
         NameValuePairs,
+        #pragma warning restore CS1591
     }
 }

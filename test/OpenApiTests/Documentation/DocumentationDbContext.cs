@@ -4,10 +4,10 @@ using TestBuildingBlocks;
 
 // @formatter:wrap_chained_method_calls chop_always
 
-namespace OpenApiTests.DocComments;
+namespace OpenApiTests.Documentation;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class DocCommentDbContext(DbContextOptions<DocCommentDbContext> options) : TestableDbContext(options)
+public sealed class DocumentationDbContext(DbContextOptions<DocumentationDbContext> options) : TestableDbContext(options)
 {
     public DbSet<Skyscraper> Skyscrapers => Set<Skyscraper>();
     public DbSet<Elevator> Elevators => Set<Elevator>();

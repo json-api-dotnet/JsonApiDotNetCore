@@ -2,8 +2,13 @@
 using System.Runtime.Serialization;
 using System;
 namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
-    public enum LanguageResourceType {
+    #pragma warning disable CS1591
+    public enum LanguageResourceType
+    #pragma warning restore CS1591
+    {
         [EnumMember(Value = "languages")]
+        #pragma warning disable CS1591
         Languages,
+        #pragma warning restore CS1591
     }
 }

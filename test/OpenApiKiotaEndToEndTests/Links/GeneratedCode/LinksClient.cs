@@ -19,29 +19,35 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode {
     /// <summary>
     /// The main entry point of the SDK, exposes the configuration and the fluent API.
     /// </summary>
-    public class LinksClient : BaseRequestBuilder {
+    public class LinksClient : BaseRequestBuilder 
+    {
         /// <summary>The accommodations property</summary>
-        public AccommodationsRequestBuilder Accommodations { get =>
-            new AccommodationsRequestBuilder(PathParameters, RequestAdapter);
+        public AccommodationsRequestBuilder Accommodations
+        {
+            get => new AccommodationsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The excursions property</summary>
-        public ExcursionsRequestBuilder Excursions { get =>
-            new ExcursionsRequestBuilder(PathParameters, RequestAdapter);
+        public ExcursionsRequestBuilder Excursions
+        {
+            get => new ExcursionsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The transports property</summary>
-        public TransportsRequestBuilder Transports { get =>
-            new TransportsRequestBuilder(PathParameters, RequestAdapter);
+        public TransportsRequestBuilder Transports
+        {
+            get => new TransportsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The vacations property</summary>
-        public VacationsRequestBuilder Vacations { get =>
-            new VacationsRequestBuilder(PathParameters, RequestAdapter);
+        public VacationsRequestBuilder Vacations
+        {
+            get => new VacationsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new LinksClient and sets the default values.
+        /// Instantiates a new <see cref="LinksClient"/> and sets the default values.
         /// </summary>
         /// <param name="backingStore">The backing store to use for the models.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public LinksClient(IRequestAdapter requestAdapter, IBackingStoreFactory backingStore = default) : base(requestAdapter, "{+baseurl}", new Dictionary<string, object>()) {
+        public LinksClient(IRequestAdapter requestAdapter, IBackingStoreFactory backingStore = default) : base(requestAdapter, "{+baseurl}", new Dictionary<string, object>())
+        {
             ApiClientBuilder.RegisterDefaultSerializer<JsonSerializationWriterFactory>();
             ApiClientBuilder.RegisterDefaultSerializer<TextSerializationWriterFactory>();
             ApiClientBuilder.RegisterDefaultSerializer<FormSerializationWriterFactory>();
@@ -49,7 +55,8 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode {
             ApiClientBuilder.RegisterDefaultDeserializer<JsonParseNodeFactory>();
             ApiClientBuilder.RegisterDefaultDeserializer<TextParseNodeFactory>();
             ApiClientBuilder.RegisterDefaultDeserializer<FormParseNodeFactory>();
-            if (string.IsNullOrEmpty(RequestAdapter.BaseUrl)) {
+            if (string.IsNullOrEmpty(RequestAdapter.BaseUrl))
+            {
                 RequestAdapter.BaseUrl = "http://localhost";
             }
             PathParameters.TryAdd("baseurl", RequestAdapter.BaseUrl);

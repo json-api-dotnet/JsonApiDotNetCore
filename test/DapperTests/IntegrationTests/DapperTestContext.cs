@@ -58,7 +58,7 @@ public sealed class DapperTestContext : IntegrationTest
                 $"Host=localhost;Database=DapperExample-{Guid.NewGuid():N};User ID=postgres;Password=postgres;Include Error Detail=true");
 
             builder.UseSetting("ConnectionStrings:DapperExampleMySql",
-                $"Host=localhost;Database=DapperExample-{Guid.NewGuid():N};User ID=root;Password=mysql;SSL Mode=None");
+                $"Host=localhost;Database=DapperExample-{Guid.NewGuid():N};User ID=root;Password=mysql;SSL Mode=None;AllowPublicKeyRetrieval=True");
 
             builder.UseSetting("ConnectionStrings:DapperExampleSqlServer",
                 $"Server=localhost;Database=DapperExample-{Guid.NewGuid():N};User ID=sa;Password=Passw0rd!;TrustServerCertificate=true");

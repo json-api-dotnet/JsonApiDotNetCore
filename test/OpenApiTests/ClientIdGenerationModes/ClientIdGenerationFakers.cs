@@ -8,19 +8,19 @@ using TestBuildingBlocks;
 namespace OpenApiTests.ClientIdGenerationModes;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class ClientIdGenerationFakers : FakerContainer
+public sealed class ClientIdGenerationFakers
 {
     private readonly Lazy<Faker<Player>> _lazyPlayerFaker = new(() => new Faker<Player>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(player => player.UserName, faker => faker.Person.UserName));
 
     private readonly Lazy<Faker<Game>> _lazyGameFaker = new(() => new Faker<Game>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(game => game.Title, faker => faker.Commerce.ProductName())
         .RuleFor(game => game.PurchasePrice, faker => faker.Finance.Amount(1, 80)));
 
     private readonly Lazy<Faker<PlayerGroup>> _lazyGroupFaker = new(() => new Faker<PlayerGroup>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(playerGroup => playerGroup.Name, faker => faker.Person.Company.Name));
 
     public Faker<Player> Player => _lazyPlayerFaker.Value;

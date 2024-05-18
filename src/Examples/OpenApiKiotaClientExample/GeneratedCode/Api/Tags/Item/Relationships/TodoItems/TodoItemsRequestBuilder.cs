@@ -12,20 +12,23 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.Relationships.To
     /// <summary>
     /// Builds and executes requests for operations under \api\tags\{id}\relationships\todoItems
     /// </summary>
-    public class TodoItemsRequestBuilder : BaseRequestBuilder {
+    public class TodoItemsRequestBuilder : BaseRequestBuilder 
+    {
         /// <summary>
-        /// Instantiates a new TodoItemsRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="TodoItemsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public TodoItemsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/tags/{id}/relationships/todoItems{?query*}", pathParameters) {
+        public TodoItemsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/tags/{id}/relationships/todoItems{?query*}", pathParameters)
+        {
         }
         /// <summary>
-        /// Instantiates a new TodoItemsRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="TodoItemsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public TodoItemsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/tags/{id}/relationships/todoItems{?query*}", rawUrl) {
+        public TodoItemsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/tags/{id}/relationships/todoItems{?query*}", rawUrl)
+        {
         }
         /// <summary>
         /// Removes existing todoItems from the todoItems relationship of an individual tag.
@@ -33,16 +36,22 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.Relationships.To
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
+        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="ErrorResponseDocument">When receiving a 409 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task DeleteAsync(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task DeleteAsync(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #nullable restore
 #else
-        public async Task DeleteAsync(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task DeleteAsync(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToDeleteRequestInformation(body, requestConfiguration);
-            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>> {
+            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
+            {
                 {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
                 {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
                 {"409", ErrorResponseDocument.CreateFromDiscriminatorValue},
@@ -52,17 +61,23 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.Relationships.To
         /// <summary>
         /// Retrieves the related todoItem identities of an individual tag&apos;s todoItems relationship.
         /// </summary>
+        /// <returns>A <see cref="TodoItemIdentifierCollectionResponseDocument"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
+        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<TodoItemIdentifierCollectionResponseDocument?> GetAsync(Action<RequestConfiguration<TodoItemsRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task<TodoItemIdentifierCollectionResponseDocument?> GetAsync(Action<RequestConfiguration<TodoItemsRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #nullable restore
 #else
-        public async Task<TodoItemIdentifierCollectionResponseDocument> GetAsync(Action<RequestConfiguration<TodoItemsRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task<TodoItemIdentifierCollectionResponseDocument> GetAsync(Action<RequestConfiguration<TodoItemsRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
-            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>> {
+            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
+            {
                 {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
                 {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
             };
@@ -75,13 +90,15 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.Relationships.To
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<Stream?> HeadAsync(Action<RequestConfiguration<TodoItemsRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task HeadAsync(Action<RequestConfiguration<TodoItemsRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #nullable restore
 #else
-        public async Task<Stream> HeadAsync(Action<RequestConfiguration<TodoItemsRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task HeadAsync(Action<RequestConfiguration<TodoItemsRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #endif
             var requestInfo = ToHeadRequestInformation(requestConfiguration);
-            return await RequestAdapter.SendPrimitiveAsync<Stream>(requestInfo, default, cancellationToken).ConfigureAwait(false);
+            await RequestAdapter.SendNoContentAsync(requestInfo, default, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Assigns existing todoItems to the todoItems relationship of an individual tag.
@@ -89,16 +106,22 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.Relationships.To
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
+        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="ErrorResponseDocument">When receiving a 409 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task PatchAsync(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task PatchAsync(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #nullable restore
 #else
-        public async Task PatchAsync(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task PatchAsync(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPatchRequestInformation(body, requestConfiguration);
-            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>> {
+            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
+            {
                 {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
                 {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
                 {"409", ErrorResponseDocument.CreateFromDiscriminatorValue},
@@ -111,16 +134,22 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.Relationships.To
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
+        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="ErrorResponseDocument">When receiving a 409 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task PostAsync(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task PostAsync(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #nullable restore
 #else
-        public async Task PostAsync(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task PostAsync(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPostRequestInformation(body, requestConfiguration);
-            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>> {
+            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
+            {
                 {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
                 {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
                 {"409", ErrorResponseDocument.CreateFromDiscriminatorValue},
@@ -130,14 +159,17 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.Relationships.To
         /// <summary>
         /// Removes existing todoItems from the todoItems relationship of an individual tag.
         /// </summary>
+        /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToDeleteRequestInformation(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default) {
+        public RequestInformation ToDeleteRequestInformation(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default)
+        {
 #nullable restore
 #else
-        public RequestInformation ToDeleteRequestInformation(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default) {
+        public RequestInformation ToDeleteRequestInformation(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default)
+        {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = new RequestInformation(Method.DELETE, UrlTemplate, PathParameters);
@@ -149,13 +181,16 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.Relationships.To
         /// <summary>
         /// Retrieves the related todoItem identities of an individual tag&apos;s todoItems relationship.
         /// </summary>
+        /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<TodoItemsRequestBuilderGetQueryParameters>>? requestConfiguration = default) {
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<TodoItemsRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<TodoItemsRequestBuilderGetQueryParameters>> requestConfiguration = default) {
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<TodoItemsRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
@@ -165,13 +200,16 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.Relationships.To
         /// <summary>
         /// Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.
         /// </summary>
+        /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<TodoItemsRequestBuilderHeadQueryParameters>>? requestConfiguration = default) {
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<TodoItemsRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
+        {
 #nullable restore
 #else
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<TodoItemsRequestBuilderHeadQueryParameters>> requestConfiguration = default) {
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<TodoItemsRequestBuilderHeadQueryParameters>> requestConfiguration = default)
+        {
 #endif
             var requestInfo = new RequestInformation(Method.HEAD, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
@@ -180,14 +218,17 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.Relationships.To
         /// <summary>
         /// Assigns existing todoItems to the todoItems relationship of an individual tag.
         /// </summary>
+        /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPatchRequestInformation(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default) {
+        public RequestInformation ToPatchRequestInformation(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default)
+        {
 #nullable restore
 #else
-        public RequestInformation ToPatchRequestInformation(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default) {
+        public RequestInformation ToPatchRequestInformation(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default)
+        {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = new RequestInformation(Method.PATCH, UrlTemplate, PathParameters);
@@ -199,14 +240,17 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.Relationships.To
         /// <summary>
         /// Adds existing todoItems to the todoItems relationship of an individual tag.
         /// </summary>
+        /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPostRequestInformation(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default) {
+        public RequestInformation ToPostRequestInformation(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default)
+        {
 #nullable restore
 #else
-        public RequestInformation ToPostRequestInformation(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default) {
+        public RequestInformation ToPostRequestInformation(ToManyTodoItemInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default)
+        {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = new RequestInformation(Method.POST, UrlTemplate, PathParameters);
@@ -218,14 +262,17 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.Relationships.To
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
+        /// <returns>A <see cref="TodoItemsRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public TodoItemsRequestBuilder WithUrl(string rawUrl) {
+        public TodoItemsRequestBuilder WithUrl(string rawUrl)
+        {
             return new TodoItemsRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Retrieves the related todoItem identities of an individual tag&apos;s todoItems relationship.
         /// </summary>
-        public class TodoItemsRequestBuilderGetQueryParameters {
+        public class TodoItemsRequestBuilderGetQueryParameters 
+        {
             /// <summary>For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -240,7 +287,8 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.Relationships.To
         /// <summary>
         /// Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.
         /// </summary>
-        public class TodoItemsRequestBuilderHeadQueryParameters {
+        public class TodoItemsRequestBuilderHeadQueryParameters 
+        {
             /// <summary>For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable

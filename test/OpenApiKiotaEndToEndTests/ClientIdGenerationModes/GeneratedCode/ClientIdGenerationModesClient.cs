@@ -18,25 +18,30 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode {
     /// <summary>
     /// The main entry point of the SDK, exposes the configuration and the fluent API.
     /// </summary>
-    public class ClientIdGenerationModesClient : BaseRequestBuilder {
+    public class ClientIdGenerationModesClient : BaseRequestBuilder 
+    {
         /// <summary>The games property</summary>
-        public GamesRequestBuilder Games { get =>
-            new GamesRequestBuilder(PathParameters, RequestAdapter);
+        public GamesRequestBuilder Games
+        {
+            get => new GamesRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The playerGroups property</summary>
-        public PlayerGroupsRequestBuilder PlayerGroups { get =>
-            new PlayerGroupsRequestBuilder(PathParameters, RequestAdapter);
+        public PlayerGroupsRequestBuilder PlayerGroups
+        {
+            get => new PlayerGroupsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The players property</summary>
-        public PlayersRequestBuilder Players { get =>
-            new PlayersRequestBuilder(PathParameters, RequestAdapter);
+        public PlayersRequestBuilder Players
+        {
+            get => new PlayersRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new ClientIdGenerationModesClient and sets the default values.
+        /// Instantiates a new <see cref="ClientIdGenerationModesClient"/> and sets the default values.
         /// </summary>
         /// <param name="backingStore">The backing store to use for the models.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public ClientIdGenerationModesClient(IRequestAdapter requestAdapter, IBackingStoreFactory backingStore = default) : base(requestAdapter, "{+baseurl}", new Dictionary<string, object>()) {
+        public ClientIdGenerationModesClient(IRequestAdapter requestAdapter, IBackingStoreFactory backingStore = default) : base(requestAdapter, "{+baseurl}", new Dictionary<string, object>())
+        {
             ApiClientBuilder.RegisterDefaultSerializer<JsonSerializationWriterFactory>();
             ApiClientBuilder.RegisterDefaultSerializer<TextSerializationWriterFactory>();
             ApiClientBuilder.RegisterDefaultSerializer<FormSerializationWriterFactory>();
@@ -44,7 +49,8 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode {
             ApiClientBuilder.RegisterDefaultDeserializer<JsonParseNodeFactory>();
             ApiClientBuilder.RegisterDefaultDeserializer<TextParseNodeFactory>();
             ApiClientBuilder.RegisterDefaultDeserializer<FormParseNodeFactory>();
-            if (string.IsNullOrEmpty(RequestAdapter.BaseUrl)) {
+            if (string.IsNullOrEmpty(RequestAdapter.BaseUrl))
+            {
                 RequestAdapter.BaseUrl = "http://localhost";
             }
             PathParameters.TryAdd("baseurl", RequestAdapter.BaseUrl);

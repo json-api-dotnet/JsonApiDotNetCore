@@ -8,30 +8,30 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-internal sealed class RestrictionFakers : FakerContainer
+internal sealed class RestrictionFakers
 {
     private readonly Lazy<Faker<Room>> _lazyRoomFaker = new(() => new Faker<Room>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(room => room.WindowCount, faker => faker.Random.Int(0, 3)));
 
     private readonly Lazy<Faker<Table>> _lazyTableFaker = new(() => new Faker<Table>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(table => table.LegCount, faker => faker.Random.Int(1, 4)));
 
     private readonly Lazy<Faker<Chair>> _lazyChairFaker = new(() => new Faker<Chair>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(chair => chair.LegCount, faker => faker.Random.Int(2, 4)));
 
     private readonly Lazy<Faker<Sofa>> _lazySofaFaker = new(() => new Faker<Sofa>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(sofa => sofa.SeatCount, faker => faker.Random.Int(2, 6)));
 
     private readonly Lazy<Faker<Pillow>> _lazyPillowFaker = new(() => new Faker<Pillow>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(pillow => pillow.Color, faker => faker.Internet.Color()));
 
     private readonly Lazy<Faker<Bed>> _lazyBedFaker = new(() => new Faker<Bed>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(bed => bed.IsDouble, faker => faker.Random.Bool()));
 
     public Faker<Room> Room => _lazyRoomFaker.Value;

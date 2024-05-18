@@ -3,15 +3,15 @@ using FluentAssertions;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace OpenApiTests.DocComments;
+namespace OpenApiTests.Documentation;
 
-public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<DocCommentStartup<DocCommentDbContext>, DocCommentDbContext>>
+public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<DocumentationStartup<DocumentationDbContext>, DocumentationDbContext>>
 {
     private const string EscapedJsonApiMediaType = "['application/vnd.api+json']";
 
-    private readonly OpenApiTestContext<DocCommentStartup<DocCommentDbContext>, DocCommentDbContext> _testContext;
+    private readonly OpenApiTestContext<DocumentationStartup<DocumentationDbContext>, DocumentationDbContext> _testContext;
 
-    public ErrorResponseTests(OpenApiTestContext<DocCommentStartup<DocCommentDbContext>, DocCommentDbContext> testContext)
+    public ErrorResponseTests(OpenApiTestContext<DocumentationStartup<DocumentationDbContext>, DocumentationDbContext> testContext)
     {
         _testContext = testContext;
 

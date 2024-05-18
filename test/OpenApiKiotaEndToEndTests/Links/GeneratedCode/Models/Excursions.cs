@@ -5,7 +5,10 @@ using System.IO;
 using System.Linq;
 using System;
 namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
-    public class Excursions : DataInResponse, IParsable {
+    #pragma warning disable CS1591
+    public class Excursions : DataInResponse, IParsable 
+    #pragma warning restore CS1591
+    {
         /// <summary>The attributes property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -51,16 +54,21 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
+        /// <returns>A <see cref="Excursions"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static new Excursions CreateFromDiscriminatorValue(IParseNode parseNode) {
+        public static new Excursions CreateFromDiscriminatorValue(IParseNode parseNode)
+        {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
             return new Excursions();
         }
         /// <summary>
         /// The deserialization information for the current model
         /// </summary>
-        public override IDictionary<string, Action<IParseNode>> GetFieldDeserializers() {
-            return new Dictionary<string, Action<IParseNode>>(base.GetFieldDeserializers()) {
+        /// <returns>A IDictionary&lt;string, Action&lt;IParseNode&gt;&gt;</returns>
+        public override IDictionary<string, Action<IParseNode>> GetFieldDeserializers()
+        {
+            return new Dictionary<string, Action<IParseNode>>(base.GetFieldDeserializers())
+            {
                 {"attributes", n => { Attributes = n.GetObjectValue<ExcursionAttributesInResponse>(ExcursionAttributesInResponse.CreateFromDiscriminatorValue); } },
                 {"links", n => { Links = n.GetObjectValue<ResourceLinks>(ResourceLinks.CreateFromDiscriminatorValue); } },
                 {"meta", n => { Meta = n.GetObjectValue<Excursions_meta>(Excursions_meta.CreateFromDiscriminatorValue); } },
@@ -70,7 +78,8 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// Serializes information the current object
         /// </summary>
         /// <param name="writer">Serialization writer to use to serialize this model</param>
-        public override void Serialize(ISerializationWriter writer) {
+        public override void Serialize(ISerializationWriter writer)
+        {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             base.Serialize(writer);
             writer.WriteObjectValue<ExcursionAttributesInResponse>("attributes", Attributes);

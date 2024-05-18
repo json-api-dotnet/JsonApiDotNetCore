@@ -11,28 +11,33 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.Relationships 
     /// <summary>
     /// Builds and executes requests for operations under \api\people\{id}\relationships
     /// </summary>
-    public class RelationshipsRequestBuilder : BaseRequestBuilder {
+    public class RelationshipsRequestBuilder : BaseRequestBuilder 
+    {
         /// <summary>The assignedTodoItems property</summary>
-        public AssignedTodoItemsRequestBuilder AssignedTodoItems { get =>
-            new AssignedTodoItemsRequestBuilder(PathParameters, RequestAdapter);
+        public AssignedTodoItemsRequestBuilder AssignedTodoItems
+        {
+            get => new AssignedTodoItemsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The ownedTodoItems property</summary>
-        public OwnedTodoItemsRequestBuilder OwnedTodoItems { get =>
-            new OwnedTodoItemsRequestBuilder(PathParameters, RequestAdapter);
+        public OwnedTodoItemsRequestBuilder OwnedTodoItems
+        {
+            get => new OwnedTodoItemsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new RelationshipsRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="RelationshipsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public RelationshipsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/people/{id}/relationships", pathParameters) {
+        public RelationshipsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/people/{id}/relationships", pathParameters)
+        {
         }
         /// <summary>
-        /// Instantiates a new RelationshipsRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="RelationshipsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public RelationshipsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/people/{id}/relationships", rawUrl) {
+        public RelationshipsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/people/{id}/relationships", rawUrl)
+        {
         }
     }
 }

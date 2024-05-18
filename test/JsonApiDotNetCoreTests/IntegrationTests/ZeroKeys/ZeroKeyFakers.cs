@@ -6,19 +6,19 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys;
 
-internal sealed class ZeroKeyFakers : FakerContainer
+internal sealed class ZeroKeyFakers
 {
     private readonly Lazy<Faker<Game>> _lazyGameFaker = new(() => new Faker<Game>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(game => game.Title, faker => faker.Random.Words()));
 
     private readonly Lazy<Faker<Player>> _lazyPlayerFaker = new(() => new Faker<Player>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(player => player.Id, faker => faker.Person.UserName)
         .RuleFor(player => player.EmailAddress, faker => faker.Person.Email));
 
     private readonly Lazy<Faker<Map>> _lazyMapFaker = new(() => new Faker<Map>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(map => map.Id, faker => faker.Random.Guid())
         .RuleFor(map => map.Name, faker => faker.Random.Words()));
 

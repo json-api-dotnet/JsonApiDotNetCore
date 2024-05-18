@@ -2,12 +2,21 @@
 using System.Runtime.Serialization;
 using System;
 namespace OpenApiKiotaClientExample.GeneratedCode.Models {
-    public enum TodoItemPriority {
+    #pragma warning disable CS1591
+    public enum TodoItemPriority
+    #pragma warning restore CS1591
+    {
         [EnumMember(Value = "High")]
+        #pragma warning disable CS1591
         High,
+        #pragma warning restore CS1591
         [EnumMember(Value = "Medium")]
+        #pragma warning disable CS1591
         Medium,
+        #pragma warning restore CS1591
         [EnumMember(Value = "Low")]
+        #pragma warning disable CS1591
         Low,
+        #pragma warning restore CS1591
     }
 }

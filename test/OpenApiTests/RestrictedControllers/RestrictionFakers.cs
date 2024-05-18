@@ -8,7 +8,7 @@ using TestBuildingBlocks;
 namespace OpenApiTests.RestrictedControllers;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class RestrictionFakers : FakerContainer
+public sealed class RestrictionFakers
 {
     private static readonly IList<bool?> NullableBooleanValues =
     [
@@ -18,29 +18,29 @@ public sealed class RestrictionFakers : FakerContainer
     ];
 
     private readonly Lazy<Faker<DataStream>> _lazyDataStreamFaker = new(() => new Faker<DataStream>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(stream => stream.BytesTransmitted, faker => (ulong)faker.Random.Long(0)));
 
     private readonly Lazy<Faker<ReadOnlyChannel>> _lazyReadOnlyChannelFaker = new(() => new Faker<ReadOnlyChannel>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(channel => channel.Name, faker => faker.Lorem.Word())
         .RuleFor(channel => channel.IsCommercial, faker => faker.PickRandom(NullableBooleanValues))
         .RuleFor(channel => channel.IsAdultOnly, faker => faker.PickRandom(NullableBooleanValues)));
 
     private readonly Lazy<Faker<WriteOnlyChannel>> _lazyWriteOnlyChannelFaker = new(() => new Faker<WriteOnlyChannel>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(channel => channel.Name, faker => faker.Lorem.Word())
         .RuleFor(channel => channel.IsCommercial, faker => faker.PickRandom(NullableBooleanValues))
         .RuleFor(channel => channel.IsAdultOnly, faker => faker.PickRandom(NullableBooleanValues)));
 
     private readonly Lazy<Faker<RelationshipChannel>> _lazyRelationshipChannelFaker = new(() => new Faker<RelationshipChannel>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(channel => channel.Name, faker => faker.Lorem.Word())
         .RuleFor(channel => channel.IsCommercial, faker => faker.PickRandom(NullableBooleanValues))
         .RuleFor(channel => channel.IsAdultOnly, faker => faker.PickRandom(NullableBooleanValues)));
 
     private readonly Lazy<Faker<ReadOnlyResourceChannel>> _lazyReadOnlyResourceChannelFaker = new(() => new Faker<ReadOnlyResourceChannel>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(channel => channel.Name, faker => faker.Lorem.Word())
         .RuleFor(channel => channel.IsCommercial, faker => faker.PickRandom(NullableBooleanValues))
         .RuleFor(channel => channel.IsAdultOnly, faker => faker.PickRandom(NullableBooleanValues)));

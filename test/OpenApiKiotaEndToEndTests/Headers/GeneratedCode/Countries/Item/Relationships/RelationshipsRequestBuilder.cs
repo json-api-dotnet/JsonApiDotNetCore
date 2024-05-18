@@ -10,24 +10,28 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.Relatio
     /// <summary>
     /// Builds and executes requests for operations under \countries\{id}\relationships
     /// </summary>
-    public class RelationshipsRequestBuilder : BaseRequestBuilder {
+    public class RelationshipsRequestBuilder : BaseRequestBuilder 
+    {
         /// <summary>The languages property</summary>
-        public LanguagesRequestBuilder Languages { get =>
-            new LanguagesRequestBuilder(PathParameters, RequestAdapter);
+        public LanguagesRequestBuilder Languages
+        {
+            get => new LanguagesRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new RelationshipsRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="RelationshipsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public RelationshipsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/countries/{id}/relationships", pathParameters) {
+        public RelationshipsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/countries/{id}/relationships", pathParameters)
+        {
         }
         /// <summary>
-        /// Instantiates a new RelationshipsRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="RelationshipsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public RelationshipsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/countries/{id}/relationships", rawUrl) {
+        public RelationshipsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/countries/{id}/relationships", rawUrl)
+        {
         }
     }
 }

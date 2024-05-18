@@ -5,7 +5,10 @@ using System.IO;
 using System.Linq;
 using System;
 namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models {
-    public class PlayerDataInResponse : DataInResponse, IParsable {
+    #pragma warning disable CS1591
+    public class PlayerDataInResponse : DataInResponse, IParsable 
+    #pragma warning restore CS1591
+    {
         /// <summary>The attributes property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -65,16 +68,21 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
+        /// <returns>A <see cref="PlayerDataInResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static new PlayerDataInResponse CreateFromDiscriminatorValue(IParseNode parseNode) {
+        public static new PlayerDataInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
             return new PlayerDataInResponse();
         }
         /// <summary>
         /// The deserialization information for the current model
         /// </summary>
-        public override IDictionary<string, Action<IParseNode>> GetFieldDeserializers() {
-            return new Dictionary<string, Action<IParseNode>>(base.GetFieldDeserializers()) {
+        /// <returns>A IDictionary&lt;string, Action&lt;IParseNode&gt;&gt;</returns>
+        public override IDictionary<string, Action<IParseNode>> GetFieldDeserializers()
+        {
+            return new Dictionary<string, Action<IParseNode>>(base.GetFieldDeserializers())
+            {
                 {"attributes", n => { Attributes = n.GetObjectValue<PlayerAttributesInResponse>(PlayerAttributesInResponse.CreateFromDiscriminatorValue); } },
                 {"links", n => { Links = n.GetObjectValue<ResourceLinks>(ResourceLinks.CreateFromDiscriminatorValue); } },
                 {"meta", n => { Meta = n.GetObjectValue<PlayerDataInResponse_meta>(PlayerDataInResponse_meta.CreateFromDiscriminatorValue); } },
@@ -85,7 +93,8 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         /// Serializes information the current object
         /// </summary>
         /// <param name="writer">Serialization writer to use to serialize this model</param>
-        public override void Serialize(ISerializationWriter writer) {
+        public override void Serialize(ISerializationWriter writer)
+        {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             base.Serialize(writer);
             writer.WriteObjectValue<PlayerAttributesInResponse>("attributes", Attributes);

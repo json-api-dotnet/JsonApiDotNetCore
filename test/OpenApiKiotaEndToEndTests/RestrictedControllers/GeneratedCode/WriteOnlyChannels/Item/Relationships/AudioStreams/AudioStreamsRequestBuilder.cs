@@ -12,20 +12,23 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
     /// <summary>
     /// Builds and executes requests for operations under \writeOnlyChannels\{id}\relationships\audioStreams
     /// </summary>
-    public class AudioStreamsRequestBuilder : BaseRequestBuilder {
+    public class AudioStreamsRequestBuilder : BaseRequestBuilder 
+    {
         /// <summary>
-        /// Instantiates a new AudioStreamsRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="AudioStreamsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public AudioStreamsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/writeOnlyChannels/{id}/relationships/audioStreams", pathParameters) {
+        public AudioStreamsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/writeOnlyChannels/{id}/relationships/audioStreams", pathParameters)
+        {
         }
         /// <summary>
-        /// Instantiates a new AudioStreamsRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="AudioStreamsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public AudioStreamsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/writeOnlyChannels/{id}/relationships/audioStreams", rawUrl) {
+        public AudioStreamsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/writeOnlyChannels/{id}/relationships/audioStreams", rawUrl)
+        {
         }
         /// <summary>
         /// Removes existing dataStreams from the audioStreams relationship of an individual writeOnlyChannel.
@@ -33,16 +36,22 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
+        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="ErrorResponseDocument">When receiving a 409 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task DeleteAsync(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task DeleteAsync(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #nullable restore
 #else
-        public async Task DeleteAsync(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task DeleteAsync(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToDeleteRequestInformation(body, requestConfiguration);
-            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>> {
+            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
+            {
                 {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
                 {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
                 {"409", ErrorResponseDocument.CreateFromDiscriminatorValue},
@@ -55,16 +64,22 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
+        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="ErrorResponseDocument">When receiving a 409 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task PatchAsync(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task PatchAsync(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #nullable restore
 #else
-        public async Task PatchAsync(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task PatchAsync(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPatchRequestInformation(body, requestConfiguration);
-            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>> {
+            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
+            {
                 {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
                 {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
                 {"409", ErrorResponseDocument.CreateFromDiscriminatorValue},
@@ -77,16 +92,22 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
+        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="ErrorResponseDocument">When receiving a 409 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task PostAsync(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task PostAsync(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #nullable restore
 #else
-        public async Task PostAsync(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task PostAsync(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPostRequestInformation(body, requestConfiguration);
-            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>> {
+            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
+            {
                 {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
                 {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
                 {"409", ErrorResponseDocument.CreateFromDiscriminatorValue},
@@ -96,14 +117,17 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
         /// <summary>
         /// Removes existing dataStreams from the audioStreams relationship of an individual writeOnlyChannel.
         /// </summary>
+        /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToDeleteRequestInformation(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default) {
+        public RequestInformation ToDeleteRequestInformation(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default)
+        {
 #nullable restore
 #else
-        public RequestInformation ToDeleteRequestInformation(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default) {
+        public RequestInformation ToDeleteRequestInformation(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default)
+        {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = new RequestInformation(Method.DELETE, UrlTemplate, PathParameters);
@@ -115,14 +139,17 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
         /// <summary>
         /// Assigns existing dataStreams to the audioStreams relationship of an individual writeOnlyChannel.
         /// </summary>
+        /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPatchRequestInformation(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default) {
+        public RequestInformation ToPatchRequestInformation(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default)
+        {
 #nullable restore
 #else
-        public RequestInformation ToPatchRequestInformation(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default) {
+        public RequestInformation ToPatchRequestInformation(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default)
+        {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = new RequestInformation(Method.PATCH, UrlTemplate, PathParameters);
@@ -134,14 +161,17 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
         /// <summary>
         /// Adds existing dataStreams to the audioStreams relationship of an individual writeOnlyChannel.
         /// </summary>
+        /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPostRequestInformation(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default) {
+        public RequestInformation ToPostRequestInformation(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default)
+        {
 #nullable restore
 #else
-        public RequestInformation ToPostRequestInformation(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default) {
+        public RequestInformation ToPostRequestInformation(ToManyDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default)
+        {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = new RequestInformation(Method.POST, UrlTemplate, PathParameters);
@@ -153,8 +183,10 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
+        /// <returns>A <see cref="AudioStreamsRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public AudioStreamsRequestBuilder WithUrl(string rawUrl) {
+        public AudioStreamsRequestBuilder WithUrl(string rawUrl)
+        {
             return new AudioStreamsRequestBuilder(rawUrl, RequestAdapter);
         }
     }

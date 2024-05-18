@@ -13,42 +13,55 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Accommodations {
     /// <summary>
     /// Builds and executes requests for operations under \accommodations
     /// </summary>
-    public class AccommodationsRequestBuilder : BaseRequestBuilder {
+    public class AccommodationsRequestBuilder : BaseRequestBuilder 
+    {
         /// <summary>Gets an item from the OpenApiKiotaEndToEndTests.Links.GeneratedCode.accommodations.item collection</summary>
         /// <param name="position">The identifier of the accommodation to retrieve.</param>
-        public AccommodationsItemRequestBuilder this[string position] { get {
-            var urlTplParams = new Dictionary<string, object>(PathParameters);
-            urlTplParams.Add("id", position);
-            return new AccommodationsItemRequestBuilder(urlTplParams, RequestAdapter);
-        } }
+        /// <returns>A <see cref="AccommodationsItemRequestBuilder"/></returns>
+        public AccommodationsItemRequestBuilder this[string position]
+        {
+            get
+            {
+                var urlTplParams = new Dictionary<string, object>(PathParameters);
+                urlTplParams.Add("id", position);
+                return new AccommodationsItemRequestBuilder(urlTplParams, RequestAdapter);
+            }
+        }
         /// <summary>
-        /// Instantiates a new AccommodationsRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="AccommodationsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public AccommodationsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/accommodations{?query*}", pathParameters) {
+        public AccommodationsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/accommodations{?query*}", pathParameters)
+        {
         }
         /// <summary>
-        /// Instantiates a new AccommodationsRequestBuilder and sets the default values.
+        /// Instantiates a new <see cref="AccommodationsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public AccommodationsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/accommodations{?query*}", rawUrl) {
+        public AccommodationsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/accommodations{?query*}", rawUrl)
+        {
         }
         /// <summary>
         /// Retrieves a collection of accommodations.
         /// </summary>
+        /// <returns>A <see cref="AccommodationCollectionResponseDocument"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
+        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<AccommodationCollectionResponseDocument?> GetAsync(Action<RequestConfiguration<AccommodationsRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task<AccommodationCollectionResponseDocument?> GetAsync(Action<RequestConfiguration<AccommodationsRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #nullable restore
 #else
-        public async Task<AccommodationCollectionResponseDocument> GetAsync(Action<RequestConfiguration<AccommodationsRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task<AccommodationCollectionResponseDocument> GetAsync(Action<RequestConfiguration<AccommodationsRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
-            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>> {
+            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
+            {
                 {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
             };
             return await RequestAdapter.SendAsync<AccommodationCollectionResponseDocument>(requestInfo, AccommodationCollectionResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
@@ -60,30 +73,41 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Accommodations {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<Stream?> HeadAsync(Action<RequestConfiguration<AccommodationsRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task HeadAsync(Action<RequestConfiguration<AccommodationsRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #nullable restore
 #else
-        public async Task<Stream> HeadAsync(Action<RequestConfiguration<AccommodationsRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task HeadAsync(Action<RequestConfiguration<AccommodationsRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #endif
             var requestInfo = ToHeadRequestInformation(requestConfiguration);
-            return await RequestAdapter.SendPrimitiveAsync<Stream>(requestInfo, default, cancellationToken).ConfigureAwait(false);
+            await RequestAdapter.SendNoContentAsync(requestInfo, default, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Creates a new accommodation.
         /// </summary>
+        /// <returns>A <see cref="AccommodationPrimaryResponseDocument"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
+        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="ErrorResponseDocument">When receiving a 403 status code</exception>
+        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="ErrorResponseDocument">When receiving a 409 status code</exception>
+        /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<AccommodationPrimaryResponseDocument?> PostAsync(AccommodationPostRequestDocument body, Action<RequestConfiguration<AccommodationsRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task<AccommodationPrimaryResponseDocument?> PostAsync(AccommodationPostRequestDocument body, Action<RequestConfiguration<AccommodationsRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #nullable restore
 #else
-        public async Task<AccommodationPrimaryResponseDocument> PostAsync(AccommodationPostRequestDocument body, Action<RequestConfiguration<AccommodationsRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default) {
+        public async Task<AccommodationPrimaryResponseDocument> PostAsync(AccommodationPostRequestDocument body, Action<RequestConfiguration<AccommodationsRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPostRequestInformation(body, requestConfiguration);
-            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>> {
+            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
+            {
                 {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
                 {"403", ErrorResponseDocument.CreateFromDiscriminatorValue},
                 {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
@@ -95,13 +119,16 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Accommodations {
         /// <summary>
         /// Retrieves a collection of accommodations.
         /// </summary>
+        /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<AccommodationsRequestBuilderGetQueryParameters>>? requestConfiguration = default) {
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<AccommodationsRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<AccommodationsRequestBuilderGetQueryParameters>> requestConfiguration = default) {
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<AccommodationsRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
@@ -111,13 +138,16 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Accommodations {
         /// <summary>
         /// Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.
         /// </summary>
+        /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<AccommodationsRequestBuilderHeadQueryParameters>>? requestConfiguration = default) {
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<AccommodationsRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
+        {
 #nullable restore
 #else
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<AccommodationsRequestBuilderHeadQueryParameters>> requestConfiguration = default) {
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<AccommodationsRequestBuilderHeadQueryParameters>> requestConfiguration = default)
+        {
 #endif
             var requestInfo = new RequestInformation(Method.HEAD, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
@@ -126,14 +156,17 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Accommodations {
         /// <summary>
         /// Creates a new accommodation.
         /// </summary>
+        /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPostRequestInformation(AccommodationPostRequestDocument body, Action<RequestConfiguration<AccommodationsRequestBuilderPostQueryParameters>>? requestConfiguration = default) {
+        public RequestInformation ToPostRequestInformation(AccommodationPostRequestDocument body, Action<RequestConfiguration<AccommodationsRequestBuilderPostQueryParameters>>? requestConfiguration = default)
+        {
 #nullable restore
 #else
-        public RequestInformation ToPostRequestInformation(AccommodationPostRequestDocument body, Action<RequestConfiguration<AccommodationsRequestBuilderPostQueryParameters>> requestConfiguration = default) {
+        public RequestInformation ToPostRequestInformation(AccommodationPostRequestDocument body, Action<RequestConfiguration<AccommodationsRequestBuilderPostQueryParameters>> requestConfiguration = default)
+        {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = new RequestInformation(Method.POST, UrlTemplate, PathParameters);
@@ -145,14 +178,17 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Accommodations {
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
+        /// <returns>A <see cref="AccommodationsRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public AccommodationsRequestBuilder WithUrl(string rawUrl) {
+        public AccommodationsRequestBuilder WithUrl(string rawUrl)
+        {
             return new AccommodationsRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Retrieves a collection of accommodations.
         /// </summary>
-        public class AccommodationsRequestBuilderGetQueryParameters {
+        public class AccommodationsRequestBuilderGetQueryParameters 
+        {
             /// <summary>For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -167,7 +203,8 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Accommodations {
         /// <summary>
         /// Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.
         /// </summary>
-        public class AccommodationsRequestBuilderHeadQueryParameters {
+        public class AccommodationsRequestBuilderHeadQueryParameters 
+        {
             /// <summary>For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -182,7 +219,8 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Accommodations {
         /// <summary>
         /// Creates a new accommodation.
         /// </summary>
-        public class AccommodationsRequestBuilderPostQueryParameters {
+        public class AccommodationsRequestBuilderPostQueryParameters 
+        {
             /// <summary>For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable

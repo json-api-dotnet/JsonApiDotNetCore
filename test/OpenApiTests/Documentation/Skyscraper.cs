@@ -3,13 +3,13 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace OpenApiTests.DocComments;
+namespace OpenApiTests.Documentation;
 
 /// <summary>
 /// A tall, continuously habitable building having multiple floors.
 /// </summary>
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "OpenApiTests.DocComments")]
+[Resource(ControllerNamespace = "OpenApiTests.Documentation")]
 public sealed class Skyscraper : Identifiable<long>
 {
     /// <summary>

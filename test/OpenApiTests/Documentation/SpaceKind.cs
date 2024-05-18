@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace OpenApiTests.DocComments;
+namespace OpenApiTests.Documentation;
 
 /// <summary>
 /// Lists the various kinds of spaces within a skyscraper.

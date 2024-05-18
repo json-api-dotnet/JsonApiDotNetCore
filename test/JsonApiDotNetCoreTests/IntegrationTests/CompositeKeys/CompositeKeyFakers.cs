@@ -6,19 +6,19 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys;
 
-internal sealed class CompositeKeyFakers : FakerContainer
+internal sealed class CompositeKeyFakers
 {
     private readonly Lazy<Faker<Car>> _lazyCarFaker = new(() => new Faker<Car>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(car => car.LicensePlate, faker => faker.Random.Replace("??-??-##"))
         .RuleFor(car => car.RegionId, faker => faker.Random.Long(100, 999)));
 
     private readonly Lazy<Faker<Engine>> _lazyEngineFaker = new(() => new Faker<Engine>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(engine => engine.SerialCode, faker => faker.Random.Replace("????-????")));
 
     private readonly Lazy<Faker<Dealership>> _lazyDealershipFaker = new(() => new Faker<Dealership>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(dealership => dealership.Address, faker => faker.Address.FullAddress()));
 
     public Faker<Car> Car => _lazyCarFaker.Value;

@@ -6,18 +6,18 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Links;
 
-internal sealed class LinksFakers : FakerContainer
+internal sealed class LinksFakers
 {
     private readonly Lazy<Faker<PhotoAlbum>> _lazyPhotoAlbumFaker = new(() => new Faker<PhotoAlbum>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(photoAlbum => photoAlbum.Name, faker => faker.Lorem.Sentence()));
 
     private readonly Lazy<Faker<Photo>> _lazyPhotoFaker = new(() => new Faker<Photo>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(photo => photo.Url, faker => faker.Image.PlaceImgUrl()));
 
     private readonly Lazy<Faker<PhotoLocation>> _lazyPhotoLocationFaker = new(() => new Faker<PhotoLocation>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(photoLocation => photoLocation.PlaceName, faker => faker.Address.FullAddress())
         .RuleFor(photoLocation => photoLocation.Latitude, faker => faker.Address.Latitude())
         .RuleFor(photoLocation => photoLocation.Longitude, faker => faker.Address.Longitude()));

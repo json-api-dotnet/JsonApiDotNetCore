@@ -6,14 +6,14 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation;
 
-internal sealed class ObfuscationFakers : FakerContainer
+internal sealed class ObfuscationFakers
 {
     private readonly Lazy<Faker<BankAccount>> _lazyBankAccountFaker = new(() => new Faker<BankAccount>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(bankAccount => bankAccount.Iban, faker => faker.Finance.Iban()));
 
     private readonly Lazy<Faker<DebitCard>> _lazyDebitCardFaker = new(() => new Faker<DebitCard>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(debitCard => debitCard.OwnerName, faker => faker.Name.FullName())
         .RuleFor(debitCard => debitCard.PinCode, faker => (short)faker.Random.Number(1000, 9999)));
 

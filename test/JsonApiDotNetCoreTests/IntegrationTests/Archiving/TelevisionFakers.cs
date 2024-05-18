@@ -6,24 +6,24 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving;
 
-internal sealed class TelevisionFakers : FakerContainer
+internal sealed class TelevisionFakers
 {
     private readonly Lazy<Faker<TelevisionNetwork>> _lazyTelevisionNetworkFaker = new(() => new Faker<TelevisionNetwork>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(network => network.Name, faker => faker.Company.CompanyName()));
 
     private readonly Lazy<Faker<TelevisionStation>> _lazyTelevisionStationFaker = new(() => new Faker<TelevisionStation>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(station => station.Name, faker => faker.Company.CompanyName()));
 
     private readonly Lazy<Faker<TelevisionBroadcast>> _lazyTelevisionBroadcastFaker = new(() => new Faker<TelevisionBroadcast>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(broadcast => broadcast.Title, faker => faker.Lorem.Sentence())
         .RuleFor(broadcast => broadcast.AiredAt, faker => faker.Date.PastOffset().TruncateToWholeMilliseconds())
         .RuleFor(broadcast => broadcast.ArchivedAt, faker => faker.Date.RecentOffset().TruncateToWholeMilliseconds()));
 
     private readonly Lazy<Faker<BroadcastComment>> _lazyBroadcastCommentFaker = new(() => new Faker<BroadcastComment>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(comment => comment.Text, faker => faker.Lorem.Paragraph())
         .RuleFor(comment => comment.CreatedAt, faker => faker.Date.PastOffset().TruncateToWholeMilliseconds()));
 

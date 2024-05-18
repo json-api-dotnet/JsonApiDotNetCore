@@ -2,8 +2,13 @@
 using System.Runtime.Serialization;
 using System;
 namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
-    public enum NodeResourceType {
+    #pragma warning disable CS1591
+    public enum NodeResourceType
+    #pragma warning restore CS1591
+    {
         [EnumMember(Value = "nodes")]
+        #pragma warning disable CS1591
         Nodes,
+        #pragma warning restore CS1591
     }
 }
