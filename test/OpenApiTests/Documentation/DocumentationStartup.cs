@@ -5,10 +5,10 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using TestBuildingBlocks;
 
-namespace OpenApiTests.DocComments;
+namespace OpenApiTests.Documentation;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class DocCommentStartup<TDbContext> : OpenApiStartup<TDbContext>
+public sealed class DocumentationStartup<TDbContext> : OpenApiStartup<TDbContext>
     where TDbContext : TestableDbContext
 {
     protected override void SetJsonApiOptions(JsonApiOptions options)
