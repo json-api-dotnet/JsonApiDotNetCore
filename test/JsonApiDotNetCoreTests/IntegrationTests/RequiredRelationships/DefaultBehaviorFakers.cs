@@ -6,18 +6,18 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships;
 
-internal sealed class DefaultBehaviorFakers : FakerContainer
+internal sealed class DefaultBehaviorFakers
 {
     private readonly Lazy<Faker<Order>> _lazyOrderFaker = new(() => new Faker<Order>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(order => order.Amount, faker => faker.Finance.Amount()));
 
     private readonly Lazy<Faker<Customer>> _lazyCustomerFaker = new(() => new Faker<Customer>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(customer => customer.EmailAddress, faker => faker.Person.Email));
 
     private readonly Lazy<Faker<Shipment>> _lazyShipmentFaker = new(() => new Faker<Shipment>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(shipment => shipment.TrackAndTraceCode, faker => faker.Commerce.Ean13())
         .RuleFor(shipment => shipment.ShippedAt, faker => faker.Date.Past().TruncateToWholeMilliseconds()));
 

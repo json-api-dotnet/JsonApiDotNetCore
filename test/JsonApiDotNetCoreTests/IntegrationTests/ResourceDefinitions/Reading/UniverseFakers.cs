@@ -6,10 +6,10 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading;
 
-internal sealed class UniverseFakers : FakerContainer
+internal sealed class UniverseFakers
 {
     private readonly Lazy<Faker<Star>> _lazyStarFaker = new(() => new Faker<Star>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(star => star.Name, faker => faker.Random.Word())
         .RuleFor(star => star.Kind, faker => faker.PickRandom<StarKind>())
         .RuleFor(star => star.SolarRadius, faker => faker.Random.Decimal(.01M, 1000M))
@@ -17,13 +17,13 @@ internal sealed class UniverseFakers : FakerContainer
         .RuleFor(star => star.IsVisibleFromEarth, faker => faker.Random.Bool()));
 
     private readonly Lazy<Faker<Planet>> _lazyPlanetFaker = new(() => new Faker<Planet>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(planet => planet.PublicName, faker => faker.Random.Word())
         .RuleFor(planet => planet.HasRingSystem, faker => faker.Random.Bool())
         .RuleFor(planet => planet.SolarMass, faker => faker.Random.Decimal(.001M, 100M)));
 
     private readonly Lazy<Faker<Moon>> _lazyMoonFaker = new(() => new Faker<Moon>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(moon => moon.Name, faker => faker.Random.Word())
         .RuleFor(moon => moon.SolarRadius, faker => faker.Random.Decimal(.01M, 1000M)));
 

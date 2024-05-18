@@ -9,7 +9,7 @@ using TestBuildingBlocks;
 namespace OpenApiTests.Headers;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class HeaderFakers : FakerContainer
+public sealed class HeaderFakers
 {
     private static readonly Lazy<string[]> LazyLanguageNames = new(() => CultureInfo
         .GetCultures(CultureTypes.NeutralCultures)
@@ -22,12 +22,12 @@ public sealed class HeaderFakers : FakerContainer
         .ToArray());
 
     private readonly Lazy<Faker<Country>> _lazyCountryFaker = new(() => new Faker<Country>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(country => country.Name, faker => faker.Address.Country())
         .RuleFor(country => country.Population, faker => faker.Random.Long(0, 2_000_000_000)));
 
     private readonly Lazy<Faker<Language>> _lazyLanguageFaker = new(() => new Faker<Language>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(language => language.Name, faker => faker.PickRandom(LazyLanguageNames.Value))
         .RuleFor(language => language.Code, faker => faker.PickRandom(LazyLanguageCodes.Value)));
 

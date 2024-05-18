@@ -6,15 +6,15 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices;
 
-internal sealed class DomainFakers : FakerContainer
+internal sealed class DomainFakers
 {
     private readonly Lazy<Faker<DomainUser>> _lazyDomainUserFaker = new(() => new Faker<DomainUser>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(domainUser => domainUser.LoginName, faker => faker.Person.UserName)
         .RuleFor(domainUser => domainUser.DisplayName, faker => faker.Person.FullName));
 
     private readonly Lazy<Faker<DomainGroup>> _lazyDomainGroupFaker = new(() => new Faker<DomainGroup>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(domainGroup => domainGroup.Name, faker => faker.Commerce.Department()));
 
     public Faker<DomainUser> DomainUser => _lazyDomainUserFaker.Value;

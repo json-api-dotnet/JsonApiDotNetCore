@@ -6,14 +6,14 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Meta;
 
-internal sealed class MetaFakers : FakerContainer
+internal sealed class MetaFakers
 {
     private readonly Lazy<Faker<ProductFamily>> _lazyProductFamilyFaker = new(() => new Faker<ProductFamily>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(productFamily => productFamily.Name, faker => faker.Commerce.ProductName()));
 
     private readonly Lazy<Faker<SupportTicket>> _lazySupportTicketFaker = new(() => new Faker<SupportTicket>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(supportTicket => supportTicket.Description, faker => faker.Lorem.Paragraph()));
 
     public Faker<ProductFamily> ProductFamily => _lazyProductFamilyFaker.Value;

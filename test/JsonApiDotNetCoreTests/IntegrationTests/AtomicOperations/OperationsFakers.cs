@@ -7,7 +7,7 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations;
 
-internal sealed class OperationsFakers : FakerContainer
+internal sealed class OperationsFakers
 {
     private static readonly Lazy<IReadOnlyList<string>> LazyLanguageIsoCodes = new(() => CultureInfo
         .GetCultures(CultureTypes.NeutralCultures)
@@ -16,32 +16,32 @@ internal sealed class OperationsFakers : FakerContainer
         .ToArray());
 
     private readonly Lazy<Faker<Playlist>> _lazyPlaylistFaker = new(() => new Faker<Playlist>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(playlist => playlist.Name, faker => faker.Lorem.Sentence()));
 
     private readonly Lazy<Faker<MusicTrack>> _lazyMusicTrackFaker = new(() => new Faker<MusicTrack>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(musicTrack => musicTrack.Title, faker => faker.Lorem.Word())
         .RuleFor(musicTrack => musicTrack.LengthInSeconds, faker => faker.Random.Decimal(3 * 60, 5 * 60))
         .RuleFor(musicTrack => musicTrack.Genre, faker => faker.Lorem.Word())
         .RuleFor(musicTrack => musicTrack.ReleasedAt, faker => faker.Date.PastOffset().TruncateToWholeMilliseconds()));
 
     private readonly Lazy<Faker<Lyric>> _lazyLyricFaker = new(() => new Faker<Lyric>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(lyric => lyric.Text, faker => faker.Lorem.Text())
         .RuleFor(lyric => lyric.Format, "LRC"));
 
     private readonly Lazy<Faker<TextLanguage>> _lazyTextLanguageFaker = new(() => new Faker<TextLanguage>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(textLanguage => textLanguage.IsoCode, faker => faker.PickRandom<string>(LazyLanguageIsoCodes.Value)));
 
     private readonly Lazy<Faker<Performer>> _lazyPerformerFaker = new(() => new Faker<Performer>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(performer => performer.ArtistName, faker => faker.Name.FullName())
         .RuleFor(performer => performer.BornAt, faker => faker.Date.PastOffset().TruncateToWholeMilliseconds()));
 
     private readonly Lazy<Faker<RecordCompany>> _lazyRecordCompanyFaker = new(() => new Faker<RecordCompany>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(recordCompany => recordCompany.Name, faker => faker.Company.CompanyName())
         .RuleFor(recordCompany => recordCompany.CountryOfResidence, faker => faker.Address.Country()));
 

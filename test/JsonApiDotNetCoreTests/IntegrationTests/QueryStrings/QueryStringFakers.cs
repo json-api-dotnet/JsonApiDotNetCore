@@ -6,31 +6,31 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 
-internal sealed class QueryStringFakers : FakerContainer
+internal sealed class QueryStringFakers
 {
     private readonly Lazy<Faker<Blog>> _lazyBlogFaker = new(() => new Faker<Blog>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(blog => blog.Title, faker => faker.Lorem.Word())
         .RuleFor(blog => blog.PlatformName, faker => faker.Company.CompanyName()));
 
     private readonly Lazy<Faker<BlogPost>> _lazyBlogPostFaker = new(() => new Faker<BlogPost>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(blogPost => blogPost.Caption, faker => faker.Lorem.Sentence())
         .RuleFor(blogPost => blogPost.Url, faker => faker.Internet.Url()));
 
     private readonly Lazy<Faker<Label>> _lazyLabelFaker = new(() => new Faker<Label>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(label => label.Name, faker => faker.Lorem.Word())
         .RuleFor(label => label.Color, faker => faker.PickRandom<LabelColor>()));
 
     private readonly Lazy<Faker<Comment>> _lazyCommentFaker = new(() => new Faker<Comment>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(comment => comment.Text, faker => faker.Lorem.Paragraph())
         .RuleFor(comment => comment.CreatedAt, faker => faker.Date.Past().TruncateToWholeMilliseconds())
         .RuleFor(comment => comment.NumStars, faker => faker.Random.Int(0, 10)));
 
     private readonly Lazy<Faker<WebAccount>> _lazyWebAccountFaker = new(() => new Faker<WebAccount>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(webAccount => webAccount.UserName, faker => faker.Person.UserName)
         .RuleFor(webAccount => webAccount.Password, faker => faker.Internet.Password())
         .RuleFor(webAccount => webAccount.DisplayName, faker => faker.Person.FullName)
@@ -38,41 +38,41 @@ internal sealed class QueryStringFakers : FakerContainer
         .RuleFor(webAccount => webAccount.EmailAddress, faker => faker.Internet.Email()));
 
     private readonly Lazy<Faker<LoginAttempt>> _lazyLoginAttemptFaker = new(() => new Faker<LoginAttempt>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(loginAttempt => loginAttempt.TriedAt, faker => faker.Date.PastOffset().TruncateToWholeMilliseconds())
         .RuleFor(loginAttempt => loginAttempt.IsSucceeded, faker => faker.Random.Bool()));
 
     private readonly Lazy<Faker<AccountPreferences>> _lazyAccountPreferencesFaker = new(() => new Faker<AccountPreferences>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(accountPreferences => accountPreferences.UseDarkTheme, faker => faker.Random.Bool()));
 
     private readonly Lazy<Faker<Man>> _lazyManFaker = new(() => new Faker<Man>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(man => man.Name, faker => faker.Name.FullName())
         .RuleFor(man => man.HasBeard, faker => faker.Random.Bool())
         .RuleFor(man => man.Age, faker => faker.Random.Int(10, 90)));
 
     private readonly Lazy<Faker<Woman>> _lazyWomanFaker = new(() => new Faker<Woman>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(woman => woman.Name, faker => faker.Name.FullName())
         .RuleFor(woman => woman.MaidenName, faker => faker.Name.LastName())
         .RuleFor(woman => woman.Age, faker => faker.Random.Int(10, 90)));
 
     private readonly Lazy<Faker<Calendar>> _lazyCalendarFaker = new(() => new Faker<Calendar>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(calendar => calendar.TimeZone, faker => faker.Date.TimeZoneString())
         .RuleFor(calendar => calendar.ShowWeekNumbers, faker => faker.Random.Bool())
         .RuleFor(calendar => calendar.DefaultAppointmentDurationInMinutes, faker => faker.PickRandom(15, 30, 45, 60)));
 
     private readonly Lazy<Faker<Appointment>> _lazyAppointmentFaker = new(() => new Faker<Appointment>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(appointment => appointment.Title, faker => faker.Random.Word())
         .RuleFor(appointment => appointment.Description, faker => faker.Lorem.Sentence())
         .RuleFor(appointment => appointment.StartTime, faker => faker.Date.FutureOffset().TruncateToWholeMilliseconds())
         .RuleFor(appointment => appointment.EndTime, (faker, appointment) => appointment.StartTime.AddHours(faker.Random.Double(1, 4))));
 
     private readonly Lazy<Faker<Reminder>> _lazyReminderFaker = new(() => new Faker<Reminder>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(reminder => reminder.RemindsAt, faker => faker.Date.Future().TruncateToWholeMilliseconds()));
 
     public Faker<Blog> Blog => _lazyBlogFaker.Value;

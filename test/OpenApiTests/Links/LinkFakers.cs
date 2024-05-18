@@ -8,24 +8,24 @@ using TestBuildingBlocks;
 namespace OpenApiTests.Links;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class LinkFakers : FakerContainer
+public sealed class LinkFakers
 {
     private readonly Lazy<Faker<Vacation>> _lazyVacationFaker = new(() => new Faker<Vacation>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(vacation => vacation.StartsAt, faker => faker.Date.Future())
         .RuleFor(vacation => vacation.EndsAt, faker => faker.Date.Future()));
 
     private readonly Lazy<Faker<Accommodation>> _lazyAccommodationFaker = new(() => new Faker<Accommodation>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(accommodation => accommodation.Address, faker => faker.Address.FullAddress()));
 
     private readonly Lazy<Faker<Transport>> _lazyTransportFaker = new(() => new Faker<Transport>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(transport => transport.Type, faker => faker.PickRandom<TransportType>())
         .RuleFor(transport => transport.DurationInMinutes, faker => faker.Random.Int(30, 24 * 60)));
 
     private readonly Lazy<Faker<Excursion>> _lazyExcursionFaker = new(() => new Faker<Excursion>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(excursion => excursion.OccursAt, faker => faker.Date.Future())
         .RuleFor(excursion => excursion.Description, faker => faker.Lorem.Sentence()));
 

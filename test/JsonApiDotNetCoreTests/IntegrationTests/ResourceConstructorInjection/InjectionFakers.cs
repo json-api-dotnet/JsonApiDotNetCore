@@ -8,7 +8,7 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection;
 
-internal sealed class InjectionFakers : FakerContainer
+internal sealed class InjectionFakers
 {
     private readonly IServiceProvider _serviceProvider;
 
@@ -25,12 +25,12 @@ internal sealed class InjectionFakers : FakerContainer
         _serviceProvider = serviceProvider;
 
         _lazyPostOfficeFaker = new Lazy<Faker<PostOffice>>(() => new Faker<PostOffice>()
-            .UseSeed(GetFakerSeed())
+            .MakeDeterministic()
             .CustomInstantiator(_ => new PostOffice(ResolveDbContext()))
             .RuleFor(postOffice => postOffice.Address, faker => faker.Address.FullAddress()));
 
         _lazyGiftCertificateFaker = new Lazy<Faker<GiftCertificate>>(() => new Faker<GiftCertificate>()
-            .UseSeed(GetFakerSeed())
+            .MakeDeterministic()
             .CustomInstantiator(_ => new GiftCertificate(ResolveDbContext()))
             .RuleFor(giftCertificate => giftCertificate.IssueDate, faker => faker.Date.PastOffset().TruncateToWholeMilliseconds()));
     }

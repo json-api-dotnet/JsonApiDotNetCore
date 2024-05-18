@@ -9,11 +9,11 @@ using RgbColorType = DapperExample.Models.RgbColor;
 
 namespace DapperTests.IntegrationTests;
 
-internal sealed class TestFakers : FakerContainer
+internal sealed class TestFakers
 {
     private readonly Lazy<Faker<TodoItem>> _lazyTodoItemFaker = new(() =>
         new Faker<TodoItem>()
-            .UseSeed(GetFakerSeed())
+            .MakeDeterministic()
             .RuleFor(todoItem => todoItem.Description, faker => faker.Lorem.Sentence())
             .RuleFor(todoItem => todoItem.Priority, faker => faker.Random.Enum<TodoItemPriority>())
             .RuleFor(todoItem => todoItem.DurationInHours, faker => faker.Random.Long(1, 250))
@@ -24,31 +24,31 @@ internal sealed class TestFakers : FakerContainer
 
     private readonly Lazy<Faker<LoginAccount>> _lazyLoginAccountFaker = new(() =>
         new Faker<LoginAccount>()
-            .UseSeed(GetFakerSeed())
+            .MakeDeterministic()
             .RuleFor(loginAccount => loginAccount.UserName, faker => faker.Internet.UserName())
             .RuleFor(loginAccount => loginAccount.LastUsedAt, faker => faker.Date.PastOffset()
                 .TruncateToWholeMilliseconds()));
 
     private readonly Lazy<Faker<AccountRecovery>> _lazyAccountRecoveryFaker = new(() =>
         new Faker<AccountRecovery>()
-            .UseSeed(GetFakerSeed())
+            .MakeDeterministic()
             .RuleFor(accountRecovery => accountRecovery.PhoneNumber, faker => faker.Person.Phone)
             .RuleFor(accountRecovery => accountRecovery.EmailAddress, faker => faker.Person.Email));
 
     private readonly Lazy<Faker<Person>> _lazyPersonFaker = new(() =>
         new Faker<Person>()
-            .UseSeed(GetFakerSeed())
+            .MakeDeterministic()
             .RuleFor(person => person.FirstName, faker => faker.Name.FirstName())
             .RuleFor(person => person.LastName, faker => faker.Name.LastName()));
 
     private readonly Lazy<Faker<Tag>> _lazyTagFaker = new(() =>
         new Faker<Tag>()
-            .UseSeed(GetFakerSeed())
+            .MakeDeterministic()
             .RuleFor(tag => tag.Name, faker => faker.Lorem.Word()));
 
     private readonly Lazy<Faker<RgbColorType>> _lazyRgbColorFaker = new(() =>
         new Faker<RgbColorType>()
-            .UseSeed(GetFakerSeed())
+            .MakeDeterministic()
             .RuleFor(rgbColor => rgbColor.Id, faker => RgbColorType.Create(faker.Random.Byte(), faker.Random.Byte(), faker.Random.Byte())
                 .Id));
 

@@ -6,14 +6,14 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.HostingInIIS;
 
-internal sealed class HostingFakers : FakerContainer
+internal sealed class HostingFakers
 {
     private readonly Lazy<Faker<ArtGallery>> _lazyArtGalleryFaker = new(() => new Faker<ArtGallery>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(artGallery => artGallery.Theme, faker => faker.Lorem.Word()));
 
     private readonly Lazy<Faker<Painting>> _lazyPaintingFaker = new(() => new Faker<Painting>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(painting => painting.Title, faker => faker.Lorem.Sentence()));
 
     public Faker<ArtGallery> ArtGallery => _lazyArtGalleryFaker.Value;

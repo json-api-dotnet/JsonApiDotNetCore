@@ -6,7 +6,7 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization;
 
-internal sealed class SerializationFakers : FakerContainer
+internal sealed class SerializationFakers
 {
     private static readonly TimeSpan[] MeetingDurations =
     [
@@ -17,7 +17,7 @@ internal sealed class SerializationFakers : FakerContainer
     ];
 
     private readonly Lazy<Faker<Meeting>> _lazyMeetingFaker = new(() => new Faker<Meeting>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(meeting => meeting.Title, faker => faker.Lorem.Word())
         .RuleFor(meeting => meeting.StartTime, faker => faker.Date.FutureOffset().TruncateToWholeMilliseconds())
         .RuleFor(meeting => meeting.Duration, faker => faker.PickRandom(MeetingDurations))
@@ -25,7 +25,7 @@ internal sealed class SerializationFakers : FakerContainer
         .RuleFor(meeting => meeting.Longitude, faker => faker.Address.Longitude()));
 
     private readonly Lazy<Faker<MeetingAttendee>> _lazyMeetingAttendeeFaker = new(() => new Faker<MeetingAttendee>()
-        .UseSeed(GetFakerSeed())
+        .MakeDeterministic()
         .RuleFor(attendee => attendee.DisplayName, faker => faker.Random.Utf16String())
         .RuleFor(attendee => attendee.HomeAddress, faker => new Address
         {
