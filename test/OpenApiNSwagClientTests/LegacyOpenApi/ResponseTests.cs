@@ -204,7 +204,7 @@ public sealed class ResponseTests
             {
               "links": {
                 "self": "http://localhost/api/flights/ZvuH1",
-                "describedby": "swagger/v1/swagger.json"
+                "describedby": "/swagger/v1/swagger.json"
               },
               "errors": [
                 {
@@ -228,7 +228,7 @@ public sealed class ResponseTests
         exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
         exception.Result.Links.ShouldNotBeNull();
         exception.Result.Links.Self.Should().Be("http://localhost/api/flights/ZvuH1");
-        exception.Result.Links.Describedby.Should().Be("swagger/v1/swagger.json");
+        exception.Result.Links.Describedby.Should().Be("/swagger/v1/swagger.json");
         exception.Result.Errors.ShouldHaveCount(1);
 
         ErrorObject? error = exception.Result.Errors.ElementAt(0);

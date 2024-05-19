@@ -33,7 +33,7 @@ internal sealed class OpenApiDescriptionLinkProvider : IDocumentDescriptionLinkP
             string latestVersionDocumentName = swaggerGeneratorOptions.SwaggerDocs.Last().Key;
 
             SwaggerOptions swaggerOptions = _swaggerOptionsMonitor.CurrentValue;
-            return swaggerOptions.RouteTemplate.Replace("{documentName}", latestVersionDocumentName).Replace("{json|yaml}", "json");
+            return swaggerOptions.RouteTemplate.Replace("{documentName}", latestVersionDocumentName).Replace("{extension:regex(^(json|ya?ml)$)}", "json");
         }
 
         return null;
