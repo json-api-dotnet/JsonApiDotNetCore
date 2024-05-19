@@ -24,7 +24,7 @@ public sealed class AlternateOpenApiRouteTests : IClassFixture<IntegrationTestCo
         _requestAdapterFactory = new TestableHttpClientRequestAdapterFactory(testOutputHelper);
 
         testContext.ConfigureServices(services =>
-            services.Configure<SwaggerOptions>(options => options.RouteTemplate = "api-docs/{documentName}/swagger.yaml"));
+            services.Configure<SwaggerOptions>(options => options.RouteTemplate = "/api-docs/{documentName}/swagger.yaml"));
 
         testContext.UseController<ExcursionsController>();
     }
@@ -50,6 +50,6 @@ public sealed class AlternateOpenApiRouteTests : IClassFixture<IntegrationTestCo
         // Assert
         response.ShouldNotBeNull();
         response.Links.ShouldNotBeNull();
-        response.Links.Describedby.Should().Be("api-docs/v1/swagger.yaml");
+        response.Links.Describedby.Should().Be("/api-docs/v1/swagger.yaml");
     }
 }

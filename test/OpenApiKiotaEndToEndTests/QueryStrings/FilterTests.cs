@@ -140,7 +140,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
             response.Meta.ShouldNotBeNull();
             response.Meta.AdditionalData.ShouldContainKey("total").With(total => total.Should().Be(1));
             response.Links.ShouldNotBeNull();
-            response.Links.Describedby.Should().Be("swagger/v1/swagger.json");
+            response.Links.Describedby.Should().Be("/swagger/v1/swagger.json");
         }
     }
 
@@ -166,7 +166,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
             exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.BadRequest);
             exception.Message.Should().Be($"Exception of type '{typeof(ErrorResponseDocument).FullName}' was thrown.");
             exception.Links.ShouldNotBeNull();
-            exception.Links.Describedby.Should().Be("swagger/v1/swagger.json");
+            exception.Links.Describedby.Should().Be("/swagger/v1/swagger.json");
             exception.Errors.ShouldHaveCount(1);
 
             ErrorObject error = exception.Errors[0];

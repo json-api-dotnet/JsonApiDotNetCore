@@ -52,7 +52,7 @@ app.UseSwagger(options => options.RouteTemplate = "api-docs/{documentName}/swagg
 Instead, always call `UseSwagger()` *without parameters*. To change the route template, use the code below:
 
 ```c#
-builder.Services.Configure<SwaggerOptions>(options => options.RouteTemplate = "api-docs/{documentName}/swagger.yaml");
+builder.Services.Configure<SwaggerOptions>(options => options.RouteTemplate = "/api-docs/{documentName}/swagger.yaml");
 ```
 
 If you want to inject dependencies to set the route template, use:
@@ -62,7 +62,7 @@ builder.Services.AddOptions<SwaggerOptions>().Configure<IServiceProvider>((optio
 {
     var webHostEnvironment = serviceProvider.GetRequiredService<IWebHostEnvironment>();
     string appName = webHostEnvironment.ApplicationName;
-    options.RouteTemplate = $"api-docs/{{documentName}}/{appName}-swagger.yaml";
+    options.RouteTemplate = $"/api-docs/{{documentName}}/{appName}-swagger.yaml";
 });
 ```
 

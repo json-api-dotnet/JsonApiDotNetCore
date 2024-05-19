@@ -26,7 +26,7 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
 
     private async Task<JsonElement> CreateSwaggerDocumentAsync()
     {
-        string content = await GetAsync("swagger/v1/swagger.json");
+        string content = await GetAsync("/swagger/v1/swagger.json");
 
         JsonElement rootElement = ParseSwaggerDocument(content);
 

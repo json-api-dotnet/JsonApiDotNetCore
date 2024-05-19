@@ -22,7 +22,7 @@ public sealed class AlternateOpenApiRouteTests : IClassFixture<IntegrationTestCo
         _logHttpMessageHandler = new XUnitLogHttpMessageHandler(testOutputHelper);
 
         testContext.ConfigureServices(services =>
-            services.Configure<SwaggerOptions>(options => options.RouteTemplate = "api-docs/{documentName}/swagger.yaml"));
+            services.Configure<SwaggerOptions>(options => options.RouteTemplate = "/api-docs/{documentName}/swagger.yaml"));
 
         testContext.UseController<ExcursionsController>();
     }
@@ -46,6 +46,6 @@ public sealed class AlternateOpenApiRouteTests : IClassFixture<IntegrationTestCo
         ExcursionPrimaryResponseDocument response = await apiClient.GetExcursionAsync(excursion.StringId!, null, null);
 
         // Assert
-        response.Links.Describedby.Should().Be("api-docs/v1/swagger.yaml");
+        response.Links.Describedby.Should().Be("/api-docs/v1/swagger.yaml");
     }
 }
