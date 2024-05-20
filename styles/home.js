@@ -1,3 +1,31 @@
+function setTheme(theme) {
+  const darkModeStyleSheet = document.getElementById('dark-mode-style-sheet');
+  const activeTheme = document.getElementById('active-theme');
+
+  if (theme === "auto") {
+    darkModeStyleSheet.disabled = !window.matchMedia("(prefers-color-scheme: dark)").matches;
+    activeTheme.className = "bi-circle-half";
+  }
+  else if (theme === "dark") {
+    darkModeStyleSheet.disabled = false;
+    activeTheme.className = "bi bi-moon";
+  } else if (theme === "light") {
+    darkModeStyleSheet.disabled = true;
+    activeTheme.className = "bi bi-sun";
+  }
+
+  localStorage.setItem("theme", theme)
+}
+
+$('.theme-choice').click(function () {
+  setTheme(this.dataset.theme);
+})
+
+function initTheme() {
+  const theme = localStorage.getItem("theme") || "auto";
+  setTheme(theme);
+}
+
 !(function($) {
   "use strict";
 
@@ -89,6 +117,7 @@
   }
   $(window).on('load', function() {
     aos_init();
+    initTheme();
   });
 
 })(jQuery);

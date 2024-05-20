@@ -10,13 +10,41 @@
   <link href="favicon.ico" rel="apple-touch-icon">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,600,600i,700,700i" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.0/styles/default.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
   <link href="styles/home.css" rel="stylesheet">
   <link href="styles/icofont.min.css" rel="stylesheet">
+  <link href="styles/dark-mode.css" rel="stylesheet" id="dark-mode-style-sheet" disabled>
+  <script>
+    // Running this early to prevent an initial white flash on page load when dark mode is the default theme.
+    const darkModeStyleSheet = document.getElementById('dark-mode-style-sheet');
+    const theme = localStorage.getItem("theme") || "auto";
+
+    if (theme === "auto") {
+      darkModeStyleSheet.disabled = !window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+    else if (theme === "dark") {
+      darkModeStyleSheet.disabled = false;
+    } else if (theme === "light") {
+      darkModeStyleSheet.disabled = true;
+    }
+  </script>
 </head>
 <body>
+  <div class="container-xl">
+    <div class="dropdown p-3 float-right">
+      <a class="btn btn-theme dropdown-toggle" href="#" role="button" id="themeSelector" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i id="active-theme"></i>
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="themeSelector">
+        <a class="dropdown-item theme-choice" data-theme="light" href="#"><i class="bi bi-sun"></i> Light</a>
+        <a class="dropdown-item theme-choice" data-theme="dark" href="#"><i class="bi bi-moon"></i> Dark</a>
+        <a class="dropdown-item theme-choice" data-theme="auto" href="#"><i class="bi-circle-half"></i> Auto</a>
+      </div>
+    </div>
+  </div>
   <section id="hero" class="d-flex align-items-center">
     <div class="container">
       <div class="row">
@@ -31,7 +59,7 @@
           <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/" target="_blank" class="btn-get-started">Contribute on GitHub</a>
         </div>
         <div class="col-lg-5 order-1 order-lg-2 hero-img">
-          <img src="styles/img/logo.png" class="img-fluid animated" alt="project logo">
+          <img src="styles/img/logo.svg" class="img-fluid animated" alt="project logo">
         </div>
       </div>
     </div>
