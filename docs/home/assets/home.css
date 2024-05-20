@@ -603,3 +603,11 @@ div[sponsor]:hover {
     padding: 3px 0;
   }
 }
+
+/*--------------------------------------------------------------
+# Theme selection
+--------------------------------------------------------------*/
+.btn-theme:focus,
+.btn-theme:active {
+  box-shadow: none !important;
+}
