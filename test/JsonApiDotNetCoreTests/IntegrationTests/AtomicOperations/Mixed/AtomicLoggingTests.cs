@@ -36,7 +36,7 @@ public sealed class AtomicLoggingTests : IClassFixture<IntegrationTestContext<Te
     }
 
     [Fact]
-    public async Task Logs_at_error_level_on_unhandled_exception()
+    public async Task Logs_unhandled_exception_at_Error_level()
     {
         // Arrange
         var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
@@ -88,7 +88,7 @@ public sealed class AtomicLoggingTests : IClassFixture<IntegrationTestContext<Te
     }
 
     [Fact]
-    public async Task Logs_at_info_level_on_invalid_request_body()
+    public async Task Logs_invalid_request_body_error_at_Information_level()
     {
         // Arrange
         var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();

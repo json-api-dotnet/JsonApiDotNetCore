@@ -2,6 +2,7 @@ using System.Net;
 using System.Reflection;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
@@ -475,6 +476,9 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
+
+        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(HeaderConstants.MediaType);
 
         responseDocument.Errors.ShouldHaveCount(1);
 

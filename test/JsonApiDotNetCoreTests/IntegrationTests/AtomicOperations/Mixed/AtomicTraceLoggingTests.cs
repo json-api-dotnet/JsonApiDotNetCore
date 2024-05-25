@@ -33,7 +33,7 @@ public sealed class AtomicTraceLoggingTests : IClassFixture<IntegrationTestConte
     }
 
     [Fact]
-    public async Task Logs_execution_flow_at_trace_level_on_operations_request()
+    public async Task Logs_execution_flow_at_Trace_level_on_operations_request()
     {
         // Arrange
         var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
