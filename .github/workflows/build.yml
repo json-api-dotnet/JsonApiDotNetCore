@@ -48,6 +48,8 @@ jobs:
         dotnet-version: |
           6.0.x
           8.0.x
+          9.0.x
+        dotnet-quality: 'preview'
     - name: Setup PowerShell (Ubuntu)
       if: matrix.os == 'ubuntu-latest'
       run: |
@@ -196,6 +198,8 @@ jobs:
         dotnet-version: |
           6.0.x
           8.0.x
+          9.0.x
+        dotnet-quality: 'preview'
     - name: Git checkout
       uses: actions/checkout@v4
     - name: Restore tools
@@ -251,6 +255,8 @@ jobs:
         dotnet-version: |
           6.0.x
           8.0.x
+          9.0.x
+        dotnet-quality: 'preview'
     - name: Git checkout
       uses: actions/checkout@v4
       with:
@@ -263,6 +269,9 @@ jobs:
         dotnet restore
     - name: CleanupCode (on PR diff)
       if: github.event_name == 'pull_request'
+      env:
+        # Workaround for https://github.com/dotnet/runtime/issues/64103
+        COMPlus_ReadyToRun: 0
       shell: pwsh
       run: |
         # Not using the environment variables for SHAs, because they may be outdated. This may happen on force-push after the build is queued, but before it starts.
@@ -274,6 +283,9 @@ jobs:
         dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
     - name: CleanupCode (on branch)
       if: github.event_name == 'push' || github.event_name == 'release'
+      env:
+        # Workaround for https://github.com/dotnet/runtime/issues/64103
+        COMPlus_ReadyToRun: 0
       shell: pwsh
       run: |
         Write-Output "Running code cleanup on all files."
