@@ -4622,6 +4622,12 @@ references:
   commentId: F:JsonApiDotNetCore.Middleware.HeaderConstants.MediaType
   fullName: JsonApiDotNetCore.Middleware.HeaderConstants.MediaType
   nameWithType: HeaderConstants.MediaType
+- uid: JsonApiDotNetCore.Middleware.HeaderConstants.RelaxedAtomicOperationsMediaType
+  name: RelaxedAtomicOperationsMediaType
+  href: api/JsonApiDotNetCore.Middleware.HeaderConstants.html#JsonApiDotNetCore_Middleware_HeaderConstants_RelaxedAtomicOperationsMediaType
+  commentId: F:JsonApiDotNetCore.Middleware.HeaderConstants.RelaxedAtomicOperationsMediaType
+  fullName: JsonApiDotNetCore.Middleware.HeaderConstants.RelaxedAtomicOperationsMediaType
+  nameWithType: HeaderConstants.RelaxedAtomicOperationsMediaType
 - uid: JsonApiDotNetCore.Middleware.HttpContextExtensions
   name: HttpContextExtensions
   href: api/JsonApiDotNetCore.Middleware.HttpContextExtensions.html
