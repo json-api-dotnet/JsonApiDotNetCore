@@ -1,6 +1,4 @@
-<p align="center">
-<img src ="https://raw.githubusercontent.com/json-api-dotnet/JsonApiDotNetCore/master/logo.png" />
-</p>
+<a href="https://www.jsonapi.net"><img src="docs/home/assets/img/logo.svg" style="height: 345px; width: 345px"/></a>
 
 # JsonApiDotNetCore
 A framework for building [JSON:API](http://jsonapi.org/) compliant REST APIs using .NET Core and Entity Framework Core. Includes support for [Atomic Operations](https://jsonapi.org/ext/atomic/).
