@@ -83,6 +83,9 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(HeaderConstants.MediaType);
     }
 
     [Fact]
@@ -102,6 +105,9 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(HeaderConstants.MediaType);
     }
 
     [Fact]
@@ -124,10 +130,59 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(HeaderConstants.MediaType);
     }
 
     [Fact]
-    public async Task Permits_JsonApi_with_AtomicOperations_extension_in_Accept_headers_at_operations_endpoint()
+    public async Task Prefers_JsonApi_with_AtomicOperations_extension_in_Accept_headers_at_operations_endpoint()
+    {
+        // Arrange
+        var requestBody = new
+        {
+            atomic__operations = new[]
+            {
+                new
+                {
+                    op = "add",
+                    data = new
+                    {
+                        type = "policies",
+                        attributes = new
+                        {
+                            name = "some"
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/operations";
+        const string contentType = HeaderConstants.RelaxedAtomicOperationsMediaType;
+
+        Action<HttpRequestHeaders> setRequestHeaders = headers =>
+        {
+            headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("text/html"));
+            headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType}; profile=some"));
+            headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType));
+            headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType}; unknown=unexpected"));
+            headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType};EXT=atomic-operations; q=0.2"));
+            headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType};EXT=\"https://jsonapi.org/ext/atomic\"; q=0.8"));
+        };
+
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType, setRequestHeaders);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(HeaderConstants.AtomicOperationsMediaType);
+    }
+
+    [Fact]
+    public async Task Prefers_JsonApi_with_relaxed_AtomicOperations_extension_in_Accept_headers_at_operations_endpoint()
     {
         // Arrange
         var requestBody = new
@@ -158,7 +213,8 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
             headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType}; profile=some"));
             headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType));
             headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType}; unknown=unexpected"));
-            headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType};ext=\"https://jsonapi.org/ext/atomic\"; q=0.2"));
+            headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType};EXT=\"https://jsonapi.org/ext/atomic\"; q=0.2"));
+            headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType};EXT=atomic-operations; q=0.8"));
         };
 
         // Act
@@ -166,6 +222,9 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(HeaderConstants.RelaxedAtomicOperationsMediaType);
     }
 
     [Fact]
@@ -236,10 +295,13 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
 
         responseDocument.Errors.ShouldHaveCount(1);
 
+        const string detail =
+            $"Please include '{HeaderConstants.AtomicOperationsMediaType}' or '{HeaderConstants.RelaxedAtomicOperationsMediaType}' in the Accept header values.";
+
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotAcceptable);
         error.Title.Should().Be("The specified Accept header value does not contain any supported media types.");
-        error.Detail.Should().Be("Please include 'application/vnd.api+json; ext=\"https://jsonapi.org/ext/atomic\"' in the Accept header values.");
+        error.Detail.Should().Be(detail);
         error.Source.ShouldNotBeNull();
         error.Source.Header.Should().Be("Accept");
     }

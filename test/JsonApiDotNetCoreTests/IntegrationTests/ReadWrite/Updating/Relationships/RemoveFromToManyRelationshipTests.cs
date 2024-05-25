@@ -3,6 +3,7 @@ using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -307,6 +308,9 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
+
+        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(HeaderConstants.MediaType);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
