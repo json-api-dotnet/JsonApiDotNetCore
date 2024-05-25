@@ -24,7 +24,7 @@
     <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
     <SourceLinkVersion>8.0.*</SourceLinkVersion>
     <SwashbuckleVersion>6.6.*</SwashbuckleVersion>
-    <TestSdkVersion>17.9.*</TestSdkVersion>
+    <TestSdkVersion>17.10.*</TestSdkVersion>
     <XunitVersion>2.8.*</XunitVersion>
   </PropertyGroup>
 
