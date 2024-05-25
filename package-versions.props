@@ -15,7 +15,7 @@
     <GitHubActionsTestLoggerVersion>2.3.*</GitHubActionsTestLoggerVersion>
     <InheritDocVersion>2.0.*</InheritDocVersion>
     <SourceLinkVersion>8.0.*</SourceLinkVersion>
-    <TestSdkVersion>17.9.*</TestSdkVersion>
+    <TestSdkVersion>17.10.*</TestSdkVersion>
     <XunitVersion>2.8.*</XunitVersion>
   </PropertyGroup>
 
