@@ -486,7 +486,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("tandems");
         responseDocument.Data.SingleValue.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
-        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "features");
+        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
 
         long newTandemId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 

@@ -10,6 +10,9 @@ public sealed class Tandem : Bike
     [Attr]
     public int PassengerCount { get; set; }
 
+    [HasOne]
+    public Box? FoldingDimensions { get; set; }
+
     [HasMany]
     public ISet<GenericFeature> Features { get; set; } = new HashSet<GenericFeature>();
 }
