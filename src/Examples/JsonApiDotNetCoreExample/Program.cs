@@ -18,7 +18,7 @@ WebApplication app = CreateWebApplication(args);
 
 await CreateDatabaseAsync(app.Services);
 
-app.Run();
+await app.RunAsync();
 
 static WebApplication CreateWebApplication(string[] args)
 {

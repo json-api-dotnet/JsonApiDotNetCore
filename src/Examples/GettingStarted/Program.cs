@@ -38,7 +38,7 @@ app.MapControllers();
 
 await CreateDatabaseAsync(app.Services);
 
-app.Run();
+await app.RunAsync();
 
 [Conditional("DEBUG")]
 static void SetDbContextDebugOptions(DbContextOptionsBuilder options)

@@ -38,7 +38,7 @@ await CreateDatabaseAsync(null, app.Services);
 await CreateDatabaseAsync("AdventureWorks", app.Services);
 await CreateDatabaseAsync("Contoso", app.Services);
 
-app.Run();
+await app.RunAsync();
 
 [Conditional("DEBUG")]
 static void SetDbContextDebugOptions(DbContextOptionsBuilder options)
