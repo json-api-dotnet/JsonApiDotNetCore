@@ -1,5 +1,6 @@
 using System.Net;
 using FluentAssertions;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
@@ -224,6 +225,9 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
+
+        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(HeaderConstants.MediaType);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
