@@ -11,6 +11,7 @@ public class OrderClauseBuilder : QueryClauseBuilder, IOrderClauseBuilder
     public virtual Expression ApplyOrderBy(SortExpression expression, QueryClauseBuilderContext context)
     {
         ArgumentGuard.NotNull(expression);
+        ArgumentGuard.NotNull(context);
 
         return Visit(expression, context);
     }

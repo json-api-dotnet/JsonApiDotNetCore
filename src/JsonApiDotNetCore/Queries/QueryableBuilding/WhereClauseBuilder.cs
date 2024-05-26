@@ -19,6 +19,7 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
     public virtual Expression ApplyWhere(FilterExpression filter, QueryClauseBuilderContext context)
     {
         ArgumentGuard.NotNull(filter);
+        ArgumentGuard.NotNull(context);
 
         LambdaExpression lambda = GetPredicateLambda(filter, context);
 

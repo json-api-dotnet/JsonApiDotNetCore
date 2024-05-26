@@ -29,6 +29,7 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
     public virtual Expression ApplySelect(FieldSelection selection, QueryClauseBuilderContext context)
     {
         ArgumentGuard.NotNull(selection);
+        ArgumentGuard.NotNull(context);
 
         Expression bodyInitializer = CreateLambdaBodyInitializer(selection, context.ResourceType, context.LambdaScope, false, context);
 

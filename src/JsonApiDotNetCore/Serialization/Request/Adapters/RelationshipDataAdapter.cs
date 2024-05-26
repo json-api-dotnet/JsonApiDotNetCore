@@ -22,6 +22,9 @@ public sealed class RelationshipDataAdapter : BaseAdapter, IRelationshipDataAdap
     /// <inheritdoc />
     public object? Convert(SingleOrManyData<ResourceObject> data, RelationshipAttribute relationship, bool useToManyElementType, RequestAdapterState state)
     {
+        ArgumentGuard.NotNull(relationship);
+        ArgumentGuard.NotNull(state);
+
         SingleOrManyData<ResourceIdentifierObject> identifierData = ToIdentifierData(data);
         return Convert(identifierData, relationship, useToManyElementType, state);
     }

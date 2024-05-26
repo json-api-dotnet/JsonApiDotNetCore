@@ -137,6 +137,8 @@ public static class RuntimeTypeConverter
     /// </summary>
     public static bool CanContainNull(Type type)
     {
+        ArgumentGuard.NotNull(type);
+
         return !type.IsValueType || Nullable.GetUnderlyingType(type) != null;
     }
 
@@ -148,6 +150,8 @@ public static class RuntimeTypeConverter
     /// </returns>
     public static object? GetDefaultValue(Type type)
     {
+        ArgumentGuard.NotNull(type);
+
         return type.IsValueType ? Activator.CreateInstance(type) : null;
     }
 }

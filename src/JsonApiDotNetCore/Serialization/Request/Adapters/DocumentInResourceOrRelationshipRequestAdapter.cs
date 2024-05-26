@@ -27,6 +27,9 @@ public sealed class DocumentInResourceOrRelationshipRequestAdapter : IDocumentIn
     /// <inheritdoc />
     public object? Convert(Document document, RequestAdapterState state)
     {
+        ArgumentGuard.NotNull(document);
+        ArgumentGuard.NotNull(state);
+
         state.WritableTargetedFields = new TargetedFields();
 
         switch (state.Request.WriteOperation)
