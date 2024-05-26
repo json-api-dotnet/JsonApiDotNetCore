@@ -31,7 +31,7 @@ public sealed class CreateMusicTrackOperationsController(
 
         foreach (OperationContainer operation in operations)
         {
-            if (operation.Request.WriteOperation != WriteOperationKind.CreateResource || operation.Resource.GetType() != typeof(MusicTrack))
+            if (operation.Request.WriteOperation != WriteOperationKind.CreateResource || operation.Resource is not MusicTrack)
             {
                 throw new JsonApiException(new ErrorObject(HttpStatusCode.UnprocessableEntity)
                 {
