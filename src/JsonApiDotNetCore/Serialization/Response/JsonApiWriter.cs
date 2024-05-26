@@ -161,7 +161,7 @@ public sealed partial class JsonApiWriter : IJsonApiWriter
 
     private static bool RequestContainsMatchingETag(IHeaderDictionary requestHeaders, EntityTagHeaderValue responseETag)
     {
-        if (requestHeaders.Keys.Contains(HeaderNames.IfNoneMatch) &&
+        if (requestHeaders.ContainsKey(HeaderNames.IfNoneMatch) &&
             EntityTagHeaderValue.TryParseList(requestHeaders[HeaderNames.IfNoneMatch], out IList<EntityTagHeaderValue>? requestETags))
         {
             foreach (EntityTagHeaderValue requestETag in requestETags)
