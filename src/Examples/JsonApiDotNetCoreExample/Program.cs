@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
+using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -34,10 +35,10 @@ static WebApplication CreateWebApplication(string[] args)
     // Configure the HTTP request pipeline.
     ConfigurePipeline(app);
 
-    if (CodeTimingSessionManager.IsEnabled)
+    if (CodeTimingSessionManager.IsEnabled && app.Logger.IsEnabled(LogLevel.Information))
     {
         string timingResults = CodeTimingSessionManager.Current.GetResults();
-        app.Logger.LogInformation($"Measurement results for application startup:{Environment.NewLine}{timingResults}");
+        AppLog.LogStartupTimings(app.Logger, Environment.NewLine, timingResults);
     }
 
     return app;

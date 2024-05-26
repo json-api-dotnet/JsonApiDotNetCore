@@ -6,7 +6,7 @@ namespace DapperExample.TranslationToSql.Transformations;
 /// <summary>
 /// Collects all <see cref="ColumnNode" />s in selectors that are referenced elsewhere in the query.
 /// </summary>
-internal sealed class ColumnSelectorUsageCollector : SqlTreeNodeVisitor<ColumnVisitMode, object?>
+internal sealed partial class ColumnSelectorUsageCollector : SqlTreeNodeVisitor<ColumnVisitMode, object?>
 {
     private readonly HashSet<ColumnNode> _usedColumns = [];
     private readonly ILogger<ColumnSelectorUsageCollector> _logger;
@@ -24,12 +24,12 @@ internal sealed class ColumnSelectorUsageCollector : SqlTreeNodeVisitor<ColumnVi
     {
         ArgumentGuard.NotNull(select);
 
-        _logger.LogDebug("Started collection of used columns.");
+        LogStarted();
 
         _usedColumns.Clear();
         InnerVisit(select, ColumnVisitMode.Reference);
 
-        _logger.LogDebug("Finished collection of used columns.");
+        LogFinished();
     }
 
     public override object? VisitSelect(SelectNode node, ColumnVisitMode mode)
@@ -70,7 +70,7 @@ internal sealed class ColumnSelectorUsageCollector : SqlTreeNodeVisitor<ColumnVi
         if (mode == ColumnVisitMode.Reference)
         {
             _usedColumns.Add(node.Column);
-            _logger.LogDebug($"Added used column {node.Column}.");
+            LogColumnAdded(node.Column);
         }
 
         InnerVisit(node.Column, mode);
@@ -160,4 +160,13 @@ internal sealed class ColumnSelectorUsageCollector : SqlTreeNodeVisitor<ColumnVi
             InnerVisit(node, mode);
         }
     }
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Started collection of used columns.")]
+    private partial void LogStarted();
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Finished collection of used columns.")]
+    private partial void LogFinished();
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Added used column {Column}.")]
+    private partial void LogColumnAdded(ColumnNode column);
 }

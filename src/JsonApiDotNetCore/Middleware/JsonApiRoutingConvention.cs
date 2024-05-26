@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Middleware;
 /// public class SomeVeryCustomController<SomeResource> : CoreJsonApiController { } // => /someVeryCustoms/relationship/relatedResource
 /// ]]></example>
 [PublicAPI]
-public sealed class JsonApiRoutingConvention : IJsonApiRoutingConvention
+public sealed partial class JsonApiRoutingConvention : IJsonApiRoutingConvention
 {
     private readonly IJsonApiOptions _options;
     private readonly IResourceGraph _resourceGraph;
@@ -83,8 +83,7 @@ public sealed class JsonApiRoutingConvention : IJsonApiRoutingConvention
                 // ProblemDetails, where the origin of the error gets lost. As a result, we can't populate the source pointer in JSON:API error responses.
                 // For backwards-compatibility, we log a warning instead of throwing. But we can't think of any use cases where having [ApiController] makes sense.
 
-                _logger.LogWarning(
-                    $"Found JSON:API controller '{controller.ControllerType}' with [ApiController]. Please remove this attribute for optimal JSON:API compliance.");
+                LogApiControllerAttributeFound(controller.ControllerType);
             }
 
             if (!IsOperationsController(controller.ControllerType))
@@ -214,4 +213,8 @@ public sealed class JsonApiRoutingConvention : IJsonApiRoutingConvention
         Type baseControllerType = typeof(BaseJsonApiOperationsController);
         return baseControllerType.IsAssignableFrom(type);
     }
+
+    [LoggerMessage(Level = LogLevel.Warning,
+        Message = "Found JSON:API controller '{ControllerType}' with [ApiController]. Please remove this attribute for optimal JSON:API compliance.")]
+    private partial void LogApiControllerAttributeFound(TypeInfo controllerType);
 }

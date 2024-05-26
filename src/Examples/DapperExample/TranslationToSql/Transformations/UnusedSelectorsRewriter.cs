@@ -26,7 +26,7 @@ namespace DapperExample.TranslationToSql.Transformations;
 /// </p>
 /// The selectors t1."AccountId" and t1."FirstName" have no references and can be removed.
 /// </example>
-internal sealed class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<ColumnNode>, SqlTreeNode>
+internal sealed partial class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<ColumnNode>, SqlTreeNode>
 {
     private readonly ColumnSelectorUsageCollector _usageCollector;
     private readonly ILogger<UnusedSelectorsRewriter> _logger;
@@ -52,9 +52,9 @@ internal sealed class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<ColumnNo
             _hasChanged = false;
             _usageCollector.Collect(_rootSelect);
 
-            _logger.LogDebug("Started removal of unused selectors.");
+            LogStarted();
             _rootSelect = TypedVisit(_rootSelect, _usageCollector.UsedColumns);
-            _logger.LogDebug("Finished removal of unused selectors.");
+            LogFinished();
         }
         while (_hasChanged);
 
@@ -98,7 +98,7 @@ internal sealed class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<ColumnNo
             {
                 if (!usedColumns.Contains(columnSelector.Column))
                 {
-                    _logger.LogDebug($"Removing unused selector {columnSelector}.");
+                    LogSelectorRemoved(columnSelector);
                     _hasChanged = true;
                     continue;
                 }
@@ -216,4 +216,13 @@ internal sealed class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<ColumnNo
     {
         return nodes.Select(element => TypedVisit(element, usedColumns)).ToList();
     }
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Started removal of unused selectors.")]
+    private partial void LogStarted();
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Finished removal of unused selectors.")]
+    private partial void LogFinished();
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Removing unused selector {Selector}.")]
+    private partial void LogSelectorRemoved(ColumnSelectorNode selector);
 }

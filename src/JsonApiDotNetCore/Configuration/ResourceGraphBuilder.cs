@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Configuration;
 /// Builds and configures the <see cref="ResourceGraph" />.
 /// </summary>
 [PublicAPI]
-public class ResourceGraphBuilder
+public partial class ResourceGraphBuilder
 {
     private readonly IJsonApiOptions _options;
     private readonly ILogger<ResourceGraphBuilder> _logger;
@@ -38,7 +38,7 @@ public class ResourceGraphBuilder
 
         if (!resourceTypes.Any())
         {
-            _logger.LogWarning("The resource graph is empty.");
+            LogResourceGraphIsEmpty();
         }
 
         var resourceGraph = new ResourceGraph(resourceTypes);
@@ -227,8 +227,7 @@ public class ResourceGraphBuilder
         {
             if (resourceClrType.GetCustomAttribute<NoResourceAttribute>() == null)
             {
-                _logger.LogWarning(
-                    $"Skipping: Type '{resourceClrType}' does not implement '{nameof(IIdentifiable)}'. Add [NoResource] to suppress this warning.");
+                LogResourceTypeDoesNotImplementInterface(resourceClrType, nameof(IIdentifiable));
             }
         }
 
@@ -296,7 +295,7 @@ public class ResourceGraphBuilder
 
         if (attributesByName.Count < 2)
         {
-            _logger.LogWarning($"Type '{resourceClrType}' does not contain any attributes.");
+            LogResourceTypeHasNoAttributes(resourceClrType);
         }
 
         return attributesByName.Values;
@@ -475,4 +474,14 @@ public class ResourceGraphBuilder
             ? resourceProperty.Name
             : _options.SerializerOptions.PropertyNamingPolicy.ConvertName(resourceProperty.Name);
     }
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "The resource graph is empty.")]
+    private partial void LogResourceGraphIsEmpty();
+
+    [LoggerMessage(Level = LogLevel.Warning,
+        Message = "Skipping: Type '{ResourceType}' does not implement '{InterfaceType}'. Add [NoResource] to suppress this warning.")]
+    private partial void LogResourceTypeDoesNotImplementInterface(Type resourceType, string interfaceType);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Type '{ResourceType}' does not contain any attributes.")]
+    private partial void LogResourceTypeHasNoAttributes(Type resourceType);
 }

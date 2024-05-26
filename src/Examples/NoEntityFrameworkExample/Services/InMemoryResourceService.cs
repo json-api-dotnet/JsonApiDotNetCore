@@ -30,7 +30,7 @@ namespace NoEntityFrameworkExample.Services;
 /// <typeparam name="TId">
 /// The resource identifier type.
 /// </typeparam>
-public abstract class InMemoryResourceService<TResource, TId>(
+public abstract partial class InMemoryResourceService<TResource, TId>(
     IJsonApiOptions options, IResourceGraph resourceGraph, IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext,
     IEnumerable<IQueryConstraintProvider> constraintProviders, IQueryableBuilder queryableBuilder, IReadOnlyModel entityModel,
     ILoggerFactory loggerFactory) : IResourceQueryService<TResource, TId>
@@ -86,7 +86,7 @@ public abstract class InMemoryResourceService<TResource, TId>(
 
         if (filter != null)
         {
-            _logger.LogInformation($"Incoming top-level filter from query string: {filter}");
+            LogIncomingFilter(filter);
         }
     }
 
@@ -194,4 +194,7 @@ public abstract class InMemoryResourceService<TResource, TId>(
     }
 
     protected abstract IEnumerable<IIdentifiable> GetDataSource(ResourceType resourceType);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Incoming top-level filter from query string: {Filter}")]
+    private partial void LogIncomingFilter(FilterExpression filter);
 }

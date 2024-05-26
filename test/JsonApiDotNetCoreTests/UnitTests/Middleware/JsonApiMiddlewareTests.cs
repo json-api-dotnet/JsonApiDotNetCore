@@ -65,13 +65,15 @@ public sealed class JsonApiMiddlewareTests
         var httpContext = new DefaultHttpContext();
         IControllerResourceMapping controllerResourceMapping = SetupRoutes(httpContext, resourceGraph, requestMethod, requestPath);
 
-        var middleware = new JsonApiMiddleware(null, new HttpContextAccessor
+        var httpContextAccessor = new HttpContextAccessor
         {
             HttpContext = httpContext
-        });
+        };
+
+        var middleware = new JsonApiMiddleware(null, httpContextAccessor, controllerResourceMapping, options, NullLogger<JsonApiMiddleware>.Instance);
 
         // Act
-        await middleware.InvokeAsync(httpContext, controllerResourceMapping, options, request, NullLogger<JsonApiMiddleware>.Instance);
+        await middleware.InvokeAsync(httpContext, request);
 
         // Assert
         request.Kind.Should().Be(expectKind);
