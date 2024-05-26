@@ -49,12 +49,12 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<DapperTestConte
                 new
                 {
                     type = "todoItems",
-                    id = existingTodoItems.ElementAt(0).StringId
+                    id = existingTodoItems[0].StringId
                 },
                 new
                 {
                     type = "todoItems",
-                    id = existingTodoItems.ElementAt(1).StringId
+                    id = existingTodoItems[1].StringId
                 }
             }
         };
@@ -88,8 +88,8 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<DapperTestConte
 
             command.Parameters.ShouldHaveCount(3);
             command.Parameters.Should().Contain("@p1", existingPerson.Id);
-            command.Parameters.Should().Contain("@p2", existingTodoItems.ElementAt(0).Id);
-            command.Parameters.Should().Contain("@p3", existingTodoItems.ElementAt(1).Id);
+            command.Parameters.Should().Contain("@p2", existingTodoItems[0].Id);
+            command.Parameters.Should().Contain("@p3", existingTodoItems[1].Id);
         });
     }
 }

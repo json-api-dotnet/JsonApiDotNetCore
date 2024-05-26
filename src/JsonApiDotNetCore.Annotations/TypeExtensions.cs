@@ -23,7 +23,7 @@ internal static class TypeExtensions
         }
 
         return AreTypesEqual(interfaceType, source, interfaceType.IsGenericType) ||
-            source.GetInterfaces().Any(type => AreTypesEqual(interfaceType, type, interfaceType.IsGenericType));
+            Array.Exists(source.GetInterfaces(), type => AreTypesEqual(interfaceType, type, interfaceType.IsGenericType));
     }
 
     private static bool AreTypesEqual(Type left, Type right, bool isLeftGeneric)

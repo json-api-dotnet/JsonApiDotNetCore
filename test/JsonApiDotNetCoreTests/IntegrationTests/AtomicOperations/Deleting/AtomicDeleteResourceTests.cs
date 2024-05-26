@@ -267,8 +267,8 @@ public sealed class AtomicDeleteResourceTests : IClassFixture<IntegrationTestCon
 
             List<Performer> performersInDatabase = await dbContext.Performers.ToListAsync();
 
-            performersInDatabase.Should().ContainSingle(userAccount => userAccount.Id == existingTrack.Performers.ElementAt(0).Id);
-            performersInDatabase.Should().ContainSingle(userAccount => userAccount.Id == existingTrack.Performers.ElementAt(1).Id);
+            performersInDatabase.Should().ContainSingle(userAccount => userAccount.Id == existingTrack.Performers[0].Id);
+            performersInDatabase.Should().ContainSingle(userAccount => userAccount.Id == existingTrack.Performers[1].Id);
         });
     }
 

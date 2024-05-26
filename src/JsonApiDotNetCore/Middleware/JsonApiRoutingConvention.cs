@@ -189,7 +189,7 @@ public sealed partial class JsonApiRoutingConvention : IJsonApiRoutingConvention
 
             if ((nextBaseType == aspNetControllerType || nextBaseType == coreControllerType) && currentType.IsGenericType)
             {
-                Type? resourceClrType = currentType.GetGenericArguments().FirstOrDefault(typeArgument => typeArgument.IsOrImplementsInterface<IIdentifiable>());
+                Type? resourceClrType = Array.Find(currentType.GetGenericArguments(), typeArgument => typeArgument.IsOrImplementsInterface<IIdentifiable>());
 
                 if (resourceClrType != null)
                 {

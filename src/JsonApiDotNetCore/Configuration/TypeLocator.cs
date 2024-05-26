@@ -21,8 +21,10 @@ internal sealed class TypeLocator
     /// </summary>
     public Type? LookupIdType(Type? resourceClrType)
     {
-        Type? identifiableClosedInterface = resourceClrType?.GetInterfaces().FirstOrDefault(@interface =>
-            @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IIdentifiable<>));
+        Type? identifiableClosedInterface = resourceClrType != null
+            ? Array.Find(resourceClrType.GetInterfaces(),
+                @interface => @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IIdentifiable<>))
+            : null;
 
         return identifiableClosedInterface?.GetGenericArguments()[0];
     }

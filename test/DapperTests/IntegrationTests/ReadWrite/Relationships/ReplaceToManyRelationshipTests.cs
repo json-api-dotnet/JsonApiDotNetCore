@@ -180,12 +180,12 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<DapperTestCon
                 new
                 {
                     type = "todoItems",
-                    id = existingTodoItems.ElementAt(0).StringId
+                    id = existingTodoItems[0].StringId
                 },
                 new
                 {
                     type = "todoItems",
-                    id = existingTodoItems.ElementAt(1).StringId
+                    id = existingTodoItems[1].StringId
                 }
             }
         };
@@ -205,8 +205,8 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<DapperTestCon
             Person personInDatabase = await dbContext.People.Include(person => person.AssignedTodoItems).FirstWithIdAsync(existingPerson.Id);
 
             personInDatabase.AssignedTodoItems.ShouldHaveCount(2);
-            personInDatabase.AssignedTodoItems.ElementAt(0).Id.Should().Be(existingTodoItems.ElementAt(0).Id);
-            personInDatabase.AssignedTodoItems.ElementAt(1).Id.Should().Be(existingTodoItems.ElementAt(1).Id);
+            personInDatabase.AssignedTodoItems.ElementAt(0).Id.Should().Be(existingTodoItems[0].Id);
+            personInDatabase.AssignedTodoItems.ElementAt(1).Id.Should().Be(existingTodoItems[1].Id);
         });
 
         store.SqlCommands.ShouldHaveCount(2);
@@ -234,8 +234,8 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<DapperTestCon
 
             command.Parameters.ShouldHaveCount(3);
             command.Parameters.Should().Contain("@p1", existingPerson.Id);
-            command.Parameters.Should().Contain("@p2", existingTodoItems.ElementAt(0).Id);
-            command.Parameters.Should().Contain("@p3", existingTodoItems.ElementAt(1).Id);
+            command.Parameters.Should().Contain("@p2", existingTodoItems[0].Id);
+            command.Parameters.Should().Contain("@p3", existingTodoItems[1].Id);
         });
     }
 

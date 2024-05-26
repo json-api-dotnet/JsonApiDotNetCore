@@ -34,7 +34,7 @@ public sealed class NullSafeExpressionRewriterTests
             }
         };
 
-        TestResource lastInDataSource = dataSource.Last();
+        TestResource lastInDataSource = dataSource[^1];
 
         Expression<Func<IEnumerable<TestResource>, IEnumerable<TestResource>>> expression = source => source.Where(resource => resource.Parent!.Id == 3);
 
@@ -104,7 +104,7 @@ public sealed class NullSafeExpressionRewriterTests
             }
         };
 
-        TestResource lastInDataSource = dataSource.Last();
+        TestResource lastInDataSource = dataSource[^1];
         lastInDataSource.FirstChild!.Parent!.Id = lastInDataSource.Parent!.Id;
 
         Expression<Func<IEnumerable<TestResource>, IEnumerable<TestResource>>> expression = source =>
@@ -203,7 +203,7 @@ public sealed class NullSafeExpressionRewriterTests
             }
         };
 
-        TestResource lastInDataSource = dataSource.Last();
+        TestResource lastInDataSource = dataSource[^1];
 
         Expression<Func<IEnumerable<TestResource>, IEnumerable<TestResource>>> expression = source =>
             source.Where(resource => resource.Parent!.Parent!.Children.Any());
@@ -337,7 +337,7 @@ public sealed class NullSafeExpressionRewriterTests
             }
         };
 
-        TestResource lastInDataSource = dataSource.Last();
+        TestResource lastInDataSource = dataSource[^1];
 
         // ReSharper disable once NegativeEqualityExpression
         Expression<Func<IEnumerable<TestResource>, IEnumerable<TestResource>>> expression = source => source.Where(resource =>
@@ -406,7 +406,7 @@ public sealed class NullSafeExpressionRewriterTests
             }
         };
 
-        TestResource lastInDataSource = dataSource.Last();
+        TestResource lastInDataSource = dataSource[^1];
 
         // ReSharper disable UseCollectionCountProperty
         Expression<Func<IEnumerable<TestResource>, IEnumerable<TestResource>>> expression = source =>

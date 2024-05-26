@@ -42,8 +42,8 @@ public static class CodeTimingSessionManager
     {
         const string testAssemblyName = "xunit.core";
 
-        return AppDomain.CurrentDomain.GetAssemblies().Any(assembly =>
-            assembly.FullName != null && assembly.FullName.StartsWith(testAssemblyName, StringComparison.Ordinal));
+        return Array.Exists(AppDomain.CurrentDomain.GetAssemblies(),
+            assembly => assembly.FullName != null && assembly.FullName.StartsWith(testAssemblyName, StringComparison.Ordinal));
     }
 
     // ReSharper disable once UnusedMember.Local
