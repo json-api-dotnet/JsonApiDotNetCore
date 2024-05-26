@@ -5,24 +5,13 @@ using ReportsExample.Models;
 namespace ReportsExample.Services;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public class ReportService(ILoggerFactory loggerFactory) : IGetAllService<Report, int>
+public class ReportService : IGetAllService<Report, int>
 {
-    private readonly ILogger<ReportService> _logger = loggerFactory.CreateLogger<ReportService>();
-
     public Task<IReadOnlyCollection<Report>> GetAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("GetAsync");
-
-        IReadOnlyCollection<Report> reports = GetReports();
-
-        return Task.FromResult(reports);
-    }
-
-    private IReadOnlyCollection<Report> GetReports()
-    {
-        return new List<Report>
-        {
-            new()
+        List<Report> reports =
+        [
+            new Report
             {
                 Id = 1,
                 Title = "Status Report",
@@ -32,6 +21,8 @@ public class ReportService(ILoggerFactory loggerFactory) : IGetAllService<Report
                     HoursSpent = 24
                 }
             }
-        };
+        ];
+
+        return Task.FromResult<IReadOnlyCollection<Report>>(reports);
     }
 }

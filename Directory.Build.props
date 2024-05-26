@@ -17,6 +17,11 @@
     <NoWarn>$(NoWarn);CA1707</NoWarn>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <!-- Workaround for https://github.com/dotnet/runtime/issues/72263 -->
+    <NoWarn>$(NoWarn);SYSLIB1006</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2023.3.*" PrivateAssets="All" />
     <PackageReference Include="CSharpGuidelinesAnalyzer" Version="3.8.*" PrivateAssets="All" />

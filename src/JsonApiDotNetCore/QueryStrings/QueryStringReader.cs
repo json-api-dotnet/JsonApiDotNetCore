@@ -8,7 +8,7 @@ using Microsoft.Extensions.Primitives;
 namespace JsonApiDotNetCore.QueryStrings;
 
 /// <inheritdoc cref="IQueryStringReader" />
-public sealed class QueryStringReader : IQueryStringReader
+public sealed partial class QueryStringReader : IQueryStringReader
 {
     private readonly IJsonApiOptions _options;
     private readonly IRequestQueryStringAccessor _queryStringAccessor;
@@ -47,7 +47,7 @@ public sealed class QueryStringReader : IQueryStringReader
 
             if (reader != null)
             {
-                _logger.LogDebug($"Query string parameter '{parameterName}' with value '{parameterValue}' was accepted by {reader.GetType().Name}.");
+                LogParameterAccepted(parameterName, parameterValue, reader.GetType().Name);
 
                 if (!reader.AllowEmptyValue && string.IsNullOrEmpty(parameterValue))
                 {
@@ -63,7 +63,7 @@ public sealed class QueryStringReader : IQueryStringReader
                 }
 
                 reader.Read(parameterName, parameterValue);
-                _logger.LogDebug($"Query string parameter '{parameterName}' was successfully read.");
+                LogParameterRead(parameterName);
             }
             else if (!_options.AllowUnknownQueryStringParameters)
             {
@@ -73,4 +73,10 @@ public sealed class QueryStringReader : IQueryStringReader
             }
         }
     }
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Query string parameter '{ParameterName}' with value '{ParameterValue}' was accepted by {ReaderType}.")]
+    private partial void LogParameterAccepted(string parameterName, StringValues parameterValue, string readerType);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Query string parameter '{ParameterName}' was successfully read.")]
+    private partial void LogParameterRead(string parameterName);
 }

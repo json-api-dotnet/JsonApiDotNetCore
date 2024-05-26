@@ -28,7 +28,7 @@ namespace DapperExample.TranslationToSql.Transformations;
 /// </p>
 /// The reference to t1 in the WHERE clause has become stale and needs to be pulled out into scope, which is t2.
 /// </example>
-internal sealed class StaleColumnReferenceRewriter : SqlTreeNodeVisitor<ColumnVisitMode, SqlTreeNode>
+internal sealed partial class StaleColumnReferenceRewriter : SqlTreeNodeVisitor<ColumnVisitMode, SqlTreeNode>
 {
     private readonly IReadOnlyDictionary<string, string> _oldToNewTableAliasMap;
     private readonly ILogger<StaleColumnReferenceRewriter> _logger;
@@ -159,7 +159,7 @@ internal sealed class StaleColumnReferenceRewriter : SqlTreeNodeVisitor<ColumnVi
 
                     if (outerColumn != null)
                     {
-                        _logger.LogDebug($"Mapped inaccessible column {column} to {outerColumn}.");
+                        LogColumnMapped(column, outerColumn);
                         return outerColumn;
                     }
                 }
@@ -289,6 +289,9 @@ internal sealed class StaleColumnReferenceRewriter : SqlTreeNodeVisitor<ColumnVi
     {
         return nodes.Select(element => TypedVisit(element, mode)).ToList();
     }
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Mapped inaccessible column {FromColumn} to {ToColumn}.")]
+    private partial void LogColumnMapped(ColumnNode fromColumn, ColumnNode toColumn);
 
     private sealed class PopStackOnDispose<T>(Stack<T> stack) : IDisposable
     {

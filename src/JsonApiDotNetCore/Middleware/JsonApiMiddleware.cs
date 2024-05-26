@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Middleware;
 /// Intercepts HTTP requests to populate injected <see cref="IJsonApiRequest" /> instance for JSON:API requests.
 /// </summary>
 [PublicAPI]
-public sealed class JsonApiMiddleware
+public sealed partial class JsonApiMiddleware
 {
     private static readonly string[] NonOperationsContentTypes = [HeaderConstants.MediaType];
     private static readonly MediaTypeHeaderValue[] NonOperationsMediaTypes = [MediaTypeHeaderValue.Parse(HeaderConstants.MediaType)];
@@ -36,40 +36,46 @@ public sealed class JsonApiMiddleware
     ];
 
     private readonly RequestDelegate? _next;
+    private readonly IControllerResourceMapping _controllerResourceMapping;
+    private readonly IJsonApiOptions _options;
+    private readonly ILogger<JsonApiMiddleware> _logger;
 
-    public JsonApiMiddleware(RequestDelegate? next, IHttpContextAccessor httpContextAccessor)
+    public JsonApiMiddleware(RequestDelegate? next, IHttpContextAccessor httpContextAccessor, IControllerResourceMapping controllerResourceMapping,
+        IJsonApiOptions options, ILogger<JsonApiMiddleware> logger)
     {
         ArgumentGuard.NotNull(httpContextAccessor);
+        ArgumentGuard.NotNull(controllerResourceMapping);
+        ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(logger);
 
         _next = next;
+        _controllerResourceMapping = controllerResourceMapping;
+        _options = options;
+        _logger = logger;
 
         var session = new AspNetCodeTimerSession(httpContextAccessor);
         CodeTimingSessionManager.Capture(session);
     }
 
-    public async Task InvokeAsync(HttpContext httpContext, IControllerResourceMapping controllerResourceMapping, IJsonApiOptions options,
-        IJsonApiRequest request, ILogger<JsonApiMiddleware> logger)
+    public async Task InvokeAsync(HttpContext httpContext, IJsonApiRequest request)
     {
         ArgumentGuard.NotNull(httpContext);
-        ArgumentGuard.NotNull(controllerResourceMapping);
-        ArgumentGuard.NotNull(options);
         ArgumentGuard.NotNull(request);
-        ArgumentGuard.NotNull(logger);
 
         using (CodeTimingSessionManager.Current.Measure("JSON:API middleware"))
         {
-            if (!await ValidateIfMatchHeaderAsync(httpContext, options.SerializerWriteOptions))
+            if (!await ValidateIfMatchHeaderAsync(httpContext, _options.SerializerWriteOptions))
             {
                 return;
             }
 
             RouteValueDictionary routeValues = httpContext.GetRouteData().Values;
-            ResourceType? primaryResourceType = CreatePrimaryResourceType(httpContext, controllerResourceMapping);
+            ResourceType? primaryResourceType = CreatePrimaryResourceType(httpContext, _controllerResourceMapping);
 
             if (primaryResourceType != null)
             {
-                if (!await ValidateContentTypeHeaderAsync(NonOperationsContentTypes, httpContext, options.SerializerWriteOptions) ||
-                    !await ValidateAcceptHeaderAsync(NonOperationsMediaTypes, httpContext, options.SerializerWriteOptions))
+                if (!await ValidateContentTypeHeaderAsync(NonOperationsContentTypes, httpContext, _options.SerializerWriteOptions) ||
+                    !await ValidateAcceptHeaderAsync(NonOperationsMediaTypes, httpContext, _options.SerializerWriteOptions))
                 {
                     return;
                 }
@@ -80,8 +86,8 @@ public sealed class JsonApiMiddleware
             }
             else if (IsRouteForOperations(routeValues))
             {
-                if (!await ValidateContentTypeHeaderAsync(OperationsContentTypes, httpContext, options.SerializerWriteOptions) ||
-                    !await ValidateAcceptHeaderAsync(OperationsMediaTypes, httpContext, options.SerializerWriteOptions))
+                if (!await ValidateContentTypeHeaderAsync(OperationsContentTypes, httpContext, _options.SerializerWriteOptions) ||
+                    !await ValidateAcceptHeaderAsync(OperationsMediaTypes, httpContext, _options.SerializerWriteOptions))
                 {
                     return;
                 }
@@ -100,12 +106,12 @@ public sealed class JsonApiMiddleware
             }
         }
 
-        if (CodeTimingSessionManager.IsEnabled)
+        if (CodeTimingSessionManager.IsEnabled && _logger.IsEnabled(LogLevel.Information))
         {
             string timingResults = CodeTimingSessionManager.Current.GetResults();
-            string url = httpContext.Request.GetDisplayUrl();
-            string method = httpContext.Request.Method.Replace(Environment.NewLine, "");
-            logger.LogInformation($"Measurement results for {method} {url}:{Environment.NewLine}{timingResults}");
+            string requestMethod = httpContext.Request.Method.Replace(Environment.NewLine, "");
+            string requestUrl = httpContext.Request.GetEncodedUrl();
+            LogMeasurement(requestMethod, requestUrl, Environment.NewLine, timingResults);
         }
     }
 
@@ -308,4 +314,8 @@ public sealed class JsonApiMiddleware
         request.IsReadOnly = false;
         request.Kind = EndpointKind.AtomicOperations;
     }
+
+    [LoggerMessage(Level = LogLevel.Information, SkipEnabledCheck = true,
+        Message = "Measurement results for {RequestMethod} {RequestUrl}:{LineBreak}{TimingResults}")]
+    private partial void LogMeasurement(string requestMethod, string requestUrl, string lineBreak, string timingResults);
 }

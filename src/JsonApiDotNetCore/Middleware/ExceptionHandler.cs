@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Middleware;
 
 /// <inheritdoc cref="IExceptionHandler" />
 [PublicAPI]
-public class ExceptionHandler : IExceptionHandler
+public partial class ExceptionHandler : IExceptionHandler
 {
     private readonly IJsonApiOptions _options;
     private readonly ILogger _logger;
@@ -40,7 +40,7 @@ public class ExceptionHandler : IExceptionHandler
         LogLevel level = GetLogLevel(exception);
         string message = GetLogMessage(exception);
 
-        _logger.Log(level, exception, message);
+        LogException(level, exception, message);
     }
 
     protected virtual LogLevel GetLogLevel(Exception exception)
@@ -112,4 +112,7 @@ public class ExceptionHandler : IExceptionHandler
             }
         }
     }
+
+    [LoggerMessage(Message = "{Message}")]
+    private partial void LogException(LogLevel level, Exception exception, string message);
 }

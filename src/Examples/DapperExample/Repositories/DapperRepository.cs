@@ -90,7 +90,7 @@ namespace DapperExample.Repositories;
 /// </item>
 /// </list>
 /// </remarks>
-public sealed class DapperRepository<TResource, TId> : IResourceRepository<TResource, TId>, IRepositorySupportsTransaction
+public sealed partial class DapperRepository<TResource, TId> : IResourceRepository<TResource, TId>, IRepositorySupportsTransaction
     where TResource : class, IIdentifiable<TId>
 {
     private readonly ITargetedFields _targetedFields;
@@ -530,19 +530,18 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
 
         _captureStore.Add(command.CommandText, parameters);
 
-        string message = GetLogText(command.CommandText, parameters);
-        _logger.LogInformation(message);
-    }
-
-    private string GetLogText(string statement, IDictionary<string, object?>? parameters)
-    {
-        if (parameters?.Any() == true)
+        if (_logger.IsEnabled(LogLevel.Information))
         {
-            string parametersText = string.Join(", ", parameters.Select(parameter => _parameterFormatter.Format(parameter.Key, parameter.Value)));
-            return $"Executing SQL with parameters: {parametersText}{Environment.NewLine}{statement}";
+            if (parameters?.Any() == true)
+            {
+                string parametersText = string.Join(", ", parameters.Select(parameter => _parameterFormatter.Format(parameter.Key, parameter.Value)));
+                LogExecuteWithParameters(Environment.NewLine, command.CommandText, parametersText);
+            }
+            else
+            {
+                LogExecute(Environment.NewLine, command.CommandText);
+            }
         }
-
-        return $"Executing SQL: {Environment.NewLine}{statement}";
     }
 
     private async Task<TResult> ExecuteQueryAsync<TResult>(Func<DbConnection, Task<TResult>> asyncAction, CancellationToken cancellationToken)
@@ -580,4 +579,10 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
             throw new DataStoreUpdateException(exception);
         }
     }
+
+    [LoggerMessage(Level = LogLevel.Information, SkipEnabledCheck = true, Message = "Executing SQL: {LineBreak}{Query}")]
+    private partial void LogExecute(string lineBreak, string query);
+
+    [LoggerMessage(Level = LogLevel.Information, SkipEnabledCheck = true, Message = "Executing SQL with parameters: {Parameters}{LineBreak}{Query}")]
+    private partial void LogExecuteWithParameters(string lineBreak, string query, string parameters);
 }
