@@ -214,7 +214,7 @@ public sealed class ModelValidationTests : IClassFixture<IntegrationTestContext<
     }
 
     [Fact]
-    public async Task Invalid_url_should_return_an_error()
+    public async Task Invalid_uri_should_return_an_error()
     {
         // Arrange
         Fingerprint fingerprint = _fakers.Fingerprint.Generate();
@@ -247,7 +247,7 @@ public sealed class ModelValidationTests : IClassFixture<IntegrationTestContext<
     }
 
     [Fact]
-    public async Task Invalid_url_as_string_should_return_an_error()
+    public async Task Invalid_url_should_return_an_error()
     {
         // Arrange
         Fingerprint fingerprint = _fakers.Fingerprint.Generate();
@@ -438,7 +438,7 @@ public sealed class ModelValidationTests : IClassFixture<IntegrationTestContext<
                     BackgroundPicture = new Uri(fingerprint.BackgroundPicture!),
                     NextRevalidation = "02:00:00",
                     ValidatedAt = fingerprint.ValidatedAt!.Value.ToUniversalTime(),
-                    // TODO: ValidatedDateAt = new DateTimeOffset(fingerprint.ValidatedDateAt!.Value.ToDateTime(new TimeOnly()).ToUniversalTime()),
+                    ValidatedDateAt = new DateTimeOffset(fingerprint.ValidatedDateAt!.Value.ToDateTime(new TimeOnly()).ToUniversalTime()),
                     ValidatedTimeAt = fingerprint.ValidatedTimeAt!.Value.ToTimeSpan()
                 }
             }

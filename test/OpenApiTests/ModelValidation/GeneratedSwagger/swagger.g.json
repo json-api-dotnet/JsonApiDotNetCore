@@ -123,6 +123,109 @@
           }
         }
       }
+    },
+    "/fingerprints/{id}": {
+      "patch": {
+        "tags": [
+          "fingerprints"
+        ],
+        "summary": "Updates an existing fingerprint.",
+        "operationId": "patchFingerprint",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the fingerprint to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the fingerprint to update. Omitted fields are left unchanged.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/fingerprintPatchRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The fingerprint was successfully updated, which resulted in additional changes. The updated fingerprint is returned.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/fingerprintPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The fingerprint was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The fingerprint or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -268,6 +371,79 @@
           },
           "describedby": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "fingerprintAttributesInPatchRequest": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "userName": {
+            "maxLength": 18,
+            "minLength": 3,
+            "pattern": "^[a-zA-Z]+$",
+            "type": "string",
+            "nullable": true
+          },
+          "creditCard": {
+            "type": "string",
+            "format": "credit-card",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "format": "tel",
+            "nullable": true
+          },
+          "age": {
+            "maximum": 123,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "profilePicture": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "backgroundPicture": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "nextRevalidation": {
+            "type": "string",
+            "format": "date-span",
+            "nullable": true
+          },
+          "validatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "validatedDateAt": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "validatedTimeAt": {
+            "type": "string",
+            "format": "time",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -421,6 +597,30 @@
         },
         "additionalProperties": false
       },
+      "fingerprintDataInPatchRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/fingerprintResourceType"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/fingerprintAttributesInPatchRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
       "fingerprintDataInPostRequest": {
         "required": [
           "type"
@@ -473,6 +673,22 @@
             "additionalProperties": false
           }
         ],
+        "additionalProperties": false
+      },
+      "fingerprintPatchRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/fingerprintDataInPatchRequest"
+              }
+            ]
+          }
+        },
         "additionalProperties": false
       },
       "fingerprintPostRequestDocument": {

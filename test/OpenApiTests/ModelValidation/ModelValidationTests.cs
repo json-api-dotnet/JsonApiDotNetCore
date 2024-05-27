@@ -191,7 +191,8 @@ public sealed class ModelValidationTests : IClassFixture<OpenApiTestContext<Open
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.properties.nextRevalidation").With(nextRevalidationEl =>
         {
-            // TODO: TimeSpan format is an akward object with all the TimeSpan public properties.
+            nextRevalidationEl.Should().HaveProperty("type", "string");
+            nextRevalidationEl.Should().HaveProperty("format", "date-span");
             nextRevalidationEl.Should().HaveProperty("nullable", true);
         });
     }
