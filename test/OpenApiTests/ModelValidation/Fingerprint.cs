@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace OpenApiTests.ModelValidation;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "OpenApiTests.ModelValidation", GenerateControllerEndpoints = JsonApiEndpoints.Post)]
+[Resource(ControllerNamespace = "OpenApiTests.ModelValidation", GenerateControllerEndpoints = JsonApiEndpoints.Post | JsonApiEndpoints.Patch)]
 public sealed class Fingerprint : Identifiable<Guid>
 {
     [Attr]
@@ -39,8 +39,11 @@ public sealed class Fingerprint : Identifiable<Guid>
     public int? Age { get; set; }
 
     [Attr]
-    [Url]
     public Uri? ProfilePicture { get; set; }
+
+    [Attr]
+    [Url]
+    public string? BackgroundPicture { get; set; }
 
     [Attr]
     [Range(typeof(TimeSpan), "01:00", "05:00")]

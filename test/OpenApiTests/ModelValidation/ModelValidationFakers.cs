@@ -20,6 +20,7 @@ public sealed class ModelValidationFakers
         .RuleFor(fingerprint => fingerprint.Phone, faker => faker.Person.Phone)
         .RuleFor(fingerprint => fingerprint.Age, faker => faker.Random.Number(0, 123))
         .RuleFor(fingerprint => fingerprint.ProfilePicture, faker => new Uri(faker.Image.LoremFlickrUrl()))
+        .RuleFor(fingerprint => fingerprint.BackgroundPicture, faker => faker.Image.LoremFlickrUrl())
         .RuleFor(fingerprint => fingerprint.NextRevalidation, faker => TimeSpan.FromMinutes(faker.Random.Number(1, 5)))
         .RuleFor(fingerprint => fingerprint.ValidatedAt, faker => faker.Date.Recent())
         .RuleFor(fingerprint => fingerprint.ValidatedDateAt, faker => DateOnly.FromDateTime(faker.Date.Recent()))

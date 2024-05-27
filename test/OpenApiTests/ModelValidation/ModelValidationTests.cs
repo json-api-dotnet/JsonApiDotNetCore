@@ -14,7 +14,7 @@ public sealed class ModelValidationTests : IClassFixture<OpenApiTestContext<Open
 
         testContext.UseController<FingerprintsController>();
 
-        testContext.SwaggerDocumentOutputDirectory = "test/OpenApiEndToEndTests/ModelValidation";
+        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
     [Theory]
@@ -167,6 +167,22 @@ public sealed class ModelValidationTests : IClassFixture<OpenApiTestContext<Open
 
     [Theory]
     [MemberData(nameof(ModelNames))]
+    public async Task Uri_type_on_resource_property_produces_expected_schema(string modelName)
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        document.Should().ContainPath($"components.schemas.{modelName}.properties.backgroundPicture").With(backgroundPictureEl =>
+        {
+            backgroundPictureEl.Should().HaveProperty("type", "string");
+            backgroundPictureEl.Should().HaveProperty("format", "uri");
+            backgroundPictureEl.Should().HaveProperty("nullable", true);
+        });
+    }
+
+    [Theory]
+    [MemberData(nameof(ModelNames))]
     public async Task TimeSpan_range_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
@@ -231,8 +247,8 @@ public sealed class ModelValidationTests : IClassFixture<OpenApiTestContext<Open
     public static TheoryData<string> ModelNames =>
         new()
         {
-            "fingerprintAttributesInPatchRequest",
             "fingerprintAttributesInPostRequest",
+            "fingerprintAttributesInPatchRequest",
             "fingerprintAttributesInResponse"
         };
 }

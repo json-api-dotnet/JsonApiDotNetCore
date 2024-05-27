@@ -8,7 +8,7 @@ using OpenApiTests.ModelValidation;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace OpenApiEndToEndTests.ModelValidation;
+namespace OpenApiNSwagEndToEndTests.ModelValidation;
 
 public sealed class ModelValidationTests : IClassFixture<IntegrationTestContext<OpenApiStartup<ModelValidationDbContext>, ModelValidationDbContext>>
 {
@@ -26,7 +26,7 @@ public sealed class ModelValidationTests : IClassFixture<IntegrationTestContext<
     public async Task Omitting_a_required_attribute_should_return_an_error()
     {
         using HttpClient httpClient = _testContext.Factory.CreateClient();
-        var apiClient = new ModelValidationClient(httpClient);
+        ModelValidationClient apiClient = new(httpClient);
 
         // Act
         Func<Task<FingerprintPrimaryResponseDocument>> action = () => apiClient.PostFingerprintAsync(null, new FingerprintPostRequestDocument
@@ -47,13 +47,13 @@ public sealed class ModelValidationTests : IClassFixture<IntegrationTestContext<
     [Theory]
     [InlineData("ab")]
     [InlineData("abcdefghijklmnopqrs")]
-    public async Task imbadathis(string userName)
+    public async Task Not_fitting_the_length_constraint_should_return_an_error(string userName)
     {
         // Arrange
         Fingerprint fingerprint = _fakers.Fingerprint.Generate();
 
         using HttpClient httpClient = _testContext.Factory.CreateClient();
-        var apiClient = new ModelValidationClient(httpClient);
+        ModelValidationClient apiClient = new(httpClient);
 
         // Act
         Func<Task<FingerprintPrimaryResponseDocument>> action = () => apiClient.PostFingerprintAsync(null, new FingerprintPostRequestDocument
@@ -80,13 +80,13 @@ public sealed class ModelValidationTests : IClassFixture<IntegrationTestContext<
     }
 
     [Fact]
-    public async Task imbadathis2()
+    public async Task Not_matching_a_regex_should_return_an_error()
     {
         // Arrange
         Fingerprint fingerprint = _fakers.Fingerprint.Generate();
 
         using HttpClient httpClient = _testContext.Factory.CreateClient();
-        var apiClient = new ModelValidationClient(httpClient);
+        ModelValidationClient apiClient = new(httpClient);
 
         // Act
         Func<Task<FingerprintPrimaryResponseDocument>> action = () => apiClient.PostFingerprintAsync(null, new FingerprintPostRequestDocument
@@ -113,13 +113,13 @@ public sealed class ModelValidationTests : IClassFixture<IntegrationTestContext<
     }
 
     [Fact]
-    public async Task imbadathis3()
+    public async Task Invalid_credit_card_should_return_an_error()
     {
         // Arrange
         Fingerprint fingerprint = _fakers.Fingerprint.Generate();
 
         using HttpClient httpClient = _testContext.Factory.CreateClient();
-        var apiClient = new ModelValidationClient(httpClient);
+        ModelValidationClient apiClient = new(httpClient);
 
         // Act
         Func<Task<FingerprintPrimaryResponseDocument>> action = () => apiClient.PostFingerprintAsync(null, new FingerprintPostRequestDocument
@@ -146,13 +146,13 @@ public sealed class ModelValidationTests : IClassFixture<IntegrationTestContext<
     }
 
     [Fact]
-    public async Task imbadathis5()
+    public async Task Invalid_email_should_return_an_error()
     {
         // Arrange
         Fingerprint fingerprint = _fakers.Fingerprint.Generate();
 
         using HttpClient httpClient = _testContext.Factory.CreateClient();
-        var apiClient = new ModelValidationClient(httpClient);
+        ModelValidationClient apiClient = new(httpClient);
 
         // Act
         Func<Task<FingerprintPrimaryResponseDocument>> action = () => apiClient.PostFingerprintAsync(null, new FingerprintPostRequestDocument
@@ -181,13 +181,13 @@ public sealed class ModelValidationTests : IClassFixture<IntegrationTestContext<
     [Theory]
     [InlineData(-1)]
     [InlineData(124)]
-    public async Task imbadathis6(int age)
+    public async Task Out_of_range_integer_should_return_an_error(int age)
     {
         // Arrange
         Fingerprint fingerprint = _fakers.Fingerprint.Generate();
 
         using HttpClient httpClient = _testContext.Factory.CreateClient();
-        var apiClient = new ModelValidationClient(httpClient);
+        ModelValidationClient apiClient = new(httpClient);
 
         // Act
         Func<Task<FingerprintPrimaryResponseDocument>> action = () => apiClient.PostFingerprintAsync(null, new FingerprintPostRequestDocument
@@ -214,13 +214,13 @@ public sealed class ModelValidationTests : IClassFixture<IntegrationTestContext<
     }
 
     [Fact]
-    public async Task imbadathis7()
+    public async Task Invalid_url_should_return_an_error()
     {
         // Arrange
         Fingerprint fingerprint = _fakers.Fingerprint.Generate();
 
         using HttpClient httpClient = _testContext.Factory.CreateClient();
-        var apiClient = new ModelValidationClient(httpClient);
+        ModelValidationClient apiClient = new(httpClient);
 
         // Act
         Func<Task<FingerprintPrimaryResponseDocument>> action = () => apiClient.PostFingerprintAsync(null, new FingerprintPostRequestDocument
@@ -247,13 +247,13 @@ public sealed class ModelValidationTests : IClassFixture<IntegrationTestContext<
     }
 
     [Fact]
-    public async Task imbadathis8()
+    public async Task Invalid_url_as_string_should_return_an_error()
     {
         // Arrange
         Fingerprint fingerprint = _fakers.Fingerprint.Generate();
 
         using HttpClient httpClient = _testContext.Factory.CreateClient();
-        var apiClient = new ModelValidationClient(httpClient);
+        ModelValidationClient apiClient = new(httpClient);
 
         // Act
         Func<Task<FingerprintPrimaryResponseDocument>> action = () => apiClient.PostFingerprintAsync(null, new FingerprintPostRequestDocument
@@ -263,7 +263,7 @@ public sealed class ModelValidationTests : IClassFixture<IntegrationTestContext<
                 Attributes = new FingerprintAttributesInPostRequest
                 {
                     LastName = fingerprint.LastName,
-                    NextRevalidation = new OpenApiNSwagEndToEndTests.ModelValidation.GeneratedCode.TimeSpan { TotalSeconds = 1 }
+                    BackgroundPicture = new Uri("/justapath", UriKind.Relative)
                 }
             }
         });
@@ -274,19 +274,52 @@ public sealed class ModelValidationTests : IClassFixture<IntegrationTestContext<
 
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be("");
+        errorObject.Detail.Should().Be("The BackgroundPicture field is not a valid fully-qualified http, https, or ftp URL.");
         errorObject.Source.ShouldNotBeNull();
-        errorObject.Source.Pointer.Should().Be("/data/attributes/nextRevalidation");
+        errorObject.Source.Pointer.Should().Be("/data/attributes/backgroundPicture");
     }
 
     [Fact]
-    public async Task imbadathis10()
+    public async Task Out_of_range_timespan_should_return_an_error()
     {
         // Arrange
         Fingerprint fingerprint = _fakers.Fingerprint.Generate();
 
         using HttpClient httpClient = _testContext.Factory.CreateClient();
-        var apiClient = new ModelValidationClient(httpClient);
+        ModelValidationClient apiClient = new(httpClient);
+
+        // Act
+        Func<Task<FingerprintPrimaryResponseDocument>> action = () => apiClient.PostFingerprintAsync(null, new FingerprintPostRequestDocument
+        {
+            Data = new FingerprintDataInPostRequest
+            {
+                Attributes = new FingerprintAttributesInPostRequest
+                {
+                    LastName = fingerprint.LastName,
+                    NextRevalidation = "00:00:01",
+                }
+            }
+        });
+
+        // Assert
+        ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
+        document.Errors.ShouldHaveCount(1);
+
+        ErrorObject errorObject = document.Errors.First();
+        errorObject.Title.Should().Be("Input validation failed.");
+        errorObject.Detail.Should().Be("The field NextRevalidation must be between 01:00:00 and 05:00:00.");
+        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Pointer.Should().Be("/data/attributes/nextRevalidation");
+    }
+
+    [Fact]
+    public async Task Invalid_datetime_should_return_an_error()
+    {
+        // Arrange
+        Fingerprint fingerprint = _fakers.Fingerprint.Generate();
+
+        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        ModelValidationClient apiClient = new(httpClient);
 
         // Act
         Func<Task<FingerprintPrimaryResponseDocument>> action = () => apiClient.PostFingerprintAsync(null, new FingerprintPostRequestDocument
@@ -313,13 +346,13 @@ public sealed class ModelValidationTests : IClassFixture<IntegrationTestContext<
     }
 
     [Fact]
-    public async Task imbadathis11()
+    public async Task Invalid_date_should_return_an_error()
     {
         // Arrange
         Fingerprint fingerprint = _fakers.Fingerprint.Generate();
 
         using HttpClient httpClient = _testContext.Factory.CreateClient();
-        var apiClient = new ModelValidationClient(httpClient);
+        ModelValidationClient apiClient = new(httpClient);
 
         // Act
         Func<Task<FingerprintPrimaryResponseDocument>> action = () => apiClient.PostFingerprintAsync(null, new FingerprintPostRequestDocument
@@ -346,13 +379,13 @@ public sealed class ModelValidationTests : IClassFixture<IntegrationTestContext<
     }
 
     [Fact]
-    public async Task imbadathis9()
+    public async Task Invalid_time_only_should_return_an_error()
     {
         // Arrange
         Fingerprint fingerprint = _fakers.Fingerprint.Generate();
 
         using HttpClient httpClient = _testContext.Factory.CreateClient();
-        var apiClient = new ModelValidationClient(httpClient);
+        ModelValidationClient apiClient = new(httpClient);
 
         // Act
         Func<Task<FingerprintPrimaryResponseDocument>> action = () => apiClient.PostFingerprintAsync(null, new FingerprintPostRequestDocument
@@ -362,7 +395,7 @@ public sealed class ModelValidationTests : IClassFixture<IntegrationTestContext<
                 Attributes = new FingerprintAttributesInPostRequest
                 {
                     LastName = fingerprint.LastName,
-                    ValidatedTimeAt = System.TimeSpan.FromSeconds(-1)
+                    ValidatedTimeAt = TimeSpan.FromSeconds(-1)
                 }
             }
         });
@@ -372,9 +405,46 @@ public sealed class ModelValidationTests : IClassFixture<IntegrationTestContext<
         document.Errors.ShouldHaveCount(1);
 
         ErrorObject errorObject = document.Errors.First();
-        errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be("");
+        errorObject.Title.Should().Be("Failed to deserialize request body: Incompatible attribute value found.");
+        errorObject.Detail.Should().Be("Failed to convert attribute 'validatedTimeAt' with value '-00:00:01' of type 'String' to type 'Nullable<TimeOnly>'.");
         errorObject.Source.ShouldNotBeNull();
-        errorObject.Source.Pointer.Should().Be("/data/attributes/");
+        errorObject.Source.Pointer.Should().Be("/data/attributes/validatedTimeAt");
+    }
+
+    [Fact]
+    public async Task Fitting_all_the_constraints_should_work()
+    {
+        // Arrange
+        Fingerprint fingerprint = _fakers.Fingerprint.Generate();
+
+        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        ModelValidationClient apiClient = new(httpClient);
+
+        // Act
+        Func<Task<FingerprintPrimaryResponseDocument>> action = () => apiClient.PostFingerprintAsync(null, new FingerprintPostRequestDocument
+        {
+            Data = new FingerprintDataInPostRequest
+            {
+                Attributes = new FingerprintAttributesInPostRequest
+                {
+                    FirstName = fingerprint.FirstName,
+                    LastName = fingerprint.LastName,
+                    UserName = fingerprint.UserName,
+                    CreditCard = fingerprint.CreditCard,
+                    Email = fingerprint.Email,
+                    Phone = fingerprint.Phone,
+                    Age = fingerprint.Age,
+                    ProfilePicture = fingerprint.ProfilePicture,
+                    BackgroundPicture = new Uri(fingerprint.BackgroundPicture!),
+                    NextRevalidation = "02:00:00",
+                    ValidatedAt = fingerprint.ValidatedAt!.Value.ToUniversalTime(),
+                    // TODO: ValidatedDateAt = new DateTimeOffset(fingerprint.ValidatedDateAt!.Value.ToDateTime(new TimeOnly()).ToUniversalTime()),
+                    ValidatedTimeAt = fingerprint.ValidatedTimeAt!.Value.ToTimeSpan()
+                }
+            }
+        });
+
+        // Assert
+        await action.Should().NotThrowAsync();
     }
 }
