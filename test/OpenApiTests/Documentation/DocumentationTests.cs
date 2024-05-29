@@ -72,16 +72,16 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[0].description", ResourceTextQueryString);
                     parametersElement.Should().HaveProperty("[1].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[1].in", "header");
-                    parametersElement.Should().HaveProperty("[1].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
+                    parametersElement.Should().HaveProperty("[1].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.");
                 });
 
                 getElement.Should().ContainPath("responses").With(responsesElement =>
                 {
                     responsesElement.EnumerateObject().ShouldHaveCount(3);
                     responsesElement.Should().HaveProperty("200.description", "Successfully returns the found skyscrapers, or an empty array if none were found.");
-                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
-                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
-                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("304.description", "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
+                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                 });
             });
@@ -98,17 +98,17 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[0].description", ResourceTextQueryString);
                     parametersElement.Should().HaveProperty("[1].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[1].in", "header");
-                    parametersElement.Should().HaveProperty("[1].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
+                    parametersElement.Should().HaveProperty("[1].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.");
                 });
 
                 headElement.Should().ContainPath("responses").With(responsesElement =>
                 {
                     responsesElement.EnumerateObject().ShouldHaveCount(3);
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
-                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the HTTP response body, in bytes.");
-                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
-                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("304.description", "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
+                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                 });
             });
@@ -153,16 +153,16 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
                     parametersElement.Should().HaveProperty("[2].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[2].in", "header");
-                    parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
+                    parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.");
                 });
 
                 getElement.Should().ContainPath("responses").With(responsesElement =>
                 {
                     responsesElement.EnumerateObject().ShouldHaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "Successfully returns the found skyscraper.");
-                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
-                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
-                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("304.description", "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
+                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
@@ -182,17 +182,17 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
                     parametersElement.Should().HaveProperty("[2].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[2].in", "header");
-                    parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
+                    parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.");
                 });
 
                 headElement.Should().ContainPath("responses").With(responsesElement =>
                 {
                     responsesElement.EnumerateObject().ShouldHaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
-                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the HTTP response body, in bytes.");
-                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
-                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("304.description", "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
+                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
@@ -260,16 +260,16 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
                     parametersElement.Should().HaveProperty("[2].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[2].in", "header");
-                    parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
+                    parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.");
                 });
 
                 getElement.Should().ContainPath("responses").With(responsesElement =>
                 {
                     responsesElement.EnumerateObject().ShouldHaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "Successfully returns the found elevator, or `null` if it was not found.");
-                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
-                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
-                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("304.description", "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
+                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
@@ -289,17 +289,17 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
                     parametersElement.Should().HaveProperty("[2].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[2].in", "header");
-                    parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
+                    parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.");
                 });
 
                 headElement.Should().ContainPath("responses").With(responsesElement =>
                 {
                     responsesElement.EnumerateObject().ShouldHaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
-                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the HTTP response body, in bytes.");
-                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
-                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("304.description", "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
+                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
@@ -321,16 +321,16 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[1].description", RelationshipTextQueryString);
                     parametersElement.Should().HaveProperty("[2].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[2].in", "header");
-                    parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
+                    parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.");
                 });
 
                 getElement.Should().ContainPath("responses").With(responsesElement =>
                 {
                     responsesElement.EnumerateObject().ShouldHaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "Successfully returns the found elevator identity, or `null` if it was not found.");
-                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
-                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
-                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("304.description", "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
+                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
@@ -350,17 +350,17 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[1].description", RelationshipTextQueryString);
                     parametersElement.Should().HaveProperty("[2].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[2].in", "header");
-                    parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
+                    parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.");
                 });
 
                 headElement.Should().ContainPath("responses").With(responsesElement =>
                 {
                     responsesElement.EnumerateObject().ShouldHaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
-                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the HTTP response body, in bytes.");
-                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
-                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("304.description", "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
+                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
@@ -405,16 +405,16 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
                     parametersElement.Should().HaveProperty("[2].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[2].in", "header");
-                    parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
+                    parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.");
                 });
 
                 getElement.Should().ContainPath("responses").With(responsesElement =>
                 {
                     responsesElement.EnumerateObject().ShouldHaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "Successfully returns the found spaces, or an empty array if none were found.");
-                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
-                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
-                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("304.description", "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
+                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
@@ -434,17 +434,17 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
                     parametersElement.Should().HaveProperty("[2].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[2].in", "header");
-                    parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
+                    parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.");
                 });
 
                 headElement.Should().ContainPath("responses").With(responsesElement =>
                 {
                     responsesElement.EnumerateObject().ShouldHaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
-                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the HTTP response body, in bytes.");
-                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
-                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("304.description", "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
+                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
@@ -466,16 +466,16 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[1].description", RelationshipTextQueryString);
                     parametersElement.Should().HaveProperty("[2].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[2].in", "header");
-                    parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
+                    parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.");
                 });
 
                 getElement.Should().ContainPath("responses").With(responsesElement =>
                 {
                     responsesElement.EnumerateObject().ShouldHaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "Successfully returns the found space identities, or an empty array if none were found.");
-                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
-                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
-                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("304.description", "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
+                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
@@ -495,17 +495,17 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[1].description", RelationshipTextQueryString);
                     parametersElement.Should().HaveProperty("[2].name", "If-None-Match");
                     parametersElement.Should().HaveProperty("[2].in", "header");
-                    parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
+                    parametersElement.Should().HaveProperty("[2].description", "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.");
                 });
 
                 headElement.Should().ContainPath("responses").With(responsesElement =>
                 {
                     responsesElement.EnumerateObject().ShouldHaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
-                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("200.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the HTTP response body, in bytes.");
-                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
-                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                    responsesElement.Should().HaveProperty("304.description", "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
+                    responsesElement.Should().HaveProperty("304.headers.ETag.description", "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });

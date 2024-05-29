@@ -4,17 +4,27 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace OpenApiTests.ModelValidation;
+namespace OpenApiTests.ModelStateValidation;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "OpenApiTests.ModelValidation", GenerateControllerEndpoints = JsonApiEndpoints.Post | JsonApiEndpoints.Patch)]
-public sealed class Fingerprint : Identifiable<Guid>
+[Resource(ControllerNamespace = "OpenApiTests.ModelStateValidation", GenerateControllerEndpoints = JsonApiEndpoints.Post | JsonApiEndpoints.Patch)]
+public sealed class SocialMediaAccount : Identifiable<Guid>
 {
     [Attr]
+    public Guid? AlternativeId { get; set; }
+
+    [Attr]
+#if NET8_0_OR_GREATER
+    [Length(2, 20)]
+#endif
     public string? FirstName { get; set; }
 
     [Attr]
-    [Required(ErrorMessage = "Last name is required.")]
+    [Compare(nameof(FirstName))]
+    public string? GivenName { get; set; }
+
+    [Attr]
+    [Required(AllowEmptyStrings = false)]
     public string LastName { get; set; } = default!;
 
     [Attr]
@@ -31,12 +41,18 @@ public sealed class Fingerprint : Identifiable<Guid>
     public string? Email { get; set; }
 
     [Attr]
+#if NET8_0_OR_GREATER
+    [Base64String]
+#endif
+    public string? Password { get; set; }
+
+    [Attr]
     [Phone]
     public string? Phone { get; set; }
 
     [Attr]
-    [Range(0, 123)]
-    public int? Age { get; set; }
+    [Range(0.1, 122.9, ConvertValueInInvariantCulture = true, ParseLimitsInInvariantCulture = true)]
+    public double? Age { get; set; }
 
     [Attr]
     public Uri? ProfilePicture { get; set; }
@@ -46,6 +62,14 @@ public sealed class Fingerprint : Identifiable<Guid>
     public string? BackgroundPicture { get; set; }
 
     [Attr]
+#if NET8_0_OR_GREATER
+    [AllowedValues("tag1", "tag2")]
+    [DeniedValues("tag3")]
+    [Length(0, 10)]
+#endif
+    public HashSet<string>? Tags { get; set; }
+
+    [Attr]
     [Range(typeof(TimeSpan), "01:00", "05:00")]
     public TimeSpan? NextRevalidation { get; set; }
 
@@ -53,8 +77,8 @@ public sealed class Fingerprint : Identifiable<Guid>
     public DateTime? ValidatedAt { get; set; }
 
     [Attr]
-    public DateOnly? ValidatedDateAt { get; set; }
+    public DateOnly? ValidatedAtDate { get; set; }
 
     [Attr]
-    public TimeOnly? ValidatedTimeAt { get; set; }
+    public TimeOnly? ValidatedAtTime { get; set; }
 }

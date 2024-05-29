@@ -10,13 +10,13 @@
     }
   ],
   "paths": {
-    "/fingerprints": {
+    "/socialMediaAccounts": {
       "post": {
         "tags": [
-          "fingerprints"
+          "socialMediaAccounts"
         ],
-        "summary": "Creates a new fingerprint.",
-        "operationId": "postFingerprint",
+        "summary": "Creates a new socialMediaAccount.",
+        "operationId": "postSocialMediaAccount",
         "parameters": [
           {
             "name": "query",
@@ -33,13 +33,13 @@
           }
         ],
         "requestBody": {
-          "description": "The attributes and relationships of the fingerprint to create.",
+          "description": "The attributes and relationships of the socialMediaAccount to create.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/fingerprintPostRequestDocument"
+                    "$ref": "#/components/schemas/socialMediaAccountPostRequestDocument"
                   }
                 ]
               }
@@ -49,10 +49,10 @@
         },
         "responses": {
           "201": {
-            "description": "The fingerprint was successfully created, which resulted in additional changes. The newly created fingerprint is returned.",
+            "description": "The socialMediaAccount was successfully created, which resulted in additional changes. The newly created socialMediaAccount is returned.",
             "headers": {
               "Location": {
-                "description": "The URL at which the newly created fingerprint can be retrieved.",
+                "description": "The URL at which the newly created socialMediaAccount can be retrieved.",
                 "required": true,
                 "schema": {
                   "type": "string",
@@ -63,13 +63,13 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/fingerprintPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/socialMediaAccountPrimaryResponseDocument"
                 }
               }
             }
           },
           "204": {
-            "description": "The fingerprint was successfully created, which did not result in additional changes."
+            "description": "The socialMediaAccount was successfully created, which did not result in additional changes."
           },
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
@@ -124,18 +124,18 @@
         }
       }
     },
-    "/fingerprints/{id}": {
+    "/socialMediaAccounts/{id}": {
       "patch": {
         "tags": [
-          "fingerprints"
+          "socialMediaAccounts"
         ],
-        "summary": "Updates an existing fingerprint.",
-        "operationId": "patchFingerprint",
+        "summary": "Updates an existing socialMediaAccount.",
+        "operationId": "patchSocialMediaAccount",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "The identifier of the fingerprint to update.",
+            "description": "The identifier of the socialMediaAccount to update.",
             "required": true,
             "schema": {
               "type": "string"
@@ -156,13 +156,13 @@
           }
         ],
         "requestBody": {
-          "description": "The attributes and relationships of the fingerprint to update. Omitted fields are left unchanged.",
+          "description": "The attributes and relationships of the socialMediaAccount to update. Omitted fields are left unchanged.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/fingerprintPatchRequestDocument"
+                    "$ref": "#/components/schemas/socialMediaAccountPatchRequestDocument"
                   }
                 ]
               }
@@ -172,17 +172,17 @@
         },
         "responses": {
           "200": {
-            "description": "The fingerprint was successfully updated, which resulted in additional changes. The updated fingerprint is returned.",
+            "description": "The socialMediaAccount was successfully updated, which resulted in additional changes. The updated socialMediaAccount is returned.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/fingerprintPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/socialMediaAccountPrimaryResponseDocument"
                 }
               }
             }
           },
           "204": {
-            "description": "The fingerprint was successfully updated, which did not result in additional changes."
+            "description": "The socialMediaAccount was successfully updated, which did not result in additional changes."
           },
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
@@ -195,7 +195,7 @@
             }
           },
           "404": {
-            "description": "The fingerprint or a related resource does not exist.",
+            "description": "The socialMediaAccount or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -250,7 +250,7 @@
         "discriminator": {
           "propertyName": "type",
           "mapping": {
-            "fingerprints": "#/components/schemas/fingerprintDataInResponse"
+            "socialMediaAccounts": "#/components/schemas/socialMediaAccountDataInResponse"
           }
         },
         "x-abstract": true
@@ -375,10 +375,40 @@
         },
         "additionalProperties": false
       },
-      "fingerprintAttributesInPatchRequest": {
+      "resourceLinks": {
         "type": "object",
         "properties": {
+          "self": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "socialMediaAccountAttributesInPatchRequest": {
+        "type": "object",
+        "properties": {
+          "alternativeId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "givenName": {
             "type": "string",
             "nullable": true
           },
@@ -403,16 +433,20 @@
             "format": "email",
             "nullable": true
           },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
           "phone": {
             "type": "string",
             "format": "tel",
             "nullable": true
           },
           "age": {
-            "maximum": 123,
-            "minimum": 0,
-            "type": "integer",
-            "format": "int32",
+            "maximum": 122.9,
+            "minimum": 0.1,
+            "type": "number",
+            "format": "double",
             "nullable": true
           },
           "profilePicture": {
@@ -425,6 +459,14 @@
             "format": "uri",
             "nullable": true
           },
+          "tags": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
           "nextRevalidation": {
             "type": "string",
             "format": "date-span",
@@ -435,12 +477,12 @@
             "format": "date-time",
             "nullable": true
           },
-          "validatedDateAt": {
+          "validatedAtDate": {
             "type": "string",
             "format": "date",
             "nullable": true
           },
-          "validatedTimeAt": {
+          "validatedAtTime": {
             "type": "string",
             "format": "time",
             "nullable": true
@@ -448,13 +490,22 @@
         },
         "additionalProperties": false
       },
-      "fingerprintAttributesInPostRequest": {
+      "socialMediaAccountAttributesInPostRequest": {
         "required": [
           "lastName"
         ],
         "type": "object",
         "properties": {
+          "alternativeId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "givenName": {
             "type": "string",
             "nullable": true
           },
@@ -479,16 +530,20 @@
             "format": "email",
             "nullable": true
           },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
           "phone": {
             "type": "string",
             "format": "tel",
             "nullable": true
           },
           "age": {
-            "maximum": 123,
-            "minimum": 0,
-            "type": "integer",
-            "format": "int32",
+            "maximum": 122.9,
+            "minimum": 0.1,
+            "type": "number",
+            "format": "double",
             "nullable": true
           },
           "profilePicture": {
@@ -501,6 +556,14 @@
             "format": "uri",
             "nullable": true
           },
+          "tags": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
           "nextRevalidation": {
             "type": "string",
             "format": "date-span",
@@ -511,12 +574,12 @@
             "format": "date-time",
             "nullable": true
           },
-          "validatedDateAt": {
+          "validatedAtDate": {
             "type": "string",
             "format": "date",
             "nullable": true
           },
-          "validatedTimeAt": {
+          "validatedAtTime": {
             "type": "string",
             "format": "time",
             "nullable": true
@@ -524,10 +587,19 @@
         },
         "additionalProperties": false
       },
-      "fingerprintAttributesInResponse": {
+      "socialMediaAccountAttributesInResponse": {
         "type": "object",
         "properties": {
+          "alternativeId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "givenName": {
             "type": "string",
             "nullable": true
           },
@@ -552,16 +624,20 @@
             "format": "email",
             "nullable": true
           },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
           "phone": {
             "type": "string",
             "format": "tel",
             "nullable": true
           },
           "age": {
-            "maximum": 123,
-            "minimum": 0,
-            "type": "integer",
-            "format": "int32",
+            "maximum": 122.9,
+            "minimum": 0.1,
+            "type": "number",
+            "format": "double",
             "nullable": true
           },
           "profilePicture": {
@@ -574,6 +650,14 @@
             "format": "uri",
             "nullable": true
           },
+          "tags": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
           "nextRevalidation": {
             "type": "string",
             "format": "date-span",
@@ -584,12 +668,12 @@
             "format": "date-time",
             "nullable": true
           },
-          "validatedDateAt": {
+          "validatedAtDate": {
             "type": "string",
             "format": "date",
             "nullable": true
           },
-          "validatedTimeAt": {
+          "validatedAtTime": {
             "type": "string",
             "format": "time",
             "nullable": true
@@ -597,7 +681,7 @@
         },
         "additionalProperties": false
       },
-      "fingerprintDataInPatchRequest": {
+      "socialMediaAccountDataInPatchRequest": {
         "required": [
           "id",
           "type"
@@ -605,7 +689,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/fingerprintResourceType"
+            "$ref": "#/components/schemas/socialMediaAccountResourceType"
           },
           "id": {
             "minLength": 1,
@@ -614,33 +698,33 @@
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/fingerprintAttributesInPatchRequest"
+                "$ref": "#/components/schemas/socialMediaAccountAttributesInPatchRequest"
               }
             ]
           }
         },
         "additionalProperties": false
       },
-      "fingerprintDataInPostRequest": {
+      "socialMediaAccountDataInPostRequest": {
         "required": [
           "type"
         ],
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/fingerprintResourceType"
+            "$ref": "#/components/schemas/socialMediaAccountResourceType"
           },
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/fingerprintAttributesInPostRequest"
+                "$ref": "#/components/schemas/socialMediaAccountAttributesInPostRequest"
               }
             ]
           }
         },
         "additionalProperties": false
       },
-      "fingerprintDataInResponse": {
+      "socialMediaAccountDataInResponse": {
         "allOf": [
           {
             "$ref": "#/components/schemas/dataInResponse"
@@ -651,7 +735,7 @@
               "attributes": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/fingerprintAttributesInResponse"
+                    "$ref": "#/components/schemas/socialMediaAccountAttributesInResponse"
                   }
                 ]
               },
@@ -675,7 +759,7 @@
         ],
         "additionalProperties": false
       },
-      "fingerprintPatchRequestDocument": {
+      "socialMediaAccountPatchRequestDocument": {
         "required": [
           "data"
         ],
@@ -684,14 +768,14 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/fingerprintDataInPatchRequest"
+                "$ref": "#/components/schemas/socialMediaAccountDataInPatchRequest"
               }
             ]
           }
         },
         "additionalProperties": false
       },
-      "fingerprintPostRequestDocument": {
+      "socialMediaAccountPostRequestDocument": {
         "required": [
           "data"
         ],
@@ -700,14 +784,14 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/fingerprintDataInPostRequest"
+                "$ref": "#/components/schemas/socialMediaAccountDataInPostRequest"
               }
             ]
           }
         },
         "additionalProperties": false
       },
-      "fingerprintPrimaryResponseDocument": {
+      "socialMediaAccountPrimaryResponseDocument": {
         "required": [
           "data",
           "links"
@@ -724,7 +808,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/fingerprintDataInResponse"
+                "$ref": "#/components/schemas/socialMediaAccountDataInResponse"
               }
             ]
           },
@@ -744,32 +828,11 @@
         },
         "additionalProperties": false
       },
-      "fingerprintResourceType": {
+      "socialMediaAccountResourceType": {
         "enum": [
-          "fingerprints"
+          "socialMediaAccounts"
         ],
         "type": "string",
-        "additionalProperties": false
-      },
-      "resourceLinks": {
-        "type": "object",
-        "properties": {
-          "self": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "resourceTopLevelLinks": {
-        "type": "object",
-        "properties": {
-          "self": {
-            "type": "string"
-          },
-          "describedby": {
-            "type": "string"
-          }
-        },
         "additionalProperties": false
       }
     }
