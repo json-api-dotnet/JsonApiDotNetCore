@@ -26,32 +26,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     }
 
     [Fact]
-    public async Task xxx()
-    {
-        // Arrange
-        SocialMediaAccount socialMediaAccount = _fakers.SocialMediaAccount.Generate();
-
-        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
-        ModelStateValidationClient apiClient = new(httpClient);
-
-        // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument>> action = () => apiClient.PostSocialMediaAccountAsync(new SocialMediaAccountPostRequestDocument
-        {
-            Data = new SocialMediaAccountDataInPostRequest
-            {
-                Attributes = new SocialMediaAccountAttributesInPostRequest()
-            }
-        });
-
-        // Assert
-        ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
-        assertion.Which.Message.Should().Be("Cannot write a null value for property 'lastName'. Property requires a value. Path 'data.attributes'.");
-    }
-
-    [Theory]
-    [InlineData("ab")]
-    [InlineData("abcdefghijklmnopqrs")]
-    public async Task Cannot_exceed_length_constraint(string userName)
+    public async Task Cannot_violate_compare_constraint()
     {
         // Arrange
         SocialMediaAccount socialMediaAccount = _fakers.SocialMediaAccount.Generate();
@@ -66,8 +41,76 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
             {
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
-                    LastName = socialMediaAccount.LastName,
-                    UserName = userName
+                    FirstName = socialMediaAccount.FirstName,
+                    GivenName = "something else",
+                    LastName = ""
+                }
+            }
+        });
+
+        // Assert
+        ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
+        document.Errors.ShouldHaveCount(1);
+
+        ErrorObject errorObject = document.Errors.First();
+        errorObject.Title.Should().Be("Input validation failed.");
+        errorObject.Detail.Should().Be("'GivenName' and 'FirstName' do not match.");
+        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Pointer.Should().Be("/data/attributes/givenName");
+    }
+
+    [Theory]
+    [InlineData("a")]
+    [InlineData("abcdefghijklmnopqrstu")]
+    public async Task Cannot_exceed_length_constraint(string firstName)
+    {
+        // Arrange
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        ModelStateValidationClient apiClient = new(httpClient);
+
+        // Act
+        Func<Task<SocialMediaAccountPrimaryResponseDocument>> action = () => apiClient.PostSocialMediaAccountAsync(new SocialMediaAccountPostRequestDocument
+        {
+            Data = new SocialMediaAccountDataInPostRequest
+            {
+                Attributes = new SocialMediaAccountAttributesInPostRequest
+                {
+                    FirstName = firstName,
+                    GivenName = firstName,
+                    LastName = ""
+                }
+            }
+        });
+
+        // Assert
+        ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
+        document.Errors.ShouldHaveCount(1);
+
+        ErrorObject errorObject = document.Errors.First();
+        errorObject.Title.Should().Be("Input validation failed.");
+        errorObject.Detail.Should().Be("The field FirstName must be a string or collection type with a minimum length of '2' and maximum length of '20'.");
+        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Pointer.Should().Be("/data/attributes/firstName");
+    }
+
+    [Theory]
+    [InlineData("ab")]
+    [InlineData("abcdefghijklmnopqrs")]
+    public async Task Cannot_exceed_string_length_constraint(string userName)
+    {
+        // Arrange
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        ModelStateValidationClient apiClient = new(httpClient);
+
+        // Act
+        Func<Task<SocialMediaAccountPrimaryResponseDocument>> action = () => apiClient.PostSocialMediaAccountAsync(new SocialMediaAccountPostRequestDocument
+        {
+            Data = new SocialMediaAccountDataInPostRequest
+            {
+                Attributes = new SocialMediaAccountAttributesInPostRequest
+                {
+                    LastName = "",
+                    UserName = userName,
                 }
             }
         });
@@ -87,8 +130,6 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     public async Task Cannot_violate_regular_expression_constraint()
     {
         // Arrange
-        SocialMediaAccount socialMediaAccount = _fakers.SocialMediaAccount.Generate();
-
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
 
@@ -99,8 +140,8 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
             {
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
-                    LastName = socialMediaAccount.LastName,
-                    UserName = "aB1"
+                    LastName = "",
+                    UserName = "aB1",
                 }
             }
         });
@@ -120,8 +161,6 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     public async Task Cannot_use_invalid_credit_card()
     {
         // Arrange
-        SocialMediaAccount socialMediaAccount = _fakers.SocialMediaAccount.Generate();
-
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
 
@@ -132,8 +171,8 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
             {
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
-                    LastName = socialMediaAccount.LastName,
-                    CreditCard = "123-456"
+                    LastName = "",
+                    CreditCard = "123-456",
                 }
             }
         });
@@ -153,8 +192,6 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     public async Task Cannot_use_invalid_email()
     {
         // Arrange
-        SocialMediaAccount socialMediaAccount = _fakers.SocialMediaAccount.Generate();
-
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
 
@@ -165,8 +202,8 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
             {
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
-                    LastName = socialMediaAccount.LastName,
-                    Email = "abc"
+                    LastName = "",
+                    Email = "abc",
                 }
             }
         });
@@ -190,8 +227,6 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     public async Task Cannot_use_double_outside_of_valid_range(int age)
     {
         // Arrange
-        SocialMediaAccount socialMediaAccount = _fakers.SocialMediaAccount.Generate();
-
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
 
@@ -202,8 +237,8 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
             {
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
-                    LastName = socialMediaAccount.LastName,
-                    Age = age
+                    LastName = "",
+                    Age = age,
                 }
             }
         });
@@ -214,7 +249,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
 
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be("The field Age must be between 0 and 123.");
+        errorObject.Detail.Should().Be("The field Age must be between 0.1 and 122.9.");
         errorObject.Source.ShouldNotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/age");
     }
@@ -223,8 +258,6 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     public async Task Cannot_use_invalid_url()
     {
         // Arrange
-        SocialMediaAccount socialMediaAccount = _fakers.SocialMediaAccount.Generate();
-
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
 
@@ -235,8 +268,8 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
             {
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
-                    LastName = socialMediaAccount.LastName,
-                    BackgroundPicture = new Uri("/justapath", UriKind.Relative)
+                    LastName = "",
+                    BackgroundPicture = new Uri("/justapath", UriKind.Relative),
                 }
             }
         });
@@ -253,11 +286,9 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     }
 
     [Fact]
-    public async Task Cannot_use_TimeSpan_outside_of_valid_range()
+    public async Task Cannot_use_non_allowed_value()
     {
         // Arrange
-        SocialMediaAccount socialMediaAccount = _fakers.SocialMediaAccount.Generate();
-
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
 
@@ -268,8 +299,70 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
             {
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
-                    LastName = socialMediaAccount.LastName,
-                    NextRevalidation = "00:00:01"
+                    LastName = "",
+                    CountryCode = "US"
+                }
+            }
+        });
+
+        // Assert
+        ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
+        document.Errors.ShouldHaveCount(1);
+
+        ErrorObject errorObject = document.Errors.First();
+        errorObject.Title.Should().Be("Input validation failed.");
+        errorObject.Detail.Should().Be("The CountryCode field does not equal any of the values specified in AllowedValuesAttribute.");
+        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Pointer.Should().Be("/data/attributes/countryCode");
+    }
+
+    [Fact]
+    public async Task Cannot_use_denied_value()
+    {
+        // Arrange
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        ModelStateValidationClient apiClient = new(httpClient);
+
+        // Act
+        Func<Task<SocialMediaAccountPrimaryResponseDocument>> action = () => apiClient.PostSocialMediaAccountAsync(new SocialMediaAccountPostRequestDocument
+        {
+            Data = new SocialMediaAccountDataInPostRequest
+            {
+                Attributes = new SocialMediaAccountAttributesInPostRequest
+                {
+                    LastName = "",
+                    Planet = "pluto"
+                }
+            }
+        });
+
+        // Assert
+        ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
+        document.Errors.ShouldHaveCount(1);
+
+        ErrorObject errorObject = document.Errors.First();
+        errorObject.Title.Should().Be("Input validation failed.");
+        errorObject.Detail.Should().Be("The Planet field equals one of the values specified in DeniedValuesAttribute.");
+        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Pointer.Should().Be("/data/attributes/planet");
+    }
+
+    [Fact]
+    public async Task Cannot_use_TimeSpan_outside_of_valid_range()
+    {
+        // Arrange
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        ModelStateValidationClient apiClient = new(httpClient);
+
+        // Act
+        Func<Task<SocialMediaAccountPrimaryResponseDocument>> action = () => apiClient.PostSocialMediaAccountAsync(new SocialMediaAccountPostRequestDocument
+        {
+            Data = new SocialMediaAccountDataInPostRequest
+            {
+                Attributes = new SocialMediaAccountAttributesInPostRequest
+                {
+                    LastName = "",
+                    NextRevalidation = "00:00:01",
                 }
             }
         });
@@ -289,8 +382,6 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     public async Task Cannot_use_invalid_TimeOnly()
     {
         // Arrange
-        SocialMediaAccount socialMediaAccount = _fakers.SocialMediaAccount.Generate();
-
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
 
@@ -301,8 +392,8 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
             {
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
-                    LastName = socialMediaAccount.LastName,
-                    ValidatedAtTime = TimeSpan.FromSeconds(-1)
+                    LastName = "",
+                    ValidatedAtTime = TimeSpan.FromSeconds(-1),
                 }
             }
         });
@@ -344,6 +435,8 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
                     Age = socialMediaAccount.Age,
                     ProfilePicture = socialMediaAccount.ProfilePicture,
                     BackgroundPicture = new Uri(socialMediaAccount.BackgroundPicture!),
+                    Tags = socialMediaAccount.Tags,
+                    Planet = socialMediaAccount.Planet,
                     NextRevalidation = "02:00:00",
                     ValidatedAt = socialMediaAccount.ValidatedAt!,
                     ValidatedAtDate = new DateTimeOffset(socialMediaAccount.ValidatedAtDate!.Value.ToDateTime(new TimeOnly()).ToUniversalTime()),

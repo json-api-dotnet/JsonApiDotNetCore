@@ -24,7 +24,7 @@ public sealed class SocialMediaAccount : Identifiable<Guid>
     public string? GivenName { get; set; }
 
     [Attr]
-    [Required(AllowEmptyStrings = false)]
+    [Required(AllowEmptyStrings = true)]
     public string LastName { get; set; } = default!;
 
     [Attr]
@@ -63,11 +63,21 @@ public sealed class SocialMediaAccount : Identifiable<Guid>
 
     [Attr]
 #if NET8_0_OR_GREATER
-    [AllowedValues("tag1", "tag2")]
-    [DeniedValues("tag3")]
     [Length(0, 10)]
 #endif
-    public HashSet<string>? Tags { get; set; }
+    public List<string>? Tags { get; set; }
+
+    [Attr]
+#if NET8_0_OR_GREATER
+    [AllowedValues(null, "NL", "FR")]
+#endif
+    public string? CountryCode { get; set; }
+
+    [Attr]
+#if NET8_0_OR_GREATER
+    [DeniedValues("pluto")]
+#endif
+    public string? Planet { get; set; }
 
     [Attr]
     [Range(typeof(TimeSpan), "01:00", "05:00")]

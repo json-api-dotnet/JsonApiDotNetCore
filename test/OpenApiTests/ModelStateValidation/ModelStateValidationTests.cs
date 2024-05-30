@@ -25,7 +25,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
 
     [Theory]
     [MemberData(nameof(ModelNames))]
-    public async Task Guid_type_on_resource_property_produces_expected_schema(string modelName)
+    public async Task Guid_type_produces_expected_schema(string modelName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -54,7 +54,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
 
     [Theory]
     [MemberData(nameof(ModelNames))]
-    public async Task Required_annotation_with_AllowEmptyStrings_disabled_on_resource_property_produces_expected_schema(string modelName)
+    public async Task Required_annotation_with_AllowEmptyStrings_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -62,7 +62,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.properties.lastName").With(lastNameEl =>
         {
-            lastNameEl.Should().HaveProperty("minLength", 1);
+            lastNameEl.Should().NotContainPath("minLength");
             lastNameEl.Should().HaveProperty("type", "string");
         });
     }
@@ -193,7 +193,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
 
     [Theory]
     [MemberData(nameof(ModelNames))]
-    public async Task Uri_type_on_resource_property_produces_expected_schema(string modelName)
+    public async Task Uri_type_produces_expected_schema(string modelName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -208,7 +208,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
 
     [Theory]
     [MemberData(nameof(ModelNames))]
-    public async Task HashSet_annotated_with_Length_AllowedValues_DeniedValues_on_resource_property_produces_expected_schema(string modelName)
+    public async Task HashSet_type_produces_expected_schema(string modelName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -216,12 +216,25 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.properties.tags").With(tagsEl =>
         {
-            tagsEl.Should().HaveProperty("uniqueItems", true);
             tagsEl.Should().HaveProperty("type", "array");
             tagsEl.Should().ContainPath("items").With(itemsEl =>
             {
                 itemsEl.Should().HaveProperty("type", "string");
             });
+        });
+    }
+
+    [Theory]
+    [MemberData(nameof(ModelNames))]
+    public async Task Allowed_denied_annotations_on_resource_property_produces_expected_schema(string modelName)
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        document.Should().ContainPath($"components.schemas.{modelName}.properties.planet").With(planetEl =>
+        {
+            planetEl.Should().HaveProperty("type", "string");
         });
     }
 
