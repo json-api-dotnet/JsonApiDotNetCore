@@ -27,7 +27,7 @@ public sealed class ModelStateValidationFakers
         .RuleFor(socialMediaAccount => socialMediaAccount.Age, faker => faker.Random.Double(0.1, 122.9))
         .RuleFor(socialMediaAccount => socialMediaAccount.ProfilePicture, faker => new Uri(faker.Image.LoremFlickrUrl()))
         .RuleFor(socialMediaAccount => socialMediaAccount.BackgroundPicture, faker => faker.Image.LoremFlickrUrl())
-        .RuleFor(socialMediaAccount => socialMediaAccount.Tags, faker => faker.Make(faker.Random.Number(0, 10), () => faker.Random.String2(2, 10)))
+        .RuleFor(socialMediaAccount => socialMediaAccount.Tags, faker => faker.Make(faker.Random.Number(1, 10), () => faker.Random.String2(2, 10)))
         .RuleFor(socialMediaAccount => socialMediaAccount.CountryCode, faker => faker.Random.ListItem(["NL", "FR"]))
         .RuleFor(socialMediaAccount => socialMediaAccount.Planet, faker => faker.Random.String2(2, 8))
         .RuleFor(socialMediaAccount => socialMediaAccount.NextRevalidation, faker => TimeSpan.FromMinutes(faker.Random.Number(1, 5)))

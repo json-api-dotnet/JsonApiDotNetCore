@@ -63,7 +63,7 @@ public sealed class SocialMediaAccount : Identifiable<Guid>
 
     [Attr]
 #if NET8_0_OR_GREATER
-    [Length(0, 10)]
+    [Length(1, 10)]
 #endif
     public List<string>? Tags { get; set; }
 

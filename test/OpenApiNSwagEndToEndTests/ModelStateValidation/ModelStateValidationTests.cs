@@ -285,6 +285,39 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         errorObject.Source.Pointer.Should().Be("/data/attributes/backgroundPicture");
     }
 
+    [Theory]
+    [InlineData(0)]
+    [InlineData(11)]
+    public async Task Cannot_exceed_collection_length_constraint(int length)
+    {
+        // Arrange
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        ModelStateValidationClient apiClient = new(httpClient);
+
+        // Act
+        Func<Task<SocialMediaAccountPrimaryResponseDocument>> action = () => apiClient.PostSocialMediaAccountAsync(new SocialMediaAccountPostRequestDocument
+        {
+            Data = new SocialMediaAccountDataInPostRequest
+            {
+                Attributes = new SocialMediaAccountAttributesInPostRequest
+                {
+                    LastName = "",
+                    Tags = Enumerable.Repeat("", length).ToArray(),
+                }
+            }
+        });
+
+        // Assert
+        ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
+        document.Errors.ShouldHaveCount(1);
+
+        ErrorObject errorObject = document.Errors.First();
+        errorObject.Title.Should().Be("Input validation failed.");
+        errorObject.Detail.Should().Be("The field Tags must be a string or collection type with a minimum length of '1' and maximum length of '10'.");
+        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Pointer.Should().Be("/data/attributes/tags");
+    }
+
     [Fact]
     public async Task Cannot_use_non_allowed_value()
     {
@@ -300,7 +333,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
                     LastName = "",
-                    CountryCode = "US"
+                    CountryCode = "XX"
                 }
             }
         });
