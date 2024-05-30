@@ -34,7 +34,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -45,7 +45,7 @@
             "description": "Successfully returns the found dataStreams, or an empty array if none were found.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -61,10 +61,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -108,7 +108,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -119,7 +119,7 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -136,10 +136,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -186,7 +186,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -197,7 +197,7 @@
             "description": "Successfully returns the found dataStream.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -213,10 +213,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -279,7 +279,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -290,7 +290,7 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -307,10 +307,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -351,7 +351,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -362,7 +362,7 @@
             "description": "Successfully returns the found readOnlyChannels, or an empty array if none were found.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -378,10 +378,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -425,7 +425,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -436,7 +436,7 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -453,10 +453,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -503,7 +503,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -514,7 +514,7 @@
             "description": "Successfully returns the found readOnlyChannel.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -530,10 +530,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -596,7 +596,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -607,7 +607,7 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -624,10 +624,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -677,7 +677,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -688,7 +688,7 @@
             "description": "Successfully returns the found dataStreams, or an empty array if none were found.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -704,10 +704,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -770,7 +770,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -781,7 +781,7 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -798,10 +798,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -851,7 +851,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -862,7 +862,7 @@
             "description": "Successfully returns the found dataStream identities, or an empty array if none were found.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -878,10 +878,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -944,7 +944,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -955,7 +955,7 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -972,10 +972,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1025,7 +1025,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -1036,7 +1036,7 @@
             "description": "Successfully returns the found dataStream, or `null` if it was not found.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1052,10 +1052,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1118,7 +1118,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -1129,7 +1129,7 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1146,10 +1146,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1199,7 +1199,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -1210,7 +1210,7 @@
             "description": "Successfully returns the found dataStream identity, or `null` if it was not found.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1226,10 +1226,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1292,7 +1292,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -1303,7 +1303,7 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1320,10 +1320,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1373,7 +1373,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -1384,7 +1384,7 @@
             "description": "Successfully returns the found dataStream, or `null` if it was not found.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1400,10 +1400,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1466,7 +1466,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -1477,7 +1477,7 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1494,10 +1494,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1547,7 +1547,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -1558,7 +1558,7 @@
             "description": "Successfully returns the found dataStream identity, or `null` if it was not found.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1574,10 +1574,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1640,7 +1640,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -1651,7 +1651,7 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1668,10 +1668,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1712,7 +1712,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -1723,7 +1723,7 @@
             "description": "Successfully returns the found readOnlyResourceChannels, or an empty array if none were found.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1739,10 +1739,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1786,7 +1786,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -1797,7 +1797,7 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1814,10 +1814,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1864,7 +1864,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -1875,7 +1875,7 @@
             "description": "Successfully returns the found readOnlyResourceChannel.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1891,10 +1891,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1957,7 +1957,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -1968,7 +1968,7 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -1985,10 +1985,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -2038,7 +2038,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -2049,7 +2049,7 @@
             "description": "Successfully returns the found dataStreams, or an empty array if none were found.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -2065,10 +2065,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -2131,7 +2131,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -2142,7 +2142,7 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -2159,10 +2159,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -2212,7 +2212,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -2223,7 +2223,7 @@
             "description": "Successfully returns the found dataStream, or `null` if it was not found.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -2239,10 +2239,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -2305,7 +2305,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -2316,7 +2316,7 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -2333,10 +2333,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -2386,7 +2386,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -2397,7 +2397,7 @@
             "description": "Successfully returns the found dataStream, or `null` if it was not found.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -2413,10 +2413,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -2479,7 +2479,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -2490,7 +2490,7 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -2507,10 +2507,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -2560,7 +2560,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -2571,7 +2571,7 @@
             "description": "Successfully returns the found dataStream identities, or an empty array if none were found.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -2587,10 +2587,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -2653,7 +2653,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -2664,7 +2664,7 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -2681,10 +2681,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -2938,7 +2938,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -2949,7 +2949,7 @@
             "description": "Successfully returns the found dataStream identity, or `null` if it was not found.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -2965,10 +2965,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -3031,7 +3031,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -3042,7 +3042,7 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -3059,10 +3059,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -3180,7 +3180,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -3191,7 +3191,7 @@
             "description": "Successfully returns the found dataStream identity, or `null` if it was not found.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -3207,10 +3207,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -3273,7 +3273,7 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string"
             }
@@ -3284,7 +3284,7 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
@@ -3301,10 +3301,10 @@
             }
           },
           "304": {
-            "description": "The socialMediaAccount of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
-                "description": "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
