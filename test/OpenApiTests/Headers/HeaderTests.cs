@@ -42,7 +42,7 @@ public sealed class HeaderTests : IClassFixture<OpenApiTestContext<OpenApiStartu
                     parameterElement.Should().NotContainPath("required");
 
                     parameterElement.Should().HaveProperty("description",
-                        "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current socialMediaAccount.");
+                        "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
 
                     parameterElement.Should().ContainPath("schema").With(schemaElement =>
                     {
@@ -59,7 +59,7 @@ public sealed class HeaderTests : IClassFixture<OpenApiTestContext<OpenApiStartu
         static void AssertETag(JsonElement etagElement)
         {
             etagElement.Should().HaveProperty("description",
-                "A socialMediaAccount of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
+                "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
 
             etagElement.Should().HaveProperty("required", true);
 
