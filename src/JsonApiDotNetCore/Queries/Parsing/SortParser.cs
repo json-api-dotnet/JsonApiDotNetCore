@@ -32,7 +32,7 @@ public class SortParser : QueryExpressionParser, ISortParser
         ImmutableArray<SortElementExpression>.Builder elementsBuilder = ImmutableArray.CreateBuilder<SortElementExpression>();
         elementsBuilder.Add(firstElement);
 
-        while (TokenStack.Any())
+        while (TokenStack.Count > 0)
         {
             EatSingleCharacterToken(TokenKind.Comma);
 

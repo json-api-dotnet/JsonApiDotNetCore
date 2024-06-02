@@ -455,7 +455,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
         await _resourceDefinitionAccessor.OnAddToRelationshipAsync(leftPlaceholderResource, relationship, rightResourceIds, cancellationToken);
 
-        if (rightResourceIds.Any())
+        if (rightResourceIds.Count > 0)
         {
             var leftResourceTracked = (TResource)_dbContext.GetTrackedOrAttach(leftPlaceholderResource);
             IEnumerable rightValueToStore = GetRightValueToStoreForAddToToMany(leftResourceTracked, relationship, rightResourceIds);
@@ -486,7 +486,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
-        if (rightResourceIdsStored.Any())
+        if (rightResourceIdsStored.Count > 0)
         {
             rightResourceIdsStored.UnionWith(rightResourceIdsToAdd);
             return rightResourceIdsStored;
@@ -515,7 +515,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
         await _resourceDefinitionAccessor.OnRemoveFromRelationshipAsync(leftResource, relationship, rightResourceIdsToRemove, cancellationToken);
 
-        if (rightResourceIdsToRemove.Any())
+        if (rightResourceIdsToRemove.Count > 0)
         {
             var leftResourceTracked = (TResource)_dbContext.GetTrackedOrAttach(leftResource);
 

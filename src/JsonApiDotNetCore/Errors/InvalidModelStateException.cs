@@ -186,7 +186,7 @@ public sealed class InvalidModelStateException(
             Exception exception = modelError.Exception.Demystify();
             string[] stackTraceLines = exception.ToString().Split(Environment.NewLine);
 
-            if (stackTraceLines.Any())
+            if (stackTraceLines.Length > 0)
             {
                 error.Meta ??= new Dictionary<string, object?>();
                 error.Meta["StackTrace"] = stackTraceLines;

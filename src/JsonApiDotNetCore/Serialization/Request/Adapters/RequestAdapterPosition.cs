@@ -33,7 +33,7 @@ public sealed class RequestAdapterPosition
 
     public string? ToSourcePointer()
     {
-        if (!_stack.Any())
+        if (_stack.Count == 0)
         {
             return null;
         }
@@ -41,7 +41,7 @@ public sealed class RequestAdapterPosition
         var builder = new StringBuilder();
         var clone = new Stack<string>(_stack);
 
-        while (clone.Any())
+        while (clone.Count > 0)
         {
             string element = clone.Pop();
             builder.Append(element);

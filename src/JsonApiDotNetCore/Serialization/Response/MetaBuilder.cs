@@ -50,6 +50,6 @@ public sealed class MetaBuilder : IMetaBuilder
             Add(extraMeta);
         }
 
-        return _meta.Any() ? _meta : null;
+        return _meta.Count > 0 ? _meta : null;
     }
 }

@@ -59,7 +59,7 @@ public class IncludeElementExpression : QueryExpression
         var builder = new StringBuilder();
         builder.Append(toFullString ? $"{Relationship.LeftType.PublicName}:{Relationship.PublicName}" : Relationship.PublicName);
 
-        if (Children.Any())
+        if (Children.Count > 0)
         {
             builder.Append('{');
             builder.Append(string.Join(",", Children.Select(child => toFullString ? child.ToFullString() : child.ToString()).OrderBy(name => name)));

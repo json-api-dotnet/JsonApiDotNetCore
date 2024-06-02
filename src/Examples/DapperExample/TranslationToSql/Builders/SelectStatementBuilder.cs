@@ -438,7 +438,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
     private SelectNode ToSelect(bool isSubQuery, bool createAlias)
     {
         WhereNode? where = GetWhere();
-        OrderByNode? orderBy = !_orderByTerms.Any() ? null : new OrderByNode(_orderByTerms);
+        OrderByNode? orderBy = _orderByTerms.Count == 0 ? null : new OrderByNode(_orderByTerms);
 
         // Materialization using Dapper requires selectors to match property names, so adjust selector names accordingly.
         Dictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> selectorsPerTable =
@@ -588,7 +588,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
         var finder = new NullableAttributeFinder(_queryState.DataModelService);
         finder.Visit(expression, null);
 
-        if (finder.AttributesToNullCheck.Any())
+        if (finder.AttributesToNullCheck.Count > 0)
         {
             var orTerms = new List<FilterNode>
             {

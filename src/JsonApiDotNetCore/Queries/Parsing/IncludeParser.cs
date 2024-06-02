@@ -41,7 +41,7 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
         var treeRoot = IncludeTreeNode.CreateRoot(resourceType);
         bool isAtStart = true;
 
-        while (TokenStack.Any())
+        while (TokenStack.Count > 0)
         {
             if (!isAtStart)
             {
@@ -120,7 +120,7 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
             // This is compensated for when rendering the response, which substitutes relationships on base types with the derived ones.
             IReadOnlySet<RelationshipAttribute> relationships = parent.Relationship.RightType.GetRelationshipsInTypeOrDerived(relationshipName);
 
-            if (relationships.Any())
+            if (relationships.Count > 0)
             {
                 relationshipsFound.UnionWith(relationships);
 
@@ -139,7 +139,7 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
     private static void AssertRelationshipsFound(ISet<RelationshipAttribute> relationshipsFound, string relationshipName, ICollection<IncludeTreeNode> parents,
         int position)
     {
-        if (relationshipsFound.Any())
+        if (relationshipsFound.Count > 0)
         {
             return;
         }
@@ -255,7 +255,7 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
 
             if (element.Relationship is HiddenRootRelationshipAttribute)
             {
-                return element.Children.Any() ? new IncludeExpression(element.Children) : IncludeExpression.Empty;
+                return element.Children.Count > 0 ? new IncludeExpression(element.Children) : IncludeExpression.Empty;
             }
 
             return new IncludeExpression(ImmutableHashSet.Create(element));

@@ -271,7 +271,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
                 object? rightValue = relationship.GetValue(primaryResource);
                 HashSet<IIdentifiable> rightResourceIds = _collectionConverter.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
 
-                if (rightResourceIds.Any())
+                if (rightResourceIds.Count > 0)
                 {
                     IAsyncEnumerable<MissingResourceInRelationship> missingResourcesInRelationship =
                         GetMissingRightResourcesAsync(queryLayer, relationship, rightResourceIds, cancellationToken);
@@ -289,7 +289,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             }
         }
 
-        if (missingResources.Any())
+        if (missingResources.Count > 0)
         {
             throw new ResourcesInRelationshipsNotFoundException(missingResources);
         }
@@ -348,7 +348,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
 
         TResource? resourceFromDatabase = null;
 
-        if (rightResourceIds.Any() && _request.Relationship is HasManyAttribute { IsManyToMany: true } manyToManyRelationship)
+        if (rightResourceIds.Count > 0 && _request.Relationship is HasManyAttribute { IsManyToMany: true } manyToManyRelationship)
         {
             // In the case of a many-to-many relationship, creating a duplicate entry in the join table results in a
             // unique constraint violation. We avoid that by excluding already-existing entries from the set in advance.
@@ -415,7 +415,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         HashSet<IIdentifiable> rightResourceIds = _collectionConverter.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
         object? newRightValue = rightValue;
 
-        if (rightResourceIds.Any())
+        if (rightResourceIds.Count > 0)
         {
             QueryLayer queryLayer = _queryLayerComposer.ComposeForGetRelationshipRightIds(_request.Relationship, rightResourceIds);
 
@@ -428,7 +428,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
                 ? rightResourceIds.FirstOrDefault()
                 : _collectionConverter.CopyToTypedCollection(rightResourceIds, _request.Relationship.Property.PropertyType);
 
-            if (missingResources.Any())
+            if (missingResources.Count > 0)
             {
                 throw new ResourcesInRelationshipsNotFoundException(missingResources);
             }

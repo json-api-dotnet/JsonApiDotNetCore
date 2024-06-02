@@ -37,7 +37,7 @@ internal sealed class MatchError
 
     public static MatchError CreateForUnknownField(int position, ResourceType? resourceType, string publicName, bool allowDerivedTypes)
     {
-        bool hasDerivedTypes = allowDerivedTypes && resourceType != null && resourceType.DirectlyDerivedTypes.Any();
+        bool hasDerivedTypes = allowDerivedTypes && resourceType is { DirectlyDerivedTypes.Count: > 0 };
 
         var builder = new MessageBuilder();
 

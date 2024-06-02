@@ -12,7 +12,7 @@ internal sealed class SourceCodeBuilder
     {
         StringBuilder builder = new();
 
-        if (_namespaceImports.Any())
+        if (_namespaceImports.Count > 0)
         {
             foreach (string namespaceImport in _namespaceImports)
             {

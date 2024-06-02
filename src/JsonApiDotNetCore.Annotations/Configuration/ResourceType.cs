@@ -314,7 +314,7 @@ public sealed class ResourceType
 
     internal bool IsPartOfTypeHierarchy()
     {
-        return BaseType != null || DirectlyDerivedTypes.Any();
+        return BaseType != null || DirectlyDerivedTypes.Count > 0;
     }
 
     public override string ToString()

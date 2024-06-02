@@ -31,7 +31,7 @@ internal sealed class IncludeChainConverter
     {
         ArgumentGuard.NotNull(include);
 
-        if (!include.Elements.Any())
+        if (include.Elements.Count == 0)
         {
             return Array.Empty<ResourceFieldChainExpression>();
         }
@@ -60,7 +60,7 @@ internal sealed class IncludeChainConverter
 
         public override object? VisitIncludeElement(IncludeElementExpression expression, object? argument)
         {
-            if (!expression.Children.Any())
+            if (expression.Children.Count == 0)
             {
                 FlushChain(expression);
             }
