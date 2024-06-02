@@ -53,7 +53,7 @@ public abstract class MessagingGroupDefinition(
                 {
                     content = new UserAddedToGroupContent(beforeUser.Id, group.Id);
                 }
-                else if (beforeUser.Group != null && beforeUser.Group.Id != group.Id)
+                else if (beforeUser.Group.Id != group.Id)
                 {
                     content = new UserMovedToGroupContent(beforeUser.Id, beforeUser.Group.Id, group.Id);
                 }
@@ -94,7 +94,7 @@ public abstract class MessagingGroupDefinition(
                 {
                     content = new UserAddedToGroupContent(beforeUser.Id, group.Id);
                 }
-                else if (beforeUser.Group != null && beforeUser.Group.Id != group.Id)
+                else if (beforeUser.Group.Id != group.Id)
                 {
                     content = new UserMovedToGroupContent(beforeUser.Id, beforeUser.Group.Id, group.Id);
                 }
