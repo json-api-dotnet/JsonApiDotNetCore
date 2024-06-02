@@ -14,7 +14,7 @@ public sealed class SparseFieldSetCache : ISparseFieldSetCache
 
     private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
     private readonly Lazy<IDictionary<ResourceType, IImmutableSet<ResourceFieldAttribute>>> _lazySourceTable;
-    private readonly IDictionary<ResourceType, IImmutableSet<ResourceFieldAttribute>> _visitedTable;
+    private readonly Dictionary<ResourceType, IImmutableSet<ResourceFieldAttribute>> _visitedTable;
 
     public SparseFieldSetCache(IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor)
     {

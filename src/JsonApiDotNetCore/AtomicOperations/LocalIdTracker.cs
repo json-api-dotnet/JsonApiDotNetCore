@@ -6,7 +6,7 @@ namespace JsonApiDotNetCore.AtomicOperations;
 /// <inheritdoc cref="ILocalIdTracker" />
 public sealed class LocalIdTracker : ILocalIdTracker
 {
-    private readonly IDictionary<string, LocalIdState> _idsTracked = new Dictionary<string, LocalIdState>();
+    private readonly Dictionary<string, LocalIdState> _idsTracked = new();
 
     /// <inheritdoc />
     public void Reset()

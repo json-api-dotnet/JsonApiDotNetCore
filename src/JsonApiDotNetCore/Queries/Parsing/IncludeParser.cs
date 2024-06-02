@@ -220,7 +220,7 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
 
     private sealed class IncludeTreeNode
     {
-        private readonly IDictionary<RelationshipAttribute, IncludeTreeNode> _children = new Dictionary<RelationshipAttribute, IncludeTreeNode>();
+        private readonly Dictionary<RelationshipAttribute, IncludeTreeNode> _children = new();
 
         public RelationshipAttribute Relationship { get; }
 

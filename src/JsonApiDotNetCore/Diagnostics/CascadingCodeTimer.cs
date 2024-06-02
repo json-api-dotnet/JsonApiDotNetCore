@@ -130,7 +130,7 @@ internal sealed class CascadingCodeTimer : ICodeTimer
     private sealed class MeasureScope : IDisposable
     {
         private readonly CascadingCodeTimer _owner;
-        private readonly IList<MeasureScope> _children = new List<MeasureScope>();
+        private readonly List<MeasureScope> _children = [];
         private readonly bool _excludeInRelativeCost;
         private readonly TimeSpan _startedAt;
         private TimeSpan? _stoppedAt;

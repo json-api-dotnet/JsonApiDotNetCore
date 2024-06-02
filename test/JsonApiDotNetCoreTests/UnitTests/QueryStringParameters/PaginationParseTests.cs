@@ -15,7 +15,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters;
 
 public sealed class PaginationParseTests : BaseParseTests
 {
-    private readonly IPaginationQueryStringParameterReader _reader;
+    private readonly PaginationQueryStringParameterReader _reader;
 
     public PaginationParseTests()
     {

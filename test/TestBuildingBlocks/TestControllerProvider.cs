@@ -5,7 +5,7 @@ namespace TestBuildingBlocks;
 
 internal sealed class TestControllerProvider : ControllerFeatureProvider
 {
-    private readonly ISet<Type> _allowedControllerTypes = new HashSet<Type>();
+    private readonly HashSet<Type> _allowedControllerTypes = [];
 
     internal ISet<Assembly> ControllerAssemblies { get; } = new HashSet<Assembly>();
 

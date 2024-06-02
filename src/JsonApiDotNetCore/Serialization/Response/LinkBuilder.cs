@@ -219,7 +219,7 @@ public class LinkBuilder : ILinkBuilder
 
     private string GetQueryStringInPaginationLink(int pageOffset, string? pageSizeValue)
     {
-        IDictionary<string, string?> parameters = HttpContext.Request.Query.ToDictionary(pair => pair.Key, pair => (string?)pair.Value.ToString());
+        Dictionary<string, string?> parameters = HttpContext.Request.Query.ToDictionary(pair => pair.Key, pair => (string?)pair.Value.ToString());
 
         if (pageSizeValue == null)
         {

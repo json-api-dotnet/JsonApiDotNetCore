@@ -13,7 +13,7 @@ namespace Benchmarks.Serialization;
 // ReSharper disable once ClassCanBeSealed.Global
 public class OperationsSerializationBenchmarks : SerializationBenchmarkBase
 {
-    private readonly IEnumerable<OperationContainer> _responseOperations;
+    private readonly List<OperationContainer> _responseOperations;
 
     public OperationsSerializationBenchmarks()
     {
@@ -23,7 +23,7 @@ public class OperationsSerializationBenchmarks : SerializationBenchmarkBase
         _responseOperations = CreateResponseOperations(request);
     }
 
-    private static IEnumerable<OperationContainer> CreateResponseOperations(IJsonApiRequest request)
+    private static List<OperationContainer> CreateResponseOperations(IJsonApiRequest request)
     {
         var resource1 = new OutgoingResource
         {
@@ -102,14 +102,14 @@ public class OperationsSerializationBenchmarks : SerializationBenchmarkBase
 
         var targetedFields = new TargetedFields();
 
-        return new List<OperationContainer>
-        {
-            new(resource1, targetedFields, request),
-            new(resource2, targetedFields, request),
-            new(resource3, targetedFields, request),
-            new(resource4, targetedFields, request),
-            new(resource5, targetedFields, request)
-        };
+        return
+        [
+            new OperationContainer(resource1, targetedFields, request),
+            new OperationContainer(resource2, targetedFields, request),
+            new OperationContainer(resource3, targetedFields, request),
+            new OperationContainer(resource4, targetedFields, request),
+            new OperationContainer(resource5, targetedFields, request)
+        ];
     }
 
     [Benchmark]
