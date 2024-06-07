@@ -1,5 +1,3 @@
-using System;
-using System.Net;
 using Bogus;
 using JetBrains.Annotations;
 using TestBuildingBlocks;
@@ -18,7 +16,7 @@ public sealed class ModelStateValidationFakers
         .RuleFor(socialMediaAccount => socialMediaAccount.FirstName, faker => faker.Person.FirstName)
         .RuleFor(socialMediaAccount => socialMediaAccount.GivenName, (_, socialMediaAccount) => socialMediaAccount.FirstName)
         .RuleFor(socialMediaAccount => socialMediaAccount.LastName, faker => faker.Person.LastName)
-        .RuleFor(socialMediaAccount => socialMediaAccount.UserName, faker => faker.Random.String2(3, 18))
+        .RuleFor(socialMediaAccount => socialMediaAccount.UserName, faker => faker.Person.UserName)
         .RuleFor(socialMediaAccount => socialMediaAccount.CreditCard, faker => faker.Finance.CreditCardNumber())
         .RuleFor(socialMediaAccount => socialMediaAccount.Email, faker => faker.Person.Email)
         .RuleFor(socialMediaAccount => socialMediaAccount.Password, faker => faker.Random.String2(8, 32))
