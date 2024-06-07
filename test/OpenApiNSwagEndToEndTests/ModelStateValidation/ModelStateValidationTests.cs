@@ -1,3 +1,4 @@
+using System.Globalization;
 using FluentAssertions;
 using JsonApiDotNetCore.OpenApi.Client.NSwag;
 using OpenApiNSwagEndToEndTests.ModelStateValidation.GeneratedCode;
@@ -200,7 +201,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     }
 
     [Fact]
-    public async Task Cannot_use_invalid_email()
+    public async Task Cannot_use_invalid_email_address()
     {
         // Arrange
         SocialMediaAccount socialMediaAccount = _fakers.SocialMediaAccount.Generate();
@@ -426,7 +427,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
                     LastName = socialMediaAccount.LastName,
-                    NextRevalidation = "00:00:01",
+                    NextRevalidation = TimeSpan.FromSeconds(1).ToString()
                 }
             }
         };
@@ -439,6 +440,40 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
         errorObject.Detail.Should().Be("The field NextRevalidation must be between 01:00:00 and 05:00:00.");
+        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Pointer.Should().Be("/data/attributes/nextRevalidation");
+    }
+
+    [Fact]
+    public async Task Cannot_use_culture_sensitive_TimeSpan()
+    {
+        // Arrange
+        SocialMediaAccount socialMediaAccount = _fakers.SocialMediaAccount.Generate();
+
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        ModelStateValidationClient apiClient = new(httpClient);
+
+        // Act
+        SocialMediaAccountPostRequestDocument requestBody = new()
+        {
+            Data = new SocialMediaAccountDataInPostRequest
+            {
+                Attributes = new SocialMediaAccountAttributesInPostRequest
+                {
+                    LastName = socialMediaAccount.LastName,
+                    NextRevalidation = new TimeSpan(0, 2, 0, 0, 1).ToString("g", new CultureInfo("fr-FR"))
+                }
+            }
+        };
+        Func<Task<SocialMediaAccountPrimaryResponseDocument>> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
+
+        // Assert
+        ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
+        document.Errors.ShouldHaveCount(1);
+
+        ErrorObject errorObject = document.Errors.First();
+        errorObject.Title.Should().Be("Failed to deserialize request body: Incompatible attribute value found.");
+        errorObject.Detail.Should().Be("Failed to convert attribute 'nextRevalidation' with value '2:00:00,001' of type 'String' to type 'Nullable<TimeSpan>'.");
         errorObject.Source.ShouldNotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/nextRevalidation");
     }
