@@ -7,6 +7,14 @@ namespace OpenApiTests.ModelStateValidation;
 
 public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext<OpenApiStartup<ModelStateValidationDbContext>, ModelStateValidationDbContext>>
 {
+    // ReSharper disable once UseCollectionExpression (https://youtrack.jetbrains.com/issue/RSRP-497450)
+    public static readonly TheoryData<string> ModelNames = new()
+    {
+        "socialMediaAccountAttributesInPostRequest",
+        "socialMediaAccountAttributesInPatchRequest",
+        "socialMediaAccountAttributesInResponse"
+    };
+
     private readonly OpenApiTestContext<OpenApiStartup<ModelStateValidationDbContext>, ModelStateValidationDbContext> _testContext;
 
     public ModelStateValidationTests(OpenApiTestContext<OpenApiStartup<ModelStateValidationDbContext>, ModelStateValidationDbContext> testContext)
@@ -241,6 +249,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
             tagsElement.Should().HaveProperty("minItems", 1);
 #endif
             tagsElement.Should().HaveProperty("type", "array");
+
             tagsElement.Should().ContainPath("items").With(itemsEl =>
             {
                 itemsEl.Should().HaveProperty("type", "string");
@@ -335,12 +344,4 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
             validatedTimeAtElement.Should().HaveProperty("format", "time");
         });
     }
-
-    // ReSharper disable once UseCollectionExpression (https://youtrack.jetbrains.com/issue/RSRP-497450)
-    public static readonly TheoryData<string> ModelNames = new()
-    {
-        "socialMediaAccountAttributesInPostRequest",
-        "socialMediaAccountAttributesInPatchRequest",
-        "socialMediaAccountAttributesInResponse"
-    };
 }

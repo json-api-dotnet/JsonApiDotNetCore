@@ -10,13 +10,15 @@ using Xunit.Abstractions;
 
 namespace OpenApiNSwagEndToEndTests.ModelStateValidation;
 
-public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestContext<OpenApiStartup<ModelStateValidationDbContext>, ModelStateValidationDbContext>>
+public sealed class ModelStateValidationTests
+    : IClassFixture<IntegrationTestContext<OpenApiStartup<ModelStateValidationDbContext>, ModelStateValidationDbContext>>
 {
     private readonly IntegrationTestContext<OpenApiStartup<ModelStateValidationDbContext>, ModelStateValidationDbContext> _testContext;
     private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
     private readonly ModelStateValidationFakers _fakers = new();
 
-    public ModelStateValidationTests(IntegrationTestContext<OpenApiStartup<ModelStateValidationDbContext>, ModelStateValidationDbContext> testContext, ITestOutputHelper testOutputHelper)
+    public ModelStateValidationTests(IntegrationTestContext<OpenApiStartup<ModelStateValidationDbContext>, ModelStateValidationDbContext> testContext,
+        ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
         _logHttpMessageHandler = new XUnitLogHttpMessageHandler(testOutputHelper);
@@ -31,6 +33,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
         SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
             Data = new SocialMediaAccountDataInPostRequest
@@ -67,6 +70,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
         SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
             Data = new SocialMediaAccountDataInPostRequest
@@ -103,6 +107,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
         SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
             Data = new SocialMediaAccountDataInPostRequest
@@ -110,7 +115,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
                     LastName = newAccount.LastName,
-                    UserName = userName,
+                    UserName = userName
                 }
             }
         };
@@ -136,6 +141,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
         SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
             Data = new SocialMediaAccountDataInPostRequest
@@ -143,7 +149,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
                     LastName = newAccount.LastName,
-                    UserName = "aB1",
+                    UserName = "aB1"
                 }
             }
         };
@@ -169,6 +175,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
         SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
             Data = new SocialMediaAccountDataInPostRequest
@@ -176,7 +183,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
                     LastName = newAccount.LastName,
-                    CreditCard = "123-456",
+                    CreditCard = "123-456"
                 }
             }
         };
@@ -202,6 +209,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
         SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
             Data = new SocialMediaAccountDataInPostRequest
@@ -209,7 +217,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
                     LastName = newAccount.LastName,
-                    Email = "abc",
+                    Email = "abc"
                 }
             }
         };
@@ -239,6 +247,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
         SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
             Data = new SocialMediaAccountDataInPostRequest
@@ -246,7 +255,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
                     LastName = newAccount.LastName,
-                    Age = age,
+                    Age = age
                 }
             }
         };
@@ -272,6 +281,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
         SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
             Data = new SocialMediaAccountDataInPostRequest
@@ -279,7 +289,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
                     LastName = newAccount.LastName,
-                    BackgroundPicture = new Uri("/justapath", UriKind.Relative),
+                    BackgroundPicture = new Uri("/justapath", UriKind.Relative)
                 }
             }
         };
@@ -307,6 +317,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
         SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
             Data = new SocialMediaAccountDataInPostRequest
@@ -314,7 +325,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
                     LastName = newAccount.LastName,
-                    Tags = Enumerable.Repeat("-", length).ToArray(),
+                    Tags = Enumerable.Repeat("-", length).ToArray()
                 }
             }
         };
@@ -340,6 +351,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
         SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
             Data = new SocialMediaAccountDataInPostRequest
@@ -373,6 +385,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
         SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
             Data = new SocialMediaAccountDataInPostRequest
@@ -406,6 +419,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
         SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
             Data = new SocialMediaAccountDataInPostRequest
@@ -439,6 +453,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
         SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
             Data = new SocialMediaAccountDataInPostRequest
@@ -460,7 +475,10 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
 
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Failed to deserialize request body: Incompatible attribute value found.");
-        errorObject.Detail.Should().Be("Failed to convert attribute 'nextRevalidation' with value '2:00:00,001' of type 'String' to type 'Nullable<TimeSpan>'.");
+
+        errorObject.Detail.Should()
+            .Be("Failed to convert attribute 'nextRevalidation' with value '2:00:00,001' of type 'String' to type 'Nullable<TimeSpan>'.");
+
         errorObject.Source.ShouldNotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/nextRevalidation");
     }
@@ -472,6 +490,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
         SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
             Data = new SocialMediaAccountDataInPostRequest
@@ -479,7 +498,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
                     LastName = newAccount.LastName,
-                    ValidatedAtTime = TimeSpan.FromSeconds(-1),
+                    ValidatedAtTime = TimeSpan.FromSeconds(-1)
                 }
             }
         };
@@ -505,6 +524,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
         SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
             Data = new SocialMediaAccountDataInPostRequest
