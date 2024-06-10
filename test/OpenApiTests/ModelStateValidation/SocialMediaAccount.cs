@@ -14,7 +14,7 @@ public sealed class SocialMediaAccount : Identifiable<Guid>
     public Guid? AlternativeId { get; set; }
 
     [Attr]
-#if NET8_0_OR_GREATER
+#if !NET6_0
     [Length(2, 20)]
 #endif
     public string? FirstName { get; set; }
@@ -41,7 +41,7 @@ public sealed class SocialMediaAccount : Identifiable<Guid>
     public string? Email { get; set; }
 
     [Attr]
-#if NET8_0_OR_GREATER
+#if !NET6_0
     [Base64String]
 #endif
     public string? Password { get; set; }
@@ -62,19 +62,19 @@ public sealed class SocialMediaAccount : Identifiable<Guid>
     public string? BackgroundPicture { get; set; }
 
     [Attr]
-#if NET8_0_OR_GREATER
+#if !NET6_0
     [Length(1, 10)]
 #endif
     public List<string>? Tags { get; set; }
 
     [Attr]
-#if NET8_0_OR_GREATER
+#if !NET6_0
     [AllowedValues(null, "NL", "FR")]
 #endif
     public string? CountryCode { get; set; }
 
     [Attr]
-#if NET8_0_OR_GREATER
+#if !NET6_0
     [DeniedValues("pluto")]
 #endif
     public string? Planet { get; set; }

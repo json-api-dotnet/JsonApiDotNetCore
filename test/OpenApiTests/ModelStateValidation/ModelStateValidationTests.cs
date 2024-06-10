@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 using TestBuildingBlocks;
 using Xunit;
@@ -10,6 +11,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
 
     public ModelStateValidationTests(OpenApiTestContext<OpenApiStartup<ModelStateValidationDbContext>, ModelStateValidationDbContext> testContext)
     {
+        CultureInfo.CurrentCulture = new CultureInfo("fr-FR");
         _testContext = testContext;
 
         testContext.UseController<SocialMediaAccountsController>();
@@ -40,15 +42,29 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
 
     [Theory]
     [MemberData(nameof(ModelNames))]
+    public async Task Length_annotation_on_resource_property_produces_expected_schema(string modelName)
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        document.Should().ContainPath($"components.schemas.{modelName}.properties.firstName").With(firstName =>
+        {
+            firstName.Should().HaveProperty("type", "string");
+        });
+    }
+
+    [Theory]
+    [MemberData(nameof(ModelNames))]
     public async Task Compare_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.givenName").With(surnameElement =>
+        document.Should().ContainPath($"components.schemas.{modelName}.properties.givenName").With(givenNameElement =>
         {
-            surnameElement.Should().HaveProperty("type", "string");
+            givenNameElement.Should().HaveProperty("type", "string");
         });
     }
 
