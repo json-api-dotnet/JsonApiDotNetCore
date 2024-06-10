@@ -80,7 +80,7 @@ public sealed class SocialMediaAccount : Identifiable<Guid>
     public string? Planet { get; set; }
 
     [Attr]
-    [Range(typeof(TimeSpan), "01:00", "05:00")]
+    [Range(typeof(TimeSpan), "01:00", "05:00", ConvertValueInInvariantCulture = true)]
     public TimeSpan? NextRevalidation { get; set; }
 
     [Attr]
