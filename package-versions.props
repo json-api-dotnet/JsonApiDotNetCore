@@ -4,7 +4,7 @@
     <CodeAnalysisFrozenVersion>4.1.0</CodeAnalysisFrozenVersion>
     <DemystifierFrozenVersion>0.4.1</DemystifierFrozenVersion>
     <HumanizerFrozenVersion>2.14.1</HumanizerFrozenVersion>
-    <SwashbuckleFrozenVersion>6.6.1</SwashbuckleFrozenVersion>
+    <SwashbuckleFrozenVersion>6.6.2</SwashbuckleFrozenVersion>
     <NewtonsoftJsonFrozenVersion>13.0.3</NewtonsoftJsonFrozenVersion>
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->

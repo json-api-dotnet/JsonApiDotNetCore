@@ -42,15 +42,19 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
 
     [Theory]
     [MemberData(nameof(ModelNames))]
-    public async Task Length_annotation_on_resource_property_produces_expected_schema(string modelName)
+    public async Task Length_annotation_on_resource_string_property_produces_expected_schema(string modelName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.firstName").With(firstName =>
+        document.Should().ContainPath($"components.schemas.{modelName}.properties.firstName").With(firstNameElement =>
         {
-            firstName.Should().HaveProperty("type", "string");
+#if !NET6_0
+            firstNameElement.Should().HaveProperty("maxLength", 20);
+            firstNameElement.Should().HaveProperty("minLength", 2);
+#endif
+            firstNameElement.Should().HaveProperty("type", "string");
         });
     }
 
@@ -224,7 +228,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
 
     [Theory]
     [MemberData(nameof(ModelNames))]
-    public async Task HashSet_type_produces_expected_schema(string modelName)
+    public async Task Length_annotation_on_resource_list_property_produces_expected_schema(string modelName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -232,6 +236,10 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.properties.tags").With(tagsElement =>
         {
+#if !NET6_0
+            tagsElement.Should().HaveProperty("maxItems", 10);
+            tagsElement.Should().HaveProperty("minItems", 1);
+#endif
             tagsElement.Should().HaveProperty("type", "array");
             tagsElement.Should().ContainPath("items").With(itemsEl =>
             {
@@ -242,7 +250,21 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
 
     [Theory]
     [MemberData(nameof(ModelNames))]
-    public async Task Allowed_denied_annotations_on_resource_property_produces_expected_schema(string modelName)
+    public async Task AllowedValues_annotation_on_resource_list_property_produces_expected_schema(string modelName)
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        document.Should().ContainPath($"components.schemas.{modelName}.properties.countryCode").With(countryCodeElement =>
+        {
+            countryCodeElement.Should().HaveProperty("type", "string");
+        });
+    }
+
+    [Theory]
+    [MemberData(nameof(ModelNames))]
+    public async Task DeniedValues_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
