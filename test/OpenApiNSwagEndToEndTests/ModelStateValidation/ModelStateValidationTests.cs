@@ -495,16 +495,19 @@ public sealed class ModelStateValidationTests
             {
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
+                    AlternativeId = newAccount.AlternativeId,
                     FirstName = newAccount.FirstName,
                     LastName = newAccount.LastName,
                     UserName = newAccount.UserName,
                     CreditCard = newAccount.CreditCard,
                     Email = newAccount.Email,
+                    Password = newAccount.Password,
                     Phone = newAccount.Phone,
                     Age = newAccount.Age,
                     ProfilePicture = newAccount.ProfilePicture,
                     BackgroundPicture = new Uri(newAccount.BackgroundPicture!),
                     Tags = newAccount.Tags,
+                    CountryCode = newAccount.CountryCode,
                     Planet = newAccount.Planet,
                     NextRevalidation = newAccount.NextRevalidation!.Value.ToString(),
                     ValidatedAt = newAccount.ValidatedAt!,
