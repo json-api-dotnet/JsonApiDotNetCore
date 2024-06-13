@@ -452,7 +452,10 @@ public sealed class ModelStateValidationTests
 
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Failed to deserialize request body: Incompatible attribute value found.");
-        errorObject.Detail.Should().Be("Failed to convert attribute 'nextRevalidation' with value 'not a TimeSpan' of type 'String' to type 'Nullable<TimeSpan>'.");
+
+        errorObject.Detail.Should()
+            .Be("Failed to convert attribute 'nextRevalidation' with value 'not a TimeSpan' of type 'String' to type 'Nullable<TimeSpan>'.");
+
         errorObject.Source.ShouldNotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/nextRevalidation");
     }
