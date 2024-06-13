@@ -410,10 +410,6 @@
             "type": "string",
             "nullable": true
           },
-          "givenName": {
-            "type": "string",
-            "nullable": true
-          },
           "lastName": {
             "type": "string"
           },
@@ -517,10 +513,6 @@
             "type": "string",
             "nullable": true
           },
-          "givenName": {
-            "type": "string",
-            "nullable": true
-          },
           "lastName": {
             "type": "string"
           },
@@ -618,10 +610,6 @@
           "firstName": {
             "maxLength": 20,
             "minLength": 2,
-            "type": "string",
-            "nullable": true
-          },
-          "givenName": {
             "type": "string",
             "nullable": true
           },

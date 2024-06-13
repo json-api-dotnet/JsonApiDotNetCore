@@ -68,20 +68,6 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
 
     [Theory]
     [MemberData(nameof(ModelNames))]
-    public async Task Compare_annotation_on_resource_property_produces_expected_schema(string modelName)
-    {
-        // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
-
-        // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.givenName").With(givenNameElement =>
-        {
-            givenNameElement.Should().HaveProperty("type", "string");
-        });
-    }
-
-    [Theory]
-    [MemberData(nameof(ModelNames))]
     public async Task Required_annotation_with_AllowEmptyStrings_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act

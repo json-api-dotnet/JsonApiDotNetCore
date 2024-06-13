@@ -20,10 +20,6 @@ public sealed class SocialMediaAccount : Identifiable<Guid>
     public string? FirstName { get; set; }
 
     [Attr]
-    [Compare(nameof(FirstName))]
-    public string? GivenName { get; set; }
-
-    [Attr]
     [Required(AllowEmptyStrings = true)]
     public string LastName { get; set; } = default!;
 
@@ -51,7 +47,7 @@ public sealed class SocialMediaAccount : Identifiable<Guid>
     public string? Phone { get; set; }
 
     [Attr]
-    [Range(0.1, 122.9, ConvertValueInInvariantCulture = true, ParseLimitsInInvariantCulture = true)]
+    [Range(0.1, 122.9)]
     public double? Age { get; set; }
 
     [Attr]

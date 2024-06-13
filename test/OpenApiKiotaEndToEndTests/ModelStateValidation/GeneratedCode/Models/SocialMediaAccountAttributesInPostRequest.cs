@@ -93,20 +93,6 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
             set { BackingStore?.Set("firstName", value); }
         }
 #endif
-        /// <summary>The givenName property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public string? GivenName {
-            get { return BackingStore?.Get<string?>("givenName"); }
-            set { BackingStore?.Set("givenName", value); }
-        }
-#nullable restore
-#else
-        public string GivenName {
-            get { return BackingStore?.Get<string>("givenName"); }
-            set { BackingStore?.Set("givenName", value); }
-        }
-#endif
         /// <summary>The lastName property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -266,7 +252,6 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
                 {"creditCard", n => { CreditCard = n.GetStringValue(); } },
                 {"email", n => { Email = n.GetStringValue(); } },
                 {"firstName", n => { FirstName = n.GetStringValue(); } },
-                {"givenName", n => { GivenName = n.GetStringValue(); } },
                 {"lastName", n => { LastName = n.GetStringValue(); } },
                 {"nextRevalidation", n => { NextRevalidation = n.GetStringValue(); } },
                 {"password", n => { Password = n.GetStringValue(); } },
@@ -294,7 +279,6 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
             writer.WriteStringValue("creditCard", CreditCard);
             writer.WriteStringValue("email", Email);
             writer.WriteStringValue("firstName", FirstName);
-            writer.WriteStringValue("givenName", GivenName);
             writer.WriteStringValue("lastName", LastName);
             writer.WriteStringValue("nextRevalidation", NextRevalidation);
             writer.WriteStringValue("password", Password);

@@ -27,42 +27,6 @@ public sealed class ModelStateValidationTests
         testContext.UseController<SocialMediaAccountsController>();
     }
 
-    [Fact]
-    public async Task Cannot_violate_compare_constraint()
-    {
-        // Arrange
-        using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
-        ModelStateValidationClient apiClient = new(requestAdapter);
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
-
-        SocialMediaAccountPostRequestDocument requestBody = new()
-        {
-            Data = new SocialMediaAccountDataInPostRequest
-            {
-                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
-                Attributes = new SocialMediaAccountAttributesInPostRequest
-                {
-                    FirstName = newAccount.FirstName,
-                    GivenName = "something else",
-                    LastName = newAccount.LastName
-                }
-            }
-        };
-
-        // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument?>> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
-
-        // Assert
-        ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
-        document.Errors.ShouldHaveCount(1);
-
-        ErrorObject errorObject = document.Errors.First();
-        errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be("'GivenName' and 'FirstName' do not match.");
-        errorObject.Source.ShouldNotBeNull();
-        errorObject.Source.Pointer.Should().Be("/data/attributes/givenName");
-    }
-
     [Theory]
     [InlineData("a")]
     [InlineData("abcdefghijklmnopqrstu")]
@@ -81,14 +45,13 @@ public sealed class ModelStateValidationTests
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
                     FirstName = firstName,
-                    GivenName = firstName,
                     LastName = newAccount.LastName
                 }
             }
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument?>> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
+        Func<Task> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
@@ -125,7 +88,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument?>> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
+        Func<Task> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
@@ -160,7 +123,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument?>> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
+        Func<Task> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
@@ -195,7 +158,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument?>> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
+        Func<Task> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
@@ -230,7 +193,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument?>> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
+        Func<Task> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
@@ -269,7 +232,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument?>> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
+        Func<Task> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
@@ -280,6 +243,41 @@ public sealed class ModelStateValidationTests
         errorObject.Detail.Should().Be("The field Age must be between 0.1 and 122.9.");
         errorObject.Source.ShouldNotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/age");
+    }
+
+    [Fact]
+    public async Task Cannot_use_invalid_url()
+    {
+        // Arrange
+        using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
+        ModelStateValidationClient apiClient = new(requestAdapter);
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
+        SocialMediaAccountPostRequestDocument requestBody = new()
+        {
+            Data = new SocialMediaAccountDataInPostRequest
+            {
+                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
+                Attributes = new SocialMediaAccountAttributesInPostRequest
+                {
+                    LastName = newAccount.LastName,
+                    ProfilePicture = "http://:example.com"
+                }
+            }
+        };
+
+        // Act
+        Func<Task> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
+
+        // Assert
+        ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
+        document.Errors.ShouldHaveCount(1);
+
+        ErrorObject errorObject = document.Errors.First();
+        errorObject.Title.Should().Be("Failed to deserialize request body: Incompatible attribute value found.");
+        errorObject.Detail.Should().Be("Failed to convert attribute 'profilePicture' with value 'http://:example.com' of type 'String' to type 'Uri'.");
+        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Pointer.Should().Be("/data/attributes/profilePicture");
     }
 
     [Fact]
@@ -304,7 +302,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument?>> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
+        Func<Task> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
@@ -341,7 +339,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument?>> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
+        Func<Task> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
@@ -376,7 +374,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument?>> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
+        Func<Task> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
@@ -411,7 +409,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument?>> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
+        Func<Task> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
@@ -422,6 +420,41 @@ public sealed class ModelStateValidationTests
         errorObject.Detail.Should().Be("The Planet field equals one of the values specified in DeniedValuesAttribute.");
         errorObject.Source.ShouldNotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/planet");
+    }
+
+    [Fact]
+    public async Task Cannot_use_invalid_TimeSpan()
+    {
+        // Arrange
+        using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
+        ModelStateValidationClient apiClient = new(requestAdapter);
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
+        SocialMediaAccountPostRequestDocument requestBody = new()
+        {
+            Data = new SocialMediaAccountDataInPostRequest
+            {
+                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
+                Attributes = new SocialMediaAccountAttributesInPostRequest
+                {
+                    LastName = newAccount.LastName,
+                    NextRevalidation = "not a TimeSpan"
+                }
+            }
+        };
+
+        // Act
+        Func<Task> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
+
+        // Assert
+        ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
+        document.Errors.ShouldHaveCount(1);
+
+        ErrorObject errorObject = document.Errors.First();
+        errorObject.Title.Should().Be("Failed to deserialize request body: Incompatible attribute value found.");
+        errorObject.Detail.Should().Be("Failed to convert attribute 'nextRevalidation' with value 'not a TimeSpan' of type 'String' to type 'Nullable<TimeSpan>'.");
+        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Pointer.Should().Be("/data/attributes/nextRevalidation");
     }
 
     [Fact]
@@ -446,7 +479,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument?>> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
+        Func<Task> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
@@ -481,7 +514,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument?>> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
+        Func<Task> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
@@ -513,7 +546,6 @@ public sealed class ModelStateValidationTests
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
                     FirstName = newAccount.FirstName,
-                    GivenName = newAccount.GivenName,
                     LastName = newAccount.LastName,
                     UserName = newAccount.UserName,
                     CreditCard = newAccount.CreditCard,
@@ -533,7 +565,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument?>> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
+        Func<Task> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
 
         // Assert
         await action.Should().NotThrowAsync();

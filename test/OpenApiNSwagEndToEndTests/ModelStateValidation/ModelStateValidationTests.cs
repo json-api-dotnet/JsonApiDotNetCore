@@ -26,41 +26,6 @@ public sealed class ModelStateValidationTests
         testContext.UseController<SocialMediaAccountsController>();
     }
 
-    [Fact]
-    public async Task Cannot_violate_compare_constraint()
-    {
-        // Arrange
-        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
-        ModelStateValidationClient apiClient = new(httpClient);
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
-
-        SocialMediaAccountPostRequestDocument requestBody = new()
-        {
-            Data = new SocialMediaAccountDataInPostRequest
-            {
-                Attributes = new SocialMediaAccountAttributesInPostRequest
-                {
-                    FirstName = newAccount.FirstName,
-                    GivenName = "something else",
-                    LastName = newAccount.LastName
-                }
-            }
-        };
-
-        // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument>> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
-
-        // Assert
-        ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        document.Errors.ShouldHaveCount(1);
-
-        ErrorObject errorObject = document.Errors.First();
-        errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be("'GivenName' and 'FirstName' do not match.");
-        errorObject.Source.ShouldNotBeNull();
-        errorObject.Source.Pointer.Should().Be("/data/attributes/givenName");
-    }
-
     [Theory]
     [InlineData("a")]
     [InlineData("abcdefghijklmnopqrstu")]
@@ -78,7 +43,6 @@ public sealed class ModelStateValidationTests
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
                     FirstName = firstName,
-                    GivenName = firstName,
                     LastName = newAccount.LastName
                 }
             }
@@ -532,7 +496,6 @@ public sealed class ModelStateValidationTests
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
                     FirstName = newAccount.FirstName,
-                    GivenName = newAccount.GivenName,
                     LastName = newAccount.LastName,
                     UserName = newAccount.UserName,
                     CreditCard = newAccount.CreditCard,
@@ -545,7 +508,7 @@ public sealed class ModelStateValidationTests
                     Planet = newAccount.Planet,
                     NextRevalidation = newAccount.NextRevalidation!.Value.ToString(),
                     ValidatedAt = newAccount.ValidatedAt!,
-                    ValidatedAtDate = new DateTimeOffset(newAccount.ValidatedAtDate!.Value.ToDateTime(new TimeOnly()).ToUniversalTime()),
+                    ValidatedAtDate = new DateTimeOffset(newAccount.ValidatedAtDate!.Value.ToDateTime(new TimeOnly()), TimeSpan.Zero),
                     ValidatedAtTime = newAccount.ValidatedAtTime!.Value.ToTimeSpan()
                 }
             }
