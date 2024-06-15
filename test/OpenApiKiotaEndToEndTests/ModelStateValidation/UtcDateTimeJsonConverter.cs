@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace OpenApiKiotaEndToEndTests.ModelStateValidation;
 
-internal class UtcDateTimeJsonConverter : JsonConverter<DateTime>
+internal sealed class UtcDateTimeJsonConverter : JsonConverter<DateTime>
 {
     public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
