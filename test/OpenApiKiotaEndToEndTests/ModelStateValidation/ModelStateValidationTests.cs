@@ -1,5 +1,7 @@
 using System.Globalization;
 using FluentAssertions;
+using JsonApiDotNetCore.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Kiota.Http.HttpClientLibrary;
 using OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode;
 using OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models;
@@ -25,6 +27,7 @@ public sealed class ModelStateValidationTests
         _requestAdapterFactory = new TestableHttpClientRequestAdapterFactory(testOutputHelper);
 
         testContext.UseController<SocialMediaAccountsController>();
+        testContext.Factory.Services.GetRequiredService<IJsonApiOptions>().SerializerOptions.Converters.Add(new UtcDateTimeJsonConverter());
     }
 
     [Theory]

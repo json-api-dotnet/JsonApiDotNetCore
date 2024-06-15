@@ -1,6 +1,8 @@
 using System.Globalization;
 using FluentAssertions;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Client.NSwag;
+using Microsoft.Extensions.DependencyInjection;
 using OpenApiNSwagEndToEndTests.ModelStateValidation.GeneratedCode;
 using OpenApiTests;
 using OpenApiTests.ModelStateValidation;
@@ -24,6 +26,7 @@ public sealed class ModelStateValidationTests
         _logHttpMessageHandler = new XUnitLogHttpMessageHandler(testOutputHelper);
 
         testContext.UseController<SocialMediaAccountsController>();
+        testContext.Factory.Services.GetRequiredService<IJsonApiOptions>().SerializerOptions.Converters.Add(new UtcDateTimeJsonConverter());
     }
 
     [Theory]
