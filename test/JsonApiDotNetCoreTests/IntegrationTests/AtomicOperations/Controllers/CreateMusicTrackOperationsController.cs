@@ -1,12 +1,9 @@
-using System.Net;
 using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Controllers.Annotations;
-using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -16,35 +13,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Controllers;
 [Route("/operations/musicTracks/create")]
 public sealed class CreateMusicTrackOperationsController(
     IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IOperationsProcessor processor, IJsonApiRequest request,
-    ITargetedFields targetedFields) : JsonApiOperationsController(options, resourceGraph, loggerFactory, processor, request, targetedFields)
+    ITargetedFields targetedFields) : JsonApiOperationsController(options, resourceGraph, loggerFactory, processor, request, targetedFields,
+    OnlyCreateMusicTracksOperationFilter.Instance)
 {
-    public override async Task<IActionResult> PostOperationsAsync(IList<OperationContainer> operations, CancellationToken cancellationToken)
+    private sealed class OnlyCreateMusicTracksOperationFilter : IAtomicOperationFilter
     {
-        AssertOnlyCreatingMusicTracks(operations);
+        public static readonly OnlyCreateMusicTracksOperationFilter Instance = new();
 
-        return await base.PostOperationsAsync(operations, cancellationToken);
-    }
-
-    private static void AssertOnlyCreatingMusicTracks(IEnumerable<OperationContainer> operations)
-    {
-        int index = 0;
-
-        foreach (OperationContainer operation in operations)
+        private OnlyCreateMusicTracksOperationFilter()
         {
-            if (operation.Request.WriteOperation != WriteOperationKind.CreateResource || operation.Resource.GetType() != typeof(MusicTrack))
-            {
-                throw new JsonApiException(new ErrorObject(HttpStatusCode.UnprocessableEntity)
-                {
-                    Title = "Unsupported combination of operation code and resource type at this endpoint.",
-                    Detail = "This endpoint can only be used to create resources of type 'musicTracks'.",
-                    Source = new ErrorSource
-                    {
-                        Pointer = $"/atomic:operations[{index}]"
-                    }
-                });
-            }
+        }
 
-            index++;
+        public bool IsEnabled(ResourceType resourceType, WriteOperationKind writeOperation)
+        {
+            return writeOperation == WriteOperationKind.CreateResource && resourceType.ClrType == typeof(MusicTrack);
         }
     }
 }
