@@ -1,9 +1,11 @@
+using System.Net;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
@@ -22,10 +24,11 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
     private readonly IOperationsProcessor _processor;
     private readonly IJsonApiRequest _request;
     private readonly ITargetedFields _targetedFields;
+    private readonly IAtomicOperationFilter _operationFilter;
     private readonly TraceLogWriter<BaseJsonApiOperationsController> _traceWriter;
 
     protected BaseJsonApiOperationsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
-        IOperationsProcessor processor, IJsonApiRequest request, ITargetedFields targetedFields)
+        IOperationsProcessor processor, IJsonApiRequest request, ITargetedFields targetedFields, IAtomicOperationFilter operationFilter)
     {
         ArgumentGuard.NotNull(options);
         ArgumentGuard.NotNull(resourceGraph);
@@ -33,12 +36,14 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
         ArgumentGuard.NotNull(processor);
         ArgumentGuard.NotNull(request);
         ArgumentGuard.NotNull(targetedFields);
+        ArgumentGuard.NotNull(operationFilter);
 
         _options = options;
         _resourceGraph = resourceGraph;
         _processor = processor;
         _request = request;
         _targetedFields = targetedFields;
+        _operationFilter = operationFilter;
         _traceWriter = new TraceLogWriter<BaseJsonApiOperationsController>(loggerFactory);
     }
 
@@ -111,6 +116,8 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
 
         ArgumentGuard.NotNull(operations);
 
+        ValidateEnabledOperations(operations);
+
         if (_options.ValidateModelState)
         {
             ValidateModelState(operations);
@@ -118,6 +125,68 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
 
         IList<OperationContainer?> results = await _processor.ProcessAsync(operations, cancellationToken);
         return results.Any(result => result != null) ? Ok(results) : NoContent();
+    }
+
+    protected virtual void ValidateEnabledOperations(IList<OperationContainer> operations)
+    {
+        List<ErrorObject> errors = [];
+
+        for (int operationIndex = 0; operationIndex < operations.Count; operationIndex++)
+        {
+            IJsonApiRequest operationRequest = operations[operationIndex].Request;
+            WriteOperationKind operationKind = operationRequest.WriteOperation!.Value;
+
+            if (operationRequest.Relationship != null && !_operationFilter.IsEnabled(operationRequest.Relationship.LeftType, operationKind))
+            {
+                string operationCode = GetOperationCodeText(operationKind);
+
+                errors.Add(new ErrorObject(HttpStatusCode.UnprocessableEntity)
+                {
+                    Title = "The requested operation is not accessible.",
+                    Detail = $"The '{operationCode}' relationship operation is not accessible for relationship '{operationRequest.Relationship}' " +
+                        $"on resource type '{operationRequest.Relationship.LeftType}'.",
+                    Source = new ErrorSource
+                    {
+                        Pointer = $"/atomic:operations[{operationIndex}]"
+                    }
+                });
+            }
+            else if (operationRequest.PrimaryResourceType != null && !_operationFilter.IsEnabled(operationRequest.PrimaryResourceType, operationKind))
+            {
+                string operationCode = GetOperationCodeText(operationKind);
+
+                errors.Add(new ErrorObject(HttpStatusCode.UnprocessableEntity)
+                {
+                    Title = "The requested operation is not accessible.",
+                    Detail = $"The '{operationCode}' resource operation is not accessible for resource type '{operationRequest.PrimaryResourceType}'.",
+                    Source = new ErrorSource
+                    {
+                        Pointer = $"/atomic:operations[{operationIndex}]"
+                    }
+                });
+            }
+        }
+
+        if (errors.Count > 0)
+        {
+            throw new JsonApiException(errors);
+        }
+    }
+
+    private static string GetOperationCodeText(WriteOperationKind operationKind)
+    {
+        AtomicOperationCode operationCode = operationKind switch
+        {
+            WriteOperationKind.CreateResource => AtomicOperationCode.Add,
+            WriteOperationKind.UpdateResource => AtomicOperationCode.Update,
+            WriteOperationKind.DeleteResource => AtomicOperationCode.Remove,
+            WriteOperationKind.AddToRelationship => AtomicOperationCode.Add,
+            WriteOperationKind.SetRelationship => AtomicOperationCode.Update,
+            WriteOperationKind.RemoveFromRelationship => AtomicOperationCode.Remove,
+            _ => throw new NotSupportedException($"Unknown operation kind '{operationKind}'.")
+        };
+
+        return operationCode.ToString().ToLowerInvariant();
     }
 
     protected virtual void ValidateModelState(IList<OperationContainer> operations)

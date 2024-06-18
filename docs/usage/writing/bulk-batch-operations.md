@@ -19,12 +19,23 @@ public sealed class OperationsController : JsonApiOperationsController
 {
     public OperationsController(IJsonApiOptions options, IResourceGraph resourceGraph,
         ILoggerFactory loggerFactory, IOperationsProcessor processor,
-        IJsonApiRequest request, ITargetedFields targetedFields)
-        : base(options, resourceGraph, loggerFactory, processor, request, targetedFields)
+        IJsonApiRequest request, ITargetedFields targetedFields,
+        IAtomicOperationFilter operationFilter)
+        : base(options, resourceGraph, loggerFactory, processor, request, targetedFields,
+        operationFilter)
     {
     }
 }
 ```
+
+> [!IMPORTANT]  
+> Since v5.6.0, the set of exposed operations is based on
+> [`GenerateControllerEndpoints` usage](~/usage/extensibility/controllers.md#resource-access-control).
+> Earlier versions always exposed all operations for all resource types.
+> If you're using [explicit controllers](~/usage/extensibility/controllers.md#explicit-controllers),
+> register and implement your own
+> [`IAtomicOperationFilter`](~/api/JsonApiDotNetCore.AtomicOperations.IAtomicOperationFilter.yml)
+> to indicate which operations to expose.
 
 You'll need to send the next Content-Type in a POST request for operations:
 
