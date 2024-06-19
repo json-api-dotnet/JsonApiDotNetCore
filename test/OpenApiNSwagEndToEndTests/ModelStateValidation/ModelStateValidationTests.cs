@@ -37,9 +37,10 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_exceed_length_constraint(string firstName)
     {
         // Arrange
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
 
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
@@ -54,7 +55,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument>> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
+        Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
@@ -73,9 +74,10 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_exceed_string_length_constraint(string userName)
     {
         // Arrange
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
 
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
@@ -90,7 +92,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument>> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
+        Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
@@ -107,9 +109,10 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_violate_regular_expression_constraint()
     {
         // Arrange
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
 
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
@@ -124,7 +127,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument>> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
+        Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
@@ -141,9 +144,10 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_use_invalid_credit_card_number()
     {
         // Arrange
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
 
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
@@ -158,7 +162,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument>> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
+        Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
@@ -175,9 +179,10 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_use_invalid_email_address()
     {
         // Arrange
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
 
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
@@ -192,7 +197,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument>> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
+        Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
@@ -205,17 +210,126 @@ public sealed class ModelStateValidationTests
         errorObject.Source.Pointer.Should().Be("/data/attributes/email");
     }
 
+    [Fact]
+    public async Task Cannot_exceed_min_length_constraint()
+    {
+        // Arrange
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        ModelStateValidationClient apiClient = new(httpClient);
+
+        SocialMediaAccountPostRequestDocument requestBody = new()
+        {
+            Data = new SocialMediaAccountDataInPostRequest
+            {
+                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
+                Attributes = new SocialMediaAccountAttributesInPostRequest
+                {
+                    LastName = newAccount.LastName,
+                    Password = "YQ=="
+                }
+            }
+        };
+
+        // Act
+        Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
+
+        // Assert
+        ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
+        document.Errors.ShouldHaveCount(1);
+
+        ErrorObject errorObject = document.Errors.First();
+        errorObject.Title.Should().Be("Input validation failed.");
+        errorObject.Detail.Should().Be("The field Password must be a string or array type with a minimum length of '5'.");
+        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Pointer.Should().Be("/data/attributes/password");
+    }
+
+    [Fact]
+    public async Task Cannot_exceed_max_length_constraint()
+    {
+        // Arrange
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        ModelStateValidationClient apiClient = new(httpClient);
+
+        SocialMediaAccountPostRequestDocument requestBody = new()
+        {
+            Data = new SocialMediaAccountDataInPostRequest
+            {
+                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
+                Attributes = new SocialMediaAccountAttributesInPostRequest
+                {
+                    LastName = newAccount.LastName,
+                    Password = "YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYQ=="
+                }
+            }
+        };
+
+        // Act
+        Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
+
+        // Assert
+        ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
+        document.Errors.ShouldHaveCount(1);
+
+        ErrorObject errorObject = document.Errors.First();
+        errorObject.Title.Should().Be("Input validation failed.");
+        errorObject.Detail.Should().Be("The field Password must be a string or array type with a maximum length of '100'.");
+        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Pointer.Should().Be("/data/attributes/password");
+    }
+
+    [Fact]
+    public async Task Cannot_use_invalid_base64()
+    {
+        // Arrange
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        ModelStateValidationClient apiClient = new(httpClient);
+
+        SocialMediaAccountPostRequestDocument requestBody = new()
+        {
+            Data = new SocialMediaAccountDataInPostRequest
+            {
+                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
+                Attributes = new SocialMediaAccountAttributesInPostRequest
+                {
+                    LastName = newAccount.LastName,
+                    Password = "not_base_64"
+                }
+            }
+        };
+
+        // Act
+        Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
+
+        // Assert
+        ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
+        document.Errors.ShouldHaveCount(1);
+
+        ErrorObject errorObject = document.Errors.First();
+        errorObject.Title.Should().Be("Input validation failed.");
+        errorObject.Detail.Should().Be("The Password field is not a valid Base64 encoding.");
+        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Pointer.Should().Be("/data/attributes/password");
+    }
+
     [Theory]
     [InlineData(-1)]
     [InlineData(-0.56)]
     [InlineData(123.98)]
     [InlineData(124)]
-    public async Task Cannot_use_double_outside_of_valid_range(int age)
+    public async Task Cannot_use_double_outside_of_valid_range(double age)
     {
         // Arrange
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
 
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
@@ -230,7 +344,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument>> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
+        Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
@@ -238,7 +352,7 @@ public sealed class ModelStateValidationTests
 
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be("The field Age must be between 0.1 and 122.9.");
+        errorObject.Detail.Should().Be("The field Age must be between 0.1 exclusive and 122.9 exclusive.");
         errorObject.Source.ShouldNotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/age");
     }
@@ -247,9 +361,10 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_use_relative_url()
     {
         // Arrange
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
 
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
@@ -258,13 +373,13 @@ public sealed class ModelStateValidationTests
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
                     LastName = newAccount.LastName,
-                    BackgroundPicture = new Uri("/justapath", UriKind.Relative)
+                    BackgroundPicture = new Uri("relativeurl", UriKind.Relative)
                 }
             }
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument>> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
+        Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
@@ -283,9 +398,10 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_exceed_collection_length_constraint(int length)
     {
         // Arrange
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
 
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
@@ -294,13 +410,13 @@ public sealed class ModelStateValidationTests
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
                     LastName = newAccount.LastName,
-                    Tags = Enumerable.Repeat("-", length).ToArray()
+                    Tags = Enumerable.Repeat("-", length).ToList()
                 }
             }
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument>> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
+        Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
@@ -317,9 +433,10 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_use_non_allowed_value()
     {
         // Arrange
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
 
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
@@ -334,7 +451,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument>> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
+        Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
@@ -351,9 +468,10 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_use_denied_value()
     {
         // Arrange
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
 
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
@@ -368,7 +486,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument>> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
+        Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
@@ -385,9 +503,10 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_use_TimeSpan_outside_of_valid_range()
     {
         // Arrange
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
 
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
@@ -402,7 +521,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument>> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
+        Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
@@ -419,9 +538,10 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_use_culture_sensitive_TimeSpan()
     {
         // Arrange
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
 
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
@@ -436,7 +556,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument>> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
+        Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
@@ -456,9 +576,10 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_use_invalid_TimeOnly()
     {
         // Arrange
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
 
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
@@ -473,7 +594,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument>> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
+        Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
@@ -490,9 +611,10 @@ public sealed class ModelStateValidationTests
     public async Task Can_create_resource_with_valid_properties()
     {
         // Arrange
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
 
         SocialMediaAccountPostRequestDocument requestBody = new()
         {
@@ -523,7 +645,7 @@ public sealed class ModelStateValidationTests
         };
 
         // Act
-        Func<Task<SocialMediaAccountPrimaryResponseDocument>> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
+        Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
         await action.Should().NotThrowAsync();

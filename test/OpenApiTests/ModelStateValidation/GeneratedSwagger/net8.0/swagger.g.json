@@ -431,6 +431,8 @@
             "nullable": true
           },
           "password": {
+            "maxLength": 100,
+            "minLength": 5,
             "type": "string",
             "nullable": true
           },
@@ -534,6 +536,8 @@
             "nullable": true
           },
           "password": {
+            "maxLength": 100,
+            "minLength": 5,
             "type": "string",
             "nullable": true
           },
@@ -634,6 +638,8 @@
             "nullable": true
           },
           "password": {
+            "maxLength": 100,
+            "minLength": 5,
             "type": "string",
             "nullable": true
           },

@@ -11,8 +11,8 @@ internal sealed class UtcDateTimeJsonConverter : JsonConverter<DateTime>
         return dateTimeOffset.UtcDateTime;
     }
 
-    public override void Write(Utf8JsonWriter writer, DateTime val, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
     {
-        writer.WriteStringValue(val.ToUniversalTime().ToString("O"));
+        writer.WriteStringValue(value.ToUniversalTime().ToString("O"));
     }
 }

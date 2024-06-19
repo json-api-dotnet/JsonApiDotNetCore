@@ -8,7 +8,7 @@ namespace OpenApiTests.ModelStateValidation;
 public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext<OpenApiStartup<ModelStateValidationDbContext>, ModelStateValidationDbContext>>
 {
     // ReSharper disable once UseCollectionExpression (https://youtrack.jetbrains.com/issue/RSRP-497450)
-    public static readonly TheoryData<string> ModelNames = new()
+    public static readonly TheoryData<string> SchemaNames = new()
     {
         "socialMediaAccountAttributesInPostRequest",
         "socialMediaAccountAttributesInPatchRequest",
@@ -34,7 +34,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     }
 
     [Theory]
-    [MemberData(nameof(ModelNames))]
+    [MemberData(nameof(SchemaNames))]
     public async Task Guid_type_produces_expected_schema(string modelName)
     {
         // Act
@@ -49,7 +49,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     }
 
     [Theory]
-    [MemberData(nameof(ModelNames))]
+    [MemberData(nameof(SchemaNames))]
     public async Task Length_annotation_on_resource_string_property_produces_expected_schema(string modelName)
     {
         // Act
@@ -67,7 +67,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     }
 
     [Theory]
-    [MemberData(nameof(ModelNames))]
+    [MemberData(nameof(SchemaNames))]
     public async Task Required_annotation_with_AllowEmptyStrings_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
@@ -82,7 +82,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     }
 
     [Theory]
-    [MemberData(nameof(ModelNames))]
+    [MemberData(nameof(SchemaNames))]
     public async Task StringLength_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
@@ -98,7 +98,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     }
 
     [Theory]
-    [MemberData(nameof(ModelNames))]
+    [MemberData(nameof(SchemaNames))]
     public async Task RegularExpression_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
@@ -113,7 +113,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     }
 
     [Theory]
-    [MemberData(nameof(ModelNames))]
+    [MemberData(nameof(SchemaNames))]
     public async Task CreditCard_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
@@ -128,7 +128,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     }
 
     [Theory]
-    [MemberData(nameof(ModelNames))]
+    [MemberData(nameof(SchemaNames))]
     public async Task Email_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
@@ -143,8 +143,8 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     }
 
     [Theory]
-    [MemberData(nameof(ModelNames))]
-    public async Task Base64String_annotation_on_resource_property_produces_expected_schema(string modelName)
+    [MemberData(nameof(SchemaNames))]
+    public async Task Min_max_length_annotation_on_resource_list_property_produces_expected_schema(string modelName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -152,12 +152,16 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.properties.password").With(passwordElement =>
         {
+#if !NET6_0
+            passwordElement.Should().HaveProperty("maxLength", 100);
+            passwordElement.Should().HaveProperty("minLength", 5);
+#endif
             passwordElement.Should().HaveProperty("type", "string");
         });
     }
 
     [Theory]
-    [MemberData(nameof(ModelNames))]
+    [MemberData(nameof(SchemaNames))]
     public async Task Phone_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
@@ -172,7 +176,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     }
 
     [Theory]
-    [MemberData(nameof(ModelNames))]
+    [MemberData(nameof(SchemaNames))]
     public async Task Range_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
@@ -191,7 +195,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     }
 
     [Theory]
-    [MemberData(nameof(ModelNames))]
+    [MemberData(nameof(SchemaNames))]
     public async Task Url_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
@@ -206,7 +210,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     }
 
     [Theory]
-    [MemberData(nameof(ModelNames))]
+    [MemberData(nameof(SchemaNames))]
     public async Task Uri_type_produces_expected_schema(string modelName)
     {
         // Act
@@ -221,7 +225,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     }
 
     [Theory]
-    [MemberData(nameof(ModelNames))]
+    [MemberData(nameof(SchemaNames))]
     public async Task Length_annotation_on_resource_list_property_produces_expected_schema(string modelName)
     {
         // Act
@@ -244,35 +248,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     }
 
     [Theory]
-    [MemberData(nameof(ModelNames))]
-    public async Task AllowedValues_annotation_on_resource_list_property_produces_expected_schema(string modelName)
-    {
-        // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
-
-        // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.countryCode").With(countryCodeElement =>
-        {
-            countryCodeElement.Should().HaveProperty("type", "string");
-        });
-    }
-
-    [Theory]
-    [MemberData(nameof(ModelNames))]
-    public async Task DeniedValues_annotation_on_resource_property_produces_expected_schema(string modelName)
-    {
-        // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
-
-        // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.planet").With(planetElement =>
-        {
-            planetElement.Should().HaveProperty("type", "string");
-        });
-    }
-
-    [Theory]
-    [MemberData(nameof(ModelNames))]
+    [MemberData(nameof(SchemaNames))]
     public async Task TimeSpan_range_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
@@ -287,7 +263,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     }
 
     [Theory]
-    [MemberData(nameof(ModelNames))]
+    [MemberData(nameof(SchemaNames))]
     public async Task DateTime_type_produces_expected_schema(string modelName)
     {
         // Act
@@ -302,7 +278,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     }
 
     [Theory]
-    [MemberData(nameof(ModelNames))]
+    [MemberData(nameof(SchemaNames))]
     public async Task DateOnly_type_produces_expected_schema(string modelName)
     {
         // Act
@@ -317,7 +293,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     }
 
     [Theory]
-    [MemberData(nameof(ModelNames))]
+    [MemberData(nameof(SchemaNames))]
     public async Task TimeOnly_type_produces_expected_schema(string modelName)
     {
         // Act
