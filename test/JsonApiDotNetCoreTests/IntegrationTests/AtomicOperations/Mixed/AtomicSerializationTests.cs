@@ -101,9 +101,7 @@ public sealed class AtomicSerializationTests : IClassFixture<IntegrationTestCont
                 "self": "http://localhost/operations"
               },
               "atomic:results": [
-                {
-                  "data": null
-                },
+                {},
                 {
                   "data": {
                     "type": "textLanguages",
