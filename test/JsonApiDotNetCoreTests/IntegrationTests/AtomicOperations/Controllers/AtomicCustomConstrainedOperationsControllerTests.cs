@@ -69,7 +69,7 @@ public sealed class AtomicCustomConstrainedOperationsControllerTests
     }
 
     [Fact]
-    public async Task Cannot_create_resource_for_mismatching_resource_type()
+    public async Task Cannot_create_resource_for_inaccessible_operation()
     {
         // Arrange
         var requestBody = new
@@ -96,12 +96,12 @@ public sealed class AtomicCustomConstrainedOperationsControllerTests
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
-        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         error.Title.Should().Be("The requested operation is not accessible.");
         error.Detail.Should().Be("The 'add' resource operation is not accessible for resource type 'performers'.");
         error.Source.ShouldNotBeNull();
@@ -109,7 +109,7 @@ public sealed class AtomicCustomConstrainedOperationsControllerTests
     }
 
     [Fact]
-    public async Task Cannot_update_resource_for_matching_resource_type()
+    public async Task Cannot_update_resource_for_inaccessible_operation()
     {
         // Arrange
         MusicTrack existingTrack = _fakers.MusicTrack.Generate();
@@ -145,12 +145,12 @@ public sealed class AtomicCustomConstrainedOperationsControllerTests
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
-        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         error.Title.Should().Be("The requested operation is not accessible.");
         error.Detail.Should().Be("The 'update' resource operation is not accessible for resource type 'musicTracks'.");
         error.Source.ShouldNotBeNull();
@@ -158,7 +158,7 @@ public sealed class AtomicCustomConstrainedOperationsControllerTests
     }
 
     [Fact]
-    public async Task Cannot_add_to_ToMany_relationship_for_matching_resource_type()
+    public async Task Cannot_add_to_ToMany_relationship_for_inaccessible_operation()
     {
         // Arrange
         MusicTrack existingTrack = _fakers.MusicTrack.Generate();
@@ -201,12 +201,12 @@ public sealed class AtomicCustomConstrainedOperationsControllerTests
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
-        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         error.Title.Should().Be("The requested operation is not accessible.");
         error.Detail.Should().Be("The 'add' relationship operation is not accessible for relationship 'performers' on resource type 'musicTracks'.");
         error.Source.ShouldNotBeNull();

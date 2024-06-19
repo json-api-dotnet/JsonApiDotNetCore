@@ -140,7 +140,7 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
             {
                 string operationCode = GetOperationCodeText(operationKind);
 
-                errors.Add(new ErrorObject(HttpStatusCode.UnprocessableEntity)
+                errors.Add(new ErrorObject(HttpStatusCode.Forbidden)
                 {
                     Title = "The requested operation is not accessible.",
                     Detail = $"The '{operationCode}' relationship operation is not accessible for relationship '{operationRequest.Relationship}' " +
@@ -155,7 +155,7 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
             {
                 string operationCode = GetOperationCodeText(operationKind);
 
-                errors.Add(new ErrorObject(HttpStatusCode.UnprocessableEntity)
+                errors.Add(new ErrorObject(HttpStatusCode.Forbidden)
                 {
                     Title = "The requested operation is not accessible.",
                     Detail = $"The '{operationCode}' resource operation is not accessible for resource type '{operationRequest.PrimaryResourceType}'.",
