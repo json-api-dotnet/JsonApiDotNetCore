@@ -27,7 +27,9 @@ public sealed class ModelStateValidationTests
         _requestAdapterFactory = new TestableHttpClientRequestAdapterFactory(testOutputHelper);
 
         testContext.UseController<SocialMediaAccountsController>();
-        testContext.Factory.Services.GetRequiredService<IJsonApiOptions>().SerializerOptions.Converters.Add(new UtcDateTimeJsonConverter());
+
+        var options = testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.SerializerOptions.Converters.Add(new UtcDateTimeJsonConverter());
     }
 
     [Theory]
