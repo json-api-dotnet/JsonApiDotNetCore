@@ -144,7 +144,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
 
     [Theory]
     [MemberData(nameof(SchemaNames))]
-    public async Task Min_max_length_annotation_on_resource_list_property_produces_expected_schema(string modelName)
+    public async Task Min_max_length_annotation_on_resource_property_produces_expected_schema(string modelName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
