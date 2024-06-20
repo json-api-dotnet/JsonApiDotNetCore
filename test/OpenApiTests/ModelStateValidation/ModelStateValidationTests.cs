@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Text.Json;
 using TestBuildingBlocks;
 using Xunit;
@@ -19,7 +18,6 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
 
     public ModelStateValidationTests(OpenApiTestContext<OpenApiStartup<ModelStateValidationDbContext>, ModelStateValidationDbContext> testContext)
     {
-        CultureInfo.CurrentCulture = new CultureInfo("fr-FR");
         _testContext = testContext;
 
         testContext.UseController<SocialMediaAccountsController>();

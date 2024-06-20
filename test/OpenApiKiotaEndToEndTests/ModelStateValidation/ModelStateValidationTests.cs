@@ -358,7 +358,7 @@ public sealed class ModelStateValidationTests
 
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be("The field Age must be between 0.1 exclusive and 122.9 exclusive.");
+        errorObject.Detail.Should().Be("The field Age must be between 0.1 and 122.9.");
         errorObject.Source.ShouldNotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/age");
     }

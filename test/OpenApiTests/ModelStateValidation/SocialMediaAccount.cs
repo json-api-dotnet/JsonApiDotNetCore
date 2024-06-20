@@ -49,11 +49,7 @@ public sealed class SocialMediaAccount : Identifiable<Guid>
     public string? Phone { get; set; }
 
     [Attr]
-#if NET6_0
     [Range(0.1, 122.9)]
-#else
-    [Range(0.1, 122.9, MinimumIsExclusive = true, MaximumIsExclusive = true)]
-#endif
     public double? Age { get; set; }
 
     [Attr]

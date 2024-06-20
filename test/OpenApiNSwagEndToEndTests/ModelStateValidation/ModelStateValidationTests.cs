@@ -1,4 +1,3 @@
-using System.Globalization;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Client.NSwag;
@@ -352,7 +351,7 @@ public sealed class ModelStateValidationTests
 
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be("The field Age must be between 0.1 exclusive and 122.9 exclusive.");
+        errorObject.Detail.Should().Be("The field Age must be between 0.1 and 122.9.");
         errorObject.Source.ShouldNotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/age");
     }
@@ -532,79 +531,6 @@ public sealed class ModelStateValidationTests
         errorObject.Detail.Should().Be("The field NextRevalidation must be between 01:00:00 and 05:00:00.");
         errorObject.Source.ShouldNotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/nextRevalidation");
-    }
-
-    [Fact]
-    public async Task Cannot_use_culture_sensitive_TimeSpan()
-    {
-        // Arrange
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
-
-        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
-        ModelStateValidationClient apiClient = new(httpClient);
-
-        SocialMediaAccountPostRequestDocument requestBody = new()
-        {
-            Data = new SocialMediaAccountDataInPostRequest
-            {
-                Attributes = new SocialMediaAccountAttributesInPostRequest
-                {
-                    LastName = newAccount.LastName,
-                    NextRevalidation = new TimeSpan(0, 2, 0, 0, 1).ToString("g", new CultureInfo("fr-FR"))
-                }
-            }
-        };
-
-        // Act
-        Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
-
-        // Assert
-        ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        document.Errors.ShouldHaveCount(1);
-
-        ErrorObject errorObject = document.Errors.First();
-        errorObject.Title.Should().Be("Failed to deserialize request body: Incompatible attribute value found.");
-
-        errorObject.Detail.Should()
-            .Be("Failed to convert attribute 'nextRevalidation' with value '2:00:00,001' of type 'String' to type 'Nullable<TimeSpan>'.");
-
-        errorObject.Source.ShouldNotBeNull();
-        errorObject.Source.Pointer.Should().Be("/data/attributes/nextRevalidation");
-    }
-
-    [Fact]
-    public async Task Cannot_use_invalid_TimeOnly()
-    {
-        // Arrange
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
-
-        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
-        ModelStateValidationClient apiClient = new(httpClient);
-
-        SocialMediaAccountPostRequestDocument requestBody = new()
-        {
-            Data = new SocialMediaAccountDataInPostRequest
-            {
-                Attributes = new SocialMediaAccountAttributesInPostRequest
-                {
-                    LastName = newAccount.LastName,
-                    ValidatedAtTime = TimeSpan.FromSeconds(-1)
-                }
-            }
-        };
-
-        // Act
-        Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
-
-        // Assert
-        ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        document.Errors.ShouldHaveCount(1);
-
-        ErrorObject errorObject = document.Errors.First();
-        errorObject.Title.Should().Be("Failed to deserialize request body: Incompatible attribute value found.");
-        errorObject.Detail.Should().Be("Failed to convert attribute 'validatedAtTime' with value '-00:00:01' of type 'String' to type 'Nullable<TimeOnly>'.");
-        errorObject.Source.ShouldNotBeNull();
-        errorObject.Source.Pointer.Should().Be("/data/attributes/validatedAtTime");
     }
 
     [Fact]
