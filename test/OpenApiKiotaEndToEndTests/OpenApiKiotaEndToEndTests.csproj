@@ -33,6 +33,8 @@
     <Exec
       Command="dotnet kiota generate --language CSharp --class-name ClientIdGenerationModesClient --namespace-name OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode --output ./ClientIdGenerationModes/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/ClientIdGenerationModes/GeneratedSwagger/swagger.g.json" />
     <Exec
+      Command="dotnet kiota generate --language CSharp --class-name ModelStateValidationClient --namespace-name OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode --output ./ModelStateValidation/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/ModelStateValidation/GeneratedSwagger/$(TargetFramework)/swagger.g.json" />
+    <Exec
       Command="dotnet kiota generate --language CSharp --class-name RestrictedControllersClient --namespace-name OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode --output ./RestrictedControllers/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/RestrictedControllers/GeneratedSwagger/swagger.g.json" />
     <Exec
       Command="dotnet kiota generate --language CSharp --class-name LinksClient --namespace-name OpenApiKiotaEndToEndTests.Links.GeneratedCode --output ./Links/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/Links/Enabled/GeneratedSwagger/swagger.g.json" />

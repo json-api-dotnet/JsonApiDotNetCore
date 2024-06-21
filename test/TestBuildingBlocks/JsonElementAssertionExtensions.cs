@@ -107,6 +107,11 @@ public static class JsonElementAssertionExtensions
                 _subject.ValueKind.Should().Be(JsonValueKind.Number);
                 _subject.GetInt32().Should().Be(intValue);
             }
+            else if (value is double doubleValue)
+            {
+                _subject.ValueKind.Should().Be(JsonValueKind.Number);
+                _subject.GetDouble().Should().Be(doubleValue);
+            }
             else if (value is string stringValue)
             {
                 _subject.ValueKind.Should().Be(JsonValueKind.String);

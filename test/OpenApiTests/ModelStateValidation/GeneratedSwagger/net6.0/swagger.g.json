@@ -1,0 +1,846 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenApiTests",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost"
+    }
+  ],
+  "paths": {
+    "/socialMediaAccounts": {
+      "post": {
+        "tags": [
+          "socialMediaAccounts"
+        ],
+        "summary": "Creates a new socialMediaAccount.",
+        "operationId": "postSocialMediaAccount",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the socialMediaAccount to create.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/socialMediaAccountPostRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The socialMediaAccount was successfully created, which resulted in additional changes. The newly created socialMediaAccount is returned.",
+            "headers": {
+              "Location": {
+                "description": "The URL at which the newly created socialMediaAccount can be retrieved.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/socialMediaAccountPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The socialMediaAccount was successfully created, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/socialMediaAccounts/{id}": {
+      "patch": {
+        "tags": [
+          "socialMediaAccounts"
+        ],
+        "summary": "Updates an existing socialMediaAccount.",
+        "operationId": "patchSocialMediaAccount",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the socialMediaAccount to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the socialMediaAccount to update. Omitted fields are left unchanged.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/socialMediaAccountPatchRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The socialMediaAccount was successfully updated, which resulted in additional changes. The updated socialMediaAccount is returned.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/socialMediaAccountPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The socialMediaAccount was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The socialMediaAccount or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "dataInResponse": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "socialMediaAccounts": "#/components/schemas/socialMediaAccountDataInResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "errorLinks": {
+        "type": "object",
+        "properties": {
+          "about": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/errorLinks"
+              }
+            ],
+            "nullable": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "source": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/errorSource"
+              }
+            ],
+            "nullable": true
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorResponseDocument": {
+        "required": [
+          "errors",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/errorTopLevelLinks"
+              }
+            ]
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/errorObject"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorSource": {
+        "type": "object",
+        "properties": {
+          "pointer": {
+            "type": "string",
+            "nullable": true
+          },
+          "parameter": {
+            "type": "string",
+            "nullable": true
+          },
+          "header": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "socialMediaAccountAttributesInPatchRequest": {
+        "type": "object",
+        "properties": {
+          "alternativeId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "userName": {
+            "maxLength": 18,
+            "minLength": 3,
+            "pattern": "^[a-zA-Z]+$",
+            "type": "string",
+            "nullable": true
+          },
+          "creditCard": {
+            "type": "string",
+            "format": "credit-card",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "format": "tel",
+            "nullable": true
+          },
+          "age": {
+            "maximum": 122.9,
+            "minimum": 0.1,
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "profilePicture": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "backgroundPicture": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "countryCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "planet": {
+            "type": "string",
+            "nullable": true
+          },
+          "nextRevalidation": {
+            "type": "string",
+            "format": "date-span",
+            "nullable": true
+          },
+          "validatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "validatedAtDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "validatedAtTime": {
+            "type": "string",
+            "format": "time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "socialMediaAccountAttributesInPostRequest": {
+        "required": [
+          "lastName"
+        ],
+        "type": "object",
+        "properties": {
+          "alternativeId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "userName": {
+            "maxLength": 18,
+            "minLength": 3,
+            "pattern": "^[a-zA-Z]+$",
+            "type": "string",
+            "nullable": true
+          },
+          "creditCard": {
+            "type": "string",
+            "format": "credit-card",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "format": "tel",
+            "nullable": true
+          },
+          "age": {
+            "maximum": 122.9,
+            "minimum": 0.1,
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "profilePicture": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "backgroundPicture": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "countryCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "planet": {
+            "type": "string",
+            "nullable": true
+          },
+          "nextRevalidation": {
+            "type": "string",
+            "format": "date-span",
+            "nullable": true
+          },
+          "validatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "validatedAtDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "validatedAtTime": {
+            "type": "string",
+            "format": "time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "socialMediaAccountAttributesInResponse": {
+        "type": "object",
+        "properties": {
+          "alternativeId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "userName": {
+            "maxLength": 18,
+            "minLength": 3,
+            "pattern": "^[a-zA-Z]+$",
+            "type": "string",
+            "nullable": true
+          },
+          "creditCard": {
+            "type": "string",
+            "format": "credit-card",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "format": "tel",
+            "nullable": true
+          },
+          "age": {
+            "maximum": 122.9,
+            "minimum": 0.1,
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "profilePicture": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "backgroundPicture": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "countryCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "planet": {
+            "type": "string",
+            "nullable": true
+          },
+          "nextRevalidation": {
+            "type": "string",
+            "format": "date-span",
+            "nullable": true
+          },
+          "validatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "validatedAtDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "validatedAtTime": {
+            "type": "string",
+            "format": "time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "socialMediaAccountDataInPatchRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/socialMediaAccountResourceType"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/socialMediaAccountAttributesInPatchRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "socialMediaAccountDataInPostRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/socialMediaAccountResourceType"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/socialMediaAccountAttributesInPostRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "socialMediaAccountDataInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/socialMediaAccountAttributesInResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              },
+              "meta": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "nullable": true
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "socialMediaAccountPatchRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/socialMediaAccountDataInPatchRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "socialMediaAccountPostRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/socialMediaAccountDataInPostRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "socialMediaAccountPrimaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/socialMediaAccountDataInResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "socialMediaAccountResourceType": {
+        "enum": [
+          "socialMediaAccounts"
+        ],
+        "type": "string",
+        "additionalProperties": false
+      }
+    }
+  }
+}
