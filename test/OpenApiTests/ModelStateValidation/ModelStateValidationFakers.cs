@@ -18,7 +18,13 @@ public sealed class ModelStateValidationFakers
         .RuleFor(socialMediaAccount => socialMediaAccount.UserName, faker => faker.Random.String2(3, 18))
         .RuleFor(socialMediaAccount => socialMediaAccount.CreditCard, faker => faker.Finance.CreditCardNumber())
         .RuleFor(socialMediaAccount => socialMediaAccount.Email, faker => faker.Person.Email)
-        .RuleFor(socialMediaAccount => socialMediaAccount.Password, faker => Convert.ToBase64String(faker.Random.Bytes(faker.Random.Number(4, 75))))
+        .RuleFor(socialMediaAccount => socialMediaAccount.Password, faker =>
+        {
+            int byteCount = faker.Random.Number(ModelStateValidation.SocialMediaAccount.MinPasswordChars,
+                ModelStateValidation.SocialMediaAccount.MaxPasswordChars);
+
+            return Convert.ToBase64String(faker.Random.Bytes(byteCount));
+        })
         .RuleFor(socialMediaAccount => socialMediaAccount.Phone, faker => faker.Person.Phone)
         .RuleFor(socialMediaAccount => socialMediaAccount.Age, faker => faker.Random.Double(0.1, 122.9))
         .RuleFor(socialMediaAccount => socialMediaAccount.ProfilePicture, faker => new Uri(faker.Image.LoremFlickrUrl()))
