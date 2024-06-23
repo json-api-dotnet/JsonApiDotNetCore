@@ -151,8 +151,9 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         document.Should().ContainPath($"components.schemas.{modelName}.properties.password").With(passwordElement =>
         {
 #if !NET6_0
-            passwordElement.Should().HaveProperty("maxLength", 100);
-            passwordElement.Should().HaveProperty("minLength", 5);
+            passwordElement.Should().HaveProperty("format", "byte");
+            passwordElement.Should().HaveProperty("maxLength", SocialMediaAccount.MaxPasswordCharsInBase64);
+            passwordElement.Should().HaveProperty("minLength", SocialMediaAccount.MinPasswordCharsInBase64);
 #endif
             passwordElement.Should().HaveProperty("type", "string");
         });
@@ -184,9 +185,11 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         document.Should().ContainPath($"components.schemas.{modelName}.properties.age").With(ageElement =>
         {
             ageElement.Should().HaveProperty("maximum", 122.9);
-            ageElement.Should().NotContainPath("exclusiveMaximum");
             ageElement.Should().HaveProperty("minimum", 0.1);
-            ageElement.Should().NotContainPath("exclusiveMinimum");
+#if !NET6_0
+            ageElement.Should().ContainPath("exclusiveMaximum").With(exclusiveElement => exclusiveElement.Should().Be(true));
+            ageElement.Should().ContainPath("exclusiveMinimum").With(exclusiveElement => exclusiveElement.Should().Be(true));
+#endif
             ageElement.Should().HaveProperty("type", "number");
             ageElement.Should().HaveProperty("format", "double");
         });

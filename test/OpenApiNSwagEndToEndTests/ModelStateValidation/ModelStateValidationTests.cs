@@ -226,7 +226,8 @@ public sealed class ModelStateValidationTests
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
                     LastName = newAccount.LastName,
-                    Password = "YQ=="
+                    // Using -3 instead of -1 to compensate for base64 padding.
+                    Password = Enumerable.Repeat((byte)'X', SocialMediaAccount.MinPasswordChars - 3).ToArray()
                 }
             }
         };
@@ -238,9 +239,11 @@ public sealed class ModelStateValidationTests
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
         document.Errors.ShouldHaveCount(1);
 
+        const int minCharsInBase64 = SocialMediaAccount.MinPasswordCharsInBase64;
+
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be("The field Password must be a string or array type with a minimum length of '5'.");
+        errorObject.Detail.Should().Be($"The field Password must be a string or array type with a minimum length of '{minCharsInBase64}'.");
         errorObject.Source.ShouldNotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/password");
     }
@@ -262,7 +265,7 @@ public sealed class ModelStateValidationTests
                 Attributes = new SocialMediaAccountAttributesInPostRequest
                 {
                     LastName = newAccount.LastName,
-                    Password = "YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYQ=="
+                    Password = Enumerable.Repeat((byte)'X', SocialMediaAccount.MaxPasswordChars + 1).ToArray()
                 }
             }
         };
@@ -274,45 +277,11 @@ public sealed class ModelStateValidationTests
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
         document.Errors.ShouldHaveCount(1);
 
-        ErrorObject errorObject = document.Errors.First();
-        errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be("The field Password must be a string or array type with a maximum length of '100'.");
-        errorObject.Source.ShouldNotBeNull();
-        errorObject.Source.Pointer.Should().Be("/data/attributes/password");
-    }
-
-    [Fact]
-    public async Task Cannot_use_invalid_base64()
-    {
-        // Arrange
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
-
-        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
-        ModelStateValidationClient apiClient = new(httpClient);
-
-        SocialMediaAccountPostRequestDocument requestBody = new()
-        {
-            Data = new SocialMediaAccountDataInPostRequest
-            {
-                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
-                Attributes = new SocialMediaAccountAttributesInPostRequest
-                {
-                    LastName = newAccount.LastName,
-                    Password = "not_base_64"
-                }
-            }
-        };
-
-        // Act
-        Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
-
-        // Assert
-        ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        document.Errors.ShouldHaveCount(1);
+        const int maxCharsInBase64 = SocialMediaAccount.MaxPasswordCharsInBase64;
 
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be("The Password field is not a valid Base64 encoding.");
+        errorObject.Detail.Should().Be($"The field Password must be a string or array type with a maximum length of '{maxCharsInBase64}'.");
         errorObject.Source.ShouldNotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/password");
     }
@@ -554,7 +523,7 @@ public sealed class ModelStateValidationTests
                     UserName = newAccount.UserName,
                     CreditCard = newAccount.CreditCard,
                     Email = newAccount.Email,
-                    Password = newAccount.Password,
+                    Password = Convert.FromBase64String(newAccount.Password!),
                     Phone = newAccount.Phone,
                     Age = newAccount.Age,
                     ProfilePicture = newAccount.ProfilePicture,

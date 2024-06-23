@@ -431,9 +431,10 @@
             "nullable": true
           },
           "password": {
-            "maxLength": 100,
-            "minLength": 5,
+            "maxLength": 60,
+            "minLength": 20,
             "type": "string",
+            "format": "byte",
             "nullable": true
           },
           "phone": {
@@ -443,7 +444,9 @@
           },
           "age": {
             "maximum": 122.9,
+            "exclusiveMaximum": true,
             "minimum": 0.1,
+            "exclusiveMinimum": true,
             "type": "number",
             "format": "double",
             "nullable": true
@@ -536,9 +539,10 @@
             "nullable": true
           },
           "password": {
-            "maxLength": 100,
-            "minLength": 5,
+            "maxLength": 60,
+            "minLength": 20,
             "type": "string",
+            "format": "byte",
             "nullable": true
           },
           "phone": {
@@ -548,7 +552,9 @@
           },
           "age": {
             "maximum": 122.9,
+            "exclusiveMaximum": true,
             "minimum": 0.1,
+            "exclusiveMinimum": true,
             "type": "number",
             "format": "double",
             "nullable": true
@@ -638,9 +644,10 @@
             "nullable": true
           },
           "password": {
-            "maxLength": 100,
-            "minLength": 5,
+            "maxLength": 60,
+            "minLength": 20,
             "type": "string",
+            "format": "byte",
             "nullable": true
           },
           "phone": {
@@ -650,7 +657,9 @@
           },
           "age": {
             "maximum": 122.9,
+            "exclusiveMaximum": true,
             "minimum": 0.1,
+            "exclusiveMinimum": true,
             "type": "number",
             "format": "double",
             "nullable": true

@@ -10,6 +10,12 @@ namespace OpenApiTests.ModelStateValidation;
 [Resource(ControllerNamespace = "OpenApiTests.ModelStateValidation", GenerateControllerEndpoints = JsonApiEndpoints.Post | JsonApiEndpoints.Patch)]
 public sealed class SocialMediaAccount : Identifiable<Guid>
 {
+    public const int MinPasswordChars = 15;
+    public const int MinPasswordCharsInBase64 = (int)(4.0 / 3 * MinPasswordChars);
+
+    public const int MaxPasswordChars = 45;
+    public const int MaxPasswordCharsInBase64 = (int)(4.0 / 3 * MaxPasswordChars);
+
     [Attr]
     public Guid? AlternativeId { get; set; }
 
@@ -39,8 +45,8 @@ public sealed class SocialMediaAccount : Identifiable<Guid>
     [Attr]
 #if !NET6_0
     [Base64String]
-    [MinLength(5)]
-    [MaxLength(100)]
+    [MinLength(MinPasswordCharsInBase64)]
+    [MaxLength(MaxPasswordCharsInBase64)]
 #endif
     public string? Password { get; set; }
 
