@@ -61,7 +61,28 @@ public sealed class WriteOnlyDocumentConverter : JsonObjectConverter<Document>
         if (!value.Results.IsNullOrEmpty())
         {
             writer.WritePropertyName(AtomicResultsText);
-            WriteSubTree(writer, value.Results, options);
+            writer.WriteStartArray();
+
+            foreach (AtomicResultObject result in value.Results)
+            {
+                writer.WriteStartObject();
+
+                if (result.Data.IsAssigned)
+                {
+                    writer.WritePropertyName(DataText);
+                    WriteSubTree(writer, result.Data, options);
+                }
+
+                if (!result.Meta.IsNullOrEmpty())
+                {
+                    writer.WritePropertyName(MetaText);
+                    WriteSubTree(writer, result.Meta, options);
+                }
+
+                writer.WriteEndObject();
+            }
+
+            writer.WriteEndArray();
         }
 
         if (!value.Errors.IsNullOrEmpty())

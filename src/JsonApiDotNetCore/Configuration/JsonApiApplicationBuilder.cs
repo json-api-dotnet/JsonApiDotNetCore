@@ -300,5 +300,6 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder
         _services.TryAddScoped<IOperationsProcessor, OperationsProcessor>();
         _services.TryAddScoped<IOperationProcessorAccessor, OperationProcessorAccessor>();
         _services.TryAddScoped<ILocalIdTracker, LocalIdTracker>();
+        _services.TryAddSingleton<IAtomicOperationFilter, DefaultOperationFilter>();
     }
 }

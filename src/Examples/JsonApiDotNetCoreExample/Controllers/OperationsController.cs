@@ -8,4 +8,5 @@ namespace JsonApiDotNetCoreExample.Controllers;
 
 public sealed class OperationsController(
     IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IOperationsProcessor processor, IJsonApiRequest request,
-    ITargetedFields targetedFields) : JsonApiOperationsController(options, resourceGraph, loggerFactory, processor, request, targetedFields);
+    ITargetedFields targetedFields, IAtomicOperationFilter operationFilter) : JsonApiOperationsController(options, resourceGraph, loggerFactory, processor,
+    request, targetedFields, operationFilter);

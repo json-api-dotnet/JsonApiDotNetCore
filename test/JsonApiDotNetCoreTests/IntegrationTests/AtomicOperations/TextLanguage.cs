@@ -1,11 +1,13 @@
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations")]
+[Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations",
+    GenerateControllerEndpoints = JsonApiEndpoints.Post | JsonApiEndpoints.Patch)]
 public sealed class TextLanguage : Identifiable<Guid>
 {
     [Attr]
