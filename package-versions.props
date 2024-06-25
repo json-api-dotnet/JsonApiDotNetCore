@@ -12,7 +12,7 @@
     <BenchmarkDotNetVersion>0.13.*</BenchmarkDotNetVersion>
     <BlushingPenguinVersion>1.0.*</BlushingPenguinVersion>
     <BogusVersion>35.5.*</BogusVersion>
-    <CodeAnalysisVersion>4.9.*</CodeAnalysisVersion>
+    <CodeAnalysisVersion>4.10.*</CodeAnalysisVersion>
     <CoverletVersion>6.0.*</CoverletVersion>
     <DapperVersion>2.1.*</DapperVersion>
     <FluentAssertionsVersion>6.12.*</FluentAssertionsVersion>
