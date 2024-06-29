@@ -43,11 +43,11 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Player
         /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<PlayerPrimaryResponseDocument?> PostAsync(PlayerPostRequestDocument body, Action<RequestConfiguration<PlayersRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<PlayerPrimaryResponseDocument?> PostAsync(CreatePlayerRequestDocument body, Action<RequestConfiguration<PlayersRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<PlayerPrimaryResponseDocument> PostAsync(PlayerPostRequestDocument body, Action<RequestConfiguration<PlayersRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<PlayerPrimaryResponseDocument> PostAsync(CreatePlayerRequestDocument body, Action<RequestConfiguration<PlayersRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -69,11 +69,11 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Player
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPostRequestInformation(PlayerPostRequestDocument body, Action<RequestConfiguration<PlayersRequestBuilderPostQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(CreatePlayerRequestDocument body, Action<RequestConfiguration<PlayersRequestBuilderPostQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPostRequestInformation(PlayerPostRequestDocument body, Action<RequestConfiguration<PlayersRequestBuilderPostQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(CreatePlayerRequestDocument body, Action<RequestConfiguration<PlayersRequestBuilderPostQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));

@@ -50,12 +50,12 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
 
     private async Task UpdatePersonAsync(CancellationToken cancellationToken)
     {
-        var patchRequest = new PersonPatchRequestDocument
+        var patchRequest = new UpdatePersonRequestDocument
         {
-            Data = new PersonDataInPatchRequest
+            Data = new DataInUpdatePersonRequest
             {
                 Id = "1",
-                Attributes = new PersonAttributesInPatchRequest
+                Attributes = new AttributesInUpdatePersonRequest
                 {
                     LastName = "Doe"
                 }
@@ -63,7 +63,7 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
         };
 
         // This line results in sending "firstName: null" instead of omitting it.
-        using (_apiClient.WithPartialAttributeSerialization<PersonPatchRequestDocument, PersonAttributesInPatchRequest>(patchRequest,
+        using (_apiClient.WithPartialAttributeSerialization<UpdatePersonRequestDocument, AttributesInUpdatePersonRequest>(patchRequest,
             person => person.FirstName))
         {
             _ = await ApiResponse.TranslateAsync(async () => await _apiClient.PatchPersonAsync(patchRequest.Data.Id, null, patchRequest, cancellationToken));

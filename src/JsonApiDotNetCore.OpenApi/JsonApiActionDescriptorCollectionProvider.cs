@@ -203,6 +203,6 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
 
     private static void ExpandTemplate(AttributeRouteInfo route, string expansionParameter)
     {
-        route.Template = route.Template!.Replace(JsonApiRoutingTemplate.RelationshipNameUrlPlaceholder, expansionParameter);
+        route.Template = route.Template!.Replace(JsonApiRoutingTemplate.RelationshipNameRoutePlaceholder, expansionParameter);
     }
 }

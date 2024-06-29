@@ -131,11 +131,11 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item {
         /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<VacationPrimaryResponseDocument?> PatchAsync(VacationPatchRequestDocument body, Action<RequestConfiguration<VacationsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<VacationPrimaryResponseDocument?> PatchAsync(UpdateVacationRequestDocument body, Action<RequestConfiguration<VacationsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<VacationPrimaryResponseDocument> PatchAsync(VacationPatchRequestDocument body, Action<RequestConfiguration<VacationsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<VacationPrimaryResponseDocument> PatchAsync(UpdateVacationRequestDocument body, Action<RequestConfiguration<VacationsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -213,11 +213,11 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPatchRequestInformation(VacationPatchRequestDocument body, Action<RequestConfiguration<VacationsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(UpdateVacationRequestDocument body, Action<RequestConfiguration<VacationsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPatchRequestInformation(VacationPatchRequestDocument body, Action<RequestConfiguration<VacationsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(UpdateVacationRequestDocument body, Action<RequestConfiguration<VacationsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));

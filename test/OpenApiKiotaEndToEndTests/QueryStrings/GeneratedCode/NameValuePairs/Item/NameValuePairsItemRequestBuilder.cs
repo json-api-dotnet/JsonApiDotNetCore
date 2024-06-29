@@ -119,11 +119,11 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.NameValuePairs.It
         /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<NameValuePairPrimaryResponseDocument?> PatchAsync(NameValuePairPatchRequestDocument body, Action<RequestConfiguration<NameValuePairsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<NameValuePairPrimaryResponseDocument?> PatchAsync(UpdateNameValuePairRequestDocument body, Action<RequestConfiguration<NameValuePairsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<NameValuePairPrimaryResponseDocument> PatchAsync(NameValuePairPatchRequestDocument body, Action<RequestConfiguration<NameValuePairsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<NameValuePairPrimaryResponseDocument> PatchAsync(UpdateNameValuePairRequestDocument body, Action<RequestConfiguration<NameValuePairsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -201,11 +201,11 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.NameValuePairs.It
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPatchRequestInformation(NameValuePairPatchRequestDocument body, Action<RequestConfiguration<NameValuePairsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(UpdateNameValuePairRequestDocument body, Action<RequestConfiguration<NameValuePairsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPatchRequestInformation(NameValuePairPatchRequestDocument body, Action<RequestConfiguration<NameValuePairsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(UpdateNameValuePairRequestDocument body, Action<RequestConfiguration<NameValuePairsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));

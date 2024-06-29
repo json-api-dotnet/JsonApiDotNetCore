@@ -83,13 +83,13 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
 
     private async Task UpdatePersonAsync(CancellationToken cancellationToken)
     {
-        var patchRequest = new PersonPatchRequestDocument
+        var patchRequest = new UpdatePersonRequestDocument
         {
-            Data = new PersonDataInPatchRequest
+            Data = new DataInUpdatePersonRequest
             {
                 Type = PersonResourceType.People,
                 Id = "1",
-                Attributes = new PersonAttributesInPatchRequest
+                Attributes = new AttributesInUpdatePersonRequest
                 {
                     LastName = "Doe"
                 }

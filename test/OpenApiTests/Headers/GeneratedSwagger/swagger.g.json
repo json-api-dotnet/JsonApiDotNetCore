@@ -180,7 +180,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/countryPostRequestDocument"
+                    "$ref": "#/components/schemas/createCountryRequestDocument"
                   }
                 ]
               }
@@ -475,7 +475,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/countryPatchRequestDocument"
+                    "$ref": "#/components/schemas/updateCountryRequestDocument"
                   }
                 ]
               }
@@ -1128,7 +1128,10 @@
   },
   "components": {
     "schemas": {
-      "countryAttributesInPatchRequest": {
+      "attributesInCreateCountryRequest": {
+        "required": [
+          "name"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1141,10 +1144,7 @@
         },
         "additionalProperties": false
       },
-      "countryAttributesInPostRequest": {
-        "required": [
-          "name"
-        ],
+      "attributesInUpdateCountryRequest": {
         "type": "object",
         "properties": {
           "name": {
@@ -1206,63 +1206,6 @@
         },
         "additionalProperties": false
       },
-      "countryDataInPatchRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/countryResourceType"
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/countryAttributesInPatchRequest"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/countryRelationshipsInPatchRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "countryDataInPostRequest": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/countryResourceType"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/countryAttributesInPostRequest"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/countryRelationshipsInPostRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
       "countryDataInResponse": {
         "allOf": [
           {
@@ -1305,38 +1248,6 @@
         ],
         "additionalProperties": false
       },
-      "countryPatchRequestDocument": {
-        "required": [
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/countryDataInPatchRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "countryPostRequestDocument": {
-        "required": [
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/countryDataInPostRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
       "countryPrimaryResponseDocument": {
         "required": [
           "data",
@@ -1374,32 +1285,6 @@
         },
         "additionalProperties": false
       },
-      "countryRelationshipsInPatchRequest": {
-        "type": "object",
-        "properties": {
-          "languages": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyLanguageInRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "countryRelationshipsInPostRequest": {
-        "type": "object",
-        "properties": {
-          "languages": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyLanguageInRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
       "countryRelationshipsInResponse": {
         "type": "object",
         "properties": {
@@ -1418,6 +1303,48 @@
           "countries"
         ],
         "type": "string",
+        "additionalProperties": false
+      },
+      "createCountryRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreateCountryRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInCreateCountryRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/countryResourceType"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInCreateCountryRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipsInCreateCountryRequest"
+              }
+            ]
+          }
+        },
         "additionalProperties": false
       },
       "dataInResponse": {
@@ -1445,6 +1372,37 @@
           }
         },
         "x-abstract": true
+      },
+      "dataInUpdateCountryRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/countryResourceType"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInUpdateCountryRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipsInUpdateCountryRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
       },
       "errorLinks": {
         "type": "object",
@@ -1715,6 +1673,32 @@
         },
         "additionalProperties": false
       },
+      "relationshipsInCreateCountryRequest": {
+        "type": "object",
+        "properties": {
+          "languages": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyLanguageInRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "relationshipsInUpdateCountryRequest": {
+        "type": "object",
+        "properties": {
+          "languages": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyLanguageInRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
       "resourceCollectionTopLevelLinks": {
         "type": "object",
         "properties": {
@@ -1824,6 +1808,22 @@
               "type": "object",
               "nullable": true
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "updateCountryRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInUpdateCountryRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false

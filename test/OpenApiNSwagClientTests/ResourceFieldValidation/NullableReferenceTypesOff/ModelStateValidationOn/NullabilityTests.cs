@@ -9,16 +9,16 @@ namespace OpenApiNSwagClientTests.ResourceFieldValidation.NullableReferenceTypes
 public sealed class NullabilityTests
 {
     [Theory]
-    [InlineData(nameof(ResourceAttributesInPostRequest.ReferenceType), NullabilityState.Unknown)]
-    [InlineData(nameof(ResourceAttributesInPostRequest.RequiredReferenceType), NullabilityState.Unknown)]
-    [InlineData(nameof(ResourceAttributesInPostRequest.ValueType), NullabilityState.NotNull)]
-    [InlineData(nameof(ResourceAttributesInPostRequest.RequiredValueType), NullabilityState.NotNull)]
-    [InlineData(nameof(ResourceAttributesInPostRequest.NullableValueType), NullabilityState.Nullable)]
-    [InlineData(nameof(ResourceAttributesInPostRequest.RequiredNullableValueType), NullabilityState.NotNull)]
+    [InlineData(nameof(AttributesInCreateResourceRequest.ReferenceType), NullabilityState.Unknown)]
+    [InlineData(nameof(AttributesInCreateResourceRequest.RequiredReferenceType), NullabilityState.Unknown)]
+    [InlineData(nameof(AttributesInCreateResourceRequest.ValueType), NullabilityState.NotNull)]
+    [InlineData(nameof(AttributesInCreateResourceRequest.RequiredValueType), NullabilityState.NotNull)]
+    [InlineData(nameof(AttributesInCreateResourceRequest.NullableValueType), NullabilityState.Nullable)]
+    [InlineData(nameof(AttributesInCreateResourceRequest.RequiredNullableValueType), NullabilityState.NotNull)]
     public void Nullability_of_generated_attribute_property_is_as_expected(string propertyName, NullabilityState expectedState)
     {
         // Act
-        PropertyInfo? property = typeof(ResourceAttributesInPostRequest).GetProperty(propertyName);
+        PropertyInfo? property = typeof(AttributesInCreateResourceRequest).GetProperty(propertyName);
 
         // Assert
         property.ShouldNotBeNull();
@@ -26,14 +26,14 @@ public sealed class NullabilityTests
     }
 
     [Theory]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.ToOne), NullabilityState.Unknown)]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredToOne), NullabilityState.Unknown)]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.ToMany), NullabilityState.Unknown)]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredToMany), NullabilityState.Unknown)]
+    [InlineData(nameof(RelationshipsInCreateResourceRequest.ToOne), NullabilityState.Unknown)]
+    [InlineData(nameof(RelationshipsInCreateResourceRequest.RequiredToOne), NullabilityState.Unknown)]
+    [InlineData(nameof(RelationshipsInCreateResourceRequest.ToMany), NullabilityState.Unknown)]
+    [InlineData(nameof(RelationshipsInCreateResourceRequest.RequiredToMany), NullabilityState.Unknown)]
     public void Nullability_of_generated_relationship_property_is_as_expected(string propertyName, NullabilityState expectedState)
     {
         // Act
-        PropertyInfo? relationshipProperty = typeof(ResourceRelationshipsInPostRequest).GetProperty(propertyName);
+        PropertyInfo? relationshipProperty = typeof(RelationshipsInCreateResourceRequest).GetProperty(propertyName);
 
         // Assert
         relationshipProperty.ShouldNotBeNull();

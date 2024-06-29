@@ -97,11 +97,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags {
         /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<TagPrimaryResponseDocument?> PostAsync(TagPostRequestDocument body, Action<RequestConfiguration<TagsRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<TagPrimaryResponseDocument?> PostAsync(CreateTagRequestDocument body, Action<RequestConfiguration<TagsRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<TagPrimaryResponseDocument> PostAsync(TagPostRequestDocument body, Action<RequestConfiguration<TagsRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<TagPrimaryResponseDocument> PostAsync(CreateTagRequestDocument body, Action<RequestConfiguration<TagsRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -161,11 +161,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPostRequestInformation(TagPostRequestDocument body, Action<RequestConfiguration<TagsRequestBuilderPostQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(CreateTagRequestDocument body, Action<RequestConfiguration<TagsRequestBuilderPostQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPostRequestInformation(TagPostRequestDocument body, Action<RequestConfiguration<TagsRequestBuilderPostQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(CreateTagRequestDocument body, Action<RequestConfiguration<TagsRequestBuilderPostQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));

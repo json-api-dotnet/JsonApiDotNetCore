@@ -107,11 +107,11 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Accommodations.Item {
         /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<AccommodationPrimaryResponseDocument?> PatchAsync(AccommodationPatchRequestDocument body, Action<RequestConfiguration<AccommodationsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<AccommodationPrimaryResponseDocument?> PatchAsync(UpdateAccommodationRequestDocument body, Action<RequestConfiguration<AccommodationsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<AccommodationPrimaryResponseDocument> PatchAsync(AccommodationPatchRequestDocument body, Action<RequestConfiguration<AccommodationsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<AccommodationPrimaryResponseDocument> PatchAsync(UpdateAccommodationRequestDocument body, Action<RequestConfiguration<AccommodationsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -189,11 +189,11 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Accommodations.Item {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPatchRequestInformation(AccommodationPatchRequestDocument body, Action<RequestConfiguration<AccommodationsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(UpdateAccommodationRequestDocument body, Action<RequestConfiguration<AccommodationsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPatchRequestInformation(AccommodationPatchRequestDocument body, Action<RequestConfiguration<AccommodationsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(UpdateAccommodationRequestDocument body, Action<RequestConfiguration<AccommodationsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));

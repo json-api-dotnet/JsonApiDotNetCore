@@ -66,7 +66,7 @@ public sealed class NullabilityTests : IClassFixture<OpenApiTestContext<MsvOffSt
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath("components.schemas.resourceRelationshipsInPostRequest.properties").With(schemaProperties =>
+        document.Should().ContainPath("components.schemas.relationshipsInCreateResourceRequest.properties").With(schemaProperties =>
         {
             schemaProperties.Should().ContainPath($"{jsonPropertyName}.allOf[0].$ref").WithSchemaReferenceId(schemaReferenceId =>
             {
@@ -89,7 +89,7 @@ public sealed class NullabilityTests : IClassFixture<OpenApiTestContext<MsvOffSt
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath("components.schemas.resourceRelationshipsInPostRequest.properties").With(schemaProperties =>
+        document.Should().ContainPath("components.schemas.relationshipsInCreateResourceRequest.properties").With(schemaProperties =>
         {
             schemaProperties.Should().ContainPath($"{jsonPropertyName}.allOf[0].$ref").WithSchemaReferenceId(schemaReferenceId =>
             {

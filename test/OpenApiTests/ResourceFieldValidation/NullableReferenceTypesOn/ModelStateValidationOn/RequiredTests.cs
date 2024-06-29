@@ -26,7 +26,7 @@ public sealed class RequiredTests : IClassFixture<OpenApiTestContext<OpenApiStar
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath("components.schemas.resourceAttributesInPostRequest").With(attributesSchema =>
+        document.Should().ContainPath("components.schemas.attributesInCreateResourceRequest").With(attributesSchema =>
         {
             attributesSchema.Should().ContainPath($"properties.{jsonPropertyName}");
             attributesSchema.Should().ContainPath("required").With(propertySet => propertySet.Should().ContainArrayElement(jsonPropertyName));
@@ -44,7 +44,7 @@ public sealed class RequiredTests : IClassFixture<OpenApiTestContext<OpenApiStar
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath("components.schemas.resourceAttributesInPostRequest").With(attributesSchema =>
+        document.Should().ContainPath("components.schemas.attributesInCreateResourceRequest").With(attributesSchema =>
         {
             attributesSchema.Should().ContainPath($"properties.{jsonPropertyName}");
             attributesSchema.Should().ContainPath("required").With(propertySet => propertySet.Should().NotContainArrayElement(jsonPropertyName));
@@ -61,7 +61,7 @@ public sealed class RequiredTests : IClassFixture<OpenApiTestContext<OpenApiStar
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath("components.schemas.resourceRelationshipsInPostRequest").With(relationshipsSchema =>
+        document.Should().ContainPath("components.schemas.relationshipsInCreateResourceRequest").With(relationshipsSchema =>
         {
             relationshipsSchema.Should().ContainPath($"properties.{jsonPropertyName}");
             relationshipsSchema.Should().ContainPath("required").With(propertySet => propertySet.Should().ContainArrayElement(jsonPropertyName));
@@ -78,7 +78,7 @@ public sealed class RequiredTests : IClassFixture<OpenApiTestContext<OpenApiStar
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath("components.schemas.resourceRelationshipsInPostRequest").With(relationshipsSchema =>
+        document.Should().ContainPath("components.schemas.relationshipsInCreateResourceRequest").With(relationshipsSchema =>
         {
             relationshipsSchema.Should().ContainPath($"properties.{jsonPropertyName}");
             relationshipsSchema.Should().ContainPath("required").With(propertySet => propertySet.Should().NotContainArrayElement(jsonPropertyName));

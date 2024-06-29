@@ -125,11 +125,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item {
         /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<PersonPrimaryResponseDocument?> PatchAsync(PersonPatchRequestDocument body, Action<RequestConfiguration<PeopleItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<PersonPrimaryResponseDocument?> PatchAsync(UpdatePersonRequestDocument body, Action<RequestConfiguration<PeopleItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<PersonPrimaryResponseDocument> PatchAsync(PersonPatchRequestDocument body, Action<RequestConfiguration<PeopleItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<PersonPrimaryResponseDocument> PatchAsync(UpdatePersonRequestDocument body, Action<RequestConfiguration<PeopleItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -207,11 +207,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPatchRequestInformation(PersonPatchRequestDocument body, Action<RequestConfiguration<PeopleItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(UpdatePersonRequestDocument body, Action<RequestConfiguration<PeopleItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPatchRequestInformation(PersonPatchRequestDocument body, Action<RequestConfiguration<PeopleItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(UpdatePersonRequestDocument body, Action<RequestConfiguration<PeopleItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));

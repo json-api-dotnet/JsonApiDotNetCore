@@ -26,7 +26,7 @@ public sealed class ClientIdGenerationTests : IClassFixture<OpenApiTestContext<O
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath("components.schemas.playerDataInPostRequest").With(dataElement =>
+        document.Should().ContainPath("components.schemas.dataInCreatePlayerRequest").With(dataElement =>
         {
             dataElement.Should().ContainPath("required").With(requiredElement =>
             {
@@ -44,7 +44,7 @@ public sealed class ClientIdGenerationTests : IClassFixture<OpenApiTestContext<O
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath("components.schemas.gameDataInPostRequest").With(dataElement =>
+        document.Should().ContainPath("components.schemas.dataInCreateGameRequest").With(dataElement =>
         {
             dataElement.Should().ContainPath("required").With(requiredElement =>
             {
@@ -62,7 +62,7 @@ public sealed class ClientIdGenerationTests : IClassFixture<OpenApiTestContext<O
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath("components.schemas.playerGroupDataInPostRequest").With(dataElement =>
+        document.Should().ContainPath("components.schemas.dataInCreatePlayerGroupRequest").With(dataElement =>
         {
             dataElement.Should().ContainPath("required").With(requiredElement =>
             {

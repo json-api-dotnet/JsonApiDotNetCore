@@ -9,18 +9,18 @@ namespace OpenApiNSwagClientTests.ResourceFieldValidation.NullableReferenceTypes
 public sealed class NullabilityTests
 {
     [Theory]
-    [InlineData(nameof(ResourceAttributesInPostRequest.NonNullableReferenceType), NullabilityState.NotNull)]
-    [InlineData(nameof(ResourceAttributesInPostRequest.RequiredNonNullableReferenceType), NullabilityState.NotNull)]
-    [InlineData(nameof(ResourceAttributesInPostRequest.NullableReferenceType), NullabilityState.Nullable)]
-    [InlineData(nameof(ResourceAttributesInPostRequest.RequiredNullableReferenceType), NullabilityState.Nullable)]
-    [InlineData(nameof(ResourceAttributesInPostRequest.ValueType), NullabilityState.NotNull)]
-    [InlineData(nameof(ResourceAttributesInPostRequest.RequiredValueType), NullabilityState.NotNull)]
-    [InlineData(nameof(ResourceAttributesInPostRequest.NullableValueType), NullabilityState.Nullable)]
-    [InlineData(nameof(ResourceAttributesInPostRequest.RequiredNullableValueType), NullabilityState.Nullable)]
+    [InlineData(nameof(AttributesInCreateResourceRequest.NonNullableReferenceType), NullabilityState.NotNull)]
+    [InlineData(nameof(AttributesInCreateResourceRequest.RequiredNonNullableReferenceType), NullabilityState.NotNull)]
+    [InlineData(nameof(AttributesInCreateResourceRequest.NullableReferenceType), NullabilityState.Nullable)]
+    [InlineData(nameof(AttributesInCreateResourceRequest.RequiredNullableReferenceType), NullabilityState.Nullable)]
+    [InlineData(nameof(AttributesInCreateResourceRequest.ValueType), NullabilityState.NotNull)]
+    [InlineData(nameof(AttributesInCreateResourceRequest.RequiredValueType), NullabilityState.NotNull)]
+    [InlineData(nameof(AttributesInCreateResourceRequest.NullableValueType), NullabilityState.Nullable)]
+    [InlineData(nameof(AttributesInCreateResourceRequest.RequiredNullableValueType), NullabilityState.Nullable)]
     public void Nullability_of_generated_attribute_property_is_as_expected(string propertyName, NullabilityState expectedState)
     {
         // Act
-        PropertyInfo? property = typeof(ResourceAttributesInPostRequest).GetProperty(propertyName);
+        PropertyInfo? property = typeof(AttributesInCreateResourceRequest).GetProperty(propertyName);
 
         // Assert
         property.ShouldNotBeNull();
@@ -28,16 +28,16 @@ public sealed class NullabilityTests
     }
 
     [Theory]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.NonNullableToOne), NullabilityState.NotNull)]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredNonNullableToOne), NullabilityState.NotNull)]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.NullableToOne), NullabilityState.Nullable)]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredNullableToOne), NullabilityState.Nullable)]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.ToMany), NullabilityState.NotNull)]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredToMany), NullabilityState.NotNull)]
+    [InlineData(nameof(RelationshipsInCreateResourceRequest.NonNullableToOne), NullabilityState.NotNull)]
+    [InlineData(nameof(RelationshipsInCreateResourceRequest.RequiredNonNullableToOne), NullabilityState.NotNull)]
+    [InlineData(nameof(RelationshipsInCreateResourceRequest.NullableToOne), NullabilityState.Nullable)]
+    [InlineData(nameof(RelationshipsInCreateResourceRequest.RequiredNullableToOne), NullabilityState.Nullable)]
+    [InlineData(nameof(RelationshipsInCreateResourceRequest.ToMany), NullabilityState.NotNull)]
+    [InlineData(nameof(RelationshipsInCreateResourceRequest.RequiredToMany), NullabilityState.NotNull)]
     public void Nullability_of_generated_relationship_property_is_as_expected(string propertyName, NullabilityState expectedState)
     {
         // Act
-        PropertyInfo? relationshipProperty = typeof(ResourceRelationshipsInPostRequest).GetProperty(propertyName);
+        PropertyInfo? relationshipProperty = typeof(RelationshipsInCreateResourceRequest).GetProperty(propertyName);
 
         // Assert
         relationshipProperty.ShouldNotBeNull();

@@ -39,11 +39,11 @@ public sealed class ClientIdGenerationModesTests
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ClientIdGenerationModesClient apiClient = new(httpClient);
 
-        var requestBody = new PlayerPostRequestDocument
+        var requestBody = new CreatePlayerRequestDocument
         {
-            Data = new PlayerDataInPostRequest
+            Data = new DataInCreatePlayerRequest
             {
-                Attributes = new PlayerAttributesInPostRequest
+                Attributes = new AttributesInCreatePlayerRequest
                 {
                     UserName = newPlayer.UserName
                 }
@@ -68,12 +68,12 @@ public sealed class ClientIdGenerationModesTests
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ClientIdGenerationModesClient apiClient = new(httpClient);
 
-        var requestBody = new PlayerPostRequestDocument
+        var requestBody = new CreatePlayerRequestDocument
         {
-            Data = new PlayerDataInPostRequest
+            Data = new DataInCreatePlayerRequest
             {
                 Id = newPlayer.StringId!,
-                Attributes = new PlayerAttributesInPostRequest
+                Attributes = new AttributesInCreatePlayerRequest
                 {
                     UserName = newPlayer.UserName
                 }
@@ -103,11 +103,11 @@ public sealed class ClientIdGenerationModesTests
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ClientIdGenerationModesClient apiClient = new(httpClient);
 
-        var requestBody = new GamePostRequestDocument
+        var requestBody = new CreateGameRequestDocument
         {
-            Data = new GameDataInPostRequest
+            Data = new DataInCreateGameRequest
             {
-                Attributes = new GameAttributesInPostRequest
+                Attributes = new AttributesInCreateGameRequest
                 {
                     Title = newGame.Title,
                     PurchasePrice = (double)newGame.PurchasePrice
@@ -143,12 +143,12 @@ public sealed class ClientIdGenerationModesTests
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ClientIdGenerationModesClient apiClient = new(httpClient);
 
-        var requestBody = new GamePostRequestDocument
+        var requestBody = new CreateGameRequestDocument
         {
-            Data = new GameDataInPostRequest
+            Data = new DataInCreateGameRequest
             {
                 Id = newGame.StringId!,
-                Attributes = new GameAttributesInPostRequest
+                Attributes = new AttributesInCreateGameRequest
                 {
                     Title = newGame.Title,
                     PurchasePrice = (double)newGame.PurchasePrice
@@ -186,12 +186,12 @@ public sealed class ClientIdGenerationModesTests
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ClientIdGenerationModesClient apiClient = new(httpClient);
 
-        var requestBody = new GamePostRequestDocument
+        var requestBody = new CreateGameRequestDocument
         {
-            Data = new GameDataInPostRequest
+            Data = new DataInCreateGameRequest
             {
                 Id = existingGame.StringId!,
-                Attributes = new GameAttributesInPostRequest
+                Attributes = new AttributesInCreateGameRequest
                 {
                     Title = existingGame.Title,
                     PurchasePrice = (double)existingGame.PurchasePrice
@@ -223,11 +223,11 @@ public sealed class ClientIdGenerationModesTests
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ClientIdGenerationModesClient apiClient = new(httpClient);
 
-        var requestBody = new PlayerGroupPostRequestDocument
+        var requestBody = new CreatePlayerGroupRequestDocument
         {
-            Data = new PlayerGroupDataInPostRequest
+            Data = new DataInCreatePlayerGroupRequest
             {
-                Attributes = new PlayerGroupAttributesInPostRequest
+                Attributes = new AttributesInCreatePlayerGroupRequest
                 {
                     Name = newPlayerGroup.Name
                 }

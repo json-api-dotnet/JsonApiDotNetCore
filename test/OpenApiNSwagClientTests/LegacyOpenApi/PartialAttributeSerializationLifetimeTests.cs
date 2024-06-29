@@ -18,17 +18,17 @@ public sealed class PartialAttributeSerializationLifetimeTests
 
         const string airplaneId = "XUuiP";
 
-        var requestDocument = new AirplanePatchRequestDocument
+        var requestDocument = new UpdateAirplaneRequestDocument
         {
-            Data = new AirplaneDataInPatchRequest
+            Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId,
                 Type = AirplaneResourceType.Airplanes,
-                Attributes = new AirplaneAttributesInPatchRequest()
+                Attributes = new AttributesInUpdateAirplaneRequest()
             }
         };
 
-        using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
+        using (apiClient.WithPartialAttributeSerialization<UpdateAirplaneRequestDocument, AttributesInUpdateAirplaneRequest>(requestDocument,
             airplane => airplane.AirtimeInHours))
         {
             _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
@@ -62,20 +62,20 @@ public sealed class PartialAttributeSerializationLifetimeTests
 
         const string airplaneId = "XUuiP";
 
-        var requestDocument = new AirplanePatchRequestDocument
+        var requestDocument = new UpdateAirplaneRequestDocument
         {
-            Data = new AirplaneDataInPatchRequest
+            Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId,
                 Type = AirplaneResourceType.Airplanes,
-                Attributes = new AirplaneAttributesInPatchRequest
+                Attributes = new AttributesInUpdateAirplaneRequest
                 {
                     AirtimeInHours = 100
                 }
             }
         };
 
-        using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
+        using (apiClient.WithPartialAttributeSerialization<UpdateAirplaneRequestDocument, AttributesInUpdateAirplaneRequest>(requestDocument,
             airplane => airplane.AirtimeInHours))
         {
             _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
@@ -111,32 +111,32 @@ public sealed class PartialAttributeSerializationLifetimeTests
 
         const string airplaneId1 = "XUuiP";
 
-        var requestDocument1 = new AirplanePatchRequestDocument
+        var requestDocument1 = new UpdateAirplaneRequestDocument
         {
-            Data = new AirplaneDataInPatchRequest
+            Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId1,
                 Type = AirplaneResourceType.Airplanes,
-                Attributes = new AirplaneAttributesInPatchRequest()
+                Attributes = new AttributesInUpdateAirplaneRequest()
             }
         };
 
         const string airplaneId2 = "DJy1u";
 
-        var requestDocument2 = new AirplanePatchRequestDocument
+        var requestDocument2 = new UpdateAirplaneRequestDocument
         {
-            Data = new AirplaneDataInPatchRequest
+            Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId2,
                 Type = AirplaneResourceType.Airplanes,
-                Attributes = new AirplaneAttributesInPatchRequest()
+                Attributes = new AttributesInUpdateAirplaneRequest()
             }
         };
 
-        using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
+        using (apiClient.WithPartialAttributeSerialization<UpdateAirplaneRequestDocument, AttributesInUpdateAirplaneRequest>(requestDocument1,
             airplane => airplane.AirtimeInHours))
         {
-            using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
+            using (apiClient.WithPartialAttributeSerialization<UpdateAirplaneRequestDocument, AttributesInUpdateAirplaneRequest>(requestDocument2,
                 airplane => airplane.SerialNumber))
             {
             }
@@ -168,20 +168,20 @@ public sealed class PartialAttributeSerializationLifetimeTests
 
         const string airplaneId = "XUuiP";
 
-        var requestDocument = new AirplanePatchRequestDocument
+        var requestDocument = new UpdateAirplaneRequestDocument
         {
-            Data = new AirplaneDataInPatchRequest
+            Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId,
                 Type = AirplaneResourceType.Airplanes,
-                Attributes = new AirplaneAttributesInPatchRequest
+                Attributes = new AttributesInUpdateAirplaneRequest
                 {
                     IsInMaintenance = true
                 }
             }
         };
 
-        using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
+        using (apiClient.WithPartialAttributeSerialization<UpdateAirplaneRequestDocument, AttributesInUpdateAirplaneRequest>(requestDocument,
             airplane => airplane.IsInMaintenance))
         {
             requestDocument.Data.Attributes.IsInMaintenance = false;
@@ -213,29 +213,29 @@ public sealed class PartialAttributeSerializationLifetimeTests
 
         const string airplaneId1 = "XUuiP";
 
-        var requestDocument1 = new AirplanePatchRequestDocument
+        var requestDocument1 = new UpdateAirplaneRequestDocument
         {
-            Data = new AirplaneDataInPatchRequest
+            Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId1,
                 Type = AirplaneResourceType.Airplanes,
-                Attributes = new AirplaneAttributesInPatchRequest()
+                Attributes = new AttributesInUpdateAirplaneRequest()
             }
         };
 
-        var requestDocument2 = new AirplanePostRequestDocument
+        var requestDocument2 = new CreateAirplaneRequestDocument
         {
-            Data = new AirplaneDataInPostRequest
+            Data = new DataInCreateAirplaneRequest
             {
                 Type = AirplaneResourceType.Airplanes,
-                Attributes = new AirplaneAttributesInPostRequest()
+                Attributes = new AttributesInCreateAirplaneRequest()
             }
         };
 
-        using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
+        using (apiClient.WithPartialAttributeSerialization<UpdateAirplaneRequestDocument, AttributesInUpdateAirplaneRequest>(requestDocument1,
             airplane => airplane.IsInMaintenance))
         {
-            using (apiClient.WithPartialAttributeSerialization<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument2,
+            using (apiClient.WithPartialAttributeSerialization<CreateAirplaneRequestDocument, AttributesInCreateAirplaneRequest>(requestDocument2,
                 airplane => airplane.AirtimeInHours))
             {
                 // Act
@@ -266,17 +266,17 @@ public sealed class PartialAttributeSerializationLifetimeTests
 
         const string airplaneId1 = "XUuiP";
 
-        var requestDocument1 = new AirplanePatchRequestDocument
+        var requestDocument1 = new UpdateAirplaneRequestDocument
         {
-            Data = new AirplaneDataInPatchRequest
+            Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId1,
                 Type = AirplaneResourceType.Airplanes,
-                Attributes = new AirplaneAttributesInPatchRequest()
+                Attributes = new AttributesInUpdateAirplaneRequest()
             }
         };
 
-        using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
+        using (apiClient.WithPartialAttributeSerialization<UpdateAirplaneRequestDocument, AttributesInUpdateAirplaneRequest>(requestDocument1,
             airplane => airplane.AirtimeInHours))
         {
             _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId1, null, requestDocument1));
@@ -284,13 +284,13 @@ public sealed class PartialAttributeSerializationLifetimeTests
 
         const string airplaneId2 = "DJy1u";
 
-        var requestDocument2 = new AirplanePatchRequestDocument
+        var requestDocument2 = new UpdateAirplaneRequestDocument
         {
-            Data = new AirplaneDataInPatchRequest
+            Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId2,
                 Type = AirplaneResourceType.Airplanes,
-                Attributes = new AirplaneAttributesInPatchRequest
+                Attributes = new AttributesInUpdateAirplaneRequest
                 {
                     ManufacturedInCity = "Everett"
                 }
@@ -299,7 +299,7 @@ public sealed class PartialAttributeSerializationLifetimeTests
 
         wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
 
-        using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
+        using (apiClient.WithPartialAttributeSerialization<UpdateAirplaneRequestDocument, AttributesInUpdateAirplaneRequest>(requestDocument2,
             airplane => airplane.SerialNumber))
         {
             // Act
@@ -328,19 +328,19 @@ public sealed class PartialAttributeSerializationLifetimeTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
-        var requestDocument1 = new AirplanePostRequestDocument
+        var requestDocument1 = new CreateAirplaneRequestDocument
         {
-            Data = new AirplaneDataInPostRequest
+            Data = new DataInCreateAirplaneRequest
             {
                 Type = AirplaneResourceType.Airplanes,
-                Attributes = new AirplaneAttributesInPostRequest
+                Attributes = new AttributesInCreateAirplaneRequest
                 {
                     Name = "Jay Jay the Jet Plane"
                 }
             }
         };
 
-        using (apiClient.WithPartialAttributeSerialization<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument1,
+        using (apiClient.WithPartialAttributeSerialization<CreateAirplaneRequestDocument, AttributesInCreateAirplaneRequest>(requestDocument1,
             airplane => airplane.AirtimeInHours))
         {
             _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostAirplaneAsync(null, requestDocument1));
@@ -348,13 +348,13 @@ public sealed class PartialAttributeSerializationLifetimeTests
 
         const string airplaneId = "DJy1u";
 
-        var requestDocument2 = new AirplanePatchRequestDocument
+        var requestDocument2 = new UpdateAirplaneRequestDocument
         {
-            Data = new AirplaneDataInPatchRequest
+            Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId,
                 Type = AirplaneResourceType.Airplanes,
-                Attributes = new AirplaneAttributesInPatchRequest
+                Attributes = new AttributesInUpdateAirplaneRequest
                 {
                     ManufacturedInCity = "Everett"
                 }
@@ -363,7 +363,7 @@ public sealed class PartialAttributeSerializationLifetimeTests
 
         wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
 
-        using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
+        using (apiClient.WithPartialAttributeSerialization<UpdateAirplaneRequestDocument, AttributesInUpdateAirplaneRequest>(requestDocument2,
             airplane => airplane.SerialNumber))
         {
             // Act
@@ -394,32 +394,32 @@ public sealed class PartialAttributeSerializationLifetimeTests
 
         const string airplaneId1 = "XUuiP";
 
-        var requestDocument1 = new AirplanePatchRequestDocument
+        var requestDocument1 = new UpdateAirplaneRequestDocument
         {
-            Data = new AirplaneDataInPatchRequest
+            Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId1,
                 Type = AirplaneResourceType.Airplanes,
-                Attributes = new AirplaneAttributesInPatchRequest()
+                Attributes = new AttributesInUpdateAirplaneRequest()
             }
         };
 
         const string airplaneId2 = "DJy1u";
 
-        var requestDocument2 = new AirplanePatchRequestDocument
+        var requestDocument2 = new UpdateAirplaneRequestDocument
         {
-            Data = new AirplaneDataInPatchRequest
+            Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId2,
                 Type = AirplaneResourceType.Airplanes,
-                Attributes = new AirplaneAttributesInPatchRequest()
+                Attributes = new AttributesInUpdateAirplaneRequest()
             }
         };
 
-        using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
+        using (apiClient.WithPartialAttributeSerialization<UpdateAirplaneRequestDocument, AttributesInUpdateAirplaneRequest>(requestDocument1,
             airplane => airplane.SerialNumber))
         {
-            using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
+            using (apiClient.WithPartialAttributeSerialization<UpdateAirplaneRequestDocument, AttributesInUpdateAirplaneRequest>(requestDocument2,
                 airplane => airplane.IsInMaintenance, airplane => airplane.AirtimeInHours))
             {
                 // Act

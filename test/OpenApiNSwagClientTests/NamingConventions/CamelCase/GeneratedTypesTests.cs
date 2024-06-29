@@ -47,19 +47,20 @@ public sealed class GeneratedTypesTests
     public void Generated_top_level_document_types_are_named_as_expected()
     {
         _ = nameof(SupermarketCollectionResponseDocument);
-        _ = nameof(SupermarketPostRequestDocument);
+        _ = nameof(CreateSupermarketRequestDocument);
         _ = nameof(SupermarketPrimaryResponseDocument);
-        _ = nameof(SupermarketPatchRequestDocument);
+        _ = nameof(UpdateSupermarketRequestDocument);
 
         _ = nameof(StaffMemberCollectionResponseDocument);
-        _ = nameof(StaffMemberPostRequestDocument);
+        _ = nameof(CreateStaffMemberRequestDocument);
         _ = nameof(StaffMemberPrimaryResponseDocument);
-        _ = nameof(StaffMemberPatchRequestDocument);
+        _ = nameof(UpdateStaffMemberRequestDocument);
         _ = nameof(StaffMemberIdentifierCollectionResponseDocument);
         _ = nameof(StaffMemberIdentifierResponseDocument);
         _ = nameof(StaffMemberSecondaryResponseDocument);
         _ = nameof(NullableStaffMemberSecondaryResponseDocument);
         _ = nameof(NullableStaffMemberIdentifierResponseDocument);
+
         _ = nameof(ErrorResponseDocument);
     }
 
@@ -73,32 +74,33 @@ public sealed class GeneratedTypesTests
         _ = nameof(ErrorTopLevelLinks);
         _ = nameof(ResourceLinks);
         _ = nameof(RelationshipLinks);
+        _ = nameof(ErrorLinks);
     }
 
     [Fact]
     public void Generated_resource_field_types_are_named_as_expected()
     {
-        _ = nameof(SupermarketAttributesInPostRequest.NameOfCity);
-        _ = nameof(SupermarketAttributesInPostRequest.Kind);
-        _ = nameof(SupermarketAttributesInPatchRequest.NameOfCity);
-        _ = nameof(SupermarketAttributesInPatchRequest.Kind);
+        _ = nameof(AttributesInCreateSupermarketRequest.NameOfCity);
+        _ = nameof(AttributesInCreateSupermarketRequest.Kind);
+        _ = nameof(AttributesInUpdateSupermarketRequest.NameOfCity);
+        _ = nameof(AttributesInUpdateSupermarketRequest.Kind);
         _ = nameof(SupermarketAttributesInResponse.NameOfCity);
         _ = nameof(SupermarketAttributesInResponse.Kind);
-        _ = nameof(SupermarketRelationshipsInPostRequest.StoreManager);
-        _ = nameof(SupermarketRelationshipsInPostRequest.BackupStoreManager);
-        _ = nameof(SupermarketRelationshipsInPostRequest.Cashiers);
-        _ = nameof(SupermarketRelationshipsInPatchRequest.StoreManager);
-        _ = nameof(SupermarketRelationshipsInPatchRequest.BackupStoreManager);
-        _ = nameof(SupermarketRelationshipsInPatchRequest.Cashiers);
+        _ = nameof(RelationshipsInCreateSupermarketRequest.StoreManager);
+        _ = nameof(RelationshipsInCreateSupermarketRequest.BackupStoreManager);
+        _ = nameof(RelationshipsInCreateSupermarketRequest.Cashiers);
+        _ = nameof(RelationshipsInUpdateSupermarketRequest.StoreManager);
+        _ = nameof(RelationshipsInUpdateSupermarketRequest.BackupStoreManager);
+        _ = nameof(RelationshipsInUpdateSupermarketRequest.Cashiers);
         _ = nameof(SupermarketRelationshipsInResponse.StoreManager);
         _ = nameof(SupermarketRelationshipsInResponse.BackupStoreManager);
         _ = nameof(SupermarketRelationshipsInResponse.Cashiers);
         _ = nameof(SupermarketType);
 
-        _ = nameof(StaffMemberAttributesInPostRequest.Name);
-        _ = nameof(StaffMemberAttributesInPostRequest.Age);
-        _ = nameof(StaffMemberAttributesInPatchRequest.Name);
-        _ = nameof(StaffMemberAttributesInPatchRequest.Age);
+        _ = nameof(AttributesInCreateStaffMemberRequest.Name);
+        _ = nameof(AttributesInCreateStaffMemberRequest.Age);
+        _ = nameof(AttributesInUpdateStaffMemberRequest.Name);
+        _ = nameof(AttributesInUpdateStaffMemberRequest.Age);
         _ = nameof(StaffMemberAttributesInResponse.Name);
         _ = nameof(StaffMemberAttributesInResponse.Age);
     }
@@ -124,22 +126,24 @@ public sealed class GeneratedTypesTests
     [Fact]
     public void Generated_data_types_are_named_as_expected()
     {
-        _ = nameof(SupermarketDataInPostRequest);
-        _ = nameof(SupermarketDataInPatchRequest);
+        _ = nameof(DataInResponse);
+
+        _ = nameof(DataInCreateSupermarketRequest);
+        _ = nameof(DataInUpdateSupermarketRequest);
         _ = nameof(SupermarketDataInResponse);
 
-        _ = nameof(StaffMemberDataInPostRequest);
-        _ = nameof(StaffMemberDataInPatchRequest);
+        _ = nameof(DataInCreateStaffMemberRequest);
+        _ = nameof(DataInUpdateStaffMemberRequest);
         _ = nameof(StaffMemberDataInResponse);
-
-        _ = nameof(DataInResponse);
 
         _ = nameof(StaffMemberIdentifier);
     }
 
     [Fact]
-    public void Generated_code_is_named_as_expected()
+    public void Generated_predefined_types_are_named_as_expected()
     {
         _ = nameof(Jsonapi);
+        _ = nameof(ErrorObject);
+        _ = nameof(ErrorSource);
     }
 }

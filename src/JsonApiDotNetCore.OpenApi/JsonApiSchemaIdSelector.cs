@@ -13,14 +13,14 @@ internal sealed class JsonApiSchemaIdSelector
 
     private static readonly IDictionary<Type, string> TypeToSchemaTemplateMap = new Dictionary<Type, string>
     {
-        [typeof(ResourcePostRequestDocument<>)] = "[ResourceName] Post Request Document",
-        [typeof(ResourcePatchRequestDocument<>)] = "[ResourceName] Patch Request Document",
-        [typeof(ResourceDataInPostRequest<>)] = "[ResourceName] Data In Post Request",
-        [typeof(AttributesInPostRequest<>)] = "[ResourceName] Attributes In Post Request",
-        [typeof(RelationshipsInPostRequest<>)] = "[ResourceName] Relationships In Post Request",
-        [typeof(ResourceDataInPatchRequest<>)] = "[ResourceName] Data In Patch Request",
-        [typeof(AttributesInPatchRequest<>)] = "[ResourceName] Attributes In Patch Request",
-        [typeof(RelationshipsInPatchRequest<>)] = "[ResourceName] Relationships In Patch Request",
+        [typeof(CreateResourceRequestDocument<>)] = "Create [ResourceName] Request Document",
+        [typeof(UpdateResourceRequestDocument<>)] = "Update [ResourceName] Request Document",
+        [typeof(DataInCreateResourceRequest<>)] = "Data In Create [ResourceName] Request",
+        [typeof(AttributesInCreateResourceRequest<>)] = "Attributes In Create [ResourceName] Request",
+        [typeof(RelationshipsInCreateResourceRequest<>)] = "Relationships In Create [ResourceName] Request",
+        [typeof(DataInUpdateResourceRequest<>)] = "Data In Update [ResourceName] Request",
+        [typeof(AttributesInUpdateResourceRequest<>)] = "Attributes In Update [ResourceName] Request",
+        [typeof(RelationshipsInUpdateResourceRequest<>)] = "Relationships In Update [ResourceName] Request",
         [typeof(ToOneRelationshipInRequest<>)] = "To One [ResourceName] In Request",
         [typeof(NullableToOneRelationshipInRequest<>)] = "Nullable To One [ResourceName] In Request",
         [typeof(ToManyRelationshipInRequest<>)] = "To Many [ResourceName] In Request",

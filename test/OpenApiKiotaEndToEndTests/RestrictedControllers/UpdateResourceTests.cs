@@ -53,17 +53,17 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new RestrictedControllersClient(requestAdapter);
 
-        var requestBody = new WriteOnlyChannelPatchRequestDocument
+        var requestBody = new UpdateWriteOnlyChannelRequestDocument
         {
-            Data = new WriteOnlyChannelDataInPatchRequest
+            Data = new DataInUpdateWriteOnlyChannelRequest
             {
                 Type = WriteOnlyChannelResourceType.WriteOnlyChannels,
                 Id = existingChannel.StringId!,
-                Attributes = new WriteOnlyChannelAttributesInPatchRequest
+                Attributes = new AttributesInUpdateWriteOnlyChannelRequest
                 {
                     Name = newChannelName
                 },
-                Relationships = new WriteOnlyChannelRelationshipsInPatchRequest
+                Relationships = new RelationshipsInUpdateWriteOnlyChannelRequest
                 {
                     VideoStream = new ToOneDataStreamInRequest
                     {
@@ -164,14 +164,14 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new RestrictedControllersClient(requestAdapter);
 
-        var requestBody = new WriteOnlyChannelPatchRequestDocument
+        var requestBody = new UpdateWriteOnlyChannelRequestDocument
         {
-            Data = new WriteOnlyChannelDataInPatchRequest
+            Data = new DataInUpdateWriteOnlyChannelRequest
             {
                 Type = WriteOnlyChannelResourceType.WriteOnlyChannels,
                 Id = existingChannel.StringId!,
-                Attributes = new WriteOnlyChannelAttributesInPatchRequest(),
-                Relationships = new WriteOnlyChannelRelationshipsInPatchRequest()
+                Attributes = new AttributesInUpdateWriteOnlyChannelRequest(),
+                Relationships = new RelationshipsInUpdateWriteOnlyChannelRequest()
             }
         };
 
@@ -238,7 +238,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new RestrictedControllersClient(requestAdapter);
 
-        WriteOnlyChannelPatchRequestDocument requestBody = null!;
+        UpdateWriteOnlyChannelRequestDocument requestBody = null!;
 
         // Act
         Func<Task> action = async () => _ = await apiClient.WriteOnlyChannels[existingChannel.StringId].PatchAsync(requestBody);
@@ -265,13 +265,13 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new RestrictedControllersClient(requestAdapter);
 
-        var requestBody = new WriteOnlyChannelPatchRequestDocument
+        var requestBody = new UpdateWriteOnlyChannelRequestDocument
         {
-            Data = new WriteOnlyChannelDataInPatchRequest
+            Data = new DataInUpdateWriteOnlyChannelRequest
             {
                 Type = WriteOnlyChannelResourceType.WriteOnlyChannels,
                 Id = existingChannel.StringId!,
-                Relationships = new WriteOnlyChannelRelationshipsInPatchRequest
+                Relationships = new RelationshipsInUpdateWriteOnlyChannelRequest
                 {
                     VideoStream = new ToOneDataStreamInRequest
                     {

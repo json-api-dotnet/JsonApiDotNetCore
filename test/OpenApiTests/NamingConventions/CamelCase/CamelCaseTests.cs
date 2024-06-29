@@ -142,9 +142,9 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
                     .SchemaReferenceId;
             });
 
-            schemasElement.Should().ContainPath($"{relatedResourceTypeSchemaRefId}.enum[0]").With(enumValueElement =>
+            schemasElement.Should().ContainPath($"{relatedResourceTypeSchemaRefId}.enum").With(codeElement =>
             {
-                enumValueElement.Should().Be("staffMembers");
+                codeElement.Should().ContainArrayElement("staffMembers");
             });
         });
     }
@@ -380,7 +380,7 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
             });
 
             documentSchemaRefId = getElement.Should().ContainPath("requestBody.content['application/vnd.api+json'].schema.allOf[0].$ref")
-                .ShouldBeSchemaReferenceId("supermarketPostRequestDocument").SchemaReferenceId;
+                .ShouldBeSchemaReferenceId("createSupermarketRequestDocument").SchemaReferenceId;
         });
 
         document.Should().ContainPath("components.schemas").With(schemasElement =>
@@ -389,18 +389,18 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
 
             schemasElement.Should().ContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
-                resourceDataSchemaRefId = propertiesElement.Should().ContainPath("data.allOf[0].$ref").ShouldBeSchemaReferenceId("supermarketDataInPostRequest")
-                    .SchemaReferenceId;
+                resourceDataSchemaRefId = propertiesElement.Should().ContainPath("data.allOf[0].$ref")
+                    .ShouldBeSchemaReferenceId("dataInCreateSupermarketRequest").SchemaReferenceId;
             });
 
             string? resourceRelationshipInPostRequestSchemaRefId = null;
 
             schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
             {
-                propertiesElement.Should().ContainPath("attributes.allOf[0].$ref").ShouldBeSchemaReferenceId("supermarketAttributesInPostRequest");
+                propertiesElement.Should().ContainPath("attributes.allOf[0].$ref").ShouldBeSchemaReferenceId("attributesInCreateSupermarketRequest");
 
                 resourceRelationshipInPostRequestSchemaRefId = propertiesElement.Should().ContainPath("relationships.allOf[0].$ref")
-                    .ShouldBeSchemaReferenceId("supermarketRelationshipsInPostRequest").SchemaReferenceId;
+                    .ShouldBeSchemaReferenceId("relationshipsInCreateSupermarketRequest").SchemaReferenceId;
             });
 
             schemasElement.Should().ContainPath($"{resourceRelationshipInPostRequestSchemaRefId}.properties").With(propertiesElement =>
@@ -450,7 +450,7 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
             });
 
             documentSchemaRefId = getElement.Should().ContainPath("requestBody.content['application/vnd.api+json'].schema.allOf[0].$ref")
-                .ShouldBeSchemaReferenceId("supermarketPatchRequestDocument").SchemaReferenceId;
+                .ShouldBeSchemaReferenceId("updateSupermarketRequestDocument").SchemaReferenceId;
         });
 
         document.Should().ContainPath("components.schemas").With(schemasElement =>
@@ -460,13 +460,13 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
             schemasElement.Should().ContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
                 resourceDataSchemaRefId = propertiesElement.Should().ContainPath("data.allOf[0].$ref")
-                    .ShouldBeSchemaReferenceId("supermarketDataInPatchRequest").SchemaReferenceId;
+                    .ShouldBeSchemaReferenceId("dataInUpdateSupermarketRequest").SchemaReferenceId;
             });
 
             schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
             {
-                propertiesElement.Should().ContainPath("attributes.allOf[0].$ref").ShouldBeSchemaReferenceId("supermarketAttributesInPatchRequest");
-                propertiesElement.Should().ContainPath("relationships.allOf[0].$ref").ShouldBeSchemaReferenceId("supermarketRelationshipsInPatchRequest");
+                propertiesElement.Should().ContainPath("attributes.allOf[0].$ref").ShouldBeSchemaReferenceId("attributesInUpdateSupermarketRequest");
+                propertiesElement.Should().ContainPath("relationships.allOf[0].$ref").ShouldBeSchemaReferenceId("relationshipsInUpdateSupermarketRequest");
             });
         });
     }

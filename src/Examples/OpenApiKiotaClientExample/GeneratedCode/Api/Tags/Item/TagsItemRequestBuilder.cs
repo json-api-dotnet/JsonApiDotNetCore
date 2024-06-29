@@ -119,11 +119,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item {
         /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<TagPrimaryResponseDocument?> PatchAsync(TagPatchRequestDocument body, Action<RequestConfiguration<TagsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<TagPrimaryResponseDocument?> PatchAsync(UpdateTagRequestDocument body, Action<RequestConfiguration<TagsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<TagPrimaryResponseDocument> PatchAsync(TagPatchRequestDocument body, Action<RequestConfiguration<TagsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<TagPrimaryResponseDocument> PatchAsync(UpdateTagRequestDocument body, Action<RequestConfiguration<TagsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -201,11 +201,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPatchRequestInformation(TagPatchRequestDocument body, Action<RequestConfiguration<TagsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(UpdateTagRequestDocument body, Action<RequestConfiguration<TagsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPatchRequestInformation(TagPatchRequestDocument body, Action<RequestConfiguration<TagsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(UpdateTagRequestDocument body, Action<RequestConfiguration<TagsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));

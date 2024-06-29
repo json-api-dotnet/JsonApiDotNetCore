@@ -16,20 +16,20 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
     private readonly NrtOffMsvOnFakers _fakers = new();
 
     [Theory]
-    [InlineData(nameof(ResourceAttributesInPostRequest.ReferenceType), "referenceType")]
-    [InlineData(nameof(ResourceAttributesInPostRequest.ValueType), "valueType")]
-    [InlineData(nameof(ResourceAttributesInPostRequest.RequiredValueType), "requiredValueType")]
-    [InlineData(nameof(ResourceAttributesInPostRequest.NullableValueType), "nullableValueType")]
-    [InlineData(nameof(ResourceAttributesInPostRequest.RequiredNullableValueType), "requiredNullableValueType")]
+    [InlineData(nameof(AttributesInCreateResourceRequest.ReferenceType), "referenceType")]
+    [InlineData(nameof(AttributesInCreateResourceRequest.ValueType), "valueType")]
+    [InlineData(nameof(AttributesInCreateResourceRequest.RequiredValueType), "requiredValueType")]
+    [InlineData(nameof(AttributesInCreateResourceRequest.NullableValueType), "nullableValueType")]
+    [InlineData(nameof(AttributesInCreateResourceRequest.RequiredNullableValueType), "requiredNullableValueType")]
     public async Task Can_set_attribute_to_default_value(string attributePropertyName, string jsonPropertyName)
     {
         // Arrange
-        var requestDocument = new ResourcePostRequestDocument
+        var requestDocument = new CreateResourceRequestDocument
         {
-            Data = new ResourceDataInPostRequest
+            Data = new DataInCreateResourceRequest
             {
                 Attributes = _fakers.PostAttributes.Generate(),
-                Relationships = new ResourceRelationshipsInPostRequest
+                Relationships = new RelationshipsInCreateResourceRequest
                 {
                     ToOne = _fakers.NullableToOne.Generate(),
                     RequiredToOne = _fakers.ToOne.Generate(),
@@ -44,8 +44,8 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
-        Expression<Func<ResourceAttributesInPostRequest, object?>> includeAttributeSelector =
-            CreateAttributeSelectorFor<ResourceAttributesInPostRequest>(attributePropertyName);
+        Expression<Func<AttributesInCreateResourceRequest, object?>> includeAttributeSelector =
+            CreateAttributeSelectorFor<AttributesInCreateResourceRequest>(attributePropertyName);
 
         using IDisposable _ = apiClient.WithPartialAttributeSerialization(requestDocument, includeAttributeSelector);
 
@@ -62,16 +62,16 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
     }
 
     [Theory]
-    [InlineData(nameof(ResourceAttributesInPostRequest.RequiredReferenceType), "requiredReferenceType")]
+    [InlineData(nameof(AttributesInCreateResourceRequest.RequiredReferenceType), "requiredReferenceType")]
     public async Task Cannot_set_attribute_to_default_value(string attributePropertyName, string jsonPropertyName)
     {
         // Arrange
-        var requestDocument = new ResourcePostRequestDocument
+        var requestDocument = new CreateResourceRequestDocument
         {
-            Data = new ResourceDataInPostRequest
+            Data = new DataInCreateResourceRequest
             {
                 Attributes = _fakers.PostAttributes.Generate(),
-                Relationships = new ResourceRelationshipsInPostRequest
+                Relationships = new RelationshipsInCreateResourceRequest
                 {
                     ToOne = _fakers.NullableToOne.Generate(),
                     RequiredToOne = _fakers.ToOne.Generate(),
@@ -86,8 +86,8 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
-        Expression<Func<ResourceAttributesInPostRequest, object?>> includeAttributeSelector =
-            CreateAttributeSelectorFor<ResourceAttributesInPostRequest>(attributePropertyName);
+        Expression<Func<AttributesInCreateResourceRequest, object?>> includeAttributeSelector =
+            CreateAttributeSelectorFor<AttributesInCreateResourceRequest>(attributePropertyName);
 
         using IDisposable _ = apiClient.WithPartialAttributeSerialization(requestDocument, includeAttributeSelector);
 
@@ -101,19 +101,19 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
     }
 
     [Theory]
-    [InlineData(nameof(ResourceAttributesInPostRequest.ReferenceType), "referenceType")]
-    [InlineData(nameof(ResourceAttributesInPostRequest.ValueType), "valueType")]
-    [InlineData(nameof(ResourceAttributesInPostRequest.RequiredValueType), "requiredValueType")]
-    [InlineData(nameof(ResourceAttributesInPostRequest.NullableValueType), "nullableValueType")]
+    [InlineData(nameof(AttributesInCreateResourceRequest.ReferenceType), "referenceType")]
+    [InlineData(nameof(AttributesInCreateResourceRequest.ValueType), "valueType")]
+    [InlineData(nameof(AttributesInCreateResourceRequest.RequiredValueType), "requiredValueType")]
+    [InlineData(nameof(AttributesInCreateResourceRequest.NullableValueType), "nullableValueType")]
     public async Task Can_omit_attribute(string attributePropertyName, string jsonPropertyName)
     {
         // Arrange
-        var requestDocument = new ResourcePostRequestDocument
+        var requestDocument = new CreateResourceRequestDocument
         {
-            Data = new ResourceDataInPostRequest
+            Data = new DataInCreateResourceRequest
             {
                 Attributes = _fakers.PostAttributes.Generate(),
-                Relationships = new ResourceRelationshipsInPostRequest
+                Relationships = new RelationshipsInCreateResourceRequest
                 {
                     ToOne = _fakers.NullableToOne.Generate(),
                     RequiredToOne = _fakers.ToOne.Generate(),
@@ -128,7 +128,7 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
-        using IDisposable _ = apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument);
+        using IDisposable _ = apiClient.WithPartialAttributeSerialization<CreateResourceRequestDocument, AttributesInCreateResourceRequest>(requestDocument);
 
         // Act
         await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(null, requestDocument));
@@ -143,17 +143,17 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
     }
 
     [Theory]
-    [InlineData(nameof(ResourceAttributesInPostRequest.RequiredReferenceType), "requiredReferenceType")]
-    [InlineData(nameof(ResourceAttributesInPostRequest.RequiredNullableValueType), "requiredNullableValueType")]
+    [InlineData(nameof(AttributesInCreateResourceRequest.RequiredReferenceType), "requiredReferenceType")]
+    [InlineData(nameof(AttributesInCreateResourceRequest.RequiredNullableValueType), "requiredNullableValueType")]
     public async Task Cannot_omit_attribute(string attributePropertyName, string jsonPropertyName)
     {
         // Arrange
-        var requestDocument = new ResourcePostRequestDocument
+        var requestDocument = new CreateResourceRequestDocument
         {
-            Data = new ResourceDataInPostRequest
+            Data = new DataInCreateResourceRequest
             {
                 Attributes = _fakers.PostAttributes.Generate(),
-                Relationships = new ResourceRelationshipsInPostRequest
+                Relationships = new RelationshipsInCreateResourceRequest
                 {
                     ToOne = _fakers.NullableToOne.Generate(),
                     RequiredToOne = _fakers.ToOne.Generate(),
@@ -168,7 +168,7 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
-        using IDisposable _ = apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument);
+        using IDisposable _ = apiClient.WithPartialAttributeSerialization<CreateResourceRequestDocument, AttributesInCreateResourceRequest>(requestDocument);
 
         // Act
         Func<Task> action = async () => await apiClient.PostResourceAsync(null, requestDocument);
@@ -181,16 +181,16 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
     }
 
     [Theory]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.ToOne), "toOne")]
+    [InlineData(nameof(RelationshipsInCreateResourceRequest.ToOne), "toOne")]
     public async Task Can_clear_relationship(string relationshipPropertyName, string jsonPropertyName)
     {
         // Arrange
-        var requestDocument = new ResourcePostRequestDocument
+        var requestDocument = new CreateResourceRequestDocument
         {
-            Data = new ResourceDataInPostRequest
+            Data = new DataInCreateResourceRequest
             {
                 Attributes = _fakers.PostAttributes.Generate(),
-                Relationships = new ResourceRelationshipsInPostRequest
+                Relationships = new RelationshipsInCreateResourceRequest
                 {
                     ToOne = _fakers.NullableToOne.Generate(),
                     RequiredToOne = _fakers.ToOne.Generate(),
@@ -218,18 +218,18 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
     }
 
     [Theory]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredToOne), "requiredToOne")]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.ToMany), "toMany")]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredToMany), "requiredToMany")]
+    [InlineData(nameof(RelationshipsInCreateResourceRequest.RequiredToOne), "requiredToOne")]
+    [InlineData(nameof(RelationshipsInCreateResourceRequest.ToMany), "toMany")]
+    [InlineData(nameof(RelationshipsInCreateResourceRequest.RequiredToMany), "requiredToMany")]
     public async Task Cannot_clear_relationship(string relationshipPropertyName, string jsonPropertyName)
     {
         // Arrange
-        var requestDocument = new ResourcePostRequestDocument
+        var requestDocument = new CreateResourceRequestDocument
         {
-            Data = new ResourceDataInPostRequest
+            Data = new DataInCreateResourceRequest
             {
                 Attributes = _fakers.PostAttributes.Generate(),
-                Relationships = new ResourceRelationshipsInPostRequest
+                Relationships = new RelationshipsInCreateResourceRequest
                 {
                     ToOne = _fakers.NullableToOne.Generate(),
                     RequiredToOne = _fakers.ToOne.Generate(),
@@ -255,18 +255,18 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
     }
 
     [Theory]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.ToOne), "toOne")]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.ToMany), "toMany")]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredToMany), "requiredToMany")]
+    [InlineData(nameof(RelationshipsInCreateResourceRequest.ToOne), "toOne")]
+    [InlineData(nameof(RelationshipsInCreateResourceRequest.ToMany), "toMany")]
+    [InlineData(nameof(RelationshipsInCreateResourceRequest.RequiredToMany), "requiredToMany")]
     public async Task Can_omit_relationship(string relationshipPropertyName, string jsonPropertyName)
     {
         // Arrange
-        var requestDocument = new ResourcePostRequestDocument
+        var requestDocument = new CreateResourceRequestDocument
         {
-            Data = new ResourceDataInPostRequest
+            Data = new DataInCreateResourceRequest
             {
                 Attributes = _fakers.PostAttributes.Generate(),
-                Relationships = new ResourceRelationshipsInPostRequest
+                Relationships = new RelationshipsInCreateResourceRequest
                 {
                     ToOne = _fakers.NullableToOne.Generate(),
                     RequiredToOne = _fakers.ToOne.Generate(),
@@ -294,16 +294,16 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
     }
 
     [Theory]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredToOne), "requiredToOne")]
+    [InlineData(nameof(RelationshipsInCreateResourceRequest.RequiredToOne), "requiredToOne")]
     public async Task Cannot_omit_relationship(string relationshipPropertyName, string jsonPropertyName)
     {
         // Arrange
-        var requestDocument = new ResourcePostRequestDocument
+        var requestDocument = new CreateResourceRequestDocument
         {
-            Data = new ResourceDataInPostRequest
+            Data = new DataInCreateResourceRequest
             {
                 Attributes = _fakers.PostAttributes.Generate(),
-                Relationships = new ResourceRelationshipsInPostRequest
+                Relationships = new RelationshipsInCreateResourceRequest
                 {
                     ToOne = _fakers.NullableToOne.Generate(),
                     RequiredToOne = _fakers.ToOne.Generate(),

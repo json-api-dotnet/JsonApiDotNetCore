@@ -43,11 +43,11 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMed
         /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<SocialMediaAccountPrimaryResponseDocument?> PatchAsync(SocialMediaAccountPatchRequestDocument body, Action<RequestConfiguration<SocialMediaAccountsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<SocialMediaAccountPrimaryResponseDocument?> PatchAsync(UpdateSocialMediaAccountRequestDocument body, Action<RequestConfiguration<SocialMediaAccountsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<SocialMediaAccountPrimaryResponseDocument> PatchAsync(SocialMediaAccountPatchRequestDocument body, Action<RequestConfiguration<SocialMediaAccountsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<SocialMediaAccountPrimaryResponseDocument> PatchAsync(UpdateSocialMediaAccountRequestDocument body, Action<RequestConfiguration<SocialMediaAccountsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -69,11 +69,11 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMed
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPatchRequestInformation(SocialMediaAccountPatchRequestDocument body, Action<RequestConfiguration<SocialMediaAccountsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(UpdateSocialMediaAccountRequestDocument body, Action<RequestConfiguration<SocialMediaAccountsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPatchRequestInformation(SocialMediaAccountPatchRequestDocument body, Action<RequestConfiguration<SocialMediaAccountsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(UpdateSocialMediaAccountRequestDocument body, Action<RequestConfiguration<SocialMediaAccountsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));

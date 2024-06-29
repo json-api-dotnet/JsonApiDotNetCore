@@ -91,8 +91,8 @@ internal sealed class ResourceFieldSchemaBuilder
     private static AttrCapabilities GetRequiredCapabilityForAttributes(Type resourceDataOpenType)
     {
         return resourceDataOpenType == typeof(ResourceDataInResponse<>) ? AttrCapabilities.AllowView :
-            resourceDataOpenType == typeof(ResourceDataInPostRequest<>) ? AttrCapabilities.AllowCreate :
-            resourceDataOpenType == typeof(ResourceDataInPatchRequest<>) ? AttrCapabilities.AllowChange : throw new UnreachableCodeException();
+            resourceDataOpenType == typeof(DataInCreateResourceRequest<>) ? AttrCapabilities.AllowCreate :
+            resourceDataOpenType == typeof(DataInUpdateResourceRequest<>) ? AttrCapabilities.AllowChange : throw new UnreachableCodeException();
     }
 
     private void EnsureAttributeSchemaIsExposed(OpenApiSchema attributeReferenceSchema, AttrAttribute attribute, SchemaRepository schemaRepository)
@@ -127,8 +127,8 @@ internal sealed class ResourceFieldSchemaBuilder
 
     private bool IsFieldRequired(ResourceFieldAttribute field)
     {
-        bool isPostRequestSchemaType = _resourceTypeInfo.ResourceDataOpenType == typeof(ResourceDataInPostRequest<>);
-        return isPostRequestSchemaType && _resourceFieldValidationMetadataProvider.IsRequired(field);
+        bool isCreateResourceSchemaType = _resourceTypeInfo.ResourceDataOpenType == typeof(DataInCreateResourceRequest<>);
+        return isCreateResourceSchemaType && _resourceFieldValidationMetadataProvider.IsRequired(field);
     }
 
     public void SetMembersOfRelationships(OpenApiSchema fullSchemaForRelationships, SchemaRepository schemaRepository)

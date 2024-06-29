@@ -43,16 +43,16 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new RestrictedControllersClient(httpClient);
 
-        var requestBody = new WriteOnlyChannelPostRequestDocument
+        var requestBody = new CreateWriteOnlyChannelRequestDocument
         {
-            Data = new WriteOnlyChannelDataInPostRequest
+            Data = new DataInCreateWriteOnlyChannelRequest
             {
-                Attributes = new WriteOnlyChannelAttributesInPostRequest
+                Attributes = new AttributesInCreateWriteOnlyChannelRequest
                 {
                     Name = newChannel.Name,
                     IsAdultOnly = newChannel.IsAdultOnly
                 },
-                Relationships = new WriteOnlyChannelRelationshipsInPostRequest
+                Relationships = new RelationshipsInCreateWriteOnlyChannelRequest
                 {
                     VideoStream = new ToOneDataStreamInRequest
                     {
@@ -139,7 +139,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new RestrictedControllersClient(httpClient);
 
-        WriteOnlyChannelPostRequestDocument requestBody = null!;
+        CreateWriteOnlyChannelRequestDocument requestBody = null!;
 
         // Act
         Func<Task> action = async () => _ = await apiClient.PostWriteOnlyChannelAsync(null, requestBody);
@@ -159,15 +159,15 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new RestrictedControllersClient(httpClient);
 
-        var requestBody = new WriteOnlyChannelPostRequestDocument
+        var requestBody = new CreateWriteOnlyChannelRequestDocument
         {
-            Data = new WriteOnlyChannelDataInPostRequest
+            Data = new DataInCreateWriteOnlyChannelRequest
             {
-                Attributes = new WriteOnlyChannelAttributesInPostRequest
+                Attributes = new AttributesInCreateWriteOnlyChannelRequest
                 {
                     Name = newChannel.Name
                 },
-                Relationships = new WriteOnlyChannelRelationshipsInPostRequest
+                Relationships = new RelationshipsInCreateWriteOnlyChannelRequest
                 {
                     VideoStream = new ToOneDataStreamInRequest
                     {

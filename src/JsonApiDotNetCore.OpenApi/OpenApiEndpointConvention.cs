@@ -105,11 +105,11 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
             JsonApiEndpoint.GetSingle => availableEndpoints.HasFlag(JsonApiEndpoints.GetSingle),
             JsonApiEndpoint.GetSecondary => availableEndpoints.HasFlag(JsonApiEndpoints.GetSecondary),
             JsonApiEndpoint.GetRelationship => availableEndpoints.HasFlag(JsonApiEndpoints.GetRelationship),
-            JsonApiEndpoint.Post => availableEndpoints.HasFlag(JsonApiEndpoints.Post),
+            JsonApiEndpoint.PostResource => availableEndpoints.HasFlag(JsonApiEndpoints.Post),
             JsonApiEndpoint.PostRelationship => availableEndpoints.HasFlag(JsonApiEndpoints.PostRelationship),
-            JsonApiEndpoint.Patch => availableEndpoints.HasFlag(JsonApiEndpoints.Patch),
+            JsonApiEndpoint.PatchResource => availableEndpoints.HasFlag(JsonApiEndpoints.Patch),
             JsonApiEndpoint.PatchRelationship => availableEndpoints.HasFlag(JsonApiEndpoints.PatchRelationship),
-            JsonApiEndpoint.Delete => availableEndpoints.HasFlag(JsonApiEndpoints.Delete),
+            JsonApiEndpoint.DeleteResource => availableEndpoints.HasFlag(JsonApiEndpoints.Delete),
             JsonApiEndpoint.DeleteRelationship => availableEndpoints.HasFlag(JsonApiEndpoints.DeleteRelationship),
             _ => throw new UnreachableCodeException()
         };
@@ -152,17 +152,17 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
                 HttpStatusCode.OK,
                 HttpStatusCode.NotModified
             ],
-            JsonApiEndpoint.Post =>
+            JsonApiEndpoint.PostResource =>
             [
                 HttpStatusCode.Created,
                 HttpStatusCode.NoContent
             ],
-            JsonApiEndpoint.Patch =>
+            JsonApiEndpoint.PatchResource =>
             [
                 HttpStatusCode.OK,
                 HttpStatusCode.NoContent
             ],
-            JsonApiEndpoint.Delete or JsonApiEndpoint.PostRelationship or JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship =>
+            JsonApiEndpoint.DeleteResource or JsonApiEndpoint.PostRelationship or JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship =>
             [
                 HttpStatusCode.NoContent
             ],
@@ -182,7 +182,7 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
                 HttpStatusCode.BadRequest,
                 HttpStatusCode.NotFound
             ],
-            JsonApiEndpoint.Post when clientIdGeneration == ClientIdGenerationMode.Forbidden =>
+            JsonApiEndpoint.PostResource when clientIdGeneration == ClientIdGenerationMode.Forbidden =>
             [
                 HttpStatusCode.BadRequest,
                 HttpStatusCode.Forbidden,
@@ -190,21 +190,21 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
                 HttpStatusCode.Conflict,
                 HttpStatusCode.UnprocessableEntity
             ],
-            JsonApiEndpoint.Post =>
+            JsonApiEndpoint.PostResource =>
             [
                 HttpStatusCode.BadRequest,
                 HttpStatusCode.NotFound,
                 HttpStatusCode.Conflict,
                 HttpStatusCode.UnprocessableEntity
             ],
-            JsonApiEndpoint.Patch =>
+            JsonApiEndpoint.PatchResource =>
             [
                 HttpStatusCode.BadRequest,
                 HttpStatusCode.NotFound,
                 HttpStatusCode.Conflict,
                 HttpStatusCode.UnprocessableEntity
             ],
-            JsonApiEndpoint.Delete => [HttpStatusCode.NotFound],
+            JsonApiEndpoint.DeleteResource => [HttpStatusCode.NotFound],
             JsonApiEndpoint.PostRelationship or JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship => new[]
             {
                 HttpStatusCode.BadRequest,
@@ -225,7 +225,7 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
 
     private static bool RequiresRequestBody(JsonApiEndpoint endpoint)
     {
-        return endpoint is JsonApiEndpoint.Post or JsonApiEndpoint.Patch or JsonApiEndpoint.PostRelationship or JsonApiEndpoint.PatchRelationship or
-            JsonApiEndpoint.DeleteRelationship;
+        return endpoint is JsonApiEndpoint.PostResource or JsonApiEndpoint.PatchResource or JsonApiEndpoint.PostRelationship or
+            JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship;
     }
 }

@@ -8,6 +8,18 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 
 internal sealed class ResourceDataSchemaGenerator
 {
+#if NET6_0
+    private static readonly string[] ResourceDataPropertyNamesInOrder =
+    [
+        JsonApiPropertyName.Type,
+        JsonApiPropertyName.Id,
+        JsonApiPropertyName.Attributes,
+        JsonApiPropertyName.Relationships,
+        JsonApiPropertyName.Links,
+        JsonApiPropertyName.Meta
+    ];
+#endif
+
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly ResourceTypeSchemaGenerator _resourceTypeSchemaGenerator;
     private readonly ResourceIdentifierSchemaGenerator _resourceIdentifierSchemaGenerator;
@@ -68,7 +80,7 @@ internal sealed class ResourceDataSchemaGenerator
 
         if (effectiveFullSchemaForResourceData == fullSchemaForResourceData)
         {
-            RemoveResourceIdIfPostResource(resourceTypeInfo, fullSchemaForResourceData);
+            AdaptResourceIdentity(resourceTypeInfo, fullSchemaForResourceData);
             SetResourceType(fullSchemaForResourceData, resourceTypeInfo.ResourceType, schemaRepository);
         }
 
@@ -81,12 +93,16 @@ internal sealed class ResourceDataSchemaGenerator
 
         effectiveFullSchemaForResourceData.SetValuesInMetaToNullable();
 
+#if NET6_0
+        effectiveFullSchemaForResourceData.ReorderProperties(ResourceDataPropertyNamesInOrder);
+#endif
+
         return referenceSchemaForResourceData;
     }
 
-    private void RemoveResourceIdIfPostResource(ResourceTypeInfo resourceTypeInfo, OpenApiSchema fullSchemaForResourceData)
+    private void AdaptResourceIdentity(ResourceTypeInfo resourceTypeInfo, OpenApiSchema fullSchemaForResourceData)
     {
-        if (resourceTypeInfo.ResourceDataOpenType == typeof(ResourceDataInPostRequest<>))
+        if (resourceTypeInfo.ResourceDataOpenType == typeof(DataInCreateResourceRequest<>))
         {
             ClientIdGenerationMode clientIdGeneration = resourceTypeInfo.ResourceType.ClientIdGeneration ?? _options.ClientIdGeneration;
 

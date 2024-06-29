@@ -18,12 +18,12 @@ public sealed class UpdateResourceTests : BaseOpenApiNSwagClientTests
     public async Task Cannot_omit_Id()
     {
         // Arrange
-        var requestDocument = new ResourcePatchRequestDocument
+        var requestDocument = new UpdateResourceRequestDocument
         {
-            Data = new ResourceDataInPatchRequest
+            Data = new DataInUpdateResourceRequest
             {
                 Attributes = _fakers.PatchAttributes.Generate(),
-                Relationships = new ResourceRelationshipsInPatchRequest
+                Relationships = new RelationshipsInUpdateResourceRequest
                 {
                     NonNullableToOne = _fakers.ToOne.Generate(),
                     RequiredNonNullableToOne = _fakers.ToOne.Generate(),
@@ -48,24 +48,24 @@ public sealed class UpdateResourceTests : BaseOpenApiNSwagClientTests
     }
 
     [Theory]
-    [InlineData(nameof(ResourceAttributesInPatchRequest.NonNullableReferenceType), "nonNullableReferenceType")]
-    [InlineData(nameof(ResourceAttributesInPatchRequest.RequiredNonNullableReferenceType), "requiredNonNullableReferenceType")]
-    [InlineData(nameof(ResourceAttributesInPatchRequest.NullableReferenceType), "nullableReferenceType")]
-    [InlineData(nameof(ResourceAttributesInPatchRequest.RequiredNullableReferenceType), "requiredNullableReferenceType")]
-    [InlineData(nameof(ResourceAttributesInPatchRequest.ValueType), "valueType")]
-    [InlineData(nameof(ResourceAttributesInPatchRequest.RequiredValueType), "requiredValueType")]
-    [InlineData(nameof(ResourceAttributesInPatchRequest.NullableValueType), "nullableValueType")]
-    [InlineData(nameof(ResourceAttributesInPatchRequest.RequiredNullableValueType), "requiredNullableValueType")]
+    [InlineData(nameof(AttributesInUpdateResourceRequest.NonNullableReferenceType), "nonNullableReferenceType")]
+    [InlineData(nameof(AttributesInUpdateResourceRequest.RequiredNonNullableReferenceType), "requiredNonNullableReferenceType")]
+    [InlineData(nameof(AttributesInUpdateResourceRequest.NullableReferenceType), "nullableReferenceType")]
+    [InlineData(nameof(AttributesInUpdateResourceRequest.RequiredNullableReferenceType), "requiredNullableReferenceType")]
+    [InlineData(nameof(AttributesInUpdateResourceRequest.ValueType), "valueType")]
+    [InlineData(nameof(AttributesInUpdateResourceRequest.RequiredValueType), "requiredValueType")]
+    [InlineData(nameof(AttributesInUpdateResourceRequest.NullableValueType), "nullableValueType")]
+    [InlineData(nameof(AttributesInUpdateResourceRequest.RequiredNullableValueType), "requiredNullableValueType")]
     public async Task Can_omit_attribute(string attributePropertyName, string jsonPropertyName)
     {
         // Arrange
-        var requestDocument = new ResourcePatchRequestDocument
+        var requestDocument = new UpdateResourceRequestDocument
         {
-            Data = new ResourceDataInPatchRequest
+            Data = new DataInUpdateResourceRequest
             {
                 Id = Unknown.StringId.Int32,
                 Attributes = _fakers.PatchAttributes.Generate(),
-                Relationships = new ResourceRelationshipsInPatchRequest
+                Relationships = new RelationshipsInUpdateResourceRequest
                 {
                     NonNullableToOne = _fakers.ToOne.Generate(),
                     RequiredNonNullableToOne = _fakers.ToOne.Generate(),
@@ -82,7 +82,7 @@ public sealed class UpdateResourceTests : BaseOpenApiNSwagClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
 
-        using IDisposable _ = apiClient.WithPartialAttributeSerialization<ResourcePatchRequestDocument, ResourceAttributesInPatchRequest>(requestDocument);
+        using IDisposable _ = apiClient.WithPartialAttributeSerialization<UpdateResourceRequestDocument, AttributesInUpdateResourceRequest>(requestDocument);
 
         // Act
         await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(requestDocument.Data.Id, null, requestDocument));
@@ -97,22 +97,22 @@ public sealed class UpdateResourceTests : BaseOpenApiNSwagClientTests
     }
 
     [Theory]
-    [InlineData(nameof(ResourceRelationshipsInPatchRequest.NonNullableToOne), "nonNullableToOne")]
-    [InlineData(nameof(ResourceRelationshipsInPatchRequest.RequiredNonNullableToOne), "requiredNonNullableToOne")]
-    [InlineData(nameof(ResourceRelationshipsInPatchRequest.NullableToOne), "nullableToOne")]
-    [InlineData(nameof(ResourceRelationshipsInPatchRequest.RequiredNullableToOne), "requiredNullableToOne")]
-    [InlineData(nameof(ResourceRelationshipsInPatchRequest.ToMany), "toMany")]
-    [InlineData(nameof(ResourceRelationshipsInPatchRequest.RequiredToMany), "requiredToMany")]
+    [InlineData(nameof(RelationshipsInUpdateResourceRequest.NonNullableToOne), "nonNullableToOne")]
+    [InlineData(nameof(RelationshipsInUpdateResourceRequest.RequiredNonNullableToOne), "requiredNonNullableToOne")]
+    [InlineData(nameof(RelationshipsInUpdateResourceRequest.NullableToOne), "nullableToOne")]
+    [InlineData(nameof(RelationshipsInUpdateResourceRequest.RequiredNullableToOne), "requiredNullableToOne")]
+    [InlineData(nameof(RelationshipsInUpdateResourceRequest.ToMany), "toMany")]
+    [InlineData(nameof(RelationshipsInUpdateResourceRequest.RequiredToMany), "requiredToMany")]
     public async Task Can_omit_relationship(string relationshipPropertyName, string jsonPropertyName)
     {
         // Arrange
-        var requestDocument = new ResourcePatchRequestDocument
+        var requestDocument = new UpdateResourceRequestDocument
         {
-            Data = new ResourceDataInPatchRequest
+            Data = new DataInUpdateResourceRequest
             {
                 Id = Unknown.StringId.Int32,
                 Attributes = _fakers.PatchAttributes.Generate(),
-                Relationships = new ResourceRelationshipsInPatchRequest
+                Relationships = new RelationshipsInUpdateResourceRequest
                 {
                     NonNullableToOne = _fakers.ToOne.Generate(),
                     RequiredNonNullableToOne = _fakers.ToOne.Generate(),

@@ -97,11 +97,11 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries {
         /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<CountryPrimaryResponseDocument?> PostAsync(CountryPostRequestDocument body, Action<RequestConfiguration<CountriesRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<CountryPrimaryResponseDocument?> PostAsync(CreateCountryRequestDocument body, Action<RequestConfiguration<CountriesRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<CountryPrimaryResponseDocument> PostAsync(CountryPostRequestDocument body, Action<RequestConfiguration<CountriesRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<CountryPrimaryResponseDocument> PostAsync(CreateCountryRequestDocument body, Action<RequestConfiguration<CountriesRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -161,11 +161,11 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPostRequestInformation(CountryPostRequestDocument body, Action<RequestConfiguration<CountriesRequestBuilderPostQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(CreateCountryRequestDocument body, Action<RequestConfiguration<CountriesRequestBuilderPostQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPostRequestInformation(CountryPostRequestDocument body, Action<RequestConfiguration<CountriesRequestBuilderPostQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(CreateCountryRequestDocument body, Action<RequestConfiguration<CountriesRequestBuilderPostQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));

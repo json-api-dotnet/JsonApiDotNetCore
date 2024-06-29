@@ -180,7 +180,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/staffMemberPostRequestDocument"
+                    "$ref": "#/components/schemas/createStaffMemberRequestDocument"
                   }
                 ]
               }
@@ -475,7 +475,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/staffMemberPatchRequestDocument"
+                    "$ref": "#/components/schemas/updateStaffMemberRequestDocument"
                   }
                 ]
               }
@@ -743,7 +743,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/supermarketPostRequestDocument"
+                    "$ref": "#/components/schemas/createSupermarketRequestDocument"
                   }
                 ]
               }
@@ -1038,7 +1038,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/supermarketPatchRequestDocument"
+                    "$ref": "#/components/schemas/updateSupermarketRequestDocument"
                   }
                 ]
               }
@@ -2523,6 +2523,147 @@
   },
   "components": {
     "schemas": {
+      "attributesInCreateStaffMemberRequest": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "attributesInCreateSupermarketRequest": {
+        "required": [
+          "nameOfCity"
+        ],
+        "type": "object",
+        "properties": {
+          "nameOfCity": {
+            "type": "string"
+          },
+          "kind": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/supermarketType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "attributesInUpdateStaffMemberRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "attributesInUpdateSupermarketRequest": {
+        "type": "object",
+        "properties": {
+          "nameOfCity": {
+            "type": "string"
+          },
+          "kind": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/supermarketType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "createStaffMemberRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreateStaffMemberRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "createSupermarketRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreateSupermarketRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInCreateStaffMemberRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/staffMemberResourceType"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInCreateStaffMemberRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInCreateSupermarketRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/supermarketResourceType"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInCreateSupermarketRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipsInCreateSupermarketRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
       "dataInResponse": {
         "required": [
           "id",
@@ -2548,6 +2689,61 @@
           }
         },
         "x-abstract": true
+      },
+      "dataInUpdateStaffMemberRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/staffMemberResourceType"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInUpdateStaffMemberRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInUpdateSupermarketRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/supermarketResourceType"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInUpdateSupermarketRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipsInUpdateSupermarketRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
       },
       "errorLinks": {
         "type": "object",
@@ -2845,6 +3041,63 @@
         },
         "additionalProperties": false
       },
+      "relationshipsInCreateSupermarketRequest": {
+        "required": [
+          "storeManager"
+        ],
+        "type": "object",
+        "properties": {
+          "storeManager": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneStaffMemberInRequest"
+              }
+            ]
+          },
+          "backupStoreManager": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullableToOneStaffMemberInRequest"
+              }
+            ]
+          },
+          "cashiers": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyStaffMemberInRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "relationshipsInUpdateSupermarketRequest": {
+        "type": "object",
+        "properties": {
+          "storeManager": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneStaffMemberInRequest"
+              }
+            ]
+          },
+          "backupStoreManager": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullableToOneStaffMemberInRequest"
+              }
+            ]
+          },
+          "cashiers": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyStaffMemberInRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
       "resourceCollectionTopLevelLinks": {
         "type": "object",
         "properties": {
@@ -2932,35 +3185,6 @@
         },
         "additionalProperties": false
       },
-      "staffMemberAttributesInPatchRequest": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "age": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "staffMemberAttributesInPostRequest": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "age": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
       "staffMemberAttributesInResponse": {
         "type": "object",
         "properties": {
@@ -3013,49 +3237,6 @@
               "type": "object",
               "nullable": true
             }
-          }
-        },
-        "additionalProperties": false
-      },
-      "staffMemberDataInPatchRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/staffMemberResourceType"
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/staffMemberAttributesInPatchRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "staffMemberDataInPostRequest": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/staffMemberResourceType"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/staffMemberAttributesInPostRequest"
-              }
-            ]
           }
         },
         "additionalProperties": false
@@ -3187,38 +3368,6 @@
         },
         "additionalProperties": false
       },
-      "staffMemberPatchRequestDocument": {
-        "required": [
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/staffMemberDataInPatchRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "staffMemberPostRequestDocument": {
-        "required": [
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/staffMemberDataInPostRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
       "staffMemberPrimaryResponseDocument": {
         "required": [
           "data",
@@ -3314,41 +3463,6 @@
         },
         "additionalProperties": false
       },
-      "supermarketAttributesInPatchRequest": {
-        "type": "object",
-        "properties": {
-          "nameOfCity": {
-            "type": "string"
-          },
-          "kind": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/supermarketType"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "supermarketAttributesInPostRequest": {
-        "required": [
-          "nameOfCity"
-        ],
-        "type": "object",
-        "properties": {
-          "nameOfCity": {
-            "type": "string"
-          },
-          "kind": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/supermarketType"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
       "supermarketAttributesInResponse": {
         "type": "object",
         "properties": {
@@ -3408,63 +3522,6 @@
         },
         "additionalProperties": false
       },
-      "supermarketDataInPatchRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/supermarketResourceType"
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/supermarketAttributesInPatchRequest"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/supermarketRelationshipsInPatchRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "supermarketDataInPostRequest": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/supermarketResourceType"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/supermarketAttributesInPostRequest"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/supermarketRelationshipsInPostRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
       "supermarketDataInResponse": {
         "allOf": [
           {
@@ -3507,38 +3564,6 @@
         ],
         "additionalProperties": false
       },
-      "supermarketPatchRequestDocument": {
-        "required": [
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/supermarketDataInPatchRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "supermarketPostRequestDocument": {
-        "required": [
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/supermarketDataInPostRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
       "supermarketPrimaryResponseDocument": {
         "required": [
           "data",
@@ -3579,63 +3604,6 @@
               "type": "object",
               "nullable": true
             }
-          }
-        },
-        "additionalProperties": false
-      },
-      "supermarketRelationshipsInPatchRequest": {
-        "type": "object",
-        "properties": {
-          "storeManager": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toOneStaffMemberInRequest"
-              }
-            ]
-          },
-          "backupStoreManager": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOneStaffMemberInRequest"
-              }
-            ]
-          },
-          "cashiers": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyStaffMemberInRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "supermarketRelationshipsInPostRequest": {
-        "required": [
-          "storeManager"
-        ],
-        "type": "object",
-        "properties": {
-          "storeManager": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toOneStaffMemberInRequest"
-              }
-            ]
-          },
-          "backupStoreManager": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOneStaffMemberInRequest"
-              }
-            ]
-          },
-          "cashiers": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyStaffMemberInRequest"
-              }
-            ]
           }
         },
         "additionalProperties": false
@@ -3762,6 +3730,38 @@
               "type": "object",
               "nullable": true
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "updateStaffMemberRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInUpdateStaffMemberRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "updateSupermarketRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInUpdateSupermarketRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false

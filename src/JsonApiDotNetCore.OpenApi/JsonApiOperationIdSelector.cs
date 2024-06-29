@@ -18,12 +18,12 @@ internal sealed class JsonApiOperationIdSelector
     private const string SecondaryOperationIdTemplate = $"{ResourceOperationIdTemplate} [RelationshipName]";
     private const string RelationshipOperationIdTemplate = $"{SecondaryOperationIdTemplate} Relationship";
 
-    private static readonly IDictionary<Type, string> DocumentOpenTypeToOperationIdTemplateMap = new Dictionary<Type, string>
+    private static readonly IDictionary<Type, string> DocumentSchemaTypeToOperationIdTemplateMap = new Dictionary<Type, string>
     {
         [typeof(ResourceCollectionResponseDocument<>)] = ResourceCollectionOperationIdTemplate,
         [typeof(PrimaryResourceResponseDocument<>)] = ResourceOperationIdTemplate,
-        [typeof(ResourcePostRequestDocument<>)] = ResourceOperationIdTemplate,
-        [typeof(ResourcePatchRequestDocument<>)] = ResourceOperationIdTemplate,
+        [typeof(CreateResourceRequestDocument<>)] = ResourceOperationIdTemplate,
+        [typeof(UpdateResourceRequestDocument<>)] = ResourceOperationIdTemplate,
         [typeof(void)] = ResourceOperationIdTemplate,
         [typeof(SecondaryResourceResponseDocument<>)] = SecondaryOperationIdTemplate,
         [typeof(NullableSecondaryResourceResponseDocument<>)] = SecondaryOperationIdTemplate,
@@ -68,7 +68,7 @@ internal sealed class JsonApiOperationIdSelector
     {
         Type requestDocumentType = GetDocumentType(endpoint);
 
-        if (!DocumentOpenTypeToOperationIdTemplateMap.TryGetValue(requestDocumentType, out string? template))
+        if (!DocumentSchemaTypeToOperationIdTemplateMap.TryGetValue(requestDocumentType, out string? template))
         {
             throw new UnreachableCodeException();
         }

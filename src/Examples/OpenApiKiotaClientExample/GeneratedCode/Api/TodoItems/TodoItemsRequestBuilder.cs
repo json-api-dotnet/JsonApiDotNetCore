@@ -97,11 +97,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems {
         /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<TodoItemPrimaryResponseDocument?> PostAsync(TodoItemPostRequestDocument body, Action<RequestConfiguration<TodoItemsRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<TodoItemPrimaryResponseDocument?> PostAsync(CreateTodoItemRequestDocument body, Action<RequestConfiguration<TodoItemsRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<TodoItemPrimaryResponseDocument> PostAsync(TodoItemPostRequestDocument body, Action<RequestConfiguration<TodoItemsRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<TodoItemPrimaryResponseDocument> PostAsync(CreateTodoItemRequestDocument body, Action<RequestConfiguration<TodoItemsRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -161,11 +161,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPostRequestInformation(TodoItemPostRequestDocument body, Action<RequestConfiguration<TodoItemsRequestBuilderPostQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(CreateTodoItemRequestDocument body, Action<RequestConfiguration<TodoItemsRequestBuilderPostQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPostRequestInformation(TodoItemPostRequestDocument body, Action<RequestConfiguration<TodoItemsRequestBuilderPostQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(CreateTodoItemRequestDocument body, Action<RequestConfiguration<TodoItemsRequestBuilderPostQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));

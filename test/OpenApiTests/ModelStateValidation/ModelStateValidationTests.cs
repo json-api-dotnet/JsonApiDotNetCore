@@ -9,8 +9,8 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     // ReSharper disable once UseCollectionExpression (https://youtrack.jetbrains.com/issue/RSRP-497450)
     public static readonly TheoryData<string> SchemaNames = new()
     {
-        "socialMediaAccountAttributesInPostRequest",
-        "socialMediaAccountAttributesInPatchRequest",
+        "attributesInCreateSocialMediaAccountRequest",
+        "attributesInUpdateSocialMediaAccountRequest",
         "socialMediaAccountAttributesInResponse"
     };
 

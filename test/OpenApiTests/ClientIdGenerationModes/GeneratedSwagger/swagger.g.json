@@ -39,7 +39,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/gamePostRequestDocument"
+                    "$ref": "#/components/schemas/createGameRequestDocument"
                   }
                 ]
               }
@@ -143,7 +143,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/playerGroupPostRequestDocument"
+                    "$ref": "#/components/schemas/createPlayerGroupRequestDocument"
                   }
                 ]
               }
@@ -257,7 +257,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/playerPostRequestDocument"
+                    "$ref": "#/components/schemas/createPlayerRequestDocument"
                   }
                 ]
               }
@@ -335,6 +335,174 @@
   },
   "components": {
     "schemas": {
+      "attributesInCreateGameRequest": {
+        "required": [
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "purchasePrice": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "attributesInCreatePlayerGroupRequest": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "attributesInCreatePlayerRequest": {
+        "required": [
+          "userName"
+        ],
+        "type": "object",
+        "properties": {
+          "userName": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "createGameRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreateGameRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "createPlayerGroupRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreatePlayerGroupRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "createPlayerRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreatePlayerRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInCreateGameRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/gameResourceType"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInCreateGameRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInCreatePlayerGroupRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/playerGroupResourceType"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInCreatePlayerGroupRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipsInCreatePlayerGroupRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInCreatePlayerRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/playerResourceType"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInCreatePlayerRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipsInCreatePlayerRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
       "dataInResponse": {
         "required": [
           "id",
@@ -482,22 +650,6 @@
         },
         "additionalProperties": false
       },
-      "gameAttributesInPostRequest": {
-        "required": [
-          "title"
-        ],
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string"
-          },
-          "purchasePrice": {
-            "type": "number",
-            "format": "double"
-          }
-        },
-        "additionalProperties": false
-      },
       "gameAttributesInResponse": {
         "type": "object",
         "properties": {
@@ -507,29 +659,6 @@
           "purchasePrice": {
             "type": "number",
             "format": "double"
-          }
-        },
-        "additionalProperties": false
-      },
-      "gameDataInPostRequest": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/gameResourceType"
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/gameAttributesInPostRequest"
-              }
-            ]
           }
         },
         "additionalProperties": false
@@ -586,22 +715,6 @@
         },
         "additionalProperties": false
       },
-      "gamePostRequestDocument": {
-        "required": [
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/gameDataInPostRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
       "gamePrimaryResponseDocument": {
         "required": [
           "data",
@@ -646,54 +759,11 @@
         "type": "string",
         "additionalProperties": false
       },
-      "playerAttributesInPostRequest": {
-        "required": [
-          "userName"
-        ],
-        "type": "object",
-        "properties": {
-          "userName": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "playerAttributesInResponse": {
         "type": "object",
         "properties": {
           "userName": {
             "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "playerDataInPostRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/playerResourceType"
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/playerAttributesInPostRequest"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/playerRelationshipsInPostRequest"
-              }
-            ]
           }
         },
         "additionalProperties": false
@@ -740,49 +810,11 @@
         ],
         "additionalProperties": false
       },
-      "playerGroupAttributesInPostRequest": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "playerGroupAttributesInResponse": {
         "type": "object",
         "properties": {
           "name": {
             "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "playerGroupDataInPostRequest": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/playerGroupResourceType"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/playerGroupAttributesInPostRequest"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/playerGroupRelationshipsInPostRequest"
-              }
-            ]
           }
         },
         "additionalProperties": false
@@ -846,22 +878,6 @@
         },
         "additionalProperties": false
       },
-      "playerGroupPostRequestDocument": {
-        "required": [
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/playerGroupDataInPostRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
       "playerGroupPrimaryResponseDocument": {
         "required": [
           "data",
@@ -895,19 +911,6 @@
               "type": "object",
               "nullable": true
             }
-          }
-        },
-        "additionalProperties": false
-      },
-      "playerGroupRelationshipsInPostRequest": {
-        "type": "object",
-        "properties": {
-          "players": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyPlayerInRequest"
-              }
-            ]
           }
         },
         "additionalProperties": false
@@ -949,22 +952,6 @@
         },
         "additionalProperties": false
       },
-      "playerPostRequestDocument": {
-        "required": [
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/playerDataInPostRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
       "playerPrimaryResponseDocument": {
         "required": [
           "data",
@@ -998,26 +985,6 @@
               "type": "object",
               "nullable": true
             }
-          }
-        },
-        "additionalProperties": false
-      },
-      "playerRelationshipsInPostRequest": {
-        "type": "object",
-        "properties": {
-          "ownedGames": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyGameInRequest"
-              }
-            ]
-          },
-          "memberOf": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyPlayerGroupInRequest"
-              }
-            ]
           }
         },
         "additionalProperties": false
@@ -1057,6 +1024,39 @@
           },
           "related": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "relationshipsInCreatePlayerGroupRequest": {
+        "type": "object",
+        "properties": {
+          "players": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyPlayerInRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "relationshipsInCreatePlayerRequest": {
+        "type": "object",
+        "properties": {
+          "ownedGames": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyGameInRequest"
+              }
+            ]
+          },
+          "memberOf": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyPlayerGroupInRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false

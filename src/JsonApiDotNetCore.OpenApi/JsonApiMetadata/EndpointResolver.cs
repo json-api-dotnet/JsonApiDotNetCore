@@ -45,19 +45,19 @@ internal sealed class EndpointResolver
             },
             HttpPostAttribute attr => attr.Template switch
             {
-                null => JsonApiEndpoint.Post,
+                null => JsonApiEndpoint.PostResource,
                 JsonApiRoutingTemplate.RelationshipEndpoint => JsonApiEndpoint.PostRelationship,
                 _ => null
             },
             HttpPatchAttribute attr => attr.Template switch
             {
-                JsonApiRoutingTemplate.PrimaryEndpoint => JsonApiEndpoint.Patch,
+                JsonApiRoutingTemplate.PrimaryEndpoint => JsonApiEndpoint.PatchResource,
                 JsonApiRoutingTemplate.RelationshipEndpoint => JsonApiEndpoint.PatchRelationship,
                 _ => null
             },
             HttpDeleteAttribute attr => attr.Template switch
             {
-                JsonApiRoutingTemplate.PrimaryEndpoint => JsonApiEndpoint.Delete,
+                JsonApiRoutingTemplate.PrimaryEndpoint => JsonApiEndpoint.DeleteResource,
                 JsonApiRoutingTemplate.RelationshipEndpoint => JsonApiEndpoint.DeleteRelationship,
                 _ => null
             },

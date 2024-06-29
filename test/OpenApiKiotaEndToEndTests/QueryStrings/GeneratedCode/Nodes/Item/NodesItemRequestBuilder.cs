@@ -131,11 +131,11 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item {
         /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<NodePrimaryResponseDocument?> PatchAsync(NodePatchRequestDocument body, Action<RequestConfiguration<NodesItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<NodePrimaryResponseDocument?> PatchAsync(UpdateNodeRequestDocument body, Action<RequestConfiguration<NodesItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<NodePrimaryResponseDocument> PatchAsync(NodePatchRequestDocument body, Action<RequestConfiguration<NodesItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<NodePrimaryResponseDocument> PatchAsync(UpdateNodeRequestDocument body, Action<RequestConfiguration<NodesItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -213,11 +213,11 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPatchRequestInformation(NodePatchRequestDocument body, Action<RequestConfiguration<NodesItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(UpdateNodeRequestDocument body, Action<RequestConfiguration<NodesItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPatchRequestInformation(NodePatchRequestDocument body, Action<RequestConfiguration<NodesItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(UpdateNodeRequestDocument body, Action<RequestConfiguration<NodesItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));

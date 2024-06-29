@@ -97,11 +97,11 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Excursions {
         /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<ExcursionPrimaryResponseDocument?> PostAsync(ExcursionPostRequestDocument body, Action<RequestConfiguration<ExcursionsRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<ExcursionPrimaryResponseDocument?> PostAsync(CreateExcursionRequestDocument body, Action<RequestConfiguration<ExcursionsRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<ExcursionPrimaryResponseDocument> PostAsync(ExcursionPostRequestDocument body, Action<RequestConfiguration<ExcursionsRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<ExcursionPrimaryResponseDocument> PostAsync(CreateExcursionRequestDocument body, Action<RequestConfiguration<ExcursionsRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -161,11 +161,11 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Excursions {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPostRequestInformation(ExcursionPostRequestDocument body, Action<RequestConfiguration<ExcursionsRequestBuilderPostQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(CreateExcursionRequestDocument body, Action<RequestConfiguration<ExcursionsRequestBuilderPostQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPostRequestInformation(ExcursionPostRequestDocument body, Action<RequestConfiguration<ExcursionsRequestBuilderPostQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(CreateExcursionRequestDocument body, Action<RequestConfiguration<ExcursionsRequestBuilderPostQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));

@@ -60,12 +60,12 @@ public sealed class RequestTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
-        var requestDocument = new FlightPostRequestDocument
+        var requestDocument = new CreateFlightRequestDocument
         {
-            Data = new FlightDataInPostRequest
+            Data = new DataInCreateFlightRequest
             {
                 Type = FlightResourceType.Flights,
-                Relationships = new FlightRelationshipsInPostRequest
+                Relationships = new RelationshipsInCreateFlightRequest
                 {
                     Purser = new ToOneFlightAttendantInRequest
                     {
@@ -142,12 +142,12 @@ public sealed class RequestTests
 
         string name = $"anAirplaneName {specialCharacters}";
 
-        var requestDocument = new AirplanePostRequestDocument
+        var requestDocument = new CreateAirplaneRequestDocument
         {
-            Data = new AirplaneDataInPostRequest
+            Data = new DataInCreateAirplaneRequest
             {
                 Type = AirplaneResourceType.Airplanes,
-                Attributes = new AirplaneAttributesInPostRequest
+                Attributes = new AttributesInCreateAirplaneRequest
                 {
                     Name = name,
                     AirtimeInHours = 800
@@ -155,7 +155,7 @@ public sealed class RequestTests
             }
         };
 
-        using (apiClient.WithPartialAttributeSerialization<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument,
+        using (apiClient.WithPartialAttributeSerialization<CreateAirplaneRequestDocument, AttributesInCreateAirplaneRequest>(requestDocument,
             airplane => airplane.SerialNumber))
         {
             // Act
@@ -195,20 +195,20 @@ public sealed class RequestTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
-        var requestDocument = new AirplanePatchRequestDocument
+        var requestDocument = new UpdateAirplaneRequestDocument
         {
-            Data = new AirplaneDataInPatchRequest
+            Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId,
                 Type = AirplaneResourceType.Airplanes,
-                Attributes = new AirplaneAttributesInPatchRequest
+                Attributes = new AttributesInUpdateAirplaneRequest
                 {
                     LastServicedAt = lastServicedAt
                 }
             }
         };
 
-        using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
+        using (apiClient.WithPartialAttributeSerialization<UpdateAirplaneRequestDocument, AttributesInUpdateAirplaneRequest>(requestDocument,
             airplane => airplane.SerialNumber, airplane => airplane.LastServicedAt, airplane => airplane.IsInMaintenance, airplane => airplane.AirtimeInHours))
         {
             // Act
@@ -389,19 +389,19 @@ public sealed class RequestTests
 
         var requestDocument = new ToManyFlightAttendantInRequest
         {
-            Data = new List<FlightAttendantIdentifier>
-            {
-                new()
+            Data =
+            [
+                new FlightAttendantIdentifier
                 {
                     Type = FlightAttendantResourceType.FlightAttendants,
                     Id = "bBJHu"
                 },
-                new()
+                new FlightAttendantIdentifier
                 {
                     Type = FlightAttendantResourceType.FlightAttendants,
                     Id = "NInmX"
                 }
-            }
+            ]
         };
 
         // Act
@@ -442,19 +442,19 @@ public sealed class RequestTests
 
         var requestDocument = new ToManyFlightAttendantInRequest
         {
-            Data = new List<FlightAttendantIdentifier>
-            {
-                new()
+            Data =
+            [
+                new FlightAttendantIdentifier
                 {
                     Id = "bBJHu",
                     Type = FlightAttendantResourceType.FlightAttendants
                 },
-                new()
+                new FlightAttendantIdentifier
                 {
                     Id = "NInmX",
                     Type = FlightAttendantResourceType.FlightAttendants
                 }
-            }
+            ]
         };
 
         // Act
@@ -495,19 +495,19 @@ public sealed class RequestTests
 
         var requestDocument = new ToManyFlightAttendantInRequest
         {
-            Data = new List<FlightAttendantIdentifier>
-            {
-                new()
+            Data =
+            [
+                new FlightAttendantIdentifier
                 {
                     Id = "bBJHu",
                     Type = FlightAttendantResourceType.FlightAttendants
                 },
-                new()
+                new FlightAttendantIdentifier
                 {
                     Id = "NInmX",
                     Type = FlightAttendantResourceType.FlightAttendants
                 }
-            }
+            ]
         };
 
         // Act

@@ -295,13 +295,12 @@ public sealed class ResponseTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.Created, responseBody);
         ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
-        // Act
-        FlightPrimaryResponseDocument document = await apiClient.PostFlightAsync(null, new FlightPostRequestDocument
+        var requestBody = new CreateFlightRequestDocument
         {
-            Data = new FlightDataInPostRequest
+            Data = new DataInCreateFlightRequest
             {
                 Type = FlightResourceType.Flights,
-                Relationships = new FlightRelationshipsInPostRequest
+                Relationships = new RelationshipsInCreateFlightRequest
                 {
                     Purser = new ToOneFlightAttendantInRequest
                     {
@@ -313,7 +312,10 @@ public sealed class ResponseTests
                     }
                 }
             }
-        });
+        };
+
+        // Act
+        FlightPrimaryResponseDocument document = await apiClient.PostFlightAsync(null, requestBody);
 
         // Assert
         document.Data.Attributes.Should().BeNull();
@@ -349,15 +351,17 @@ public sealed class ResponseTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
         ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
-        // Act
-        FlightPrimaryResponseDocument document = await apiClient.PatchFlightAsync(flightId, null, new FlightPatchRequestDocument
+        var requestBody = new UpdateFlightRequestDocument
         {
-            Data = new FlightDataInPatchRequest
+            Data = new DataInUpdateFlightRequest
             {
                 Id = flightId,
                 Type = FlightResourceType.Flights
             }
-        });
+        };
+
+        // Act
+        FlightPrimaryResponseDocument document = await apiClient.PatchFlightAsync(flightId, null, requestBody);
 
         // Assert
         document.Data.Attributes.Should().BeNull();
@@ -374,9 +378,9 @@ public sealed class ResponseTests
 
         // Act
         FlightPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PatchFlightAsync(flightId, null,
-            new FlightPatchRequestDocument
+            new UpdateFlightRequestDocument
             {
-                Data = new FlightDataInPatchRequest
+                Data = new DataInUpdateFlightRequest
                 {
                     Id = flightId,
                     Type = FlightResourceType.Flights
@@ -582,15 +586,17 @@ public sealed class ResponseTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
-        // Act
-        await apiClient.PatchFlightPurserRelationshipAsync("ZvuH1", new ToOneFlightAttendantInRequest
+        var requestBody = new ToOneFlightAttendantInRequest
         {
             Data = new FlightAttendantIdentifier
             {
                 Id = "Adk2a",
                 Type = FlightAttendantResourceType.FlightAttendants
             }
-        });
+        };
+
+        // Act
+        await apiClient.PatchFlightPurserRelationshipAsync("ZvuH1", requestBody);
     }
 
     [Fact]
@@ -640,23 +646,25 @@ public sealed class ResponseTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
-        // Act
-        Func<Task> action = async () => await apiClient.PostFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantInRequest
+        var requestBody = new ToManyFlightAttendantInRequest
         {
-            Data = new List<FlightAttendantIdentifier>
-            {
-                new()
+            Data =
+            [
+                new FlightAttendantIdentifier
                 {
                     Id = "Adk2a",
                     Type = FlightAttendantResourceType.FlightAttendants
                 },
-                new()
+                new FlightAttendantIdentifier
                 {
                     Id = "Un37k",
                     Type = FlightAttendantResourceType.FlightAttendants
                 }
-            }
-        });
+            ]
+        };
+
+        // Act
+        Func<Task> action = async () => await apiClient.PostFlightCabinCrewMembersRelationshipAsync("ZvuH1", requestBody);
 
         // Assert
         await action.Should().NotThrowAsync();
@@ -669,23 +677,25 @@ public sealed class ResponseTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
-        // Act
-        Func<Task> action = async () => await apiClient.PatchFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantInRequest
+        var requestBody = new ToManyFlightAttendantInRequest
         {
-            Data = new List<FlightAttendantIdentifier>
-            {
-                new()
+            Data =
+            [
+                new FlightAttendantIdentifier
                 {
                     Id = "Adk2a",
                     Type = FlightAttendantResourceType.FlightAttendants
                 },
-                new()
+                new FlightAttendantIdentifier
                 {
                     Id = "Un37k",
                     Type = FlightAttendantResourceType.FlightAttendants
                 }
-            }
-        });
+            ]
+        };
+
+        // Act
+        Func<Task> action = async () => await apiClient.PatchFlightCabinCrewMembersRelationshipAsync("ZvuH1", requestBody);
 
         // Assert
         await action.Should().NotThrowAsync();
@@ -698,23 +708,25 @@ public sealed class ResponseTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
-        // Act
-        Func<Task> action = async () => await apiClient.DeleteFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantInRequest
+        var requestBody = new ToManyFlightAttendantInRequest
         {
-            Data = new List<FlightAttendantIdentifier>
-            {
-                new()
+            Data =
+            [
+                new FlightAttendantIdentifier
                 {
                     Id = "Adk2a",
                     Type = FlightAttendantResourceType.FlightAttendants
                 },
-                new()
+                new FlightAttendantIdentifier
                 {
                     Id = "Un37k",
                     Type = FlightAttendantResourceType.FlightAttendants
                 }
-            }
-        });
+            ]
+        };
+
+        // Act
+        Func<Task> action = async () => await apiClient.DeleteFlightCabinCrewMembersRelationshipAsync("ZvuH1", requestBody);
 
         // Assert
         await action.Should().NotThrowAsync();

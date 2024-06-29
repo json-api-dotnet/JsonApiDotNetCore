@@ -34,11 +34,11 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new HeadersClient(httpClient);
 
-        var requestBody = new CountryPostRequestDocument
+        var requestBody = new CreateCountryRequestDocument
         {
-            Data = new CountryDataInPostRequest
+            Data = new DataInCreateCountryRequest
             {
-                Attributes = new CountryAttributesInPostRequest
+                Attributes = new AttributesInCreateCountryRequest
                 {
                     Name = newCountry.Name,
                     Population = newCountry.Population

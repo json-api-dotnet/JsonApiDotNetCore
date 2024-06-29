@@ -119,11 +119,11 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item {
         /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<CountryPrimaryResponseDocument?> PatchAsync(CountryPatchRequestDocument body, Action<RequestConfiguration<CountriesItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<CountryPrimaryResponseDocument?> PatchAsync(UpdateCountryRequestDocument body, Action<RequestConfiguration<CountriesItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<CountryPrimaryResponseDocument> PatchAsync(CountryPatchRequestDocument body, Action<RequestConfiguration<CountriesItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<CountryPrimaryResponseDocument> PatchAsync(UpdateCountryRequestDocument body, Action<RequestConfiguration<CountriesItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -201,11 +201,11 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPatchRequestInformation(CountryPatchRequestDocument body, Action<RequestConfiguration<CountriesItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(UpdateCountryRequestDocument body, Action<RequestConfiguration<CountriesItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPatchRequestInformation(CountryPatchRequestDocument body, Action<RequestConfiguration<CountriesItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(UpdateCountryRequestDocument body, Action<RequestConfiguration<CountriesItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));

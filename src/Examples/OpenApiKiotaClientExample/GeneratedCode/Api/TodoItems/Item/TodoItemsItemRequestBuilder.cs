@@ -131,11 +131,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item {
         /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<TodoItemPrimaryResponseDocument?> PatchAsync(TodoItemPatchRequestDocument body, Action<RequestConfiguration<TodoItemsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<TodoItemPrimaryResponseDocument?> PatchAsync(UpdateTodoItemRequestDocument body, Action<RequestConfiguration<TodoItemsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<TodoItemPrimaryResponseDocument> PatchAsync(TodoItemPatchRequestDocument body, Action<RequestConfiguration<TodoItemsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<TodoItemPrimaryResponseDocument> PatchAsync(UpdateTodoItemRequestDocument body, Action<RequestConfiguration<TodoItemsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -213,11 +213,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPatchRequestInformation(TodoItemPatchRequestDocument body, Action<RequestConfiguration<TodoItemsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(UpdateTodoItemRequestDocument body, Action<RequestConfiguration<TodoItemsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPatchRequestInformation(TodoItemPatchRequestDocument body, Action<RequestConfiguration<TodoItemsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(UpdateTodoItemRequestDocument body, Action<RequestConfiguration<TodoItemsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));

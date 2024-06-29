@@ -3418,7 +3418,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/writeOnlyChannelPostRequestDocument"
+                    "$ref": "#/components/schemas/createWriteOnlyChannelRequestDocument"
                   }
                 ]
               }
@@ -3541,7 +3541,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/writeOnlyChannelPatchRequestDocument"
+                    "$ref": "#/components/schemas/updateWriteOnlyChannelRequestDocument"
                   }
                 ]
               }
@@ -3988,6 +3988,84 @@
   },
   "components": {
     "schemas": {
+      "attributesInCreateWriteOnlyChannelRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "isCommercial": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isAdultOnly": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "attributesInUpdateWriteOnlyChannelRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "isCommercial": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isAdultOnly": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "createWriteOnlyChannelRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreateWriteOnlyChannelRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInCreateWriteOnlyChannelRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/writeOnlyChannelResourceType"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInCreateWriteOnlyChannelRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipsInCreateWriteOnlyChannelRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
       "dataInResponse": {
         "required": [
           "id",
@@ -4015,6 +4093,37 @@
           }
         },
         "x-abstract": true
+      },
+      "dataInUpdateWriteOnlyChannelRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/writeOnlyChannelResourceType"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInUpdateWriteOnlyChannelRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipsInUpdateWriteOnlyChannelRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
       },
       "dataStreamAttributesInResponse": {
         "type": "object",
@@ -4823,6 +4932,63 @@
         },
         "additionalProperties": false
       },
+      "relationshipsInCreateWriteOnlyChannelRequest": {
+        "required": [
+          "videoStream"
+        ],
+        "type": "object",
+        "properties": {
+          "videoStream": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneDataStreamInRequest"
+              }
+            ]
+          },
+          "ultraHighDefinitionVideoStream": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullableToOneDataStreamInRequest"
+              }
+            ]
+          },
+          "audioStreams": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyDataStreamInRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "relationshipsInUpdateWriteOnlyChannelRequest": {
+        "type": "object",
+        "properties": {
+          "videoStream": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneDataStreamInRequest"
+              }
+            ]
+          },
+          "ultraHighDefinitionVideoStream": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullableToOneDataStreamInRequest"
+              }
+            ]
+          },
+          "audioStreams": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyDataStreamInRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
       "resourceCollectionTopLevelLinks": {
         "type": "object",
         "properties": {
@@ -4994,38 +5160,18 @@
         },
         "additionalProperties": false
       },
-      "writeOnlyChannelAttributesInPatchRequest": {
+      "updateWriteOnlyChannelRequestDocument": {
+        "required": [
+          "data"
+        ],
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "isCommercial": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isAdultOnly": {
-            "type": "boolean",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "writeOnlyChannelAttributesInPostRequest": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "isCommercial": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isAdultOnly": {
-            "type": "boolean",
-            "nullable": true
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInUpdateWriteOnlyChannelRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5044,63 +5190,6 @@
           "isAdultOnly": {
             "type": "boolean",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "writeOnlyChannelDataInPatchRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/writeOnlyChannelResourceType"
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/writeOnlyChannelAttributesInPatchRequest"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/writeOnlyChannelRelationshipsInPatchRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "writeOnlyChannelDataInPostRequest": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/writeOnlyChannelResourceType"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/writeOnlyChannelAttributesInPostRequest"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/writeOnlyChannelRelationshipsInPostRequest"
-              }
-            ]
           }
         },
         "additionalProperties": false
@@ -5147,38 +5236,6 @@
         ],
         "additionalProperties": false
       },
-      "writeOnlyChannelPatchRequestDocument": {
-        "required": [
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/writeOnlyChannelDataInPatchRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "writeOnlyChannelPostRequestDocument": {
-        "required": [
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/writeOnlyChannelDataInPostRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
       "writeOnlyChannelPrimaryResponseDocument": {
         "required": [
           "data",
@@ -5212,63 +5269,6 @@
               "type": "object",
               "nullable": true
             }
-          }
-        },
-        "additionalProperties": false
-      },
-      "writeOnlyChannelRelationshipsInPatchRequest": {
-        "type": "object",
-        "properties": {
-          "videoStream": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toOneDataStreamInRequest"
-              }
-            ]
-          },
-          "ultraHighDefinitionVideoStream": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOneDataStreamInRequest"
-              }
-            ]
-          },
-          "audioStreams": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyDataStreamInRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "writeOnlyChannelRelationshipsInPostRequest": {
-        "required": [
-          "videoStream"
-        ],
-        "type": "object",
-        "properties": {
-          "videoStream": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toOneDataStreamInRequest"
-              }
-            ]
-          },
-          "ultraHighDefinitionVideoStream": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOneDataStreamInRequest"
-              }
-            ]
-          },
-          "audioStreams": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyDataStreamInRequest"
-              }
-            ]
           }
         },
         "additionalProperties": false

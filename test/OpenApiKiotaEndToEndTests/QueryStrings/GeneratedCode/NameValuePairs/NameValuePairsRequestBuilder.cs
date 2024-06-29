@@ -97,11 +97,11 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.NameValuePairs {
         /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<NameValuePairPrimaryResponseDocument?> PostAsync(NameValuePairPostRequestDocument body, Action<RequestConfiguration<NameValuePairsRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<NameValuePairPrimaryResponseDocument?> PostAsync(CreateNameValuePairRequestDocument body, Action<RequestConfiguration<NameValuePairsRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<NameValuePairPrimaryResponseDocument> PostAsync(NameValuePairPostRequestDocument body, Action<RequestConfiguration<NameValuePairsRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<NameValuePairPrimaryResponseDocument> PostAsync(CreateNameValuePairRequestDocument body, Action<RequestConfiguration<NameValuePairsRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -161,11 +161,11 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.NameValuePairs {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPostRequestInformation(NameValuePairPostRequestDocument body, Action<RequestConfiguration<NameValuePairsRequestBuilderPostQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(CreateNameValuePairRequestDocument body, Action<RequestConfiguration<NameValuePairsRequestBuilderPostQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPostRequestInformation(NameValuePairPostRequestDocument body, Action<RequestConfiguration<NameValuePairsRequestBuilderPostQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(CreateNameValuePairRequestDocument body, Action<RequestConfiguration<NameValuePairsRequestBuilderPostQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));

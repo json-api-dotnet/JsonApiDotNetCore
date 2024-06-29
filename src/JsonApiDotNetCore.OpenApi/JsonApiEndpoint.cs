@@ -6,12 +6,10 @@ internal enum JsonApiEndpoint
     GetSingle,
     GetSecondary,
     GetRelationship,
-    Post,
+    PostResource,
     PostRelationship,
-    Patch,
+    PatchResource,
     PatchRelationship,
-#pragma warning disable AV1711 // Name members and local functions similarly to members of .NET Framework classes
-    Delete,
-#pragma warning restore AV1711 // Name members and local functions similarly to members of .NET Framework classes
+    DeleteResource,
     DeleteRelationship
 }

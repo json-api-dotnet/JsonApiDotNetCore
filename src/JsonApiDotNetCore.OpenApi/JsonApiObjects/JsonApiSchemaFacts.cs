@@ -9,8 +9,8 @@ internal static class JsonApiSchemaFacts
 {
     private static readonly Type[] RequestSchemaTypes =
     [
-        typeof(ResourcePostRequestDocument<>),
-        typeof(ResourcePatchRequestDocument<>),
+        typeof(CreateResourceRequestDocument<>),
+        typeof(UpdateResourceRequestDocument<>),
         typeof(ToOneRelationshipInRequest<>),
         typeof(NullableToOneRelationshipInRequest<>),
         typeof(ToManyRelationshipInRequest<>)
