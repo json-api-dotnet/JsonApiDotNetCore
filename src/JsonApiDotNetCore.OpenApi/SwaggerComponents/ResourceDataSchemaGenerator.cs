@@ -75,8 +75,7 @@ internal sealed class ResourceDataSchemaGenerator
         var fieldSchemaBuilder = new ResourceFieldSchemaBuilder(_defaultSchemaGenerator, _resourceIdentifierSchemaGenerator, _linksVisibilitySchemaGenerator,
             _resourceFieldValidationMetadataProvider, _relationshipTypeFactory, resourceTypeInfo);
 
-        OpenApiSchema effectiveFullSchemaForResourceData =
-            fullSchemaForResourceData.AllOf.Count == 0 ? fullSchemaForResourceData : fullSchemaForResourceData.AllOf[1];
+        OpenApiSchema effectiveFullSchemaForResourceData = fullSchemaForResourceData.UnwrapLastExtendedSchema();
 
         if (effectiveFullSchemaForResourceData == fullSchemaForResourceData)
         {
@@ -118,12 +117,13 @@ internal sealed class ResourceDataSchemaGenerator
 
     private void SetResourceType(OpenApiSchema fullSchemaForResourceData, ResourceType resourceType, SchemaRepository schemaRepository)
     {
-        fullSchemaForResourceData.Properties[JsonApiPropertyName.Type] = _resourceTypeSchemaGenerator.Get(resourceType, schemaRepository);
+        OpenApiSchema referenceSchema = _resourceTypeSchemaGenerator.Get(resourceType, schemaRepository);
+        fullSchemaForResourceData.Properties[JsonApiPropertyName.Type] = referenceSchema.WrapInExtendedSchema();
     }
 
     private void SetResourceAttributes(OpenApiSchema fullSchemaForResourceData, ResourceFieldSchemaBuilder builder, SchemaRepository schemaRepository)
     {
-        OpenApiSchema referenceSchemaForAttributes = fullSchemaForResourceData.Properties[JsonApiPropertyName.Attributes].UnwrapExtendedReferenceSchema();
+        OpenApiSchema referenceSchemaForAttributes = fullSchemaForResourceData.Properties[JsonApiPropertyName.Attributes].UnwrapLastExtendedSchema();
         OpenApiSchema fullSchemaForAttributes = schemaRepository.Schemas[referenceSchemaForAttributes.Reference.Id];
 
         builder.SetMembersOfAttributes(fullSchemaForAttributes, schemaRepository);
@@ -140,7 +140,7 @@ internal sealed class ResourceDataSchemaGenerator
 
     private void SetResourceRelationships(OpenApiSchema fullSchemaForResourceData, ResourceFieldSchemaBuilder builder, SchemaRepository schemaRepository)
     {
-        OpenApiSchema referenceSchemaForRelationships = fullSchemaForResourceData.Properties[JsonApiPropertyName.Relationships].UnwrapExtendedReferenceSchema();
+        OpenApiSchema referenceSchemaForRelationships = fullSchemaForResourceData.Properties[JsonApiPropertyName.Relationships].UnwrapLastExtendedSchema();
         OpenApiSchema fullSchemaForRelationships = schemaRepository.Schemas[referenceSchemaForRelationships.Reference.Id];
 
         builder.SetMembersOfRelationships(fullSchemaForRelationships, schemaRepository);

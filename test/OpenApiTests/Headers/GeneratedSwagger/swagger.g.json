@@ -1328,7 +1328,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/countryResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/countryResourceType"
+              }
+            ]
           },
           "attributes": {
             "allOf": [
@@ -1381,7 +1385,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/countryResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/countryResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -1617,7 +1625,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/languageResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/languageResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,

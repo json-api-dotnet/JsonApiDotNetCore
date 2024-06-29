@@ -3449,7 +3449,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/resourceResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceResourceType"
+              }
+            ]
           },
           "attributes": {
             "allOf": [
@@ -3502,7 +3506,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/resourceResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -3597,7 +3605,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/emptyResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/emptyResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,

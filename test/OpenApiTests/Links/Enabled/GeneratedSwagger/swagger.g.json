@@ -3737,7 +3737,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/accommodationResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/accommodationResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -4050,7 +4054,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/accommodationResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/accommodationResourceType"
+              }
+            ]
           },
           "attributes": {
             "allOf": [
@@ -4069,7 +4077,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/excursionResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/excursionResourceType"
+              }
+            ]
           },
           "attributes": {
             "allOf": [
@@ -4088,7 +4100,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/transportResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/transportResourceType"
+              }
+            ]
           },
           "attributes": {
             "allOf": [
@@ -4107,7 +4123,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/vacationResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/vacationResourceType"
+              }
+            ]
           },
           "attributes": {
             "allOf": [
@@ -4162,7 +4182,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/accommodationResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/accommodationResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -4186,7 +4210,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/excursionResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/excursionResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -4210,7 +4238,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/transportResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/transportResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -4234,7 +4266,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/vacationResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/vacationResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -4471,7 +4507,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/excursionResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/excursionResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -5011,7 +5051,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/transportResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/transportResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,

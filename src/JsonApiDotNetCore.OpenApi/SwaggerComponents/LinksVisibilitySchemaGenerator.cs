@@ -115,8 +115,8 @@ internal sealed class LinksVisibilitySchemaGenerator
         }
         else if (visibleLinkTypes != possibleLinkTypes)
         {
-            OpenApiSchema referenceSchemaForLinks = fullSchemaForLinksContainer.Properties[JsonApiPropertyName.Links];
-            string linksSchemaId = referenceSchemaForLinks.AllOf[0].Reference.Id;
+            OpenApiSchema referenceSchemaForLinks = fullSchemaForLinksContainer.Properties[JsonApiPropertyName.Links].UnwrapLastExtendedSchema();
+            string linksSchemaId = referenceSchemaForLinks.Reference.Id;
 
             if (schemaRepository.Schemas.TryGetValue(linksSchemaId, out OpenApiSchema? fullSchemaForLinks))
             {

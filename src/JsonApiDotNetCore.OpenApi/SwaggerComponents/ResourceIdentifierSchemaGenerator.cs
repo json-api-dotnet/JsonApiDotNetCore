@@ -31,7 +31,8 @@ internal sealed class ResourceIdentifierSchemaGenerator
             referenceSchemaForIdentifier = _defaultSchemaGenerator.GenerateSchema(resourceIdentifierConstructedType, schemaRepository);
             OpenApiSchema fullSchemaForIdentifier = schemaRepository.Schemas[referenceSchemaForIdentifier.Reference.Id];
 
-            fullSchemaForIdentifier.Properties[JsonApiPropertyName.Type] = _resourceTypeSchemaGenerator.Get(resourceType, schemaRepository);
+            OpenApiSchema referenceSchemaForResourceType = _resourceTypeSchemaGenerator.Get(resourceType, schemaRepository);
+            fullSchemaForIdentifier.Properties[JsonApiPropertyName.Type] = referenceSchemaForResourceType.WrapInExtendedSchema();
         }
 
         return referenceSchemaForIdentifier;

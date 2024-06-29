@@ -66,12 +66,12 @@ internal sealed class ResourceFieldSchemaBuilder
 
             if (matchingAttribute != null && matchingAttribute.Capabilities.HasFlag(requiredCapability))
             {
-                bool isPrimitiveOpenApiType = resourceFieldSchema.AllOf.IsNullOrEmpty();
+                bool isInlineSchemaType = resourceFieldSchema.AllOf.Count == 0;
 
-                // Types like enum and complex attributes are not primitive and handled as reference schemas.
-                if (!isPrimitiveOpenApiType)
+                // Schemas for types like enum and complex attributes are handled as reference schemas.
+                if (!isInlineSchemaType)
                 {
-                    EnsureAttributeSchemaIsExposed(resourceFieldSchema, matchingAttribute, schemaRepository);
+                    EnsureAttributeSchemaIsExposed(resourceFieldSchema.UnwrapLastExtendedSchema(), matchingAttribute, schemaRepository);
                 }
 
                 fullSchemaForAttributes.Properties[matchingAttribute.PublicName] = resourceFieldSchema;
@@ -104,7 +104,7 @@ internal sealed class ResourceFieldSchemaBuilder
             return;
         }
 
-        string schemaId = attributeReferenceSchema.UnwrapExtendedReferenceSchema().Reference.Id;
+        string schemaId = attributeReferenceSchema.Reference.Id;
 
         OpenApiSchema fullSchema = _resourceSchemaRepository.Schemas[schemaId];
         schemaRepository.AddDefinition(schemaId, fullSchema);
@@ -156,14 +156,8 @@ internal sealed class ResourceFieldSchemaBuilder
         OpenApiSchema referenceSchemaForRelationship = GetReferenceSchemaForRelationship(relationshipSchemaType, schemaRepository) ??
             CreateRelationshipReferenceSchema(relationshipSchemaType, schemaRepository);
 
-        var extendedReferenceSchemaForRelationship = new OpenApiSchema
-        {
-            AllOf = new List<OpenApiSchema>
-            {
-                referenceSchemaForRelationship
-            },
-            Description = _resourceDocumentationReader.GetDocumentationForRelationship(relationship)
-        };
+        OpenApiSchema extendedReferenceSchemaForRelationship = referenceSchemaForRelationship.WrapInExtendedSchema();
+        extendedReferenceSchemaForRelationship.Description = _resourceDocumentationReader.GetDocumentationForRelationship(relationship);
 
         fullSchemaForRelationships.Properties.Add(relationship.PublicName, extendedReferenceSchemaForRelationship);
 

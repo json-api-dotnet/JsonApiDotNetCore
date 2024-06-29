@@ -4047,7 +4047,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/writeOnlyChannelResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/writeOnlyChannelResourceType"
+              }
+            ]
           },
           "attributes": {
             "allOf": [
@@ -4102,7 +4106,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/writeOnlyChannelResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/writeOnlyChannelResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -4214,7 +4222,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/dataStreamResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataStreamResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,

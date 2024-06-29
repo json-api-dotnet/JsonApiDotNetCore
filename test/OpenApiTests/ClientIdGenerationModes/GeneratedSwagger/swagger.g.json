@@ -430,7 +430,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/gameResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/gameResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -453,7 +457,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/playerGroupResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/playerGroupResourceType"
+              }
+            ]
           },
           "attributes": {
             "allOf": [
@@ -480,7 +488,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/playerResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/playerResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -708,7 +720,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/gameResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/gameResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -877,7 +893,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/playerGroupResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/playerGroupResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -951,7 +971,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/playerResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/playerResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,

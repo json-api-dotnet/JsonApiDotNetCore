@@ -6296,7 +6296,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/airplane-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/airplane-resource-type"
+              }
+            ]
           },
           "attributes": {
             "allOf": [
@@ -6322,7 +6326,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/flight-attendant-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-resource-type"
+              }
+            ]
           },
           "attributes": {
             "allOf": [
@@ -6348,7 +6356,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/flight-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-resource-type"
+              }
+            ]
           },
           "relationships": {
             "allOf": [
@@ -6367,7 +6379,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/passenger-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/passenger-resource-type"
+              }
+            ]
           },
           "attributes": {
             "allOf": [
@@ -6415,7 +6431,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/airplane-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/airplane-resource-type"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -6446,7 +6466,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/flight-attendant-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-resource-type"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -6477,7 +6501,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/flight-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-resource-type"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -6508,7 +6536,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/passenger-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/passenger-resource-type"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -6771,7 +6803,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/flight-attendant-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-resource-type"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -7101,7 +7137,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/flight-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-resource-type"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -7498,7 +7538,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/passenger-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/passenger-resource-type"
+              }
+            ]
           },
           "id": {
             "minLength": 1,

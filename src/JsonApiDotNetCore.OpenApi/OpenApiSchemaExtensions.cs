@@ -27,15 +27,25 @@ internal static class OpenApiSchemaExtensions
         fullSchema.Properties = propertiesInOrder;
     }
 
-    public static OpenApiSchema UnwrapExtendedReferenceSchema(this OpenApiSchema source)
+    public static OpenApiSchema WrapInExtendedSchema(this OpenApiSchema source)
     {
         ArgumentGuard.NotNull(source);
 
-        if (source.AllOf.Count != 1)
+        return new OpenApiSchema
         {
-            throw new InvalidOperationException($"Schema '{nameof(source)}' should not contain multiple entries in '{nameof(source.AllOf)}' ");
+            AllOf = [source]
+        };
+    }
+
+    public static OpenApiSchema UnwrapLastExtendedSchema(this OpenApiSchema source)
+    {
+        ArgumentGuard.NotNull(source);
+
+        if (source.AllOf is { Count: > 0 })
+        {
+            return source.AllOf.Last();
         }
 
-        return source.AllOf.Single();
+        return source;
     }
 }

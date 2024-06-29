@@ -75,11 +75,7 @@ internal sealed class DocumentSchemaGenerator
         OpenApiSchema fullSchemaForErrorObject = schemaRepository.Schemas[referenceSchemaForErrorObject.Reference.Id];
 
         OpenApiSchema referenceSchemaForMeta = _metaSchemaGenerator.GenerateSchema(schemaRepository);
-
-        fullSchemaForErrorObject.Properties[JsonApiPropertyName.Meta] = new OpenApiSchema
-        {
-            AllOf = [referenceSchemaForMeta]
-        };
+        fullSchemaForErrorObject.Properties[JsonApiPropertyName.Meta] = referenceSchemaForMeta.WrapInExtendedSchema();
     }
 
     private OpenApiSchema GenerateJsonApiDocumentSchema(Type documentType, SchemaRepository schemaRepository)

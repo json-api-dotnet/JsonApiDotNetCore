@@ -3172,7 +3172,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/nameValuePairResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nameValuePairResourceType"
+              }
+            ]
           },
           "attributes": {
             "allOf": [
@@ -3198,7 +3202,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/nodeResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nodeResourceType"
+              }
+            ]
           },
           "attributes": {
             "allOf": [
@@ -3251,7 +3259,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/nameValuePairResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nameValuePairResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -3282,7 +3294,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/nodeResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nodeResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -3532,7 +3548,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/nameValuePairResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nameValuePairResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -3727,7 +3747,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/nodeResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nodeResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,

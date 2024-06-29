@@ -448,7 +448,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/socialMediaAccountResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/socialMediaAccountResourceType"
+              }
+            ]
           },
           "attributes": {
             "allOf": [
@@ -493,7 +497,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/socialMediaAccountResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/socialMediaAccountResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,

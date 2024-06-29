@@ -2626,7 +2626,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/staffMemberResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/staffMemberResourceType"
+              }
+            ]
           },
           "attributes": {
             "allOf": [
@@ -2645,7 +2649,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/supermarketResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/supermarketResourceType"
+              }
+            ]
           },
           "attributes": {
             "allOf": [
@@ -2698,7 +2706,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/staffMemberResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/staffMemberResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -2722,7 +2734,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/supermarketResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/supermarketResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -3292,7 +3308,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/staffMemberResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/staffMemberResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,

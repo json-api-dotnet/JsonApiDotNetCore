@@ -4895,7 +4895,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/personResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personResourceType"
+              }
+            ]
           },
           "attributes": {
             "allOf": [
@@ -4921,7 +4925,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/tagResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/tagResourceType"
+              }
+            ]
           },
           "attributes": {
             "allOf": [
@@ -4947,7 +4955,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/todoItemResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemResourceType"
+              }
+            ]
           },
           "attributes": {
             "allOf": [
@@ -5001,7 +5013,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/personResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -5032,7 +5048,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/tagResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/tagResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -5063,7 +5083,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/todoItemResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -5432,7 +5456,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/personResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -5891,7 +5919,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/tagResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/tagResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -6228,7 +6260,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/todoItemResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
