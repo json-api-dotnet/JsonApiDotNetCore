@@ -1,12 +1,13 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
+using JsonApiDotNetCore.OpenApi.SwaggerComponents;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
+namespace JsonApiDotNetCore.OpenApi.SchemaGenerators.Components;
 
-internal sealed class ResourceDataSchemaGenerator
+internal sealed class DataSchemaGenerator
 {
 #if NET6_0
     private static readonly string[] ResourceDataPropertyNamesInOrder =
@@ -30,7 +31,7 @@ internal sealed class ResourceDataSchemaGenerator
     private readonly RelationshipTypeFactory _relationshipTypeFactory;
     private readonly ResourceDocumentationReader _resourceDocumentationReader;
 
-    public ResourceDataSchemaGenerator(SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator,
+    public DataSchemaGenerator(SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator,
         ResourceIdentifierSchemaGenerator resourceIdentifierSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator,
         IResourceGraph resourceGraph, IJsonApiOptions options, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider,
         RelationshipTypeFactory relationshipTypeFactory, ResourceDocumentationReader resourceDocumentationReader)
@@ -72,12 +73,9 @@ internal sealed class ResourceDataSchemaGenerator
 
         var resourceTypeInfo = ResourceTypeInfo.Create(resourceDataConstructedType, _resourceGraph);
 
-        var fieldSchemaBuilder = new ResourceFieldSchemaBuilder(_defaultSchemaGenerator, _resourceIdentifierSchemaGenerator, _linksVisibilitySchemaGenerator,
-            _resourceFieldValidationMetadataProvider, _relationshipTypeFactory, resourceTypeInfo);
+        OpenApiSchema fullSchemaForDerivedType = fullSchemaForResourceData.UnwrapLastExtendedSchema();
 
-        OpenApiSchema effectiveFullSchemaForResourceData = fullSchemaForResourceData.UnwrapLastExtendedSchema();
-
-        if (effectiveFullSchemaForResourceData == fullSchemaForResourceData)
+        if (fullSchemaForDerivedType == fullSchemaForResourceData)
         {
             AdaptResourceIdentity(resourceTypeInfo, fullSchemaForResourceData);
             SetResourceType(fullSchemaForResourceData, resourceTypeInfo.ResourceType, schemaRepository);
@@ -85,13 +83,23 @@ internal sealed class ResourceDataSchemaGenerator
 
         fullSchemaForResourceData.Description = _resourceDocumentationReader.GetDocumentationForType(resourceTypeInfo.ResourceType);
 
-        SetResourceAttributes(effectiveFullSchemaForResourceData, fieldSchemaBuilder, schemaRepository);
-        SetResourceRelationships(effectiveFullSchemaForResourceData, fieldSchemaBuilder, schemaRepository);
+        var fieldSchemaBuilder = new ResourceFieldSchemaBuilder(_defaultSchemaGenerator, _resourceIdentifierSchemaGenerator, _linksVisibilitySchemaGenerator,
+            _resourceFieldValidationMetadataProvider, _relationshipTypeFactory, resourceTypeInfo);
 
-        _linksVisibilitySchemaGenerator.UpdateSchemaForResource(resourceTypeInfo, effectiveFullSchemaForResourceData, schemaRepository);
+        if (fullSchemaForDerivedType.Properties.ContainsKey(JsonApiPropertyName.Attributes))
+        {
+            SetResourceAttributes(fullSchemaForDerivedType, fieldSchemaBuilder, schemaRepository);
+        }
+
+        if (fullSchemaForDerivedType.Properties.ContainsKey(JsonApiPropertyName.Relationships))
+        {
+            SetResourceRelationships(fullSchemaForDerivedType, fieldSchemaBuilder, schemaRepository);
+        }
+
+        _linksVisibilitySchemaGenerator.UpdateSchemaForResource(resourceTypeInfo, fullSchemaForDerivedType, schemaRepository);
 
 #if NET6_0
-        effectiveFullSchemaForResourceData.ReorderProperties(ResourceDataPropertyNamesInOrder);
+        fullSchemaForDerivedType.ReorderProperties(ResourceDataPropertyNamesInOrder);
 #endif
 
         return referenceSchemaForResourceData;
@@ -117,7 +125,7 @@ internal sealed class ResourceDataSchemaGenerator
 
     private void SetResourceType(OpenApiSchema fullSchemaForResourceData, ResourceType resourceType, SchemaRepository schemaRepository)
     {
-        OpenApiSchema referenceSchema = _resourceTypeSchemaGenerator.Get(resourceType, schemaRepository);
+        OpenApiSchema referenceSchema = _resourceTypeSchemaGenerator.GenerateSchema(resourceType, schemaRepository);
         fullSchemaForResourceData.Properties[JsonApiPropertyName.Type] = referenceSchema.WrapInExtendedSchema();
     }
 

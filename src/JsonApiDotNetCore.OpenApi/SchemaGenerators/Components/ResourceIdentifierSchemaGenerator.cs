@@ -3,7 +3,7 @@ using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
+namespace JsonApiDotNetCore.OpenApi.SchemaGenerators.Components;
 
 internal sealed class ResourceIdentifierSchemaGenerator
 {
@@ -31,7 +31,7 @@ internal sealed class ResourceIdentifierSchemaGenerator
             referenceSchemaForIdentifier = _defaultSchemaGenerator.GenerateSchema(resourceIdentifierConstructedType, schemaRepository);
             OpenApiSchema fullSchemaForIdentifier = schemaRepository.Schemas[referenceSchemaForIdentifier.Reference.Id];
 
-            OpenApiSchema referenceSchemaForResourceType = _resourceTypeSchemaGenerator.Get(resourceType, schemaRepository);
+            OpenApiSchema referenceSchemaForResourceType = _resourceTypeSchemaGenerator.GenerateSchema(resourceType, schemaRepository);
             fullSchemaForIdentifier.Properties[JsonApiPropertyName.Type] = referenceSchemaForResourceType.WrapInExtendedSchema();
         }
 

@@ -3,7 +3,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
+namespace JsonApiDotNetCore.OpenApi.SchemaGenerators.Components;
 
 internal sealed class ResourceTypeSchemaGenerator
 {
@@ -16,7 +16,7 @@ internal sealed class ResourceTypeSchemaGenerator
         _schemaIdSelector = schemaIdSelector;
     }
 
-    public OpenApiSchema Get(ResourceType resourceType, SchemaRepository schemaRepository)
+    public OpenApiSchema GenerateSchema(ResourceType resourceType, SchemaRepository schemaRepository)
     {
         ArgumentGuard.NotNull(resourceType);
         ArgumentGuard.NotNull(schemaRepository);
@@ -29,25 +29,13 @@ internal sealed class ResourceTypeSchemaGenerator
         var fullSchema = new OpenApiSchema
         {
             Type = "string",
-            Enum = new List<IOpenApiAny>
-            {
-                new OpenApiString(resourceType.PublicName)
-            },
+            Enum = [new OpenApiString(resourceType.PublicName)],
             AdditionalPropertiesAllowed = false
         };
 
         string schemaId = _schemaIdSelector.GetResourceTypeSchemaId(resourceType);
 
-        referenceSchema = new OpenApiSchema
-        {
-            Reference = new OpenApiReference
-            {
-                Id = schemaId,
-                Type = ReferenceType.Schema
-            }
-        };
-
-        schemaRepository.AddDefinition(schemaId, fullSchema);
+        referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
         schemaRepository.RegisterType(resourceType.ClrType, schemaId);
 
         return referenceSchema;

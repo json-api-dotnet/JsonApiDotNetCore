@@ -2,11 +2,12 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
+using JsonApiDotNetCore.OpenApi.SwaggerComponents;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
+namespace JsonApiDotNetCore.OpenApi.SchemaGenerators.Components;
 
 /// <summary>
 /// Hides links that are never returned.

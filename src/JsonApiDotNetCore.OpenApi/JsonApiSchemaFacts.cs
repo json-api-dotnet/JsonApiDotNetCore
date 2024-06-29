@@ -3,7 +3,7 @@ using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 
 #pragma warning disable AV1008 // Class should not be static
 
-namespace JsonApiDotNetCore.OpenApi.JsonApiObjects;
+namespace JsonApiDotNetCore.OpenApi;
 
 internal static class JsonApiSchemaFacts
 {
@@ -14,18 +14,6 @@ internal static class JsonApiSchemaFacts
         typeof(ToOneRelationshipInRequest<>),
         typeof(NullableToOneRelationshipInRequest<>),
         typeof(ToManyRelationshipInRequest<>)
-    ];
-
-    private static readonly Type[] ResponseSchemaTypes =
-    [
-        typeof(ResourceCollectionResponseDocument<>),
-        typeof(PrimaryResourceResponseDocument<>),
-        typeof(SecondaryResourceResponseDocument<>),
-        typeof(NullableSecondaryResourceResponseDocument<>),
-        typeof(ResourceIdentifierCollectionResponseDocument<>),
-        typeof(ResourceIdentifierResponseDocument<>),
-        typeof(NullableResourceIdentifierResponseDocument<>),
-        typeof(ErrorResponseDocument)
     ];
 
     private static readonly Type[] SchemaTypesHavingNullableDataProperty =
@@ -42,14 +30,6 @@ internal static class JsonApiSchemaFacts
         typeof(ToManyRelationshipInResponse<>),
         typeof(NullableToOneRelationshipInResponse<>)
     ];
-
-    public static bool RequiresCustomSchemaGenerator(Type schemaType)
-    {
-        // Subset of the entry types Swashbuckle calls us for, which must be handled by our custom schema generators.
-
-        Type lookupType = schemaType.ConstructedToOpenType();
-        return RequestSchemaTypes.Contains(lookupType) || ResponseSchemaTypes.Contains(lookupType);
-    }
 
     public static bool IsRequestSchemaType(Type schemaType)
     {

@@ -2,7 +2,7 @@ using JsonApiDotNetCore.OpenApi.JsonApiObjects;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
+namespace JsonApiDotNetCore.OpenApi.SchemaGenerators.Components;
 
 internal sealed class MetaSchemaGenerator
 {

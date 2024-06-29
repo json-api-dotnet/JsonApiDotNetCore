@@ -1,11 +1,12 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
+using JsonApiDotNetCore.OpenApi.SwaggerComponents;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
+namespace JsonApiDotNetCore.OpenApi.SchemaGenerators.Components;
 
 internal sealed class AbstractResourceDataSchemaGenerator
 {
@@ -23,7 +24,7 @@ internal sealed class AbstractResourceDataSchemaGenerator
         _resourceGraph = resourceGraph;
     }
 
-    public OpenApiSchema Get(SchemaRepository schemaRepository)
+    public OpenApiSchema GenerateSchema(SchemaRepository schemaRepository)
     {
         ArgumentGuard.NotNull(schemaRepository);
 
@@ -67,16 +68,7 @@ internal sealed class AbstractResourceDataSchemaGenerator
 
         string schemaId = _schemaIdSelector.GetSchemaId(ResourceDataAbstractType);
 
-        referenceSchema = new OpenApiSchema
-        {
-            Reference = new OpenApiReference
-            {
-                Id = schemaId,
-                Type = ReferenceType.Schema
-            }
-        };
-
-        schemaRepository.AddDefinition(schemaId, fullSchema);
+        referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
         schemaRepository.RegisterType(ResourceDataAbstractType, schemaId);
 
         return referenceSchema;

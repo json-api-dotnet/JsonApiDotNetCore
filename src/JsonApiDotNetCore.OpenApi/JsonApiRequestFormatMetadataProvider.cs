@@ -1,5 +1,4 @@
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;

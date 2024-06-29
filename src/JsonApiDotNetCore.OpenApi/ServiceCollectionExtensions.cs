@@ -1,4 +1,7 @@
 using JsonApiDotNetCore.OpenApi.JsonApiMetadata;
+using JsonApiDotNetCore.OpenApi.SchemaGenerators;
+using JsonApiDotNetCore.OpenApi.SchemaGenerators.Bodies;
+using JsonApiDotNetCore.OpenApi.SchemaGenerators.Components;
 using JsonApiDotNetCore.OpenApi.SwaggerComponents;
 using JsonApiDotNetCore.Serialization.Response;
 using Microsoft.AspNetCore.Mvc;
@@ -86,12 +89,14 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<SchemaGenerator>();
         services.TryAddSingleton<ISchemaGenerator, JsonApiSchemaGenerator>();
 
-        services.TryAddSingleton<DocumentSchemaGenerator>();
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<BodySchemaGenerator, ResourceOrRelationshipBodySchemaGenerator>());
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<BodySchemaGenerator, ErrorResponseBodySchemaGenerator>());
+
         services.TryAddSingleton<ResourceTypeSchemaGenerator>();
         services.TryAddSingleton<MetaSchemaGenerator>();
         services.TryAddSingleton<ResourceIdentifierSchemaGenerator>();
         services.TryAddSingleton<AbstractResourceDataSchemaGenerator>();
-        services.TryAddSingleton<ResourceDataSchemaGenerator>();
+        services.TryAddSingleton<DataSchemaGenerator>();
         services.TryAddSingleton<LinksVisibilitySchemaGenerator>();
     }
 }

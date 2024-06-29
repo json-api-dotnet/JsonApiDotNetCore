@@ -1,7 +1,7 @@
 using System.Reflection;
 using JsonApiDotNetCore.OpenApi.JsonApiMetadata;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
+using JsonApiDotNetCore.OpenApi.SchemaGenerators.Components;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -95,7 +95,7 @@ internal sealed class ResourceFieldSchemaBuilder
             resourceDataOpenType == typeof(DataInUpdateResourceRequest<>) ? AttrCapabilities.AllowChange : throw new UnreachableCodeException();
     }
 
-    private void EnsureAttributeSchemaIsExposed(OpenApiSchema attributeReferenceSchema, AttrAttribute attribute, SchemaRepository schemaRepository)
+    private void EnsureAttributeSchemaIsExposed(OpenApiSchema referenceSchemaForAttribute, AttrAttribute attribute, SchemaRepository schemaRepository)
     {
         Type nonNullableTypeInPropertyType = GetRepresentedTypeForAttributeSchema(attribute);
 
@@ -104,7 +104,7 @@ internal sealed class ResourceFieldSchemaBuilder
             return;
         }
 
-        string schemaId = attributeReferenceSchema.Reference.Id;
+        string schemaId = referenceSchemaForAttribute.Reference.Id;
 
         OpenApiSchema fullSchema = _resourceSchemaRepository.Schemas[schemaId];
         schemaRepository.AddDefinition(schemaId, fullSchema);
@@ -154,7 +154,7 @@ internal sealed class ResourceFieldSchemaBuilder
         Type relationshipSchemaType = GetRelationshipSchemaType(relationship, _resourceTypeInfo.ResourceDataOpenType);
 
         OpenApiSchema referenceSchemaForRelationship = GetReferenceSchemaForRelationship(relationshipSchemaType, schemaRepository) ??
-            CreateRelationshipReferenceSchema(relationshipSchemaType, schemaRepository);
+            CreateReferenceSchemaForRelationship(relationshipSchemaType, schemaRepository);
 
         OpenApiSchema extendedReferenceSchemaForRelationship = referenceSchemaForRelationship.WrapInExtendedSchema();
         extendedReferenceSchemaForRelationship.Description = _resourceDocumentationReader.GetDocumentationForRelationship(relationship);
@@ -178,7 +178,7 @@ internal sealed class ResourceFieldSchemaBuilder
         return schemaRepository.TryLookupByType(relationshipSchemaType, out OpenApiSchema? referenceSchema) ? referenceSchema : null;
     }
 
-    private OpenApiSchema CreateRelationshipReferenceSchema(Type relationshipSchemaType, SchemaRepository schemaRepository)
+    private OpenApiSchema CreateReferenceSchemaForRelationship(Type relationshipSchemaType, SchemaRepository schemaRepository)
     {
         OpenApiSchema referenceSchema = _defaultSchemaGenerator.GenerateSchema(relationshipSchemaType, schemaRepository);
 
