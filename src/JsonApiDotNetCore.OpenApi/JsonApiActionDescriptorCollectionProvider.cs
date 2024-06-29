@@ -13,8 +13,10 @@ namespace JsonApiDotNetCore.OpenApi;
 
 /// <summary>
 /// Adds JsonApiDotNetCore metadata to <see cref="ControllerActionDescriptor" />s if available. This translates to updating response types in
-/// <see cref="ProducesResponseTypeAttribute" /> and performing an expansion for secondary and relationship endpoints (eg
-/// /article/{id}/{relationshipName} -> /article/{id}/author, /article/{id}/revisions, etc).
+/// <see cref="ProducesResponseTypeAttribute" /> and performing an expansion for secondary and relationship endpoints. For example:
+/// <code><![CDATA[
+/// /article/{id}/{relationshipName} -> /article/{id}/author, /article/{id}/revisions, etc.
+/// ]]></code>
 /// </summary>
 internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescriptorCollectionProvider
 {
@@ -163,30 +165,16 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
 
     private static ActionDescriptor Clone(ActionDescriptor descriptor)
     {
-        var clone = (ActionDescriptor)descriptor.MemberwiseClone();
-
-        clone.AttributeRouteInfo = (AttributeRouteInfo)descriptor.AttributeRouteInfo!.MemberwiseClone();
-
-        clone.FilterDescriptors = new List<FilterDescriptor>();
-
-        foreach (FilterDescriptor filter in descriptor.FilterDescriptors)
-        {
-            clone.FilterDescriptors.Add(Clone(filter));
-        }
-
-        clone.Parameters = new List<ParameterDescriptor>();
-
-        foreach (ParameterDescriptor parameter in descriptor.Parameters)
-        {
-            clone.Parameters.Add((ParameterDescriptor)parameter.MemberwiseClone());
-        }
-
+        ActionDescriptor clone = descriptor.MemberwiseClone();
+        clone.AttributeRouteInfo = descriptor.AttributeRouteInfo!.MemberwiseClone();
+        clone.FilterDescriptors = descriptor.FilterDescriptors.Select(Clone).ToList();
+        clone.Parameters = descriptor.Parameters.Select(parameter => parameter.MemberwiseClone()).ToList();
         return clone;
     }
 
     private static FilterDescriptor Clone(FilterDescriptor descriptor)
     {
-        var clone = (IFilterMetadata)descriptor.Filter.MemberwiseClone();
+        IFilterMetadata clone = descriptor.Filter.MemberwiseClone();
 
         return new FilterDescriptor(clone, descriptor.Scope)
         {
