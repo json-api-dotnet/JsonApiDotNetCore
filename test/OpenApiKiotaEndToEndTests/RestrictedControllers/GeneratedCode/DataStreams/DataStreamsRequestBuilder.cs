@@ -9,26 +9,27 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStreams {
+namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStreams
+{
     /// <summary>
     /// Builds and executes requests for operations under \dataStreams
     /// </summary>
-    public class DataStreamsRequestBuilder : BaseRequestBuilder 
+    public class DataStreamsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>Gets an item from the OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.dataStreams.item collection</summary>
         /// <param name="position">The identifier of the dataStream to retrieve.</param>
-        /// <returns>A <see cref="DataStreamsItemRequestBuilder"/></returns>
-        public DataStreamsItemRequestBuilder this[string position]
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStreams.Item.DataStreamsItemRequestBuilder"/></returns>
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStreams.Item.DataStreamsItemRequestBuilder this[string position]
         {
             get
             {
                 var urlTplParams = new Dictionary<string, object>(PathParameters);
                 urlTplParams.Add("id", position);
-                return new DataStreamsItemRequestBuilder(urlTplParams, RequestAdapter);
+                return new OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStreams.Item.DataStreamsItemRequestBuilder(urlTplParams, RequestAdapter);
             }
         }
         /// <summary>
-        /// Instantiates a new <see cref="DataStreamsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStreams.DataStreamsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -36,7 +37,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStre
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="DataStreamsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStreams.DataStreamsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -46,25 +47,25 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStre
         /// <summary>
         /// Retrieves a collection of dataStreams.
         /// </summary>
-        /// <returns>A <see cref="DataStreamCollectionResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamCollectionResponseDocument"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<DataStreamCollectionResponseDocument?> GetAsync(Action<RequestConfiguration<DataStreamsRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamCollectionResponseDocument?> GetAsync(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStreams.DataStreamsRequestBuilder.DataStreamsRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<DataStreamCollectionResponseDocument> GetAsync(Action<RequestConfiguration<DataStreamsRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamCollectionResponseDocument> GetAsync(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStreams.DataStreamsRequestBuilder.DataStreamsRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
+                { "400", OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<DataStreamCollectionResponseDocument>(requestInfo, DataStreamCollectionResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamCollectionResponseDocument>(requestInfo, OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamCollectionResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.
@@ -73,11 +74,11 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStre
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task HeadAsync(Action<RequestConfiguration<DataStreamsRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task HeadAsync(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStreams.DataStreamsRequestBuilder.DataStreamsRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task HeadAsync(Action<RequestConfiguration<DataStreamsRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task HeadAsync(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStreams.DataStreamsRequestBuilder.DataStreamsRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToHeadRequestInformation(requestConfiguration);
@@ -90,11 +91,11 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStre
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<DataStreamsRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStreams.DataStreamsRequestBuilder.DataStreamsRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<DataStreamsRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStreams.DataStreamsRequestBuilder.DataStreamsRequestBuilderGetQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
@@ -109,11 +110,11 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStre
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<DataStreamsRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStreams.DataStreamsRequestBuilder.DataStreamsRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<DataStreamsRequestBuilderHeadQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStreams.DataStreamsRequestBuilder.DataStreamsRequestBuilderHeadQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.HEAD, UrlTemplate, PathParameters);
@@ -123,11 +124,11 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStre
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="DataStreamsRequestBuilder"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStreams.DataStreamsRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public DataStreamsRequestBuilder WithUrl(string rawUrl)
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStreams.DataStreamsRequestBuilder WithUrl(string rawUrl)
         {
-            return new DataStreamsRequestBuilder(rawUrl, RequestAdapter);
+            return new OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStreams.DataStreamsRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Retrieves a collection of dataStreams.

@@ -5,22 +5,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Models {
+namespace OpenApiKiotaClientExample.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class DataInCreateTodoItemRequest : IBackedModel, IParsable 
+    public class DataInCreateTodoItemRequest : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>The attributes property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public AttributesInCreateTodoItemRequest? Attributes {
-            get { return BackingStore?.Get<AttributesInCreateTodoItemRequest?>("attributes"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInCreateTodoItemRequest? Attributes
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInCreateTodoItemRequest?>("attributes"); }
             set { BackingStore?.Set("attributes", value); }
         }
 #nullable restore
 #else
-        public AttributesInCreateTodoItemRequest Attributes {
-            get { return BackingStore?.Get<AttributesInCreateTodoItemRequest>("attributes"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInCreateTodoItemRequest Attributes
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInCreateTodoItemRequest>("attributes"); }
             set { BackingStore?.Set("attributes", value); }
         }
 #endif
@@ -29,24 +32,27 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The relationships property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RelationshipsInCreateTodoItemRequest? Relationships {
-            get { return BackingStore?.Get<RelationshipsInCreateTodoItemRequest?>("relationships"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInCreateTodoItemRequest? Relationships
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInCreateTodoItemRequest?>("relationships"); }
             set { BackingStore?.Set("relationships", value); }
         }
 #nullable restore
 #else
-        public RelationshipsInCreateTodoItemRequest Relationships {
-            get { return BackingStore?.Get<RelationshipsInCreateTodoItemRequest>("relationships"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInCreateTodoItemRequest Relationships
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInCreateTodoItemRequest>("relationships"); }
             set { BackingStore?.Set("relationships", value); }
         }
 #endif
         /// <summary>The type property</summary>
-        public TodoItemResourceType? Type {
-            get { return BackingStore?.Get<TodoItemResourceType?>("type"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemResourceType? Type
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemResourceType?>("type"); }
             set { BackingStore?.Set("type", value); }
         }
         /// <summary>
-        /// Instantiates a new <see cref="DataInCreateTodoItemRequest"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.DataInCreateTodoItemRequest"/> and sets the default values.
         /// </summary>
         public DataInCreateTodoItemRequest()
         {
@@ -55,12 +61,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="DataInCreateTodoItemRequest"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.DataInCreateTodoItemRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static DataInCreateTodoItemRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaClientExample.GeneratedCode.Models.DataInCreateTodoItemRequest CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new DataInCreateTodoItemRequest();
+            return new OpenApiKiotaClientExample.GeneratedCode.Models.DataInCreateTodoItemRequest();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -70,9 +76,9 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"attributes", n => { Attributes = n.GetObjectValue<AttributesInCreateTodoItemRequest>(AttributesInCreateTodoItemRequest.CreateFromDiscriminatorValue); } },
-                {"relationships", n => { Relationships = n.GetObjectValue<RelationshipsInCreateTodoItemRequest>(RelationshipsInCreateTodoItemRequest.CreateFromDiscriminatorValue); } },
-                {"type", n => { Type = n.GetEnumValue<TodoItemResourceType>(); } },
+                { "attributes", n => { Attributes = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInCreateTodoItemRequest>(OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInCreateTodoItemRequest.CreateFromDiscriminatorValue); } },
+                { "relationships", n => { Relationships = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInCreateTodoItemRequest>(OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInCreateTodoItemRequest.CreateFromDiscriminatorValue); } },
+                { "type", n => { Type = n.GetEnumValue<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemResourceType>(); } },
             };
         }
         /// <summary>
@@ -82,9 +88,9 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<AttributesInCreateTodoItemRequest>("attributes", Attributes);
-            writer.WriteObjectValue<RelationshipsInCreateTodoItemRequest>("relationships", Relationships);
-            writer.WriteEnumValue<TodoItemResourceType>("type", Type);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInCreateTodoItemRequest>("attributes", Attributes);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInCreateTodoItemRequest>("relationships", Relationships);
+            writer.WriteEnumValue<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemResourceType>("type", Type);
         }
     }
 }

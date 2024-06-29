@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class UpdateWriteOnlyChannelRequestDocument : IBackedModel, IParsable 
+    public class UpdateWriteOnlyChannelRequestDocument : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,19 +16,21 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public DataInUpdateWriteOnlyChannelRequest? Data {
-            get { return BackingStore?.Get<DataInUpdateWriteOnlyChannelRequest?>("data"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataInUpdateWriteOnlyChannelRequest? Data
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataInUpdateWriteOnlyChannelRequest?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public DataInUpdateWriteOnlyChannelRequest Data {
-            get { return BackingStore?.Get<DataInUpdateWriteOnlyChannelRequest>("data"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataInUpdateWriteOnlyChannelRequest Data
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataInUpdateWriteOnlyChannelRequest>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="UpdateWriteOnlyChannelRequestDocument"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.UpdateWriteOnlyChannelRequestDocument"/> and sets the default values.
         /// </summary>
         public UpdateWriteOnlyChannelRequestDocument()
         {
@@ -36,12 +39,12 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="UpdateWriteOnlyChannelRequestDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.UpdateWriteOnlyChannelRequestDocument"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static UpdateWriteOnlyChannelRequestDocument CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.UpdateWriteOnlyChannelRequestDocument CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new UpdateWriteOnlyChannelRequestDocument();
+            return new OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.UpdateWriteOnlyChannelRequestDocument();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -51,7 +54,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"data", n => { Data = n.GetObjectValue<DataInUpdateWriteOnlyChannelRequest>(DataInUpdateWriteOnlyChannelRequest.CreateFromDiscriminatorValue); } },
+                { "data", n => { Data = n.GetObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataInUpdateWriteOnlyChannelRequest>(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataInUpdateWriteOnlyChannelRequest.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -61,7 +64,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<DataInUpdateWriteOnlyChannelRequest>("data", Data);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataInUpdateWriteOnlyChannelRequest>("data", Data);
         }
     }
 }

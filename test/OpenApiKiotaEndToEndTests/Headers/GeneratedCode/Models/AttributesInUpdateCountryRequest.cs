@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class AttributesInUpdateCountryRequest : IBackedModel, IParsable 
+    public class AttributesInUpdateCountryRequest : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,24 +16,27 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
         /// <summary>The name property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Name {
+        public string? Name
+        {
             get { return BackingStore?.Get<string?>("name"); }
             set { BackingStore?.Set("name", value); }
         }
 #nullable restore
 #else
-        public string Name {
+        public string Name
+        {
             get { return BackingStore?.Get<string>("name"); }
             set { BackingStore?.Set("name", value); }
         }
 #endif
         /// <summary>The population property</summary>
-        public long? Population {
+        public long? Population
+        {
             get { return BackingStore?.Get<long?>("population"); }
             set { BackingStore?.Set("population", value); }
         }
         /// <summary>
-        /// Instantiates a new <see cref="AttributesInUpdateCountryRequest"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.AttributesInUpdateCountryRequest"/> and sets the default values.
         /// </summary>
         public AttributesInUpdateCountryRequest()
         {
@@ -41,12 +45,12 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="AttributesInUpdateCountryRequest"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.AttributesInUpdateCountryRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static AttributesInUpdateCountryRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.AttributesInUpdateCountryRequest CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new AttributesInUpdateCountryRequest();
+            return new OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.AttributesInUpdateCountryRequest();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -56,8 +60,8 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"name", n => { Name = n.GetStringValue(); } },
-                {"population", n => { Population = n.GetLongValue(); } },
+                { "name", n => { Name = n.GetStringValue(); } },
+                { "population", n => { Population = n.GetLongValue(); } },
             };
         }
         /// <summary>

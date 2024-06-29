@@ -5,22 +5,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Models {
+namespace OpenApiKiotaClientExample.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class DataInCreatePersonRequest : IBackedModel, IParsable 
+    public class DataInCreatePersonRequest : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>The attributes property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public AttributesInCreatePersonRequest? Attributes {
-            get { return BackingStore?.Get<AttributesInCreatePersonRequest?>("attributes"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInCreatePersonRequest? Attributes
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInCreatePersonRequest?>("attributes"); }
             set { BackingStore?.Set("attributes", value); }
         }
 #nullable restore
 #else
-        public AttributesInCreatePersonRequest Attributes {
-            get { return BackingStore?.Get<AttributesInCreatePersonRequest>("attributes"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInCreatePersonRequest Attributes
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInCreatePersonRequest>("attributes"); }
             set { BackingStore?.Set("attributes", value); }
         }
 #endif
@@ -29,24 +32,27 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The relationships property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RelationshipsInCreatePersonRequest? Relationships {
-            get { return BackingStore?.Get<RelationshipsInCreatePersonRequest?>("relationships"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInCreatePersonRequest? Relationships
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInCreatePersonRequest?>("relationships"); }
             set { BackingStore?.Set("relationships", value); }
         }
 #nullable restore
 #else
-        public RelationshipsInCreatePersonRequest Relationships {
-            get { return BackingStore?.Get<RelationshipsInCreatePersonRequest>("relationships"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInCreatePersonRequest Relationships
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInCreatePersonRequest>("relationships"); }
             set { BackingStore?.Set("relationships", value); }
         }
 #endif
         /// <summary>The type property</summary>
-        public PersonResourceType? Type {
-            get { return BackingStore?.Get<PersonResourceType?>("type"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.PersonResourceType? Type
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.PersonResourceType?>("type"); }
             set { BackingStore?.Set("type", value); }
         }
         /// <summary>
-        /// Instantiates a new <see cref="DataInCreatePersonRequest"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.DataInCreatePersonRequest"/> and sets the default values.
         /// </summary>
         public DataInCreatePersonRequest()
         {
@@ -55,12 +61,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="DataInCreatePersonRequest"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.DataInCreatePersonRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static DataInCreatePersonRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaClientExample.GeneratedCode.Models.DataInCreatePersonRequest CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new DataInCreatePersonRequest();
+            return new OpenApiKiotaClientExample.GeneratedCode.Models.DataInCreatePersonRequest();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -70,9 +76,9 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"attributes", n => { Attributes = n.GetObjectValue<AttributesInCreatePersonRequest>(AttributesInCreatePersonRequest.CreateFromDiscriminatorValue); } },
-                {"relationships", n => { Relationships = n.GetObjectValue<RelationshipsInCreatePersonRequest>(RelationshipsInCreatePersonRequest.CreateFromDiscriminatorValue); } },
-                {"type", n => { Type = n.GetEnumValue<PersonResourceType>(); } },
+                { "attributes", n => { Attributes = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInCreatePersonRequest>(OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInCreatePersonRequest.CreateFromDiscriminatorValue); } },
+                { "relationships", n => { Relationships = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInCreatePersonRequest>(OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInCreatePersonRequest.CreateFromDiscriminatorValue); } },
+                { "type", n => { Type = n.GetEnumValue<OpenApiKiotaClientExample.GeneratedCode.Models.PersonResourceType>(); } },
             };
         }
         /// <summary>
@@ -82,9 +88,9 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<AttributesInCreatePersonRequest>("attributes", Attributes);
-            writer.WriteObjectValue<RelationshipsInCreatePersonRequest>("relationships", Relationships);
-            writer.WriteEnumValue<PersonResourceType>("type", Type);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInCreatePersonRequest>("attributes", Attributes);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInCreatePersonRequest>("relationships", Relationships);
+            writer.WriteEnumValue<OpenApiKiotaClientExample.GeneratedCode.Models.PersonResourceType>("type", Type);
         }
     }
 }

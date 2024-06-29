@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class ToManyExcursionInRequest : IBackedModel, IParsable 
+    public class ToManyExcursionInRequest : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,19 +16,21 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public List<ExcursionIdentifier>? Data {
-            get { return BackingStore?.Get<List<ExcursionIdentifier>?>("data"); }
+        public List<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ExcursionIdentifier>? Data
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ExcursionIdentifier>?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public List<ExcursionIdentifier> Data {
-            get { return BackingStore?.Get<List<ExcursionIdentifier>>("data"); }
+        public List<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ExcursionIdentifier> Data
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ExcursionIdentifier>>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="ToManyExcursionInRequest"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ToManyExcursionInRequest"/> and sets the default values.
         /// </summary>
         public ToManyExcursionInRequest()
         {
@@ -36,12 +39,12 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="ToManyExcursionInRequest"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ToManyExcursionInRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static ToManyExcursionInRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ToManyExcursionInRequest CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new ToManyExcursionInRequest();
+            return new OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ToManyExcursionInRequest();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -51,7 +54,7 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"data", n => { Data = n.GetCollectionOfObjectValues<ExcursionIdentifier>(ExcursionIdentifier.CreateFromDiscriminatorValue)?.ToList(); } },
+                { "data", n => { Data = n.GetCollectionOfObjectValues<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ExcursionIdentifier>(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ExcursionIdentifier.CreateFromDiscriminatorValue)?.ToList(); } },
             };
         }
         /// <summary>
@@ -61,7 +64,7 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteCollectionOfObjectValues<ExcursionIdentifier>("data", Data);
+            writer.WriteCollectionOfObjectValues<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ExcursionIdentifier>("data", Data);
         }
     }
 }

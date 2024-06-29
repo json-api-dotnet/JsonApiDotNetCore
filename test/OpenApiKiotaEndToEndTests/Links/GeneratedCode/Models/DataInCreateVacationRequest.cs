@@ -5,22 +5,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class DataInCreateVacationRequest : IBackedModel, IParsable 
+    public class DataInCreateVacationRequest : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>The attributes property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public AttributesInCreateVacationRequest? Attributes {
-            get { return BackingStore?.Get<AttributesInCreateVacationRequest?>("attributes"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AttributesInCreateVacationRequest? Attributes
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AttributesInCreateVacationRequest?>("attributes"); }
             set { BackingStore?.Set("attributes", value); }
         }
 #nullable restore
 #else
-        public AttributesInCreateVacationRequest Attributes {
-            get { return BackingStore?.Get<AttributesInCreateVacationRequest>("attributes"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AttributesInCreateVacationRequest Attributes
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AttributesInCreateVacationRequest>("attributes"); }
             set { BackingStore?.Set("attributes", value); }
         }
 #endif
@@ -29,24 +32,27 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>The relationships property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RelationshipsInCreateVacationRequest? Relationships {
-            get { return BackingStore?.Get<RelationshipsInCreateVacationRequest?>("relationships"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.RelationshipsInCreateVacationRequest? Relationships
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.RelationshipsInCreateVacationRequest?>("relationships"); }
             set { BackingStore?.Set("relationships", value); }
         }
 #nullable restore
 #else
-        public RelationshipsInCreateVacationRequest Relationships {
-            get { return BackingStore?.Get<RelationshipsInCreateVacationRequest>("relationships"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.RelationshipsInCreateVacationRequest Relationships
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.RelationshipsInCreateVacationRequest>("relationships"); }
             set { BackingStore?.Set("relationships", value); }
         }
 #endif
         /// <summary>The type property</summary>
-        public VacationResourceType? Type {
-            get { return BackingStore?.Get<VacationResourceType?>("type"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationResourceType? Type
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationResourceType?>("type"); }
             set { BackingStore?.Set("type", value); }
         }
         /// <summary>
-        /// Instantiates a new <see cref="DataInCreateVacationRequest"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.DataInCreateVacationRequest"/> and sets the default values.
         /// </summary>
         public DataInCreateVacationRequest()
         {
@@ -55,12 +61,12 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="DataInCreateVacationRequest"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.DataInCreateVacationRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static DataInCreateVacationRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.DataInCreateVacationRequest CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new DataInCreateVacationRequest();
+            return new OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.DataInCreateVacationRequest();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -70,9 +76,9 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"attributes", n => { Attributes = n.GetObjectValue<AttributesInCreateVacationRequest>(AttributesInCreateVacationRequest.CreateFromDiscriminatorValue); } },
-                {"relationships", n => { Relationships = n.GetObjectValue<RelationshipsInCreateVacationRequest>(RelationshipsInCreateVacationRequest.CreateFromDiscriminatorValue); } },
-                {"type", n => { Type = n.GetEnumValue<VacationResourceType>(); } },
+                { "attributes", n => { Attributes = n.GetObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AttributesInCreateVacationRequest>(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AttributesInCreateVacationRequest.CreateFromDiscriminatorValue); } },
+                { "relationships", n => { Relationships = n.GetObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.RelationshipsInCreateVacationRequest>(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.RelationshipsInCreateVacationRequest.CreateFromDiscriminatorValue); } },
+                { "type", n => { Type = n.GetEnumValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationResourceType>(); } },
             };
         }
         /// <summary>
@@ -82,9 +88,9 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<AttributesInCreateVacationRequest>("attributes", Attributes);
-            writer.WriteObjectValue<RelationshipsInCreateVacationRequest>("relationships", Relationships);
-            writer.WriteEnumValue<VacationResourceType>("type", Type);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AttributesInCreateVacationRequest>("attributes", Attributes);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.RelationshipsInCreateVacationRequest>("relationships", Relationships);
+            writer.WriteEnumValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationResourceType>("type", Type);
         }
     }
 }

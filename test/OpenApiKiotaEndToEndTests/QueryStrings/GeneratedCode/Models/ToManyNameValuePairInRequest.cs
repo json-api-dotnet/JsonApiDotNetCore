@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class ToManyNameValuePairInRequest : IBackedModel, IParsable 
+    public class ToManyNameValuePairInRequest : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,19 +16,21 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public List<NameValuePairIdentifier>? Data {
-            get { return BackingStore?.Get<List<NameValuePairIdentifier>?>("data"); }
+        public List<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifier>? Data
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifier>?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public List<NameValuePairIdentifier> Data {
-            get { return BackingStore?.Get<List<NameValuePairIdentifier>>("data"); }
+        public List<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifier> Data
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifier>>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="ToManyNameValuePairInRequest"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ToManyNameValuePairInRequest"/> and sets the default values.
         /// </summary>
         public ToManyNameValuePairInRequest()
         {
@@ -36,12 +39,12 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="ToManyNameValuePairInRequest"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ToManyNameValuePairInRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static ToManyNameValuePairInRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ToManyNameValuePairInRequest CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new ToManyNameValuePairInRequest();
+            return new OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ToManyNameValuePairInRequest();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -51,7 +54,7 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"data", n => { Data = n.GetCollectionOfObjectValues<NameValuePairIdentifier>(NameValuePairIdentifier.CreateFromDiscriminatorValue)?.ToList(); } },
+                { "data", n => { Data = n.GetCollectionOfObjectValues<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifier>(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifier.CreateFromDiscriminatorValue)?.ToList(); } },
             };
         }
         /// <summary>
@@ -61,7 +64,7 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteCollectionOfObjectValues<NameValuePairIdentifier>("data", Data);
+            writer.WriteCollectionOfObjectValues<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifier>("data", Data);
         }
     }
 }

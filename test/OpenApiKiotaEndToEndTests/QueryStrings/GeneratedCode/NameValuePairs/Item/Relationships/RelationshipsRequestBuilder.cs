@@ -6,19 +6,20 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
-namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.NameValuePairs.Item.Relationships {
+namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.NameValuePairs.Item.Relationships
+{
     /// <summary>
     /// Builds and executes requests for operations under \nameValuePairs\{id}\relationships
     /// </summary>
-    public class RelationshipsRequestBuilder : BaseRequestBuilder 
+    public class RelationshipsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>The owner property</summary>
-        public OwnerRequestBuilder Owner
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.NameValuePairs.Item.Relationships.Owner.OwnerRequestBuilder Owner
         {
-            get => new OwnerRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.NameValuePairs.Item.Relationships.Owner.OwnerRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new <see cref="RelationshipsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.NameValuePairs.Item.Relationships.RelationshipsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -26,7 +27,7 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.NameValuePairs.It
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="RelationshipsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.NameValuePairs.Item.Relationships.RelationshipsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>

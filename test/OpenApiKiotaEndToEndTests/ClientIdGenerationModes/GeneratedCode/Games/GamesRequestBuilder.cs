@@ -8,14 +8,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Games {
+namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Games
+{
     /// <summary>
     /// Builds and executes requests for operations under \games
     /// </summary>
-    public class GamesRequestBuilder : BaseRequestBuilder 
+    public class GamesRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="GamesRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Games.GamesRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -23,7 +24,7 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Games 
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="GamesRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Games.GamesRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -33,33 +34,33 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Games 
         /// <summary>
         /// Creates a new game.
         /// </summary>
-        /// <returns>A <see cref="GamePrimaryResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GamePrimaryResponseDocument"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 409 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument">When receiving a 409 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<GamePrimaryResponseDocument?> PostAsync(CreateGameRequestDocument body, Action<RequestConfiguration<GamesRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GamePrimaryResponseDocument?> PostAsync(OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.CreateGameRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Games.GamesRequestBuilder.GamesRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<GamePrimaryResponseDocument> PostAsync(CreateGameRequestDocument body, Action<RequestConfiguration<GamesRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GamePrimaryResponseDocument> PostAsync(OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.CreateGameRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Games.GamesRequestBuilder.GamesRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPostRequestInformation(body, requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"409", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"422", ErrorResponseDocument.CreateFromDiscriminatorValue},
+                { "400", OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "404", OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "409", OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "422", OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<GamePrimaryResponseDocument>(requestInfo, GamePrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GamePrimaryResponseDocument>(requestInfo, OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GamePrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Creates a new game.
@@ -69,11 +70,11 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Games 
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPostRequestInformation(CreateGameRequestDocument body, Action<RequestConfiguration<GamesRequestBuilderPostQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.CreateGameRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Games.GamesRequestBuilder.GamesRequestBuilderPostQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPostRequestInformation(CreateGameRequestDocument body, Action<RequestConfiguration<GamesRequestBuilderPostQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.CreateGameRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Games.GamesRequestBuilder.GamesRequestBuilderPostQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -86,11 +87,11 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Games 
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="GamesRequestBuilder"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Games.GamesRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public GamesRequestBuilder WithUrl(string rawUrl)
+        public OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Games.GamesRequestBuilder WithUrl(string rawUrl)
         {
-            return new GamesRequestBuilder(rawUrl, RequestAdapter);
+            return new OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Games.GamesRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Creates a new game.

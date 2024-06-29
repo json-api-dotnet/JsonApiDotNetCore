@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class AttributesInUpdateExcursionRequest : IBackedModel, IParsable 
+    public class AttributesInUpdateExcursionRequest : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,24 +16,27 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>The description property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Description {
+        public string? Description
+        {
             get { return BackingStore?.Get<string?>("description"); }
             set { BackingStore?.Set("description", value); }
         }
 #nullable restore
 #else
-        public string Description {
+        public string Description
+        {
             get { return BackingStore?.Get<string>("description"); }
             set { BackingStore?.Set("description", value); }
         }
 #endif
         /// <summary>The occursAt property</summary>
-        public DateTimeOffset? OccursAt {
+        public DateTimeOffset? OccursAt
+        {
             get { return BackingStore?.Get<DateTimeOffset?>("occursAt"); }
             set { BackingStore?.Set("occursAt", value); }
         }
         /// <summary>
-        /// Instantiates a new <see cref="AttributesInUpdateExcursionRequest"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AttributesInUpdateExcursionRequest"/> and sets the default values.
         /// </summary>
         public AttributesInUpdateExcursionRequest()
         {
@@ -41,12 +45,12 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="AttributesInUpdateExcursionRequest"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AttributesInUpdateExcursionRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static AttributesInUpdateExcursionRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AttributesInUpdateExcursionRequest CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new AttributesInUpdateExcursionRequest();
+            return new OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AttributesInUpdateExcursionRequest();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -56,8 +60,8 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"description", n => { Description = n.GetStringValue(); } },
-                {"occursAt", n => { OccursAt = n.GetDateTimeOffsetValue(); } },
+                { "description", n => { Description = n.GetStringValue(); } },
+                { "occursAt", n => { OccursAt = n.GetDateTimeOffsetValue(); } },
             };
         }
         /// <summary>

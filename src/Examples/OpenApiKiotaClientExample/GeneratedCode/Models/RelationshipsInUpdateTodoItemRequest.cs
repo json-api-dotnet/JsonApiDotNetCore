@@ -5,22 +5,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Models {
+namespace OpenApiKiotaClientExample.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class RelationshipsInUpdateTodoItemRequest : IBackedModel, IParsable 
+    public class RelationshipsInUpdateTodoItemRequest : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>The assignee property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public NullableToOnePersonInRequest? Assignee {
-            get { return BackingStore?.Get<NullableToOnePersonInRequest?>("assignee"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.NullableToOnePersonInRequest? Assignee
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.NullableToOnePersonInRequest?>("assignee"); }
             set { BackingStore?.Set("assignee", value); }
         }
 #nullable restore
 #else
-        public NullableToOnePersonInRequest Assignee {
-            get { return BackingStore?.Get<NullableToOnePersonInRequest>("assignee"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.NullableToOnePersonInRequest Assignee
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.NullableToOnePersonInRequest>("assignee"); }
             set { BackingStore?.Set("assignee", value); }
         }
 #endif
@@ -29,33 +32,37 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The owner property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ToOnePersonInRequest? Owner {
-            get { return BackingStore?.Get<ToOnePersonInRequest?>("owner"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ToOnePersonInRequest? Owner
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ToOnePersonInRequest?>("owner"); }
             set { BackingStore?.Set("owner", value); }
         }
 #nullable restore
 #else
-        public ToOnePersonInRequest Owner {
-            get { return BackingStore?.Get<ToOnePersonInRequest>("owner"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ToOnePersonInRequest Owner
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ToOnePersonInRequest>("owner"); }
             set { BackingStore?.Set("owner", value); }
         }
 #endif
         /// <summary>The tags property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ToManyTagInRequest? Tags {
-            get { return BackingStore?.Get<ToManyTagInRequest?>("tags"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTagInRequest? Tags
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTagInRequest?>("tags"); }
             set { BackingStore?.Set("tags", value); }
         }
 #nullable restore
 #else
-        public ToManyTagInRequest Tags {
-            get { return BackingStore?.Get<ToManyTagInRequest>("tags"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTagInRequest Tags
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTagInRequest>("tags"); }
             set { BackingStore?.Set("tags", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="RelationshipsInUpdateTodoItemRequest"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdateTodoItemRequest"/> and sets the default values.
         /// </summary>
         public RelationshipsInUpdateTodoItemRequest()
         {
@@ -64,12 +71,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="RelationshipsInUpdateTodoItemRequest"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdateTodoItemRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static RelationshipsInUpdateTodoItemRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdateTodoItemRequest CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new RelationshipsInUpdateTodoItemRequest();
+            return new OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdateTodoItemRequest();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -79,9 +86,9 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"assignee", n => { Assignee = n.GetObjectValue<NullableToOnePersonInRequest>(NullableToOnePersonInRequest.CreateFromDiscriminatorValue); } },
-                {"owner", n => { Owner = n.GetObjectValue<ToOnePersonInRequest>(ToOnePersonInRequest.CreateFromDiscriminatorValue); } },
-                {"tags", n => { Tags = n.GetObjectValue<ToManyTagInRequest>(ToManyTagInRequest.CreateFromDiscriminatorValue); } },
+                { "assignee", n => { Assignee = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.NullableToOnePersonInRequest>(OpenApiKiotaClientExample.GeneratedCode.Models.NullableToOnePersonInRequest.CreateFromDiscriminatorValue); } },
+                { "owner", n => { Owner = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ToOnePersonInRequest>(OpenApiKiotaClientExample.GeneratedCode.Models.ToOnePersonInRequest.CreateFromDiscriminatorValue); } },
+                { "tags", n => { Tags = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTagInRequest>(OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTagInRequest.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -91,9 +98,9 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<NullableToOnePersonInRequest>("assignee", Assignee);
-            writer.WriteObjectValue<ToOnePersonInRequest>("owner", Owner);
-            writer.WriteObjectValue<ToManyTagInRequest>("tags", Tags);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.NullableToOnePersonInRequest>("assignee", Assignee);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ToOnePersonInRequest>("owner", Owner);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTagInRequest>("tags", Tags);
         }
     }
 }

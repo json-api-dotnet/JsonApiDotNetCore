@@ -5,34 +5,38 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class AttributesInCreateGameRequest : IBackedModel, IParsable 
+    public class AttributesInCreateGameRequest : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
         public IBackingStore BackingStore { get; private set; }
         /// <summary>The purchasePrice property</summary>
-        public double? PurchasePrice {
+        public double? PurchasePrice
+        {
             get { return BackingStore?.Get<double?>("purchasePrice"); }
             set { BackingStore?.Set("purchasePrice", value); }
         }
         /// <summary>The title property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Title {
+        public string? Title
+        {
             get { return BackingStore?.Get<string?>("title"); }
             set { BackingStore?.Set("title", value); }
         }
 #nullable restore
 #else
-        public string Title {
+        public string Title
+        {
             get { return BackingStore?.Get<string>("title"); }
             set { BackingStore?.Set("title", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="AttributesInCreateGameRequest"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.AttributesInCreateGameRequest"/> and sets the default values.
         /// </summary>
         public AttributesInCreateGameRequest()
         {
@@ -41,12 +45,12 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="AttributesInCreateGameRequest"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.AttributesInCreateGameRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static AttributesInCreateGameRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.AttributesInCreateGameRequest CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new AttributesInCreateGameRequest();
+            return new OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.AttributesInCreateGameRequest();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -56,8 +60,8 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"purchasePrice", n => { PurchasePrice = n.GetDoubleValue(); } },
-                {"title", n => { Title = n.GetStringValue(); } },
+                { "purchasePrice", n => { PurchasePrice = n.GetDoubleValue(); } },
+                { "title", n => { Title = n.GetStringValue(); } },
             };
         }
         /// <summary>

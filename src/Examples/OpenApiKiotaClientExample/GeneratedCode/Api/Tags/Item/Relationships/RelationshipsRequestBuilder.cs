@@ -6,19 +6,20 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.Relationships {
+namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.Relationships
+{
     /// <summary>
     /// Builds and executes requests for operations under \api\tags\{id}\relationships
     /// </summary>
-    public class RelationshipsRequestBuilder : BaseRequestBuilder 
+    public class RelationshipsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>The todoItems property</summary>
-        public TodoItemsRequestBuilder TodoItems
+        public OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.Relationships.TodoItems.TodoItemsRequestBuilder TodoItems
         {
-            get => new TodoItemsRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.Relationships.TodoItems.TodoItemsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new <see cref="RelationshipsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.Relationships.RelationshipsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -26,7 +27,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.Relationships {
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="RelationshipsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.Relationships.RelationshipsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>

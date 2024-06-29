@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class RelationshipsInCreatePlayerRequest : IBackedModel, IParsable 
+    public class RelationshipsInCreatePlayerRequest : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,33 +16,37 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         /// <summary>The memberOf property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ToManyPlayerGroupInRequest? MemberOf {
-            get { return BackingStore?.Get<ToManyPlayerGroupInRequest?>("memberOf"); }
+        public OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyPlayerGroupInRequest? MemberOf
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyPlayerGroupInRequest?>("memberOf"); }
             set { BackingStore?.Set("memberOf", value); }
         }
 #nullable restore
 #else
-        public ToManyPlayerGroupInRequest MemberOf {
-            get { return BackingStore?.Get<ToManyPlayerGroupInRequest>("memberOf"); }
+        public OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyPlayerGroupInRequest MemberOf
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyPlayerGroupInRequest>("memberOf"); }
             set { BackingStore?.Set("memberOf", value); }
         }
 #endif
         /// <summary>The ownedGames property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ToManyGameInRequest? OwnedGames {
-            get { return BackingStore?.Get<ToManyGameInRequest?>("ownedGames"); }
+        public OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyGameInRequest? OwnedGames
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyGameInRequest?>("ownedGames"); }
             set { BackingStore?.Set("ownedGames", value); }
         }
 #nullable restore
 #else
-        public ToManyGameInRequest OwnedGames {
-            get { return BackingStore?.Get<ToManyGameInRequest>("ownedGames"); }
+        public OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyGameInRequest OwnedGames
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyGameInRequest>("ownedGames"); }
             set { BackingStore?.Set("ownedGames", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="RelationshipsInCreatePlayerRequest"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.RelationshipsInCreatePlayerRequest"/> and sets the default values.
         /// </summary>
         public RelationshipsInCreatePlayerRequest()
         {
@@ -50,12 +55,12 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="RelationshipsInCreatePlayerRequest"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.RelationshipsInCreatePlayerRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static RelationshipsInCreatePlayerRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.RelationshipsInCreatePlayerRequest CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new RelationshipsInCreatePlayerRequest();
+            return new OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.RelationshipsInCreatePlayerRequest();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -65,8 +70,8 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"memberOf", n => { MemberOf = n.GetObjectValue<ToManyPlayerGroupInRequest>(ToManyPlayerGroupInRequest.CreateFromDiscriminatorValue); } },
-                {"ownedGames", n => { OwnedGames = n.GetObjectValue<ToManyGameInRequest>(ToManyGameInRequest.CreateFromDiscriminatorValue); } },
+                { "memberOf", n => { MemberOf = n.GetObjectValue<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyPlayerGroupInRequest>(OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyPlayerGroupInRequest.CreateFromDiscriminatorValue); } },
+                { "ownedGames", n => { OwnedGames = n.GetObjectValue<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyGameInRequest>(OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyGameInRequest.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -76,8 +81,8 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<ToManyPlayerGroupInRequest>("memberOf", MemberOf);
-            writer.WriteObjectValue<ToManyGameInRequest>("ownedGames", OwnedGames);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyPlayerGroupInRequest>("memberOf", MemberOf);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyGameInRequest>("ownedGames", OwnedGames);
         }
     }
 }

@@ -14,29 +14,30 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
-namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode {
+namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode
+{
     /// <summary>
     /// The main entry point of the SDK, exposes the configuration and the fluent API.
     /// </summary>
-    public class ClientIdGenerationModesClient : BaseRequestBuilder 
+    public class ClientIdGenerationModesClient : BaseRequestBuilder
     {
         /// <summary>The games property</summary>
-        public GamesRequestBuilder Games
+        public OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Games.GamesRequestBuilder Games
         {
-            get => new GamesRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Games.GamesRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The playerGroups property</summary>
-        public PlayerGroupsRequestBuilder PlayerGroups
+        public OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.PlayerGroups.PlayerGroupsRequestBuilder PlayerGroups
         {
-            get => new PlayerGroupsRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.PlayerGroups.PlayerGroupsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The players property</summary>
-        public PlayersRequestBuilder Players
+        public OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Players.PlayersRequestBuilder Players
         {
-            get => new PlayersRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Players.PlayersRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new <see cref="ClientIdGenerationModesClient"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.ClientIdGenerationModesClient"/> and sets the default values.
         /// </summary>
         /// <param name="backingStore">The backing store to use for the models.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>

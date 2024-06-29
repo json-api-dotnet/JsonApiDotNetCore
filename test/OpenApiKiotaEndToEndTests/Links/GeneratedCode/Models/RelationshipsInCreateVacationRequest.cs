@@ -5,22 +5,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class RelationshipsInCreateVacationRequest : IBackedModel, IParsable 
+    public class RelationshipsInCreateVacationRequest : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>The accommodation property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ToOneAccommodationInRequest? Accommodation {
-            get { return BackingStore?.Get<ToOneAccommodationInRequest?>("accommodation"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ToOneAccommodationInRequest? Accommodation
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ToOneAccommodationInRequest?>("accommodation"); }
             set { BackingStore?.Set("accommodation", value); }
         }
 #nullable restore
 #else
-        public ToOneAccommodationInRequest Accommodation {
-            get { return BackingStore?.Get<ToOneAccommodationInRequest>("accommodation"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ToOneAccommodationInRequest Accommodation
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ToOneAccommodationInRequest>("accommodation"); }
             set { BackingStore?.Set("accommodation", value); }
         }
 #endif
@@ -29,33 +32,37 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>The excursions property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ToManyExcursionInRequest? Excursions {
-            get { return BackingStore?.Get<ToManyExcursionInRequest?>("excursions"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ToManyExcursionInRequest? Excursions
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ToManyExcursionInRequest?>("excursions"); }
             set { BackingStore?.Set("excursions", value); }
         }
 #nullable restore
 #else
-        public ToManyExcursionInRequest Excursions {
-            get { return BackingStore?.Get<ToManyExcursionInRequest>("excursions"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ToManyExcursionInRequest Excursions
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ToManyExcursionInRequest>("excursions"); }
             set { BackingStore?.Set("excursions", value); }
         }
 #endif
         /// <summary>The transport property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public NullableToOneTransportInRequest? Transport {
-            get { return BackingStore?.Get<NullableToOneTransportInRequest?>("transport"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.NullableToOneTransportInRequest? Transport
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.NullableToOneTransportInRequest?>("transport"); }
             set { BackingStore?.Set("transport", value); }
         }
 #nullable restore
 #else
-        public NullableToOneTransportInRequest Transport {
-            get { return BackingStore?.Get<NullableToOneTransportInRequest>("transport"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.NullableToOneTransportInRequest Transport
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.NullableToOneTransportInRequest>("transport"); }
             set { BackingStore?.Set("transport", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="RelationshipsInCreateVacationRequest"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.RelationshipsInCreateVacationRequest"/> and sets the default values.
         /// </summary>
         public RelationshipsInCreateVacationRequest()
         {
@@ -64,12 +71,12 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="RelationshipsInCreateVacationRequest"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.RelationshipsInCreateVacationRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static RelationshipsInCreateVacationRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.RelationshipsInCreateVacationRequest CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new RelationshipsInCreateVacationRequest();
+            return new OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.RelationshipsInCreateVacationRequest();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -79,9 +86,9 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"accommodation", n => { Accommodation = n.GetObjectValue<ToOneAccommodationInRequest>(ToOneAccommodationInRequest.CreateFromDiscriminatorValue); } },
-                {"excursions", n => { Excursions = n.GetObjectValue<ToManyExcursionInRequest>(ToManyExcursionInRequest.CreateFromDiscriminatorValue); } },
-                {"transport", n => { Transport = n.GetObjectValue<NullableToOneTransportInRequest>(NullableToOneTransportInRequest.CreateFromDiscriminatorValue); } },
+                { "accommodation", n => { Accommodation = n.GetObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ToOneAccommodationInRequest>(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ToOneAccommodationInRequest.CreateFromDiscriminatorValue); } },
+                { "excursions", n => { Excursions = n.GetObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ToManyExcursionInRequest>(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ToManyExcursionInRequest.CreateFromDiscriminatorValue); } },
+                { "transport", n => { Transport = n.GetObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.NullableToOneTransportInRequest>(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.NullableToOneTransportInRequest.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -91,9 +98,9 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<ToOneAccommodationInRequest>("accommodation", Accommodation);
-            writer.WriteObjectValue<ToManyExcursionInRequest>("excursions", Excursions);
-            writer.WriteObjectValue<NullableToOneTransportInRequest>("transport", Transport);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ToOneAccommodationInRequest>("accommodation", Accommodation);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ToManyExcursionInRequest>("excursions", Excursions);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.NullableToOneTransportInRequest>("transport", Transport);
         }
     }
 }

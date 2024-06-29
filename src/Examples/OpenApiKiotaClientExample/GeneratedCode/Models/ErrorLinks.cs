@@ -5,21 +5,24 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Models {
+namespace OpenApiKiotaClientExample.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class ErrorLinks : IBackedModel, IParsable 
+    public class ErrorLinks : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>The about property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? About {
+        public string? About
+        {
             get { return BackingStore?.Get<string?>("about"); }
             set { BackingStore?.Set("about", value); }
         }
 #nullable restore
 #else
-        public string About {
+        public string About
+        {
             get { return BackingStore?.Get<string>("about"); }
             set { BackingStore?.Set("about", value); }
         }
@@ -29,19 +32,21 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The type property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Type {
+        public string? Type
+        {
             get { return BackingStore?.Get<string?>("type"); }
             set { BackingStore?.Set("type", value); }
         }
 #nullable restore
 #else
-        public string Type {
+        public string Type
+        {
             get { return BackingStore?.Get<string>("type"); }
             set { BackingStore?.Set("type", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="ErrorLinks"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.ErrorLinks"/> and sets the default values.
         /// </summary>
         public ErrorLinks()
         {
@@ -50,12 +55,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="ErrorLinks"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.ErrorLinks"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static ErrorLinks CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaClientExample.GeneratedCode.Models.ErrorLinks CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new ErrorLinks();
+            return new OpenApiKiotaClientExample.GeneratedCode.Models.ErrorLinks();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -65,8 +70,8 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"about", n => { About = n.GetStringValue(); } },
-                {"type", n => { Type = n.GetStringValue(); } },
+                { "about", n => { About = n.GetStringValue(); } },
+                { "type", n => { Type = n.GetStringValue(); } },
             };
         }
         /// <summary>

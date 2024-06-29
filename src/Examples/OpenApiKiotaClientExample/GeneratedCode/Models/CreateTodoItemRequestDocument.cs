@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Models {
+namespace OpenApiKiotaClientExample.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class CreateTodoItemRequestDocument : IBackedModel, IParsable 
+    public class CreateTodoItemRequestDocument : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,19 +16,21 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public DataInCreateTodoItemRequest? Data {
-            get { return BackingStore?.Get<DataInCreateTodoItemRequest?>("data"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.DataInCreateTodoItemRequest? Data
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.DataInCreateTodoItemRequest?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public DataInCreateTodoItemRequest Data {
-            get { return BackingStore?.Get<DataInCreateTodoItemRequest>("data"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.DataInCreateTodoItemRequest Data
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.DataInCreateTodoItemRequest>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="CreateTodoItemRequestDocument"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.CreateTodoItemRequestDocument"/> and sets the default values.
         /// </summary>
         public CreateTodoItemRequestDocument()
         {
@@ -36,12 +39,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="CreateTodoItemRequestDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.CreateTodoItemRequestDocument"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static CreateTodoItemRequestDocument CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaClientExample.GeneratedCode.Models.CreateTodoItemRequestDocument CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new CreateTodoItemRequestDocument();
+            return new OpenApiKiotaClientExample.GeneratedCode.Models.CreateTodoItemRequestDocument();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -51,7 +54,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"data", n => { Data = n.GetObjectValue<DataInCreateTodoItemRequest>(DataInCreateTodoItemRequest.CreateFromDiscriminatorValue); } },
+                { "data", n => { Data = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.DataInCreateTodoItemRequest>(OpenApiKiotaClientExample.GeneratedCode.Models.DataInCreateTodoItemRequest.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -61,7 +64,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<DataInCreateTodoItemRequest>("data", Data);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.DataInCreateTodoItemRequest>("data", Data);
         }
     }
 }

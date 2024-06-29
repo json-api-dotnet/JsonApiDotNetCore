@@ -8,29 +8,30 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
-namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Relationships {
+namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Relationships
+{
     /// <summary>
     /// Builds and executes requests for operations under \nodes\{id}\relationships
     /// </summary>
-    public class RelationshipsRequestBuilder : BaseRequestBuilder 
+    public class RelationshipsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>The children property</summary>
-        public ChildrenRequestBuilder Children
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Relationships.Children.ChildrenRequestBuilder Children
         {
-            get => new ChildrenRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Relationships.Children.ChildrenRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The parent property</summary>
-        public ParentRequestBuilder Parent
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Relationships.Parent.ParentRequestBuilder Parent
         {
-            get => new ParentRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Relationships.Parent.ParentRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The values property</summary>
-        public ValuesRequestBuilder Values
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Relationships.Values.ValuesRequestBuilder Values
         {
-            get => new ValuesRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Relationships.Values.ValuesRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new <see cref="RelationshipsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Relationships.RelationshipsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -38,7 +39,7 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Relati
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="RelationshipsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Relationships.RelationshipsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>

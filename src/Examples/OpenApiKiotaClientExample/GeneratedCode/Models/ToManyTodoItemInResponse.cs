@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Models {
+namespace OpenApiKiotaClientExample.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class ToManyTodoItemInResponse : IBackedModel, IParsable 
+    public class ToManyTodoItemInResponse : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,47 +16,53 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public List<TodoItemIdentifier>? Data {
-            get { return BackingStore?.Get<List<TodoItemIdentifier>?>("data"); }
+        public List<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemIdentifier>? Data
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemIdentifier>?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public List<TodoItemIdentifier> Data {
-            get { return BackingStore?.Get<List<TodoItemIdentifier>>("data"); }
+        public List<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemIdentifier> Data
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemIdentifier>>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RelationshipLinks? Links {
-            get { return BackingStore?.Get<RelationshipLinks?>("links"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipLinks? Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public RelationshipLinks Links {
-            get { return BackingStore?.Get<RelationshipLinks>("links"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipLinks Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ToManyTodoItemInResponse_meta? Meta {
-            get { return BackingStore?.Get<ToManyTodoItemInResponse_meta?>("meta"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse_meta? Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse_meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public ToManyTodoItemInResponse_meta Meta {
-            get { return BackingStore?.Get<ToManyTodoItemInResponse_meta>("meta"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse_meta Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse_meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="ToManyTodoItemInResponse"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse"/> and sets the default values.
         /// </summary>
         public ToManyTodoItemInResponse()
         {
@@ -64,12 +71,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="ToManyTodoItemInResponse"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static ToManyTodoItemInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new ToManyTodoItemInResponse();
+            return new OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -79,9 +86,9 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"data", n => { Data = n.GetCollectionOfObjectValues<TodoItemIdentifier>(TodoItemIdentifier.CreateFromDiscriminatorValue)?.ToList(); } },
-                {"links", n => { Links = n.GetObjectValue<RelationshipLinks>(RelationshipLinks.CreateFromDiscriminatorValue); } },
-                {"meta", n => { Meta = n.GetObjectValue<ToManyTodoItemInResponse_meta>(ToManyTodoItemInResponse_meta.CreateFromDiscriminatorValue); } },
+                { "data", n => { Data = n.GetCollectionOfObjectValues<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemIdentifier>(OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemIdentifier.CreateFromDiscriminatorValue)?.ToList(); } },
+                { "links", n => { Links = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipLinks>(OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipLinks.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse_meta>(OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse_meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -91,9 +98,9 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteCollectionOfObjectValues<TodoItemIdentifier>("data", Data);
-            writer.WriteObjectValue<RelationshipLinks>("links", Links);
-            writer.WriteObjectValue<ToManyTodoItemInResponse_meta>("meta", Meta);
+            writer.WriteCollectionOfObjectValues<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemIdentifier>("data", Data);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipLinks>("links", Links);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse_meta>("meta", Meta);
         }
     }
 }

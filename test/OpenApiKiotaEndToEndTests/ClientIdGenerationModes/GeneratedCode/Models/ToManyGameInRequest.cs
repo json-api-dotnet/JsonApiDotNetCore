@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class ToManyGameInRequest : IBackedModel, IParsable 
+    public class ToManyGameInRequest : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,19 +16,21 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public List<GameIdentifier>? Data {
-            get { return BackingStore?.Get<List<GameIdentifier>?>("data"); }
+        public List<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameIdentifier>? Data
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameIdentifier>?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public List<GameIdentifier> Data {
-            get { return BackingStore?.Get<List<GameIdentifier>>("data"); }
+        public List<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameIdentifier> Data
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameIdentifier>>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="ToManyGameInRequest"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyGameInRequest"/> and sets the default values.
         /// </summary>
         public ToManyGameInRequest()
         {
@@ -36,12 +39,12 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="ToManyGameInRequest"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyGameInRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static ToManyGameInRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyGameInRequest CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new ToManyGameInRequest();
+            return new OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyGameInRequest();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -51,7 +54,7 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"data", n => { Data = n.GetCollectionOfObjectValues<GameIdentifier>(GameIdentifier.CreateFromDiscriminatorValue)?.ToList(); } },
+                { "data", n => { Data = n.GetCollectionOfObjectValues<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameIdentifier>(OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameIdentifier.CreateFromDiscriminatorValue)?.ToList(); } },
             };
         }
         /// <summary>
@@ -61,7 +64,7 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteCollectionOfObjectValues<GameIdentifier>("data", Data);
+            writer.WriteCollectionOfObjectValues<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameIdentifier>("data", Data);
         }
     }
 }

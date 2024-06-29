@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class UpdateNodeRequestDocument : IBackedModel, IParsable 
+    public class UpdateNodeRequestDocument : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,19 +16,21 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public DataInUpdateNodeRequest? Data {
-            get { return BackingStore?.Get<DataInUpdateNodeRequest?>("data"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.DataInUpdateNodeRequest? Data
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.DataInUpdateNodeRequest?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public DataInUpdateNodeRequest Data {
-            get { return BackingStore?.Get<DataInUpdateNodeRequest>("data"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.DataInUpdateNodeRequest Data
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.DataInUpdateNodeRequest>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="UpdateNodeRequestDocument"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.UpdateNodeRequestDocument"/> and sets the default values.
         /// </summary>
         public UpdateNodeRequestDocument()
         {
@@ -36,12 +39,12 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="UpdateNodeRequestDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.UpdateNodeRequestDocument"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static UpdateNodeRequestDocument CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.UpdateNodeRequestDocument CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new UpdateNodeRequestDocument();
+            return new OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.UpdateNodeRequestDocument();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -51,7 +54,7 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"data", n => { Data = n.GetObjectValue<DataInUpdateNodeRequest>(DataInUpdateNodeRequest.CreateFromDiscriminatorValue); } },
+                { "data", n => { Data = n.GetObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.DataInUpdateNodeRequest>(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.DataInUpdateNodeRequest.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -61,7 +64,7 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<DataInUpdateNodeRequest>("data", Data);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.DataInUpdateNodeRequest>("data", Data);
         }
     }
 }

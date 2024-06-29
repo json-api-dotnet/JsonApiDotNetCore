@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Models {
+namespace OpenApiKiotaClientExample.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class PersonCollectionResponseDocument : IBackedModel, IParsable 
+    public class PersonCollectionResponseDocument : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,61 +16,69 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public List<PersonDataInResponse>? Data {
-            get { return BackingStore?.Get<List<PersonDataInResponse>?>("data"); }
+        public List<OpenApiKiotaClientExample.GeneratedCode.Models.PersonDataInResponse>? Data
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaClientExample.GeneratedCode.Models.PersonDataInResponse>?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public List<PersonDataInResponse> Data {
-            get { return BackingStore?.Get<List<PersonDataInResponse>>("data"); }
+        public List<OpenApiKiotaClientExample.GeneratedCode.Models.PersonDataInResponse> Data
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaClientExample.GeneratedCode.Models.PersonDataInResponse>>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
         /// <summary>The included property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public List<DataInResponse>? Included {
-            get { return BackingStore?.Get<List<DataInResponse>?>("included"); }
+        public List<OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse>? Included
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse>?>("included"); }
             set { BackingStore?.Set("included", value); }
         }
 #nullable restore
 #else
-        public List<DataInResponse> Included {
-            get { return BackingStore?.Get<List<DataInResponse>>("included"); }
+        public List<OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse> Included
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse>>("included"); }
             set { BackingStore?.Set("included", value); }
         }
 #endif
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ResourceCollectionTopLevelLinks? Links {
-            get { return BackingStore?.Get<ResourceCollectionTopLevelLinks?>("links"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ResourceCollectionTopLevelLinks? Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ResourceCollectionTopLevelLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public ResourceCollectionTopLevelLinks Links {
-            get { return BackingStore?.Get<ResourceCollectionTopLevelLinks>("links"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ResourceCollectionTopLevelLinks Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ResourceCollectionTopLevelLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public PersonCollectionResponseDocument_meta? Meta {
-            get { return BackingStore?.Get<PersonCollectionResponseDocument_meta?>("meta"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.PersonCollectionResponseDocument_meta? Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.PersonCollectionResponseDocument_meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public PersonCollectionResponseDocument_meta Meta {
-            get { return BackingStore?.Get<PersonCollectionResponseDocument_meta>("meta"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.PersonCollectionResponseDocument_meta Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.PersonCollectionResponseDocument_meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="PersonCollectionResponseDocument"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.PersonCollectionResponseDocument"/> and sets the default values.
         /// </summary>
         public PersonCollectionResponseDocument()
         {
@@ -78,12 +87,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="PersonCollectionResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.PersonCollectionResponseDocument"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static PersonCollectionResponseDocument CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaClientExample.GeneratedCode.Models.PersonCollectionResponseDocument CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new PersonCollectionResponseDocument();
+            return new OpenApiKiotaClientExample.GeneratedCode.Models.PersonCollectionResponseDocument();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -93,10 +102,10 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"data", n => { Data = n.GetCollectionOfObjectValues<PersonDataInResponse>(PersonDataInResponse.CreateFromDiscriminatorValue)?.ToList(); } },
-                {"included", n => { Included = n.GetCollectionOfObjectValues<DataInResponse>(DataInResponse.CreateFromDiscriminatorValue)?.ToList(); } },
-                {"links", n => { Links = n.GetObjectValue<ResourceCollectionTopLevelLinks>(ResourceCollectionTopLevelLinks.CreateFromDiscriminatorValue); } },
-                {"meta", n => { Meta = n.GetObjectValue<PersonCollectionResponseDocument_meta>(PersonCollectionResponseDocument_meta.CreateFromDiscriminatorValue); } },
+                { "data", n => { Data = n.GetCollectionOfObjectValues<OpenApiKiotaClientExample.GeneratedCode.Models.PersonDataInResponse>(OpenApiKiotaClientExample.GeneratedCode.Models.PersonDataInResponse.CreateFromDiscriminatorValue)?.ToList(); } },
+                { "included", n => { Included = n.GetCollectionOfObjectValues<OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse>(OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse.CreateFromDiscriminatorValue)?.ToList(); } },
+                { "links", n => { Links = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ResourceCollectionTopLevelLinks>(OpenApiKiotaClientExample.GeneratedCode.Models.ResourceCollectionTopLevelLinks.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.PersonCollectionResponseDocument_meta>(OpenApiKiotaClientExample.GeneratedCode.Models.PersonCollectionResponseDocument_meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -106,10 +115,10 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteCollectionOfObjectValues<PersonDataInResponse>("data", Data);
-            writer.WriteCollectionOfObjectValues<DataInResponse>("included", Included);
-            writer.WriteObjectValue<ResourceCollectionTopLevelLinks>("links", Links);
-            writer.WriteObjectValue<PersonCollectionResponseDocument_meta>("meta", Meta);
+            writer.WriteCollectionOfObjectValues<OpenApiKiotaClientExample.GeneratedCode.Models.PersonDataInResponse>("data", Data);
+            writer.WriteCollectionOfObjectValues<OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse>("included", Included);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ResourceCollectionTopLevelLinks>("links", Links);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.PersonCollectionResponseDocument_meta>("meta", Meta);
         }
     }
 }

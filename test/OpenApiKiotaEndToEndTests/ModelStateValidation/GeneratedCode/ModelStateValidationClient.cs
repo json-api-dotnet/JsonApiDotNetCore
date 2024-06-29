@@ -12,19 +12,20 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
-namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode {
+namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode
+{
     /// <summary>
     /// The main entry point of the SDK, exposes the configuration and the fluent API.
     /// </summary>
-    public class ModelStateValidationClient : BaseRequestBuilder 
+    public class ModelStateValidationClient : BaseRequestBuilder
     {
         /// <summary>The socialMediaAccounts property</summary>
-        public SocialMediaAccountsRequestBuilder SocialMediaAccounts
+        public OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMediaAccounts.SocialMediaAccountsRequestBuilder SocialMediaAccounts
         {
-            get => new SocialMediaAccountsRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMediaAccounts.SocialMediaAccountsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new <see cref="ModelStateValidationClient"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.ModelStateValidationClient"/> and sets the default values.
         /// </summary>
         /// <param name="backingStore">The backing store to use for the models.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>

@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class UpdateSocialMediaAccountRequestDocument : IBackedModel, IParsable 
+    public class UpdateSocialMediaAccountRequestDocument : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,19 +16,21 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public DataInUpdateSocialMediaAccountRequest? Data {
-            get { return BackingStore?.Get<DataInUpdateSocialMediaAccountRequest?>("data"); }
+        public OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.DataInUpdateSocialMediaAccountRequest? Data
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.DataInUpdateSocialMediaAccountRequest?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public DataInUpdateSocialMediaAccountRequest Data {
-            get { return BackingStore?.Get<DataInUpdateSocialMediaAccountRequest>("data"); }
+        public OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.DataInUpdateSocialMediaAccountRequest Data
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.DataInUpdateSocialMediaAccountRequest>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="UpdateSocialMediaAccountRequestDocument"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.UpdateSocialMediaAccountRequestDocument"/> and sets the default values.
         /// </summary>
         public UpdateSocialMediaAccountRequestDocument()
         {
@@ -36,12 +39,12 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="UpdateSocialMediaAccountRequestDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.UpdateSocialMediaAccountRequestDocument"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static UpdateSocialMediaAccountRequestDocument CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.UpdateSocialMediaAccountRequestDocument CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new UpdateSocialMediaAccountRequestDocument();
+            return new OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.UpdateSocialMediaAccountRequestDocument();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -51,7 +54,7 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"data", n => { Data = n.GetObjectValue<DataInUpdateSocialMediaAccountRequest>(DataInUpdateSocialMediaAccountRequest.CreateFromDiscriminatorValue); } },
+                { "data", n => { Data = n.GetObjectValue<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.DataInUpdateSocialMediaAccountRequest>(OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.DataInUpdateSocialMediaAccountRequest.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -61,7 +64,7 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<DataInUpdateSocialMediaAccountRequest>("data", Data);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.DataInUpdateSocialMediaAccountRequest>("data", Data);
         }
     }
 }

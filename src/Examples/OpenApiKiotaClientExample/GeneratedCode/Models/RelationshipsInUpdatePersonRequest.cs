@@ -5,22 +5,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Models {
+namespace OpenApiKiotaClientExample.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class RelationshipsInUpdatePersonRequest : IBackedModel, IParsable 
+    public class RelationshipsInUpdatePersonRequest : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>The assignedTodoItems property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ToManyTodoItemInRequest? AssignedTodoItems {
-            get { return BackingStore?.Get<ToManyTodoItemInRequest?>("assignedTodoItems"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInRequest? AssignedTodoItems
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInRequest?>("assignedTodoItems"); }
             set { BackingStore?.Set("assignedTodoItems", value); }
         }
 #nullable restore
 #else
-        public ToManyTodoItemInRequest AssignedTodoItems {
-            get { return BackingStore?.Get<ToManyTodoItemInRequest>("assignedTodoItems"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInRequest AssignedTodoItems
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInRequest>("assignedTodoItems"); }
             set { BackingStore?.Set("assignedTodoItems", value); }
         }
 #endif
@@ -29,19 +32,21 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The ownedTodoItems property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ToManyTodoItemInRequest? OwnedTodoItems {
-            get { return BackingStore?.Get<ToManyTodoItemInRequest?>("ownedTodoItems"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInRequest? OwnedTodoItems
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInRequest?>("ownedTodoItems"); }
             set { BackingStore?.Set("ownedTodoItems", value); }
         }
 #nullable restore
 #else
-        public ToManyTodoItemInRequest OwnedTodoItems {
-            get { return BackingStore?.Get<ToManyTodoItemInRequest>("ownedTodoItems"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInRequest OwnedTodoItems
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInRequest>("ownedTodoItems"); }
             set { BackingStore?.Set("ownedTodoItems", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="RelationshipsInUpdatePersonRequest"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdatePersonRequest"/> and sets the default values.
         /// </summary>
         public RelationshipsInUpdatePersonRequest()
         {
@@ -50,12 +55,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="RelationshipsInUpdatePersonRequest"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdatePersonRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static RelationshipsInUpdatePersonRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdatePersonRequest CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new RelationshipsInUpdatePersonRequest();
+            return new OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdatePersonRequest();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -65,8 +70,8 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"assignedTodoItems", n => { AssignedTodoItems = n.GetObjectValue<ToManyTodoItemInRequest>(ToManyTodoItemInRequest.CreateFromDiscriminatorValue); } },
-                {"ownedTodoItems", n => { OwnedTodoItems = n.GetObjectValue<ToManyTodoItemInRequest>(ToManyTodoItemInRequest.CreateFromDiscriminatorValue); } },
+                { "assignedTodoItems", n => { AssignedTodoItems = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInRequest>(OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInRequest.CreateFromDiscriminatorValue); } },
+                { "ownedTodoItems", n => { OwnedTodoItems = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInRequest>(OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInRequest.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -76,8 +81,8 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<ToManyTodoItemInRequest>("assignedTodoItems", AssignedTodoItems);
-            writer.WriteObjectValue<ToManyTodoItemInRequest>("ownedTodoItems", OwnedTodoItems);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInRequest>("assignedTodoItems", AssignedTodoItems);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInRequest>("ownedTodoItems", OwnedTodoItems);
         }
     }
 }

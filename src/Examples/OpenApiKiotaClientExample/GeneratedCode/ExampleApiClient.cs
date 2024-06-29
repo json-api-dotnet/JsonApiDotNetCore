@@ -12,19 +12,20 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode {
+namespace OpenApiKiotaClientExample.GeneratedCode
+{
     /// <summary>
     /// The main entry point of the SDK, exposes the configuration and the fluent API.
     /// </summary>
-    public class ExampleApiClient : BaseRequestBuilder 
+    public class ExampleApiClient : BaseRequestBuilder
     {
         /// <summary>The api property</summary>
-        public ApiRequestBuilder Api
+        public OpenApiKiotaClientExample.GeneratedCode.Api.ApiRequestBuilder Api
         {
-            get => new ApiRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaClientExample.GeneratedCode.Api.ApiRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new <see cref="ExampleApiClient"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.ExampleApiClient"/> and sets the default values.
         /// </summary>
         /// <param name="backingStore">The backing store to use for the models.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>

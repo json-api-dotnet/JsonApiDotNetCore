@@ -5,22 +5,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Models {
+namespace OpenApiKiotaClientExample.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class DataInUpdatePersonRequest : IBackedModel, IParsable 
+    public class DataInUpdatePersonRequest : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>The attributes property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public AttributesInUpdatePersonRequest? Attributes {
-            get { return BackingStore?.Get<AttributesInUpdatePersonRequest?>("attributes"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInUpdatePersonRequest? Attributes
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInUpdatePersonRequest?>("attributes"); }
             set { BackingStore?.Set("attributes", value); }
         }
 #nullable restore
 #else
-        public AttributesInUpdatePersonRequest Attributes {
-            get { return BackingStore?.Get<AttributesInUpdatePersonRequest>("attributes"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInUpdatePersonRequest Attributes
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInUpdatePersonRequest>("attributes"); }
             set { BackingStore?.Set("attributes", value); }
         }
 #endif
@@ -29,13 +32,15 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The id property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Id {
+        public string? Id
+        {
             get { return BackingStore?.Get<string?>("id"); }
             set { BackingStore?.Set("id", value); }
         }
 #nullable restore
 #else
-        public string Id {
+        public string Id
+        {
             get { return BackingStore?.Get<string>("id"); }
             set { BackingStore?.Set("id", value); }
         }
@@ -43,24 +48,27 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The relationships property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RelationshipsInUpdatePersonRequest? Relationships {
-            get { return BackingStore?.Get<RelationshipsInUpdatePersonRequest?>("relationships"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdatePersonRequest? Relationships
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdatePersonRequest?>("relationships"); }
             set { BackingStore?.Set("relationships", value); }
         }
 #nullable restore
 #else
-        public RelationshipsInUpdatePersonRequest Relationships {
-            get { return BackingStore?.Get<RelationshipsInUpdatePersonRequest>("relationships"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdatePersonRequest Relationships
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdatePersonRequest>("relationships"); }
             set { BackingStore?.Set("relationships", value); }
         }
 #endif
         /// <summary>The type property</summary>
-        public PersonResourceType? Type {
-            get { return BackingStore?.Get<PersonResourceType?>("type"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.PersonResourceType? Type
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.PersonResourceType?>("type"); }
             set { BackingStore?.Set("type", value); }
         }
         /// <summary>
-        /// Instantiates a new <see cref="DataInUpdatePersonRequest"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.DataInUpdatePersonRequest"/> and sets the default values.
         /// </summary>
         public DataInUpdatePersonRequest()
         {
@@ -69,12 +77,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="DataInUpdatePersonRequest"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.DataInUpdatePersonRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static DataInUpdatePersonRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaClientExample.GeneratedCode.Models.DataInUpdatePersonRequest CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new DataInUpdatePersonRequest();
+            return new OpenApiKiotaClientExample.GeneratedCode.Models.DataInUpdatePersonRequest();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -84,10 +92,10 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"attributes", n => { Attributes = n.GetObjectValue<AttributesInUpdatePersonRequest>(AttributesInUpdatePersonRequest.CreateFromDiscriminatorValue); } },
-                {"id", n => { Id = n.GetStringValue(); } },
-                {"relationships", n => { Relationships = n.GetObjectValue<RelationshipsInUpdatePersonRequest>(RelationshipsInUpdatePersonRequest.CreateFromDiscriminatorValue); } },
-                {"type", n => { Type = n.GetEnumValue<PersonResourceType>(); } },
+                { "attributes", n => { Attributes = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInUpdatePersonRequest>(OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInUpdatePersonRequest.CreateFromDiscriminatorValue); } },
+                { "id", n => { Id = n.GetStringValue(); } },
+                { "relationships", n => { Relationships = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdatePersonRequest>(OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdatePersonRequest.CreateFromDiscriminatorValue); } },
+                { "type", n => { Type = n.GetEnumValue<OpenApiKiotaClientExample.GeneratedCode.Models.PersonResourceType>(); } },
             };
         }
         /// <summary>
@@ -97,10 +105,10 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<AttributesInUpdatePersonRequest>("attributes", Attributes);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInUpdatePersonRequest>("attributes", Attributes);
             writer.WriteStringValue("id", Id);
-            writer.WriteObjectValue<RelationshipsInUpdatePersonRequest>("relationships", Relationships);
-            writer.WriteEnumValue<PersonResourceType>("type", Type);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdatePersonRequest>("relationships", Relationships);
+            writer.WriteEnumValue<OpenApiKiotaClientExample.GeneratedCode.Models.PersonResourceType>("type", Type);
         }
     }
 }

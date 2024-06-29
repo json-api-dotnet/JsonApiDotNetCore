@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Models {
+namespace OpenApiKiotaClientExample.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class RelationshipsInUpdateTagRequest : IBackedModel, IParsable 
+    public class RelationshipsInUpdateTagRequest : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,19 +16,21 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The todoItems property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ToManyTodoItemInRequest? TodoItems {
-            get { return BackingStore?.Get<ToManyTodoItemInRequest?>("todoItems"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInRequest? TodoItems
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInRequest?>("todoItems"); }
             set { BackingStore?.Set("todoItems", value); }
         }
 #nullable restore
 #else
-        public ToManyTodoItemInRequest TodoItems {
-            get { return BackingStore?.Get<ToManyTodoItemInRequest>("todoItems"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInRequest TodoItems
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInRequest>("todoItems"); }
             set { BackingStore?.Set("todoItems", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="RelationshipsInUpdateTagRequest"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdateTagRequest"/> and sets the default values.
         /// </summary>
         public RelationshipsInUpdateTagRequest()
         {
@@ -36,12 +39,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="RelationshipsInUpdateTagRequest"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdateTagRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static RelationshipsInUpdateTagRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdateTagRequest CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new RelationshipsInUpdateTagRequest();
+            return new OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdateTagRequest();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -51,7 +54,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"todoItems", n => { TodoItems = n.GetObjectValue<ToManyTodoItemInRequest>(ToManyTodoItemInRequest.CreateFromDiscriminatorValue); } },
+                { "todoItems", n => { TodoItems = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInRequest>(OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInRequest.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -61,7 +64,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<ToManyTodoItemInRequest>("todoItems", TodoItems);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInRequest>("todoItems", TodoItems);
         }
     }
 }

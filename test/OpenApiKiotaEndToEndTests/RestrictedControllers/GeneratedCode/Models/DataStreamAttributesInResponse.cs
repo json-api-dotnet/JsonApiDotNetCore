@@ -5,20 +5,22 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class DataStreamAttributesInResponse : IBackedModel, IParsable 
+    public class DataStreamAttributesInResponse : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
         public IBackingStore BackingStore { get; private set; }
         /// <summary>The bytesTransmitted property</summary>
-        public long? BytesTransmitted {
+        public long? BytesTransmitted
+        {
             get { return BackingStore?.Get<long?>("bytesTransmitted"); }
             set { BackingStore?.Set("bytesTransmitted", value); }
         }
         /// <summary>
-        /// Instantiates a new <see cref="DataStreamAttributesInResponse"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamAttributesInResponse"/> and sets the default values.
         /// </summary>
         public DataStreamAttributesInResponse()
         {
@@ -27,12 +29,12 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="DataStreamAttributesInResponse"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamAttributesInResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static DataStreamAttributesInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamAttributesInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new DataStreamAttributesInResponse();
+            return new OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamAttributesInResponse();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -42,7 +44,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"bytesTransmitted", n => { BytesTransmitted = n.GetLongValue(); } },
+                { "bytesTransmitted", n => { BytesTransmitted = n.GetLongValue(); } },
             };
         }
         /// <summary>

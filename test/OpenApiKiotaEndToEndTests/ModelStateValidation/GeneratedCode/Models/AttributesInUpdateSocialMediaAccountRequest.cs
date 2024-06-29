@@ -6,31 +6,36 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class AttributesInUpdateSocialMediaAccountRequest : IBackedModel, IParsable 
+    public class AttributesInUpdateSocialMediaAccountRequest : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>The age property</summary>
-        public double? Age {
+        public double? Age
+        {
             get { return BackingStore?.Get<double?>("age"); }
             set { BackingStore?.Set("age", value); }
         }
         /// <summary>The alternativeId property</summary>
-        public Guid? AlternativeId {
+        public Guid? AlternativeId
+        {
             get { return BackingStore?.Get<Guid?>("alternativeId"); }
             set { BackingStore?.Set("alternativeId", value); }
         }
         /// <summary>The backgroundPicture property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? BackgroundPicture {
+        public string? BackgroundPicture
+        {
             get { return BackingStore?.Get<string?>("backgroundPicture"); }
             set { BackingStore?.Set("backgroundPicture", value); }
         }
 #nullable restore
 #else
-        public string BackgroundPicture {
+        public string BackgroundPicture
+        {
             get { return BackingStore?.Get<string>("backgroundPicture"); }
             set { BackingStore?.Set("backgroundPicture", value); }
         }
@@ -40,13 +45,15 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
         /// <summary>The countryCode property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? CountryCode {
+        public string? CountryCode
+        {
             get { return BackingStore?.Get<string?>("countryCode"); }
             set { BackingStore?.Set("countryCode", value); }
         }
 #nullable restore
 #else
-        public string CountryCode {
+        public string CountryCode
+        {
             get { return BackingStore?.Get<string>("countryCode"); }
             set { BackingStore?.Set("countryCode", value); }
         }
@@ -54,13 +61,15 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
         /// <summary>The creditCard property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? CreditCard {
+        public string? CreditCard
+        {
             get { return BackingStore?.Get<string?>("creditCard"); }
             set { BackingStore?.Set("creditCard", value); }
         }
 #nullable restore
 #else
-        public string CreditCard {
+        public string CreditCard
+        {
             get { return BackingStore?.Get<string>("creditCard"); }
             set { BackingStore?.Set("creditCard", value); }
         }
@@ -68,13 +77,15 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
         /// <summary>The email property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Email {
+        public string? Email
+        {
             get { return BackingStore?.Get<string?>("email"); }
             set { BackingStore?.Set("email", value); }
         }
 #nullable restore
 #else
-        public string Email {
+        public string Email
+        {
             get { return BackingStore?.Get<string>("email"); }
             set { BackingStore?.Set("email", value); }
         }
@@ -82,13 +93,15 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
         /// <summary>The firstName property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? FirstName {
+        public string? FirstName
+        {
             get { return BackingStore?.Get<string?>("firstName"); }
             set { BackingStore?.Set("firstName", value); }
         }
 #nullable restore
 #else
-        public string FirstName {
+        public string FirstName
+        {
             get { return BackingStore?.Get<string>("firstName"); }
             set { BackingStore?.Set("firstName", value); }
         }
@@ -96,13 +109,15 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
         /// <summary>The lastName property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? LastName {
+        public string? LastName
+        {
             get { return BackingStore?.Get<string?>("lastName"); }
             set { BackingStore?.Set("lastName", value); }
         }
 #nullable restore
 #else
-        public string LastName {
+        public string LastName
+        {
             get { return BackingStore?.Get<string>("lastName"); }
             set { BackingStore?.Set("lastName", value); }
         }
@@ -110,13 +125,15 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
         /// <summary>The nextRevalidation property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? NextRevalidation {
+        public string? NextRevalidation
+        {
             get { return BackingStore?.Get<string?>("nextRevalidation"); }
             set { BackingStore?.Set("nextRevalidation", value); }
         }
 #nullable restore
 #else
-        public string NextRevalidation {
+        public string NextRevalidation
+        {
             get { return BackingStore?.Get<string>("nextRevalidation"); }
             set { BackingStore?.Set("nextRevalidation", value); }
         }
@@ -124,13 +141,15 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
         /// <summary>The password property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Password {
+        public string? Password
+        {
             get { return BackingStore?.Get<string?>("password"); }
             set { BackingStore?.Set("password", value); }
         }
 #nullable restore
 #else
-        public string Password {
+        public string Password
+        {
             get { return BackingStore?.Get<string>("password"); }
             set { BackingStore?.Set("password", value); }
         }
@@ -138,13 +157,15 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
         /// <summary>The phone property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Phone {
+        public string? Phone
+        {
             get { return BackingStore?.Get<string?>("phone"); }
             set { BackingStore?.Set("phone", value); }
         }
 #nullable restore
 #else
-        public string Phone {
+        public string Phone
+        {
             get { return BackingStore?.Get<string>("phone"); }
             set { BackingStore?.Set("phone", value); }
         }
@@ -152,13 +173,15 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
         /// <summary>The planet property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Planet {
+        public string? Planet
+        {
             get { return BackingStore?.Get<string?>("planet"); }
             set { BackingStore?.Set("planet", value); }
         }
 #nullable restore
 #else
-        public string Planet {
+        public string Planet
+        {
             get { return BackingStore?.Get<string>("planet"); }
             set { BackingStore?.Set("planet", value); }
         }
@@ -166,13 +189,15 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
         /// <summary>The profilePicture property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? ProfilePicture {
+        public string? ProfilePicture
+        {
             get { return BackingStore?.Get<string?>("profilePicture"); }
             set { BackingStore?.Set("profilePicture", value); }
         }
 #nullable restore
 #else
-        public string ProfilePicture {
+        public string ProfilePicture
+        {
             get { return BackingStore?.Get<string>("profilePicture"); }
             set { BackingStore?.Set("profilePicture", value); }
         }
@@ -180,13 +205,15 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
         /// <summary>The tags property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public List<string>? Tags {
+        public List<string>? Tags
+        {
             get { return BackingStore?.Get<List<string>?>("tags"); }
             set { BackingStore?.Set("tags", value); }
         }
 #nullable restore
 #else
-        public List<string> Tags {
+        public List<string> Tags
+        {
             get { return BackingStore?.Get<List<string>>("tags"); }
             set { BackingStore?.Set("tags", value); }
         }
@@ -194,34 +221,39 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
         /// <summary>The userName property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? UserName {
+        public string? UserName
+        {
             get { return BackingStore?.Get<string?>("userName"); }
             set { BackingStore?.Set("userName", value); }
         }
 #nullable restore
 #else
-        public string UserName {
+        public string UserName
+        {
             get { return BackingStore?.Get<string>("userName"); }
             set { BackingStore?.Set("userName", value); }
         }
 #endif
         /// <summary>The validatedAt property</summary>
-        public DateTimeOffset? ValidatedAt {
+        public DateTimeOffset? ValidatedAt
+        {
             get { return BackingStore?.Get<DateTimeOffset?>("validatedAt"); }
             set { BackingStore?.Set("validatedAt", value); }
         }
         /// <summary>The validatedAtDate property</summary>
-        public Date? ValidatedAtDate {
+        public Date? ValidatedAtDate
+        {
             get { return BackingStore?.Get<Date?>("validatedAtDate"); }
             set { BackingStore?.Set("validatedAtDate", value); }
         }
         /// <summary>The validatedAtTime property</summary>
-        public Time? ValidatedAtTime {
+        public Time? ValidatedAtTime
+        {
             get { return BackingStore?.Get<Time?>("validatedAtTime"); }
             set { BackingStore?.Set("validatedAtTime", value); }
         }
         /// <summary>
-        /// Instantiates a new <see cref="AttributesInUpdateSocialMediaAccountRequest"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.AttributesInUpdateSocialMediaAccountRequest"/> and sets the default values.
         /// </summary>
         public AttributesInUpdateSocialMediaAccountRequest()
         {
@@ -230,12 +262,12 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="AttributesInUpdateSocialMediaAccountRequest"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.AttributesInUpdateSocialMediaAccountRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static AttributesInUpdateSocialMediaAccountRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.AttributesInUpdateSocialMediaAccountRequest CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new AttributesInUpdateSocialMediaAccountRequest();
+            return new OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.AttributesInUpdateSocialMediaAccountRequest();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -245,24 +277,24 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"age", n => { Age = n.GetDoubleValue(); } },
-                {"alternativeId", n => { AlternativeId = n.GetGuidValue(); } },
-                {"backgroundPicture", n => { BackgroundPicture = n.GetStringValue(); } },
-                {"countryCode", n => { CountryCode = n.GetStringValue(); } },
-                {"creditCard", n => { CreditCard = n.GetStringValue(); } },
-                {"email", n => { Email = n.GetStringValue(); } },
-                {"firstName", n => { FirstName = n.GetStringValue(); } },
-                {"lastName", n => { LastName = n.GetStringValue(); } },
-                {"nextRevalidation", n => { NextRevalidation = n.GetStringValue(); } },
-                {"password", n => { Password = n.GetStringValue(); } },
-                {"phone", n => { Phone = n.GetStringValue(); } },
-                {"planet", n => { Planet = n.GetStringValue(); } },
-                {"profilePicture", n => { ProfilePicture = n.GetStringValue(); } },
-                {"tags", n => { Tags = n.GetCollectionOfPrimitiveValues<string>()?.ToList(); } },
-                {"userName", n => { UserName = n.GetStringValue(); } },
-                {"validatedAt", n => { ValidatedAt = n.GetDateTimeOffsetValue(); } },
-                {"validatedAtDate", n => { ValidatedAtDate = n.GetDateValue(); } },
-                {"validatedAtTime", n => { ValidatedAtTime = n.GetTimeValue(); } },
+                { "age", n => { Age = n.GetDoubleValue(); } },
+                { "alternativeId", n => { AlternativeId = n.GetGuidValue(); } },
+                { "backgroundPicture", n => { BackgroundPicture = n.GetStringValue(); } },
+                { "countryCode", n => { CountryCode = n.GetStringValue(); } },
+                { "creditCard", n => { CreditCard = n.GetStringValue(); } },
+                { "email", n => { Email = n.GetStringValue(); } },
+                { "firstName", n => { FirstName = n.GetStringValue(); } },
+                { "lastName", n => { LastName = n.GetStringValue(); } },
+                { "nextRevalidation", n => { NextRevalidation = n.GetStringValue(); } },
+                { "password", n => { Password = n.GetStringValue(); } },
+                { "phone", n => { Phone = n.GetStringValue(); } },
+                { "planet", n => { Planet = n.GetStringValue(); } },
+                { "profilePicture", n => { ProfilePicture = n.GetStringValue(); } },
+                { "tags", n => { Tags = n.GetCollectionOfPrimitiveValues<string>()?.ToList(); } },
+                { "userName", n => { UserName = n.GetStringValue(); } },
+                { "validatedAt", n => { ValidatedAt = n.GetDateTimeOffsetValue(); } },
+                { "validatedAtDate", n => { ValidatedAtDate = n.GetDateValue(); } },
+                { "validatedAtTime", n => { ValidatedAtTime = n.GetTimeValue(); } },
             };
         }
         /// <summary>

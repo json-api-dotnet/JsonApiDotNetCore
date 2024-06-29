@@ -5,22 +5,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Models {
+namespace OpenApiKiotaClientExample.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class DataInUpdateTagRequest : IBackedModel, IParsable 
+    public class DataInUpdateTagRequest : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>The attributes property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public AttributesInUpdateTagRequest? Attributes {
-            get { return BackingStore?.Get<AttributesInUpdateTagRequest?>("attributes"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInUpdateTagRequest? Attributes
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInUpdateTagRequest?>("attributes"); }
             set { BackingStore?.Set("attributes", value); }
         }
 #nullable restore
 #else
-        public AttributesInUpdateTagRequest Attributes {
-            get { return BackingStore?.Get<AttributesInUpdateTagRequest>("attributes"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInUpdateTagRequest Attributes
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInUpdateTagRequest>("attributes"); }
             set { BackingStore?.Set("attributes", value); }
         }
 #endif
@@ -29,13 +32,15 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The id property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Id {
+        public string? Id
+        {
             get { return BackingStore?.Get<string?>("id"); }
             set { BackingStore?.Set("id", value); }
         }
 #nullable restore
 #else
-        public string Id {
+        public string Id
+        {
             get { return BackingStore?.Get<string>("id"); }
             set { BackingStore?.Set("id", value); }
         }
@@ -43,24 +48,27 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The relationships property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RelationshipsInUpdateTagRequest? Relationships {
-            get { return BackingStore?.Get<RelationshipsInUpdateTagRequest?>("relationships"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdateTagRequest? Relationships
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdateTagRequest?>("relationships"); }
             set { BackingStore?.Set("relationships", value); }
         }
 #nullable restore
 #else
-        public RelationshipsInUpdateTagRequest Relationships {
-            get { return BackingStore?.Get<RelationshipsInUpdateTagRequest>("relationships"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdateTagRequest Relationships
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdateTagRequest>("relationships"); }
             set { BackingStore?.Set("relationships", value); }
         }
 #endif
         /// <summary>The type property</summary>
-        public TagResourceType? Type {
-            get { return BackingStore?.Get<TagResourceType?>("type"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.TagResourceType? Type
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.TagResourceType?>("type"); }
             set { BackingStore?.Set("type", value); }
         }
         /// <summary>
-        /// Instantiates a new <see cref="DataInUpdateTagRequest"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.DataInUpdateTagRequest"/> and sets the default values.
         /// </summary>
         public DataInUpdateTagRequest()
         {
@@ -69,12 +77,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="DataInUpdateTagRequest"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.DataInUpdateTagRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static DataInUpdateTagRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaClientExample.GeneratedCode.Models.DataInUpdateTagRequest CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new DataInUpdateTagRequest();
+            return new OpenApiKiotaClientExample.GeneratedCode.Models.DataInUpdateTagRequest();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -84,10 +92,10 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"attributes", n => { Attributes = n.GetObjectValue<AttributesInUpdateTagRequest>(AttributesInUpdateTagRequest.CreateFromDiscriminatorValue); } },
-                {"id", n => { Id = n.GetStringValue(); } },
-                {"relationships", n => { Relationships = n.GetObjectValue<RelationshipsInUpdateTagRequest>(RelationshipsInUpdateTagRequest.CreateFromDiscriminatorValue); } },
-                {"type", n => { Type = n.GetEnumValue<TagResourceType>(); } },
+                { "attributes", n => { Attributes = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInUpdateTagRequest>(OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInUpdateTagRequest.CreateFromDiscriminatorValue); } },
+                { "id", n => { Id = n.GetStringValue(); } },
+                { "relationships", n => { Relationships = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdateTagRequest>(OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdateTagRequest.CreateFromDiscriminatorValue); } },
+                { "type", n => { Type = n.GetEnumValue<OpenApiKiotaClientExample.GeneratedCode.Models.TagResourceType>(); } },
             };
         }
         /// <summary>
@@ -97,10 +105,10 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<AttributesInUpdateTagRequest>("attributes", Attributes);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInUpdateTagRequest>("attributes", Attributes);
             writer.WriteStringValue("id", Id);
-            writer.WriteObjectValue<RelationshipsInUpdateTagRequest>("relationships", Relationships);
-            writer.WriteEnumValue<TagResourceType>("type", Type);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInUpdateTagRequest>("relationships", Relationships);
+            writer.WriteEnumValue<OpenApiKiotaClientExample.GeneratedCode.Models.TagResourceType>("type", Type);
         }
     }
 }

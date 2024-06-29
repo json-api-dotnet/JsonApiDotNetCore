@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class LanguageIdentifierCollectionResponseDocument : IBackedModel, IParsable 
+    public class LanguageIdentifierCollectionResponseDocument : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,47 +16,53 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public List<LanguageIdentifier>? Data {
-            get { return BackingStore?.Get<List<LanguageIdentifier>?>("data"); }
+        public List<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifier>? Data
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifier>?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public List<LanguageIdentifier> Data {
-            get { return BackingStore?.Get<List<LanguageIdentifier>>("data"); }
+        public List<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifier> Data
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifier>>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ResourceIdentifierCollectionTopLevelLinks? Links {
-            get { return BackingStore?.Get<ResourceIdentifierCollectionTopLevelLinks?>("links"); }
+        public OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks? Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public ResourceIdentifierCollectionTopLevelLinks Links {
-            get { return BackingStore?.Get<ResourceIdentifierCollectionTopLevelLinks>("links"); }
+        public OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public LanguageIdentifierCollectionResponseDocument_meta? Meta {
-            get { return BackingStore?.Get<LanguageIdentifierCollectionResponseDocument_meta?>("meta"); }
+        public OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierCollectionResponseDocument_meta? Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierCollectionResponseDocument_meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public LanguageIdentifierCollectionResponseDocument_meta Meta {
-            get { return BackingStore?.Get<LanguageIdentifierCollectionResponseDocument_meta>("meta"); }
+        public OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierCollectionResponseDocument_meta Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierCollectionResponseDocument_meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="LanguageIdentifierCollectionResponseDocument"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierCollectionResponseDocument"/> and sets the default values.
         /// </summary>
         public LanguageIdentifierCollectionResponseDocument()
         {
@@ -64,12 +71,12 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="LanguageIdentifierCollectionResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierCollectionResponseDocument"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static LanguageIdentifierCollectionResponseDocument CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierCollectionResponseDocument CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new LanguageIdentifierCollectionResponseDocument();
+            return new OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierCollectionResponseDocument();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -79,9 +86,9 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"data", n => { Data = n.GetCollectionOfObjectValues<LanguageIdentifier>(LanguageIdentifier.CreateFromDiscriminatorValue)?.ToList(); } },
-                {"links", n => { Links = n.GetObjectValue<ResourceIdentifierCollectionTopLevelLinks>(ResourceIdentifierCollectionTopLevelLinks.CreateFromDiscriminatorValue); } },
-                {"meta", n => { Meta = n.GetObjectValue<LanguageIdentifierCollectionResponseDocument_meta>(LanguageIdentifierCollectionResponseDocument_meta.CreateFromDiscriminatorValue); } },
+                { "data", n => { Data = n.GetCollectionOfObjectValues<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifier>(OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifier.CreateFromDiscriminatorValue)?.ToList(); } },
+                { "links", n => { Links = n.GetObjectValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks>(OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierCollectionResponseDocument_meta>(OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierCollectionResponseDocument_meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -91,9 +98,9 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteCollectionOfObjectValues<LanguageIdentifier>("data", Data);
-            writer.WriteObjectValue<ResourceIdentifierCollectionTopLevelLinks>("links", Links);
-            writer.WriteObjectValue<LanguageIdentifierCollectionResponseDocument_meta>("meta", Meta);
+            writer.WriteCollectionOfObjectValues<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifier>("data", Data);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks>("links", Links);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierCollectionResponseDocument_meta>("meta", Meta);
         }
     }
 }

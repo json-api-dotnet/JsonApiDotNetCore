@@ -8,29 +8,30 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Api {
+namespace OpenApiKiotaClientExample.GeneratedCode.Api
+{
     /// <summary>
     /// Builds and executes requests for operations under \api
     /// </summary>
-    public class ApiRequestBuilder : BaseRequestBuilder 
+    public class ApiRequestBuilder : BaseRequestBuilder
     {
         /// <summary>The people property</summary>
-        public PeopleRequestBuilder People
+        public OpenApiKiotaClientExample.GeneratedCode.Api.People.PeopleRequestBuilder People
         {
-            get => new PeopleRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaClientExample.GeneratedCode.Api.People.PeopleRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The tags property</summary>
-        public TagsRequestBuilder Tags
+        public OpenApiKiotaClientExample.GeneratedCode.Api.Tags.TagsRequestBuilder Tags
         {
-            get => new TagsRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaClientExample.GeneratedCode.Api.Tags.TagsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The todoItems property</summary>
-        public TodoItemsRequestBuilder TodoItems
+        public OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.TodoItemsRequestBuilder TodoItems
         {
-            get => new TodoItemsRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.TodoItemsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new <see cref="ApiRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Api.ApiRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -38,7 +39,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api {
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="ApiRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Api.ApiRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>

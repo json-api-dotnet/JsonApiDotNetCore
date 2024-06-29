@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class NameValuePairRelationshipsInResponse : IBackedModel, IParsable 
+    public class NameValuePairRelationshipsInResponse : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,19 +16,21 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         /// <summary>The owner property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ToOneNodeInResponse? Owner {
-            get { return BackingStore?.Get<ToOneNodeInResponse?>("owner"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ToOneNodeInResponse? Owner
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ToOneNodeInResponse?>("owner"); }
             set { BackingStore?.Set("owner", value); }
         }
 #nullable restore
 #else
-        public ToOneNodeInResponse Owner {
-            get { return BackingStore?.Get<ToOneNodeInResponse>("owner"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ToOneNodeInResponse Owner
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ToOneNodeInResponse>("owner"); }
             set { BackingStore?.Set("owner", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="NameValuePairRelationshipsInResponse"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairRelationshipsInResponse"/> and sets the default values.
         /// </summary>
         public NameValuePairRelationshipsInResponse()
         {
@@ -36,12 +39,12 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="NameValuePairRelationshipsInResponse"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairRelationshipsInResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static NameValuePairRelationshipsInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairRelationshipsInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new NameValuePairRelationshipsInResponse();
+            return new OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairRelationshipsInResponse();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -51,7 +54,7 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"owner", n => { Owner = n.GetObjectValue<ToOneNodeInResponse>(ToOneNodeInResponse.CreateFromDiscriminatorValue); } },
+                { "owner", n => { Owner = n.GetObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ToOneNodeInResponse>(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ToOneNodeInResponse.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -61,7 +64,7 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<ToOneNodeInResponse>("owner", Owner);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ToOneNodeInResponse>("owner", Owner);
         }
     }
 }

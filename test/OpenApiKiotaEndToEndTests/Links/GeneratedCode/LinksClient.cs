@@ -15,34 +15,35 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
-namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode {
+namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode
+{
     /// <summary>
     /// The main entry point of the SDK, exposes the configuration and the fluent API.
     /// </summary>
-    public class LinksClient : BaseRequestBuilder 
+    public class LinksClient : BaseRequestBuilder
     {
         /// <summary>The accommodations property</summary>
-        public AccommodationsRequestBuilder Accommodations
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Accommodations.AccommodationsRequestBuilder Accommodations
         {
-            get => new AccommodationsRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.Links.GeneratedCode.Accommodations.AccommodationsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The excursions property</summary>
-        public ExcursionsRequestBuilder Excursions
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Excursions.ExcursionsRequestBuilder Excursions
         {
-            get => new ExcursionsRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.Links.GeneratedCode.Excursions.ExcursionsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The transports property</summary>
-        public TransportsRequestBuilder Transports
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Transports.TransportsRequestBuilder Transports
         {
-            get => new TransportsRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.Links.GeneratedCode.Transports.TransportsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The vacations property</summary>
-        public VacationsRequestBuilder Vacations
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.VacationsRequestBuilder Vacations
         {
-            get => new VacationsRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.VacationsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new <see cref="LinksClient"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.LinksClient"/> and sets the default values.
         /// </summary>
         /// <param name="backingStore">The backing store to use for the models.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>

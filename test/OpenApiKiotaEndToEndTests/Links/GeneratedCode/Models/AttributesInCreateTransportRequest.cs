@@ -5,25 +5,28 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class AttributesInCreateTransportRequest : IBackedModel, IParsable 
+    public class AttributesInCreateTransportRequest : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
         public IBackingStore BackingStore { get; private set; }
         /// <summary>The durationInMinutes property</summary>
-        public int? DurationInMinutes {
+        public int? DurationInMinutes
+        {
             get { return BackingStore?.Get<int?>("durationInMinutes"); }
             set { BackingStore?.Set("durationInMinutes", value); }
         }
         /// <summary>The type property</summary>
-        public int? Type {
+        public int? Type
+        {
             get { return BackingStore?.Get<int?>("type"); }
             set { BackingStore?.Set("type", value); }
         }
         /// <summary>
-        /// Instantiates a new <see cref="AttributesInCreateTransportRequest"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AttributesInCreateTransportRequest"/> and sets the default values.
         /// </summary>
         public AttributesInCreateTransportRequest()
         {
@@ -32,12 +35,12 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="AttributesInCreateTransportRequest"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AttributesInCreateTransportRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static AttributesInCreateTransportRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AttributesInCreateTransportRequest CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new AttributesInCreateTransportRequest();
+            return new OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AttributesInCreateTransportRequest();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -47,8 +50,8 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"durationInMinutes", n => { DurationInMinutes = n.GetIntValue(); } },
-                {"type", n => { Type = n.GetIntValue(); } },
+                { "durationInMinutes", n => { DurationInMinutes = n.GetIntValue(); } },
+                { "type", n => { Type = n.GetIntValue(); } },
             };
         }
         /// <summary>

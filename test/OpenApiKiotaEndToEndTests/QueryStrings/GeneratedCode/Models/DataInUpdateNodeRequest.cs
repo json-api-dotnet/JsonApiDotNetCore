@@ -5,22 +5,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class DataInUpdateNodeRequest : IBackedModel, IParsable 
+    public class DataInUpdateNodeRequest : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>The attributes property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public AttributesInUpdateNodeRequest? Attributes {
-            get { return BackingStore?.Get<AttributesInUpdateNodeRequest?>("attributes"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.AttributesInUpdateNodeRequest? Attributes
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.AttributesInUpdateNodeRequest?>("attributes"); }
             set { BackingStore?.Set("attributes", value); }
         }
 #nullable restore
 #else
-        public AttributesInUpdateNodeRequest Attributes {
-            get { return BackingStore?.Get<AttributesInUpdateNodeRequest>("attributes"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.AttributesInUpdateNodeRequest Attributes
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.AttributesInUpdateNodeRequest>("attributes"); }
             set { BackingStore?.Set("attributes", value); }
         }
 #endif
@@ -29,13 +32,15 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         /// <summary>The id property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Id {
+        public string? Id
+        {
             get { return BackingStore?.Get<string?>("id"); }
             set { BackingStore?.Set("id", value); }
         }
 #nullable restore
 #else
-        public string Id {
+        public string Id
+        {
             get { return BackingStore?.Get<string>("id"); }
             set { BackingStore?.Set("id", value); }
         }
@@ -43,24 +48,27 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         /// <summary>The relationships property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RelationshipsInUpdateNodeRequest? Relationships {
-            get { return BackingStore?.Get<RelationshipsInUpdateNodeRequest?>("relationships"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.RelationshipsInUpdateNodeRequest? Relationships
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.RelationshipsInUpdateNodeRequest?>("relationships"); }
             set { BackingStore?.Set("relationships", value); }
         }
 #nullable restore
 #else
-        public RelationshipsInUpdateNodeRequest Relationships {
-            get { return BackingStore?.Get<RelationshipsInUpdateNodeRequest>("relationships"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.RelationshipsInUpdateNodeRequest Relationships
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.RelationshipsInUpdateNodeRequest>("relationships"); }
             set { BackingStore?.Set("relationships", value); }
         }
 #endif
         /// <summary>The type property</summary>
-        public NodeResourceType? Type {
-            get { return BackingStore?.Get<NodeResourceType?>("type"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeResourceType? Type
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeResourceType?>("type"); }
             set { BackingStore?.Set("type", value); }
         }
         /// <summary>
-        /// Instantiates a new <see cref="DataInUpdateNodeRequest"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.DataInUpdateNodeRequest"/> and sets the default values.
         /// </summary>
         public DataInUpdateNodeRequest()
         {
@@ -69,12 +77,12 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="DataInUpdateNodeRequest"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.DataInUpdateNodeRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static DataInUpdateNodeRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.DataInUpdateNodeRequest CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new DataInUpdateNodeRequest();
+            return new OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.DataInUpdateNodeRequest();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -84,10 +92,10 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"attributes", n => { Attributes = n.GetObjectValue<AttributesInUpdateNodeRequest>(AttributesInUpdateNodeRequest.CreateFromDiscriminatorValue); } },
-                {"id", n => { Id = n.GetStringValue(); } },
-                {"relationships", n => { Relationships = n.GetObjectValue<RelationshipsInUpdateNodeRequest>(RelationshipsInUpdateNodeRequest.CreateFromDiscriminatorValue); } },
-                {"type", n => { Type = n.GetEnumValue<NodeResourceType>(); } },
+                { "attributes", n => { Attributes = n.GetObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.AttributesInUpdateNodeRequest>(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.AttributesInUpdateNodeRequest.CreateFromDiscriminatorValue); } },
+                { "id", n => { Id = n.GetStringValue(); } },
+                { "relationships", n => { Relationships = n.GetObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.RelationshipsInUpdateNodeRequest>(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.RelationshipsInUpdateNodeRequest.CreateFromDiscriminatorValue); } },
+                { "type", n => { Type = n.GetEnumValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeResourceType>(); } },
             };
         }
         /// <summary>
@@ -97,10 +105,10 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<AttributesInUpdateNodeRequest>("attributes", Attributes);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.AttributesInUpdateNodeRequest>("attributes", Attributes);
             writer.WriteStringValue("id", Id);
-            writer.WriteObjectValue<RelationshipsInUpdateNodeRequest>("relationships", Relationships);
-            writer.WriteEnumValue<NodeResourceType>("type", Type);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.RelationshipsInUpdateNodeRequest>("relationships", Relationships);
+            writer.WriteEnumValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeResourceType>("type", Type);
         }
     }
 }

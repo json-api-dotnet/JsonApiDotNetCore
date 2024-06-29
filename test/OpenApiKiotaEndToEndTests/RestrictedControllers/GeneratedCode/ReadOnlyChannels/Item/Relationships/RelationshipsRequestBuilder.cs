@@ -8,29 +8,30 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
-namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyChannels.Item.Relationships {
+namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyChannels.Item.Relationships
+{
     /// <summary>
     /// Builds and executes requests for operations under \readOnlyChannels\{id}\relationships
     /// </summary>
-    public class RelationshipsRequestBuilder : BaseRequestBuilder 
+    public class RelationshipsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>The audioStreams property</summary>
-        public AudioStreamsRequestBuilder AudioStreams
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyChannels.Item.Relationships.AudioStreams.AudioStreamsRequestBuilder AudioStreams
         {
-            get => new AudioStreamsRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyChannels.Item.Relationships.AudioStreams.AudioStreamsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The ultraHighDefinitionVideoStream property</summary>
-        public UltraHighDefinitionVideoStreamRequestBuilder UltraHighDefinitionVideoStream
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyChannels.Item.Relationships.UltraHighDefinitionVideoStream.UltraHighDefinitionVideoStreamRequestBuilder UltraHighDefinitionVideoStream
         {
-            get => new UltraHighDefinitionVideoStreamRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyChannels.Item.Relationships.UltraHighDefinitionVideoStream.UltraHighDefinitionVideoStreamRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The videoStream property</summary>
-        public VideoStreamRequestBuilder VideoStream
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyChannels.Item.Relationships.VideoStream.VideoStreamRequestBuilder VideoStream
         {
-            get => new VideoStreamRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyChannels.Item.Relationships.VideoStream.VideoStreamRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new <see cref="RelationshipsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyChannels.Item.Relationships.RelationshipsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -38,7 +39,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnly
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="RelationshipsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyChannels.Item.Relationships.RelationshipsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>

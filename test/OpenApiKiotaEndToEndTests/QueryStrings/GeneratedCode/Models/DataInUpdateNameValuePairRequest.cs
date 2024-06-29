@@ -5,22 +5,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class DataInUpdateNameValuePairRequest : IBackedModel, IParsable 
+    public class DataInUpdateNameValuePairRequest : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>The attributes property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public AttributesInUpdateNameValuePairRequest? Attributes {
-            get { return BackingStore?.Get<AttributesInUpdateNameValuePairRequest?>("attributes"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.AttributesInUpdateNameValuePairRequest? Attributes
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.AttributesInUpdateNameValuePairRequest?>("attributes"); }
             set { BackingStore?.Set("attributes", value); }
         }
 #nullable restore
 #else
-        public AttributesInUpdateNameValuePairRequest Attributes {
-            get { return BackingStore?.Get<AttributesInUpdateNameValuePairRequest>("attributes"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.AttributesInUpdateNameValuePairRequest Attributes
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.AttributesInUpdateNameValuePairRequest>("attributes"); }
             set { BackingStore?.Set("attributes", value); }
         }
 #endif
@@ -29,13 +32,15 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         /// <summary>The id property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Id {
+        public string? Id
+        {
             get { return BackingStore?.Get<string?>("id"); }
             set { BackingStore?.Set("id", value); }
         }
 #nullable restore
 #else
-        public string Id {
+        public string Id
+        {
             get { return BackingStore?.Get<string>("id"); }
             set { BackingStore?.Set("id", value); }
         }
@@ -43,24 +48,27 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         /// <summary>The relationships property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RelationshipsInUpdateNameValuePairRequest? Relationships {
-            get { return BackingStore?.Get<RelationshipsInUpdateNameValuePairRequest?>("relationships"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.RelationshipsInUpdateNameValuePairRequest? Relationships
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.RelationshipsInUpdateNameValuePairRequest?>("relationships"); }
             set { BackingStore?.Set("relationships", value); }
         }
 #nullable restore
 #else
-        public RelationshipsInUpdateNameValuePairRequest Relationships {
-            get { return BackingStore?.Get<RelationshipsInUpdateNameValuePairRequest>("relationships"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.RelationshipsInUpdateNameValuePairRequest Relationships
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.RelationshipsInUpdateNameValuePairRequest>("relationships"); }
             set { BackingStore?.Set("relationships", value); }
         }
 #endif
         /// <summary>The type property</summary>
-        public NameValuePairResourceType? Type {
-            get { return BackingStore?.Get<NameValuePairResourceType?>("type"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairResourceType? Type
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairResourceType?>("type"); }
             set { BackingStore?.Set("type", value); }
         }
         /// <summary>
-        /// Instantiates a new <see cref="DataInUpdateNameValuePairRequest"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.DataInUpdateNameValuePairRequest"/> and sets the default values.
         /// </summary>
         public DataInUpdateNameValuePairRequest()
         {
@@ -69,12 +77,12 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="DataInUpdateNameValuePairRequest"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.DataInUpdateNameValuePairRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static DataInUpdateNameValuePairRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.DataInUpdateNameValuePairRequest CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new DataInUpdateNameValuePairRequest();
+            return new OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.DataInUpdateNameValuePairRequest();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -84,10 +92,10 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"attributes", n => { Attributes = n.GetObjectValue<AttributesInUpdateNameValuePairRequest>(AttributesInUpdateNameValuePairRequest.CreateFromDiscriminatorValue); } },
-                {"id", n => { Id = n.GetStringValue(); } },
-                {"relationships", n => { Relationships = n.GetObjectValue<RelationshipsInUpdateNameValuePairRequest>(RelationshipsInUpdateNameValuePairRequest.CreateFromDiscriminatorValue); } },
-                {"type", n => { Type = n.GetEnumValue<NameValuePairResourceType>(); } },
+                { "attributes", n => { Attributes = n.GetObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.AttributesInUpdateNameValuePairRequest>(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.AttributesInUpdateNameValuePairRequest.CreateFromDiscriminatorValue); } },
+                { "id", n => { Id = n.GetStringValue(); } },
+                { "relationships", n => { Relationships = n.GetObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.RelationshipsInUpdateNameValuePairRequest>(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.RelationshipsInUpdateNameValuePairRequest.CreateFromDiscriminatorValue); } },
+                { "type", n => { Type = n.GetEnumValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairResourceType>(); } },
             };
         }
         /// <summary>
@@ -97,10 +105,10 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<AttributesInUpdateNameValuePairRequest>("attributes", Attributes);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.AttributesInUpdateNameValuePairRequest>("attributes", Attributes);
             writer.WriteStringValue("id", Id);
-            writer.WriteObjectValue<RelationshipsInUpdateNameValuePairRequest>("relationships", Relationships);
-            writer.WriteEnumValue<NameValuePairResourceType>("type", Type);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.RelationshipsInUpdateNameValuePairRequest>("relationships", Relationships);
+            writer.WriteEnumValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairResourceType>("type", Type);
         }
     }
 }
