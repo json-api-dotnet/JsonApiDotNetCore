@@ -3552,11 +3552,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3577,11 +3577,11 @@
                 ]
               },
               "meta": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "object",
-                  "nullable": true
-                }
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/meta"
+                  }
+                ]
               }
             },
             "additionalProperties": false
@@ -3627,11 +3627,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3658,11 +3658,11 @@
             ]
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3702,11 +3702,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3764,9 +3764,11 @@
             "nullable": true
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": { },
-            "nullable": true
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3792,11 +3794,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3831,6 +3833,12 @@
         },
         "additionalProperties": false
       },
+      "meta": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        }
+      },
       "nullableEmptyIdentifierResponseDocument": {
         "required": [
           "data",
@@ -3854,11 +3862,11 @@
             "nullable": true
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3892,11 +3900,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3937,11 +3945,11 @@
             "nullable": true
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4124,11 +4132,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4187,11 +4195,11 @@
                 ]
               },
               "meta": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "object",
-                  "nullable": true
-                }
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/meta"
+                  }
+                ]
               }
             },
             "additionalProperties": false
@@ -4278,11 +4286,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4386,11 +4394,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4429,11 +4437,11 @@
             ]
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false

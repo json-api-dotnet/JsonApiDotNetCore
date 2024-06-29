@@ -64,16 +64,16 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GamePrimaryResponseDocument_meta? Meta
+        public OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.Meta? Meta
         {
-            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GamePrimaryResponseDocument_meta?>("meta"); }
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.Meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GamePrimaryResponseDocument_meta Meta
+        public OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.Meta Meta
         {
-            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GamePrimaryResponseDocument_meta>("meta"); }
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.Meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
@@ -105,7 +105,7 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
                 { "data", n => { Data = n.GetObjectValue<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameDataInResponse>(OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameDataInResponse.CreateFromDiscriminatorValue); } },
                 { "included", n => { Included = n.GetCollectionOfObjectValues<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.DataInResponse>(OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.DataInResponse.CreateFromDiscriminatorValue)?.ToList(); } },
                 { "links", n => { Links = n.GetObjectValue<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ResourceTopLevelLinks>(OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ResourceTopLevelLinks.CreateFromDiscriminatorValue); } },
-                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GamePrimaryResponseDocument_meta>(OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GamePrimaryResponseDocument_meta.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.Meta>(OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -118,7 +118,7 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameDataInResponse>("data", Data);
             writer.WriteCollectionOfObjectValues<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.DataInResponse>("included", Included);
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ResourceTopLevelLinks>("links", Links);
-            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GamePrimaryResponseDocument_meta>("meta", Meta);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.Meta>("meta", Meta);
         }
     }
 }

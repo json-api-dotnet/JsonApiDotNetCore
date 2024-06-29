@@ -88,6 +88,7 @@ public static class ServiceCollectionExtensions
 
         services.TryAddSingleton<DocumentSchemaGenerator>();
         services.TryAddSingleton<ResourceTypeSchemaGenerator>();
+        services.TryAddSingleton<MetaSchemaGenerator>();
         services.TryAddSingleton<ResourceIdentifierSchemaGenerator>();
         services.TryAddSingleton<AbstractResourceDataSchemaGenerator>();
         services.TryAddSingleton<ResourceDataSchemaGenerator>();

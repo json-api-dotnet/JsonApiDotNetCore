@@ -64,16 +64,16 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyChannelCollectionResponseDocument_meta? Meta
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta? Meta
         {
-            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyChannelCollectionResponseDocument_meta?>("meta"); }
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyChannelCollectionResponseDocument_meta Meta
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta Meta
         {
-            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyChannelCollectionResponseDocument_meta>("meta"); }
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
@@ -105,7 +105,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models
                 { "data", n => { Data = n.GetCollectionOfObjectValues<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyChannelDataInResponse>(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyChannelDataInResponse.CreateFromDiscriminatorValue)?.ToList(); } },
                 { "included", n => { Included = n.GetCollectionOfObjectValues<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataInResponse>(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataInResponse.CreateFromDiscriminatorValue)?.ToList(); } },
                 { "links", n => { Links = n.GetObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceCollectionTopLevelLinks>(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceCollectionTopLevelLinks.CreateFromDiscriminatorValue); } },
-                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyChannelCollectionResponseDocument_meta>(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyChannelCollectionResponseDocument_meta.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta>(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -118,7 +118,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models
             writer.WriteCollectionOfObjectValues<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyChannelDataInResponse>("data", Data);
             writer.WriteCollectionOfObjectValues<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataInResponse>("included", Included);
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceCollectionTopLevelLinks>("links", Links);
-            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyChannelCollectionResponseDocument_meta>("meta", Meta);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta>("meta", Meta);
         }
     }
 }

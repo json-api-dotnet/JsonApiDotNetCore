@@ -10,6 +10,7 @@ namespace JsonApiDotNetCore.OpenApi;
 internal sealed class JsonApiSchemaIdSelector
 {
     private const string ResourceTypeSchemaIdTemplate = "[ResourceName] Resource Type";
+    private const string MetaSchemaIdTemplate = "Meta";
 
     private static readonly IDictionary<Type, string> TypeToSchemaTemplateMap = new Dictionary<Type, string>
     {
@@ -98,10 +99,15 @@ internal sealed class JsonApiSchemaIdSelector
         return namingPolicy != null ? namingPolicy.ConvertName(pascalCaseSchemaId) : pascalCaseSchemaId;
     }
 
-    public string GetSchemaId(ResourceType resourceType)
+    public string GetResourceTypeSchemaId(ResourceType resourceType)
     {
         ArgumentGuard.NotNull(resourceType);
 
         return ApplySchemaTemplate(ResourceTypeSchemaIdTemplate, resourceType);
+    }
+
+    public string GetMetaSchemaId()
+    {
+        return ApplySchemaTemplate(MetaSchemaIdTemplate, null);
     }
 }

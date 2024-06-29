@@ -64,16 +64,16 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemPrimaryResponseDocument_meta? Meta
+        public OpenApiKiotaClientExample.GeneratedCode.Models.Meta? Meta
         {
-            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemPrimaryResponseDocument_meta?>("meta"); }
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.Meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemPrimaryResponseDocument_meta Meta
+        public OpenApiKiotaClientExample.GeneratedCode.Models.Meta Meta
         {
-            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemPrimaryResponseDocument_meta>("meta"); }
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
@@ -105,7 +105,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
                 { "data", n => { Data = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemDataInResponse>(OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemDataInResponse.CreateFromDiscriminatorValue); } },
                 { "included", n => { Included = n.GetCollectionOfObjectValues<OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse>(OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse.CreateFromDiscriminatorValue)?.ToList(); } },
                 { "links", n => { Links = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ResourceTopLevelLinks>(OpenApiKiotaClientExample.GeneratedCode.Models.ResourceTopLevelLinks.CreateFromDiscriminatorValue); } },
-                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemPrimaryResponseDocument_meta>(OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemPrimaryResponseDocument_meta.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>(OpenApiKiotaClientExample.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -118,7 +118,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
             writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemDataInResponse>("data", Data);
             writer.WriteCollectionOfObjectValues<OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse>("included", Included);
             writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ResourceTopLevelLinks>("links", Links);
-            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemPrimaryResponseDocument_meta>("meta", Meta);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta", Meta);
         }
     }
 }

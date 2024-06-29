@@ -6,7 +6,7 @@ namespace OpenApiKiotaEndToEndTests;
 
 public sealed class AdditionalPropertiesTests
 {
-    private static readonly string GeneratedCodeDirectory = $"{Path.PathSeparator}GeneratedCode{Path.PathSeparator}";
+    private static readonly string GeneratedCodeDirectory = $"{Path.DirectorySeparatorChar}GeneratedCode{Path.DirectorySeparatorChar}";
 
     [Fact]
     public async Task Additional_properties_are_only_allowed_in_meta()
@@ -19,7 +19,8 @@ public sealed class AdditionalPropertiesTests
             RecurseSubdirectories = true
         }))
         {
-            if (path.Contains(GeneratedCodeDirectory, StringComparison.OrdinalIgnoreCase) && !path.EndsWith("_meta.cs", StringComparison.OrdinalIgnoreCase))
+            if (path.Contains(GeneratedCodeDirectory, StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(Path.GetFileName(path), "Meta.cs", StringComparison.OrdinalIgnoreCase))
             {
                 string content = await File.ReadAllTextAsync(path);
                 bool containsAdditionalData = content.Contains("public IDictionary<string, object> AdditionalData");

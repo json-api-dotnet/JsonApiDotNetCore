@@ -48,16 +48,16 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierCollectionResponseDocument_meta? Meta
+        public OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta? Meta
         {
-            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierCollectionResponseDocument_meta?>("meta"); }
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierCollectionResponseDocument_meta Meta
+        public OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta Meta
         {
-            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierCollectionResponseDocument_meta>("meta"); }
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
@@ -88,7 +88,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
             {
                 { "data", n => { Data = n.GetCollectionOfObjectValues<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifier>(OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifier.CreateFromDiscriminatorValue)?.ToList(); } },
                 { "links", n => { Links = n.GetObjectValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks>(OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks.CreateFromDiscriminatorValue); } },
-                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierCollectionResponseDocument_meta>(OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierCollectionResponseDocument_meta.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta>(OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -100,7 +100,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteCollectionOfObjectValues<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifier>("data", Data);
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks>("links", Links);
-            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierCollectionResponseDocument_meta>("meta", Meta);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta>("meta", Meta);
         }
     }
 }

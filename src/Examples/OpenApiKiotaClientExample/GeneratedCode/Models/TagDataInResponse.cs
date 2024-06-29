@@ -45,16 +45,16 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public OpenApiKiotaClientExample.GeneratedCode.Models.TagDataInResponse_meta? Meta
+        public OpenApiKiotaClientExample.GeneratedCode.Models.Meta? Meta
         {
-            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.TagDataInResponse_meta?>("meta"); }
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.Meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public OpenApiKiotaClientExample.GeneratedCode.Models.TagDataInResponse_meta Meta
+        public OpenApiKiotaClientExample.GeneratedCode.Models.Meta Meta
         {
-            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.TagDataInResponse_meta>("meta"); }
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
@@ -94,7 +94,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
             {
                 { "attributes", n => { Attributes = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.TagAttributesInResponse>(OpenApiKiotaClientExample.GeneratedCode.Models.TagAttributesInResponse.CreateFromDiscriminatorValue); } },
                 { "links", n => { Links = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ResourceLinks>(OpenApiKiotaClientExample.GeneratedCode.Models.ResourceLinks.CreateFromDiscriminatorValue); } },
-                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.TagDataInResponse_meta>(OpenApiKiotaClientExample.GeneratedCode.Models.TagDataInResponse_meta.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>(OpenApiKiotaClientExample.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
                 { "relationships", n => { Relationships = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.TagRelationshipsInResponse>(OpenApiKiotaClientExample.GeneratedCode.Models.TagRelationshipsInResponse.CreateFromDiscriminatorValue); } },
             };
         }
@@ -108,7 +108,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
             base.Serialize(writer);
             writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.TagAttributesInResponse>("attributes", Attributes);
             writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ResourceLinks>("links", Links);
-            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.TagDataInResponse_meta>("meta", Meta);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta", Meta);
             writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.TagRelationshipsInResponse>("relationships", Relationships);
         }
     }

@@ -20,5 +20,5 @@ internal sealed class NullableToOneRelationshipInResponse<TResource>
     public ResourceIdentifier<TResource>? Data { get; set; }
 
     [JsonPropertyName("meta")]
-    public IDictionary<string, object> Meta { get; set; } = null!;
+    public Meta Meta { get; set; } = null!;
 }

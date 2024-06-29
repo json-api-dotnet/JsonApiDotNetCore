@@ -5954,11 +5954,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5993,11 +5993,11 @@
                 ]
               },
               "meta": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "object",
-                  "nullable": true
-                }
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/meta"
+                  }
+                ]
               }
             },
             "additionalProperties": false
@@ -6040,11 +6040,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -6577,9 +6577,11 @@
             "nullable": true
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": { },
-            "nullable": true
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -6612,11 +6614,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -6710,11 +6712,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -6749,11 +6751,11 @@
                 ]
               },
               "meta": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "object",
-                  "nullable": true
-                }
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/meta"
+                  }
+                ]
               }
             },
             "additionalProperties": false
@@ -6806,11 +6808,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -6844,11 +6846,11 @@
             ]
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -6888,11 +6890,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -6959,11 +6961,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7040,11 +7042,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7079,11 +7081,11 @@
                 ]
               },
               "meta": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "object",
-                  "nullable": true
-                }
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/meta"
+                  }
+                ]
               }
             },
             "additionalProperties": false
@@ -7136,11 +7138,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7180,11 +7182,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7249,14 +7251,20 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
+      },
+      "meta": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        }
       },
       "nullable-flight-attendant-identifier-response-document": {
         "required": [
@@ -7288,11 +7296,11 @@
             "nullable": true
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7333,11 +7341,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7378,11 +7386,11 @@
             "nullable": true
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7438,11 +7446,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7470,11 +7478,11 @@
                 ]
               },
               "meta": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "object",
-                  "nullable": true
-                }
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/meta"
+                  }
+                ]
               }
             },
             "additionalProperties": false
@@ -7527,11 +7535,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7571,11 +7579,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7855,11 +7863,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7896,11 +7904,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7937,11 +7945,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7980,11 +7988,11 @@
             ]
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false

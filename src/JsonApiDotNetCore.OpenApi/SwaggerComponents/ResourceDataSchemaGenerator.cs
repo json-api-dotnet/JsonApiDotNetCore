@@ -91,8 +91,6 @@ internal sealed class ResourceDataSchemaGenerator
 
         _linksVisibilitySchemaGenerator.UpdateSchemaForResource(resourceTypeInfo, effectiveFullSchemaForResourceData, schemaRepository);
 
-        effectiveFullSchemaForResourceData.SetValuesInMetaToNullable();
-
 #if NET6_0
         effectiveFullSchemaForResourceData.ReorderProperties(ResourceDataPropertyNamesInOrder);
 #endif

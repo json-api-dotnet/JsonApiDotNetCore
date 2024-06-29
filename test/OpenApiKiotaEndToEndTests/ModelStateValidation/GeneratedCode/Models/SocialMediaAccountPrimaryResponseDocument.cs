@@ -64,16 +64,16 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountPrimaryResponseDocument_meta? Meta
+        public OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.Meta? Meta
         {
-            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountPrimaryResponseDocument_meta?>("meta"); }
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.Meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountPrimaryResponseDocument_meta Meta
+        public OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.Meta Meta
         {
-            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountPrimaryResponseDocument_meta>("meta"); }
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.Meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
@@ -105,7 +105,7 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models
                 { "data", n => { Data = n.GetObjectValue<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountDataInResponse>(OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountDataInResponse.CreateFromDiscriminatorValue); } },
                 { "included", n => { Included = n.GetCollectionOfObjectValues<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.DataInResponse>(OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.DataInResponse.CreateFromDiscriminatorValue)?.ToList(); } },
                 { "links", n => { Links = n.GetObjectValue<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ResourceTopLevelLinks>(OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ResourceTopLevelLinks.CreateFromDiscriminatorValue); } },
-                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountPrimaryResponseDocument_meta>(OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountPrimaryResponseDocument_meta.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.Meta>(OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -118,7 +118,7 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountDataInResponse>("data", Data);
             writer.WriteCollectionOfObjectValues<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.DataInResponse>("included", Included);
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ResourceTopLevelLinks>("links", Links);
-            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountPrimaryResponseDocument_meta>("meta", Meta);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.Meta>("meta", Meta);
         }
     }
 }

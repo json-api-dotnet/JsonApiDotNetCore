@@ -1,7 +1,9 @@
 using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects;
+using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -12,18 +14,21 @@ internal sealed class DocumentSchemaGenerator
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly AbstractResourceDataSchemaGenerator _abstractResourceDataSchemaGenerator;
     private readonly ResourceDataSchemaGenerator _resourceDataSchemaGenerator;
+    private readonly MetaSchemaGenerator _metaSchemaGenerator;
     private readonly LinksVisibilitySchemaGenerator _linksVisibilitySchemaGenerator;
     private readonly IncludeDependencyScanner _includeDependencyScanner;
     private readonly IResourceGraph _resourceGraph;
     private readonly IJsonApiOptions _options;
 
     public DocumentSchemaGenerator(SchemaGenerator defaultSchemaGenerator, AbstractResourceDataSchemaGenerator abstractResourceDataSchemaGenerator,
-        ResourceDataSchemaGenerator resourceDataSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator,
-        IncludeDependencyScanner includeDependencyScanner, IResourceGraph resourceGraph, IJsonApiOptions options)
+        ResourceDataSchemaGenerator resourceDataSchemaGenerator, MetaSchemaGenerator metaSchemaGenerator,
+        LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, IncludeDependencyScanner includeDependencyScanner, IResourceGraph resourceGraph,
+        IJsonApiOptions options)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);
         ArgumentGuard.NotNull(abstractResourceDataSchemaGenerator);
         ArgumentGuard.NotNull(resourceDataSchemaGenerator);
+        ArgumentGuard.NotNull(metaSchemaGenerator);
         ArgumentGuard.NotNull(linksVisibilitySchemaGenerator);
         ArgumentGuard.NotNull(includeDependencyScanner);
         ArgumentGuard.NotNull(resourceGraph);
@@ -32,6 +37,7 @@ internal sealed class DocumentSchemaGenerator
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _abstractResourceDataSchemaGenerator = abstractResourceDataSchemaGenerator;
         _resourceDataSchemaGenerator = resourceDataSchemaGenerator;
+        _metaSchemaGenerator = metaSchemaGenerator;
         _linksVisibilitySchemaGenerator = linksVisibilitySchemaGenerator;
         _includeDependencyScanner = includeDependencyScanner;
         _resourceGraph = resourceGraph;
@@ -43,19 +49,37 @@ internal sealed class DocumentSchemaGenerator
         ArgumentGuard.NotNull(modelType);
         ArgumentGuard.NotNull(schemaRepository);
 
+        _ = _metaSchemaGenerator.GenerateSchema(schemaRepository);
+
+        if (modelType == typeof(ErrorResponseDocument))
+        {
+            GenerateErrorObjectSchema(schemaRepository);
+        }
+
         OpenApiSchema referenceSchemaForDocument = modelType.IsConstructedGenericType
             ? GenerateJsonApiDocumentSchema(modelType, schemaRepository)
             : _defaultSchemaGenerator.GenerateSchema(modelType, schemaRepository);
 
         OpenApiSchema fullSchemaForDocument = schemaRepository.Schemas[referenceSchemaForDocument.Reference.Id];
 
-        SetJsonApiVersion(fullSchemaForDocument, schemaRepository);
+        SetJsonApiVersion(fullSchemaForDocument);
 
         _linksVisibilitySchemaGenerator.UpdateSchemaForTopLevel(modelType, fullSchemaForDocument, schemaRepository);
 
-        fullSchemaForDocument.SetValuesInMetaToNullable();
-
         return referenceSchemaForDocument;
+    }
+
+    private void GenerateErrorObjectSchema(SchemaRepository schemaRepository)
+    {
+        OpenApiSchema referenceSchemaForErrorObject = _defaultSchemaGenerator.GenerateSchema(typeof(ErrorObject), schemaRepository);
+        OpenApiSchema fullSchemaForErrorObject = schemaRepository.Schemas[referenceSchemaForErrorObject.Reference.Id];
+
+        OpenApiSchema referenceSchemaForMeta = _metaSchemaGenerator.GenerateSchema(schemaRepository);
+
+        fullSchemaForErrorObject.Properties[JsonApiPropertyName.Meta] = new OpenApiSchema
+        {
+            AllOf = [referenceSchemaForMeta]
+        };
     }
 
     private OpenApiSchema GenerateJsonApiDocumentSchema(Type documentType, SchemaRepository schemaRepository)
@@ -127,21 +151,11 @@ internal sealed class DocumentSchemaGenerator
         fullSchemaForDocument.Properties[JsonApiPropertyName.Data] = referenceSchemaForData;
     }
 
-    private void SetJsonApiVersion(OpenApiSchema fullSchemaForDocument, SchemaRepository schemaRepository)
+    private void SetJsonApiVersion(OpenApiSchema fullSchemaForDocument)
     {
-        if (fullSchemaForDocument.Properties.TryGetValue(JsonApiPropertyName.Jsonapi, out OpenApiSchema? referenceSchemaForJsonapi))
+        if (fullSchemaForDocument.Properties.ContainsKey(JsonApiPropertyName.Jsonapi) && !_options.IncludeJsonApiVersion)
         {
-            string jsonapiSchemaId = referenceSchemaForJsonapi.AllOf[0].Reference.Id;
-
-            if (!_options.IncludeJsonApiVersion)
-            {
-                fullSchemaForDocument.Properties.Remove(JsonApiPropertyName.Jsonapi);
-            }
-            else
-            {
-                OpenApiSchema fullSchemaForJsonapi = schemaRepository.Schemas[jsonapiSchemaId];
-                fullSchemaForJsonapi.SetValuesInMetaToNullable();
-            }
+            fullSchemaForDocument.Properties.Remove(JsonApiPropertyName.Jsonapi);
         }
     }
 }

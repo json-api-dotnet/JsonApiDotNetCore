@@ -36,7 +36,7 @@ internal sealed class ResourceTypeSchemaGenerator
             AdditionalPropertiesAllowed = false
         };
 
-        string schemaId = _schemaIdSelector.GetSchemaId(resourceType);
+        string schemaId = _schemaIdSelector.GetResourceTypeSchemaId(resourceType);
 
         referenceSchema = new OpenApiSchema
         {

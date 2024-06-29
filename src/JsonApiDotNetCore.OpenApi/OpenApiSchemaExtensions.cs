@@ -38,18 +38,4 @@ internal static class OpenApiSchemaExtensions
 
         return source.AllOf.Single();
     }
-
-    public static void SetValuesInMetaToNullable(this OpenApiSchema fullSchema)
-    {
-        ArgumentGuard.NotNull(fullSchema);
-
-        if (fullSchema.Properties.TryGetValue(JsonApiPropertyName.Meta, out OpenApiSchema? schemaForMeta))
-        {
-            schemaForMeta.AdditionalProperties = new OpenApiSchema
-            {
-                Type = "object",
-                Nullable = true
-            };
-        }
-    }
 }

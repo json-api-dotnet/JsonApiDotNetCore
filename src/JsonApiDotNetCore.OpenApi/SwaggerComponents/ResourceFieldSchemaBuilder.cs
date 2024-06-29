@@ -200,8 +200,6 @@ internal sealed class ResourceFieldSchemaBuilder
             _linksVisibilitySchemaGenerator.UpdateSchemaForRelationship(relationshipSchemaType, fullSchema, schemaRepository);
 
             fullSchema.Required.Remove(JsonApiPropertyName.Data);
-
-            fullSchema.SetValuesInMetaToNullable();
         }
 
         return referenceSchema;

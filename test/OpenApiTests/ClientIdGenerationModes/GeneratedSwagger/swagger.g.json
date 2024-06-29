@@ -583,9 +583,11 @@
             "nullable": true
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": { },
-            "nullable": true
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -611,11 +613,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -686,11 +688,11 @@
                 ]
               },
               "meta": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "object",
-                  "nullable": true
-                }
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/meta"
+                  }
+                ]
               }
             },
             "additionalProperties": false
@@ -743,11 +745,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -758,6 +760,12 @@
         ],
         "type": "string",
         "additionalProperties": false
+      },
+      "meta": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        }
       },
       "playerAttributesInResponse": {
         "type": "object",
@@ -798,11 +806,11 @@
                 ]
               },
               "meta": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "object",
-                  "nullable": true
-                }
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/meta"
+                  }
+                ]
               }
             },
             "additionalProperties": false
@@ -849,11 +857,11 @@
                 ]
               },
               "meta": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "object",
-                  "nullable": true
-                }
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/meta"
+                  }
+                ]
               }
             },
             "additionalProperties": false
@@ -906,11 +914,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -980,11 +988,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1114,11 +1122,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1155,11 +1163,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1196,11 +1204,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false

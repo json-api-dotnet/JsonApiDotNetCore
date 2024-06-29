@@ -45,16 +45,16 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationDataInResponse_meta? Meta
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta? Meta
         {
-            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationDataInResponse_meta?>("meta"); }
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationDataInResponse_meta Meta
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta Meta
         {
-            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationDataInResponse_meta>("meta"); }
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
@@ -94,7 +94,7 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models
             {
                 { "attributes", n => { Attributes = n.GetObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationAttributesInResponse>(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationAttributesInResponse.CreateFromDiscriminatorValue); } },
                 { "links", n => { Links = n.GetObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ResourceLinks>(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ResourceLinks.CreateFromDiscriminatorValue); } },
-                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationDataInResponse_meta>(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationDataInResponse_meta.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta>(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
                 { "relationships", n => { Relationships = n.GetObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationRelationshipsInResponse>(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationRelationshipsInResponse.CreateFromDiscriminatorValue); } },
             };
         }
@@ -108,7 +108,7 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models
             base.Serialize(writer);
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationAttributesInResponse>("attributes", Attributes);
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ResourceLinks>("links", Links);
-            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationDataInResponse_meta>("meta", Meta);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta>("meta", Meta);
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationRelationshipsInResponse>("relationships", Relationships);
         }
     }

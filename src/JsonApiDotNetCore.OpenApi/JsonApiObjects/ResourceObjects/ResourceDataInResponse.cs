@@ -20,5 +20,5 @@ internal sealed class ResourceDataInResponse<TResource> : ResourceData
     public ResourceLinks Links { get; set; } = null!;
 
     [JsonPropertyName("meta")]
-    public IDictionary<string, object> Meta { get; set; } = null!;
+    public Meta Meta { get; set; } = null!;
 }

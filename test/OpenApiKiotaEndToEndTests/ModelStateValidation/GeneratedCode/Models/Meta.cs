@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models
+namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models
 {
     #pragma warning disable CS1591
-    public class ReadOnlyChannelDataInResponse_meta : IAdditionalDataHolder, IBackedModel, IParsable
+    public class Meta : IAdditionalDataHolder, IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.</summary>
@@ -20,9 +20,9 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models
         /// <summary>Stores model information.</summary>
         public IBackingStore BackingStore { get; private set; }
         /// <summary>
-        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyChannelDataInResponse_meta"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.Meta"/> and sets the default values.
         /// </summary>
-        public ReadOnlyChannelDataInResponse_meta()
+        public Meta()
         {
             BackingStore = BackingStoreFactorySingleton.Instance.CreateBackingStore();
             AdditionalData = new Dictionary<string, object>();
@@ -30,12 +30,12 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyChannelDataInResponse_meta"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.Meta"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyChannelDataInResponse_meta CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.Meta CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyChannelDataInResponse_meta();
+            return new OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.Meta();
         }
         /// <summary>
         /// The deserialization information for the current model
