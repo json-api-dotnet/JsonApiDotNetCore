@@ -1212,8 +1212,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -1353,16 +1360,11 @@
       },
       "dataInResponse": {
         "required": [
-          "id",
           "type"
         ],
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "id": {
             "minLength": 1,
             "type": "string"
           }
@@ -1588,8 +1590,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -1617,7 +1626,37 @@
         ],
         "additionalProperties": false
       },
-      "languageIdentifier": {
+      "languageIdentifierCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceIdentifierCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/languageIdentifierInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "languageIdentifierInRequest": {
         "required": [
           "id",
           "type"
@@ -1638,32 +1677,23 @@
         },
         "additionalProperties": false
       },
-      "languageIdentifierCollectionResponseDocument": {
+      "languageIdentifierInResponse": {
         "required": [
-          "data",
-          "links"
+          "id",
+          "type"
         ],
         "type": "object",
         "properties": {
-          "links": {
+          "type": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/resourceIdentifierCollectionTopLevelLinks"
+                "$ref": "#/components/schemas/languageResourceType"
               }
             ]
           },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/languageIdentifier"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+          "id": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -1800,7 +1830,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/languageIdentifier"
+              "$ref": "#/components/schemas/languageIdentifierInRequest"
             }
           }
         },
@@ -1819,7 +1849,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/languageIdentifier"
+              "$ref": "#/components/schemas/languageIdentifierInResponse"
             }
           },
           "meta": {

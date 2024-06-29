@@ -29,6 +29,22 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
 #endif
         /// <summary>Stores model information.</summary>
         public IBackingStore BackingStore { get; private set; }
+        /// <summary>The lid property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? Lid
+        {
+            get { return BackingStore?.Get<string?>("lid"); }
+            set { BackingStore?.Set("lid", value); }
+        }
+#nullable restore
+#else
+        public string Lid
+        {
+            get { return BackingStore?.Get<string>("lid"); }
+            set { BackingStore?.Set("lid", value); }
+        }
+#endif
         /// <summary>The relationships property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -77,6 +93,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
             return new Dictionary<string, Action<IParseNode>>
             {
                 { "attributes", n => { Attributes = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInCreateTagRequest>(OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInCreateTagRequest.CreateFromDiscriminatorValue); } },
+                { "lid", n => { Lid = n.GetStringValue(); } },
                 { "relationships", n => { Relationships = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInCreateTagRequest>(OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInCreateTagRequest.CreateFromDiscriminatorValue); } },
                 { "type", n => { Type = n.GetEnumValue<OpenApiKiotaClientExample.GeneratedCode.Models.TagResourceType>(); } },
             };
@@ -89,6 +106,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInCreateTagRequest>("attributes", Attributes);
+            writer.WriteStringValue("lid", Lid);
             writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInCreateTagRequest>("relationships", Relationships);
             writer.WriteEnumValue<OpenApiKiotaClientExample.GeneratedCode.Models.TagResourceType>("type", Type);
         }

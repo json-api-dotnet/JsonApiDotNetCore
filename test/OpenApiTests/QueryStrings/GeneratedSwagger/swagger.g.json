@@ -3227,16 +3227,11 @@
       },
       "dataInResponse": {
         "required": [
-          "id",
           "type"
         ],
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "id": {
             "minLength": 1,
             "type": "string"
           }
@@ -3504,8 +3499,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -3540,7 +3542,37 @@
         ],
         "additionalProperties": false
       },
-      "nameValuePairIdentifier": {
+      "nameValuePairIdentifierCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceIdentifierCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/nameValuePairIdentifierInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "nameValuePairIdentifierInRequest": {
         "required": [
           "id",
           "type"
@@ -3561,32 +3593,23 @@
         },
         "additionalProperties": false
       },
-      "nameValuePairIdentifierCollectionResponseDocument": {
+      "nameValuePairIdentifierInResponse": {
         "required": [
-          "data",
-          "links"
+          "id",
+          "type"
         ],
         "type": "object",
         "properties": {
-          "links": {
+          "type": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/resourceIdentifierCollectionTopLevelLinks"
+                "$ref": "#/components/schemas/nameValuePairResourceType"
               }
             ]
           },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/nameValuePairIdentifier"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+          "id": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -3703,8 +3726,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -3739,7 +3769,37 @@
         ],
         "additionalProperties": false
       },
-      "nodeIdentifier": {
+      "nodeIdentifierCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceIdentifierCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/nodeIdentifierInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "nodeIdentifierInRequest": {
         "required": [
           "id",
           "type"
@@ -3760,32 +3820,23 @@
         },
         "additionalProperties": false
       },
-      "nodeIdentifierCollectionResponseDocument": {
+      "nodeIdentifierInResponse": {
         "required": [
-          "data",
-          "links"
+          "id",
+          "type"
         ],
         "type": "object",
         "properties": {
-          "links": {
+          "type": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/resourceIdentifierCollectionTopLevelLinks"
+                "$ref": "#/components/schemas/nodeResourceType"
               }
             ]
           },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/nodeIdentifier"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+          "id": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -3807,7 +3858,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/nodeIdentifier"
+                "$ref": "#/components/schemas/nodeIdentifierInResponse"
               }
             ]
           },
@@ -3946,7 +3997,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/nodeIdentifier"
+                "$ref": "#/components/schemas/nodeIdentifierInResponse"
               }
             ],
             "nullable": true
@@ -4008,7 +4059,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/nodeIdentifier"
+                "$ref": "#/components/schemas/nodeIdentifierInRequest"
               }
             ],
             "nullable": true
@@ -4029,7 +4080,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/nodeIdentifier"
+                "$ref": "#/components/schemas/nodeIdentifierInResponse"
               }
             ],
             "nullable": true
@@ -4235,7 +4286,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/nameValuePairIdentifier"
+              "$ref": "#/components/schemas/nameValuePairIdentifierInRequest"
             }
           }
         },
@@ -4254,7 +4305,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/nameValuePairIdentifier"
+              "$ref": "#/components/schemas/nameValuePairIdentifierInResponse"
             }
           },
           "meta": {
@@ -4276,7 +4327,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/nodeIdentifier"
+              "$ref": "#/components/schemas/nodeIdentifierInRequest"
             }
           }
         },
@@ -4295,7 +4346,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/nodeIdentifier"
+              "$ref": "#/components/schemas/nodeIdentifierInResponse"
             }
           },
           "meta": {
@@ -4317,7 +4368,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/nodeIdentifier"
+                "$ref": "#/components/schemas/nodeIdentifierInRequest"
               }
             ]
           }
@@ -4337,7 +4388,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/nodeIdentifier"
+                "$ref": "#/components/schemas/nodeIdentifierInResponse"
               }
             ]
           },

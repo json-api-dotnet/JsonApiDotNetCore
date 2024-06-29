@@ -16,16 +16,16 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public List<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameIdentifier>? Data
+        public List<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameIdentifierInRequest>? Data
         {
-            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameIdentifier>?>("data"); }
+            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameIdentifierInRequest>?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public List<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameIdentifier> Data
+        public List<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameIdentifierInRequest> Data
         {
-            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameIdentifier>>("data"); }
+            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameIdentifierInRequest>>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
@@ -54,7 +54,7 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                { "data", n => { Data = n.GetCollectionOfObjectValues<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameIdentifier>(OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameIdentifier.CreateFromDiscriminatorValue)?.ToList(); } },
+                { "data", n => { Data = n.GetCollectionOfObjectValues<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameIdentifierInRequest>(OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameIdentifierInRequest.CreateFromDiscriminatorValue)?.ToList(); } },
             };
         }
         /// <summary>
@@ -64,7 +64,7 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteCollectionOfObjectValues<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameIdentifier>("data", Data);
+            writer.WriteCollectionOfObjectValues<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.GameIdentifierInRequest>("data", Data);
         }
     }
 }

@@ -26,6 +26,22 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
             set { BackingStore?.Set("attributes", value); }
         }
 #endif
+        /// <summary>The id property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? Id
+        {
+            get { return BackingStore?.Get<string?>("id"); }
+            set { BackingStore?.Set("id", value); }
+        }
+#nullable restore
+#else
+        public string Id
+        {
+            get { return BackingStore?.Get<string>("id"); }
+            set { BackingStore?.Set("id", value); }
+        }
+#endif
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -93,6 +109,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
             return new Dictionary<string, Action<IParseNode>>(base.GetFieldDeserializers())
             {
                 { "attributes", n => { Attributes = n.GetObjectValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.CountryAttributesInResponse>(OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.CountryAttributesInResponse.CreateFromDiscriminatorValue); } },
+                { "id", n => { Id = n.GetStringValue(); } },
                 { "links", n => { Links = n.GetObjectValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ResourceLinks>(OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ResourceLinks.CreateFromDiscriminatorValue); } },
                 { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta>(OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
                 { "relationships", n => { Relationships = n.GetObjectValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.CountryRelationshipsInResponse>(OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.CountryRelationshipsInResponse.CreateFromDiscriminatorValue); } },
@@ -107,6 +124,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             base.Serialize(writer);
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.CountryAttributesInResponse>("attributes", Attributes);
+            writer.WriteStringValue("id", Id);
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ResourceLinks>("links", Links);
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta>("meta", Meta);
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.CountryRelationshipsInResponse>("relationships", Relationships);

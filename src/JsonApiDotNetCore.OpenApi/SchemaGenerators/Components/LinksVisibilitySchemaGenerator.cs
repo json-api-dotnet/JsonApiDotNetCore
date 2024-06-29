@@ -39,6 +39,7 @@ internal sealed class LinksVisibilitySchemaGenerator
         [typeof(NullableResourceIdentifierResponseDocument<>)] = ResourceIdentifierTopLinkTypes,
         [typeof(ResourceIdentifierCollectionResponseDocument<>)] = ResourceIdentifierCollectionTopLinkTypes,
         [typeof(ErrorResponseDocument)] = ErrorTopLinkTypes,
+        [typeof(OperationsResponseDocument)] = ResourceTopLinkTypes,
         [typeof(NullableToOneRelationshipInResponse<>)] = RelationshipLinkTypes,
         [typeof(ToManyRelationshipInResponse<>)] = RelationshipLinkTypes,
         [typeof(ToOneRelationshipInResponse<>)] = RelationshipLinkTypes,

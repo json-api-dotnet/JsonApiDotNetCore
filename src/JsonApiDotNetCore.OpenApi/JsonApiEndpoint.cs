@@ -11,5 +11,6 @@ internal enum JsonApiEndpoint
     PatchResource,
     PatchRelationship,
     DeleteResource,
-    DeleteRelationship
+    DeleteRelationship,
+    PostOperations
 }

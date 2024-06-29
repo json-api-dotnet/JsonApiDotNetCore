@@ -69,7 +69,7 @@ public sealed class RequestTests
                 {
                     Purser = new ToOneFlightAttendantInRequest
                     {
-                        Data = new FlightAttendantIdentifier
+                        Data = new FlightAttendantIdentifierInRequest
                         {
                             Id = "bBJHu",
                             Type = FlightAttendantResourceType.FlightAttendants
@@ -77,7 +77,7 @@ public sealed class RequestTests
                     },
                     BackupPurser = new NullableToOneFlightAttendantInRequest
                     {
-                        Data = new FlightAttendantIdentifier
+                        Data = new FlightAttendantIdentifierInRequest
                         {
                             Id = "NInmX",
                             Type = FlightAttendantResourceType.FlightAttendants
@@ -330,7 +330,7 @@ public sealed class RequestTests
 
         var requestDocument = new ToOneFlightAttendantInRequest
         {
-            Data = new FlightAttendantIdentifier
+            Data = new FlightAttendantIdentifierInRequest
             {
                 Id = "bBJHu",
                 Type = FlightAttendantResourceType.FlightAttendants
@@ -391,12 +391,12 @@ public sealed class RequestTests
         {
             Data =
             [
-                new FlightAttendantIdentifier
+                new FlightAttendantIdentifierInRequest
                 {
                     Type = FlightAttendantResourceType.FlightAttendants,
                     Id = "bBJHu"
                 },
-                new FlightAttendantIdentifier
+                new FlightAttendantIdentifierInRequest
                 {
                     Type = FlightAttendantResourceType.FlightAttendants,
                     Id = "NInmX"
@@ -444,12 +444,12 @@ public sealed class RequestTests
         {
             Data =
             [
-                new FlightAttendantIdentifier
+                new FlightAttendantIdentifierInRequest
                 {
                     Id = "bBJHu",
                     Type = FlightAttendantResourceType.FlightAttendants
                 },
-                new FlightAttendantIdentifier
+                new FlightAttendantIdentifierInRequest
                 {
                     Id = "NInmX",
                     Type = FlightAttendantResourceType.FlightAttendants
@@ -497,12 +497,12 @@ public sealed class RequestTests
         {
             Data =
             [
-                new FlightAttendantIdentifier
+                new FlightAttendantIdentifierInRequest
                 {
                     Id = "bBJHu",
                     Type = FlightAttendantResourceType.FlightAttendants
                 },
-                new FlightAttendantIdentifier
+                new FlightAttendantIdentifierInRequest
                 {
                     Id = "NInmX",
                     Type = FlightAttendantResourceType.FlightAttendants

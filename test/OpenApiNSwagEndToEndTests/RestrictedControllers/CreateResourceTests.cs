@@ -56,7 +56,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
                 {
                     VideoStream = new ToOneDataStreamInRequest
                     {
-                        Data = new DataStreamIdentifier
+                        Data = new DataStreamIdentifierInRequest
                         {
                             Id = existingVideoStream.StringId!
                         }
@@ -65,7 +65,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
                     {
                         Data =
                         [
-                            new DataStreamIdentifier
+                            new DataStreamIdentifierInRequest
                             {
                                 Id = existingAudioStream.StringId!
                             }
@@ -171,7 +171,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
                 {
                     VideoStream = new ToOneDataStreamInRequest
                     {
-                        Data = new DataStreamIdentifier
+                        Data = new DataStreamIdentifierInRequest
                         {
                             Id = unknownVideoStreamId
                         }

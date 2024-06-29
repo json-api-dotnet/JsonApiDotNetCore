@@ -31,6 +31,7 @@ public sealed class ClientIdGenerationTests : IClassFixture<OpenApiTestContext<O
             dataElement.Should().ContainPath("required").With(requiredElement =>
             {
                 requiredElement.Should().ContainArrayElement("id");
+                requiredElement.Should().NotContainArrayElement("lid");
             });
 
             dataElement.Should().ContainPath("properties.id");
@@ -49,6 +50,7 @@ public sealed class ClientIdGenerationTests : IClassFixture<OpenApiTestContext<O
             dataElement.Should().ContainPath("required").With(requiredElement =>
             {
                 requiredElement.Should().NotContainArrayElement("id");
+                requiredElement.Should().NotContainArrayElement("lid");
             });
 
             dataElement.Should().ContainPath("properties.id");
@@ -67,6 +69,7 @@ public sealed class ClientIdGenerationTests : IClassFixture<OpenApiTestContext<O
             dataElement.Should().ContainPath("required").With(requiredElement =>
             {
                 requiredElement.Should().NotContainArrayElement("id");
+                requiredElement.Should().NotContainArrayElement("lid");
             });
 
             dataElement.Should().NotContainPath("properties.id");

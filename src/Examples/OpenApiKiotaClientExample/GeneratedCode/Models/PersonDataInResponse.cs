@@ -26,6 +26,22 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
             set { BackingStore?.Set("attributes", value); }
         }
 #endif
+        /// <summary>The id property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? Id
+        {
+            get { return BackingStore?.Get<string?>("id"); }
+            set { BackingStore?.Set("id", value); }
+        }
+#nullable restore
+#else
+        public string Id
+        {
+            get { return BackingStore?.Get<string>("id"); }
+            set { BackingStore?.Set("id", value); }
+        }
+#endif
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -93,6 +109,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
             return new Dictionary<string, Action<IParseNode>>(base.GetFieldDeserializers())
             {
                 { "attributes", n => { Attributes = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.PersonAttributesInResponse>(OpenApiKiotaClientExample.GeneratedCode.Models.PersonAttributesInResponse.CreateFromDiscriminatorValue); } },
+                { "id", n => { Id = n.GetStringValue(); } },
                 { "links", n => { Links = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ResourceLinks>(OpenApiKiotaClientExample.GeneratedCode.Models.ResourceLinks.CreateFromDiscriminatorValue); } },
                 { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>(OpenApiKiotaClientExample.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
                 { "relationships", n => { Relationships = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.PersonRelationshipsInResponse>(OpenApiKiotaClientExample.GeneratedCode.Models.PersonRelationshipsInResponse.CreateFromDiscriminatorValue); } },
@@ -107,6 +124,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             base.Serialize(writer);
             writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.PersonAttributesInResponse>("attributes", Attributes);
+            writer.WriteStringValue("id", Id);
             writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ResourceLinks>("links", Links);
             writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta", Meta);
             writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.PersonRelationshipsInResponse>("relationships", Relationships);

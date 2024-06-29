@@ -53,7 +53,7 @@ internal sealed class ResourceFieldSchemaBuilder
         return fullSchemaForResource.Properties;
     }
 
-    public void SetMembersOfAttributes(OpenApiSchema fullSchemaForAttributes, SchemaRepository schemaRepository)
+    public void SetMembersOfAttributes(OpenApiSchema fullSchemaForAttributes, bool forRequestSchema, SchemaRepository schemaRepository)
     {
         ArgumentGuard.NotNull(fullSchemaForAttributes);
         ArgumentGuard.NotNull(schemaRepository);
@@ -66,6 +66,21 @@ internal sealed class ResourceFieldSchemaBuilder
 
             if (matchingAttribute != null && matchingAttribute.Capabilities.HasFlag(requiredCapability))
             {
+                if (forRequestSchema)
+                {
+                    if (matchingAttribute.Property.SetMethod == null)
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    if (matchingAttribute.Property.GetMethod == null)
+                    {
+                        continue;
+                    }
+                }
+
                 bool isInlineSchemaType = resourceFieldSchema.AllOf.Count == 0;
 
                 // Schemas for types like enum and complex attributes are handled as reference schemas.
@@ -74,7 +89,7 @@ internal sealed class ResourceFieldSchemaBuilder
                     EnsureAttributeSchemaIsExposed(resourceFieldSchema.UnwrapLastExtendedSchema(), matchingAttribute, schemaRepository);
                 }
 
-                fullSchemaForAttributes.Properties[matchingAttribute.PublicName] = resourceFieldSchema;
+                fullSchemaForAttributes.Properties.Add(matchingAttribute.PublicName, resourceFieldSchema);
 
                 resourceFieldSchema.Nullable = _resourceFieldValidationMetadataProvider.IsNullable(matchingAttribute);
 
@@ -131,7 +146,7 @@ internal sealed class ResourceFieldSchemaBuilder
         return isCreateResourceSchemaType && _resourceFieldValidationMetadataProvider.IsRequired(field);
     }
 
-    public void SetMembersOfRelationships(OpenApiSchema fullSchemaForRelationships, SchemaRepository schemaRepository)
+    public void SetMembersOfRelationships(OpenApiSchema fullSchemaForRelationships, bool forRequestSchema, SchemaRepository schemaRepository)
     {
         ArgumentGuard.NotNull(fullSchemaForRelationships);
         ArgumentGuard.NotNull(schemaRepository);
@@ -142,7 +157,7 @@ internal sealed class ResourceFieldSchemaBuilder
 
             if (matchingRelationship != null)
             {
-                _ = _resourceIdentifierSchemaGenerator.GenerateSchema(matchingRelationship.RightType, schemaRepository);
+                _ = _resourceIdentifierSchemaGenerator.GenerateSchema(matchingRelationship.RightType, forRequestSchema, schemaRepository);
                 AddRelationshipSchemaToResourceData(matchingRelationship, fullSchemaForRelationships, schemaRepository);
             }
         }

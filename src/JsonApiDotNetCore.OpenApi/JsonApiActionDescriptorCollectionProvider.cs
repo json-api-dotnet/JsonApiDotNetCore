@@ -2,6 +2,7 @@ using System.Reflection;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.JsonApiMetadata;
+using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -62,7 +63,7 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
         return new ActionDescriptorCollection(newDescriptors.AsReadOnly(), descriptorVersion);
     }
 
-    private static bool IsVisibleJsonApiEndpoint(ActionDescriptor descriptor)
+    internal static bool IsVisibleJsonApiEndpoint(ActionDescriptor descriptor)
     {
         // Only if in a convention ApiExplorer.IsVisible was set to false, the ApiDescriptionActionData will not be present.
         return descriptor is ControllerActionDescriptor controllerAction && controllerAction.Properties.ContainsKey(typeof(ApiDescriptionActionData));
@@ -75,12 +76,12 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
             case PrimaryResponseMetadata primaryMetadata:
             {
                 UpdateProducesResponseTypeAttribute(endpoint, primaryMetadata.DocumentType);
-                return Array.Empty<ActionDescriptor>();
+                return [];
             }
             case PrimaryRequestMetadata primaryMetadata:
             {
                 UpdateBodyParameterDescriptor(endpoint, primaryMetadata.DocumentType, null);
-                return Array.Empty<ActionDescriptor>();
+                return [];
             }
             case NonPrimaryEndpointMetadata nonPrimaryEndpointMetadata and (RelationshipResponseMetadata or SecondaryResponseMetadata):
             {
@@ -91,9 +92,19 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
             {
                 return Expand(endpoint, nonPrimaryEndpointMetadata, UpdateBodyParameterDescriptor);
             }
+            case AtomicOperationsRequestMetadata:
+            {
+                UpdateBodyParameterDescriptor(endpoint, typeof(OperationsRequestDocument), null);
+                return [];
+            }
+            case AtomicOperationsResponseMetadata:
+            {
+                UpdateProducesResponseTypeAttribute(endpoint, typeof(OperationsResponseDocument));
+                return [];
+            }
             default:
             {
-                return Array.Empty<ActionDescriptor>();
+                return [];
             }
         }
     }
@@ -118,7 +129,8 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
     {
         var produces = endpoint.GetFilterMetadata<ProducesAttribute>();
 
-        return produces != null && produces.ContentTypes.Any(contentType => contentType == HeaderConstants.MediaType);
+        return produces != null && produces.ContentTypes.Any(contentType =>
+            contentType is HeaderConstants.MediaType or HeaderConstants.AtomicOperationsMediaType or HeaderConstants.RelaxedAtomicOperationsMediaType);
     }
 
     private static IEnumerable<ActionDescriptor> Expand(ActionDescriptor genericEndpoint, NonPrimaryEndpointMetadata metadata,
@@ -185,7 +197,6 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
     private static void RemovePathParameter(ICollection<ParameterDescriptor> parameters, string parameterName)
     {
         ParameterDescriptor relationshipName = parameters.Single(parameterDescriptor => parameterDescriptor.Name == parameterName);
-
         parameters.Remove(relationshipName);
     }
 

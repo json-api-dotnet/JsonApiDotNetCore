@@ -484,16 +484,11 @@
       },
       "dataInResponse": {
         "required": [
-          "id",
           "type"
         ],
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "id": {
             "minLength": 1,
             "type": "string"
           }
@@ -795,8 +790,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {

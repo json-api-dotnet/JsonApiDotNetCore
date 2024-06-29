@@ -39,6 +39,11 @@ internal sealed class JsonApiEndpointMetadataProvider
             throw new NotSupportedException($"Unable to provide metadata for non-JSON:API endpoint '{controllerAction.ReflectedType!.FullName}'.");
         }
 
+        if (endpoint == JsonApiEndpoint.PostOperations)
+        {
+            return new JsonApiEndpointMetadataContainer(AtomicOperationsRequestMetadata.Instance, AtomicOperationsResponseMetadata.Instance);
+        }
+
         ResourceType? primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(controllerAction.ReflectedType);
 
         if (primaryResourceType == null)

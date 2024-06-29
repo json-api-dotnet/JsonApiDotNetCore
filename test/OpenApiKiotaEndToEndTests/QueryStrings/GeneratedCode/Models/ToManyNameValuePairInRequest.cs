@@ -16,16 +16,16 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public List<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifier>? Data
+        public List<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifierInRequest>? Data
         {
-            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifier>?>("data"); }
+            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifierInRequest>?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public List<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifier> Data
+        public List<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifierInRequest> Data
         {
-            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifier>>("data"); }
+            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifierInRequest>>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
@@ -54,7 +54,7 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                { "data", n => { Data = n.GetCollectionOfObjectValues<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifier>(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifier.CreateFromDiscriminatorValue)?.ToList(); } },
+                { "data", n => { Data = n.GetCollectionOfObjectValues<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifierInRequest>(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifierInRequest.CreateFromDiscriminatorValue)?.ToList(); } },
             };
         }
         /// <summary>
@@ -64,7 +64,7 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteCollectionOfObjectValues<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifier>("data", Data);
+            writer.WriteCollectionOfObjectValues<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifierInRequest>("data", Data);
         }
     }
 }

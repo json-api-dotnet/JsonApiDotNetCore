@@ -1,4 +1,3 @@
-using System.Net;
 using System.Text;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.OpenApi.Client.NSwag;
@@ -19,17 +18,17 @@ internal sealed class PeopleMessageFormatter
 
     private static string WritePeople(ApiResponse<PersonCollectionResponseDocument?> peopleResponse)
     {
-        if (peopleResponse is { StatusCode: (int)HttpStatusCode.NotModified, Result: null })
+        if (peopleResponse.Result == null)
         {
-            return "The HTTP response hasn't changed, so no response body was returned.";
+            return $"Status code {peopleResponse.StatusCode} was returned without a response body.";
         }
 
         var builder = new StringBuilder();
-        builder.AppendLine($"Found {peopleResponse.Result!.Data.Count} people:");
+        builder.AppendLine($"Found {peopleResponse.Result.Data.Count} people:");
 
-        foreach (PersonDataInResponse person in peopleResponse.Result!.Data)
+        foreach (PersonDataInResponse person in peopleResponse.Result.Data)
         {
-            WritePerson(person, peopleResponse.Result!.Included, builder);
+            WritePerson(person, peopleResponse.Result.Included ?? [], builder);
         }
 
         return builder.ToString();
@@ -37,30 +36,31 @@ internal sealed class PeopleMessageFormatter
 
     private static void WritePerson(PersonDataInResponse person, ICollection<DataInResponse> includes, StringBuilder builder)
     {
-        ToManyTodoItemInResponse assignedTodoItems = person.Relationships.AssignedTodoItems;
+        ICollection<TodoItemIdentifierInResponse> assignedTodoItems = person.Relationships?.AssignedTodoItems?.Data ?? [];
 
-        builder.AppendLine($"  Person {person.Id}: {person.Attributes.DisplayName} with {assignedTodoItems.Data.Count} assigned todo-items:");
-        WriteRelatedTodoItems(assignedTodoItems.Data, includes, builder);
+        builder.AppendLine($"  Person {person.Id}: {person.Attributes?.DisplayName} with {assignedTodoItems.Count} assigned todo-items:");
+        WriteRelatedTodoItems(assignedTodoItems, includes, builder);
     }
 
-    private static void WriteRelatedTodoItems(IEnumerable<TodoItemIdentifier> todoItemIdentifiers, ICollection<DataInResponse> includes, StringBuilder builder)
+    private static void WriteRelatedTodoItems(IEnumerable<TodoItemIdentifierInResponse> todoItemIdentifiers, ICollection<DataInResponse> includes,
+        StringBuilder builder)
     {
-        foreach (TodoItemIdentifier todoItemIdentifier in todoItemIdentifiers)
+        foreach (TodoItemIdentifierInResponse todoItemIdentifier in todoItemIdentifiers)
         {
             TodoItemDataInResponse includedTodoItem = includes.OfType<TodoItemDataInResponse>().Single(include => include.Id == todoItemIdentifier.Id);
-            ToManyTagInResponse tags = includedTodoItem.Relationships.Tags;
+            ICollection<TagIdentifierInResponse> tags = includedTodoItem.Relationships?.Tags?.Data ?? [];
 
-            builder.AppendLine($"    TodoItem {includedTodoItem.Id}: {includedTodoItem.Attributes.Description} with {tags.Data.Count} tags:");
-            WriteRelatedTags(tags.Data, includes, builder);
+            builder.AppendLine($"    TodoItem {includedTodoItem.Id}: {includedTodoItem.Attributes?.Description} with {tags.Count} tags:");
+            WriteRelatedTags(tags, includes, builder);
         }
     }
 
-    private static void WriteRelatedTags(IEnumerable<TagIdentifier> tagIdentifiers, ICollection<DataInResponse> includes, StringBuilder builder)
+    private static void WriteRelatedTags(IEnumerable<TagIdentifierInResponse> tagIdentifiers, ICollection<DataInResponse> includes, StringBuilder builder)
     {
-        foreach (TagIdentifier tagIdentifier in tagIdentifiers)
+        foreach (TagIdentifierInResponse tagIdentifier in tagIdentifiers)
         {
             TagDataInResponse includedTag = includes.OfType<TagDataInResponse>().Single(include => include.Id == tagIdentifier.Id);
-            builder.AppendLine($"      Tag {includedTag.Id}: {includedTag.Attributes.Name}");
+            builder.AppendLine($"      Tag {includedTag.Id}: {includedTag.Attributes?.Name}");
         }
     }
 }

@@ -2626,16 +2626,11 @@
       },
       "dataInResponse": {
         "required": [
-          "id",
           "type"
         ],
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "id": {
             "minLength": 1,
             "type": "string"
           }
@@ -2727,8 +2722,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "links": {
                 "allOf": [
                   {
@@ -2749,7 +2751,37 @@
         ],
         "additionalProperties": false
       },
-      "emptyIdentifier": {
+      "emptyIdentifierCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceIdentifierCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/emptyIdentifierInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "emptyIdentifierInRequest": {
         "required": [
           "id",
           "type"
@@ -2770,32 +2802,23 @@
         },
         "additionalProperties": false
       },
-      "emptyIdentifierCollectionResponseDocument": {
+      "emptyIdentifierInResponse": {
         "required": [
-          "data",
-          "links"
+          "id",
+          "type"
         ],
         "type": "object",
         "properties": {
-          "links": {
+          "type": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/resourceIdentifierCollectionTopLevelLinks"
+                "$ref": "#/components/schemas/emptyResourceType"
               }
             ]
           },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/emptyIdentifier"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+          "id": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -2817,7 +2840,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/emptyIdentifier"
+                "$ref": "#/components/schemas/emptyIdentifierInResponse"
               }
             ]
           },
@@ -3020,7 +3043,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/emptyIdentifier"
+                "$ref": "#/components/schemas/emptyIdentifierInResponse"
               }
             ],
             "nullable": true
@@ -3082,7 +3105,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/emptyIdentifier"
+                "$ref": "#/components/schemas/emptyIdentifierInRequest"
               }
             ],
             "nullable": true
@@ -3103,7 +3126,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/emptyIdentifier"
+                "$ref": "#/components/schemas/emptyIdentifierInResponse"
               }
             ],
             "nullable": true
@@ -3298,8 +3321,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -3484,7 +3514,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/emptyIdentifier"
+              "$ref": "#/components/schemas/emptyIdentifierInRequest"
             }
           }
         },
@@ -3503,7 +3533,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/emptyIdentifier"
+              "$ref": "#/components/schemas/emptyIdentifierInResponse"
             }
           },
           "meta": {
@@ -3525,7 +3555,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/emptyIdentifier"
+                "$ref": "#/components/schemas/emptyIdentifierInRequest"
               }
             ]
           }
@@ -3545,7 +3575,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/emptyIdentifier"
+                "$ref": "#/components/schemas/emptyIdentifierInResponse"
               }
             ]
           },

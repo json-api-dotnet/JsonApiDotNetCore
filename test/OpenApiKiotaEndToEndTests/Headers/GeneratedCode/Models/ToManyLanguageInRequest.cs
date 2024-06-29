@@ -16,16 +16,16 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public List<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifier>? Data
+        public List<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierInRequest>? Data
         {
-            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifier>?>("data"); }
+            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierInRequest>?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public List<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifier> Data
+        public List<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierInRequest> Data
         {
-            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifier>>("data"); }
+            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierInRequest>>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
@@ -54,7 +54,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                { "data", n => { Data = n.GetCollectionOfObjectValues<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifier>(OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifier.CreateFromDiscriminatorValue)?.ToList(); } },
+                { "data", n => { Data = n.GetCollectionOfObjectValues<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierInRequest>(OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierInRequest.CreateFromDiscriminatorValue)?.ToList(); } },
             };
         }
         /// <summary>
@@ -64,7 +64,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteCollectionOfObjectValues<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifier>("data", Data);
+            writer.WriteCollectionOfObjectValues<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageIdentifierInRequest>("data", Data);
         }
     }
 }

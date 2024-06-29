@@ -12,5 +12,5 @@ internal sealed class NullableToOneRelationshipInRequest<TResource>
 {
     [Required]
     [JsonPropertyName("data")]
-    public ResourceIdentifier<TResource>? Data { get; set; }
+    public ResourceIdentifierInRequest<TResource>? Data { get; set; }
 }

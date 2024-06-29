@@ -1,8 +1,6 @@
-using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.SchemaGenerators.Components;
 using JsonApiDotNetCore.OpenApi.SwaggerComponents;
 using Microsoft.OpenApi.Models;
@@ -15,7 +13,7 @@ namespace JsonApiDotNetCore.OpenApi.SchemaGenerators.Bodies;
 /// </summary>
 internal sealed class ResourceOrRelationshipBodySchemaGenerator : BodySchemaGenerator
 {
-    private static readonly Type[] RequestSchemaTypes =
+    private static readonly Type[] RequestBodySchemaTypes =
     [
         typeof(CreateResourceRequestDocument<>),
         typeof(UpdateResourceRequestDocument<>),
@@ -24,7 +22,7 @@ internal sealed class ResourceOrRelationshipBodySchemaGenerator : BodySchemaGene
         typeof(ToManyRelationshipInRequest<>)
     ];
 
-    private static readonly Type[] ResponseSchemaTypes =
+    private static readonly Type[] ResponseBodySchemaTypes =
     [
         typeof(ResourceCollectionResponseDocument<>),
         typeof(PrimaryResourceResponseDocument<>),
@@ -36,34 +34,27 @@ internal sealed class ResourceOrRelationshipBodySchemaGenerator : BodySchemaGene
     ];
 
     private readonly SchemaGenerator _defaultSchemaGenerator;
-    private readonly AbstractResourceDataSchemaGenerator _abstractResourceDataSchemaGenerator;
-    private readonly DataSchemaGenerator _dataSchemaGenerator;
-    private readonly IncludeDependencyScanner _includeDependencyScanner;
+    private readonly DataContainerSchemaGenerator _dataContainerSchemaGenerator;
     private readonly IResourceGraph _resourceGraph;
 
-    public ResourceOrRelationshipBodySchemaGenerator(SchemaGenerator defaultSchemaGenerator,
-        AbstractResourceDataSchemaGenerator abstractResourceDataSchemaGenerator, DataSchemaGenerator dataSchemaGenerator,
-        MetaSchemaGenerator metaSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator,
-        IncludeDependencyScanner includeDependencyScanner, IResourceGraph resourceGraph, IJsonApiOptions options)
+    public ResourceOrRelationshipBodySchemaGenerator(SchemaGenerator defaultSchemaGenerator, DataContainerSchemaGenerator dataContainerSchemaGenerator,
+        MetaSchemaGenerator metaSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, IResourceGraph resourceGraph,
+        IJsonApiOptions options)
         : base(metaSchemaGenerator, linksVisibilitySchemaGenerator, options)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);
-        ArgumentGuard.NotNull(abstractResourceDataSchemaGenerator);
-        ArgumentGuard.NotNull(dataSchemaGenerator);
-        ArgumentGuard.NotNull(includeDependencyScanner);
+        ArgumentGuard.NotNull(dataContainerSchemaGenerator);
         ArgumentGuard.NotNull(resourceGraph);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
-        _abstractResourceDataSchemaGenerator = abstractResourceDataSchemaGenerator;
-        _dataSchemaGenerator = dataSchemaGenerator;
-        _includeDependencyScanner = includeDependencyScanner;
+        _dataContainerSchemaGenerator = dataContainerSchemaGenerator;
         _resourceGraph = resourceGraph;
     }
 
     public override bool CanGenerate(Type modelType)
     {
         Type modelOpenType = modelType.ConstructedToOpenType();
-        return RequestSchemaTypes.Contains(modelOpenType) || ResponseSchemaTypes.Contains(modelOpenType);
+        return RequestBodySchemaTypes.Contains(modelOpenType) || ResponseBodySchemaTypes.Contains(modelOpenType);
     }
 
     protected override OpenApiSchema GenerateBodySchema(Type bodyType, SchemaRepository schemaRepository)
@@ -76,31 +67,10 @@ internal sealed class ResourceOrRelationshipBodySchemaGenerator : BodySchemaGene
             return referenceSchemaForBody;
         }
 
-        bool isRequestSchema = RequestSchemaTypes.Contains(bodyType.ConstructedToOpenType());
+        var resourceTypeInfo = ResourceTypeInfo.Create(bodyType, _resourceGraph);
+        bool isRequestSchema = RequestBodySchemaTypes.Contains(bodyType.ConstructedToOpenType());
 
-        if (!isRequestSchema)
-        {
-            // There's no way to intercept in the Swashbuckle recursive component schema generation when using inheritance, which we need
-            // to perform generic type expansions. As a workaround, we generate an empty base schema upfront. Each time the schema
-            // for a derived type is generated, we'll add it to the discriminator mapping.
-            _ = _abstractResourceDataSchemaGenerator.GenerateSchema(schemaRepository);
-        }
-
-        Type dataConstructedType = GetInnerTypeOfDataProperty(bodyType);
-
-        if (!isRequestSchema)
-        {
-            // Ensure all reachable related resource types are available in the discriminator mapping so includes work.
-            // Doing this matters when not all endpoints are exposed.
-            EnsureResourceTypesAreMappedInDiscriminator(dataConstructedType, schemaRepository);
-        }
-
-        OpenApiSchema referenceSchemaForData = _dataSchemaGenerator.GenerateSchema(dataConstructedType, schemaRepository);
-
-        if (!isRequestSchema)
-        {
-            _abstractResourceDataSchemaGenerator.MapDiscriminator(dataConstructedType, referenceSchemaForData, schemaRepository);
-        }
+        _ = _dataContainerSchemaGenerator.GenerateSchema(bodyType, resourceTypeInfo.ResourceType, isRequestSchema, schemaRepository);
 
         referenceSchemaForBody = _defaultSchemaGenerator.GenerateSchema(bodyType, schemaRepository);
         OpenApiSchema fullSchemaForBody = schemaRepository.Schemas[referenceSchemaForBody.Reference.Id].UnwrapLastExtendedSchema();
@@ -111,42 +81,5 @@ internal sealed class ResourceOrRelationshipBodySchemaGenerator : BodySchemaGene
         }
 
         return referenceSchemaForBody;
-    }
-
-    private static Type GetInnerTypeOfDataProperty(Type bodyType)
-    {
-        PropertyInfo? dataProperty = bodyType.GetProperty("Data");
-
-        if (dataProperty == null)
-        {
-            throw new UnreachableCodeException();
-        }
-
-        return dataProperty.PropertyType.ConstructedToOpenType().IsAssignableTo(typeof(ICollection<>))
-            ? dataProperty.PropertyType.GenericTypeArguments[0]
-            : dataProperty.PropertyType;
-    }
-
-    private void EnsureResourceTypesAreMappedInDiscriminator(Type dataConstructedType, SchemaRepository schemaRepository)
-    {
-        Type dataOpenType = dataConstructedType.GetGenericTypeDefinition();
-
-        if (dataOpenType == typeof(ResourceDataInResponse<>))
-        {
-            var resourceTypeInfo = ResourceTypeInfo.Create(dataConstructedType, _resourceGraph);
-
-            foreach (ResourceType resourceType in _includeDependencyScanner.GetReachableRelatedTypes(resourceTypeInfo.ResourceType))
-            {
-                EnsureResourceTypeIsMappedInDiscriminator(schemaRepository, resourceType);
-            }
-        }
-    }
-
-    private void EnsureResourceTypeIsMappedInDiscriminator(SchemaRepository schemaRepository, ResourceType resourceType)
-    {
-        Type resourceDataConstructedType = typeof(ResourceDataInResponse<>).MakeGenericType(resourceType.ClrType);
-        OpenApiSchema referenceSchemaForResourceData = _dataSchemaGenerator.GenerateSchema(resourceDataConstructedType, schemaRepository);
-
-        _abstractResourceDataSchemaGenerator.MapDiscriminator(resourceDataConstructedType, referenceSchemaForResourceData, schemaRepository);
     }
 }

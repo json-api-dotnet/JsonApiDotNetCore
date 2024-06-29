@@ -14,6 +14,7 @@ internal sealed class DataSchemaGenerator
     [
         JsonApiPropertyName.Type,
         JsonApiPropertyName.Id,
+        JsonApiPropertyName.Lid,
         JsonApiPropertyName.Attributes,
         JsonApiPropertyName.Relationships,
         JsonApiPropertyName.Links,
@@ -22,6 +23,7 @@ internal sealed class DataSchemaGenerator
 #endif
 
     private readonly SchemaGenerator _defaultSchemaGenerator;
+    private readonly GenerationCacheSchemaGenerator _generationCacheSchemaGenerator;
     private readonly ResourceTypeSchemaGenerator _resourceTypeSchemaGenerator;
     private readonly ResourceIdentifierSchemaGenerator _resourceIdentifierSchemaGenerator;
     private readonly LinksVisibilitySchemaGenerator _linksVisibilitySchemaGenerator;
@@ -31,12 +33,14 @@ internal sealed class DataSchemaGenerator
     private readonly RelationshipTypeFactory _relationshipTypeFactory;
     private readonly ResourceDocumentationReader _resourceDocumentationReader;
 
-    public DataSchemaGenerator(SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator,
-        ResourceIdentifierSchemaGenerator resourceIdentifierSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator,
-        IResourceGraph resourceGraph, IJsonApiOptions options, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider,
-        RelationshipTypeFactory relationshipTypeFactory, ResourceDocumentationReader resourceDocumentationReader)
+    public DataSchemaGenerator(SchemaGenerator defaultSchemaGenerator, GenerationCacheSchemaGenerator generationCacheSchemaGenerator,
+        ResourceTypeSchemaGenerator resourceTypeSchemaGenerator, ResourceIdentifierSchemaGenerator resourceIdentifierSchemaGenerator,
+        LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, IResourceGraph resourceGraph, IJsonApiOptions options,
+        ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider, RelationshipTypeFactory relationshipTypeFactory,
+        ResourceDocumentationReader resourceDocumentationReader)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);
+        ArgumentGuard.NotNull(generationCacheSchemaGenerator);
         ArgumentGuard.NotNull(resourceTypeSchemaGenerator);
         ArgumentGuard.NotNull(resourceIdentifierSchemaGenerator);
         ArgumentGuard.NotNull(linksVisibilitySchemaGenerator);
@@ -47,6 +51,7 @@ internal sealed class DataSchemaGenerator
         ArgumentGuard.NotNull(resourceDocumentationReader);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
+        _generationCacheSchemaGenerator = generationCacheSchemaGenerator;
         _resourceTypeSchemaGenerator = resourceTypeSchemaGenerator;
         _resourceIdentifierSchemaGenerator = resourceIdentifierSchemaGenerator;
         _linksVisibilitySchemaGenerator = linksVisibilitySchemaGenerator;
@@ -74,10 +79,12 @@ internal sealed class DataSchemaGenerator
         var resourceTypeInfo = ResourceTypeInfo.Create(resourceDataConstructedType, _resourceGraph);
 
         OpenApiSchema fullSchemaForDerivedType = fullSchemaForResourceData.UnwrapLastExtendedSchema();
+        bool isRequestSchema = fullSchemaForDerivedType == fullSchemaForResourceData;
 
-        if (fullSchemaForDerivedType == fullSchemaForResourceData)
+        if (isRequestSchema)
         {
-            AdaptResourceIdentity(resourceTypeInfo, fullSchemaForResourceData);
+            bool hasAtomicOperationsEndpoint = _generationCacheSchemaGenerator.HasAtomicOperationsEndpoint(schemaRepository);
+            AdaptResourceIdentity(resourceTypeInfo, fullSchemaForResourceData, hasAtomicOperationsEndpoint);
             SetResourceType(fullSchemaForResourceData, resourceTypeInfo.ResourceType, schemaRepository);
         }
 
@@ -88,12 +95,12 @@ internal sealed class DataSchemaGenerator
 
         if (fullSchemaForDerivedType.Properties.ContainsKey(JsonApiPropertyName.Attributes))
         {
-            SetResourceAttributes(fullSchemaForDerivedType, fieldSchemaBuilder, schemaRepository);
+            SetResourceAttributes(fullSchemaForDerivedType, isRequestSchema, fieldSchemaBuilder, schemaRepository);
         }
 
         if (fullSchemaForDerivedType.Properties.ContainsKey(JsonApiPropertyName.Relationships))
         {
-            SetResourceRelationships(fullSchemaForDerivedType, fieldSchemaBuilder, schemaRepository);
+            SetResourceRelationships(fullSchemaForDerivedType, isRequestSchema, fieldSchemaBuilder, schemaRepository);
         }
 
         _linksVisibilitySchemaGenerator.UpdateSchemaForResource(resourceTypeInfo, fullSchemaForDerivedType, schemaRepository);
@@ -105,20 +112,46 @@ internal sealed class DataSchemaGenerator
         return referenceSchemaForResourceData;
     }
 
-    private void AdaptResourceIdentity(ResourceTypeInfo resourceTypeInfo, OpenApiSchema fullSchemaForResourceData)
+    private void AdaptResourceIdentity(ResourceTypeInfo resourceTypeInfo, OpenApiSchema fullSchemaForResourceData, bool hasAtomicOperationsEndpoint)
     {
+        if (!hasAtomicOperationsEndpoint)
+        {
+            fullSchemaForResourceData.Properties.Remove(JsonApiPropertyName.Lid);
+        }
+
         if (resourceTypeInfo.ResourceDataOpenType == typeof(DataInCreateResourceRequest<>))
         {
             ClientIdGenerationMode clientIdGeneration = resourceTypeInfo.ResourceType.ClientIdGeneration ?? _options.ClientIdGeneration;
 
-            if (clientIdGeneration == ClientIdGenerationMode.Forbidden)
+            if (hasAtomicOperationsEndpoint)
             {
-                fullSchemaForResourceData.Required.Remove(JsonApiPropertyName.Id);
-                fullSchemaForResourceData.Properties.Remove(JsonApiPropertyName.Id);
+                if (clientIdGeneration == ClientIdGenerationMode.Forbidden)
+                {
+                    fullSchemaForResourceData.Properties.Remove(JsonApiPropertyName.Id);
+                }
+                else if (clientIdGeneration == ClientIdGenerationMode.Required)
+                {
+                    fullSchemaForResourceData.Properties.Remove(JsonApiPropertyName.Lid);
+                    fullSchemaForResourceData.Required.Add(JsonApiPropertyName.Id);
+                }
             }
-            else if (clientIdGeneration == ClientIdGenerationMode.Allowed)
+            else
             {
-                fullSchemaForResourceData.Required.Remove(JsonApiPropertyName.Id);
+                if (clientIdGeneration == ClientIdGenerationMode.Forbidden)
+                {
+                    fullSchemaForResourceData.Properties.Remove(JsonApiPropertyName.Id);
+                }
+                else if (clientIdGeneration == ClientIdGenerationMode.Required)
+                {
+                    fullSchemaForResourceData.Required.Add(JsonApiPropertyName.Id);
+                }
+            }
+        }
+        else
+        {
+            if (!hasAtomicOperationsEndpoint)
+            {
+                fullSchemaForResourceData.Required.Add(JsonApiPropertyName.Id);
             }
         }
     }
@@ -129,12 +162,13 @@ internal sealed class DataSchemaGenerator
         fullSchemaForResourceData.Properties[JsonApiPropertyName.Type] = referenceSchema.WrapInExtendedSchema();
     }
 
-    private void SetResourceAttributes(OpenApiSchema fullSchemaForResourceData, ResourceFieldSchemaBuilder builder, SchemaRepository schemaRepository)
+    private void SetResourceAttributes(OpenApiSchema fullSchemaForResourceData, bool forRequestSchema, ResourceFieldSchemaBuilder builder,
+        SchemaRepository schemaRepository)
     {
         OpenApiSchema referenceSchemaForAttributes = fullSchemaForResourceData.Properties[JsonApiPropertyName.Attributes].UnwrapLastExtendedSchema();
         OpenApiSchema fullSchemaForAttributes = schemaRepository.Schemas[referenceSchemaForAttributes.Reference.Id];
 
-        builder.SetMembersOfAttributes(fullSchemaForAttributes, schemaRepository);
+        builder.SetMembersOfAttributes(fullSchemaForAttributes, forRequestSchema, schemaRepository);
 
         if (!fullSchemaForAttributes.Properties.Any())
         {
@@ -146,12 +180,13 @@ internal sealed class DataSchemaGenerator
         }
     }
 
-    private void SetResourceRelationships(OpenApiSchema fullSchemaForResourceData, ResourceFieldSchemaBuilder builder, SchemaRepository schemaRepository)
+    private void SetResourceRelationships(OpenApiSchema fullSchemaForResourceData, bool forRequestSchema, ResourceFieldSchemaBuilder builder,
+        SchemaRepository schemaRepository)
     {
         OpenApiSchema referenceSchemaForRelationships = fullSchemaForResourceData.Properties[JsonApiPropertyName.Relationships].UnwrapLastExtendedSchema();
         OpenApiSchema fullSchemaForRelationships = schemaRepository.Schemas[referenceSchemaForRelationships.Reference.Id];
 
-        builder.SetMembersOfRelationships(fullSchemaForRelationships, schemaRepository);
+        builder.SetMembersOfRelationships(fullSchemaForRelationships, forRequestSchema, schemaRepository);
 
         if (!fullSchemaForRelationships.Properties.Any())
         {

@@ -3700,8 +3700,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -3729,7 +3736,28 @@
         ],
         "additionalProperties": false
       },
-      "accommodationIdentifier": {
+      "accommodationIdentifierInRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/accommodationResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "accommodationIdentifierInResponse": {
         "required": [
           "id",
           "type"
@@ -3767,7 +3795,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/accommodationIdentifier"
+                "$ref": "#/components/schemas/accommodationIdentifierInResponse"
               }
             ]
           },
@@ -4148,16 +4176,11 @@
       },
       "dataInResponse": {
         "required": [
-          "id",
           "type"
         ],
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "id": {
             "minLength": 1,
             "type": "string"
           }
@@ -4470,8 +4493,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -4499,7 +4529,37 @@
         ],
         "additionalProperties": false
       },
-      "excursionIdentifier": {
+      "excursionIdentifierCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceIdentifierCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/excursionIdentifierInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "excursionIdentifierInRequest": {
         "required": [
           "id",
           "type"
@@ -4520,32 +4580,23 @@
         },
         "additionalProperties": false
       },
-      "excursionIdentifierCollectionResponseDocument": {
+      "excursionIdentifierInResponse": {
         "required": [
-          "data",
-          "links"
+          "id",
+          "type"
         ],
         "type": "object",
         "properties": {
-          "links": {
+          "type": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/resourceIdentifierCollectionTopLevelLinks"
+                "$ref": "#/components/schemas/excursionResourceType"
               }
             ]
           },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/excursionIdentifier"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+          "id": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -4609,7 +4660,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/transportIdentifier"
+                "$ref": "#/components/schemas/transportIdentifierInRequest"
               }
             ],
             "nullable": true
@@ -4630,7 +4681,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/transportIdentifier"
+                "$ref": "#/components/schemas/transportIdentifierInResponse"
               }
             ],
             "nullable": true
@@ -4662,7 +4713,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/transportIdentifier"
+                "$ref": "#/components/schemas/transportIdentifierInResponse"
               }
             ],
             "nullable": true
@@ -4880,7 +4931,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/excursionIdentifier"
+              "$ref": "#/components/schemas/excursionIdentifierInRequest"
             }
           }
         },
@@ -4899,7 +4950,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/excursionIdentifier"
+              "$ref": "#/components/schemas/excursionIdentifierInResponse"
             }
           },
           "meta": {
@@ -4921,7 +4972,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/accommodationIdentifier"
+                "$ref": "#/components/schemas/accommodationIdentifierInRequest"
               }
             ]
           }
@@ -4941,7 +4992,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/accommodationIdentifier"
+                "$ref": "#/components/schemas/accommodationIdentifierInResponse"
               }
             ]
           },
@@ -5014,8 +5065,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -5043,7 +5101,28 @@
         ],
         "additionalProperties": false
       },
-      "transportIdentifier": {
+      "transportIdentifierInRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/transportResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "transportIdentifierInResponse": {
         "required": [
           "id",
           "type"
@@ -5238,8 +5317,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {

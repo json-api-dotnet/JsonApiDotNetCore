@@ -23,6 +23,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
         testContext.UseController<SkyscrapersController>();
         testContext.UseController<ElevatorsController>();
         testContext.UseController<SpacesController>();
+        testContext.UseController<OperationsController>();
     }
 
     [Fact]
@@ -123,6 +124,8 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[0].in", "query");
                     parametersElement.Should().HaveProperty("[0].description", ResourceTextQueryString);
                 });
+
+                postElement.Should().HaveProperty("requestBody.description", "The attributes and relationships of the skyscraper to create.");
 
                 postElement.Should().ContainPath("responses").With(responsesElement =>
                 {
@@ -577,6 +580,28 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     responsesElement.Should().HaveProperty("400.description", "The request body is missing or malformed.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper or a related resource does not exist.");
                     responsesElement.Should().HaveProperty("409.description", "The request body contains conflicting information or another resource with the same ID already exists.");
+                });
+            });
+        });
+
+        document.Should().ContainPath("paths./operations").With(skyscrapersElement =>
+        {
+            skyscrapersElement.Should().ContainPath("post").With(postElement =>
+            {
+                postElement.Should().HaveProperty("summary", "Performs multiple mutations in a linear and atomic manner.");
+
+                postElement.Should().HaveProperty("requestBody.description", "An array of mutation operations. For syntax, see the [Atomic Operations documentation](https://jsonapi.org/ext/atomic/).");
+
+                postElement.Should().ContainPath("responses").With(responsesElement =>
+                {
+                    responsesElement.EnumerateObject().ShouldHaveCount(7);
+                    responsesElement.Should().HaveProperty("200.description", "All operations were successfully applied, which resulted in additional changes.");
+                    responsesElement.Should().HaveProperty("204.description", "All operations were successfully applied, which did not result in additional changes.");
+                    responsesElement.Should().HaveProperty("400.description", "The request body is missing or malformed.");
+                    responsesElement.Should().HaveProperty("403.description", "An operation is not accessible or a client-generated ID is used.");
+                    responsesElement.Should().HaveProperty("404.description", "A resource or a related resource does not exist.");
+                    responsesElement.Should().HaveProperty("409.description", "The request body contains conflicting information or another resource with the same ID already exists.");
+                    responsesElement.Should().HaveProperty("422.description", "Validation of the request body failed.");
                 });
             });
         });

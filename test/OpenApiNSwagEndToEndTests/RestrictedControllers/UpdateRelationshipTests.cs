@@ -48,7 +48,7 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
 
         var requestBody = new NullableToOneDataStreamInRequest
         {
-            Data = new DataStreamIdentifier
+            Data = new DataStreamIdentifierInRequest
             {
                 Id = existingVideoStream.StringId!
             }
@@ -141,7 +141,7 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
         {
             Data =
             [
-                new DataStreamIdentifier
+                new DataStreamIdentifierInRequest
                 {
                     Id = existingAudioStream.StringId!
                 }
@@ -235,7 +235,7 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
         {
             Data =
             [
-                new DataStreamIdentifier
+                new DataStreamIdentifierInRequest
                 {
                     Id = existingAudioStream.StringId!
                 }
@@ -284,11 +284,11 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
         {
             Data =
             [
-                new DataStreamIdentifier
+                new DataStreamIdentifierInRequest
                 {
                     Id = existingChannel.AudioStreams.ElementAt(0).StringId!
                 },
-                new DataStreamIdentifier
+                new DataStreamIdentifierInRequest
                 {
                     Id = existingChannel.AudioStreams.ElementAt(1).StringId!
                 }
@@ -365,11 +365,11 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
         {
             Data =
             [
-                new DataStreamIdentifier
+                new DataStreamIdentifierInRequest
                 {
                     Id = unknownAudioStreamId1
                 },
-                new DataStreamIdentifier
+                new DataStreamIdentifierInRequest
                 {
                     Id = unknownAudioStreamId2
                 }

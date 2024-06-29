@@ -4072,16 +4072,11 @@
       },
       "dataInResponse": {
         "required": [
-          "id",
           "type"
         ],
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "id": {
             "minLength": 1,
             "type": "string"
           }
@@ -4185,8 +4180,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -4214,7 +4216,37 @@
         ],
         "additionalProperties": false
       },
-      "dataStreamIdentifier": {
+      "dataStreamIdentifierCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceIdentifierCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataStreamIdentifierInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataStreamIdentifierInRequest": {
         "required": [
           "id",
           "type"
@@ -4235,32 +4267,23 @@
         },
         "additionalProperties": false
       },
-      "dataStreamIdentifierCollectionResponseDocument": {
+      "dataStreamIdentifierInResponse": {
         "required": [
-          "data",
-          "links"
+          "id",
+          "type"
         ],
         "type": "object",
         "properties": {
-          "links": {
+          "type": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/resourceIdentifierCollectionTopLevelLinks"
+                "$ref": "#/components/schemas/dataStreamResourceType"
               }
             ]
           },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/dataStreamIdentifier"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+          "id": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -4282,7 +4305,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/dataStreamIdentifier"
+                "$ref": "#/components/schemas/dataStreamIdentifierInResponse"
               }
             ]
           },
@@ -4522,7 +4545,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/dataStreamIdentifier"
+                "$ref": "#/components/schemas/dataStreamIdentifierInResponse"
               }
             ],
             "nullable": true
@@ -4584,7 +4607,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/dataStreamIdentifier"
+                "$ref": "#/components/schemas/dataStreamIdentifierInRequest"
               }
             ],
             "nullable": true
@@ -4605,7 +4628,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/dataStreamIdentifier"
+                "$ref": "#/components/schemas/dataStreamIdentifierInResponse"
               }
             ],
             "nullable": true
@@ -4680,8 +4703,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -4840,8 +4870,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -5105,7 +5142,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/dataStreamIdentifier"
+              "$ref": "#/components/schemas/dataStreamIdentifierInRequest"
             }
           }
         },
@@ -5124,7 +5161,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/dataStreamIdentifier"
+              "$ref": "#/components/schemas/dataStreamIdentifierInResponse"
             }
           },
           "meta": {
@@ -5146,7 +5183,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/dataStreamIdentifier"
+                "$ref": "#/components/schemas/dataStreamIdentifierInRequest"
               }
             ]
           }
@@ -5166,7 +5203,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/dataStreamIdentifier"
+                "$ref": "#/components/schemas/dataStreamIdentifierInResponse"
               }
             ]
           },
@@ -5220,8 +5257,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {

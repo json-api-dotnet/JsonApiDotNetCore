@@ -39,18 +39,13 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
 
         if (endpoint == null)
         {
-            // Not a JSON:API controller, or a non-standard action method in a JSON:API controller, or an atomic:operations
-            // controller. None of these are yet implemented, so hide them to avoid downstream crashes.
+            // Not a JSON:API controller, or a non-standard action method in a JSON:API controller.
+            // None of these are yet implemented, so hide them to avoid downstream crashes.
             action.ApiExplorer.IsVisible = false;
             return;
         }
 
         ResourceType? resourceType = _controllerResourceMapping.GetResourceTypeForController(action.Controller.ControllerType);
-
-        if (resourceType == null)
-        {
-            throw new UnreachableCodeException();
-        }
 
         if (ShouldSuppressEndpoint(endpoint.Value, resourceType))
         {
@@ -62,8 +57,13 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
         SetRequestMetadata(action, endpoint.Value);
     }
 
-    private bool ShouldSuppressEndpoint(JsonApiEndpoint endpoint, ResourceType resourceType)
+    private bool ShouldSuppressEndpoint(JsonApiEndpoint endpoint, ResourceType? resourceType)
     {
+        if (resourceType == null)
+        {
+            return false;
+        }
+
         if (!IsEndpointAvailable(endpoint, resourceType))
         {
             return true;
@@ -127,9 +127,10 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
             JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship;
     }
 
-    private void SetResponseMetadata(ActionModel action, JsonApiEndpoint endpoint, ResourceType resourceType)
+    private void SetResponseMetadata(ActionModel action, JsonApiEndpoint endpoint, ResourceType? resourceType)
     {
-        action.Filters.Add(new ProducesAttribute(HeaderConstants.MediaType));
+        string contentType = endpoint == JsonApiEndpoint.PostOperations ? HeaderConstants.RelaxedAtomicOperationsMediaType : HeaderConstants.MediaType;
+        action.Filters.Add(new ProducesAttribute(contentType));
 
         foreach (HttpStatusCode statusCode in GetSuccessStatusCodesForEndpoint(endpoint))
         {
@@ -166,13 +167,19 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
             [
                 HttpStatusCode.NoContent
             ],
+            JsonApiEndpoint.PostOperations =>
+            [
+                HttpStatusCode.OK,
+                HttpStatusCode.NoContent
+            ],
             _ => throw new UnreachableCodeException()
         };
     }
 
-    private IEnumerable<HttpStatusCode> GetErrorStatusCodesForEndpoint(JsonApiEndpoint endpoint, ResourceType resourceType)
+    private IEnumerable<HttpStatusCode> GetErrorStatusCodesForEndpoint(JsonApiEndpoint endpoint, ResourceType? resourceType)
     {
-        ClientIdGenerationMode clientIdGeneration = resourceType.ClientIdGeneration ?? _options.ClientIdGeneration;
+        // Condition doesn't apply to atomic operations, because Forbidden is also used when an operation is not accessible.
+        ClientIdGenerationMode clientIdGeneration = resourceType?.ClientIdGeneration ?? _options.ClientIdGeneration;
 
         return endpoint switch
         {
@@ -211,6 +218,14 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
                 HttpStatusCode.NotFound,
                 HttpStatusCode.Conflict
             },
+            JsonApiEndpoint.PostOperations =>
+            [
+                HttpStatusCode.BadRequest,
+                HttpStatusCode.Forbidden,
+                HttpStatusCode.NotFound,
+                HttpStatusCode.Conflict,
+                HttpStatusCode.UnprocessableEntity
+            ],
             _ => throw new UnreachableCodeException()
         };
     }
@@ -219,13 +234,14 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
     {
         if (RequiresRequestBody(endpoint))
         {
-            action.Filters.Add(new ConsumesAttribute(HeaderConstants.MediaType));
+            string contentType = endpoint == JsonApiEndpoint.PostOperations ? HeaderConstants.RelaxedAtomicOperationsMediaType : HeaderConstants.MediaType;
+            action.Filters.Add(new ConsumesAttribute(contentType));
         }
     }
 
     private static bool RequiresRequestBody(JsonApiEndpoint endpoint)
     {
         return endpoint is JsonApiEndpoint.PostResource or JsonApiEndpoint.PatchResource or JsonApiEndpoint.PostRelationship or
-            JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship;
+            JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship or JsonApiEndpoint.PostOperations;
     }
 }

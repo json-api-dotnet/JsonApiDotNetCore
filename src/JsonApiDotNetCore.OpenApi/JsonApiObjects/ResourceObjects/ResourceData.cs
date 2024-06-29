@@ -11,7 +11,5 @@ internal abstract class ResourceData : IResourceIdentity
     [JsonPropertyName("type")]
     public string Type { get; set; } = null!;
 
-    [Required]
-    [JsonPropertyName("id")]
-    public string Id { get; set; } = null!;
+    public abstract string Id { get; set; }
 }

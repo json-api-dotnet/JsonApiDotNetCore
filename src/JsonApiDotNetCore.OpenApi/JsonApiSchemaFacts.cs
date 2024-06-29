@@ -7,21 +7,22 @@ namespace JsonApiDotNetCore.OpenApi;
 
 internal static class JsonApiSchemaFacts
 {
-    private static readonly Type[] RequestSchemaTypes =
+    private static readonly Type[] RequestBodySchemaTypes =
     [
         typeof(CreateResourceRequestDocument<>),
         typeof(UpdateResourceRequestDocument<>),
         typeof(ToOneRelationshipInRequest<>),
         typeof(NullableToOneRelationshipInRequest<>),
-        typeof(ToManyRelationshipInRequest<>)
+        typeof(ToManyRelationshipInRequest<>),
+        typeof(OperationsRequestDocument)
     ];
 
     private static readonly Type[] SchemaTypesHavingNullableDataProperty =
     [
-        typeof(NullableSecondaryResourceResponseDocument<>),
-        typeof(NullableResourceIdentifierResponseDocument<>),
         typeof(NullableToOneRelationshipInRequest<>),
-        typeof(NullableToOneRelationshipInResponse<>)
+        typeof(NullableToOneRelationshipInResponse<>),
+        typeof(NullableSecondaryResourceResponseDocument<>),
+        typeof(NullableResourceIdentifierResponseDocument<>)
     ];
 
     private static readonly Type[] RelationshipInResponseSchemaTypes =
@@ -31,10 +32,10 @@ internal static class JsonApiSchemaFacts
         typeof(NullableToOneRelationshipInResponse<>)
     ];
 
-    public static bool IsRequestSchemaType(Type schemaType)
+    public static bool IsRequestBodySchemaType(Type schemaType)
     {
         Type lookupType = schemaType.ConstructedToOpenType();
-        return RequestSchemaTypes.Contains(lookupType);
+        return RequestBodySchemaTypes.Contains(lookupType);
     }
 
     public static bool HasNullableDataProperty(Type schemaType)

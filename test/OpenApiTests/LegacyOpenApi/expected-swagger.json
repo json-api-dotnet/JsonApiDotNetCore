@@ -5969,8 +5969,15 @@
             "$ref": "#/components/schemas/data-in-response"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -6397,16 +6404,11 @@
       },
       "data-in-response": {
         "required": [
-          "id",
           "type"
         ],
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "id": {
             "minLength": 1,
             "type": "string"
           }
@@ -6759,8 +6761,15 @@
             "$ref": "#/components/schemas/data-in-response"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -6795,27 +6804,6 @@
         ],
         "additionalProperties": false
       },
-      "flight-attendant-identifier": {
-        "required": [
-          "id",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-attendant-resource-type"
-              }
-            ]
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "flight-attendant-identifier-collection-response-document": {
         "required": [
           "data",
@@ -6840,7 +6828,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/flight-attendant-identifier"
+              "$ref": "#/components/schemas/flight-attendant-identifier-in-response"
             }
           },
           "meta": {
@@ -6849,6 +6837,48 @@
                 "$ref": "#/components/schemas/meta"
               }
             ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "flight-attendant-identifier-in-request": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-resource-type"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "flight-attendant-identifier-in-response": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-resource-type"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -6877,7 +6907,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/flight-attendant-identifier"
+                "$ref": "#/components/schemas/flight-attendant-identifier-in-response"
               }
             ]
           },
@@ -7093,8 +7123,15 @@
             "$ref": "#/components/schemas/data-in-response"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -7129,27 +7166,6 @@
         ],
         "additionalProperties": false
       },
-      "flight-identifier": {
-        "required": [
-          "id",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-resource-type"
-              }
-            ]
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "flight-identifier-collection-response-document": {
         "required": [
           "data",
@@ -7174,7 +7190,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/flight-identifier"
+              "$ref": "#/components/schemas/flight-identifier-in-response"
             }
           },
           "meta": {
@@ -7183,6 +7199,48 @@
                 "$ref": "#/components/schemas/meta"
               }
             ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "flight-identifier-in-request": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-resource-type"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "flight-identifier-in-response": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-resource-type"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -7330,7 +7388,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/flight-attendant-identifier"
+                "$ref": "#/components/schemas/flight-attendant-identifier-in-response"
               }
             ],
             "nullable": true
@@ -7399,7 +7457,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/flight-attendant-identifier"
+                "$ref": "#/components/schemas/flight-attendant-identifier-in-request"
               }
             ],
             "nullable": true
@@ -7420,7 +7478,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/flight-attendant-identifier"
+                "$ref": "#/components/schemas/flight-attendant-identifier-in-response"
               }
             ],
             "nullable": true
@@ -7501,8 +7559,15 @@
             "$ref": "#/components/schemas/data-in-response"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -7530,27 +7595,6 @@
         ],
         "additionalProperties": false
       },
-      "passenger-identifier": {
-        "required": [
-          "id",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/passenger-resource-type"
-              }
-            ]
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "passenger-identifier-collection-response-document": {
         "required": [
           "data",
@@ -7575,7 +7619,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/passenger-identifier"
+              "$ref": "#/components/schemas/passenger-identifier-in-response"
             }
           },
           "meta": {
@@ -7584,6 +7628,48 @@
                 "$ref": "#/components/schemas/meta"
               }
             ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "passenger-identifier-in-request": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/passenger-resource-type"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "passenger-identifier-in-response": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/passenger-resource-type"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -7884,7 +7970,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/flight-attendant-identifier"
+              "$ref": "#/components/schemas/flight-attendant-identifier-in-request"
             }
           }
         },
@@ -7903,7 +7989,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/flight-attendant-identifier"
+              "$ref": "#/components/schemas/flight-attendant-identifier-in-response"
             }
           },
           "meta": {
@@ -7925,7 +8011,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/flight-identifier"
+              "$ref": "#/components/schemas/flight-identifier-in-request"
             }
           }
         },
@@ -7944,7 +8030,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/flight-identifier"
+              "$ref": "#/components/schemas/flight-identifier-in-response"
             }
           },
           "meta": {
@@ -7966,7 +8052,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/passenger-identifier"
+              "$ref": "#/components/schemas/passenger-identifier-in-request"
             }
           }
         },
@@ -7985,7 +8071,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/passenger-identifier"
+              "$ref": "#/components/schemas/passenger-identifier-in-response"
             }
           },
           "meta": {
@@ -8007,7 +8093,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/flight-attendant-identifier"
+                "$ref": "#/components/schemas/flight-attendant-identifier-in-request"
               }
             ]
           }
@@ -8027,7 +8113,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/flight-attendant-identifier"
+                "$ref": "#/components/schemas/flight-attendant-identifier-in-response"
               }
             ]
           },

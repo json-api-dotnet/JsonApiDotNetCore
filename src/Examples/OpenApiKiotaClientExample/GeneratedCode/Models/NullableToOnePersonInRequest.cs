@@ -16,16 +16,16 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public OpenApiKiotaClientExample.GeneratedCode.Models.PersonIdentifier? Data
+        public OpenApiKiotaClientExample.GeneratedCode.Models.PersonIdentifierInRequest? Data
         {
-            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.PersonIdentifier?>("data"); }
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.PersonIdentifierInRequest?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public OpenApiKiotaClientExample.GeneratedCode.Models.PersonIdentifier Data
+        public OpenApiKiotaClientExample.GeneratedCode.Models.PersonIdentifierInRequest Data
         {
-            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.PersonIdentifier>("data"); }
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.PersonIdentifierInRequest>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
@@ -54,7 +54,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                { "data", n => { Data = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.PersonIdentifier>(OpenApiKiotaClientExample.GeneratedCode.Models.PersonIdentifier.CreateFromDiscriminatorValue); } },
+                { "data", n => { Data = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.PersonIdentifierInRequest>(OpenApiKiotaClientExample.GeneratedCode.Models.PersonIdentifierInRequest.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -64,7 +64,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.PersonIdentifier>("data", Data);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.PersonIdentifierInRequest>("data", Data);
         }
     }
 }

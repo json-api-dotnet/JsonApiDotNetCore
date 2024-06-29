@@ -14,6 +14,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
 
         testContext.UseController<SupermarketsController>();
         testContext.UseController<StaffMembersController>();
+        testContext.UseController<OperationsController>();
 
         testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
@@ -125,7 +126,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
                     .SchemaReferenceId;
 
                 relatedResourceIdentifierSchemaRefId = propertiesElement.Should().ContainPath("data.allOf[0].$ref")
-                    .ShouldBeSchemaReferenceId("StaffMemberIdentifier").SchemaReferenceId;
+                    .ShouldBeSchemaReferenceId("StaffMemberIdentifierInResponse").SchemaReferenceId;
             });
 
             schemasElement.Should().ContainPath($"{relationshipLinksSchemaRefId}.properties").With(propertiesElement =>
@@ -547,6 +548,120 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
             getElement.Should().ContainPath("operationId").With(operationElement =>
             {
                 operationElement.Should().Be("DeleteSupermarketCashiersRelationship");
+            });
+        });
+    }
+
+    [Fact]
+    public async Task Casing_convention_is_applied_to_PostOperations_endpoint()
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        document.Should().ContainPath("paths./Operations.post").With(getElement =>
+        {
+            getElement.Should().ContainPath("operationId").With(operationElement =>
+            {
+                operationElement.Should().Be("PostOperations");
+            });
+
+            getElement.Should().ContainPath("requestBody.content['application/vnd.api+json; ext=atomic-operations'].schema.allOf[0].$ref")
+                .ShouldBeSchemaReferenceId("OperationsRequestDocument");
+
+            getElement.Should().ContainPath("responses.200.content['application/vnd.api+json; ext=atomic-operations'].schema.$ref")
+                .ShouldBeSchemaReferenceId("OperationsResponseDocument");
+        });
+
+        document.Should().ContainPath("components.schemas").With(schemasElement =>
+        {
+            schemasElement.Should().ContainPath("AddOperationCode.enum").With(codeElement => codeElement.Should().ContainArrayElement("add"));
+            schemasElement.Should().ContainPath("UpdateOperationCode.enum").With(codeElement => codeElement.Should().ContainArrayElement("update"));
+            schemasElement.Should().ContainPath("RemoveOperationCode.enum").With(codeElement => codeElement.Should().ContainArrayElement("remove"));
+
+            schemasElement.Should().ContainPath("AtomicOperation.discriminator.mapping").With(mappingElement =>
+            {
+                mappingElement.Should().ContainPath("AddStaffMember").ShouldBeSchemaReferenceId("CreateStaffMemberOperation");
+                mappingElement.Should().ContainPath("AddSupermarket").ShouldBeSchemaReferenceId("CreateSupermarketOperation");
+                mappingElement.Should().ContainPath("AddToSupermarketCashiers").ShouldBeSchemaReferenceId("AddToSupermarketCashiersRelationshipOperation");
+
+                mappingElement.Should().ContainPath("RemoveFromSupermarketCashiers")
+                    .ShouldBeSchemaReferenceId("RemoveFromSupermarketCashiersRelationshipOperation");
+
+                mappingElement.Should().ContainPath("RemoveStaffMember").ShouldBeSchemaReferenceId("DeleteStaffMemberOperation");
+                mappingElement.Should().ContainPath("RemoveSupermarket").ShouldBeSchemaReferenceId("DeleteSupermarketOperation");
+                mappingElement.Should().ContainPath("UpdateStaffMember").ShouldBeSchemaReferenceId("UpdateStaffMemberOperation");
+                mappingElement.Should().ContainPath("UpdateSupermarket").ShouldBeSchemaReferenceId("UpdateSupermarketOperation");
+
+                mappingElement.Should().ContainPath("UpdateSupermarketBackupStoreManager")
+                    .ShouldBeSchemaReferenceId("UpdateSupermarketBackupStoreManagerRelationshipOperation");
+
+                mappingElement.Should().ContainPath("UpdateSupermarketCashiers").ShouldBeSchemaReferenceId("UpdateSupermarketCashiersRelationshipOperation");
+
+                mappingElement.Should().ContainPath("UpdateSupermarketStoreManager")
+                    .ShouldBeSchemaReferenceId("UpdateSupermarketStoreManagerRelationshipOperation");
+            });
+
+            schemasElement.Should().ContainPath("CreateSupermarketOperation.allOf[1].properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainPath("data.allOf[0].$ref").ShouldBeSchemaReferenceId("DataInCreateSupermarketRequest");
+            });
+
+            schemasElement.Should().ContainPath("UpdateSupermarketOperation.allOf[1].properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainPath("ref.allOf[0].$ref").ShouldBeSchemaReferenceId("SupermarketIdentifierInRequest");
+                propertiesElement.Should().ContainPath("data.allOf[0].$ref").ShouldBeSchemaReferenceId("DataInUpdateSupermarketRequest");
+            });
+
+            schemasElement.Should().ContainPath("DeleteSupermarketOperation.allOf[1].properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainPath("ref.allOf[0].$ref").ShouldBeSchemaReferenceId("SupermarketIdentifierInRequest");
+            });
+
+            schemasElement.Should().ContainPath("UpdateSupermarketStoreManagerRelationshipOperation.allOf[1].properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainPath("ref.allOf[0].$ref").ShouldBeSchemaReferenceId("SupermarketStoreManagerRelationshipIdentifier");
+                propertiesElement.Should().ContainPath("data.allOf[0].$ref").ShouldBeSchemaReferenceId("StaffMemberIdentifierInRequest");
+            });
+
+            schemasElement.Should().ContainPath("UpdateSupermarketBackupStoreManagerRelationshipOperation.allOf[1].properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainPath("ref.allOf[0].$ref").ShouldBeSchemaReferenceId("SupermarketBackupStoreManagerRelationshipIdentifier");
+                propertiesElement.Should().ContainPath("data.allOf[0].$ref").ShouldBeSchemaReferenceId("StaffMemberIdentifierInRequest");
+            });
+
+            schemasElement.Should().ContainPath("UpdateSupermarketCashiersRelationshipOperation.allOf[1].properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainPath("ref.allOf[0].$ref").ShouldBeSchemaReferenceId("SupermarketCashiersRelationshipIdentifier");
+                propertiesElement.Should().ContainPath("data.items.$ref").ShouldBeSchemaReferenceId("StaffMemberIdentifierInRequest");
+            });
+
+            schemasElement.Should().ContainPath("AddToSupermarketCashiersRelationshipOperation.allOf[1].properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainPath("ref.allOf[0].$ref").ShouldBeSchemaReferenceId("SupermarketCashiersRelationshipIdentifier");
+                propertiesElement.Should().ContainPath("data.items.$ref").ShouldBeSchemaReferenceId("StaffMemberIdentifierInRequest");
+            });
+
+            schemasElement.Should().ContainPath("RemoveFromSupermarketCashiersRelationshipOperation.allOf[1].properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainPath("ref.allOf[0].$ref").ShouldBeSchemaReferenceId("SupermarketCashiersRelationshipIdentifier");
+                propertiesElement.Should().ContainPath("data.items.$ref").ShouldBeSchemaReferenceId("StaffMemberIdentifierInRequest");
+            });
+
+            schemasElement.Should().ContainPath("CreateStaffMemberOperation.allOf[1].properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainPath("data.allOf[0].$ref").ShouldBeSchemaReferenceId("DataInCreateStaffMemberRequest");
+            });
+
+            schemasElement.Should().ContainPath("UpdateStaffMemberOperation.allOf[1].properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainPath("ref.allOf[0].$ref").ShouldBeSchemaReferenceId("StaffMemberIdentifierInRequest");
+                propertiesElement.Should().ContainPath("data.allOf[0].$ref").ShouldBeSchemaReferenceId("DataInUpdateStaffMemberRequest");
+            });
+
+            schemasElement.Should().ContainPath("DeleteStaffMemberOperation.allOf[1].properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainPath("ref.allOf[0].$ref").ShouldBeSchemaReferenceId("StaffMemberIdentifierInRequest");
             });
         });
     }

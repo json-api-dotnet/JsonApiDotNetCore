@@ -37,18 +37,12 @@ internal sealed class AbstractResourceDataSchemaGenerator
         {
             Required = new HashSet<string>
             {
-                "id",
                 "type"
             },
             Type = "object",
             Properties = new Dictionary<string, OpenApiSchema>
             {
                 ["type"] = new()
-                {
-                    MinLength = 1,
-                    Type = "string"
-                },
-                ["id"] = new()
                 {
                     MinLength = 1,
                     Type = "string"

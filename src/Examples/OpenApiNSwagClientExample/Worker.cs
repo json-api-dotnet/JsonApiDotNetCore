@@ -28,6 +28,8 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
 
             await UpdatePersonAsync(stoppingToken);
 
+            await SendOperationsRequestAsync(stoppingToken);
+
             _ = await _apiClient.GetPersonAsync("999999", null, null, stoppingToken);
         }
         catch (ApiException<ErrorResponseDocument> exception)
@@ -50,7 +52,7 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
 
     private async Task UpdatePersonAsync(CancellationToken cancellationToken)
     {
-        var patchRequest = new UpdatePersonRequestDocument
+        var updatePersonRequest = new UpdatePersonRequestDocument
         {
             Data = new DataInUpdatePersonRequest
             {
@@ -63,10 +65,91 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
         };
 
         // This line results in sending "firstName: null" instead of omitting it.
-        using (_apiClient.WithPartialAttributeSerialization<UpdatePersonRequestDocument, AttributesInUpdatePersonRequest>(patchRequest,
+        using (_apiClient.WithPartialAttributeSerialization<UpdatePersonRequestDocument, AttributesInUpdatePersonRequest>(updatePersonRequest,
             person => person.FirstName))
         {
-            _ = await ApiResponse.TranslateAsync(async () => await _apiClient.PatchPersonAsync(patchRequest.Data.Id, null, patchRequest, cancellationToken));
+            _ = await ApiResponse.TranslateAsync(async () =>
+                await _apiClient.PatchPersonAsync(updatePersonRequest.Data.Id, updatePersonRequest, cancellationToken: cancellationToken));
         }
+    }
+
+    private async Task SendOperationsRequestAsync(CancellationToken cancellationToken)
+    {
+        var operationsRequest = new OperationsRequestDocument
+        {
+            Atomic_operations =
+            [
+                new CreateTagOperation
+                {
+                    Data = new DataInCreateTagRequest
+                    {
+                        Lid = "new-tag",
+                        Attributes = new AttributesInCreateTagRequest
+                        {
+                            Name = "Housekeeping"
+                        }
+                    }
+                },
+                new CreatePersonOperation
+                {
+                    Data = new DataInCreatePersonRequest
+                    {
+                        Lid = "new-person",
+                        Attributes = new AttributesInCreatePersonRequest
+                        {
+                            LastName = "Cinderella"
+                        }
+                    }
+                },
+                new CreateTodoItemOperation
+                {
+                    Data = new DataInCreateTodoItemRequest
+                    {
+                        Lid = "new-todo-item",
+                        Attributes = new AttributesInCreateTodoItemRequest
+                        {
+                            Description = "Put out the garbage",
+                            Priority = TodoItemPriority.Medium
+                        },
+                        Relationships = new RelationshipsInCreateTodoItemRequest
+                        {
+                            Owner = new ToOnePersonInRequest
+                            {
+                                Data = new PersonIdentifierInRequest
+                                {
+                                    Lid = "new-person"
+                                }
+                            },
+                            Tags = new ToManyTagInRequest
+                            {
+                                Data =
+                                [
+                                    new TagIdentifierInRequest
+                                    {
+                                        Lid = "new-tag"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                new UpdateTodoItemAssigneeRelationshipOperation
+                {
+                    Ref = new TodoItemAssigneeRelationshipIdentifier
+                    {
+                        Lid = "new-todo-item"
+                    },
+                    Data = new PersonIdentifierInRequest
+                    {
+                        Lid = "new-person"
+                    }
+                }
+            ]
+        };
+
+        ApiResponse<OperationsResponseDocument> operationsResponse = await _apiClient.PostOperationsAsync(operationsRequest, cancellationToken);
+
+        var newTodoItem = (TodoItemDataInResponse)operationsResponse.Result.Atomic_results.ElementAt(2).Data!;
+        Console.WriteLine($"Created todo-item with ID {newTodoItem.Id}: {newTodoItem.Attributes!.Description}.");
     }
 }

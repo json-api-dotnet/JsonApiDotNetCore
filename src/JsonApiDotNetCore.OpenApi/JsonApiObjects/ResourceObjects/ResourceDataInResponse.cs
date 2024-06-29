@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Links;
@@ -9,6 +10,10 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 internal sealed class ResourceDataInResponse<TResource> : ResourceData
     where TResource : IIdentifiable
 {
+    [Required]
+    [JsonPropertyName("id")]
+    public override string Id { get; set; } = null!;
+
     [JsonPropertyName("attributes")]
     public AttributesInResponse<TResource> Attributes { get; set; } = null!;
 

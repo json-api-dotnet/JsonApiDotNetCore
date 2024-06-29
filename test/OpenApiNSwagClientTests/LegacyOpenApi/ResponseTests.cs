@@ -304,7 +304,7 @@ public sealed class ResponseTests
                 {
                     Purser = new ToOneFlightAttendantInRequest
                     {
-                        Data = new FlightAttendantIdentifier
+                        Data = new FlightAttendantIdentifierInRequest
                         {
                             Id = flightAttendantId,
                             Type = FlightAttendantResourceType.FlightAttendants
@@ -588,7 +588,7 @@ public sealed class ResponseTests
 
         var requestBody = new ToOneFlightAttendantInRequest
         {
-            Data = new FlightAttendantIdentifier
+            Data = new FlightAttendantIdentifierInRequest
             {
                 Id = "Adk2a",
                 Type = FlightAttendantResourceType.FlightAttendants
@@ -650,12 +650,12 @@ public sealed class ResponseTests
         {
             Data =
             [
-                new FlightAttendantIdentifier
+                new FlightAttendantIdentifierInRequest
                 {
                     Id = "Adk2a",
                     Type = FlightAttendantResourceType.FlightAttendants
                 },
-                new FlightAttendantIdentifier
+                new FlightAttendantIdentifierInRequest
                 {
                     Id = "Un37k",
                     Type = FlightAttendantResourceType.FlightAttendants
@@ -681,12 +681,12 @@ public sealed class ResponseTests
         {
             Data =
             [
-                new FlightAttendantIdentifier
+                new FlightAttendantIdentifierInRequest
                 {
                     Id = "Adk2a",
                     Type = FlightAttendantResourceType.FlightAttendants
                 },
-                new FlightAttendantIdentifier
+                new FlightAttendantIdentifierInRequest
                 {
                     Id = "Un37k",
                     Type = FlightAttendantResourceType.FlightAttendants
@@ -712,12 +712,12 @@ public sealed class ResponseTests
         {
             Data =
             [
-                new FlightAttendantIdentifier
+                new FlightAttendantIdentifierInRequest
                 {
                     Id = "Adk2a",
                     Type = FlightAttendantResourceType.FlightAttendants
                 },
-                new FlightAttendantIdentifier
+                new FlightAttendantIdentifierInRequest
                 {
                     Id = "Un37k",
                     Type = FlightAttendantResourceType.FlightAttendants

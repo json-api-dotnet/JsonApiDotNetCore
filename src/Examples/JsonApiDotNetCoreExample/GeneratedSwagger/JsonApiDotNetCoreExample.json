@@ -10,6 +10,95 @@
     }
   ],
   "paths": {
+    "/api/operations": {
+      "post": {
+        "tags": [
+          "operations"
+        ],
+        "summary": "Performs multiple mutations in a linear and atomic manner.",
+        "operationId": "postOperations",
+        "requestBody": {
+          "description": "An array of mutation operations. For syntax, see the [Atomic Operations documentation](https://jsonapi.org/ext/atomic/).",
+          "content": {
+            "application/vnd.api+json; ext=atomic-operations": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/operationsRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "All operations were successfully applied, which resulted in additional changes.",
+            "content": {
+              "application/vnd.api+json; ext=atomic-operations": {
+                "schema": {
+                  "$ref": "#/components/schemas/operationsResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "All operations were successfully applied, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=atomic-operations": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "An operation is not accessible or a client-generated ID is used.",
+            "content": {
+              "application/vnd.api+json; ext=atomic-operations": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A resource or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=atomic-operations": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=atomic-operations": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=atomic-operations": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/people": {
       "get": {
         "tags": [
@@ -4742,6 +4831,233 @@
   },
   "components": {
     "schemas": {
+      "addOperationCode": {
+        "enum": [
+          "add"
+        ],
+        "type": "string"
+      },
+      "addToPersonAssignedTodoItemsRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/addOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/personAssignedTodoItemsRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/todoItemIdentifierInRequest"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "addToPersonOwnedTodoItemsRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/addOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/personOwnedTodoItemsRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/todoItemIdentifierInRequest"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "addToTagTodoItemsRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/addOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/tagTodoItemsRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/todoItemIdentifierInRequest"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "addToTodoItemTagsRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/addOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/todoItemTagsRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/tagIdentifierInRequest"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "atomicOperation": {
+        "required": [
+          "operationDiscriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "operationDiscriminator",
+          "mapping": {
+            "addPerson": "#/components/schemas/createPersonOperation",
+            "addTag": "#/components/schemas/createTagOperation",
+            "addToPersonAssignedTodoItems": "#/components/schemas/addToPersonAssignedTodoItemsRelationshipOperation",
+            "addToPersonOwnedTodoItems": "#/components/schemas/addToPersonOwnedTodoItemsRelationshipOperation",
+            "addToTagTodoItems": "#/components/schemas/addToTagTodoItemsRelationshipOperation",
+            "addToTodoItemTags": "#/components/schemas/addToTodoItemTagsRelationshipOperation",
+            "addTodoItem": "#/components/schemas/createTodoItemOperation",
+            "removeFromPersonAssignedTodoItems": "#/components/schemas/removeFromPersonAssignedTodoItemsRelationshipOperation",
+            "removeFromPersonOwnedTodoItems": "#/components/schemas/removeFromPersonOwnedTodoItemsRelationshipOperation",
+            "removeFromTagTodoItems": "#/components/schemas/removeFromTagTodoItemsRelationshipOperation",
+            "removeFromTodoItemTags": "#/components/schemas/removeFromTodoItemTagsRelationshipOperation",
+            "removePerson": "#/components/schemas/deletePersonOperation",
+            "removeTag": "#/components/schemas/deleteTagOperation",
+            "removeTodoItem": "#/components/schemas/deleteTodoItemOperation",
+            "updatePerson": "#/components/schemas/updatePersonOperation",
+            "updatePersonAssignedTodoItems": "#/components/schemas/updatePersonAssignedTodoItemsRelationshipOperation",
+            "updatePersonOwnedTodoItems": "#/components/schemas/updatePersonOwnedTodoItemsRelationshipOperation",
+            "updateTag": "#/components/schemas/updateTagOperation",
+            "updateTagTodoItems": "#/components/schemas/updateTagTodoItemsRelationshipOperation",
+            "updateTodoItem": "#/components/schemas/updateTodoItemOperation",
+            "updateTodoItemAssignee": "#/components/schemas/updateTodoItemAssigneeRelationshipOperation",
+            "updateTodoItemOwner": "#/components/schemas/updateTodoItemOwnerRelationshipOperation",
+            "updateTodoItemTags": "#/components/schemas/updateTodoItemTagsRelationshipOperation"
+          }
+        },
+        "x-abstract": true
+      },
+      "atomicResult": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInResponse"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
       "attributesInCreatePersonRequest": {
         "required": [
           "lastName"
@@ -4840,6 +5156,38 @@
         },
         "additionalProperties": false
       },
+      "createPersonOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/addOperationCode"
+                  }
+                ]
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/dataInCreatePersonRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
       "createPersonRequestDocument": {
         "required": [
           "data"
@@ -4856,6 +5204,38 @@
         },
         "additionalProperties": false
       },
+      "createTagOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/addOperationCode"
+                  }
+                ]
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/dataInCreateTagRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
       "createTagRequestDocument": {
         "required": [
           "data"
@@ -4870,6 +5250,38 @@
             ]
           }
         },
+        "additionalProperties": false
+      },
+      "createTodoItemOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/addOperationCode"
+                  }
+                ]
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/dataInCreateTodoItemRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "createTodoItemRequestDocument": {
@@ -4901,6 +5313,10 @@
               }
             ]
           },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          },
           "attributes": {
             "allOf": [
               {
@@ -4930,6 +5346,10 @@
                 "$ref": "#/components/schemas/tagResourceType"
               }
             ]
+          },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
           },
           "attributes": {
             "allOf": [
@@ -4961,6 +5381,10 @@
               }
             ]
           },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          },
           "attributes": {
             "allOf": [
               {
@@ -4980,16 +5404,11 @@
       },
       "dataInResponse": {
         "required": [
-          "id",
           "type"
         ],
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "id": {
             "minLength": 1,
             "type": "string"
           }
@@ -5007,7 +5426,6 @@
       },
       "dataInUpdatePersonRequest": {
         "required": [
-          "id",
           "type"
         ],
         "type": "object",
@@ -5020,6 +5438,10 @@
             ]
           },
           "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "lid": {
             "minLength": 1,
             "type": "string"
           },
@@ -5042,7 +5464,6 @@
       },
       "dataInUpdateTagRequest": {
         "required": [
-          "id",
           "type"
         ],
         "type": "object",
@@ -5055,6 +5476,10 @@
             ]
           },
           "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "lid": {
             "minLength": 1,
             "type": "string"
           },
@@ -5077,7 +5502,6 @@
       },
       "dataInUpdateTodoItemRequest": {
         "required": [
-          "id",
           "type"
         ],
         "type": "object",
@@ -5090,6 +5514,10 @@
             ]
           },
           "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "lid": {
             "minLength": 1,
             "type": "string"
           },
@@ -5108,6 +5536,102 @@
             ]
           }
         },
+        "additionalProperties": false
+      },
+      "deletePersonOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/removeOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/personIdentifierInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "deleteTagOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/removeOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/tagIdentifierInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "deleteTodoItemOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/removeOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/todoItemIdentifierInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "errorLinks": {
@@ -5255,7 +5779,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/personIdentifier"
+                "$ref": "#/components/schemas/personIdentifierInResponse"
               }
             ],
             "nullable": true
@@ -5317,7 +5841,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/personIdentifier"
+                "$ref": "#/components/schemas/personIdentifierInRequest"
               }
             ],
             "nullable": true
@@ -5338,7 +5862,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/personIdentifier"
+                "$ref": "#/components/schemas/personIdentifierInResponse"
               }
             ],
             "nullable": true
@@ -5351,6 +5875,99 @@
             ]
           }
         },
+        "additionalProperties": false
+      },
+      "operationsRequestDocument": {
+        "required": [
+          "atomic:operations"
+        ],
+        "type": "object",
+        "properties": {
+          "atomic:operations": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/atomicOperation"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "operationsResponseDocument": {
+        "required": [
+          "atomic:results",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "atomic:results": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/atomicResult"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "personAssignedTodoItemsRelationshipIdentifier": {
+        "required": [
+          "relationship",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "relationship": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personAssignedTodoItemsRelationshipName"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "personAssignedTodoItemsRelationshipName": {
+        "enum": [
+          "assignedTodoItems"
+        ],
+        "type": "string",
         "additionalProperties": false
       },
       "personAttributesInResponse": {
@@ -5412,8 +6029,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -5448,7 +6072,31 @@
         ],
         "additionalProperties": false
       },
-      "personIdentifier": {
+      "personIdentifierInRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "personIdentifierInResponse": {
         "required": [
           "id",
           "type"
@@ -5486,7 +6134,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/personIdentifier"
+                "$ref": "#/components/schemas/personIdentifierInResponse"
               }
             ]
           },
@@ -5498,6 +6146,45 @@
             ]
           }
         },
+        "additionalProperties": false
+      },
+      "personOwnedTodoItemsRelationshipIdentifier": {
+        "required": [
+          "relationship",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "relationship": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personOwnedTodoItemsRelationshipName"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "personOwnedTodoItemsRelationshipName": {
+        "enum": [
+          "ownedTodoItems"
+        ],
+        "type": "string",
         "additionalProperties": false
       },
       "personPrimaryResponseDocument": {
@@ -5736,6 +6423,168 @@
         },
         "additionalProperties": false
       },
+      "removeFromPersonAssignedTodoItemsRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/removeOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/personAssignedTodoItemsRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/todoItemIdentifierInRequest"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "removeFromPersonOwnedTodoItemsRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/removeOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/personOwnedTodoItemsRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/todoItemIdentifierInRequest"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "removeFromTagTodoItemsRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/removeOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/tagTodoItemsRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/todoItemIdentifierInRequest"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "removeFromTodoItemTagsRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/removeOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/todoItemTagsRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/tagIdentifierInRequest"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "removeOperationCode": {
+        "enum": [
+          "remove"
+        ],
+        "type": "string"
+      },
       "resourceCollectionTopLevelLinks": {
         "type": "object",
         "properties": {
@@ -5875,8 +6724,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -5911,27 +6767,6 @@
         ],
         "additionalProperties": false
       },
-      "tagIdentifier": {
-        "required": [
-          "id",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/tagResourceType"
-              }
-            ]
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "tagIdentifierCollectionResponseDocument": {
         "required": [
           "data",
@@ -5949,7 +6784,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/tagIdentifier"
+              "$ref": "#/components/schemas/tagIdentifierInResponse"
             }
           },
           "meta": {
@@ -5958,6 +6793,51 @@
                 "$ref": "#/components/schemas/meta"
               }
             ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "tagIdentifierInRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/tagResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "tagIdentifierInResponse": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/tagResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -6019,6 +6899,45 @@
         "type": "string",
         "additionalProperties": false
       },
+      "tagTodoItemsRelationshipIdentifier": {
+        "required": [
+          "relationship",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/tagResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "relationship": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/tagTodoItemsRelationshipName"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "tagTodoItemsRelationshipName": {
+        "enum": [
+          "todoItems"
+        ],
+        "type": "string",
+        "additionalProperties": false
+      },
       "toManyTagInRequest": {
         "required": [
           "data"
@@ -6028,7 +6947,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/tagIdentifier"
+              "$ref": "#/components/schemas/tagIdentifierInRequest"
             }
           }
         },
@@ -6047,7 +6966,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/tagIdentifier"
+              "$ref": "#/components/schemas/tagIdentifierInResponse"
             }
           },
           "meta": {
@@ -6069,7 +6988,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/todoItemIdentifier"
+              "$ref": "#/components/schemas/todoItemIdentifierInRequest"
             }
           }
         },
@@ -6088,7 +7007,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/todoItemIdentifier"
+              "$ref": "#/components/schemas/todoItemIdentifierInResponse"
             }
           },
           "meta": {
@@ -6110,7 +7029,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/personIdentifier"
+                "$ref": "#/components/schemas/personIdentifierInRequest"
               }
             ]
           }
@@ -6130,7 +7049,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/personIdentifier"
+                "$ref": "#/components/schemas/personIdentifierInResponse"
               }
             ]
           },
@@ -6142,6 +7061,45 @@
             ]
           }
         },
+        "additionalProperties": false
+      },
+      "todoItemAssigneeRelationshipIdentifier": {
+        "required": [
+          "relationship",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "relationship": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemAssigneeRelationshipName"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "todoItemAssigneeRelationshipName": {
+        "enum": [
+          "assignee"
+        ],
+        "type": "string",
         "additionalProperties": false
       },
       "todoItemAttributesInResponse": {
@@ -6216,8 +7174,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -6252,7 +7217,61 @@
         ],
         "additionalProperties": false
       },
-      "todoItemIdentifier": {
+      "todoItemIdentifierCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceIdentifierCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/todoItemIdentifierInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "todoItemIdentifierInRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "todoItemIdentifierInResponse": {
         "required": [
           "id",
           "type"
@@ -6273,34 +7292,43 @@
         },
         "additionalProperties": false
       },
-      "todoItemIdentifierCollectionResponseDocument": {
+      "todoItemOwnerRelationshipIdentifier": {
         "required": [
-          "data",
-          "links"
+          "relationship",
+          "type"
         ],
         "type": "object",
         "properties": {
-          "links": {
+          "type": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/resourceIdentifierCollectionTopLevelLinks"
+                "$ref": "#/components/schemas/todoItemResourceType"
               }
             ]
           },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/todoItemIdentifier"
-            }
+          "id": {
+            "minLength": 1,
+            "type": "string"
           },
-          "meta": {
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "relationship": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/meta"
+                "$ref": "#/components/schemas/todoItemOwnerRelationshipName"
               }
             ]
           }
         },
+        "additionalProperties": false
+      },
+      "todoItemOwnerRelationshipName": {
+        "enum": [
+          "owner"
+        ],
+        "type": "string",
         "additionalProperties": false
       },
       "todoItemPrimaryResponseDocument": {
@@ -6382,6 +7410,168 @@
         "type": "string",
         "additionalProperties": false
       },
+      "todoItemTagsRelationshipIdentifier": {
+        "required": [
+          "relationship",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "relationship": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemTagsRelationshipName"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "todoItemTagsRelationshipName": {
+        "enum": [
+          "tags"
+        ],
+        "type": "string",
+        "additionalProperties": false
+      },
+      "updateOperationCode": {
+        "enum": [
+          "update"
+        ],
+        "type": "string"
+      },
+      "updatePersonAssignedTodoItemsRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/personAssignedTodoItemsRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/todoItemIdentifierInRequest"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updatePersonOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/personIdentifierInRequest"
+                  }
+                ]
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/dataInUpdatePersonRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updatePersonOwnedTodoItemsRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/personOwnedTodoItemsRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/todoItemIdentifierInRequest"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
       "updatePersonRequestDocument": {
         "required": [
           "data"
@@ -6396,6 +7586,45 @@
             ]
           }
         },
+        "additionalProperties": false
+      },
+      "updateTagOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/tagIdentifierInRequest"
+                  }
+                ]
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/dataInUpdateTagRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "updateTagRequestDocument": {
@@ -6414,6 +7643,165 @@
         },
         "additionalProperties": false
       },
+      "updateTagTodoItemsRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/tagTodoItemsRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/todoItemIdentifierInRequest"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateTodoItemAssigneeRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/todoItemAssigneeRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/personIdentifierInRequest"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateTodoItemOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/todoItemIdentifierInRequest"
+                  }
+                ]
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/dataInUpdateTodoItemRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateTodoItemOwnerRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/todoItemOwnerRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/personIdentifierInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
       "updateTodoItemRequestDocument": {
         "required": [
           "data"
@@ -6428,6 +7816,45 @@
             ]
           }
         },
+        "additionalProperties": false
+      },
+      "updateTodoItemTagsRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/todoItemTagsRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/tagIdentifierInRequest"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       }
     }

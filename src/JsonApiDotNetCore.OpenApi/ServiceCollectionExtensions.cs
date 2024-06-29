@@ -68,7 +68,7 @@ public static class ServiceCollectionExtensions
     {
         services.TryAddSingleton<ISerializerDataContractResolver, JsonApiDataContractResolver>();
         services.TryAddSingleton<ResourceDocumentationReader>();
-        services.TryAddSingleton<JsonApiOperationIdSelector>();
+        services.TryAddSingleton<OpenApiOperationIdSelector>();
         services.TryAddSingleton<JsonApiSchemaIdSelector>();
         services.TryAddSingleton<IncludeDependencyScanner>();
     }
@@ -90,13 +90,20 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<ISchemaGenerator, JsonApiSchemaGenerator>();
 
         services.TryAddEnumerable(ServiceDescriptor.Singleton<BodySchemaGenerator, ResourceOrRelationshipBodySchemaGenerator>());
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<BodySchemaGenerator, AtomicOperationsBodySchemaGenerator>());
         services.TryAddEnumerable(ServiceDescriptor.Singleton<BodySchemaGenerator, ErrorResponseBodySchemaGenerator>());
 
+        services.TryAddSingleton<AtomicOperationCodeSchemaGenerator>();
         services.TryAddSingleton<ResourceTypeSchemaGenerator>();
         services.TryAddSingleton<MetaSchemaGenerator>();
         services.TryAddSingleton<ResourceIdentifierSchemaGenerator>();
+        services.TryAddSingleton<RelationshipIdentifierSchemaGenerator>();
+        services.TryAddSingleton<RelationshipNameSchemaGenerator>();
         services.TryAddSingleton<AbstractResourceDataSchemaGenerator>();
+        services.TryAddSingleton<AbstractAtomicOperationSchemaGenerator>();
         services.TryAddSingleton<DataSchemaGenerator>();
+        services.TryAddSingleton<DataContainerSchemaGenerator>();
         services.TryAddSingleton<LinksVisibilitySchemaGenerator>();
+        services.TryAddSingleton<GenerationCacheSchemaGenerator>();
     }
 }

@@ -22,7 +22,7 @@ internal sealed class NullableResourceIdentifierResponseDocument<TResource>
 
     [Required]
     [JsonPropertyName("data")]
-    public ResourceIdentifier<TResource>? Data { get; set; }
+    public ResourceIdentifierInResponse<TResource>? Data { get; set; }
 
     [JsonPropertyName("meta")]
     public Meta Meta { get; set; } = null!;

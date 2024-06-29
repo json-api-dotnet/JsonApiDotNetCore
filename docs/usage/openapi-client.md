@@ -67,7 +67,7 @@ The following steps describe how to generate and use a JSON:API client in C#, us
 5.  Add the following line inside the **OpenApiReference** section in your project file:
 
     ```xml
-    <Options>/GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag</Options>
+    <Options>/GenerateExceptionClasses:false /GenerateNullableReferenceTypes:true /GenerateOptionalPropertiesAsNullable:true /GenerateOptionalParameters:true /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag</Options>
     ```
 
 6.  Add the following glue code to connect our package with your generated code.
@@ -105,19 +105,19 @@ The following steps describe how to generate and use a JSON:API client in C#, us
 
     foreach (var person in getResponse.Data)
     {
-        Console.WriteLine($"Found person {person.Id}: {person.Attributes.DisplayName}");
+        Console.WriteLine($"Found person {person.Id}: {person.Attributes!.DisplayName}");
     }
     ```
 
 8.  Extend your demo code to send a partial PATCH request with the help of our package:
 
     ```c#
-    var patchRequest = new PersonPatchRequestDocument
+    var updatePersonRequest = new UpdatePersonRequestDocument
     {
-        Data = new PersonDataInPatchRequest
+        Data = new DataInUpdatePersonRequest
         {
             Id = "1",
-            Attributes = new PersonAttributesInPatchRequest
+            Attributes = new AttributesInUpdatePersonRequest
             {
                 LastName = "Doe"
             }
@@ -125,11 +125,12 @@ The following steps describe how to generate and use a JSON:API client in C#, us
     };
 
     // This line results in sending "firstName: null" instead of omitting it.
-    using (apiClient.WithPartialAttributeSerialization<PersonPatchRequestDocument, PersonAttributesInPatchRequest>(patchRequest,
-        person => person.FirstName))
+    using (apiClient.WithPartialAttributeSerialization<UpdatePersonRequestDocument, AttributesInUpdatePersonRequest>(
+        updatePersonRequest, person => person.FirstName))
     {
         // Workaround for https://github.com/RicoSuter/NSwag/issues/2499.
-        await ApiResponse.TranslateAsync(() => apiClient.PatchPersonAsync(patchRequest.Data.Id, null, patchRequest));
+        await ApiResponse.TranslateAsync(() =>
+            apiClient.PatchPersonAsync(updatePersonRequest.Data.Id, updatePersonRequest));
 
         // The sent request looks like this:
         // {
@@ -171,6 +172,7 @@ Alternatively, the following section shows what to add to your client project fi
       <CodeGenerator>NSwagCSharp</CodeGenerator>
       <ClassName>ExampleApiClient</ClassName>
       <OutputPath>ExampleApiClient.cs</OutputPath>
+      <Options>/GenerateExceptionClasses:false /GenerateNullableReferenceTypes:true /GenerateOptionalPropertiesAsNullable:true /GenerateOptionalParameters:true /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag</Options>
   </OpenApiReference>
 </ItemGroup>
 ```
@@ -184,7 +186,7 @@ To generate your C# client, install the Kiota tool by following the steps at htt
 Next, generate client code by running the [command line tool](https://learn.microsoft.com/en-us/openapi/kiota/using#client-generation). For example:
 
 ```
-dotnet kiota generate --language CSharp --class-name ExampleApiClient --output ./GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --openapi ..\JsonApiDotNetCoreExample\GeneratedSwagger\JsonApiDotNetCoreExample.json
+dotnet kiota generate --language CSharp --class-name ExampleApiClient --output ./GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --openapi http://localhost:14140/swagger/v1/swagger.json
 ```
 
 > [!CAUTION]
@@ -216,7 +218,7 @@ For example, the following section puts the generated code in a namespace and ge
 </OpenApiReference>
 ```
 
-Likewise, you can enable nullable reference types by adding `/GenerateNullableReferenceTypes:true`, optionally combined with `/GenerateOptionalParameters:true`.
+Likewise, you can enable nullable reference types by adding `/GenerateNullableReferenceTypes:true /GenerateOptionalPropertiesAsNullable:true /GenerateOptionalParameters:true`.
 
 # [Kiota](#tab/kiota)
 
@@ -256,9 +258,9 @@ NSwag needs extra settings to make response headers accessible. Specify the foll
 This enables the following code, which is explained below:
 
 ```c#
-var getResponse = await ApiResponse.TranslateAsync(() => apiClient.GetPersonCollectionAsync(null, null));
+var getResponse = await ApiResponse.TranslateAsync(() => apiClient.GetPersonCollectionAsync());
 string eTag = getResponse.Headers["ETag"].Single();
-Console.WriteLine($"Retrieved {getResponse.Result.Data.Count} people.");
+Console.WriteLine($"Retrieved {getResponse.Result?.Data.Count ?? 0} people.");
 
 // wait some time...
 
@@ -293,5 +295,29 @@ string eTag = headerInspector.ResponseHeaders["ETag"].Single();
 Due to a [bug in Kiota](https://github.com/microsoft/kiota/issues/4190), a try/catch block is needed additionally to make this work.
 
 For a full example, see the [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/openapi/src/Examples/OpenApiKiotaClientExample).
+
+---
+
+## Atomic operations
+
+# [NSwag](#tab/nswag)
+
+[Atomic operations](~/usage/writing/bulk-batch-operations.md) are fully supported.
+The [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/openapi/src/Examples/OpenApiNSwagClientExample)
+demonstrates how to use them. It uses local IDs to:
+- Create a new tag
+- Create a new person
+- Create a new todo-item, tagged with the new tag, and owned by the new person
+- Assign the todo-item to the created person
+
+# [Kiota](#tab/kiota)
+
+[Atomic operations](~/usage/writing/bulk-batch-operations.md) are fully supported.
+See the [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/openapi/src/Examples/OpenApiKiotaClientExample)
+demonstrates how to use them. It uses local IDs to:
+- Create a new tag
+- Create a new person
+- Create a new todo-item, tagged with the new tag, and owned by the new person
+- Assign the todo-item to the created person
 
 ---

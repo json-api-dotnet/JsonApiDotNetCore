@@ -41,6 +41,8 @@ public sealed class GeneratedTypesTests
         _ = nameof(GeneratedClient.HeadStaffMemberAsync);
         _ = nameof(GeneratedClient.PatchStaffMemberAsync);
         _ = nameof(GeneratedClient.DeleteStaffMemberAsync);
+
+        _ = nameof(GeneratedClient.PostOperationsAsync);
     }
 
     [Fact]
@@ -62,6 +64,9 @@ public sealed class GeneratedTypesTests
         _ = nameof(NullableStaffMemberIdentifierResponseDocument);
 
         _ = nameof(ErrorResponseDocument);
+
+        _ = nameof(OperationsRequestDocument);
+        _ = nameof(OperationsResponseDocument);
     }
 
     [Fact]
@@ -75,6 +80,23 @@ public sealed class GeneratedTypesTests
         _ = nameof(ResourceLinks);
         _ = nameof(RelationshipLinks);
         _ = nameof(ErrorLinks);
+    }
+
+    [Fact]
+    public void Generated_operation_types_are_named_as_expected()
+    {
+        _ = nameof(CreateSupermarketOperation);
+        _ = nameof(UpdateSupermarketOperation);
+        _ = nameof(DeleteSupermarketOperation);
+        _ = nameof(UpdateSupermarketBackupStoreManagerRelationshipOperation);
+        _ = nameof(UpdateSupermarketCashiersRelationshipOperation);
+        _ = nameof(AddToSupermarketCashiersRelationshipOperation);
+        _ = nameof(RemoveFromSupermarketCashiersRelationshipOperation);
+        _ = nameof(UpdateSupermarketStoreManagerRelationshipOperation);
+
+        _ = nameof(CreateStaffMemberOperation);
+        _ = nameof(UpdateStaffMemberOperation);
+        _ = nameof(DeleteStaffMemberOperation);
     }
 
     [Fact]
@@ -114,6 +136,18 @@ public sealed class GeneratedTypesTests
         _ = nameof(NullableToOneStaffMemberInResponse);
         _ = nameof(ToManyStaffMemberInRequest);
         _ = nameof(ToManyStaffMemberInResponse);
+
+        _ = nameof(SupermarketBackupStoreManagerRelationshipIdentifier);
+        _ = nameof(SupermarketCashiersRelationshipIdentifier);
+        _ = nameof(SupermarketStoreManagerRelationshipIdentifier);
+    }
+
+    [Fact]
+    public void Generated_relationship_name_enums_are_named_as_expected()
+    {
+        _ = nameof(SupermarketBackupStoreManagerRelationshipName.BackupStoreManager);
+        _ = nameof(SupermarketCashiersRelationshipName.Cashiers);
+        _ = nameof(SupermarketStoreManagerRelationshipName.StoreManager);
     }
 
     [Fact]
@@ -121,6 +155,14 @@ public sealed class GeneratedTypesTests
     {
         _ = nameof(SupermarketResourceType.Supermarkets);
         _ = nameof(StaffMemberResourceType.StaffMembers);
+    }
+
+    [Fact]
+    public void Generated_operation_type_enums_are_named_as_expected()
+    {
+        _ = nameof(AddOperationCode.Add);
+        _ = nameof(UpdateOperationCode.Update);
+        _ = nameof(RemoveOperationCode.Remove);
     }
 
     [Fact]
@@ -132,11 +174,14 @@ public sealed class GeneratedTypesTests
         _ = nameof(DataInUpdateSupermarketRequest);
         _ = nameof(SupermarketDataInResponse);
 
+        _ = nameof(SupermarketIdentifierInRequest);
+
         _ = nameof(DataInCreateStaffMemberRequest);
         _ = nameof(DataInUpdateStaffMemberRequest);
         _ = nameof(StaffMemberDataInResponse);
 
-        _ = nameof(StaffMemberIdentifier);
+        _ = nameof(StaffMemberIdentifierInRequest);
+        _ = nameof(StaffMemberIdentifierInResponse);
     }
 
     [Fact]
@@ -145,5 +190,9 @@ public sealed class GeneratedTypesTests
         _ = nameof(Jsonapi);
         _ = nameof(ErrorObject);
         _ = nameof(ErrorSource);
+        _ = nameof(Meta);
+
+        _ = nameof(AtomicOperation);
+        _ = nameof(AtomicResult);
     }
 }
