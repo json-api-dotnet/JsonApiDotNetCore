@@ -3,6 +3,8 @@ using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Services;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -207,7 +209,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
         TResource? newResource = await _create.CreateAsync(resource, cancellationToken);
 
         string resourceId = (newResource ?? resource).StringId!;
-        string locationUrl = HttpContext.Request.Path.Add($"/{resourceId}");
+        string locationUrl = GetLocationUrl(resourceId);
 
         if (newResource == null)
         {
@@ -216,6 +218,15 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
         }
 
         return Created(locationUrl, newResource);
+    }
+
+    private string GetLocationUrl(string resourceId)
+    {
+        PathString locationPath = HttpContext.Request.Path.Add($"/{resourceId}");
+
+        return _options.UseRelativeLinks
+            ? UriHelper.BuildRelative(HttpContext.Request.PathBase, locationPath)
+            : UriHelper.BuildAbsolute(HttpContext.Request.Scheme, HttpContext.Request.Host, HttpContext.Request.PathBase, locationPath);
     }
 
     /// <summary>
