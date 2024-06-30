@@ -28,7 +28,7 @@ public class SetRelationshipProcessor<TResource, TId> : ISetRelationshipProcesso
         var leftId = (TId)operation.Resource.GetTypedId();
         object? rightValue = GetRelationshipRightValue(operation);
 
-        await _service.SetRelationshipAsync(leftId, operation.Request.Relationship!.PublicName, rightValue, cancellationToken);
+        await _service.SetRelationshipAsync(leftId!, operation.Request.Relationship!.PublicName, rightValue, cancellationToken);
 
         return null;
     }

@@ -24,7 +24,7 @@ public class DeleteProcessor<TResource, TId> : IDeleteProcessor<TResource, TId>
         ArgumentGuard.NotNull(operation);
 
         var id = (TId)operation.Resource.GetTypedId();
-        await _service.DeleteAsync(id, cancellationToken);
+        await _service.DeleteAsync(id!, cancellationToken);
 
         return null;
     }

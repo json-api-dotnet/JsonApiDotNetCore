@@ -96,18 +96,20 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
     private IIdentifiable CreateResource(ResourceIdentity identity, ResourceIdentityRequirements requirements, ResourceType resourceType,
         RequestAdapterState state)
     {
-        if (state.Request.Kind != EndpointKind.AtomicOperations)
+        AssertNoIdWithLid(identity, state);
+
+        bool allowLid = requirements.EvaluateAllowLid?.Invoke(resourceType) ?? false;
+
+        if (!allowLid)
         {
             AssertHasNoLid(identity, state);
         }
-
-        AssertNoIdWithLid(identity, state);
 
         JsonElementConstraint? idConstraint = requirements.EvaluateIdConstraint?.Invoke(resourceType);
 
         if (idConstraint == JsonElementConstraint.Required)
         {
-            AssertHasIdOrLid(identity, requirements, state);
+            AssertHasIdOrLid(identity, requirements, allowLid, state);
         }
         else if (idConstraint == JsonElementConstraint.Forbidden)
         {
@@ -128,7 +130,10 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         if (identity.Lid != null)
         {
             using IDisposable _ = state.Position.PushElement("lid");
-            throw new ModelConversionException(state.Position, "The 'lid' element is not supported at this endpoint.", null);
+
+            throw state.Request.Kind == EndpointKind.AtomicOperations
+                ? new ModelConversionException(state.Position, "The 'lid' element cannot be used because a client-generated ID is required.", null)
+                : new ModelConversionException(state.Position, "The 'lid' element is not supported at this endpoint.", null);
         }
     }
 
@@ -140,7 +145,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         }
     }
 
-    private static void AssertHasIdOrLid(ResourceIdentity identity, ResourceIdentityRequirements requirements, RequestAdapterState state)
+    private static void AssertHasIdOrLid(ResourceIdentity identity, ResourceIdentityRequirements requirements, bool allowLid, RequestAdapterState state)
     {
         string? message = null;
 
@@ -154,7 +159,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         }
         else if (identity.Id == null && identity.Lid == null)
         {
-            message = state.Request.Kind == EndpointKind.AtomicOperations ? "The 'id' or 'lid' element is required." : "The 'id' element is required.";
+            message = allowLid ? "The 'id' or 'lid' element is required." : "The 'id' element is required.";
         }
 
         if (message != null)

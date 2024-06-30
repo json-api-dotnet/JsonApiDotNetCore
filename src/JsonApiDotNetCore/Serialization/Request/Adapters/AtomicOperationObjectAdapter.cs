@@ -125,7 +125,9 @@ public sealed class AtomicOperationObjectAdapter : IAtomicOperationObjectAdapter
         return new ResourceIdentityRequirements
         {
             EvaluateIdConstraint = resourceType =>
-                ResourceIdentityRequirements.DoEvaluateIdConstraint(resourceType, state.Request.WriteOperation, _options.ClientIdGeneration)
+                ResourceIdentityRequirements.DoEvaluateIdConstraint(resourceType, state.Request.WriteOperation, _options.ClientIdGeneration),
+            EvaluateAllowLid = resourceType =>
+                ResourceIdentityRequirements.DoEvaluateAllowLid(resourceType, state.Request.WriteOperation, _options.ClientIdGeneration)
         };
     }
 
@@ -135,6 +137,7 @@ public sealed class AtomicOperationObjectAdapter : IAtomicOperationObjectAdapter
         {
             ResourceType = refResult.ResourceType,
             EvaluateIdConstraint = refRequirements.EvaluateIdConstraint,
+            EvaluateAllowLid = refRequirements.EvaluateAllowLid,
             IdValue = refResult.Resource.StringId,
             LidValue = refResult.Resource.LocalId,
             RelationshipName = refResult.Relationship?.PublicName

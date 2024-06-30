@@ -26,7 +26,7 @@ public class RemoveFromRelationshipProcessor<TResource, TId> : IRemoveFromRelati
         var leftId = (TId)operation.Resource.GetTypedId();
         ISet<IIdentifiable> rightResourceIds = operation.GetSecondaryResources();
 
-        await _service.RemoveFromToManyRelationshipAsync(leftId, operation.Request.Relationship!.PublicName, rightResourceIds, cancellationToken);
+        await _service.RemoveFromToManyRelationshipAsync(leftId!, operation.Request.Relationship!.PublicName, rightResourceIds, cancellationToken);
 
         return null;
     }

@@ -22,6 +22,11 @@ public sealed class ResourceIdentityRequirements
     public Func<ResourceType, JsonElementConstraint?>? EvaluateIdConstraint { get; init; }
 
     /// <summary>
+    /// When not null, provides a callback to indicate whether the "lid" element can be used instead of the "id" element. Defaults to <c>false</c>.
+    /// </summary>
+    public Func<ResourceType, bool>? EvaluateAllowLid { get; init; }
+
+    /// <summary>
     /// When not null, indicates what the value of the "id" element must be.
     /// </summary>
     public string? IdValue { get; init; }
@@ -49,5 +54,16 @@ public sealed class ResourceIdentityRequirements
                 _ => null
             }
             : JsonElementConstraint.Required;
+    }
+
+    internal static bool DoEvaluateAllowLid(ResourceType resourceType, WriteOperationKind? writeOperation, ClientIdGenerationMode globalClientIdGeneration)
+    {
+        if (writeOperation == null)
+        {
+            return false;
+        }
+
+        ClientIdGenerationMode clientIdGeneration = resourceType.ClientIdGeneration ?? globalClientIdGeneration;
+        return !(writeOperation == WriteOperationKind.CreateResource && clientIdGeneration == ClientIdGenerationMode.Required);
     }
 }
