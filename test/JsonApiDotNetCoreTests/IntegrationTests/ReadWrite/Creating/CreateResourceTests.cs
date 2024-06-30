@@ -58,7 +58,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         string newWorkItemId = responseDocument.Data.SingleValue.ShouldNotBeNull().Id.ShouldNotBeNull();
-        httpResponse.Headers.Location.Should().Be($"/workItems/{newWorkItemId}");
+        httpResponse.Headers.Location.Should().Be($"http://localhost/workItems/{newWorkItemId}");
 
         responseDocument.Links.ShouldNotBeNull();
         responseDocument.Links.Self.Should().Be("http://localhost/workItems/");
@@ -66,7 +66,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Links.Self.Should().Be($"http://localhost{httpResponse.Headers.Location}");
+        responseDocument.Data.SingleValue.Links.Self.Should().Be($"{httpResponse.Headers.Location}");
     }
 
     [Fact]

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using JsonApiDotNetCore.Resources;
 
 // ReSharper disable UnusedTypeParameter
@@ -23,5 +24,5 @@ public interface ISetRelationshipService<TResource, in TId>
     /// <param name="cancellationToken">
     /// Propagates notification that request handling should be canceled.
     /// </param>
-    Task SetRelationshipAsync(TId leftId, string relationshipName, object? rightValue, CancellationToken cancellationToken);
+    Task SetRelationshipAsync([DisallowNull] TId leftId, string relationshipName, object? rightValue, CancellationToken cancellationToken);
 }

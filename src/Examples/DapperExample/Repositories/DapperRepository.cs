@@ -1,4 +1,5 @@
 using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 using Dapper;
 using DapperExample.AtomicOperations;
 using DapperExample.TranslationToSql;
@@ -177,7 +178,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
     }
 
     /// <inheritdoc />
-    public Task<TResource> GetForCreateAsync(Type resourceClrType, TId id, CancellationToken cancellationToken)
+    public Task<TResource> GetForCreateAsync(Type resourceClrType, [DisallowNull] TId id, CancellationToken cancellationToken)
     {
         ArgumentGuard.NotNull(resourceClrType);
 
@@ -355,7 +356,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
     }
 
     /// <inheritdoc />
-    public async Task DeleteAsync(TResource? resourceFromDatabase, TId id, CancellationToken cancellationToken)
+    public async Task DeleteAsync(TResource? resourceFromDatabase, [DisallowNull] TId id, CancellationToken cancellationToken)
     {
         TResource placeholderResource = resourceFromDatabase ?? _resourceFactory.CreateInstance<TResource>();
         placeholderResource.Id = id;
@@ -451,7 +452,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
     }
 
     /// <inheritdoc />
-    public async Task AddToToManyRelationshipAsync(TResource? leftResource, TId leftId, ISet<IIdentifiable> rightResourceIds,
+    public async Task AddToToManyRelationshipAsync(TResource? leftResource, [DisallowNull] TId leftId, ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
     {
         ArgumentGuard.NotNull(rightResourceIds);

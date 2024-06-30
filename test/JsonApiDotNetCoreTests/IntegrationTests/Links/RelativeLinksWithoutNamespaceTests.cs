@@ -394,6 +394,8 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
                 value.Links.Related.Should().Be($"{photoLink}/album");
             });
         });
+
+        httpResponse.Headers.Location.Should().Be(albumLink);
     }
 
     [Fact]

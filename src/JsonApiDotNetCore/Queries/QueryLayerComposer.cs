@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
@@ -63,7 +64,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     }
 
     /// <inheritdoc />
-    public FilterExpression? GetSecondaryFilterFromConstraints<TId>(TId primaryId, HasManyAttribute hasManyRelationship)
+    public FilterExpression? GetSecondaryFilterFromConstraints<TId>([DisallowNull] TId primaryId, HasManyAttribute hasManyRelationship)
     {
         ArgumentGuard.NotNull(hasManyRelationship);
 
@@ -102,26 +103,29 @@ public class QueryLayerComposer : IQueryLayerComposer
         return LogicalExpression.Compose(LogicalOperator.And, inverseFilter, primaryFilter, secondaryFilter);
     }
 
-    private static FilterExpression GetInverseRelationshipFilter<TId>(TId primaryId, HasManyAttribute relationship, RelationshipAttribute inverseRelationship)
+    private static FilterExpression GetInverseRelationshipFilter<TId>([DisallowNull] TId primaryId, HasManyAttribute relationship,
+        RelationshipAttribute inverseRelationship)
     {
         return inverseRelationship is HasManyAttribute hasManyInverseRelationship
             ? GetInverseHasManyRelationshipFilter(primaryId, relationship, hasManyInverseRelationship)
             : GetInverseHasOneRelationshipFilter(primaryId, relationship, (HasOneAttribute)inverseRelationship);
     }
 
-    private static FilterExpression GetInverseHasOneRelationshipFilter<TId>(TId primaryId, HasManyAttribute relationship, HasOneAttribute inverseRelationship)
+    private static FilterExpression GetInverseHasOneRelationshipFilter<TId>([DisallowNull] TId primaryId, HasManyAttribute relationship,
+        HasOneAttribute inverseRelationship)
     {
         AttrAttribute idAttribute = GetIdAttribute(relationship.LeftType);
         var idChain = new ResourceFieldChainExpression(ImmutableArray.Create<ResourceFieldAttribute>(inverseRelationship, idAttribute));
 
-        return new ComparisonExpression(ComparisonOperator.Equals, idChain, new LiteralConstantExpression(primaryId!));
+        return new ComparisonExpression(ComparisonOperator.Equals, idChain, new LiteralConstantExpression(primaryId));
     }
 
-    private static FilterExpression GetInverseHasManyRelationshipFilter<TId>(TId primaryId, HasManyAttribute relationship, HasManyAttribute inverseRelationship)
+    private static FilterExpression GetInverseHasManyRelationshipFilter<TId>([DisallowNull] TId primaryId, HasManyAttribute relationship,
+        HasManyAttribute inverseRelationship)
     {
         AttrAttribute idAttribute = GetIdAttribute(relationship.LeftType);
         var idChain = new ResourceFieldChainExpression(ImmutableArray.Create<ResourceFieldAttribute>(idAttribute));
-        var idComparison = new ComparisonExpression(ComparisonOperator.Equals, idChain, new LiteralConstantExpression(primaryId!));
+        var idComparison = new ComparisonExpression(ComparisonOperator.Equals, idChain, new LiteralConstantExpression(primaryId));
 
         return new HasExpression(new ResourceFieldChainExpression(inverseRelationship), idComparison);
     }
@@ -263,7 +267,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     }
 
     /// <inheritdoc />
-    public QueryLayer ComposeForGetById<TId>(TId id, ResourceType primaryResourceType, TopFieldSelection fieldSelection)
+    public QueryLayer ComposeForGetById<TId>([DisallowNull] TId id, ResourceType primaryResourceType, TopFieldSelection fieldSelection)
     {
         ArgumentGuard.NotNull(primaryResourceType);
 
@@ -314,7 +318,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     }
 
     /// <inheritdoc />
-    public QueryLayer WrapLayerForSecondaryEndpoint<TId>(QueryLayer secondaryLayer, ResourceType primaryResourceType, TId primaryId,
+    public QueryLayer WrapLayerForSecondaryEndpoint<TId>(QueryLayer secondaryLayer, ResourceType primaryResourceType, [DisallowNull] TId primaryId,
         RelationshipAttribute relationship)
     {
         ArgumentGuard.NotNull(secondaryLayer);
@@ -377,7 +381,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     }
 
     /// <inheritdoc />
-    public QueryLayer ComposeForUpdate<TId>(TId id, ResourceType primaryResourceType)
+    public QueryLayer ComposeForUpdate<TId>([DisallowNull] TId id, ResourceType primaryResourceType)
     {
         ArgumentGuard.NotNull(primaryResourceType);
 
@@ -440,7 +444,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     }
 
     /// <inheritdoc />
-    public QueryLayer ComposeForHasMany<TId>(HasManyAttribute hasManyRelationship, TId leftId, ICollection<IIdentifiable> rightResourceIds)
+    public QueryLayer ComposeForHasMany<TId>(HasManyAttribute hasManyRelationship, [DisallowNull] TId leftId, ICollection<IIdentifiable> rightResourceIds)
     {
         ArgumentGuard.NotNull(hasManyRelationship);
         ArgumentGuard.NotNull(rightResourceIds);
