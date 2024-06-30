@@ -24,7 +24,7 @@ public class UpdateProcessor<TResource, TId> : IUpdateProcessor<TResource, TId>
         ArgumentGuard.NotNull(operation);
 
         var resource = (TResource)operation.Resource;
-        TResource? updated = await _service.UpdateAsync(resource.Id, resource, cancellationToken);
+        TResource? updated = await _service.UpdateAsync(resource.Id!, resource, cancellationToken);
 
         return updated == null ? null : operation.WithResource(updated);
     }

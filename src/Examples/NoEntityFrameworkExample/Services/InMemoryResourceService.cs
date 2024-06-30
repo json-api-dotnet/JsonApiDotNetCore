@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries;
@@ -114,7 +115,7 @@ public abstract class InMemoryResourceService<TResource, TId>(
     }
 
     /// <inheritdoc />
-    public Task<TResource> GetAsync(TId id, CancellationToken cancellationToken)
+    public Task<TResource> GetAsync([DisallowNull] TId id, CancellationToken cancellationToken)
     {
         QueryLayer queryLayer = _queryLayerComposer.ComposeForGetById(id, _resourceType, TopFieldSelection.PreserveExisting);
 
@@ -124,14 +125,14 @@ public abstract class InMemoryResourceService<TResource, TId>(
 
         if (resource == null)
         {
-            throw new ResourceNotFoundException(id!.ToString()!, _resourceType.PublicName);
+            throw new ResourceNotFoundException(id.ToString()!, _resourceType.PublicName);
         }
 
         return Task.FromResult(resource);
     }
 
     /// <inheritdoc />
-    public Task<object?> GetSecondaryAsync(TId id, string relationshipName, CancellationToken cancellationToken)
+    public Task<object?> GetSecondaryAsync([DisallowNull] TId id, string relationshipName, CancellationToken cancellationToken)
     {
         RelationshipAttribute? relationship = _resourceType.FindRelationshipByPublicName(relationshipName);
 
@@ -151,7 +152,7 @@ public abstract class InMemoryResourceService<TResource, TId>(
 
         if (primaryResource == null)
         {
-            throw new ResourceNotFoundException(id!.ToString()!, _resourceType.PublicName);
+            throw new ResourceNotFoundException(id.ToString()!, _resourceType.PublicName);
         }
 
         object? rightValue = relationship.GetValue(primaryResource);
@@ -164,7 +165,7 @@ public abstract class InMemoryResourceService<TResource, TId>(
         return Task.FromResult(rightValue);
     }
 
-    private void SetNonPrimaryTotalCount(TId id, RelationshipAttribute relationship)
+    private void SetNonPrimaryTotalCount([DisallowNull] TId id, RelationshipAttribute relationship)
     {
         if (_options.IncludeTotalResourceCount && relationship is HasManyAttribute hasManyRelationship)
         {
@@ -188,7 +189,7 @@ public abstract class InMemoryResourceService<TResource, TId>(
     }
 
     /// <inheritdoc />
-    public Task<object?> GetRelationshipAsync(TId id, string relationshipName, CancellationToken cancellationToken)
+    public Task<object?> GetRelationshipAsync([DisallowNull] TId id, string relationshipName, CancellationToken cancellationToken)
     {
         return GetSecondaryAsync(id, relationshipName, cancellationToken);
     }

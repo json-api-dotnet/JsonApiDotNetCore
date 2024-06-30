@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
@@ -18,7 +19,7 @@ public interface IQueryLayerComposer
     /// <summary>
     /// Builds a filter from constraints, used to determine total resource count on a secondary collection endpoint.
     /// </summary>
-    FilterExpression? GetSecondaryFilterFromConstraints<TId>(TId primaryId, HasManyAttribute hasManyRelationship);
+    FilterExpression? GetSecondaryFilterFromConstraints<TId>([DisallowNull] TId primaryId, HasManyAttribute hasManyRelationship);
 
     /// <summary>
     /// Collects constraints and builds a <see cref="QueryLayer" /> out of them, used to retrieve the actual resources.
@@ -28,7 +29,7 @@ public interface IQueryLayerComposer
     /// <summary>
     /// Collects constraints and builds a <see cref="QueryLayer" /> out of them, used to retrieve one resource.
     /// </summary>
-    QueryLayer ComposeForGetById<TId>(TId id, ResourceType primaryResourceType, TopFieldSelection fieldSelection);
+    QueryLayer ComposeForGetById<TId>([DisallowNull] TId id, ResourceType primaryResourceType, TopFieldSelection fieldSelection);
 
     /// <summary>
     /// Collects constraints and builds the secondary layer for a relationship endpoint.
@@ -38,14 +39,14 @@ public interface IQueryLayerComposer
     /// <summary>
     /// Wraps a layer for a secondary endpoint into a primary layer, rewriting top-level includes.
     /// </summary>
-    QueryLayer WrapLayerForSecondaryEndpoint<TId>(QueryLayer secondaryLayer, ResourceType primaryResourceType, TId primaryId,
+    QueryLayer WrapLayerForSecondaryEndpoint<TId>(QueryLayer secondaryLayer, ResourceType primaryResourceType, [DisallowNull] TId primaryId,
         RelationshipAttribute relationship);
 
     /// <summary>
     /// Builds a query that retrieves the primary resource, including all of its attributes and all targeted relationships, during a create/update/delete
     /// request.
     /// </summary>
-    QueryLayer ComposeForUpdate<TId>(TId id, ResourceType primaryResourceType);
+    QueryLayer ComposeForUpdate<TId>([DisallowNull] TId id, ResourceType primaryResourceType);
 
     /// <summary>
     /// Builds a query for each targeted relationship with a filter to match on its right resource IDs.
@@ -60,5 +61,5 @@ public interface IQueryLayerComposer
     /// <summary>
     /// Builds a query for a to-many relationship with a filter to match on its left and right resource IDs.
     /// </summary>
-    QueryLayer ComposeForHasMany<TId>(HasManyAttribute hasManyRelationship, TId leftId, ICollection<IIdentifiable> rightResourceIds);
+    QueryLayer ComposeForHasMany<TId>(HasManyAttribute hasManyRelationship, [DisallowNull] TId leftId, ICollection<IIdentifiable> rightResourceIds);
 }

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using JsonApiDotNetCore.Resources;
 
 // ReSharper disable UnusedTypeParameter
@@ -12,5 +13,5 @@ public interface IGetSecondaryService<TResource, in TId>
     /// Handles a JSON:API request to retrieve a single resource or a collection of resources for a secondary endpoint, such as /articles/1/author or
     /// /articles/1/revisions.
     /// </summary>
-    Task<object?> GetSecondaryAsync(TId id, string relationshipName, CancellationToken cancellationToken);
+    Task<object?> GetSecondaryAsync([DisallowNull] TId id, string relationshipName, CancellationToken cancellationToken);
 }

@@ -179,7 +179,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
     }
 
     /// <inheritdoc />
-    public virtual Task<TResource> GetForCreateAsync(Type resourceClrType, TId id, CancellationToken cancellationToken)
+    public virtual Task<TResource> GetForCreateAsync(Type resourceClrType, [DisallowNull] TId id, CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
@@ -332,7 +332,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
     }
 
     /// <inheritdoc />
-    public virtual async Task DeleteAsync(TResource? resourceFromDatabase, TId id, CancellationToken cancellationToken)
+    public virtual async Task DeleteAsync(TResource? resourceFromDatabase, [DisallowNull] TId id, CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
@@ -432,7 +432,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
     }
 
     /// <inheritdoc />
-    public virtual async Task AddToToManyRelationshipAsync(TResource? leftResource, TId leftId, ISet<IIdentifiable> rightResourceIds,
+    public virtual async Task AddToToManyRelationshipAsync(TResource? leftResource, [DisallowNull] TId leftId, ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
