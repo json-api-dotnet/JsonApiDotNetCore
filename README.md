@@ -1,7 +1,11 @@
-<a href="https://www.jsonapi.net"><img src="docs/home/assets/img/logo.svg" style="height: 345px; width: 345px"/></a>
+<p align="center">
+  <a href="https://www.jsonapi.net"><img src="docs/home/assets/img/logo.svg" style="height: 345px; width: 345px"/></a>
+</p>
 
 # JsonApiDotNetCore
-A framework for building [JSON:API](http://jsonapi.org/) compliant REST APIs using .NET Core and Entity Framework Core. Includes support for [Atomic Operations](https://jsonapi.org/ext/atomic/).
+A framework for building [JSON:API](http://jsonapi.org/) compliant REST APIs using .NET Core and Entity Framework Core. Includes support for the [Atomic Operations](https://jsonapi.org/ext/atomic/) extension.
+
+The ultimate goal of this library is to eliminate as much boilerplate as possible by offering out-of-the-box features such as sorting, filtering and pagination. You just need to focus on defining the resources and implementing your custom business logic. This library has been designed around dependency injection, making extensibility incredibly easy.
 
 [![Build](https://github.com/json-api-dotnet/JsonApiDotNetCore/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/json-api-dotnet/JsonApiDotNetCore/actions/workflows/build.yml?query=branch%3Amaster)
 [![Coverage](https://codecov.io/gh/json-api-dotnet/JsonApiDotNetCore/branch/master/graph/badge.svg?token=pn036tWV8T)](https://codecov.io/gh/json-api-dotnet/JsonApiDotNetCore)
@@ -9,11 +13,61 @@ A framework for building [JSON:API](http://jsonapi.org/) compliant REST APIs usi
 [![Chat](https://badges.gitter.im/json-api-dotnet-core/Lobby.svg)](https://gitter.im/json-api-dotnet-core/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![FIRST-TIMERS](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
 
-The ultimate goal of this library is to eliminate as much boilerplate as possible by offering out-of-the-box features such as sorting, filtering and pagination. You just need to focus on defining the resources and implementing your custom business logic. This library has been designed around dependency injection, making extensibility incredibly easy.
-
 ## Getting Started
 
-These are some steps you can take to help you understand what this project is and how you can use it:
+First declare you models
+
+```c#
+[Resource]
+public class Article : Identifiable<int>
+{
+    [Attr]
+    public string Name { get; set; } = null!;
+}
+```
+
+then add the middlewares
+
+```c#
+// Program.cs
+
+builder.Services.AddJsonApi<AppDbContext>();
+
+// ...
+
+app.UseRouting();
+app.UseJsonApi();
+app.MapControllers();
+```
+
+finally you can query your JSON:API
+
+```
+$ curl -i http://localhost:18574/authors
+
+HTTP/1.1 200 OK
+Content-Type: application/vnd.api+json
+ETag: "078F7A2A7D0B3C0B56952AD3E35E5908"
+
+{
+  "links": {
+    "self": "http://localhost:18574/authors",
+    "first": "http://localhost:18574/authors"
+  },
+  "data": [
+    {
+      "type": "authors",
+      "id": "8977e0ab-4af8-418b-8859-a3d7a22367d7",
+      "attributes": { "name": "William Shakespeare" },
+      "links": { "self": "http://localhost:18574/authors/8977e0ab-4af8-418b-8859-a3d7a22367d7" }
+    }
+  ]
+}
+```
+
+See [our documentation](https://www.jsonapi.net/) for detailed usage and the [examples](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples) directory for up-to-date sample applications.
+
+## Resources
 
 ### About
 - [What is JSON:API and why should I use it?](https://nordicapis.com/the-benefits-of-using-json-api/) (blog, 2017)
@@ -28,46 +82,11 @@ These are some steps you can take to help you understand what this project is an
 - [JsonApiDotNetCore website](https://www.jsonapi.net/)
 - [Roadmap](ROADMAP.md)
 
-## Related Projects
+### Related Projects
 
 - [Performance Reports](https://github.com/json-api-dotnet/PerformanceReports)
 - [JsonApiDotNetCore.MongoDb](https://github.com/json-api-dotnet/JsonApiDotNetCore.MongoDb)
 - [Ember.js Todo List App](https://github.com/json-api-dotnet/TodoListExample)
-
-## Examples
-
-See the [examples](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples) directory for up-to-date sample applications. There is also a [Todo List App](https://github.com/json-api-dotnet/TodoListExample) that includes a JsonApiDotNetCore API and an EmberJs client.
-
-## Installation and Usage
-
-See [our documentation](https://www.jsonapi.net/) for detailed usage.
-
-### Models
-
-```c#
-#nullable enable
-
-[Resource]
-public class Article : Identifiable<int>
-{
-    [Attr]
-    public string Name { get; set; } = null!;
-}
-```
-
-### Middleware
-
-```c#
-// Program.cs
-
-builder.Services.AddJsonApi<AppDbContext>();
-
-// ...
-
-app.UseRouting();
-app.UseJsonApi();
-app.MapControllers();
-```
 
 ## Compatibility
 
