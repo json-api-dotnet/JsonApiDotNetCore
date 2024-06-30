@@ -394,6 +394,8 @@ public sealed class AbsoluteLinksWithNamespaceTests : IClassFixture<IntegrationT
                 value.Links.Related.Should().Be($"{photoLink}/album");
             });
         });
+
+        httpResponse.Headers.Location.Should().Be(albumLink);
     }
 
     [Fact]
