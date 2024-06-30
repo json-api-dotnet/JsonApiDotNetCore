@@ -147,6 +147,38 @@ public sealed class ResourceIdentityRequirements</code></pre>
 </h2>
 
 
+  <a id="JsonApiDotNetCore_Serialization_Request_Adapters_ResourceIdentityRequirements_EvaluateAllowLid_" data-uid="JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.EvaluateAllowLid*"></a>
+
+  <h3 id="JsonApiDotNetCore_Serialization_Request_Adapters_ResourceIdentityRequirements_EvaluateAllowLid" data-uid="JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.EvaluateAllowLid">
+  EvaluateAllowLid
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Request/Adapters/ResourceIdentityRequirements.cs/#L27"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>When not null, provides a callback to indicate whether the &quot;lid&quot; element can be used instead of the &quot;id&quot; element. Defaults to <code>false</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Func&lt;ResourceType, bool&gt;? EvaluateAllowLid { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="JsonApiDotNetCore_Serialization_Request_Adapters_ResourceIdentityRequirements_EvaluateIdConstraint_" data-uid="JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.EvaluateIdConstraint*"></a>
 
   <h3 id="JsonApiDotNetCore_Serialization_Request_Adapters_ResourceIdentityRequirements_EvaluateIdConstraint" data-uid="JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.EvaluateIdConstraint">
@@ -183,7 +215,7 @@ public sealed class ResourceIdentityRequirements</code></pre>
 
   <h3 id="JsonApiDotNetCore_Serialization_Request_Adapters_ResourceIdentityRequirements_IdValue" data-uid="JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.IdValue">
   IdValue
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Request/Adapters/ResourceIdentityRequirements.cs/#L27"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Request/Adapters/ResourceIdentityRequirements.cs/#L32"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>When not null, indicates what the value of the &quot;id&quot; element must be.</p>
@@ -215,7 +247,7 @@ public sealed class ResourceIdentityRequirements</code></pre>
 
   <h3 id="JsonApiDotNetCore_Serialization_Request_Adapters_ResourceIdentityRequirements_LidValue" data-uid="JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.LidValue">
   LidValue
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Request/Adapters/ResourceIdentityRequirements.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Request/Adapters/ResourceIdentityRequirements.cs/#L37"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>When not null, indicates what the value of the &quot;lid&quot; element must be.</p>
@@ -247,7 +279,7 @@ public sealed class ResourceIdentityRequirements</code></pre>
 
   <h3 id="JsonApiDotNetCore_Serialization_Request_Adapters_ResourceIdentityRequirements_RelationshipName" data-uid="JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.RelationshipName">
   RelationshipName
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Request/Adapters/ResourceIdentityRequirements.cs/#L37"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Request/Adapters/ResourceIdentityRequirements.cs/#L42"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>When not null, indicates the name of the relationship to use in error messages.</p>

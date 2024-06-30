@@ -19528,6 +19528,19 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements
   fullName: JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements
   nameWithType: ResourceIdentityRequirements
+- uid: JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.EvaluateAllowLid
+  name: EvaluateAllowLid
+  href: api/JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.html#JsonApiDotNetCore_Serialization_Request_Adapters_ResourceIdentityRequirements_EvaluateAllowLid
+  commentId: P:JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.EvaluateAllowLid
+  fullName: JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.EvaluateAllowLid
+  nameWithType: ResourceIdentityRequirements.EvaluateAllowLid
+- uid: JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.EvaluateAllowLid*
+  name: EvaluateAllowLid
+  href: api/JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.html#JsonApiDotNetCore_Serialization_Request_Adapters_ResourceIdentityRequirements_EvaluateAllowLid_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.EvaluateAllowLid
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.EvaluateAllowLid
+  nameWithType: ResourceIdentityRequirements.EvaluateAllowLid
 - uid: JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.EvaluateIdConstraint
   name: EvaluateIdConstraint
   href: api/JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.html#JsonApiDotNetCore_Serialization_Request_Adapters_ResourceIdentityRequirements_EvaluateIdConstraint
