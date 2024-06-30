@@ -26,7 +26,7 @@ public class AddToRelationshipProcessor<TResource, TId> : IAddToRelationshipProc
         var leftId = (TId)operation.Resource.GetTypedId();
         ISet<IIdentifiable> rightResourceIds = operation.GetSecondaryResources();
 
-        await _service.AddToToManyRelationshipAsync(leftId, operation.Request.Relationship!.PublicName, rightResourceIds, cancellationToken);
+        await _service.AddToToManyRelationshipAsync(leftId!, operation.Request.Relationship!.PublicName, rightResourceIds, cancellationToken);
 
         return null;
     }

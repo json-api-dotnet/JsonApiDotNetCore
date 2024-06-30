@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using JsonApiDotNetCore.Resources;
 
 // ReSharper disable UnusedTypeParameter
@@ -11,5 +12,5 @@ public interface IGetRelationshipService<TResource, in TId>
     /// <summary>
     /// Handles a JSON:API request to retrieve a single relationship.
     /// </summary>
-    Task<object?> GetRelationshipAsync(TId id, string relationshipName, CancellationToken cancellationToken);
+    Task<object?> GetRelationshipAsync([DisallowNull] TId id, string relationshipName, CancellationToken cancellationToken);
 }

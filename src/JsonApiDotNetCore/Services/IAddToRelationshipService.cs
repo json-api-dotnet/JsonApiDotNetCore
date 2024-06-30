@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 
@@ -25,5 +26,6 @@ public interface IAddToRelationshipService<TResource, in TId>
     /// <param name="cancellationToken">
     /// Propagates notification that request handling should be canceled.
     /// </param>
-    Task AddToToManyRelationshipAsync(TId leftId, string relationshipName, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken);
+    Task AddToToManyRelationshipAsync([DisallowNull] TId leftId, string relationshipName, ISet<IIdentifiable> rightResourceIds,
+        CancellationToken cancellationToken);
 }

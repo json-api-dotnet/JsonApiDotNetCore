@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -53,7 +54,7 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
     }
 
     /// <inheritdoc />
-    public async Task<TResource> GetForCreateAsync<TResource, TId>(Type resourceClrType, TId id, CancellationToken cancellationToken)
+    public async Task<TResource> GetForCreateAsync<TResource, TId>(Type resourceClrType, [DisallowNull] TId id, CancellationToken cancellationToken)
         where TResource : class, IIdentifiable<TId>
     {
         dynamic repository = GetWriteRepository(typeof(TResource));
@@ -85,7 +86,7 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
     }
 
     /// <inheritdoc />
-    public async Task DeleteAsync<TResource, TId>(TResource? resourceFromDatabase, TId id, CancellationToken cancellationToken)
+    public async Task DeleteAsync<TResource, TId>(TResource? resourceFromDatabase, [DisallowNull] TId id, CancellationToken cancellationToken)
         where TResource : class, IIdentifiable<TId>
     {
         dynamic repository = GetWriteRepository(typeof(TResource));
@@ -101,7 +102,7 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
     }
 
     /// <inheritdoc />
-    public async Task AddToToManyRelationshipAsync<TResource, TId>(TResource? leftResource, TId leftId, ISet<IIdentifiable> rightResourceIds,
+    public async Task AddToToManyRelationshipAsync<TResource, TId>(TResource? leftResource, [DisallowNull] TId leftId, ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
         where TResource : class, IIdentifiable<TId>
     {

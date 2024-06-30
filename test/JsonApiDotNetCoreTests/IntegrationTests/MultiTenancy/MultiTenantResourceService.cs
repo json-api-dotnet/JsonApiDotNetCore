@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
@@ -45,21 +46,21 @@ public class MultiTenantResourceService<TResource, TId>(
         return await base.CreateAsync(resource, cancellationToken);
     }
 
-    public override async Task<TResource?> UpdateAsync(TId id, TResource resource, CancellationToken cancellationToken)
+    public override async Task<TResource?> UpdateAsync([DisallowNull] TId id, TResource resource, CancellationToken cancellationToken)
     {
         await AssertResourcesToAssignInRelationshipsExistAsync(resource, cancellationToken);
 
         return await base.UpdateAsync(id, resource, cancellationToken);
     }
 
-    public override async Task SetRelationshipAsync(TId leftId, string relationshipName, object? rightValue, CancellationToken cancellationToken)
+    public override async Task SetRelationshipAsync([DisallowNull] TId leftId, string relationshipName, object? rightValue, CancellationToken cancellationToken)
     {
         await AssertRightResourcesExistAsync(rightValue, cancellationToken);
 
         await base.SetRelationshipAsync(leftId, relationshipName, rightValue, cancellationToken);
     }
 
-    public override async Task AddToToManyRelationshipAsync(TId leftId, string relationshipName, ISet<IIdentifiable> rightResourceIds,
+    public override async Task AddToToManyRelationshipAsync([DisallowNull] TId leftId, string relationshipName, ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
     {
         _ = await GetPrimaryResourceByIdAsync(leftId, TopFieldSelection.OnlyIdAttribute, cancellationToken);
@@ -68,7 +69,7 @@ public class MultiTenantResourceService<TResource, TId>(
         await base.AddToToManyRelationshipAsync(leftId, relationshipName, rightResourceIds, cancellationToken);
     }
 
-    public override async Task DeleteAsync(TId id, CancellationToken cancellationToken)
+    public override async Task DeleteAsync([DisallowNull] TId id, CancellationToken cancellationToken)
     {
         _ = await GetPrimaryResourceByIdAsync(id, TopFieldSelection.OnlyIdAttribute, cancellationToken);
 

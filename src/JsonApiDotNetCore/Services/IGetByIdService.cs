@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Services;
@@ -9,5 +10,5 @@ public interface IGetByIdService<TResource, in TId>
     /// <summary>
     /// Handles a JSON:API request to retrieve a single resource for a primary endpoint.
     /// </summary>
-    Task<TResource> GetAsync(TId id, CancellationToken cancellationToken);
+    Task<TResource> GetAsync([DisallowNull] TId id, CancellationToken cancellationToken);
 }

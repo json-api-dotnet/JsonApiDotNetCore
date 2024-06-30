@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -85,7 +86,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
     }
 
     /// <inheritdoc />
-    public virtual async Task<TResource> GetAsync(TId id, CancellationToken cancellationToken)
+    public virtual async Task<TResource> GetAsync([DisallowNull] TId id, CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
@@ -98,7 +99,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
     }
 
     /// <inheritdoc />
-    public virtual async Task<object?> GetSecondaryAsync(TId id, string relationshipName, CancellationToken cancellationToken)
+    public virtual async Task<object?> GetSecondaryAsync([DisallowNull] TId id, string relationshipName, CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
@@ -137,7 +138,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
     }
 
     /// <inheritdoc />
-    public virtual async Task<object?> GetRelationshipAsync(TId id, string relationshipName, CancellationToken cancellationToken)
+    public virtual async Task<object?> GetRelationshipAsync([DisallowNull] TId id, string relationshipName, CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
@@ -177,7 +178,8 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         return rightValue;
     }
 
-    private async Task RetrieveResourceCountForNonPrimaryEndpointAsync(TId id, HasManyAttribute relationship, CancellationToken cancellationToken)
+    private async Task RetrieveResourceCountForNonPrimaryEndpointAsync([DisallowNull] TId id, HasManyAttribute relationship,
+        CancellationToken cancellationToken)
     {
         FilterExpression? secondaryFilter = _queryLayerComposer.GetSecondaryFilterFromConstraints(id, relationship);
 
@@ -205,7 +207,10 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         await AccurizeResourceTypesInHierarchyToAssignInRelationshipsAsync(resourceFromRequest, cancellationToken);
 
         Type resourceClrType = resourceFromRequest.GetClrType();
-        TResource resourceForDatabase = await _repositoryAccessor.GetForCreateAsync<TResource, TId>(resourceClrType, resourceFromRequest.Id, cancellationToken);
+
+        TResource resourceForDatabase =
+            await _repositoryAccessor.GetForCreateAsync<TResource, TId>(resourceClrType, resourceFromRequest.Id!, cancellationToken);
+
         AccurizeJsonApiRequest(resourceForDatabase);
 
         _resourceChangeTracker.SetInitiallyStoredAttributeValues(resourceForDatabase);
@@ -223,7 +228,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             throw;
         }
 
-        TResource resourceFromDatabase = await GetPrimaryResourceByIdAsync(resourceForDatabase.Id, TopFieldSelection.WithAllAttributes, cancellationToken);
+        TResource resourceFromDatabase = await GetPrimaryResourceByIdAsync(resourceForDatabase.Id!, TopFieldSelection.WithAllAttributes, cancellationToken);
 
         _resourceChangeTracker.SetFinallyStoredAttributeValues(resourceFromDatabase);
 
@@ -235,7 +240,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
     {
         if (!Equals(resource.Id, default(TId)))
         {
-            TResource? existingResource = await GetPrimaryResourceByIdOrDefaultAsync(resource.Id, TopFieldSelection.OnlyIdAttribute, cancellationToken);
+            TResource? existingResource = await GetPrimaryResourceByIdOrDefaultAsync(resource.Id!, TopFieldSelection.OnlyIdAttribute, cancellationToken);
 
             if (existingResource != null)
             {
@@ -329,7 +334,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
     }
 
     /// <inheritdoc />
-    public virtual async Task AddToToManyRelationshipAsync(TId leftId, string relationshipName, ISet<IIdentifiable> rightResourceIds,
+    public virtual async Task AddToToManyRelationshipAsync([DisallowNull] TId leftId, string relationshipName, ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
@@ -385,7 +390,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         }
     }
 
-    private async Task<TResource> RemoveExistingIdsFromRelationshipRightSideAsync(HasManyAttribute hasManyRelationship, TId leftId,
+    private async Task<TResource> RemoveExistingIdsFromRelationshipRightSideAsync(HasManyAttribute hasManyRelationship, [DisallowNull] TId leftId,
         ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
     {
         TResource leftResource = await GetForHasManyUpdateAsync(hasManyRelationship, leftId, rightResourceIds, cancellationToken);
@@ -398,8 +403,8 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         return leftResource;
     }
 
-    private async Task<TResource> GetForHasManyUpdateAsync(HasManyAttribute hasManyRelationship, TId leftId, ISet<IIdentifiable> rightResourceIds,
-        CancellationToken cancellationToken)
+    private async Task<TResource> GetForHasManyUpdateAsync(HasManyAttribute hasManyRelationship, [DisallowNull] TId leftId,
+        ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
     {
         QueryLayer queryLayer = _queryLayerComposer.ComposeForHasMany(hasManyRelationship, leftId, rightResourceIds);
         var leftResource = await _repositoryAccessor.GetForUpdateAsync<TResource>(queryLayer, cancellationToken);
@@ -438,7 +443,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
     }
 
     /// <inheritdoc />
-    public virtual async Task<TResource?> UpdateAsync(TId id, TResource resource, CancellationToken cancellationToken)
+    public virtual async Task<TResource?> UpdateAsync([DisallowNull] TId id, TResource resource, CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
@@ -481,7 +486,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
     }
 
     /// <inheritdoc />
-    public virtual async Task SetRelationshipAsync(TId leftId, string relationshipName, object? rightValue, CancellationToken cancellationToken)
+    public virtual async Task SetRelationshipAsync([DisallowNull] TId leftId, string relationshipName, object? rightValue, CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
@@ -519,7 +524,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
     }
 
     /// <inheritdoc />
-    public virtual async Task DeleteAsync(TId id, CancellationToken cancellationToken)
+    public virtual async Task DeleteAsync([DisallowNull] TId id, CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
@@ -552,7 +557,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
     }
 
     /// <inheritdoc />
-    public virtual async Task RemoveFromToManyRelationshipAsync(TId leftId, string relationshipName, ISet<IIdentifiable> rightResourceIds,
+    public virtual async Task RemoveFromToManyRelationshipAsync([DisallowNull] TId leftId, string relationshipName, ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
@@ -581,7 +586,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         await _repositoryAccessor.RemoveFromToManyRelationshipAsync(resourceFromDatabase, effectiveRightResourceIds, cancellationToken);
     }
 
-    protected async Task<TResource> GetPrimaryResourceByIdAsync(TId id, TopFieldSelection fieldSelection, CancellationToken cancellationToken)
+    protected async Task<TResource> GetPrimaryResourceByIdAsync([DisallowNull] TId id, TopFieldSelection fieldSelection, CancellationToken cancellationToken)
     {
         TResource? primaryResource = await GetPrimaryResourceByIdOrDefaultAsync(id, fieldSelection, cancellationToken);
         AssertPrimaryResourceExists(primaryResource);
@@ -589,7 +594,8 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         return primaryResource;
     }
 
-    private async Task<TResource?> GetPrimaryResourceByIdOrDefaultAsync(TId id, TopFieldSelection fieldSelection, CancellationToken cancellationToken)
+    private async Task<TResource?> GetPrimaryResourceByIdOrDefaultAsync([DisallowNull] TId id, TopFieldSelection fieldSelection,
+        CancellationToken cancellationToken)
     {
         AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
 
@@ -599,7 +605,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         return primaryResources.SingleOrDefault();
     }
 
-    protected async Task<TResource> GetPrimaryResourceForUpdateAsync(TId id, CancellationToken cancellationToken)
+    protected async Task<TResource> GetPrimaryResourceForUpdateAsync([DisallowNull] TId id, CancellationToken cancellationToken)
     {
         AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
 
