@@ -8,29 +8,30 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Relationships {
+namespace OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Relationships
+{
     /// <summary>
     /// Builds and executes requests for operations under \api\todoItems\{id}\relationships
     /// </summary>
-    public class RelationshipsRequestBuilder : BaseRequestBuilder 
+    public class RelationshipsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>The assignee property</summary>
-        public AssigneeRequestBuilder Assignee
+        public OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Relationships.Assignee.AssigneeRequestBuilder Assignee
         {
-            get => new AssigneeRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Relationships.Assignee.AssigneeRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The owner property</summary>
-        public OwnerRequestBuilder Owner
+        public OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Relationships.Owner.OwnerRequestBuilder Owner
         {
-            get => new OwnerRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Relationships.Owner.OwnerRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The tags property</summary>
-        public TagsRequestBuilder Tags
+        public OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Relationships.Tags.TagsRequestBuilder Tags
         {
-            get => new TagsRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Relationships.Tags.TagsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new <see cref="RelationshipsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Relationships.RelationshipsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -38,7 +39,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Relationshi
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="RelationshipsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Relationships.RelationshipsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>

@@ -12,5 +12,5 @@ internal sealed class ToManyRelationshipInRequest<TResource>
 {
     [Required]
     [JsonPropertyName("data")]
-    public ICollection<ResourceIdentifier<TResource>> Data { get; set; } = null!;
+    public ICollection<ResourceIdentifierInRequest<TResource>> Data { get; set; } = null!;
 }

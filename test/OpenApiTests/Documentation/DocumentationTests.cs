@@ -23,6 +23,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
         testContext.UseController<SkyscrapersController>();
         testContext.UseController<ElevatorsController>();
         testContext.UseController<SpacesController>();
+        testContext.UseController<OperationsController>();
     }
 
     [Fact]
@@ -123,6 +124,8 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                     parametersElement.Should().HaveProperty("[0].in", "query");
                     parametersElement.Should().HaveProperty("[0].description", ResourceTextQueryString);
                 });
+
+                postElement.Should().HaveProperty("requestBody.description", "The attributes and relationships of the skyscraper to create.");
 
                 postElement.Should().ContainPath("responses").With(responsesElement =>
                 {
@@ -580,6 +583,28 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                 });
             });
         });
+
+        document.Should().ContainPath("paths./operations").With(skyscrapersElement =>
+        {
+            skyscrapersElement.Should().ContainPath("post").With(postElement =>
+            {
+                postElement.Should().HaveProperty("summary", "Performs multiple mutations in a linear and atomic manner.");
+
+                postElement.Should().HaveProperty("requestBody.description", "An array of mutation operations. For syntax, see the [Atomic Operations documentation](https://jsonapi.org/ext/atomic/).");
+
+                postElement.Should().ContainPath("responses").With(responsesElement =>
+                {
+                    responsesElement.EnumerateObject().ShouldHaveCount(7);
+                    responsesElement.Should().HaveProperty("200.description", "All operations were successfully applied, which resulted in additional changes.");
+                    responsesElement.Should().HaveProperty("204.description", "All operations were successfully applied, which did not result in additional changes.");
+                    responsesElement.Should().HaveProperty("400.description", "The request body is missing or malformed.");
+                    responsesElement.Should().HaveProperty("403.description", "An operation is not accessible or a client-generated ID is used.");
+                    responsesElement.Should().HaveProperty("404.description", "A resource or a related resource does not exist.");
+                    responsesElement.Should().HaveProperty("409.description", "The request body contains conflicting information or another resource with the same ID already exists.");
+                    responsesElement.Should().HaveProperty("422.description", "Validation of the request body failed.");
+                });
+            });
+        });
     }
 
     [Fact]
@@ -591,16 +616,16 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
         // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>
         {
-            schemasElement.Should().HaveProperty("elevatorDataInPatchRequest.description", "An elevator within a skyscraper.");
-            schemasElement.Should().HaveProperty("elevatorDataInPostRequest.description", "An elevator within a skyscraper.");
+            schemasElement.Should().HaveProperty("dataInUpdateElevatorRequest.description", "An elevator within a skyscraper.");
+            schemasElement.Should().HaveProperty("dataInCreateElevatorRequest.description", "An elevator within a skyscraper.");
             schemasElement.Should().HaveProperty("elevatorDataInResponse.description", "An elevator within a skyscraper.");
 
-            schemasElement.Should().HaveProperty("skyscraperDataInPatchRequest.description", "A tall, continuously habitable building having multiple floors.");
-            schemasElement.Should().HaveProperty("skyscraperDataInPostRequest.description", "A tall, continuously habitable building having multiple floors.");
+            schemasElement.Should().HaveProperty("dataInUpdateSkyscraperRequest.description", "A tall, continuously habitable building having multiple floors.");
+            schemasElement.Should().HaveProperty("dataInCreateSkyscraperRequest.description", "A tall, continuously habitable building having multiple floors.");
             schemasElement.Should().HaveProperty("skyscraperDataInResponse.description", "A tall, continuously habitable building having multiple floors.");
 
-            schemasElement.Should().HaveProperty("spaceDataInPatchRequest.description", "A space within a skyscraper, such as an office, hotel, residential space, or retail space.");
-            schemasElement.Should().HaveProperty("spaceDataInPostRequest.description", "A space within a skyscraper, such as an office, hotel, residential space, or retail space.");
+            schemasElement.Should().HaveProperty("dataInUpdateSpaceRequest.description", "A space within a skyscraper, such as an office, hotel, residential space, or retail space.");
+            schemasElement.Should().HaveProperty("dataInCreateSpaceRequest.description", "A space within a skyscraper, such as an office, hotel, residential space, or retail space.");
             schemasElement.Should().HaveProperty("spaceDataInResponse.description", "A space within a skyscraper, such as an office, hotel, residential space, or retail space.");
         });
     }
@@ -614,21 +639,21 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
         // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>
         {
-            schemasElement.Should().HaveProperty("elevatorAttributesInPatchRequest.properties.floorCount.description", "The number of floors this elevator provides access to.");
-            schemasElement.Should().HaveProperty("elevatorAttributesInPostRequest.properties.floorCount.description", "The number of floors this elevator provides access to.");
+            schemasElement.Should().HaveProperty("attributesInUpdateElevatorRequest.properties.floorCount.description", "The number of floors this elevator provides access to.");
+            schemasElement.Should().HaveProperty("attributesInCreateElevatorRequest.properties.floorCount.description", "The number of floors this elevator provides access to.");
             schemasElement.Should().HaveProperty("elevatorAttributesInResponse.properties.floorCount.description", "The number of floors this elevator provides access to.");
 
-            schemasElement.Should().HaveProperty("skyscraperAttributesInPatchRequest.properties.heightInMeters.description", "The height of this building, in meters.");
-            schemasElement.Should().HaveProperty("skyscraperAttributesInPostRequest.properties.heightInMeters.description", "The height of this building, in meters.");
+            schemasElement.Should().HaveProperty("attributesInUpdateSkyscraperRequest.properties.heightInMeters.description", "The height of this building, in meters.");
+            schemasElement.Should().HaveProperty("attributesInCreateSkyscraperRequest.properties.heightInMeters.description", "The height of this building, in meters.");
             schemasElement.Should().HaveProperty("skyscraperAttributesInResponse.properties.heightInMeters.description", "The height of this building, in meters.");
 
-            schemasElement.Should().ContainPath("spaceAttributesInPatchRequest.properties").With(propertiesElement =>
+            schemasElement.Should().ContainPath("attributesInUpdateSpaceRequest.properties").With(propertiesElement =>
             {
                 propertiesElement.Should().HaveProperty("floorNumber.description", "The floor number on which this space resides.");
                 propertiesElement.Should().HaveProperty("kind.description", "The kind of this space.");
             });
 
-            schemasElement.Should().ContainPath("spaceAttributesInPostRequest.properties").With(propertiesElement =>
+            schemasElement.Should().ContainPath("attributesInCreateSpaceRequest.properties").With(propertiesElement =>
             {
                 propertiesElement.Should().HaveProperty("floorNumber.description", "The floor number on which this space resides.");
                 propertiesElement.Should().HaveProperty("kind.description", "The kind of this space.");
@@ -651,17 +676,17 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
         // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>
         {
-            schemasElement.Should().HaveProperty("elevatorRelationshipsInPatchRequest.properties.existsIn.description", "The skyscraper this elevator exists in.");
-            schemasElement.Should().HaveProperty("elevatorRelationshipsInPostRequest.properties.existsIn.description", "The skyscraper this elevator exists in.");
+            schemasElement.Should().HaveProperty("relationshipsInUpdateElevatorRequest.properties.existsIn.description", "The skyscraper this elevator exists in.");
+            schemasElement.Should().HaveProperty("relationshipsInCreateElevatorRequest.properties.existsIn.description", "The skyscraper this elevator exists in.");
             schemasElement.Should().HaveProperty("elevatorRelationshipsInResponse.properties.existsIn.description", "The skyscraper this elevator exists in.");
 
-            schemasElement.Should().ContainPath("skyscraperRelationshipsInPatchRequest.properties").With(propertiesElement =>
+            schemasElement.Should().ContainPath("relationshipsInUpdateSkyscraperRequest.properties").With(propertiesElement =>
             {
                 propertiesElement.Should().HaveProperty("elevator.description", "An optional elevator within this building, providing access to spaces.");
                 propertiesElement.Should().HaveProperty("spaces.description", "The spaces within this building.");
             });
 
-            schemasElement.Should().ContainPath("skyscraperRelationshipsInPostRequest.properties").With(propertiesElement =>
+            schemasElement.Should().ContainPath("relationshipsInCreateSkyscraperRequest.properties").With(propertiesElement =>
             {
                 propertiesElement.Should().HaveProperty("elevator.description", "An optional elevator within this building, providing access to spaces.");
                 propertiesElement.Should().HaveProperty("spaces.description", "The spaces within this building.");
@@ -673,8 +698,8 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
                 propertiesElement.Should().HaveProperty("spaces.description", "The spaces within this building.");
             });
 
-            schemasElement.Should().HaveProperty("spaceRelationshipsInPatchRequest.properties.existsIn.description", "The skyscraper this space exists in.");
-            schemasElement.Should().HaveProperty("spaceRelationshipsInPostRequest.properties.existsIn.description", "The skyscraper this space exists in.");
+            schemasElement.Should().HaveProperty("relationshipsInUpdateSpaceRequest.properties.existsIn.description", "The skyscraper this space exists in.");
+            schemasElement.Should().HaveProperty("relationshipsInCreateSpaceRequest.properties.existsIn.description", "The skyscraper this space exists in.");
             schemasElement.Should().HaveProperty("spaceRelationshipsInResponse.properties.existsIn.description", "The skyscraper this space exists in.");
         });
     }

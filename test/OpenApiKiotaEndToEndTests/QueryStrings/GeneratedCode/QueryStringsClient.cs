@@ -13,24 +13,25 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
-namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode {
+namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode
+{
     /// <summary>
     /// The main entry point of the SDK, exposes the configuration and the fluent API.
     /// </summary>
-    public class QueryStringsClient : BaseRequestBuilder 
+    public class QueryStringsClient : BaseRequestBuilder
     {
         /// <summary>The nameValuePairs property</summary>
-        public NameValuePairsRequestBuilder NameValuePairs
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.NameValuePairs.NameValuePairsRequestBuilder NameValuePairs
         {
-            get => new NameValuePairsRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.NameValuePairs.NameValuePairsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The nodes property</summary>
-        public NodesRequestBuilder Nodes
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.NodesRequestBuilder Nodes
         {
-            get => new NodesRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.NodesRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new <see cref="QueryStringsClient"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.QueryStringsClient"/> and sets the default values.
         /// </summary>
         /// <param name="backingStore">The backing store to use for the models.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>

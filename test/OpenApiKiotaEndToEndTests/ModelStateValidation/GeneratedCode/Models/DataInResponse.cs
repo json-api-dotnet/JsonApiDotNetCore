@@ -5,43 +5,32 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class DataInResponse : IBackedModel, IParsable 
+    public class DataInResponse : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
         public IBackingStore BackingStore { get; private set; }
-        /// <summary>The id property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public string? Id {
-            get { return BackingStore?.Get<string?>("id"); }
-            set { BackingStore?.Set("id", value); }
-        }
-#nullable restore
-#else
-        public string Id {
-            get { return BackingStore?.Get<string>("id"); }
-            set { BackingStore?.Set("id", value); }
-        }
-#endif
         /// <summary>The type property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Type {
+        public string? Type
+        {
             get { return BackingStore?.Get<string?>("type"); }
             set { BackingStore?.Set("type", value); }
         }
 #nullable restore
 #else
-        public string Type {
+        public string Type
+        {
             get { return BackingStore?.Get<string>("type"); }
             set { BackingStore?.Set("type", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="DataInResponse"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.DataInResponse"/> and sets the default values.
         /// </summary>
         public DataInResponse()
         {
@@ -50,16 +39,16 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="DataInResponse"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.DataInResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static DataInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.DataInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
             var mappingValue = parseNode.GetChildNode("type")?.GetStringValue();
             return mappingValue switch
             {
-                "socialMediaAccounts" => new SocialMediaAccountDataInResponse(),
-                _ => new DataInResponse(),
+                "socialMediaAccounts" => new OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountDataInResponse(),
+                _ => new OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.DataInResponse(),
             };
         }
         /// <summary>
@@ -70,8 +59,7 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"id", n => { Id = n.GetStringValue(); } },
-                {"type", n => { Type = n.GetStringValue(); } },
+                { "type", n => { Type = n.GetStringValue(); } },
             };
         }
         /// <summary>
@@ -81,7 +69,6 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteStringValue("id", Id);
             writer.WriteStringValue("type", Type);
         }
     }

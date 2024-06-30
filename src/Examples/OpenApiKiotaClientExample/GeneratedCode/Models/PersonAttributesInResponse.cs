@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Models {
+namespace OpenApiKiotaClientExample.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class PersonAttributesInResponse : IBackedModel, IParsable 
+    public class PersonAttributesInResponse : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,13 +16,15 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The displayName property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? DisplayName {
+        public string? DisplayName
+        {
             get { return BackingStore?.Get<string?>("displayName"); }
             set { BackingStore?.Set("displayName", value); }
         }
 #nullable restore
 #else
-        public string DisplayName {
+        public string DisplayName
+        {
             get { return BackingStore?.Get<string>("displayName"); }
             set { BackingStore?.Set("displayName", value); }
         }
@@ -29,13 +32,15 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The firstName property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? FirstName {
+        public string? FirstName
+        {
             get { return BackingStore?.Get<string?>("firstName"); }
             set { BackingStore?.Set("firstName", value); }
         }
 #nullable restore
 #else
-        public string FirstName {
+        public string FirstName
+        {
             get { return BackingStore?.Get<string>("firstName"); }
             set { BackingStore?.Set("firstName", value); }
         }
@@ -43,19 +48,21 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The lastName property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? LastName {
+        public string? LastName
+        {
             get { return BackingStore?.Get<string?>("lastName"); }
             set { BackingStore?.Set("lastName", value); }
         }
 #nullable restore
 #else
-        public string LastName {
+        public string LastName
+        {
             get { return BackingStore?.Get<string>("lastName"); }
             set { BackingStore?.Set("lastName", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="PersonAttributesInResponse"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.PersonAttributesInResponse"/> and sets the default values.
         /// </summary>
         public PersonAttributesInResponse()
         {
@@ -64,12 +71,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="PersonAttributesInResponse"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.PersonAttributesInResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static PersonAttributesInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaClientExample.GeneratedCode.Models.PersonAttributesInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new PersonAttributesInResponse();
+            return new OpenApiKiotaClientExample.GeneratedCode.Models.PersonAttributesInResponse();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -79,9 +86,9 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"displayName", n => { DisplayName = n.GetStringValue(); } },
-                {"firstName", n => { FirstName = n.GetStringValue(); } },
-                {"lastName", n => { LastName = n.GetStringValue(); } },
+                { "displayName", n => { DisplayName = n.GetStringValue(); } },
+                { "firstName", n => { FirstName = n.GetStringValue(); } },
+                { "lastName", n => { LastName = n.GetStringValue(); } },
             };
         }
         /// <summary>

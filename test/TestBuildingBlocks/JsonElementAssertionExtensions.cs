@@ -147,5 +147,10 @@ public static class JsonElementAssertionExtensions
 
             stringValues.Should().NotContain(value);
         }
+
+        public void BeJson(string json)
+        {
+            _subject.ToString().Should().BeJson(json);
+        }
     }
 }

@@ -11,9 +11,14 @@ internal sealed class EndpointResolver
     {
         ArgumentGuard.NotNull(controllerAction);
 
-        if (!IsJsonApiController(controllerAction) || IsOperationsController(controllerAction))
+        if (!IsJsonApiController(controllerAction))
         {
             return null;
+        }
+
+        if (IsAtomicOperationsController(controllerAction))
+        {
+            return JsonApiEndpoint.PostOperations;
         }
 
         HttpMethodAttribute? method = Attribute.GetCustomAttributes(controllerAction, true).OfType<HttpMethodAttribute>().FirstOrDefault();
@@ -26,7 +31,7 @@ internal sealed class EndpointResolver
         return typeof(CoreJsonApiController).IsAssignableFrom(controllerAction.ReflectedType);
     }
 
-    private static bool IsOperationsController(MethodInfo controllerAction)
+    private static bool IsAtomicOperationsController(MethodInfo controllerAction)
     {
         return typeof(BaseJsonApiOperationsController).IsAssignableFrom(controllerAction.ReflectedType);
     }
@@ -45,19 +50,19 @@ internal sealed class EndpointResolver
             },
             HttpPostAttribute attr => attr.Template switch
             {
-                null => JsonApiEndpoint.Post,
+                null => JsonApiEndpoint.PostResource,
                 JsonApiRoutingTemplate.RelationshipEndpoint => JsonApiEndpoint.PostRelationship,
                 _ => null
             },
             HttpPatchAttribute attr => attr.Template switch
             {
-                JsonApiRoutingTemplate.PrimaryEndpoint => JsonApiEndpoint.Patch,
+                JsonApiRoutingTemplate.PrimaryEndpoint => JsonApiEndpoint.PatchResource,
                 JsonApiRoutingTemplate.RelationshipEndpoint => JsonApiEndpoint.PatchRelationship,
                 _ => null
             },
             HttpDeleteAttribute attr => attr.Template switch
             {
-                JsonApiRoutingTemplate.PrimaryEndpoint => JsonApiEndpoint.Delete,
+                JsonApiRoutingTemplate.PrimaryEndpoint => JsonApiEndpoint.DeleteResource,
                 JsonApiRoutingTemplate.RelationshipEndpoint => JsonApiEndpoint.DeleteRelationship,
                 _ => null
             },

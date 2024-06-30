@@ -65,5 +65,12 @@
       <CodeGenerator>NSwagCSharp</CodeGenerator>
       <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag /GenerateNullableReferenceTypes:true</Options>
     </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\AtomicOperations\GeneratedSwagger\swagger.g.json">
+      <Namespace>OpenApiNSwagEndToEndTests.AtomicOperations.GeneratedCode</Namespace>
+      <ClassName>AtomicOperationsClient</ClassName>
+      <OutputPath>AtomicOperationsClient.cs</OutputPath>
+      <CodeGenerator>NSwagCSharp</CodeGenerator>
+      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag /GenerateNullableReferenceTypes:true</Options>
+    </OpenApiReference>
   </ItemGroup>
 </Project>

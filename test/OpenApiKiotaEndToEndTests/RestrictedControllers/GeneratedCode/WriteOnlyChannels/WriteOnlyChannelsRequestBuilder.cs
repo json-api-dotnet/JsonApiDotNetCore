@@ -9,26 +9,27 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnlyChannels {
+namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnlyChannels
+{
     /// <summary>
     /// Builds and executes requests for operations under \writeOnlyChannels
     /// </summary>
-    public class WriteOnlyChannelsRequestBuilder : BaseRequestBuilder 
+    public class WriteOnlyChannelsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>Gets an item from the OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.writeOnlyChannels.item collection</summary>
         /// <param name="position">The identifier of the writeOnlyChannel to update.</param>
-        /// <returns>A <see cref="WriteOnlyChannelsItemRequestBuilder"/></returns>
-        public WriteOnlyChannelsItemRequestBuilder this[string position]
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnlyChannels.Item.WriteOnlyChannelsItemRequestBuilder"/></returns>
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnlyChannels.Item.WriteOnlyChannelsItemRequestBuilder this[string position]
         {
             get
             {
                 var urlTplParams = new Dictionary<string, object>(PathParameters);
                 urlTplParams.Add("id", position);
-                return new WriteOnlyChannelsItemRequestBuilder(urlTplParams, RequestAdapter);
+                return new OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnlyChannels.Item.WriteOnlyChannelsItemRequestBuilder(urlTplParams, RequestAdapter);
             }
         }
         /// <summary>
-        /// Instantiates a new <see cref="WriteOnlyChannelsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnlyChannels.WriteOnlyChannelsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -36,7 +37,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="WriteOnlyChannelsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnlyChannels.WriteOnlyChannelsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -46,35 +47,35 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
         /// <summary>
         /// Creates a new writeOnlyChannel.
         /// </summary>
-        /// <returns>A <see cref="WriteOnlyChannelPrimaryResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelPrimaryResponseDocument"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 403 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 409 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 403 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 409 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<WriteOnlyChannelPrimaryResponseDocument?> PostAsync(WriteOnlyChannelPostRequestDocument body, Action<RequestConfiguration<WriteOnlyChannelsRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelPrimaryResponseDocument?> PostAsync(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.CreateWriteOnlyChannelRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnlyChannels.WriteOnlyChannelsRequestBuilder.WriteOnlyChannelsRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<WriteOnlyChannelPrimaryResponseDocument> PostAsync(WriteOnlyChannelPostRequestDocument body, Action<RequestConfiguration<WriteOnlyChannelsRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelPrimaryResponseDocument> PostAsync(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.CreateWriteOnlyChannelRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnlyChannels.WriteOnlyChannelsRequestBuilder.WriteOnlyChannelsRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPostRequestInformation(body, requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"403", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"409", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"422", ErrorResponseDocument.CreateFromDiscriminatorValue},
+                { "400", OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "403", OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "404", OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "409", OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "422", OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<WriteOnlyChannelPrimaryResponseDocument>(requestInfo, WriteOnlyChannelPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelPrimaryResponseDocument>(requestInfo, OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Creates a new writeOnlyChannel.
@@ -84,11 +85,11 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPostRequestInformation(WriteOnlyChannelPostRequestDocument body, Action<RequestConfiguration<WriteOnlyChannelsRequestBuilderPostQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.CreateWriteOnlyChannelRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnlyChannels.WriteOnlyChannelsRequestBuilder.WriteOnlyChannelsRequestBuilderPostQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPostRequestInformation(WriteOnlyChannelPostRequestDocument body, Action<RequestConfiguration<WriteOnlyChannelsRequestBuilderPostQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.CreateWriteOnlyChannelRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnlyChannels.WriteOnlyChannelsRequestBuilder.WriteOnlyChannelsRequestBuilderPostQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -101,11 +102,11 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="WriteOnlyChannelsRequestBuilder"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnlyChannels.WriteOnlyChannelsRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public WriteOnlyChannelsRequestBuilder WithUrl(string rawUrl)
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnlyChannels.WriteOnlyChannelsRequestBuilder WithUrl(string rawUrl)
         {
-            return new WriteOnlyChannelsRequestBuilder(rawUrl, RequestAdapter);
+            return new OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnlyChannels.WriteOnlyChannelsRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Creates a new writeOnlyChannel.

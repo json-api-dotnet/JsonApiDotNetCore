@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Models {
+namespace OpenApiKiotaClientExample.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class TodoItemIdentifierCollectionResponseDocument : IBackedModel, IParsable 
+    public class TodoItemIdentifierCollectionResponseDocument : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,47 +16,53 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public List<TodoItemIdentifier>? Data {
-            get { return BackingStore?.Get<List<TodoItemIdentifier>?>("data"); }
+        public List<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemIdentifierInResponse>? Data
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemIdentifierInResponse>?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public List<TodoItemIdentifier> Data {
-            get { return BackingStore?.Get<List<TodoItemIdentifier>>("data"); }
+        public List<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemIdentifierInResponse> Data
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemIdentifierInResponse>>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ResourceIdentifierCollectionTopLevelLinks? Links {
-            get { return BackingStore?.Get<ResourceIdentifierCollectionTopLevelLinks?>("links"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks? Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public ResourceIdentifierCollectionTopLevelLinks Links {
-            get { return BackingStore?.Get<ResourceIdentifierCollectionTopLevelLinks>("links"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public TodoItemIdentifierCollectionResponseDocument_meta? Meta {
-            get { return BackingStore?.Get<TodoItemIdentifierCollectionResponseDocument_meta?>("meta"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.Meta? Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.Meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public TodoItemIdentifierCollectionResponseDocument_meta Meta {
-            get { return BackingStore?.Get<TodoItemIdentifierCollectionResponseDocument_meta>("meta"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.Meta Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="TodoItemIdentifierCollectionResponseDocument"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemIdentifierCollectionResponseDocument"/> and sets the default values.
         /// </summary>
         public TodoItemIdentifierCollectionResponseDocument()
         {
@@ -64,12 +71,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="TodoItemIdentifierCollectionResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemIdentifierCollectionResponseDocument"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static TodoItemIdentifierCollectionResponseDocument CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemIdentifierCollectionResponseDocument CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new TodoItemIdentifierCollectionResponseDocument();
+            return new OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemIdentifierCollectionResponseDocument();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -79,9 +86,9 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"data", n => { Data = n.GetCollectionOfObjectValues<TodoItemIdentifier>(TodoItemIdentifier.CreateFromDiscriminatorValue)?.ToList(); } },
-                {"links", n => { Links = n.GetObjectValue<ResourceIdentifierCollectionTopLevelLinks>(ResourceIdentifierCollectionTopLevelLinks.CreateFromDiscriminatorValue); } },
-                {"meta", n => { Meta = n.GetObjectValue<TodoItemIdentifierCollectionResponseDocument_meta>(TodoItemIdentifierCollectionResponseDocument_meta.CreateFromDiscriminatorValue); } },
+                { "data", n => { Data = n.GetCollectionOfObjectValues<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemIdentifierInResponse>(OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemIdentifierInResponse.CreateFromDiscriminatorValue)?.ToList(); } },
+                { "links", n => { Links = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks>(OpenApiKiotaClientExample.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>(OpenApiKiotaClientExample.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -91,9 +98,9 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteCollectionOfObjectValues<TodoItemIdentifier>("data", Data);
-            writer.WriteObjectValue<ResourceIdentifierCollectionTopLevelLinks>("links", Links);
-            writer.WriteObjectValue<TodoItemIdentifierCollectionResponseDocument_meta>("meta", Meta);
+            writer.WriteCollectionOfObjectValues<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemIdentifierInResponse>("data", Data);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks>("links", Links);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta", Meta);
         }
     }
 }

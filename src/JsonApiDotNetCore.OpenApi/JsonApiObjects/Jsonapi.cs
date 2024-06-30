@@ -16,5 +16,5 @@ internal sealed class Jsonapi
     public ICollection<string> Profile { get; set; } = null!;
 
     [JsonPropertyName("meta")]
-    public IDictionary<string, object> Meta { get; set; } = null!;
+    public Meta Meta { get; set; } = null!;
 }

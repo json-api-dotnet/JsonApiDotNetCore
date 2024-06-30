@@ -14,6 +14,17 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
 {
     public void Apply(OpenApiDocument document, DocumentFilterContext context)
     {
+        bool hasChanges;
+
+        do
+        {
+            hasChanges = Cleanup(document);
+        }
+        while (hasChanges);
+    }
+
+    private static bool Cleanup(OpenApiDocument document)
+    {
         var visitor = new OpenApiReferenceVisitor();
         var walker = new OpenApiWalker(visitor);
         walker.Walk(document);
@@ -29,6 +40,8 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
         {
             document.Components.Schemas.Remove(schemaId);
         }
+
+        return unusedSchemaNames.Count > 0;
     }
 
     private sealed class OpenApiReferenceVisitor : OpenApiVisitorBase

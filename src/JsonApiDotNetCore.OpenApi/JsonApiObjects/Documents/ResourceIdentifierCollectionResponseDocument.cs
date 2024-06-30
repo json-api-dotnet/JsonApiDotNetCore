@@ -20,8 +20,8 @@ internal sealed class ResourceIdentifierCollectionResponseDocument<TResource>
 
     [Required]
     [JsonPropertyName("data")]
-    public ICollection<ResourceIdentifier<TResource>> Data { get; set; } = null!;
+    public ICollection<ResourceIdentifierInResponse<TResource>> Data { get; set; } = null!;
 
     [JsonPropertyName("meta")]
-    public IDictionary<string, object> Meta { get; set; } = null!;
+    public Meta Meta { get; set; } = null!;
 }

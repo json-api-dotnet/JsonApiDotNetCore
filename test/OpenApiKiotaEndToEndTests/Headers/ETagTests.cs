@@ -135,12 +135,12 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
             InspectResponseHeaders = true
         };
 
-        var requestBody = new CountryPostRequestDocument
+        var requestBody = new CreateCountryRequestDocument
         {
-            Data = new CountryDataInPostRequest
+            Data = new DataInCreateCountryRequest
             {
                 Type = CountryResourceType.Countries,
-                Attributes = new CountryAttributesInPostRequest
+                Attributes = new AttributesInCreateCountryRequest
                 {
                     Name = newCountry.Name,
                     Population = newCountry.Population

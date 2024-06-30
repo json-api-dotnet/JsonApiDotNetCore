@@ -180,7 +180,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/resourcePostRequestDocument"
+                    "$ref": "#/components/schemas/createResourceRequestDocument"
                   }
                 ]
               }
@@ -475,7 +475,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/resourcePatchRequestDocument"
+                    "$ref": "#/components/schemas/updateResourceRequestDocument"
                   }
                 ]
               }
@@ -2512,18 +2512,130 @@
   },
   "components": {
     "schemas": {
-      "dataInResponse": {
+      "attributesInCreateResourceRequest": {
         "required": [
-          "id",
+          "requiredNullableValueType",
+          "requiredReferenceType",
+          "requiredValueType"
+        ],
+        "type": "object",
+        "properties": {
+          "referenceType": {
+            "type": "string",
+            "nullable": true
+          },
+          "requiredReferenceType": {
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "valueType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "requiredValueType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nullableValueType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "requiredNullableValueType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "attributesInUpdateResourceRequest": {
+        "type": "object",
+        "properties": {
+          "referenceType": {
+            "type": "string",
+            "nullable": true
+          },
+          "requiredReferenceType": {
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "valueType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "requiredValueType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nullableValueType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "requiredNullableValueType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "createResourceRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreateResourceRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInCreateResourceRequest": {
+        "required": [
           "type"
         ],
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceResourceType"
+              }
+            ]
           },
-          "id": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInCreateResourceRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipsInCreateResourceRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInResponse": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
             "minLength": 1,
             "type": "string"
           }
@@ -2537,6 +2649,41 @@
           }
         },
         "x-abstract": true
+      },
+      "dataInUpdateResourceRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInUpdateResourceRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipsInUpdateResourceRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
       },
       "emptyCollectionResponseDocument": {
         "required": [
@@ -2565,11 +2712,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2580,8 +2727,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "links": {
                 "allOf": [
                   {
@@ -2590,33 +2744,16 @@
                 ]
               },
               "meta": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "object",
-                  "nullable": true
-                }
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/meta"
+                  }
+                ]
               }
             },
             "additionalProperties": false
           }
         ],
-        "additionalProperties": false
-      },
-      "emptyIdentifier": {
-        "required": [
-          "id",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/emptyResourceType"
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
         "additionalProperties": false
       },
       "emptyIdentifierCollectionResponseDocument": {
@@ -2636,15 +2773,57 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/emptyIdentifier"
+              "$ref": "#/components/schemas/emptyIdentifierInResponse"
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "emptyIdentifierInRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/emptyResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "emptyIdentifierInResponse": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/emptyResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -2709,9 +2888,11 @@
             "nullable": true
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": { },
-            "nullable": true
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2737,11 +2918,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2776,6 +2957,12 @@
         },
         "additionalProperties": false
       },
+      "meta": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        }
+      },
       "nullableEmptyIdentifierResponseDocument": {
         "required": [
           "data",
@@ -2793,17 +2980,17 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/emptyIdentifier"
+                "$ref": "#/components/schemas/emptyIdentifierInResponse"
               }
             ],
             "nullable": true
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2837,11 +3024,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2855,7 +3042,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/emptyIdentifier"
+                "$ref": "#/components/schemas/emptyIdentifierInRequest"
               }
             ],
             "nullable": true
@@ -2876,17 +3063,17 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/emptyIdentifier"
+                "$ref": "#/components/schemas/emptyIdentifierInResponse"
               }
             ],
             "nullable": true
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2903,73 +3090,74 @@
         },
         "additionalProperties": false
       },
-      "resourceAttributesInPatchRequest": {
+      "relationshipsInCreateResourceRequest": {
+        "required": [
+          "requiredToMany",
+          "requiredToOne"
+        ],
         "type": "object",
         "properties": {
-          "referenceType": {
-            "type": "string",
-            "nullable": true
+          "toOne": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
+              }
+            ]
           },
-          "requiredReferenceType": {
-            "minLength": 1,
-            "type": "string",
-            "nullable": true
+          "requiredToOne": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
+              }
+            ]
           },
-          "valueType": {
-            "type": "integer",
-            "format": "int32"
+          "toMany": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyEmptyInRequest"
+              }
+            ]
           },
-          "requiredValueType": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "nullableValueType": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "requiredNullableValueType": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
+          "requiredToMany": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyEmptyInRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
       },
-      "resourceAttributesInPostRequest": {
-        "required": [
-          "requiredNullableValueType",
-          "requiredReferenceType",
-          "requiredValueType"
-        ],
+      "relationshipsInUpdateResourceRequest": {
         "type": "object",
         "properties": {
-          "referenceType": {
-            "type": "string",
-            "nullable": true
+          "toOne": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
+              }
+            ]
           },
-          "requiredReferenceType": {
-            "minLength": 1,
-            "type": "string",
-            "nullable": true
+          "requiredToOne": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
+              }
+            ]
           },
-          "valueType": {
-            "type": "integer",
-            "format": "int32"
+          "toMany": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyEmptyInRequest"
+              }
+            ]
           },
-          "requiredValueType": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "nullableValueType": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "requiredNullableValueType": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
+          "requiredToMany": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyEmptyInRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3034,11 +3222,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3067,71 +3255,21 @@
         },
         "additionalProperties": false
       },
-      "resourceDataInPatchRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/resourceResourceType"
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceAttributesInPatchRequest"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceRelationshipsInPatchRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "resourceDataInPostRequest": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/resourceResourceType"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceAttributesInPostRequest"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceRelationshipsInPostRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
       "resourceDataInResponse": {
         "allOf": [
           {
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -3154,11 +3292,11 @@
                 ]
               },
               "meta": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "object",
-                  "nullable": true
-                }
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/meta"
+                  }
+                ]
               }
             },
             "additionalProperties": false
@@ -3217,38 +3355,6 @@
         },
         "additionalProperties": false
       },
-      "resourcePatchRequestDocument": {
-        "required": [
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceDataInPatchRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "resourcePostRequestDocument": {
-        "required": [
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceDataInPostRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
       "resourcePrimaryResponseDocument": {
         "required": [
           "data",
@@ -3277,81 +3383,9 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "resourceRelationshipsInPatchRequest": {
-        "type": "object",
-        "properties": {
-          "toOne": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
-              }
-            ]
-          },
-          "requiredToOne": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
-              }
-            ]
-          },
-          "toMany": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyEmptyInRequest"
-              }
-            ]
-          },
-          "requiredToMany": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyEmptyInRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "resourceRelationshipsInPostRequest": {
-        "required": [
-          "requiredToMany",
-          "requiredToOne"
-        ],
-        "type": "object",
-        "properties": {
-          "toOne": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
-              }
-            ]
-          },
-          "requiredToOne": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
-              }
-            ]
-          },
-          "toMany": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyEmptyInRequest"
-              }
-            ]
-          },
-          "requiredToMany": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyEmptyInRequest"
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -3420,7 +3454,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/emptyIdentifier"
+              "$ref": "#/components/schemas/emptyIdentifierInRequest"
             }
           }
         },
@@ -3439,15 +3473,31 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/emptyIdentifier"
+              "$ref": "#/components/schemas/emptyIdentifierInResponse"
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "updateResourceRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInUpdateResourceRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false

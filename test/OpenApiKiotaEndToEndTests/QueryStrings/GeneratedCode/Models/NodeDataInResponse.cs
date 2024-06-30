@@ -4,76 +4,101 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class NodeDataInResponse : DataInResponse, IParsable 
+    public class NodeDataInResponse : OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.DataInResponse, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>The attributes property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public NodeAttributesInResponse? Attributes {
-            get { return BackingStore?.Get<NodeAttributesInResponse?>("attributes"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeAttributesInResponse? Attributes
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeAttributesInResponse?>("attributes"); }
             set { BackingStore?.Set("attributes", value); }
         }
 #nullable restore
 #else
-        public NodeAttributesInResponse Attributes {
-            get { return BackingStore?.Get<NodeAttributesInResponse>("attributes"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeAttributesInResponse Attributes
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeAttributesInResponse>("attributes"); }
             set { BackingStore?.Set("attributes", value); }
+        }
+#endif
+        /// <summary>The id property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? Id
+        {
+            get { return BackingStore?.Get<string?>("id"); }
+            set { BackingStore?.Set("id", value); }
+        }
+#nullable restore
+#else
+        public string Id
+        {
+            get { return BackingStore?.Get<string>("id"); }
+            set { BackingStore?.Set("id", value); }
         }
 #endif
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ResourceLinks? Links {
-            get { return BackingStore?.Get<ResourceLinks?>("links"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ResourceLinks? Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ResourceLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public ResourceLinks Links {
-            get { return BackingStore?.Get<ResourceLinks>("links"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ResourceLinks Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ResourceLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public NodeDataInResponse_meta? Meta {
-            get { return BackingStore?.Get<NodeDataInResponse_meta?>("meta"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.Meta? Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.Meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public NodeDataInResponse_meta Meta {
-            get { return BackingStore?.Get<NodeDataInResponse_meta>("meta"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.Meta Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.Meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
         /// <summary>The relationships property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public NodeRelationshipsInResponse? Relationships {
-            get { return BackingStore?.Get<NodeRelationshipsInResponse?>("relationships"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeRelationshipsInResponse? Relationships
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeRelationshipsInResponse?>("relationships"); }
             set { BackingStore?.Set("relationships", value); }
         }
 #nullable restore
 #else
-        public NodeRelationshipsInResponse Relationships {
-            get { return BackingStore?.Get<NodeRelationshipsInResponse>("relationships"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeRelationshipsInResponse Relationships
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeRelationshipsInResponse>("relationships"); }
             set { BackingStore?.Set("relationships", value); }
         }
 #endif
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="NodeDataInResponse"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeDataInResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static new NodeDataInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static new OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeDataInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new NodeDataInResponse();
+            return new OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeDataInResponse();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -83,10 +108,11 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>(base.GetFieldDeserializers())
             {
-                {"attributes", n => { Attributes = n.GetObjectValue<NodeAttributesInResponse>(NodeAttributesInResponse.CreateFromDiscriminatorValue); } },
-                {"links", n => { Links = n.GetObjectValue<ResourceLinks>(ResourceLinks.CreateFromDiscriminatorValue); } },
-                {"meta", n => { Meta = n.GetObjectValue<NodeDataInResponse_meta>(NodeDataInResponse_meta.CreateFromDiscriminatorValue); } },
-                {"relationships", n => { Relationships = n.GetObjectValue<NodeRelationshipsInResponse>(NodeRelationshipsInResponse.CreateFromDiscriminatorValue); } },
+                { "attributes", n => { Attributes = n.GetObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeAttributesInResponse>(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeAttributesInResponse.CreateFromDiscriminatorValue); } },
+                { "id", n => { Id = n.GetStringValue(); } },
+                { "links", n => { Links = n.GetObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ResourceLinks>(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ResourceLinks.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.Meta>(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
+                { "relationships", n => { Relationships = n.GetObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeRelationshipsInResponse>(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeRelationshipsInResponse.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -97,10 +123,11 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             base.Serialize(writer);
-            writer.WriteObjectValue<NodeAttributesInResponse>("attributes", Attributes);
-            writer.WriteObjectValue<ResourceLinks>("links", Links);
-            writer.WriteObjectValue<NodeDataInResponse_meta>("meta", Meta);
-            writer.WriteObjectValue<NodeRelationshipsInResponse>("relationships", Relationships);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeAttributesInResponse>("attributes", Attributes);
+            writer.WriteStringValue("id", Id);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ResourceLinks>("links", Links);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.Meta>("meta", Meta);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeRelationshipsInResponse>("relationships", Relationships);
         }
     }
 }

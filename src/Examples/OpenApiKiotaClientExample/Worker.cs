@@ -36,6 +36,8 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
 
             await UpdatePersonAsync(stoppingToken);
 
+            await SendOperationsRequestAsync(stoppingToken);
+
             _ = await _apiClient.Api.People["999999"].GetAsync(cancellationToken: stoppingToken);
         }
         catch (ErrorResponseDocument exception)
@@ -83,19 +85,113 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
 
     private async Task UpdatePersonAsync(CancellationToken cancellationToken)
     {
-        var patchRequest = new PersonPatchRequestDocument
+        var updatePersonRequest = new UpdatePersonRequestDocument
         {
-            Data = new PersonDataInPatchRequest
+            Data = new DataInUpdatePersonRequest
             {
                 Type = PersonResourceType.People,
                 Id = "1",
-                Attributes = new PersonAttributesInPatchRequest
+                Attributes = new AttributesInUpdatePersonRequest
                 {
+                    // The --backing-store switch enables to send null and default values.
+                    FirstName = null,
                     LastName = "Doe"
                 }
             }
         };
 
-        _ = await _apiClient.Api.People[patchRequest.Data.Id].PatchAsync(patchRequest, cancellationToken: cancellationToken);
+        _ = await _apiClient.Api.People[updatePersonRequest.Data.Id].PatchAsync(updatePersonRequest, cancellationToken: cancellationToken);
+    }
+
+    private async Task SendOperationsRequestAsync(CancellationToken cancellationToken)
+    {
+        var operationsRequest = new OperationsRequestDocument
+        {
+            AtomicOperations =
+            [
+                new CreateTagOperation
+                {
+                    Op = AddOperationCode.Add,
+                    Data = new DataInCreateTagRequest
+                    {
+                        Type = TagResourceType.Tags,
+                        Lid = "new-tag",
+                        Attributes = new AttributesInCreateTagRequest
+                        {
+                            Name = "Housekeeping"
+                        }
+                    }
+                },
+                new CreatePersonOperation
+                {
+                    Op = AddOperationCode.Add,
+                    Data = new DataInCreatePersonRequest
+                    {
+                        Type = PersonResourceType.People,
+                        Lid = "new-person",
+                        Attributes = new AttributesInCreatePersonRequest
+                        {
+                            LastName = "Cinderella"
+                        }
+                    }
+                },
+                new CreateTodoItemOperation
+                {
+                    Op = AddOperationCode.Add,
+                    Data = new DataInCreateTodoItemRequest
+                    {
+                        Type = TodoItemResourceType.TodoItems,
+                        Lid = "new-todo-item",
+                        Attributes = new AttributesInCreateTodoItemRequest
+                        {
+                            Description = "Put out the garbage",
+                            Priority = TodoItemPriority.Medium
+                        },
+                        Relationships = new RelationshipsInCreateTodoItemRequest
+                        {
+                            Owner = new ToOnePersonInRequest
+                            {
+                                Data = new PersonIdentifierInRequest
+                                {
+                                    Type = PersonResourceType.People,
+                                    Lid = "new-person"
+                                }
+                            },
+                            Tags = new ToManyTagInRequest
+                            {
+                                Data =
+                                [
+                                    new TagIdentifierInRequest
+                                    {
+                                        Type = TagResourceType.Tags,
+                                        Lid = "new-tag"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                new UpdateTodoItemAssigneeRelationshipOperation
+                {
+                    Op = UpdateOperationCode.Update,
+                    Ref = new TodoItemAssigneeRelationshipIdentifier
+                    {
+                        Type = TodoItemResourceType.TodoItems,
+                        Lid = "new-todo-item",
+                        Relationship = TodoItemAssigneeRelationshipName.Assignee
+                    },
+                    Data = new PersonIdentifierInRequest
+                    {
+                        Type = PersonResourceType.People,
+                        Lid = "new-person"
+                    }
+                }
+            ]
+        };
+
+        OperationsResponseDocument? operationsResponse = await _apiClient.Api.Operations.PostAsync(operationsRequest, cancellationToken: cancellationToken);
+
+        var newTodoItem = (TodoItemDataInResponse)operationsResponse!.AtomicResults!.ElementAt(2).Data!;
+        Console.WriteLine($"Created todo-item with ID {newTodoItem.Id}: {newTodoItem.Attributes!.Description}.");
     }
 }

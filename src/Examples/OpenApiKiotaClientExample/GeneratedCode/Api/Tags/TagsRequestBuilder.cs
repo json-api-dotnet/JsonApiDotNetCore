@@ -9,26 +9,27 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags {
+namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags
+{
     /// <summary>
     /// Builds and executes requests for operations under \api\tags
     /// </summary>
-    public class TagsRequestBuilder : BaseRequestBuilder 
+    public class TagsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>Gets an item from the OpenApiKiotaClientExample.GeneratedCode.api.tags.item collection</summary>
         /// <param name="position">The identifier of the tag to retrieve.</param>
-        /// <returns>A <see cref="TagsItemRequestBuilder"/></returns>
-        public TagsItemRequestBuilder this[string position]
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.TagsItemRequestBuilder"/></returns>
+        public OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.TagsItemRequestBuilder this[string position]
         {
             get
             {
                 var urlTplParams = new Dictionary<string, object>(PathParameters);
                 urlTplParams.Add("id", position);
-                return new TagsItemRequestBuilder(urlTplParams, RequestAdapter);
+                return new OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.TagsItemRequestBuilder(urlTplParams, RequestAdapter);
             }
         }
         /// <summary>
-        /// Instantiates a new <see cref="TagsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Api.Tags.TagsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -36,7 +37,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags {
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="TagsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Api.Tags.TagsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -46,25 +47,25 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags {
         /// <summary>
         /// Retrieves a collection of tags.
         /// </summary>
-        /// <returns>A <see cref="TagCollectionResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.TagCollectionResponseDocument"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<TagCollectionResponseDocument?> GetAsync(Action<RequestConfiguration<TagsRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaClientExample.GeneratedCode.Models.TagCollectionResponseDocument?> GetAsync(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.Tags.TagsRequestBuilder.TagsRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<TagCollectionResponseDocument> GetAsync(Action<RequestConfiguration<TagsRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaClientExample.GeneratedCode.Models.TagCollectionResponseDocument> GetAsync(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.Tags.TagsRequestBuilder.TagsRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
+                { "400", OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<TagCollectionResponseDocument>(requestInfo, TagCollectionResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<OpenApiKiotaClientExample.GeneratedCode.Models.TagCollectionResponseDocument>(requestInfo, OpenApiKiotaClientExample.GeneratedCode.Models.TagCollectionResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.
@@ -73,11 +74,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task HeadAsync(Action<RequestConfiguration<TagsRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task HeadAsync(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.Tags.TagsRequestBuilder.TagsRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task HeadAsync(Action<RequestConfiguration<TagsRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task HeadAsync(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.Tags.TagsRequestBuilder.TagsRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToHeadRequestInformation(requestConfiguration);
@@ -86,35 +87,35 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags {
         /// <summary>
         /// Creates a new tag.
         /// </summary>
-        /// <returns>A <see cref="TagPrimaryResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.TagPrimaryResponseDocument"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 403 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 409 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
+        /// <exception cref="OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 403 status code</exception>
+        /// <exception cref="OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 409 status code</exception>
+        /// <exception cref="OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<TagPrimaryResponseDocument?> PostAsync(TagPostRequestDocument body, Action<RequestConfiguration<TagsRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaClientExample.GeneratedCode.Models.TagPrimaryResponseDocument?> PostAsync(OpenApiKiotaClientExample.GeneratedCode.Models.CreateTagRequestDocument body, Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.Tags.TagsRequestBuilder.TagsRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<TagPrimaryResponseDocument> PostAsync(TagPostRequestDocument body, Action<RequestConfiguration<TagsRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaClientExample.GeneratedCode.Models.TagPrimaryResponseDocument> PostAsync(OpenApiKiotaClientExample.GeneratedCode.Models.CreateTagRequestDocument body, Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.Tags.TagsRequestBuilder.TagsRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPostRequestInformation(body, requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"403", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"409", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"422", ErrorResponseDocument.CreateFromDiscriminatorValue},
+                { "400", OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "403", OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "404", OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "409", OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "422", OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<TagPrimaryResponseDocument>(requestInfo, TagPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<OpenApiKiotaClientExample.GeneratedCode.Models.TagPrimaryResponseDocument>(requestInfo, OpenApiKiotaClientExample.GeneratedCode.Models.TagPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Retrieves a collection of tags.
@@ -123,11 +124,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<TagsRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.Tags.TagsRequestBuilder.TagsRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<TagsRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.Tags.TagsRequestBuilder.TagsRequestBuilderGetQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
@@ -142,11 +143,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<TagsRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.Tags.TagsRequestBuilder.TagsRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<TagsRequestBuilderHeadQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.Tags.TagsRequestBuilder.TagsRequestBuilderHeadQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.HEAD, UrlTemplate, PathParameters);
@@ -161,11 +162,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPostRequestInformation(TagPostRequestDocument body, Action<RequestConfiguration<TagsRequestBuilderPostQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(OpenApiKiotaClientExample.GeneratedCode.Models.CreateTagRequestDocument body, Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.Tags.TagsRequestBuilder.TagsRequestBuilderPostQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPostRequestInformation(TagPostRequestDocument body, Action<RequestConfiguration<TagsRequestBuilderPostQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(OpenApiKiotaClientExample.GeneratedCode.Models.CreateTagRequestDocument body, Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.Tags.TagsRequestBuilder.TagsRequestBuilderPostQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -178,11 +179,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags {
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="TagsRequestBuilder"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Api.Tags.TagsRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public TagsRequestBuilder WithUrl(string rawUrl)
+        public OpenApiKiotaClientExample.GeneratedCode.Api.Tags.TagsRequestBuilder WithUrl(string rawUrl)
         {
-            return new TagsRequestBuilder(rawUrl, RequestAdapter);
+            return new OpenApiKiotaClientExample.GeneratedCode.Api.Tags.TagsRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Retrieves a collection of tags.

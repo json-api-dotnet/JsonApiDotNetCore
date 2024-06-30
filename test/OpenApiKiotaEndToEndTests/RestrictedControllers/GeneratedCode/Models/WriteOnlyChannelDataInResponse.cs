@@ -4,76 +4,101 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class WriteOnlyChannelDataInResponse : DataInResponse, IParsable 
+    public class WriteOnlyChannelDataInResponse : OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataInResponse, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>The attributes property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public WriteOnlyChannelAttributesInResponse? Attributes {
-            get { return BackingStore?.Get<WriteOnlyChannelAttributesInResponse?>("attributes"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelAttributesInResponse? Attributes
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelAttributesInResponse?>("attributes"); }
             set { BackingStore?.Set("attributes", value); }
         }
 #nullable restore
 #else
-        public WriteOnlyChannelAttributesInResponse Attributes {
-            get { return BackingStore?.Get<WriteOnlyChannelAttributesInResponse>("attributes"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelAttributesInResponse Attributes
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelAttributesInResponse>("attributes"); }
             set { BackingStore?.Set("attributes", value); }
+        }
+#endif
+        /// <summary>The id property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? Id
+        {
+            get { return BackingStore?.Get<string?>("id"); }
+            set { BackingStore?.Set("id", value); }
+        }
+#nullable restore
+#else
+        public string Id
+        {
+            get { return BackingStore?.Get<string>("id"); }
+            set { BackingStore?.Set("id", value); }
         }
 #endif
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ResourceLinks? Links {
-            get { return BackingStore?.Get<ResourceLinks?>("links"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceLinks? Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public ResourceLinks Links {
-            get { return BackingStore?.Get<ResourceLinks>("links"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceLinks Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public WriteOnlyChannelDataInResponse_meta? Meta {
-            get { return BackingStore?.Get<WriteOnlyChannelDataInResponse_meta?>("meta"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta? Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public WriteOnlyChannelDataInResponse_meta Meta {
-            get { return BackingStore?.Get<WriteOnlyChannelDataInResponse_meta>("meta"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
         /// <summary>The relationships property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public WriteOnlyChannelRelationshipsInResponse? Relationships {
-            get { return BackingStore?.Get<WriteOnlyChannelRelationshipsInResponse?>("relationships"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelRelationshipsInResponse? Relationships
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelRelationshipsInResponse?>("relationships"); }
             set { BackingStore?.Set("relationships", value); }
         }
 #nullable restore
 #else
-        public WriteOnlyChannelRelationshipsInResponse Relationships {
-            get { return BackingStore?.Get<WriteOnlyChannelRelationshipsInResponse>("relationships"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelRelationshipsInResponse Relationships
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelRelationshipsInResponse>("relationships"); }
             set { BackingStore?.Set("relationships", value); }
         }
 #endif
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="WriteOnlyChannelDataInResponse"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelDataInResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static new WriteOnlyChannelDataInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static new OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelDataInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new WriteOnlyChannelDataInResponse();
+            return new OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelDataInResponse();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -83,10 +108,11 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>(base.GetFieldDeserializers())
             {
-                {"attributes", n => { Attributes = n.GetObjectValue<WriteOnlyChannelAttributesInResponse>(WriteOnlyChannelAttributesInResponse.CreateFromDiscriminatorValue); } },
-                {"links", n => { Links = n.GetObjectValue<ResourceLinks>(ResourceLinks.CreateFromDiscriminatorValue); } },
-                {"meta", n => { Meta = n.GetObjectValue<WriteOnlyChannelDataInResponse_meta>(WriteOnlyChannelDataInResponse_meta.CreateFromDiscriminatorValue); } },
-                {"relationships", n => { Relationships = n.GetObjectValue<WriteOnlyChannelRelationshipsInResponse>(WriteOnlyChannelRelationshipsInResponse.CreateFromDiscriminatorValue); } },
+                { "attributes", n => { Attributes = n.GetObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelAttributesInResponse>(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelAttributesInResponse.CreateFromDiscriminatorValue); } },
+                { "id", n => { Id = n.GetStringValue(); } },
+                { "links", n => { Links = n.GetObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceLinks>(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceLinks.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta>(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
+                { "relationships", n => { Relationships = n.GetObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelRelationshipsInResponse>(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelRelationshipsInResponse.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -97,10 +123,11 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             base.Serialize(writer);
-            writer.WriteObjectValue<WriteOnlyChannelAttributesInResponse>("attributes", Attributes);
-            writer.WriteObjectValue<ResourceLinks>("links", Links);
-            writer.WriteObjectValue<WriteOnlyChannelDataInResponse_meta>("meta", Meta);
-            writer.WriteObjectValue<WriteOnlyChannelRelationshipsInResponse>("relationships", Relationships);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelAttributesInResponse>("attributes", Attributes);
+            writer.WriteStringValue("id", Id);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceLinks>("links", Links);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta>("meta", Meta);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelRelationshipsInResponse>("relationships", Relationships);
         }
     }
 }

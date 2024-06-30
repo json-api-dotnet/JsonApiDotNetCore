@@ -4,76 +4,101 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Models {
+namespace OpenApiKiotaClientExample.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class TagDataInResponse : DataInResponse, IParsable 
+    public class TagDataInResponse : OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>The attributes property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public TagAttributesInResponse? Attributes {
-            get { return BackingStore?.Get<TagAttributesInResponse?>("attributes"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.TagAttributesInResponse? Attributes
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.TagAttributesInResponse?>("attributes"); }
             set { BackingStore?.Set("attributes", value); }
         }
 #nullable restore
 #else
-        public TagAttributesInResponse Attributes {
-            get { return BackingStore?.Get<TagAttributesInResponse>("attributes"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.TagAttributesInResponse Attributes
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.TagAttributesInResponse>("attributes"); }
             set { BackingStore?.Set("attributes", value); }
+        }
+#endif
+        /// <summary>The id property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? Id
+        {
+            get { return BackingStore?.Get<string?>("id"); }
+            set { BackingStore?.Set("id", value); }
+        }
+#nullable restore
+#else
+        public string Id
+        {
+            get { return BackingStore?.Get<string>("id"); }
+            set { BackingStore?.Set("id", value); }
         }
 #endif
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ResourceLinks? Links {
-            get { return BackingStore?.Get<ResourceLinks?>("links"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ResourceLinks? Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ResourceLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public ResourceLinks Links {
-            get { return BackingStore?.Get<ResourceLinks>("links"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ResourceLinks Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ResourceLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public TagDataInResponse_meta? Meta {
-            get { return BackingStore?.Get<TagDataInResponse_meta?>("meta"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.Meta? Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.Meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public TagDataInResponse_meta Meta {
-            get { return BackingStore?.Get<TagDataInResponse_meta>("meta"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.Meta Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
         /// <summary>The relationships property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public TagRelationshipsInResponse? Relationships {
-            get { return BackingStore?.Get<TagRelationshipsInResponse?>("relationships"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.TagRelationshipsInResponse? Relationships
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.TagRelationshipsInResponse?>("relationships"); }
             set { BackingStore?.Set("relationships", value); }
         }
 #nullable restore
 #else
-        public TagRelationshipsInResponse Relationships {
-            get { return BackingStore?.Get<TagRelationshipsInResponse>("relationships"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.TagRelationshipsInResponse Relationships
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.TagRelationshipsInResponse>("relationships"); }
             set { BackingStore?.Set("relationships", value); }
         }
 #endif
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="TagDataInResponse"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.TagDataInResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static new TagDataInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static new OpenApiKiotaClientExample.GeneratedCode.Models.TagDataInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new TagDataInResponse();
+            return new OpenApiKiotaClientExample.GeneratedCode.Models.TagDataInResponse();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -83,10 +108,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>(base.GetFieldDeserializers())
             {
-                {"attributes", n => { Attributes = n.GetObjectValue<TagAttributesInResponse>(TagAttributesInResponse.CreateFromDiscriminatorValue); } },
-                {"links", n => { Links = n.GetObjectValue<ResourceLinks>(ResourceLinks.CreateFromDiscriminatorValue); } },
-                {"meta", n => { Meta = n.GetObjectValue<TagDataInResponse_meta>(TagDataInResponse_meta.CreateFromDiscriminatorValue); } },
-                {"relationships", n => { Relationships = n.GetObjectValue<TagRelationshipsInResponse>(TagRelationshipsInResponse.CreateFromDiscriminatorValue); } },
+                { "attributes", n => { Attributes = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.TagAttributesInResponse>(OpenApiKiotaClientExample.GeneratedCode.Models.TagAttributesInResponse.CreateFromDiscriminatorValue); } },
+                { "id", n => { Id = n.GetStringValue(); } },
+                { "links", n => { Links = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ResourceLinks>(OpenApiKiotaClientExample.GeneratedCode.Models.ResourceLinks.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>(OpenApiKiotaClientExample.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
+                { "relationships", n => { Relationships = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.TagRelationshipsInResponse>(OpenApiKiotaClientExample.GeneratedCode.Models.TagRelationshipsInResponse.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -97,10 +123,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             base.Serialize(writer);
-            writer.WriteObjectValue<TagAttributesInResponse>("attributes", Attributes);
-            writer.WriteObjectValue<ResourceLinks>("links", Links);
-            writer.WriteObjectValue<TagDataInResponse_meta>("meta", Meta);
-            writer.WriteObjectValue<TagRelationshipsInResponse>("relationships", Relationships);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.TagAttributesInResponse>("attributes", Attributes);
+            writer.WriteStringValue("id", Id);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ResourceLinks>("links", Links);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta", Meta);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.TagRelationshipsInResponse>("relationships", Relationships);
         }
     }
 }

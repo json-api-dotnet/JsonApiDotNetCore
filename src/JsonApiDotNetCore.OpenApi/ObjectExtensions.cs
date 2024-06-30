@@ -8,10 +8,11 @@ internal static class ObjectExtensions
         new(() => typeof(object).GetMethod(nameof(MemberwiseClone), BindingFlags.Instance | BindingFlags.NonPublic)!,
             LazyThreadSafetyMode.ExecutionAndPublication);
 
-    public static object MemberwiseClone(this object source)
+    public static T MemberwiseClone<T>(this T source)
+        where T : class
     {
         ArgumentGuard.NotNull(source);
 
-        return MemberwiseCloneMethod.Value.Invoke(source, null)!;
+        return (T)MemberwiseCloneMethod.Value.Invoke(source, null)!;
     }
 }

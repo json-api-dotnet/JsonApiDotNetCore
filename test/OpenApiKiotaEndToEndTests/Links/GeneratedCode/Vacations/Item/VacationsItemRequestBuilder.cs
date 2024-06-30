@@ -12,34 +12,35 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item {
+namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item
+{
     /// <summary>
     /// Builds and executes requests for operations under \vacations\{id}
     /// </summary>
-    public class VacationsItemRequestBuilder : BaseRequestBuilder 
+    public class VacationsItemRequestBuilder : BaseRequestBuilder
     {
         /// <summary>The accommodation property</summary>
-        public AccommodationRequestBuilder Accommodation
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Accommodation.AccommodationRequestBuilder Accommodation
         {
-            get => new AccommodationRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Accommodation.AccommodationRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The excursions property</summary>
-        public ExcursionsRequestBuilder Excursions
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Excursions.ExcursionsRequestBuilder Excursions
         {
-            get => new ExcursionsRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Excursions.ExcursionsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The relationships property</summary>
-        public RelationshipsRequestBuilder Relationships
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Relationships.RelationshipsRequestBuilder Relationships
         {
-            get => new RelationshipsRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Relationships.RelationshipsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The transport property</summary>
-        public TransportRequestBuilder Transport
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Transport.TransportRequestBuilder Transport
         {
-            get => new TransportRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Transport.TransportRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new <see cref="VacationsItemRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.VacationsItemRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -47,7 +48,7 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item {
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="VacationsItemRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.VacationsItemRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -59,7 +60,7 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item {
         /// </summary>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
         public async Task DeleteAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
@@ -72,34 +73,34 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item {
             var requestInfo = ToDeleteRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
+                { "404", OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
             await RequestAdapter.SendNoContentAsync(requestInfo, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Retrieves an individual vacation by its identifier.
         /// </summary>
-        /// <returns>A <see cref="VacationPrimaryResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationPrimaryResponseDocument"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<VacationPrimaryResponseDocument?> GetAsync(Action<RequestConfiguration<VacationsItemRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationPrimaryResponseDocument?> GetAsync(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.VacationsItemRequestBuilder.VacationsItemRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<VacationPrimaryResponseDocument> GetAsync(Action<RequestConfiguration<VacationsItemRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationPrimaryResponseDocument> GetAsync(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.VacationsItemRequestBuilder.VacationsItemRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
+                { "400", OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "404", OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<VacationPrimaryResponseDocument>(requestInfo, VacationPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationPrimaryResponseDocument>(requestInfo, OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.
@@ -108,11 +109,11 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task HeadAsync(Action<RequestConfiguration<VacationsItemRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task HeadAsync(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.VacationsItemRequestBuilder.VacationsItemRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task HeadAsync(Action<RequestConfiguration<VacationsItemRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task HeadAsync(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.VacationsItemRequestBuilder.VacationsItemRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToHeadRequestInformation(requestConfiguration);
@@ -121,33 +122,33 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item {
         /// <summary>
         /// Updates an existing vacation.
         /// </summary>
-        /// <returns>A <see cref="VacationPrimaryResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationPrimaryResponseDocument"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 409 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorResponseDocument">When receiving a 409 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<VacationPrimaryResponseDocument?> PatchAsync(VacationPatchRequestDocument body, Action<RequestConfiguration<VacationsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationPrimaryResponseDocument?> PatchAsync(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.UpdateVacationRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.VacationsItemRequestBuilder.VacationsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<VacationPrimaryResponseDocument> PatchAsync(VacationPatchRequestDocument body, Action<RequestConfiguration<VacationsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationPrimaryResponseDocument> PatchAsync(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.UpdateVacationRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.VacationsItemRequestBuilder.VacationsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPatchRequestInformation(body, requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"409", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"422", ErrorResponseDocument.CreateFromDiscriminatorValue},
+                { "400", OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "404", OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "409", OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "422", OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<VacationPrimaryResponseDocument>(requestInfo, VacationPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationPrimaryResponseDocument>(requestInfo, OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.VacationPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Deletes an existing vacation by its identifier.
@@ -175,11 +176,11 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<VacationsItemRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.VacationsItemRequestBuilder.VacationsItemRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<VacationsItemRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.VacationsItemRequestBuilder.VacationsItemRequestBuilderGetQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
@@ -194,11 +195,11 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<VacationsItemRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.VacationsItemRequestBuilder.VacationsItemRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<VacationsItemRequestBuilderHeadQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.VacationsItemRequestBuilder.VacationsItemRequestBuilderHeadQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.HEAD, UrlTemplate, PathParameters);
@@ -213,11 +214,11 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPatchRequestInformation(VacationPatchRequestDocument body, Action<RequestConfiguration<VacationsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.UpdateVacationRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.VacationsItemRequestBuilder.VacationsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPatchRequestInformation(VacationPatchRequestDocument body, Action<RequestConfiguration<VacationsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.UpdateVacationRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.VacationsItemRequestBuilder.VacationsItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -230,11 +231,11 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item {
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="VacationsItemRequestBuilder"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.VacationsItemRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public VacationsItemRequestBuilder WithUrl(string rawUrl)
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.VacationsItemRequestBuilder WithUrl(string rawUrl)
         {
-            return new VacationsItemRequestBuilder(rawUrl, RequestAdapter);
+            return new OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.VacationsItemRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Retrieves an individual vacation by its identifier.

@@ -1,6 +1,7 @@
 using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.OpenApi.JsonApiObjects.AtomicOperations;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.SwaggerComponents;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -12,21 +13,32 @@ namespace JsonApiDotNetCore.OpenApi;
 
 internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
 {
+    private static readonly Type[] AtomicOperationDerivedSchemaTypes =
+    [
+        typeof(CreateResourceOperation<>),
+        typeof(UpdateResourceOperation<>),
+        typeof(DeleteResourceOperation<>),
+        typeof(UpdateToOneRelationshipOperation<>),
+        typeof(UpdateToManyRelationshipOperation<>),
+        typeof(AddToRelationshipOperation<>),
+        typeof(RemoveFromRelationshipOperation<>)
+    ];
+
     private readonly IControllerResourceMapping _controllerResourceMapping;
-    private readonly JsonApiOperationIdSelector _operationIdSelector;
+    private readonly OpenApiOperationIdSelector _openApiOperationIdSelector;
     private readonly JsonApiSchemaIdSelector _schemaIdSelector;
     private readonly IResourceGraph _resourceGraph;
 
-    public ConfigureSwaggerGenOptions(IControllerResourceMapping controllerResourceMapping, JsonApiOperationIdSelector operationIdSelector,
+    public ConfigureSwaggerGenOptions(IControllerResourceMapping controllerResourceMapping, OpenApiOperationIdSelector openApiOperationIdSelector,
         JsonApiSchemaIdSelector schemaIdSelector, IResourceGraph resourceGraph)
     {
         ArgumentGuard.NotNull(controllerResourceMapping);
-        ArgumentGuard.NotNull(operationIdSelector);
+        ArgumentGuard.NotNull(openApiOperationIdSelector);
         ArgumentGuard.NotNull(schemaIdSelector);
         ArgumentGuard.NotNull(resourceGraph);
 
         _controllerResourceMapping = controllerResourceMapping;
-        _operationIdSelector = operationIdSelector;
+        _openApiOperationIdSelector = openApiOperationIdSelector;
         _schemaIdSelector = schemaIdSelector;
         _resourceGraph = resourceGraph;
     }
@@ -39,24 +51,35 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
         options.UseAllOfForInheritance();
         options.SelectDiscriminatorNameUsing(_ => "type");
         options.SelectDiscriminatorValueUsing(clrType => _resourceGraph.GetResourceType(clrType).PublicName);
-        options.SelectSubTypesUsing(GetConstructedTypesForResourceData);
+        options.SelectSubTypesUsing(SelectDerivedTypes);
 
-        SetOperationInfo(options, _controllerResourceMapping);
-        SetSchemaIdSelector(options);
+        options.TagActionsBy(description => GetOpenApiOperationTags(description, _controllerResourceMapping));
+        options.CustomOperationIds(_openApiOperationIdSelector.GetOpenApiOperationId);
+        options.CustomSchemaIds(_schemaIdSelector.GetSchemaId);
 
         options.DocumentFilter<ServerDocumentFilter>();
         options.DocumentFilter<EndpointOrderingFilter>();
-        options.OperationFilter<JsonApiOperationDocumentationFilter>();
+        options.OperationFilter<DocumentationOpenApiOperationFilter>();
         options.DocumentFilter<UnusedComponentSchemaCleaner>();
     }
 
-    private IEnumerable<Type> GetConstructedTypesForResourceData(Type baseType)
+    private IEnumerable<Type> SelectDerivedTypes(Type baseType)
     {
-        if (baseType != typeof(ResourceData))
+        if (baseType == typeof(ResourceData))
         {
-            return [];
+            return GetConstructedTypesForResourceData();
         }
 
+        if (baseType == typeof(AtomicOperation))
+        {
+            return GetConstructedTypesForAtomicOperation();
+        }
+
+        return [];
+    }
+
+    private List<Type> GetConstructedTypesForResourceData()
+    {
         List<Type> derivedTypes = [];
 
         foreach (ResourceType resourceType in _resourceGraph.GetResourceTypes())
@@ -68,27 +91,23 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
         return derivedTypes;
     }
 
-    private void SetOperationInfo(SwaggerGenOptions swaggerGenOptions, IControllerResourceMapping controllerResourceMapping)
+    private List<Type> GetConstructedTypesForAtomicOperation()
     {
-        swaggerGenOptions.TagActionsBy(description => GetOperationTags(description, controllerResourceMapping));
-        swaggerGenOptions.CustomOperationIds(_operationIdSelector.GetOperationId);
+        List<Type> derivedTypes = [];
+
+        foreach (ResourceType resourceType in _resourceGraph.GetResourceTypes())
+        {
+            derivedTypes.AddRange(AtomicOperationDerivedSchemaTypes.Select(openType => openType.MakeGenericType(resourceType.ClrType)));
+        }
+
+        return derivedTypes;
     }
 
-    private static IList<string> GetOperationTags(ApiDescription description, IControllerResourceMapping controllerResourceMapping)
+    private static IList<string> GetOpenApiOperationTags(ApiDescription description, IControllerResourceMapping controllerResourceMapping)
     {
         MethodInfo actionMethod = description.ActionDescriptor.GetActionMethod();
         ResourceType? resourceType = controllerResourceMapping.GetResourceTypeForController(actionMethod.ReflectedType);
 
-        if (resourceType == null)
-        {
-            throw new NotSupportedException("Only JsonApiDotNetCore endpoints are supported.");
-        }
-
-        return [resourceType.PublicName];
-    }
-
-    private void SetSchemaIdSelector(SwaggerGenOptions swaggerGenOptions)
-    {
-        swaggerGenOptions.CustomSchemaIds(_schemaIdSelector.GetSchemaId);
+        return resourceType == null ? ["operations"] : [resourceType.PublicName];
     }
 }

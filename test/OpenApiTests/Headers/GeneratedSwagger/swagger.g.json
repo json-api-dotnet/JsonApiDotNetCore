@@ -180,7 +180,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/countryPostRequestDocument"
+                    "$ref": "#/components/schemas/createCountryRequestDocument"
                   }
                 ]
               }
@@ -475,7 +475,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/countryPatchRequestDocument"
+                    "$ref": "#/components/schemas/updateCountryRequestDocument"
                   }
                 ]
               }
@@ -1128,7 +1128,10 @@
   },
   "components": {
     "schemas": {
-      "countryAttributesInPatchRequest": {
+      "attributesInCreateCountryRequest": {
+        "required": [
+          "name"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1141,10 +1144,7 @@
         },
         "additionalProperties": false
       },
-      "countryAttributesInPostRequest": {
-        "required": [
-          "name"
-        ],
+      "attributesInUpdateCountryRequest": {
         "type": "object",
         "properties": {
           "name": {
@@ -1197,66 +1197,9 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "countryDataInPatchRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/countryResourceType"
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/countryAttributesInPatchRequest"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/countryRelationshipsInPatchRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "countryDataInPostRequest": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/countryResourceType"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/countryAttributesInPostRequest"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/countryRelationshipsInPostRequest"
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -1269,8 +1212,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -1293,48 +1243,16 @@
                 ]
               },
               "meta": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "object",
-                  "nullable": true
-                }
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/meta"
+                  }
+                ]
               }
             },
             "additionalProperties": false
           }
         ],
-        "additionalProperties": false
-      },
-      "countryPatchRequestDocument": {
-        "required": [
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/countryDataInPatchRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "countryPostRequestDocument": {
-        "required": [
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/countryDataInPostRequest"
-              }
-            ]
-          }
-        },
         "additionalProperties": false
       },
       "countryPrimaryResponseDocument": {
@@ -1365,35 +1283,9 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "countryRelationshipsInPatchRequest": {
-        "type": "object",
-        "properties": {
-          "languages": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/toManyLanguageInRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "countryRelationshipsInPostRequest": {
-        "type": "object",
-        "properties": {
-          "languages": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyLanguageInRequest"
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -1420,18 +1312,59 @@
         "type": "string",
         "additionalProperties": false
       },
-      "dataInResponse": {
+      "createCountryRequestDocument": {
         "required": [
-          "id",
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreateCountryRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInCreateCountryRequest": {
+        "required": [
           "type"
         ],
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/countryResourceType"
+              }
+            ]
           },
-          "id": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInCreateCountryRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipsInCreateCountryRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInResponse": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
             "minLength": 1,
             "type": "string"
           }
@@ -1445,6 +1378,41 @@
           }
         },
         "x-abstract": true
+      },
+      "dataInUpdateCountryRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/countryResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInUpdateCountryRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipsInUpdateCountryRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
       },
       "errorLinks": {
         "type": "object",
@@ -1499,9 +1467,11 @@
             "nullable": true
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": { },
-            "nullable": true
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1527,11 +1497,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1605,11 +1575,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1620,8 +1590,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -1637,33 +1614,16 @@
                 ]
               },
               "meta": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "object",
-                  "nullable": true
-                }
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/meta"
+                  }
+                ]
               }
             },
             "additionalProperties": false
           }
         ],
-        "additionalProperties": false
-      },
-      "languageIdentifier": {
-        "required": [
-          "id",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/languageResourceType"
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
         "additionalProperties": false
       },
       "languageIdentifierCollectionResponseDocument": {
@@ -1683,15 +1643,57 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/languageIdentifier"
+              "$ref": "#/components/schemas/languageIdentifierInResponse"
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "languageIdentifierInRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/languageResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "languageIdentifierInResponse": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/languageResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -1703,6 +1705,12 @@
         "type": "string",
         "additionalProperties": false
       },
+      "meta": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        }
+      },
       "relationshipLinks": {
         "type": "object",
         "properties": {
@@ -1711,6 +1719,32 @@
           },
           "related": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "relationshipsInCreateCountryRequest": {
+        "type": "object",
+        "properties": {
+          "languages": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyLanguageInRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "relationshipsInUpdateCountryRequest": {
+        "type": "object",
+        "properties": {
+          "languages": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyLanguageInRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1796,7 +1830,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/languageIdentifier"
+              "$ref": "#/components/schemas/languageIdentifierInRequest"
             }
           }
         },
@@ -1815,15 +1849,31 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/languageIdentifier"
+              "$ref": "#/components/schemas/languageIdentifierInResponse"
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "updateCountryRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInUpdateCountryRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false

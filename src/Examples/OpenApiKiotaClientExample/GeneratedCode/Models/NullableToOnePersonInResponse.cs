@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Models {
+namespace OpenApiKiotaClientExample.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class NullableToOnePersonInResponse : IBackedModel, IParsable 
+    public class NullableToOnePersonInResponse : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,47 +16,53 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public PersonIdentifier? Data {
-            get { return BackingStore?.Get<PersonIdentifier?>("data"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.PersonIdentifierInResponse? Data
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.PersonIdentifierInResponse?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public PersonIdentifier Data {
-            get { return BackingStore?.Get<PersonIdentifier>("data"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.PersonIdentifierInResponse Data
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.PersonIdentifierInResponse>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RelationshipLinks? Links {
-            get { return BackingStore?.Get<RelationshipLinks?>("links"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipLinks? Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public RelationshipLinks Links {
-            get { return BackingStore?.Get<RelationshipLinks>("links"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipLinks Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public NullableToOnePersonInResponse_meta? Meta {
-            get { return BackingStore?.Get<NullableToOnePersonInResponse_meta?>("meta"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.Meta? Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.Meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public NullableToOnePersonInResponse_meta Meta {
-            get { return BackingStore?.Get<NullableToOnePersonInResponse_meta>("meta"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.Meta Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="NullableToOnePersonInResponse"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.NullableToOnePersonInResponse"/> and sets the default values.
         /// </summary>
         public NullableToOnePersonInResponse()
         {
@@ -64,12 +71,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="NullableToOnePersonInResponse"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.NullableToOnePersonInResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static NullableToOnePersonInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaClientExample.GeneratedCode.Models.NullableToOnePersonInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new NullableToOnePersonInResponse();
+            return new OpenApiKiotaClientExample.GeneratedCode.Models.NullableToOnePersonInResponse();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -79,9 +86,9 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"data", n => { Data = n.GetObjectValue<PersonIdentifier>(PersonIdentifier.CreateFromDiscriminatorValue); } },
-                {"links", n => { Links = n.GetObjectValue<RelationshipLinks>(RelationshipLinks.CreateFromDiscriminatorValue); } },
-                {"meta", n => { Meta = n.GetObjectValue<NullableToOnePersonInResponse_meta>(NullableToOnePersonInResponse_meta.CreateFromDiscriminatorValue); } },
+                { "data", n => { Data = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.PersonIdentifierInResponse>(OpenApiKiotaClientExample.GeneratedCode.Models.PersonIdentifierInResponse.CreateFromDiscriminatorValue); } },
+                { "links", n => { Links = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipLinks>(OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipLinks.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>(OpenApiKiotaClientExample.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -91,9 +98,9 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<PersonIdentifier>("data", Data);
-            writer.WriteObjectValue<RelationshipLinks>("links", Links);
-            writer.WriteObjectValue<NullableToOnePersonInResponse_meta>("meta", Meta);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.PersonIdentifierInResponse>("data", Data);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipLinks>("links", Links);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta", Meta);
         }
     }
 }

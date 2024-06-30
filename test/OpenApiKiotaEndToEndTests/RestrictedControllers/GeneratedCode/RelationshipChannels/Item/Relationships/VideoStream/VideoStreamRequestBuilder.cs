@@ -8,14 +8,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.RelationshipChannels.Item.Relationships.VideoStream {
+namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.RelationshipChannels.Item.Relationships.VideoStream
+{
     /// <summary>
     /// Builds and executes requests for operations under \relationshipChannels\{id}\relationships\videoStream
     /// </summary>
-    public class VideoStreamRequestBuilder : BaseRequestBuilder 
+    public class VideoStreamRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="VideoStreamRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.RelationshipChannels.Item.Relationships.VideoStream.VideoStreamRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -23,7 +24,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Relation
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="VideoStreamRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.RelationshipChannels.Item.Relationships.VideoStream.VideoStreamRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -33,27 +34,27 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Relation
         /// <summary>
         /// Retrieves the related dataStream identity of an individual relationshipChannel&apos;s videoStream relationship.
         /// </summary>
-        /// <returns>A <see cref="DataStreamIdentifierResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamIdentifierResponseDocument"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<DataStreamIdentifierResponseDocument?> GetAsync(Action<RequestConfiguration<VideoStreamRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamIdentifierResponseDocument?> GetAsync(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.RelationshipChannels.Item.Relationships.VideoStream.VideoStreamRequestBuilder.VideoStreamRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<DataStreamIdentifierResponseDocument> GetAsync(Action<RequestConfiguration<VideoStreamRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamIdentifierResponseDocument> GetAsync(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.RelationshipChannels.Item.Relationships.VideoStream.VideoStreamRequestBuilder.VideoStreamRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
+                { "400", OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "404", OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<DataStreamIdentifierResponseDocument>(requestInfo, DataStreamIdentifierResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamIdentifierResponseDocument>(requestInfo, OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamIdentifierResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.
@@ -62,11 +63,11 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Relation
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task HeadAsync(Action<RequestConfiguration<VideoStreamRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task HeadAsync(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.RelationshipChannels.Item.Relationships.VideoStream.VideoStreamRequestBuilder.VideoStreamRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task HeadAsync(Action<RequestConfiguration<VideoStreamRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task HeadAsync(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.RelationshipChannels.Item.Relationships.VideoStream.VideoStreamRequestBuilder.VideoStreamRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToHeadRequestInformation(requestConfiguration);
@@ -78,25 +79,25 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Relation
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 409 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 409 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task PatchAsync(ToOneDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task PatchAsync(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ToOneDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task PatchAsync(ToOneDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task PatchAsync(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ToOneDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPatchRequestInformation(body, requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"409", ErrorResponseDocument.CreateFromDiscriminatorValue},
+                { "400", OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "404", OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "409", OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
             await RequestAdapter.SendNoContentAsync(requestInfo, errorMapping, cancellationToken).ConfigureAwait(false);
         }
@@ -107,11 +108,11 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Relation
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<VideoStreamRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.RelationshipChannels.Item.Relationships.VideoStream.VideoStreamRequestBuilder.VideoStreamRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<VideoStreamRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.RelationshipChannels.Item.Relationships.VideoStream.VideoStreamRequestBuilder.VideoStreamRequestBuilderGetQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
@@ -126,11 +127,11 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Relation
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<VideoStreamRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.RelationshipChannels.Item.Relationships.VideoStream.VideoStreamRequestBuilder.VideoStreamRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<VideoStreamRequestBuilderHeadQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.RelationshipChannels.Item.Relationships.VideoStream.VideoStreamRequestBuilder.VideoStreamRequestBuilderHeadQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.HEAD, UrlTemplate, PathParameters);
@@ -145,11 +146,11 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Relation
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPatchRequestInformation(ToOneDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ToOneDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPatchRequestInformation(ToOneDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ToOneDataStreamInRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -162,11 +163,11 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Relation
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="VideoStreamRequestBuilder"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.RelationshipChannels.Item.Relationships.VideoStream.VideoStreamRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public VideoStreamRequestBuilder WithUrl(string rawUrl)
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.RelationshipChannels.Item.Relationships.VideoStream.VideoStreamRequestBuilder WithUrl(string rawUrl)
         {
-            return new VideoStreamRequestBuilder(rawUrl, RequestAdapter);
+            return new OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.RelationshipChannels.Item.Relationships.VideoStream.VideoStreamRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Retrieves the related dataStream identity of an individual relationshipChannel&apos;s videoStream relationship.

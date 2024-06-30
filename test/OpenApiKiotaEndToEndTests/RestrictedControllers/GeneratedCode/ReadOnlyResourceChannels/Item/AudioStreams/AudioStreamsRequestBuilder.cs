@@ -8,14 +8,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyResourceChannels.Item.AudioStreams {
+namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyResourceChannels.Item.AudioStreams
+{
     /// <summary>
     /// Builds and executes requests for operations under \readOnlyResourceChannels\{id}\audioStreams
     /// </summary>
-    public class AudioStreamsRequestBuilder : BaseRequestBuilder 
+    public class AudioStreamsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="AudioStreamsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyResourceChannels.Item.AudioStreams.AudioStreamsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -23,7 +24,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnly
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="AudioStreamsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyResourceChannels.Item.AudioStreams.AudioStreamsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -33,27 +34,27 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnly
         /// <summary>
         /// Retrieves the related dataStreams of an individual readOnlyResourceChannel&apos;s audioStreams relationship.
         /// </summary>
-        /// <returns>A <see cref="DataStreamCollectionResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamCollectionResponseDocument"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<DataStreamCollectionResponseDocument?> GetAsync(Action<RequestConfiguration<AudioStreamsRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamCollectionResponseDocument?> GetAsync(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyResourceChannels.Item.AudioStreams.AudioStreamsRequestBuilder.AudioStreamsRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<DataStreamCollectionResponseDocument> GetAsync(Action<RequestConfiguration<AudioStreamsRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamCollectionResponseDocument> GetAsync(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyResourceChannels.Item.AudioStreams.AudioStreamsRequestBuilder.AudioStreamsRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
+                { "400", OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "404", OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<DataStreamCollectionResponseDocument>(requestInfo, DataStreamCollectionResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamCollectionResponseDocument>(requestInfo, OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamCollectionResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.
@@ -62,11 +63,11 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnly
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task HeadAsync(Action<RequestConfiguration<AudioStreamsRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task HeadAsync(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyResourceChannels.Item.AudioStreams.AudioStreamsRequestBuilder.AudioStreamsRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task HeadAsync(Action<RequestConfiguration<AudioStreamsRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task HeadAsync(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyResourceChannels.Item.AudioStreams.AudioStreamsRequestBuilder.AudioStreamsRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToHeadRequestInformation(requestConfiguration);
@@ -79,11 +80,11 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnly
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<AudioStreamsRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyResourceChannels.Item.AudioStreams.AudioStreamsRequestBuilder.AudioStreamsRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<AudioStreamsRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyResourceChannels.Item.AudioStreams.AudioStreamsRequestBuilder.AudioStreamsRequestBuilderGetQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
@@ -98,11 +99,11 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnly
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<AudioStreamsRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyResourceChannels.Item.AudioStreams.AudioStreamsRequestBuilder.AudioStreamsRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<AudioStreamsRequestBuilderHeadQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyResourceChannels.Item.AudioStreams.AudioStreamsRequestBuilder.AudioStreamsRequestBuilderHeadQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.HEAD, UrlTemplate, PathParameters);
@@ -112,11 +113,11 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnly
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="AudioStreamsRequestBuilder"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyResourceChannels.Item.AudioStreams.AudioStreamsRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public AudioStreamsRequestBuilder WithUrl(string rawUrl)
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyResourceChannels.Item.AudioStreams.AudioStreamsRequestBuilder WithUrl(string rawUrl)
         {
-            return new AudioStreamsRequestBuilder(rawUrl, RequestAdapter);
+            return new OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.ReadOnlyResourceChannels.Item.AudioStreams.AudioStreamsRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Retrieves the related dataStreams of an individual readOnlyResourceChannel&apos;s audioStreams relationship.

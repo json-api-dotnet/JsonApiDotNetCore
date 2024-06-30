@@ -1,5 +1,4 @@
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
@@ -26,14 +25,15 @@ internal sealed class JsonApiRequestFormatMetadataProvider : IInputFormatter, IA
         ArgumentGuard.NotNullNorEmpty(contentType);
         ArgumentGuard.NotNull(objectType);
 
-        if (contentType == HeaderConstants.MediaType && JsonApiSchemaFacts.IsRequestSchemaType(objectType))
+        if (JsonApiSchemaFacts.IsRequestBodySchemaType(objectType) && contentType is HeaderConstants.MediaType or HeaderConstants.AtomicOperationsMediaType or
+            HeaderConstants.RelaxedAtomicOperationsMediaType)
         {
             return new MediaTypeCollection
             {
-                new MediaTypeHeaderValue(HeaderConstants.MediaType)
+                MediaTypeHeaderValue.Parse(contentType)
             };
         }
 
-        return new MediaTypeCollection();
+        return [];
     }
 }

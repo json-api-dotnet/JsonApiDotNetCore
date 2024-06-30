@@ -6,9 +6,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Models {
+namespace OpenApiKiotaClientExample.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class ErrorResponseDocument : ApiException, IBackedModel, IParsable 
+    public class ErrorResponseDocument : ApiException, IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -16,28 +17,32 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The errors property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public List<ErrorObject>? Errors {
-            get { return BackingStore?.Get<List<ErrorObject>?>("errors"); }
+        public List<OpenApiKiotaClientExample.GeneratedCode.Models.ErrorObject>? Errors
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaClientExample.GeneratedCode.Models.ErrorObject>?>("errors"); }
             set { BackingStore?.Set("errors", value); }
         }
 #nullable restore
 #else
-        public List<ErrorObject> Errors {
-            get { return BackingStore?.Get<List<ErrorObject>>("errors"); }
+        public List<OpenApiKiotaClientExample.GeneratedCode.Models.ErrorObject> Errors
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaClientExample.GeneratedCode.Models.ErrorObject>>("errors"); }
             set { BackingStore?.Set("errors", value); }
         }
 #endif
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ErrorTopLevelLinks? Links {
-            get { return BackingStore?.Get<ErrorTopLevelLinks?>("links"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ErrorTopLevelLinks? Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ErrorTopLevelLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public ErrorTopLevelLinks Links {
-            get { return BackingStore?.Get<ErrorTopLevelLinks>("links"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ErrorTopLevelLinks Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ErrorTopLevelLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
@@ -46,19 +51,21 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ErrorResponseDocument_meta? Meta {
-            get { return BackingStore?.Get<ErrorResponseDocument_meta?>("meta"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.Meta? Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.Meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public ErrorResponseDocument_meta Meta {
-            get { return BackingStore?.Get<ErrorResponseDocument_meta>("meta"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.Meta Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="ErrorResponseDocument"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument"/> and sets the default values.
         /// </summary>
         public ErrorResponseDocument()
         {
@@ -67,12 +74,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="ErrorResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static ErrorResponseDocument CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new ErrorResponseDocument();
+            return new OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -82,9 +89,9 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"errors", n => { Errors = n.GetCollectionOfObjectValues<ErrorObject>(ErrorObject.CreateFromDiscriminatorValue)?.ToList(); } },
-                {"links", n => { Links = n.GetObjectValue<ErrorTopLevelLinks>(ErrorTopLevelLinks.CreateFromDiscriminatorValue); } },
-                {"meta", n => { Meta = n.GetObjectValue<ErrorResponseDocument_meta>(ErrorResponseDocument_meta.CreateFromDiscriminatorValue); } },
+                { "errors", n => { Errors = n.GetCollectionOfObjectValues<OpenApiKiotaClientExample.GeneratedCode.Models.ErrorObject>(OpenApiKiotaClientExample.GeneratedCode.Models.ErrorObject.CreateFromDiscriminatorValue)?.ToList(); } },
+                { "links", n => { Links = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ErrorTopLevelLinks>(OpenApiKiotaClientExample.GeneratedCode.Models.ErrorTopLevelLinks.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>(OpenApiKiotaClientExample.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -94,9 +101,9 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteCollectionOfObjectValues<ErrorObject>("errors", Errors);
-            writer.WriteObjectValue<ErrorTopLevelLinks>("links", Links);
-            writer.WriteObjectValue<ErrorResponseDocument_meta>("meta", Meta);
+            writer.WriteCollectionOfObjectValues<OpenApiKiotaClientExample.GeneratedCode.Models.ErrorObject>("errors", Errors);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ErrorTopLevelLinks>("links", Links);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta", Meta);
         }
     }
 }

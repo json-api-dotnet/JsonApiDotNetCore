@@ -4,62 +4,85 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class DataStreamDataInResponse : DataInResponse, IParsable 
+    public class DataStreamDataInResponse : OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataInResponse, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>The attributes property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public DataStreamAttributesInResponse? Attributes {
-            get { return BackingStore?.Get<DataStreamAttributesInResponse?>("attributes"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamAttributesInResponse? Attributes
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamAttributesInResponse?>("attributes"); }
             set { BackingStore?.Set("attributes", value); }
         }
 #nullable restore
 #else
-        public DataStreamAttributesInResponse Attributes {
-            get { return BackingStore?.Get<DataStreamAttributesInResponse>("attributes"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamAttributesInResponse Attributes
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamAttributesInResponse>("attributes"); }
             set { BackingStore?.Set("attributes", value); }
+        }
+#endif
+        /// <summary>The id property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? Id
+        {
+            get { return BackingStore?.Get<string?>("id"); }
+            set { BackingStore?.Set("id", value); }
+        }
+#nullable restore
+#else
+        public string Id
+        {
+            get { return BackingStore?.Get<string>("id"); }
+            set { BackingStore?.Set("id", value); }
         }
 #endif
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ResourceLinks? Links {
-            get { return BackingStore?.Get<ResourceLinks?>("links"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceLinks? Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public ResourceLinks Links {
-            get { return BackingStore?.Get<ResourceLinks>("links"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceLinks Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public DataStreamDataInResponse_meta? Meta {
-            get { return BackingStore?.Get<DataStreamDataInResponse_meta?>("meta"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta? Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public DataStreamDataInResponse_meta Meta {
-            get { return BackingStore?.Get<DataStreamDataInResponse_meta>("meta"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="DataStreamDataInResponse"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamDataInResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static new DataStreamDataInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static new OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamDataInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new DataStreamDataInResponse();
+            return new OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamDataInResponse();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -69,9 +92,10 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>(base.GetFieldDeserializers())
             {
-                {"attributes", n => { Attributes = n.GetObjectValue<DataStreamAttributesInResponse>(DataStreamAttributesInResponse.CreateFromDiscriminatorValue); } },
-                {"links", n => { Links = n.GetObjectValue<ResourceLinks>(ResourceLinks.CreateFromDiscriminatorValue); } },
-                {"meta", n => { Meta = n.GetObjectValue<DataStreamDataInResponse_meta>(DataStreamDataInResponse_meta.CreateFromDiscriminatorValue); } },
+                { "attributes", n => { Attributes = n.GetObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamAttributesInResponse>(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamAttributesInResponse.CreateFromDiscriminatorValue); } },
+                { "id", n => { Id = n.GetStringValue(); } },
+                { "links", n => { Links = n.GetObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceLinks>(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceLinks.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta>(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -82,9 +106,10 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             base.Serialize(writer);
-            writer.WriteObjectValue<DataStreamAttributesInResponse>("attributes", Attributes);
-            writer.WriteObjectValue<ResourceLinks>("links", Links);
-            writer.WriteObjectValue<DataStreamDataInResponse_meta>("meta", Meta);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamAttributesInResponse>("attributes", Attributes);
+            writer.WriteStringValue("id", Id);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceLinks>("links", Links);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta>("meta", Meta);
         }
     }
 }

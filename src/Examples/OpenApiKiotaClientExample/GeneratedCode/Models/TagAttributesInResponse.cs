@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Models {
+namespace OpenApiKiotaClientExample.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class TagAttributesInResponse : IBackedModel, IParsable 
+    public class TagAttributesInResponse : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,19 +16,21 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The name property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Name {
+        public string? Name
+        {
             get { return BackingStore?.Get<string?>("name"); }
             set { BackingStore?.Set("name", value); }
         }
 #nullable restore
 #else
-        public string Name {
+        public string Name
+        {
             get { return BackingStore?.Get<string>("name"); }
             set { BackingStore?.Set("name", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="TagAttributesInResponse"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.TagAttributesInResponse"/> and sets the default values.
         /// </summary>
         public TagAttributesInResponse()
         {
@@ -36,12 +39,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="TagAttributesInResponse"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.TagAttributesInResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static TagAttributesInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaClientExample.GeneratedCode.Models.TagAttributesInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new TagAttributesInResponse();
+            return new OpenApiKiotaClientExample.GeneratedCode.Models.TagAttributesInResponse();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -51,7 +54,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"name", n => { Name = n.GetStringValue(); } },
+                { "name", n => { Name = n.GetStringValue(); } },
             };
         }
         /// <summary>

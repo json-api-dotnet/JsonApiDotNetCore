@@ -26,5 +26,5 @@ internal sealed class NullableSecondaryResourceResponseDocument<TResource>
     public IList<ResourceData> Included { get; set; } = null!;
 
     [JsonPropertyName("meta")]
-    public IDictionary<string, object> Meta { get; set; } = null!;
+    public Meta Meta { get; set; } = null!;
 }

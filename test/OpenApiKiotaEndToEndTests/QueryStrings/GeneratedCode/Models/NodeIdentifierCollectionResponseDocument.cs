@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class NodeIdentifierCollectionResponseDocument : IBackedModel, IParsable 
+    public class NodeIdentifierCollectionResponseDocument : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,47 +16,53 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public List<NodeIdentifier>? Data {
-            get { return BackingStore?.Get<List<NodeIdentifier>?>("data"); }
+        public List<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeIdentifierInResponse>? Data
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeIdentifierInResponse>?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public List<NodeIdentifier> Data {
-            get { return BackingStore?.Get<List<NodeIdentifier>>("data"); }
+        public List<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeIdentifierInResponse> Data
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeIdentifierInResponse>>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ResourceIdentifierCollectionTopLevelLinks? Links {
-            get { return BackingStore?.Get<ResourceIdentifierCollectionTopLevelLinks?>("links"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks? Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public ResourceIdentifierCollectionTopLevelLinks Links {
-            get { return BackingStore?.Get<ResourceIdentifierCollectionTopLevelLinks>("links"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public NodeIdentifierCollectionResponseDocument_meta? Meta {
-            get { return BackingStore?.Get<NodeIdentifierCollectionResponseDocument_meta?>("meta"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.Meta? Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.Meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public NodeIdentifierCollectionResponseDocument_meta Meta {
-            get { return BackingStore?.Get<NodeIdentifierCollectionResponseDocument_meta>("meta"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.Meta Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.Meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="NodeIdentifierCollectionResponseDocument"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeIdentifierCollectionResponseDocument"/> and sets the default values.
         /// </summary>
         public NodeIdentifierCollectionResponseDocument()
         {
@@ -64,12 +71,12 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="NodeIdentifierCollectionResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeIdentifierCollectionResponseDocument"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static NodeIdentifierCollectionResponseDocument CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeIdentifierCollectionResponseDocument CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new NodeIdentifierCollectionResponseDocument();
+            return new OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeIdentifierCollectionResponseDocument();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -79,9 +86,9 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"data", n => { Data = n.GetCollectionOfObjectValues<NodeIdentifier>(NodeIdentifier.CreateFromDiscriminatorValue)?.ToList(); } },
-                {"links", n => { Links = n.GetObjectValue<ResourceIdentifierCollectionTopLevelLinks>(ResourceIdentifierCollectionTopLevelLinks.CreateFromDiscriminatorValue); } },
-                {"meta", n => { Meta = n.GetObjectValue<NodeIdentifierCollectionResponseDocument_meta>(NodeIdentifierCollectionResponseDocument_meta.CreateFromDiscriminatorValue); } },
+                { "data", n => { Data = n.GetCollectionOfObjectValues<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeIdentifierInResponse>(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeIdentifierInResponse.CreateFromDiscriminatorValue)?.ToList(); } },
+                { "links", n => { Links = n.GetObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks>(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.Meta>(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -91,9 +98,9 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteCollectionOfObjectValues<NodeIdentifier>("data", Data);
-            writer.WriteObjectValue<ResourceIdentifierCollectionTopLevelLinks>("links", Links);
-            writer.WriteObjectValue<NodeIdentifierCollectionResponseDocument_meta>("meta", Meta);
+            writer.WriteCollectionOfObjectValues<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodeIdentifierInResponse>("data", Data);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks>("links", Links);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.Meta>("meta", Meta);
         }
     }
 }

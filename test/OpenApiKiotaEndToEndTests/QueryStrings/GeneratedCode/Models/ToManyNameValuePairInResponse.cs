@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class ToManyNameValuePairInResponse : IBackedModel, IParsable 
+    public class ToManyNameValuePairInResponse : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,47 +16,53 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public List<NameValuePairIdentifier>? Data {
-            get { return BackingStore?.Get<List<NameValuePairIdentifier>?>("data"); }
+        public List<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifierInResponse>? Data
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifierInResponse>?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public List<NameValuePairIdentifier> Data {
-            get { return BackingStore?.Get<List<NameValuePairIdentifier>>("data"); }
+        public List<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifierInResponse> Data
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifierInResponse>>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RelationshipLinks? Links {
-            get { return BackingStore?.Get<RelationshipLinks?>("links"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.RelationshipLinks? Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.RelationshipLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public RelationshipLinks Links {
-            get { return BackingStore?.Get<RelationshipLinks>("links"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.RelationshipLinks Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.RelationshipLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ToManyNameValuePairInResponse_meta? Meta {
-            get { return BackingStore?.Get<ToManyNameValuePairInResponse_meta?>("meta"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.Meta? Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.Meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public ToManyNameValuePairInResponse_meta Meta {
-            get { return BackingStore?.Get<ToManyNameValuePairInResponse_meta>("meta"); }
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.Meta Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.Meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="ToManyNameValuePairInResponse"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ToManyNameValuePairInResponse"/> and sets the default values.
         /// </summary>
         public ToManyNameValuePairInResponse()
         {
@@ -64,12 +71,12 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="ToManyNameValuePairInResponse"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ToManyNameValuePairInResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static ToManyNameValuePairInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ToManyNameValuePairInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new ToManyNameValuePairInResponse();
+            return new OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ToManyNameValuePairInResponse();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -79,9 +86,9 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"data", n => { Data = n.GetCollectionOfObjectValues<NameValuePairIdentifier>(NameValuePairIdentifier.CreateFromDiscriminatorValue)?.ToList(); } },
-                {"links", n => { Links = n.GetObjectValue<RelationshipLinks>(RelationshipLinks.CreateFromDiscriminatorValue); } },
-                {"meta", n => { Meta = n.GetObjectValue<ToManyNameValuePairInResponse_meta>(ToManyNameValuePairInResponse_meta.CreateFromDiscriminatorValue); } },
+                { "data", n => { Data = n.GetCollectionOfObjectValues<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifierInResponse>(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifierInResponse.CreateFromDiscriminatorValue)?.ToList(); } },
+                { "links", n => { Links = n.GetObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.RelationshipLinks>(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.RelationshipLinks.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.Meta>(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -91,9 +98,9 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteCollectionOfObjectValues<NameValuePairIdentifier>("data", Data);
-            writer.WriteObjectValue<RelationshipLinks>("links", Links);
-            writer.WriteObjectValue<ToManyNameValuePairInResponse_meta>("meta", Meta);
+            writer.WriteCollectionOfObjectValues<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairIdentifierInResponse>("data", Data);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.RelationshipLinks>("links", Links);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.Meta>("meta", Meta);
         }
     }
 }

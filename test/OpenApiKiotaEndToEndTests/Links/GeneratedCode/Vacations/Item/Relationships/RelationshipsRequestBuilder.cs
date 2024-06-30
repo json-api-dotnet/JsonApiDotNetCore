@@ -8,29 +8,30 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
-namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Relationships {
+namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Relationships
+{
     /// <summary>
     /// Builds and executes requests for operations under \vacations\{id}\relationships
     /// </summary>
-    public class RelationshipsRequestBuilder : BaseRequestBuilder 
+    public class RelationshipsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>The accommodation property</summary>
-        public AccommodationRequestBuilder Accommodation
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Relationships.Accommodation.AccommodationRequestBuilder Accommodation
         {
-            get => new AccommodationRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Relationships.Accommodation.AccommodationRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The excursions property</summary>
-        public ExcursionsRequestBuilder Excursions
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Relationships.Excursions.ExcursionsRequestBuilder Excursions
         {
-            get => new ExcursionsRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Relationships.Excursions.ExcursionsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The transport property</summary>
-        public TransportRequestBuilder Transport
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Relationships.Transport.TransportRequestBuilder Transport
         {
-            get => new TransportRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Relationships.Transport.TransportRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new <see cref="RelationshipsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Relationships.RelationshipsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -38,7 +39,7 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Relations
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="RelationshipsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Relationships.RelationshipsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>

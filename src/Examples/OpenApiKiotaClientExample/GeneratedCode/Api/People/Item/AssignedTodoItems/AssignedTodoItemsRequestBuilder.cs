@@ -8,14 +8,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoItems {
+namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoItems
+{
     /// <summary>
     /// Builds and executes requests for operations under \api\people\{id}\assignedTodoItems
     /// </summary>
-    public class AssignedTodoItemsRequestBuilder : BaseRequestBuilder 
+    public class AssignedTodoItemsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="AssignedTodoItemsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoItems.AssignedTodoItemsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -23,7 +24,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoIt
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="AssignedTodoItemsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoItems.AssignedTodoItemsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -33,27 +34,27 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoIt
         /// <summary>
         /// Retrieves the related todoItems of an individual person&apos;s assignedTodoItems relationship.
         /// </summary>
-        /// <returns>A <see cref="TodoItemCollectionResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemCollectionResponseDocument"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<TodoItemCollectionResponseDocument?> GetAsync(Action<RequestConfiguration<AssignedTodoItemsRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemCollectionResponseDocument?> GetAsync(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoItems.AssignedTodoItemsRequestBuilder.AssignedTodoItemsRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<TodoItemCollectionResponseDocument> GetAsync(Action<RequestConfiguration<AssignedTodoItemsRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemCollectionResponseDocument> GetAsync(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoItems.AssignedTodoItemsRequestBuilder.AssignedTodoItemsRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
+                { "400", OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "404", OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<TodoItemCollectionResponseDocument>(requestInfo, TodoItemCollectionResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemCollectionResponseDocument>(requestInfo, OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemCollectionResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.
@@ -62,11 +63,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoIt
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task HeadAsync(Action<RequestConfiguration<AssignedTodoItemsRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task HeadAsync(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoItems.AssignedTodoItemsRequestBuilder.AssignedTodoItemsRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task HeadAsync(Action<RequestConfiguration<AssignedTodoItemsRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task HeadAsync(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoItems.AssignedTodoItemsRequestBuilder.AssignedTodoItemsRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToHeadRequestInformation(requestConfiguration);
@@ -79,11 +80,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoIt
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<AssignedTodoItemsRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoItems.AssignedTodoItemsRequestBuilder.AssignedTodoItemsRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<AssignedTodoItemsRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoItems.AssignedTodoItemsRequestBuilder.AssignedTodoItemsRequestBuilderGetQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
@@ -98,11 +99,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoIt
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<AssignedTodoItemsRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoItems.AssignedTodoItemsRequestBuilder.AssignedTodoItemsRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<AssignedTodoItemsRequestBuilderHeadQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoItems.AssignedTodoItemsRequestBuilder.AssignedTodoItemsRequestBuilderHeadQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.HEAD, UrlTemplate, PathParameters);
@@ -112,11 +113,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoIt
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="AssignedTodoItemsRequestBuilder"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoItems.AssignedTodoItemsRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public AssignedTodoItemsRequestBuilder WithUrl(string rawUrl)
+        public OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoItems.AssignedTodoItemsRequestBuilder WithUrl(string rawUrl)
         {
-            return new AssignedTodoItemsRequestBuilder(rawUrl, RequestAdapter);
+            return new OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoItems.AssignedTodoItemsRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Retrieves the related todoItems of an individual person&apos;s assignedTodoItems relationship.

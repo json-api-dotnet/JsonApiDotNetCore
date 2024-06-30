@@ -5,22 +5,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Models {
+namespace OpenApiKiotaClientExample.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class PersonRelationshipsInResponse : IBackedModel, IParsable 
+    public class PersonRelationshipsInResponse : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>The assignedTodoItems property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ToManyTodoItemInResponse? AssignedTodoItems {
-            get { return BackingStore?.Get<ToManyTodoItemInResponse?>("assignedTodoItems"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse? AssignedTodoItems
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse?>("assignedTodoItems"); }
             set { BackingStore?.Set("assignedTodoItems", value); }
         }
 #nullable restore
 #else
-        public ToManyTodoItemInResponse AssignedTodoItems {
-            get { return BackingStore?.Get<ToManyTodoItemInResponse>("assignedTodoItems"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse AssignedTodoItems
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse>("assignedTodoItems"); }
             set { BackingStore?.Set("assignedTodoItems", value); }
         }
 #endif
@@ -29,19 +32,21 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The ownedTodoItems property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ToManyTodoItemInResponse? OwnedTodoItems {
-            get { return BackingStore?.Get<ToManyTodoItemInResponse?>("ownedTodoItems"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse? OwnedTodoItems
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse?>("ownedTodoItems"); }
             set { BackingStore?.Set("ownedTodoItems", value); }
         }
 #nullable restore
 #else
-        public ToManyTodoItemInResponse OwnedTodoItems {
-            get { return BackingStore?.Get<ToManyTodoItemInResponse>("ownedTodoItems"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse OwnedTodoItems
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse>("ownedTodoItems"); }
             set { BackingStore?.Set("ownedTodoItems", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="PersonRelationshipsInResponse"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.PersonRelationshipsInResponse"/> and sets the default values.
         /// </summary>
         public PersonRelationshipsInResponse()
         {
@@ -50,12 +55,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="PersonRelationshipsInResponse"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.PersonRelationshipsInResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static PersonRelationshipsInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaClientExample.GeneratedCode.Models.PersonRelationshipsInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new PersonRelationshipsInResponse();
+            return new OpenApiKiotaClientExample.GeneratedCode.Models.PersonRelationshipsInResponse();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -65,8 +70,8 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"assignedTodoItems", n => { AssignedTodoItems = n.GetObjectValue<ToManyTodoItemInResponse>(ToManyTodoItemInResponse.CreateFromDiscriminatorValue); } },
-                {"ownedTodoItems", n => { OwnedTodoItems = n.GetObjectValue<ToManyTodoItemInResponse>(ToManyTodoItemInResponse.CreateFromDiscriminatorValue); } },
+                { "assignedTodoItems", n => { AssignedTodoItems = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse>(OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse.CreateFromDiscriminatorValue); } },
+                { "ownedTodoItems", n => { OwnedTodoItems = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse>(OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -76,8 +81,8 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<ToManyTodoItemInResponse>("assignedTodoItems", AssignedTodoItems);
-            writer.WriteObjectValue<ToManyTodoItemInResponse>("ownedTodoItems", OwnedTodoItems);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse>("assignedTodoItems", AssignedTodoItems);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTodoItemInResponse>("ownedTodoItems", OwnedTodoItems);
         }
     }
 }

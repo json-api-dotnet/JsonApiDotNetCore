@@ -11,29 +11,30 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item {
+namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item
+{
     /// <summary>
     /// Builds and executes requests for operations under \api\people\{id}
     /// </summary>
-    public class PeopleItemRequestBuilder : BaseRequestBuilder 
+    public class PeopleItemRequestBuilder : BaseRequestBuilder
     {
         /// <summary>The assignedTodoItems property</summary>
-        public AssignedTodoItemsRequestBuilder AssignedTodoItems
+        public OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoItems.AssignedTodoItemsRequestBuilder AssignedTodoItems
         {
-            get => new AssignedTodoItemsRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoItems.AssignedTodoItemsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The ownedTodoItems property</summary>
-        public OwnedTodoItemsRequestBuilder OwnedTodoItems
+        public OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.OwnedTodoItems.OwnedTodoItemsRequestBuilder OwnedTodoItems
         {
-            get => new OwnedTodoItemsRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.OwnedTodoItems.OwnedTodoItemsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The relationships property</summary>
-        public RelationshipsRequestBuilder Relationships
+        public OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.Relationships.RelationshipsRequestBuilder Relationships
         {
-            get => new RelationshipsRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.Relationships.RelationshipsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new <see cref="PeopleItemRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.PeopleItemRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -41,7 +42,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item {
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="PeopleItemRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.PeopleItemRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -53,7 +54,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item {
         /// </summary>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
         public async Task DeleteAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
@@ -66,34 +67,34 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item {
             var requestInfo = ToDeleteRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
+                { "404", OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
             await RequestAdapter.SendNoContentAsync(requestInfo, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Retrieves an individual person by its identifier.
         /// </summary>
-        /// <returns>A <see cref="PersonPrimaryResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.PersonPrimaryResponseDocument"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<PersonPrimaryResponseDocument?> GetAsync(Action<RequestConfiguration<PeopleItemRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaClientExample.GeneratedCode.Models.PersonPrimaryResponseDocument?> GetAsync(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.PeopleItemRequestBuilder.PeopleItemRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<PersonPrimaryResponseDocument> GetAsync(Action<RequestConfiguration<PeopleItemRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaClientExample.GeneratedCode.Models.PersonPrimaryResponseDocument> GetAsync(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.PeopleItemRequestBuilder.PeopleItemRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
+                { "400", OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "404", OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<PersonPrimaryResponseDocument>(requestInfo, PersonPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<OpenApiKiotaClientExample.GeneratedCode.Models.PersonPrimaryResponseDocument>(requestInfo, OpenApiKiotaClientExample.GeneratedCode.Models.PersonPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.
@@ -102,11 +103,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task HeadAsync(Action<RequestConfiguration<PeopleItemRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task HeadAsync(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.PeopleItemRequestBuilder.PeopleItemRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task HeadAsync(Action<RequestConfiguration<PeopleItemRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task HeadAsync(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.PeopleItemRequestBuilder.PeopleItemRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToHeadRequestInformation(requestConfiguration);
@@ -115,33 +116,33 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item {
         /// <summary>
         /// Updates an existing person.
         /// </summary>
-        /// <returns>A <see cref="PersonPrimaryResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.PersonPrimaryResponseDocument"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 409 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
+        /// <exception cref="OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 409 status code</exception>
+        /// <exception cref="OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<PersonPrimaryResponseDocument?> PatchAsync(PersonPatchRequestDocument body, Action<RequestConfiguration<PeopleItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaClientExample.GeneratedCode.Models.PersonPrimaryResponseDocument?> PatchAsync(OpenApiKiotaClientExample.GeneratedCode.Models.UpdatePersonRequestDocument body, Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.PeopleItemRequestBuilder.PeopleItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<PersonPrimaryResponseDocument> PatchAsync(PersonPatchRequestDocument body, Action<RequestConfiguration<PeopleItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaClientExample.GeneratedCode.Models.PersonPrimaryResponseDocument> PatchAsync(OpenApiKiotaClientExample.GeneratedCode.Models.UpdatePersonRequestDocument body, Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.PeopleItemRequestBuilder.PeopleItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPatchRequestInformation(body, requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"409", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"422", ErrorResponseDocument.CreateFromDiscriminatorValue},
+                { "400", OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "404", OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "409", OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "422", OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<PersonPrimaryResponseDocument>(requestInfo, PersonPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<OpenApiKiotaClientExample.GeneratedCode.Models.PersonPrimaryResponseDocument>(requestInfo, OpenApiKiotaClientExample.GeneratedCode.Models.PersonPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Deletes an existing person by its identifier.
@@ -169,11 +170,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<PeopleItemRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.PeopleItemRequestBuilder.PeopleItemRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<PeopleItemRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.PeopleItemRequestBuilder.PeopleItemRequestBuilderGetQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
@@ -188,11 +189,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<PeopleItemRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.PeopleItemRequestBuilder.PeopleItemRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<PeopleItemRequestBuilderHeadQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.PeopleItemRequestBuilder.PeopleItemRequestBuilderHeadQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.HEAD, UrlTemplate, PathParameters);
@@ -207,11 +208,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPatchRequestInformation(PersonPatchRequestDocument body, Action<RequestConfiguration<PeopleItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(OpenApiKiotaClientExample.GeneratedCode.Models.UpdatePersonRequestDocument body, Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.PeopleItemRequestBuilder.PeopleItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPatchRequestInformation(PersonPatchRequestDocument body, Action<RequestConfiguration<PeopleItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(OpenApiKiotaClientExample.GeneratedCode.Models.UpdatePersonRequestDocument body, Action<RequestConfiguration<OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.PeopleItemRequestBuilder.PeopleItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -224,11 +225,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item {
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="PeopleItemRequestBuilder"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.PeopleItemRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public PeopleItemRequestBuilder WithUrl(string rawUrl)
+        public OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.PeopleItemRequestBuilder WithUrl(string rawUrl)
         {
-            return new PeopleItemRequestBuilder(rawUrl, RequestAdapter);
+            return new OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.PeopleItemRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Retrieves an individual person by its identifier.

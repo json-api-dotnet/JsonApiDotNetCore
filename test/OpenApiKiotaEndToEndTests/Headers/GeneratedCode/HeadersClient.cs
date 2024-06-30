@@ -12,19 +12,20 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
-namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode {
+namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode
+{
     /// <summary>
     /// The main entry point of the SDK, exposes the configuration and the fluent API.
     /// </summary>
-    public class HeadersClient : BaseRequestBuilder 
+    public class HeadersClient : BaseRequestBuilder
     {
         /// <summary>The countries property</summary>
-        public CountriesRequestBuilder Countries
+        public OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.CountriesRequestBuilder Countries
         {
-            get => new CountriesRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.CountriesRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new <see cref="HeadersClient"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.Headers.GeneratedCode.HeadersClient"/> and sets the default values.
         /// </summary>
         /// <param name="backingStore">The backing store to use for the models.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>

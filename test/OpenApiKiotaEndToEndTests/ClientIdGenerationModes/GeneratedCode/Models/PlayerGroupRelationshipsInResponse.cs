@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class PlayerGroupRelationshipsInResponse : IBackedModel, IParsable 
+    public class PlayerGroupRelationshipsInResponse : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,19 +16,21 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         /// <summary>The players property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ToManyPlayerInResponse? Players {
-            get { return BackingStore?.Get<ToManyPlayerInResponse?>("players"); }
+        public OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyPlayerInResponse? Players
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyPlayerInResponse?>("players"); }
             set { BackingStore?.Set("players", value); }
         }
 #nullable restore
 #else
-        public ToManyPlayerInResponse Players {
-            get { return BackingStore?.Get<ToManyPlayerInResponse>("players"); }
+        public OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyPlayerInResponse Players
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyPlayerInResponse>("players"); }
             set { BackingStore?.Set("players", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="PlayerGroupRelationshipsInResponse"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.PlayerGroupRelationshipsInResponse"/> and sets the default values.
         /// </summary>
         public PlayerGroupRelationshipsInResponse()
         {
@@ -36,12 +39,12 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="PlayerGroupRelationshipsInResponse"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.PlayerGroupRelationshipsInResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static PlayerGroupRelationshipsInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.PlayerGroupRelationshipsInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new PlayerGroupRelationshipsInResponse();
+            return new OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.PlayerGroupRelationshipsInResponse();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -51,7 +54,7 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"players", n => { Players = n.GetObjectValue<ToManyPlayerInResponse>(ToManyPlayerInResponse.CreateFromDiscriminatorValue); } },
+                { "players", n => { Players = n.GetObjectValue<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyPlayerInResponse>(OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyPlayerInResponse.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -61,7 +64,7 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<ToManyPlayerInResponse>("players", Players);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ToManyPlayerInResponse>("players", Players);
         }
     }
 }

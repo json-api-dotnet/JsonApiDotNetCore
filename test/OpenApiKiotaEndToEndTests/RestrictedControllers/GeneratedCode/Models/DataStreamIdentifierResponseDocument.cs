@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class DataStreamIdentifierResponseDocument : IBackedModel, IParsable 
+    public class DataStreamIdentifierResponseDocument : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,47 +16,53 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public DataStreamIdentifier? Data {
-            get { return BackingStore?.Get<DataStreamIdentifier?>("data"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamIdentifierInResponse? Data
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamIdentifierInResponse?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public DataStreamIdentifier Data {
-            get { return BackingStore?.Get<DataStreamIdentifier>("data"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamIdentifierInResponse Data
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamIdentifierInResponse>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ResourceIdentifierTopLevelLinks? Links {
-            get { return BackingStore?.Get<ResourceIdentifierTopLevelLinks?>("links"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceIdentifierTopLevelLinks? Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceIdentifierTopLevelLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public ResourceIdentifierTopLevelLinks Links {
-            get { return BackingStore?.Get<ResourceIdentifierTopLevelLinks>("links"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceIdentifierTopLevelLinks Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceIdentifierTopLevelLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public DataStreamIdentifierResponseDocument_meta? Meta {
-            get { return BackingStore?.Get<DataStreamIdentifierResponseDocument_meta?>("meta"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta? Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public DataStreamIdentifierResponseDocument_meta Meta {
-            get { return BackingStore?.Get<DataStreamIdentifierResponseDocument_meta>("meta"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="DataStreamIdentifierResponseDocument"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamIdentifierResponseDocument"/> and sets the default values.
         /// </summary>
         public DataStreamIdentifierResponseDocument()
         {
@@ -64,12 +71,12 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="DataStreamIdentifierResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamIdentifierResponseDocument"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static DataStreamIdentifierResponseDocument CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamIdentifierResponseDocument CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new DataStreamIdentifierResponseDocument();
+            return new OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamIdentifierResponseDocument();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -79,9 +86,9 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"data", n => { Data = n.GetObjectValue<DataStreamIdentifier>(DataStreamIdentifier.CreateFromDiscriminatorValue); } },
-                {"links", n => { Links = n.GetObjectValue<ResourceIdentifierTopLevelLinks>(ResourceIdentifierTopLevelLinks.CreateFromDiscriminatorValue); } },
-                {"meta", n => { Meta = n.GetObjectValue<DataStreamIdentifierResponseDocument_meta>(DataStreamIdentifierResponseDocument_meta.CreateFromDiscriminatorValue); } },
+                { "data", n => { Data = n.GetObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamIdentifierInResponse>(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamIdentifierInResponse.CreateFromDiscriminatorValue); } },
+                { "links", n => { Links = n.GetObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceIdentifierTopLevelLinks>(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceIdentifierTopLevelLinks.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta>(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -91,9 +98,9 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<DataStreamIdentifier>("data", Data);
-            writer.WriteObjectValue<ResourceIdentifierTopLevelLinks>("links", Links);
-            writer.WriteObjectValue<DataStreamIdentifierResponseDocument_meta>("meta", Meta);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataStreamIdentifierInResponse>("data", Data);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceIdentifierTopLevelLinks>("links", Links);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta>("meta", Meta);
         }
     }
 }

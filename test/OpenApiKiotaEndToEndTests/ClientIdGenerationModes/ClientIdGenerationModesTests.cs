@@ -38,12 +38,12 @@ public sealed class ClientIdGenerationModesTests
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         ClientIdGenerationModesClient apiClient = new(requestAdapter);
 
-        var requestBody = new PlayerPostRequestDocument
+        var requestBody = new CreatePlayerRequestDocument
         {
-            Data = new PlayerDataInPostRequest
+            Data = new DataInCreatePlayerRequest
             {
                 Type = PlayerResourceType.Players,
-                Attributes = new PlayerAttributesInPostRequest
+                Attributes = new AttributesInCreatePlayerRequest
                 {
                     UserName = newPlayer.UserName
                 }
@@ -77,13 +77,13 @@ public sealed class ClientIdGenerationModesTests
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         ClientIdGenerationModesClient apiClient = new(requestAdapter);
 
-        var requestBody = new PlayerPostRequestDocument
+        var requestBody = new CreatePlayerRequestDocument
         {
-            Data = new PlayerDataInPostRequest
+            Data = new DataInCreatePlayerRequest
             {
                 Type = PlayerResourceType.Players,
                 Id = newPlayer.StringId,
-                Attributes = new PlayerAttributesInPostRequest
+                Attributes = new AttributesInCreatePlayerRequest
                 {
                     UserName = newPlayer.UserName
                 }
@@ -113,12 +113,12 @@ public sealed class ClientIdGenerationModesTests
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         ClientIdGenerationModesClient apiClient = new(requestAdapter);
 
-        var requestBody = new GamePostRequestDocument
+        var requestBody = new CreateGameRequestDocument
         {
-            Data = new GameDataInPostRequest
+            Data = new DataInCreateGameRequest
             {
                 Type = GameResourceType.Games,
-                Attributes = new GameAttributesInPostRequest
+                Attributes = new AttributesInCreateGameRequest
                 {
                     Title = newGame.Title,
                     PurchasePrice = (double)newGame.PurchasePrice
@@ -155,13 +155,13 @@ public sealed class ClientIdGenerationModesTests
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         ClientIdGenerationModesClient apiClient = new(requestAdapter);
 
-        var requestBody = new GamePostRequestDocument
+        var requestBody = new CreateGameRequestDocument
         {
-            Data = new GameDataInPostRequest
+            Data = new DataInCreateGameRequest
             {
                 Type = GameResourceType.Games,
                 Id = newGame.StringId,
-                Attributes = new GameAttributesInPostRequest
+                Attributes = new AttributesInCreateGameRequest
                 {
                     Title = newGame.Title,
                     PurchasePrice = (double)newGame.PurchasePrice
@@ -199,13 +199,13 @@ public sealed class ClientIdGenerationModesTests
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         ClientIdGenerationModesClient apiClient = new(requestAdapter);
 
-        var requestBody = new GamePostRequestDocument
+        var requestBody = new CreateGameRequestDocument
         {
-            Data = new GameDataInPostRequest
+            Data = new DataInCreateGameRequest
             {
                 Type = GameResourceType.Games,
                 Id = existingGame.StringId,
-                Attributes = new GameAttributesInPostRequest
+                Attributes = new AttributesInCreateGameRequest
                 {
                     Title = existingGame.Title,
                     PurchasePrice = (double)existingGame.PurchasePrice
@@ -237,12 +237,12 @@ public sealed class ClientIdGenerationModesTests
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         ClientIdGenerationModesClient apiClient = new(requestAdapter);
 
-        var requestBody = new PlayerGroupPostRequestDocument
+        var requestBody = new CreatePlayerGroupRequestDocument
         {
-            Data = new PlayerGroupDataInPostRequest
+            Data = new DataInCreatePlayerGroupRequest
             {
                 Type = PlayerGroupResourceType.PlayerGroups,
-                Attributes = new PlayerGroupAttributesInPostRequest
+                Attributes = new AttributesInCreatePlayerGroupRequest
                 {
                     Name = newPlayerGroup.Name
                 }

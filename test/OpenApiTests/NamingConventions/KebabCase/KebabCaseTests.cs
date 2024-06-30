@@ -14,6 +14,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
 
         testContext.UseController<SupermarketsController>();
         testContext.UseController<StaffMembersController>();
+        testContext.UseController<OperationsController>();
 
         testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
@@ -125,7 +126,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
                     .SchemaReferenceId;
 
                 relatedResourceIdentifierSchemaRefId = propertiesElement.Should().ContainPath("data.allOf[0].$ref")
-                    .ShouldBeSchemaReferenceId("staff-member-identifier").SchemaReferenceId;
+                    .ShouldBeSchemaReferenceId("staff-member-identifier-in-response").SchemaReferenceId;
             });
 
             schemasElement.Should().ContainPath($"{relationshipLinksSchemaRefId}.properties").With(propertiesElement =>
@@ -138,13 +139,13 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
 
             schemasElement.Should().ContainPath($"{relatedResourceIdentifierSchemaRefId}.properties").With(propertiesElement =>
             {
-                relatedResourceTypeSchemaRefId = propertiesElement.Should().ContainPath("type.$ref").ShouldBeSchemaReferenceId("staff-member-resource-type")
-                    .SchemaReferenceId;
+                relatedResourceTypeSchemaRefId = propertiesElement.Should().ContainPath("type.allOf[0].$ref")
+                    .ShouldBeSchemaReferenceId("staff-member-resource-type").SchemaReferenceId;
             });
 
-            schemasElement.Should().ContainPath($"{relatedResourceTypeSchemaRefId}.enum[0]").With(enumValueElement =>
+            schemasElement.Should().ContainPath($"{relatedResourceTypeSchemaRefId}.enum").With(codeElement =>
             {
-                enumValueElement.Should().Be("staff-members");
+                codeElement.Should().ContainArrayElement("staff-members");
             });
         });
     }
@@ -380,7 +381,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
             });
 
             documentSchemaRefId = getElement.Should().ContainPath("requestBody.content['application/vnd.api+json'].schema.allOf[0].$ref")
-                .ShouldBeSchemaReferenceId("supermarket-post-request-document").SchemaReferenceId;
+                .ShouldBeSchemaReferenceId("create-supermarket-request-document").SchemaReferenceId;
         });
 
         document.Should().ContainPath("components.schemas").With(schemasElement =>
@@ -390,17 +391,17 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
             schemasElement.Should().ContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
                 resourceDataSchemaRefId = propertiesElement.Should().ContainPath("data.allOf[0].$ref")
-                    .ShouldBeSchemaReferenceId("supermarket-data-in-post-request").SchemaReferenceId;
+                    .ShouldBeSchemaReferenceId("data-in-create-supermarket-request").SchemaReferenceId;
             });
 
             string? resourceRelationshipInPostRequestSchemaRefId = null;
 
             schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
             {
-                propertiesElement.Should().ContainPath("attributes.allOf[0].$ref").ShouldBeSchemaReferenceId("supermarket-attributes-in-post-request");
+                propertiesElement.Should().ContainPath("attributes.allOf[0].$ref").ShouldBeSchemaReferenceId("attributes-in-create-supermarket-request");
 
                 resourceRelationshipInPostRequestSchemaRefId = propertiesElement.Should().ContainPath("relationships.allOf[0].$ref")
-                    .ShouldBeSchemaReferenceId("supermarket-relationships-in-post-request").SchemaReferenceId;
+                    .ShouldBeSchemaReferenceId("relationships-in-create-supermarket-request").SchemaReferenceId;
             });
 
             schemasElement.Should().ContainPath($"{resourceRelationshipInPostRequestSchemaRefId}.properties").With(propertiesElement =>
@@ -452,7 +453,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
             });
 
             documentSchemaRefId = getElement.Should().ContainPath("requestBody.content['application/vnd.api+json'].schema.allOf[0].$ref")
-                .ShouldBeSchemaReferenceId("supermarket-patch-request-document").SchemaReferenceId;
+                .ShouldBeSchemaReferenceId("update-supermarket-request-document").SchemaReferenceId;
         });
 
         document.Should().ContainPath("components.schemas").With(schemasElement =>
@@ -462,13 +463,13 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
             schemasElement.Should().ContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
                 resourceDataSchemaRefId = propertiesElement.Should().ContainPath("data.allOf[0].$ref")
-                    .ShouldBeSchemaReferenceId("supermarket-data-in-patch-request").SchemaReferenceId;
+                    .ShouldBeSchemaReferenceId("data-in-update-supermarket-request").SchemaReferenceId;
             });
 
             schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
             {
-                propertiesElement.Should().ContainPath("attributes.allOf[0].$ref").ShouldBeSchemaReferenceId("supermarket-attributes-in-patch-request");
-                propertiesElement.Should().ContainPath("relationships.allOf[0].$ref").ShouldBeSchemaReferenceId("supermarket-relationships-in-patch-request");
+                propertiesElement.Should().ContainPath("attributes.allOf[0].$ref").ShouldBeSchemaReferenceId("attributes-in-update-supermarket-request");
+                propertiesElement.Should().ContainPath("relationships.allOf[0].$ref").ShouldBeSchemaReferenceId("relationships-in-update-supermarket-request");
             });
         });
     }
@@ -549,6 +550,125 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
             getElement.Should().ContainPath("operationId").With(operationElement =>
             {
                 operationElement.Should().Be("delete-supermarket-cashiers-relationship");
+            });
+        });
+    }
+
+    [Fact]
+    public async Task Casing_convention_is_applied_to_PostOperations_endpoint()
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        document.Should().ContainPath("paths./operations.post").With(getElement =>
+        {
+            getElement.Should().ContainPath("operationId").With(operationElement =>
+            {
+                operationElement.Should().Be("post-operations");
+            });
+
+            getElement.Should().ContainPath("requestBody.content['application/vnd.api+json; ext=atomic-operations'].schema.allOf[0].$ref")
+                .ShouldBeSchemaReferenceId("operations-request-document");
+
+            getElement.Should().ContainPath("responses.200.content['application/vnd.api+json; ext=atomic-operations'].schema.$ref")
+                .ShouldBeSchemaReferenceId("operations-response-document");
+        });
+
+        document.Should().ContainPath("components.schemas").With(schemasElement =>
+        {
+            schemasElement.Should().ContainPath("add-operation-code.enum").With(codeElement => codeElement.Should().ContainArrayElement("add"));
+            schemasElement.Should().ContainPath("update-operation-code.enum").With(codeElement => codeElement.Should().ContainArrayElement("update"));
+            schemasElement.Should().ContainPath("remove-operation-code.enum").With(codeElement => codeElement.Should().ContainArrayElement("remove"));
+
+            schemasElement.Should().ContainPath("atomic-operation.discriminator.mapping").With(mappingElement =>
+            {
+                mappingElement.Should().ContainPath("add-staff-member").ShouldBeSchemaReferenceId("create-staff-member-operation");
+                mappingElement.Should().ContainPath("add-supermarket").ShouldBeSchemaReferenceId("create-supermarket-operation");
+
+                mappingElement.Should().ContainPath("add-to-supermarket-cashiers")
+                    .ShouldBeSchemaReferenceId("add-to-supermarket-cashiers-relationship-operation");
+
+                mappingElement.Should().ContainPath("remove-from-supermarket-cashiers")
+                    .ShouldBeSchemaReferenceId("remove-from-supermarket-cashiers-relationship-operation");
+
+                mappingElement.Should().ContainPath("remove-staff-member").ShouldBeSchemaReferenceId("delete-staff-member-operation");
+                mappingElement.Should().ContainPath("remove-supermarket").ShouldBeSchemaReferenceId("delete-supermarket-operation");
+                mappingElement.Should().ContainPath("update-staff-member").ShouldBeSchemaReferenceId("update-staff-member-operation");
+                mappingElement.Should().ContainPath("update-supermarket").ShouldBeSchemaReferenceId("update-supermarket-operation");
+
+                mappingElement.Should().ContainPath("update-supermarket-backup-store-manager")
+                    .ShouldBeSchemaReferenceId("update-supermarket-backup-store-manager-relationship-operation");
+
+                mappingElement.Should().ContainPath("update-supermarket-cashiers")
+                    .ShouldBeSchemaReferenceId("update-supermarket-cashiers-relationship-operation");
+
+                mappingElement.Should().ContainPath("update-supermarket-store-manager")
+                    .ShouldBeSchemaReferenceId("update-supermarket-store-manager-relationship-operation");
+            });
+
+            schemasElement.Should().ContainPath("create-supermarket-operation.allOf[1].properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainPath("data.allOf[0].$ref").ShouldBeSchemaReferenceId("data-in-create-supermarket-request");
+            });
+
+            schemasElement.Should().ContainPath("update-supermarket-operation.allOf[1].properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainPath("ref.allOf[0].$ref").ShouldBeSchemaReferenceId("supermarket-identifier-in-request");
+                propertiesElement.Should().ContainPath("data.allOf[0].$ref").ShouldBeSchemaReferenceId("data-in-update-supermarket-request");
+            });
+
+            schemasElement.Should().ContainPath("delete-supermarket-operation.allOf[1].properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainPath("ref.allOf[0].$ref").ShouldBeSchemaReferenceId("supermarket-identifier-in-request");
+            });
+
+            schemasElement.Should().ContainPath("update-supermarket-store-manager-relationship-operation.allOf[1].properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainPath("ref.allOf[0].$ref").ShouldBeSchemaReferenceId("supermarket-store-manager-relationship-identifier");
+                propertiesElement.Should().ContainPath("data.allOf[0].$ref").ShouldBeSchemaReferenceId("staff-member-identifier-in-request");
+            });
+
+            schemasElement.Should().ContainPath("update-supermarket-backup-store-manager-relationship-operation.allOf[1].properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainPath("ref.allOf[0].$ref")
+                    .ShouldBeSchemaReferenceId("supermarket-backup-store-manager-relationship-identifier");
+
+                propertiesElement.Should().ContainPath("data.allOf[0].$ref").ShouldBeSchemaReferenceId("staff-member-identifier-in-request");
+            });
+
+            schemasElement.Should().ContainPath("update-supermarket-cashiers-relationship-operation.allOf[1].properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainPath("ref.allOf[0].$ref").ShouldBeSchemaReferenceId("supermarket-cashiers-relationship-identifier");
+                propertiesElement.Should().ContainPath("data.items.$ref").ShouldBeSchemaReferenceId("staff-member-identifier-in-request");
+            });
+
+            schemasElement.Should().ContainPath("add-to-supermarket-cashiers-relationship-operation.allOf[1].properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainPath("ref.allOf[0].$ref").ShouldBeSchemaReferenceId("supermarket-cashiers-relationship-identifier");
+                propertiesElement.Should().ContainPath("data.items.$ref").ShouldBeSchemaReferenceId("staff-member-identifier-in-request");
+            });
+
+            schemasElement.Should().ContainPath("remove-from-supermarket-cashiers-relationship-operation.allOf[1].properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainPath("ref.allOf[0].$ref").ShouldBeSchemaReferenceId("supermarket-cashiers-relationship-identifier");
+                propertiesElement.Should().ContainPath("data.items.$ref").ShouldBeSchemaReferenceId("staff-member-identifier-in-request");
+            });
+
+            schemasElement.Should().ContainPath("create-staff-member-operation.allOf[1].properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainPath("data.allOf[0].$ref").ShouldBeSchemaReferenceId("data-in-create-staff-member-request");
+            });
+
+            schemasElement.Should().ContainPath("update-staff-member-operation.allOf[1].properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainPath("ref.allOf[0].$ref").ShouldBeSchemaReferenceId("staff-member-identifier-in-request");
+                propertiesElement.Should().ContainPath("data.allOf[0].$ref").ShouldBeSchemaReferenceId("data-in-update-staff-member-request");
+            });
+
+            schemasElement.Should().ContainPath("delete-staff-member-operation.allOf[1].properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainPath("ref.allOf[0].$ref").ShouldBeSchemaReferenceId("staff-member-identifier-in-request");
             });
         });
     }

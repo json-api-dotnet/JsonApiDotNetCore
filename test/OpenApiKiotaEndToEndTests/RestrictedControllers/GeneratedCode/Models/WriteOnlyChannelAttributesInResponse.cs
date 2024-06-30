@@ -5,39 +5,44 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class WriteOnlyChannelAttributesInResponse : IBackedModel, IParsable 
+    public class WriteOnlyChannelAttributesInResponse : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
         public IBackingStore BackingStore { get; private set; }
         /// <summary>The isAdultOnly property</summary>
-        public bool? IsAdultOnly {
+        public bool? IsAdultOnly
+        {
             get { return BackingStore?.Get<bool?>("isAdultOnly"); }
             set { BackingStore?.Set("isAdultOnly", value); }
         }
         /// <summary>The isCommercial property</summary>
-        public bool? IsCommercial {
+        public bool? IsCommercial
+        {
             get { return BackingStore?.Get<bool?>("isCommercial"); }
             set { BackingStore?.Set("isCommercial", value); }
         }
         /// <summary>The name property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Name {
+        public string? Name
+        {
             get { return BackingStore?.Get<string?>("name"); }
             set { BackingStore?.Set("name", value); }
         }
 #nullable restore
 #else
-        public string Name {
+        public string Name
+        {
             get { return BackingStore?.Get<string>("name"); }
             set { BackingStore?.Set("name", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="WriteOnlyChannelAttributesInResponse"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelAttributesInResponse"/> and sets the default values.
         /// </summary>
         public WriteOnlyChannelAttributesInResponse()
         {
@@ -46,12 +51,12 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="WriteOnlyChannelAttributesInResponse"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelAttributesInResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static WriteOnlyChannelAttributesInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelAttributesInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new WriteOnlyChannelAttributesInResponse();
+            return new OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.WriteOnlyChannelAttributesInResponse();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -61,9 +66,9 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"isAdultOnly", n => { IsAdultOnly = n.GetBoolValue(); } },
-                {"isCommercial", n => { IsCommercial = n.GetBoolValue(); } },
-                {"name", n => { Name = n.GetStringValue(); } },
+                { "isAdultOnly", n => { IsAdultOnly = n.GetBoolValue(); } },
+                { "isCommercial", n => { IsCommercial = n.GetBoolValue(); } },
+                { "name", n => { Name = n.GetStringValue(); } },
             };
         }
         /// <summary>

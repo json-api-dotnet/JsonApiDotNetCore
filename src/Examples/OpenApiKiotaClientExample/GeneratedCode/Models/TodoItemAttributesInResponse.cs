@@ -5,49 +5,56 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Models {
+namespace OpenApiKiotaClientExample.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class TodoItemAttributesInResponse : IBackedModel, IParsable 
+    public class TodoItemAttributesInResponse : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
         public IBackingStore BackingStore { get; private set; }
         /// <summary>The createdAt property</summary>
-        public DateTimeOffset? CreatedAt {
+        public DateTimeOffset? CreatedAt
+        {
             get { return BackingStore?.Get<DateTimeOffset?>("createdAt"); }
             set { BackingStore?.Set("createdAt", value); }
         }
         /// <summary>The description property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Description {
+        public string? Description
+        {
             get { return BackingStore?.Get<string?>("description"); }
             set { BackingStore?.Set("description", value); }
         }
 #nullable restore
 #else
-        public string Description {
+        public string Description
+        {
             get { return BackingStore?.Get<string>("description"); }
             set { BackingStore?.Set("description", value); }
         }
 #endif
         /// <summary>The durationInHours property</summary>
-        public long? DurationInHours {
+        public long? DurationInHours
+        {
             get { return BackingStore?.Get<long?>("durationInHours"); }
             set { BackingStore?.Set("durationInHours", value); }
         }
         /// <summary>The modifiedAt property</summary>
-        public DateTimeOffset? ModifiedAt {
+        public DateTimeOffset? ModifiedAt
+        {
             get { return BackingStore?.Get<DateTimeOffset?>("modifiedAt"); }
             set { BackingStore?.Set("modifiedAt", value); }
         }
         /// <summary>The priority property</summary>
-        public TodoItemPriority? Priority {
-            get { return BackingStore?.Get<TodoItemPriority?>("priority"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemPriority? Priority
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemPriority?>("priority"); }
             set { BackingStore?.Set("priority", value); }
         }
         /// <summary>
-        /// Instantiates a new <see cref="TodoItemAttributesInResponse"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemAttributesInResponse"/> and sets the default values.
         /// </summary>
         public TodoItemAttributesInResponse()
         {
@@ -56,12 +63,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="TodoItemAttributesInResponse"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemAttributesInResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static TodoItemAttributesInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemAttributesInResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new TodoItemAttributesInResponse();
+            return new OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemAttributesInResponse();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -71,11 +78,11 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"createdAt", n => { CreatedAt = n.GetDateTimeOffsetValue(); } },
-                {"description", n => { Description = n.GetStringValue(); } },
-                {"durationInHours", n => { DurationInHours = n.GetLongValue(); } },
-                {"modifiedAt", n => { ModifiedAt = n.GetDateTimeOffsetValue(); } },
-                {"priority", n => { Priority = n.GetEnumValue<TodoItemPriority>(); } },
+                { "createdAt", n => { CreatedAt = n.GetDateTimeOffsetValue(); } },
+                { "description", n => { Description = n.GetStringValue(); } },
+                { "durationInHours", n => { DurationInHours = n.GetLongValue(); } },
+                { "modifiedAt", n => { ModifiedAt = n.GetDateTimeOffsetValue(); } },
+                { "priority", n => { Priority = n.GetEnumValue<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemPriority>(); } },
             };
         }
         /// <summary>
@@ -89,7 +96,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
             writer.WriteStringValue("description", Description);
             writer.WriteLongValue("durationInHours", DurationInHours);
             writer.WriteDateTimeOffsetValue("modifiedAt", ModifiedAt);
-            writer.WriteEnumValue<TodoItemPriority>("priority", Priority);
+            writer.WriteEnumValue<OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemPriority>("priority", Priority);
         }
     }
 }

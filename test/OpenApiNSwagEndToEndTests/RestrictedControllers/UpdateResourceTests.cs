@@ -52,20 +52,20 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new RestrictedControllersClient(httpClient);
 
-        var requestBody = new WriteOnlyChannelPatchRequestDocument
+        var requestBody = new UpdateWriteOnlyChannelRequestDocument
         {
-            Data = new WriteOnlyChannelDataInPatchRequest
+            Data = new DataInUpdateWriteOnlyChannelRequest
             {
                 Id = existingChannel.StringId!,
-                Attributes = new WriteOnlyChannelAttributesInPatchRequest
+                Attributes = new AttributesInUpdateWriteOnlyChannelRequest
                 {
                     Name = newChannelName
                 },
-                Relationships = new WriteOnlyChannelRelationshipsInPatchRequest
+                Relationships = new RelationshipsInUpdateWriteOnlyChannelRequest
                 {
                     VideoStream = new ToOneDataStreamInRequest
                     {
-                        Data = new DataStreamIdentifier
+                        Data = new DataStreamIdentifierInRequest
                         {
                             Id = existingVideoStream.StringId!
                         }
@@ -153,13 +153,13 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new RestrictedControllersClient(httpClient);
 
-        var requestBody = new WriteOnlyChannelPatchRequestDocument
+        var requestBody = new UpdateWriteOnlyChannelRequestDocument
         {
-            Data = new WriteOnlyChannelDataInPatchRequest
+            Data = new DataInUpdateWriteOnlyChannelRequest
             {
                 Id = existingChannel.StringId!,
-                Attributes = new WriteOnlyChannelAttributesInPatchRequest(),
-                Relationships = new WriteOnlyChannelRelationshipsInPatchRequest()
+                Attributes = new AttributesInUpdateWriteOnlyChannelRequest(),
+                Relationships = new RelationshipsInUpdateWriteOnlyChannelRequest()
             }
         };
 
@@ -221,7 +221,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new RestrictedControllersClient(httpClient);
 
-        WriteOnlyChannelPatchRequestDocument requestBody = null!;
+        UpdateWriteOnlyChannelRequestDocument requestBody = null!;
 
         // Act
         Func<Task> action = async () => _ = await apiClient.PatchWriteOnlyChannelAsync(existingChannel.StringId!, null, requestBody);
@@ -248,16 +248,16 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new RestrictedControllersClient(httpClient);
 
-        var requestBody = new WriteOnlyChannelPatchRequestDocument
+        var requestBody = new UpdateWriteOnlyChannelRequestDocument
         {
-            Data = new WriteOnlyChannelDataInPatchRequest
+            Data = new DataInUpdateWriteOnlyChannelRequest
             {
                 Id = existingChannel.StringId!,
-                Relationships = new WriteOnlyChannelRelationshipsInPatchRequest
+                Relationships = new RelationshipsInUpdateWriteOnlyChannelRequest
                 {
                     VideoStream = new ToOneDataStreamInRequest
                     {
-                        Data = new DataStreamIdentifier
+                        Data = new DataStreamIdentifierInRequest
                         {
                             Id = unknownDataStreamId
                         }
@@ -266,7 +266,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
                     {
                         Data =
                         [
-                            new DataStreamIdentifier
+                            new DataStreamIdentifierInRequest
                             {
                                 Id = unknownDataStreamId
                             }

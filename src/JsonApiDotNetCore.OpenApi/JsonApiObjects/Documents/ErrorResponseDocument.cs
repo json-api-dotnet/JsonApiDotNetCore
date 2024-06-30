@@ -21,5 +21,5 @@ internal sealed class ErrorResponseDocument
     public IList<ErrorObject> Errors { get; set; } = new List<ErrorObject>();
 
     [JsonPropertyName("meta")]
-    public IDictionary<string, object> Meta { get; set; } = null!;
+    public Meta Meta { get; set; } = null!;
 }

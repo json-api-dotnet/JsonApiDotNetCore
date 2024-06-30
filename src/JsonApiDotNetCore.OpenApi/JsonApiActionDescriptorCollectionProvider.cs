@@ -2,6 +2,7 @@ using System.Reflection;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.JsonApiMetadata;
+using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -13,8 +14,10 @@ namespace JsonApiDotNetCore.OpenApi;
 
 /// <summary>
 /// Adds JsonApiDotNetCore metadata to <see cref="ControllerActionDescriptor" />s if available. This translates to updating response types in
-/// <see cref="ProducesResponseTypeAttribute" /> and performing an expansion for secondary and relationship endpoints (eg
-/// /article/{id}/{relationshipName} -> /article/{id}/author, /article/{id}/revisions, etc).
+/// <see cref="ProducesResponseTypeAttribute" /> and performing an expansion for secondary and relationship endpoints. For example:
+/// <code><![CDATA[
+/// /article/{id}/{relationshipName} -> /article/{id}/author, /article/{id}/revisions, etc.
+/// ]]></code>
 /// </summary>
 internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescriptorCollectionProvider
 {
@@ -60,7 +63,7 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
         return new ActionDescriptorCollection(newDescriptors.AsReadOnly(), descriptorVersion);
     }
 
-    private static bool IsVisibleJsonApiEndpoint(ActionDescriptor descriptor)
+    internal static bool IsVisibleJsonApiEndpoint(ActionDescriptor descriptor)
     {
         // Only if in a convention ApiExplorer.IsVisible was set to false, the ApiDescriptionActionData will not be present.
         return descriptor is ControllerActionDescriptor controllerAction && controllerAction.Properties.ContainsKey(typeof(ApiDescriptionActionData));
@@ -73,12 +76,12 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
             case PrimaryResponseMetadata primaryMetadata:
             {
                 UpdateProducesResponseTypeAttribute(endpoint, primaryMetadata.DocumentType);
-                return Array.Empty<ActionDescriptor>();
+                return [];
             }
             case PrimaryRequestMetadata primaryMetadata:
             {
                 UpdateBodyParameterDescriptor(endpoint, primaryMetadata.DocumentType, null);
-                return Array.Empty<ActionDescriptor>();
+                return [];
             }
             case NonPrimaryEndpointMetadata nonPrimaryEndpointMetadata and (RelationshipResponseMetadata or SecondaryResponseMetadata):
             {
@@ -89,9 +92,19 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
             {
                 return Expand(endpoint, nonPrimaryEndpointMetadata, UpdateBodyParameterDescriptor);
             }
+            case AtomicOperationsRequestMetadata:
+            {
+                UpdateBodyParameterDescriptor(endpoint, typeof(OperationsRequestDocument), null);
+                return [];
+            }
+            case AtomicOperationsResponseMetadata:
+            {
+                UpdateProducesResponseTypeAttribute(endpoint, typeof(OperationsResponseDocument));
+                return [];
+            }
             default:
             {
-                return Array.Empty<ActionDescriptor>();
+                return [];
             }
         }
     }
@@ -116,7 +129,8 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
     {
         var produces = endpoint.GetFilterMetadata<ProducesAttribute>();
 
-        return produces != null && produces.ContentTypes.Any(contentType => contentType == HeaderConstants.MediaType);
+        return produces != null && produces.ContentTypes.Any(contentType =>
+            contentType is HeaderConstants.MediaType or HeaderConstants.AtomicOperationsMediaType or HeaderConstants.RelaxedAtomicOperationsMediaType);
     }
 
     private static IEnumerable<ActionDescriptor> Expand(ActionDescriptor genericEndpoint, NonPrimaryEndpointMetadata metadata,
@@ -163,30 +177,16 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
 
     private static ActionDescriptor Clone(ActionDescriptor descriptor)
     {
-        var clone = (ActionDescriptor)descriptor.MemberwiseClone();
-
-        clone.AttributeRouteInfo = (AttributeRouteInfo)descriptor.AttributeRouteInfo!.MemberwiseClone();
-
-        clone.FilterDescriptors = new List<FilterDescriptor>();
-
-        foreach (FilterDescriptor filter in descriptor.FilterDescriptors)
-        {
-            clone.FilterDescriptors.Add(Clone(filter));
-        }
-
-        clone.Parameters = new List<ParameterDescriptor>();
-
-        foreach (ParameterDescriptor parameter in descriptor.Parameters)
-        {
-            clone.Parameters.Add((ParameterDescriptor)parameter.MemberwiseClone());
-        }
-
+        ActionDescriptor clone = descriptor.MemberwiseClone();
+        clone.AttributeRouteInfo = descriptor.AttributeRouteInfo!.MemberwiseClone();
+        clone.FilterDescriptors = descriptor.FilterDescriptors.Select(Clone).ToList();
+        clone.Parameters = descriptor.Parameters.Select(parameter => parameter.MemberwiseClone()).ToList();
         return clone;
     }
 
     private static FilterDescriptor Clone(FilterDescriptor descriptor)
     {
-        var clone = (IFilterMetadata)descriptor.Filter.MemberwiseClone();
+        IFilterMetadata clone = descriptor.Filter.MemberwiseClone();
 
         return new FilterDescriptor(clone, descriptor.Scope)
         {
@@ -197,12 +197,11 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
     private static void RemovePathParameter(ICollection<ParameterDescriptor> parameters, string parameterName)
     {
         ParameterDescriptor relationshipName = parameters.Single(parameterDescriptor => parameterDescriptor.Name == parameterName);
-
         parameters.Remove(relationshipName);
     }
 
     private static void ExpandTemplate(AttributeRouteInfo route, string expansionParameter)
     {
-        route.Template = route.Template!.Replace(JsonApiRoutingTemplate.RelationshipNameUrlPlaceholder, expansionParameter);
+        route.Template = route.Template!.Replace(JsonApiRoutingTemplate.RelationshipNameRoutePlaceholder, expansionParameter);
     }
 }

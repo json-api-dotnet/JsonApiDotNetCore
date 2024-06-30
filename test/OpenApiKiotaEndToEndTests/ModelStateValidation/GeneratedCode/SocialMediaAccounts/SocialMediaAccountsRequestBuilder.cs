@@ -9,26 +9,27 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMediaAccounts {
+namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMediaAccounts
+{
     /// <summary>
     /// Builds and executes requests for operations under \socialMediaAccounts
     /// </summary>
-    public class SocialMediaAccountsRequestBuilder : BaseRequestBuilder 
+    public class SocialMediaAccountsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>Gets an item from the OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.socialMediaAccounts.item collection</summary>
         /// <param name="position">The identifier of the socialMediaAccount to update.</param>
-        /// <returns>A <see cref="SocialMediaAccountsItemRequestBuilder"/></returns>
-        public SocialMediaAccountsItemRequestBuilder this[string position]
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMediaAccounts.Item.SocialMediaAccountsItemRequestBuilder"/></returns>
+        public OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMediaAccounts.Item.SocialMediaAccountsItemRequestBuilder this[string position]
         {
             get
             {
                 var urlTplParams = new Dictionary<string, object>(PathParameters);
                 urlTplParams.Add("id", position);
-                return new SocialMediaAccountsItemRequestBuilder(urlTplParams, RequestAdapter);
+                return new OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMediaAccounts.Item.SocialMediaAccountsItemRequestBuilder(urlTplParams, RequestAdapter);
             }
         }
         /// <summary>
-        /// Instantiates a new <see cref="SocialMediaAccountsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMediaAccounts.SocialMediaAccountsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -36,7 +37,7 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMed
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="SocialMediaAccountsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMediaAccounts.SocialMediaAccountsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -46,35 +47,35 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMed
         /// <summary>
         /// Creates a new socialMediaAccount.
         /// </summary>
-        /// <returns>A <see cref="SocialMediaAccountPrimaryResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountPrimaryResponseDocument"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 403 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 409 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ErrorResponseDocument">When receiving a 403 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ErrorResponseDocument">When receiving a 409 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<SocialMediaAccountPrimaryResponseDocument?> PostAsync(SocialMediaAccountPostRequestDocument body, Action<RequestConfiguration<SocialMediaAccountsRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountPrimaryResponseDocument?> PostAsync(OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.CreateSocialMediaAccountRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMediaAccounts.SocialMediaAccountsRequestBuilder.SocialMediaAccountsRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<SocialMediaAccountPrimaryResponseDocument> PostAsync(SocialMediaAccountPostRequestDocument body, Action<RequestConfiguration<SocialMediaAccountsRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountPrimaryResponseDocument> PostAsync(OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.CreateSocialMediaAccountRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMediaAccounts.SocialMediaAccountsRequestBuilder.SocialMediaAccountsRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPostRequestInformation(body, requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"403", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"409", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"422", ErrorResponseDocument.CreateFromDiscriminatorValue},
+                { "400", OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "403", OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "404", OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "409", OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "422", OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<SocialMediaAccountPrimaryResponseDocument>(requestInfo, SocialMediaAccountPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountPrimaryResponseDocument>(requestInfo, OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Creates a new socialMediaAccount.
@@ -84,11 +85,11 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMed
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPostRequestInformation(SocialMediaAccountPostRequestDocument body, Action<RequestConfiguration<SocialMediaAccountsRequestBuilderPostQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.CreateSocialMediaAccountRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMediaAccounts.SocialMediaAccountsRequestBuilder.SocialMediaAccountsRequestBuilderPostQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPostRequestInformation(SocialMediaAccountPostRequestDocument body, Action<RequestConfiguration<SocialMediaAccountsRequestBuilderPostQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.CreateSocialMediaAccountRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMediaAccounts.SocialMediaAccountsRequestBuilder.SocialMediaAccountsRequestBuilderPostQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -101,11 +102,11 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMed
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="SocialMediaAccountsRequestBuilder"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMediaAccounts.SocialMediaAccountsRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public SocialMediaAccountsRequestBuilder WithUrl(string rawUrl)
+        public OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMediaAccounts.SocialMediaAccountsRequestBuilder WithUrl(string rawUrl)
         {
-            return new SocialMediaAccountsRequestBuilder(rawUrl, RequestAdapter);
+            return new OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMediaAccounts.SocialMediaAccountsRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Creates a new socialMediaAccount.

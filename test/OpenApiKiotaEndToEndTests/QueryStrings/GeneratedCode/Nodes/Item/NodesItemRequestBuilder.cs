@@ -12,34 +12,35 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item {
+namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item
+{
     /// <summary>
     /// Builds and executes requests for operations under \nodes\{id}
     /// </summary>
-    public class NodesItemRequestBuilder : BaseRequestBuilder 
+    public class NodesItemRequestBuilder : BaseRequestBuilder
     {
         /// <summary>The children property</summary>
-        public ChildrenRequestBuilder Children
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Children.ChildrenRequestBuilder Children
         {
-            get => new ChildrenRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Children.ChildrenRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The parent property</summary>
-        public ParentRequestBuilder Parent
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Parent.ParentRequestBuilder Parent
         {
-            get => new ParentRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Parent.ParentRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The relationships property</summary>
-        public RelationshipsRequestBuilder Relationships
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Relationships.RelationshipsRequestBuilder Relationships
         {
-            get => new RelationshipsRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Relationships.RelationshipsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The values property</summary>
-        public ValuesRequestBuilder Values
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Values.ValuesRequestBuilder Values
         {
-            get => new ValuesRequestBuilder(PathParameters, RequestAdapter);
+            get => new OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Values.ValuesRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
-        /// Instantiates a new <see cref="NodesItemRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.NodesItemRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -47,7 +48,7 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item {
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="NodesItemRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.NodesItemRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -59,7 +60,7 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item {
         /// </summary>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
         public async Task DeleteAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
@@ -72,34 +73,34 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item {
             var requestInfo = ToDeleteRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
+                { "404", OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
             await RequestAdapter.SendNoContentAsync(requestInfo, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Retrieves an individual node by its identifier.
         /// </summary>
-        /// <returns>A <see cref="NodePrimaryResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodePrimaryResponseDocument"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<NodePrimaryResponseDocument?> GetAsync(Action<RequestConfiguration<NodesItemRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodePrimaryResponseDocument?> GetAsync(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.NodesItemRequestBuilder.NodesItemRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<NodePrimaryResponseDocument> GetAsync(Action<RequestConfiguration<NodesItemRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodePrimaryResponseDocument> GetAsync(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.NodesItemRequestBuilder.NodesItemRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
+                { "400", OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "404", OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<NodePrimaryResponseDocument>(requestInfo, NodePrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodePrimaryResponseDocument>(requestInfo, OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodePrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.
@@ -108,11 +109,11 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task HeadAsync(Action<RequestConfiguration<NodesItemRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task HeadAsync(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.NodesItemRequestBuilder.NodesItemRequestBuilderHeadQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task HeadAsync(Action<RequestConfiguration<NodesItemRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task HeadAsync(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.NodesItemRequestBuilder.NodesItemRequestBuilderHeadQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToHeadRequestInformation(requestConfiguration);
@@ -121,33 +122,33 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item {
         /// <summary>
         /// Updates an existing node.
         /// </summary>
-        /// <returns>A <see cref="NodePrimaryResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodePrimaryResponseDocument"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 409 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument">When receiving a 409 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<NodePrimaryResponseDocument?> PatchAsync(NodePatchRequestDocument body, Action<RequestConfiguration<NodesItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodePrimaryResponseDocument?> PatchAsync(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.UpdateNodeRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.NodesItemRequestBuilder.NodesItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<NodePrimaryResponseDocument> PatchAsync(NodePatchRequestDocument body, Action<RequestConfiguration<NodesItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodePrimaryResponseDocument> PatchAsync(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.UpdateNodeRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.NodesItemRequestBuilder.NodesItemRequestBuilderPatchQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPatchRequestInformation(body, requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"409", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"422", ErrorResponseDocument.CreateFromDiscriminatorValue},
+                { "400", OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "404", OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "409", OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "422", OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<NodePrimaryResponseDocument>(requestInfo, NodePrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodePrimaryResponseDocument>(requestInfo, OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NodePrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Deletes an existing node by its identifier.
@@ -175,11 +176,11 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<NodesItemRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.NodesItemRequestBuilder.NodesItemRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<NodesItemRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.NodesItemRequestBuilder.NodesItemRequestBuilderGetQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
@@ -194,11 +195,11 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<NodesItemRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.NodesItemRequestBuilder.NodesItemRequestBuilderHeadQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<NodesItemRequestBuilderHeadQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToHeadRequestInformation(Action<RequestConfiguration<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.NodesItemRequestBuilder.NodesItemRequestBuilderHeadQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.HEAD, UrlTemplate, PathParameters);
@@ -213,11 +214,11 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item {
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPatchRequestInformation(NodePatchRequestDocument body, Action<RequestConfiguration<NodesItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.UpdateNodeRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.NodesItemRequestBuilder.NodesItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPatchRequestInformation(NodePatchRequestDocument body, Action<RequestConfiguration<NodesItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPatchRequestInformation(OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.UpdateNodeRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.NodesItemRequestBuilder.NodesItemRequestBuilderPatchQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -230,11 +231,11 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item {
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="NodesItemRequestBuilder"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.NodesItemRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public NodesItemRequestBuilder WithUrl(string rawUrl)
+        public OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.NodesItemRequestBuilder WithUrl(string rawUrl)
         {
-            return new NodesItemRequestBuilder(rawUrl, RequestAdapter);
+            return new OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.NodesItemRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Retrieves an individual node by its identifier.

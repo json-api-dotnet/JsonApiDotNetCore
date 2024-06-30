@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaClientExample.GeneratedCode.Models {
+namespace OpenApiKiotaClientExample.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class NullablePersonSecondaryResponseDocument : IBackedModel, IParsable 
+    public class NullablePersonSecondaryResponseDocument : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,61 +16,69 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public Assignee? Data {
-            get { return BackingStore?.Get<Assignee?>("data"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.PersonDataInResponse? Data
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.PersonDataInResponse?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public Assignee Data {
-            get { return BackingStore?.Get<Assignee>("data"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.PersonDataInResponse Data
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.PersonDataInResponse>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
         /// <summary>The included property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public List<DataInResponse>? Included {
-            get { return BackingStore?.Get<List<DataInResponse>?>("included"); }
+        public List<OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse>? Included
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse>?>("included"); }
             set { BackingStore?.Set("included", value); }
         }
 #nullable restore
 #else
-        public List<DataInResponse> Included {
-            get { return BackingStore?.Get<List<DataInResponse>>("included"); }
+        public List<OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse> Included
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse>>("included"); }
             set { BackingStore?.Set("included", value); }
         }
 #endif
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ResourceTopLevelLinks? Links {
-            get { return BackingStore?.Get<ResourceTopLevelLinks?>("links"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ResourceTopLevelLinks? Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ResourceTopLevelLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public ResourceTopLevelLinks Links {
-            get { return BackingStore?.Get<ResourceTopLevelLinks>("links"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.ResourceTopLevelLinks Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.ResourceTopLevelLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public NullablePersonSecondaryResponseDocument_meta? Meta {
-            get { return BackingStore?.Get<NullablePersonSecondaryResponseDocument_meta?>("meta"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.Meta? Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.Meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public NullablePersonSecondaryResponseDocument_meta Meta {
-            get { return BackingStore?.Get<NullablePersonSecondaryResponseDocument_meta>("meta"); }
+        public OpenApiKiotaClientExample.GeneratedCode.Models.Meta Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="NullablePersonSecondaryResponseDocument"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.NullablePersonSecondaryResponseDocument"/> and sets the default values.
         /// </summary>
         public NullablePersonSecondaryResponseDocument()
         {
@@ -78,12 +87,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="NullablePersonSecondaryResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaClientExample.GeneratedCode.Models.NullablePersonSecondaryResponseDocument"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static NullablePersonSecondaryResponseDocument CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaClientExample.GeneratedCode.Models.NullablePersonSecondaryResponseDocument CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new NullablePersonSecondaryResponseDocument();
+            return new OpenApiKiotaClientExample.GeneratedCode.Models.NullablePersonSecondaryResponseDocument();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -93,10 +102,10 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"data", n => { Data = n.GetObjectValue<Assignee>(Assignee.CreateFromDiscriminatorValue); } },
-                {"included", n => { Included = n.GetCollectionOfObjectValues<DataInResponse>(DataInResponse.CreateFromDiscriminatorValue)?.ToList(); } },
-                {"links", n => { Links = n.GetObjectValue<ResourceTopLevelLinks>(ResourceTopLevelLinks.CreateFromDiscriminatorValue); } },
-                {"meta", n => { Meta = n.GetObjectValue<NullablePersonSecondaryResponseDocument_meta>(NullablePersonSecondaryResponseDocument_meta.CreateFromDiscriminatorValue); } },
+                { "data", n => { Data = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.PersonDataInResponse>(OpenApiKiotaClientExample.GeneratedCode.Models.PersonDataInResponse.CreateFromDiscriminatorValue); } },
+                { "included", n => { Included = n.GetCollectionOfObjectValues<OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse>(OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse.CreateFromDiscriminatorValue)?.ToList(); } },
+                { "links", n => { Links = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ResourceTopLevelLinks>(OpenApiKiotaClientExample.GeneratedCode.Models.ResourceTopLevelLinks.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>(OpenApiKiotaClientExample.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -106,10 +115,10 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<Assignee>("data", Data);
-            writer.WriteCollectionOfObjectValues<DataInResponse>("included", Included);
-            writer.WriteObjectValue<ResourceTopLevelLinks>("links", Links);
-            writer.WriteObjectValue<NullablePersonSecondaryResponseDocument_meta>("meta", Meta);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.PersonDataInResponse>("data", Data);
+            writer.WriteCollectionOfObjectValues<OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse>("included", Included);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.ResourceTopLevelLinks>("links", Links);
+            writer.WriteObjectValue<OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta", Meta);
         }
     }
 }

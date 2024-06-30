@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class ErrorObject : IBackedModel, IParsable 
+    public class ErrorObject : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,13 +16,15 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>The code property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Code {
+        public string? Code
+        {
             get { return BackingStore?.Get<string?>("code"); }
             set { BackingStore?.Set("code", value); }
         }
 #nullable restore
 #else
-        public string Code {
+        public string Code
+        {
             get { return BackingStore?.Get<string>("code"); }
             set { BackingStore?.Set("code", value); }
         }
@@ -29,13 +32,15 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>The detail property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Detail {
+        public string? Detail
+        {
             get { return BackingStore?.Get<string?>("detail"); }
             set { BackingStore?.Set("detail", value); }
         }
 #nullable restore
 #else
-        public string Detail {
+        public string Detail
+        {
             get { return BackingStore?.Get<string>("detail"); }
             set { BackingStore?.Set("detail", value); }
         }
@@ -43,13 +48,15 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>The id property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Id {
+        public string? Id
+        {
             get { return BackingStore?.Get<string?>("id"); }
             set { BackingStore?.Set("id", value); }
         }
 #nullable restore
 #else
-        public string Id {
+        public string Id
+        {
             get { return BackingStore?.Get<string>("id"); }
             set { BackingStore?.Set("id", value); }
         }
@@ -57,55 +64,63 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ErrorLinks? Links {
-            get { return BackingStore?.Get<ErrorLinks?>("links"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorLinks? Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public ErrorLinks Links {
-            get { return BackingStore?.Get<ErrorLinks>("links"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorLinks Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ErrorObject_meta? Meta {
-            get { return BackingStore?.Get<ErrorObject_meta?>("meta"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta? Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public ErrorObject_meta Meta {
-            get { return BackingStore?.Get<ErrorObject_meta>("meta"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
         /// <summary>The source property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ErrorSource? Source {
-            get { return BackingStore?.Get<ErrorSource?>("source"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorSource? Source
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorSource?>("source"); }
             set { BackingStore?.Set("source", value); }
         }
 #nullable restore
 #else
-        public ErrorSource Source {
-            get { return BackingStore?.Get<ErrorSource>("source"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorSource Source
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorSource>("source"); }
             set { BackingStore?.Set("source", value); }
         }
 #endif
         /// <summary>The status property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Status {
+        public string? Status
+        {
             get { return BackingStore?.Get<string?>("status"); }
             set { BackingStore?.Set("status", value); }
         }
 #nullable restore
 #else
-        public string Status {
+        public string Status
+        {
             get { return BackingStore?.Get<string>("status"); }
             set { BackingStore?.Set("status", value); }
         }
@@ -113,19 +128,21 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>The title property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Title {
+        public string? Title
+        {
             get { return BackingStore?.Get<string?>("title"); }
             set { BackingStore?.Set("title", value); }
         }
 #nullable restore
 #else
-        public string Title {
+        public string Title
+        {
             get { return BackingStore?.Get<string>("title"); }
             set { BackingStore?.Set("title", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="ErrorObject"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorObject"/> and sets the default values.
         /// </summary>
         public ErrorObject()
         {
@@ -134,12 +151,12 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="ErrorObject"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorObject"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static ErrorObject CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorObject CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new ErrorObject();
+            return new OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorObject();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -149,14 +166,14 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"code", n => { Code = n.GetStringValue(); } },
-                {"detail", n => { Detail = n.GetStringValue(); } },
-                {"id", n => { Id = n.GetStringValue(); } },
-                {"links", n => { Links = n.GetObjectValue<ErrorLinks>(ErrorLinks.CreateFromDiscriminatorValue); } },
-                {"meta", n => { Meta = n.GetObjectValue<ErrorObject_meta>(ErrorObject_meta.CreateFromDiscriminatorValue); } },
-                {"source", n => { Source = n.GetObjectValue<ErrorSource>(ErrorSource.CreateFromDiscriminatorValue); } },
-                {"status", n => { Status = n.GetStringValue(); } },
-                {"title", n => { Title = n.GetStringValue(); } },
+                { "code", n => { Code = n.GetStringValue(); } },
+                { "detail", n => { Detail = n.GetStringValue(); } },
+                { "id", n => { Id = n.GetStringValue(); } },
+                { "links", n => { Links = n.GetObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorLinks>(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorLinks.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta>(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
+                { "source", n => { Source = n.GetObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorSource>(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorSource.CreateFromDiscriminatorValue); } },
+                { "status", n => { Status = n.GetStringValue(); } },
+                { "title", n => { Title = n.GetStringValue(); } },
             };
         }
         /// <summary>
@@ -169,9 +186,9 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
             writer.WriteStringValue("code", Code);
             writer.WriteStringValue("detail", Detail);
             writer.WriteStringValue("id", Id);
-            writer.WriteObjectValue<ErrorLinks>("links", Links);
-            writer.WriteObjectValue<ErrorObject_meta>("meta", Meta);
-            writer.WriteObjectValue<ErrorSource>("source", Source);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorLinks>("links", Links);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta>("meta", Meta);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorSource>("source", Source);
             writer.WriteStringValue("status", Status);
             writer.WriteStringValue("title", Title);
         }

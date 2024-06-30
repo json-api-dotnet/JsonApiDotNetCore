@@ -1,26 +1,42 @@
 using System.Text.Json;
 using Humanizer;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.OpenApi.JsonApiObjects.AtomicOperations;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.OpenApi;
 
 internal sealed class JsonApiSchemaIdSelector
 {
     private const string ResourceTypeSchemaIdTemplate = "[ResourceName] Resource Type";
+    private const string MetaSchemaIdTemplate = "Meta";
 
-    private static readonly IDictionary<Type, string> TypeToSchemaTemplateMap = new Dictionary<Type, string>
+    private const string AtomicOperationDiscriminatorNameTemplate = "Operation Discriminator";
+    private const string ResourceAtomicOperationDiscriminatorValueTemplate = "[OperationCode] [ResourceName]";
+    private const string UpdateRelationshipAtomicOperationDiscriminatorValueTemplate = "Update [ResourceName] [RelationshipName]";
+    private const string AddToRelationshipAtomicOperationDiscriminatorValueTemplate = "Add To [ResourceName] [RelationshipName]";
+    private const string RemoveFromRelationshipAtomicOperationDiscriminatorValueTemplate = "Remove From [ResourceName] [RelationshipName]";
+
+    private const string UpdateRelationshipAtomicOperationSchemaIdTemplate = "Update [ResourceName] [RelationshipName] Relationship Operation";
+    private const string AddToRelationshipAtomicOperationSchemaIdTemplate = "Add To [ResourceName] [RelationshipName] Relationship Operation";
+    private const string RemoveFromRelationshipAtomicOperationSchemaIdTemplate = "Remove From [ResourceName] [RelationshipName] Relationship Operation";
+    private const string RelationshipIdentifierSchemaIdTemplate = "[ResourceName] [RelationshipName] Relationship Identifier";
+    private const string RelationshipNameSchemaIdTemplate = "[ResourceName] [RelationshipName] Relationship Name";
+
+    private static readonly IDictionary<Type, string> SchemaTypeToTemplateMap = new Dictionary<Type, string>
     {
-        [typeof(ResourcePostRequestDocument<>)] = "[ResourceName] Post Request Document",
-        [typeof(ResourcePatchRequestDocument<>)] = "[ResourceName] Patch Request Document",
-        [typeof(ResourceDataInPostRequest<>)] = "[ResourceName] Data In Post Request",
-        [typeof(AttributesInPostRequest<>)] = "[ResourceName] Attributes In Post Request",
-        [typeof(RelationshipsInPostRequest<>)] = "[ResourceName] Relationships In Post Request",
-        [typeof(ResourceDataInPatchRequest<>)] = "[ResourceName] Data In Patch Request",
-        [typeof(AttributesInPatchRequest<>)] = "[ResourceName] Attributes In Patch Request",
-        [typeof(RelationshipsInPatchRequest<>)] = "[ResourceName] Relationships In Patch Request",
+        [typeof(CreateResourceRequestDocument<>)] = "Create [ResourceName] Request Document",
+        [typeof(UpdateResourceRequestDocument<>)] = "Update [ResourceName] Request Document",
+        [typeof(DataInCreateResourceRequest<>)] = "Data In Create [ResourceName] Request",
+        [typeof(AttributesInCreateResourceRequest<>)] = "Attributes In Create [ResourceName] Request",
+        [typeof(RelationshipsInCreateResourceRequest<>)] = "Relationships In Create [ResourceName] Request",
+        [typeof(DataInUpdateResourceRequest<>)] = "Data In Update [ResourceName] Request",
+        [typeof(AttributesInUpdateResourceRequest<>)] = "Attributes In Update [ResourceName] Request",
+        [typeof(RelationshipsInUpdateResourceRequest<>)] = "Relationships In Update [ResourceName] Request",
         [typeof(ToOneRelationshipInRequest<>)] = "To One [ResourceName] In Request",
         [typeof(NullableToOneRelationshipInRequest<>)] = "Nullable To One [ResourceName] In Request",
         [typeof(ToManyRelationshipInRequest<>)] = "To Many [ResourceName] In Request",
@@ -38,7 +54,15 @@ internal sealed class JsonApiSchemaIdSelector
         [typeof(ResourceDataInResponse<>)] = "[ResourceName] Data In Response",
         [typeof(AttributesInResponse<>)] = "[ResourceName] Attributes In Response",
         [typeof(RelationshipsInResponse<>)] = "[ResourceName] Relationships In Response",
-        [typeof(ResourceIdentifier<>)] = "[ResourceName] Identifier"
+        [typeof(ResourceIdentifierInRequest<>)] = "[ResourceName] Identifier In Request",
+        [typeof(ResourceIdentifierInResponse<>)] = "[ResourceName] Identifier In Response",
+        [typeof(CreateResourceOperation<>)] = "Create [ResourceName] Operation",
+        [typeof(UpdateResourceOperation<>)] = "Update [ResourceName] Operation",
+        [typeof(DeleteResourceOperation<>)] = "Delete [ResourceName] Operation",
+        [typeof(UpdateToOneRelationshipOperation<>)] = "Temporary Update [ResourceName] To One Relationship Operation",
+        [typeof(UpdateToManyRelationshipOperation<>)] = "Temporary Update [ResourceName] To Many Relationship Operation",
+        [typeof(AddToRelationshipOperation<>)] = "Temporary Add To [ResourceName] To Many Relationship Operation",
+        [typeof(RemoveFromRelationshipOperation<>)] = "Temporary Remove From [ResourceName] To Many Relationship Operation"
     };
 
     private readonly IResourceGraph _resourceGraph;
@@ -68,40 +92,119 @@ internal sealed class JsonApiSchemaIdSelector
 
         if (openType != type)
         {
-            if (TypeToSchemaTemplateMap.TryGetValue(openType, out string? schemaTemplate))
+            if (SchemaTypeToTemplateMap.TryGetValue(openType, out string? schemaTemplate))
             {
                 Type resourceClrType = type.GetGenericArguments().First();
                 resourceType = _resourceGraph.GetResourceType(resourceClrType);
 
-                return ApplySchemaTemplate(schemaTemplate, resourceType);
+                return ApplySchemaTemplate(schemaTemplate, resourceType, null, null);
             }
         }
         else
         {
-            if (TypeToSchemaTemplateMap.TryGetValue(type, out string? schemaTemplate))
+            if (SchemaTypeToTemplateMap.TryGetValue(type, out string? schemaTemplate))
             {
-                return ApplySchemaTemplate(schemaTemplate, null);
+                return ApplySchemaTemplate(schemaTemplate, null, null, null);
             }
         }
 
         // Used for a fixed set of non-generic types, such as Jsonapi, ResourceCollectionTopLevelLinks etc.
-        return ApplySchemaTemplate(type.Name, null);
+        return ApplySchemaTemplate(type.Name, null, null, null);
     }
 
-    private string ApplySchemaTemplate(string schemaTemplate, ResourceType? resourceType)
+    private string ApplySchemaTemplate(string schemaTemplate, ResourceType? resourceType, string? relationshipName, AtomicOperationCode? operationCode)
     {
-        string pascalCaseSchemaId = resourceType != null
-            ? schemaTemplate.Replace("[ResourceName]", resourceType.PublicName.Singularize()).ToPascalCase()
-            : schemaTemplate.ToPascalCase();
+        string schemaId = schemaTemplate;
+
+        if (resourceType != null)
+        {
+            schemaId = schemaId.Replace("[ResourceName]", resourceType.PublicName.Singularize()).ToPascalCase();
+        }
+
+        if (relationshipName != null)
+        {
+            schemaId = schemaId.Replace("[RelationshipName]", relationshipName.ToPascalCase());
+        }
+
+        if (operationCode != null)
+        {
+            schemaId = schemaId.Replace("[OperationCode]", operationCode.Value.ToString().ToPascalCase());
+        }
+
+        string pascalCaseSchemaId = schemaId.ToPascalCase();
 
         JsonNamingPolicy? namingPolicy = _options.SerializerOptions.PropertyNamingPolicy;
         return namingPolicy != null ? namingPolicy.ConvertName(pascalCaseSchemaId) : pascalCaseSchemaId;
     }
 
-    public string GetSchemaId(ResourceType resourceType)
+    public string GetResourceTypeSchemaId(ResourceType resourceType)
     {
         ArgumentGuard.NotNull(resourceType);
 
-        return ApplySchemaTemplate(ResourceTypeSchemaIdTemplate, resourceType);
+        return ApplySchemaTemplate(ResourceTypeSchemaIdTemplate, resourceType, null, null);
+    }
+
+    public string GetMetaSchemaId()
+    {
+        return ApplySchemaTemplate(MetaSchemaIdTemplate, null, null, null);
+    }
+
+    public string GetAtomicOperationCodeSchemaId(AtomicOperationCode operationCode)
+    {
+        return ApplySchemaTemplate("[OperationCode] Operation Code", null, null, operationCode);
+    }
+
+    public string GetAtomicOperationDiscriminatorName()
+    {
+        return ApplySchemaTemplate(AtomicOperationDiscriminatorNameTemplate, null, null, null);
+    }
+
+    public string GetAtomicOperationDiscriminatorValue(AtomicOperationCode operationCode, ResourceType resourceType)
+    {
+        ArgumentGuard.NotNull(resourceType);
+
+        return ApplySchemaTemplate(ResourceAtomicOperationDiscriminatorValueTemplate, resourceType, null, operationCode);
+    }
+
+    public string GetAtomicOperationDiscriminatorValue(AtomicOperationCode operationCode, RelationshipAttribute relationship)
+    {
+        ArgumentGuard.NotNull(relationship);
+
+        string schemaIdTemplate = operationCode switch
+        {
+            AtomicOperationCode.Add => AddToRelationshipAtomicOperationDiscriminatorValueTemplate,
+            AtomicOperationCode.Remove => RemoveFromRelationshipAtomicOperationDiscriminatorValueTemplate,
+            _ => UpdateRelationshipAtomicOperationDiscriminatorValueTemplate
+        };
+
+        return ApplySchemaTemplate(schemaIdTemplate, relationship.LeftType, relationship.PublicName, null);
+    }
+
+    public string GetRelationshipAtomicOperationSchemaId(RelationshipAttribute relationship, AtomicOperationCode operationCode)
+    {
+        ArgumentGuard.NotNull(relationship);
+
+        string schemaIdTemplate = operationCode switch
+        {
+            AtomicOperationCode.Add => AddToRelationshipAtomicOperationSchemaIdTemplate,
+            AtomicOperationCode.Remove => RemoveFromRelationshipAtomicOperationSchemaIdTemplate,
+            _ => UpdateRelationshipAtomicOperationSchemaIdTemplate
+        };
+
+        return ApplySchemaTemplate(schemaIdTemplate, relationship.LeftType, relationship.PublicName, null);
+    }
+
+    public string GetRelationshipIdentifierSchemaId(RelationshipAttribute relationship)
+    {
+        ArgumentGuard.NotNull(relationship);
+
+        return ApplySchemaTemplate(RelationshipIdentifierSchemaIdTemplate, relationship.LeftType, relationship.PublicName, null);
+    }
+
+    public string GetRelationshipNameSchemaId(RelationshipAttribute relationship)
+    {
+        ArgumentGuard.NotNull(relationship);
+
+        return ApplySchemaTemplate(RelationshipNameSchemaIdTemplate, relationship.LeftType, relationship.PublicName, null);
     }
 }

@@ -8,6 +8,7 @@ namespace OpenApiTests.Documentation;
 public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<DocumentationStartup<DocumentationDbContext>, DocumentationDbContext>>
 {
     private const string EscapedJsonApiMediaType = "['application/vnd.api+json']";
+    private const string EscapedOperationsMediaType = "['application/vnd.api+json; ext=atomic-operations']";
 
     private readonly OpenApiTestContext<DocumentationStartup<DocumentationDbContext>, DocumentationDbContext> _testContext;
 
@@ -18,6 +19,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
         testContext.UseController<SkyscrapersController>();
         testContext.UseController<ElevatorsController>();
         testContext.UseController<SpacesController>();
+        testContext.UseController<OperationsController>();
     }
 
     [Fact]
@@ -269,6 +271,25 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
 
                 errorStatusCodeProperties.Should().AllSatisfy(property =>
                     property.Value.Should().ContainPath($"content.{EscapedJsonApiMediaType}.schema.$ref").ShouldBeSchemaReferenceId("errorResponseDocument"));
+            });
+        });
+
+        document.Should().ContainPath("paths./operations").With(skyscrapersElement =>
+        {
+            skyscrapersElement.Should().ContainPath("post.responses").With(responsesElement =>
+            {
+                JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
+                errorStatusCodeProperties.ShouldHaveCount(5);
+
+                errorStatusCodeProperties[0].Name.Should().Be("400");
+                errorStatusCodeProperties[1].Name.Should().Be("403");
+                errorStatusCodeProperties[2].Name.Should().Be("404");
+                errorStatusCodeProperties[3].Name.Should().Be("409");
+                errorStatusCodeProperties[4].Name.Should().Be("422");
+
+                errorStatusCodeProperties.Should().AllSatisfy(property =>
+                    property.Value.Should().ContainPath($"content.{EscapedOperationsMediaType}.schema.$ref")
+                        .ShouldBeSchemaReferenceId("errorResponseDocument"));
             });
         });
     }

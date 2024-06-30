@@ -4,29 +4,48 @@ namespace JsonApiDotNetCore.OpenApi;
 
 internal static class OpenApiSchemaExtensions
 {
-    public static OpenApiSchema UnwrapExtendedReferenceSchema(this OpenApiSchema source)
+    public static void ReorderProperties(this OpenApiSchema fullSchema, IEnumerable<string> propertyNamesInOrder)
+    {
+        ArgumentGuard.NotNull(fullSchema);
+        ArgumentGuard.NotNull(propertyNamesInOrder);
+
+        var propertiesInOrder = new Dictionary<string, OpenApiSchema>();
+
+        foreach (string propertyName in propertyNamesInOrder)
+        {
+            if (fullSchema.Properties.TryGetValue(propertyName, out OpenApiSchema? schema))
+            {
+                propertiesInOrder.Add(propertyName, schema);
+            }
+        }
+
+        if (fullSchema.Properties.Count != propertiesInOrder.Count)
+        {
+            throw new UnreachableCodeException();
+        }
+
+        fullSchema.Properties = propertiesInOrder;
+    }
+
+    public static OpenApiSchema WrapInExtendedSchema(this OpenApiSchema source)
     {
         ArgumentGuard.NotNull(source);
 
-        if (source.AllOf.Count != 1)
+        return new OpenApiSchema
         {
-            throw new InvalidOperationException($"Schema '{nameof(source)}' should not contain multiple entries in '{nameof(source.AllOf)}' ");
-        }
-
-        return source.AllOf.Single();
+            AllOf = [source]
+        };
     }
 
-    public static void SetValuesInMetaToNullable(this OpenApiSchema fullSchema)
+    public static OpenApiSchema UnwrapLastExtendedSchema(this OpenApiSchema source)
     {
-        ArgumentGuard.NotNull(fullSchema);
+        ArgumentGuard.NotNull(source);
 
-        if (fullSchema.Properties.TryGetValue(JsonApiPropertyName.Meta, out OpenApiSchema? schemaForMeta))
+        if (source.AllOf is { Count: > 0 })
         {
-            schemaForMeta.AdditionalProperties = new OpenApiSchema
-            {
-                Type = "object",
-                Nullable = true
-            };
+            return source.AllOf.Last();
         }
+
+        return source;
     }
 }

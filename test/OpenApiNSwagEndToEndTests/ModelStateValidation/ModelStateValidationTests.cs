@@ -41,11 +41,11 @@ public sealed class ModelStateValidationTests
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
 
-        SocialMediaAccountPostRequestDocument requestBody = new()
+        var requestBody = new CreateSocialMediaAccountRequestDocument
         {
-            Data = new SocialMediaAccountDataInPostRequest
+            Data = new DataInCreateSocialMediaAccountRequest
             {
-                Attributes = new SocialMediaAccountAttributesInPostRequest
+                Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     FirstName = firstName,
                     LastName = newAccount.LastName
@@ -78,11 +78,11 @@ public sealed class ModelStateValidationTests
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
 
-        SocialMediaAccountPostRequestDocument requestBody = new()
+        var requestBody = new CreateSocialMediaAccountRequestDocument
         {
-            Data = new SocialMediaAccountDataInPostRequest
+            Data = new DataInCreateSocialMediaAccountRequest
             {
-                Attributes = new SocialMediaAccountAttributesInPostRequest
+                Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
                     UserName = userName
@@ -113,11 +113,11 @@ public sealed class ModelStateValidationTests
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
 
-        SocialMediaAccountPostRequestDocument requestBody = new()
+        var requestBody = new CreateSocialMediaAccountRequestDocument
         {
-            Data = new SocialMediaAccountDataInPostRequest
+            Data = new DataInCreateSocialMediaAccountRequest
             {
-                Attributes = new SocialMediaAccountAttributesInPostRequest
+                Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
                     UserName = "aB1"
@@ -148,11 +148,11 @@ public sealed class ModelStateValidationTests
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
 
-        SocialMediaAccountPostRequestDocument requestBody = new()
+        var requestBody = new CreateSocialMediaAccountRequestDocument
         {
-            Data = new SocialMediaAccountDataInPostRequest
+            Data = new DataInCreateSocialMediaAccountRequest
             {
-                Attributes = new SocialMediaAccountAttributesInPostRequest
+                Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
                     CreditCard = "123-456"
@@ -183,11 +183,11 @@ public sealed class ModelStateValidationTests
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
 
-        SocialMediaAccountPostRequestDocument requestBody = new()
+        var requestBody = new CreateSocialMediaAccountRequestDocument
         {
-            Data = new SocialMediaAccountDataInPostRequest
+            Data = new DataInCreateSocialMediaAccountRequest
             {
-                Attributes = new SocialMediaAccountAttributesInPostRequest
+                Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
                     Email = "abc"
@@ -218,12 +218,12 @@ public sealed class ModelStateValidationTests
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
 
-        SocialMediaAccountPostRequestDocument requestBody = new()
+        var requestBody = new CreateSocialMediaAccountRequestDocument
         {
-            Data = new SocialMediaAccountDataInPostRequest
+            Data = new DataInCreateSocialMediaAccountRequest
             {
                 Type = SocialMediaAccountResourceType.SocialMediaAccounts,
-                Attributes = new SocialMediaAccountAttributesInPostRequest
+                Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
                     // Using -3 instead of -1 to compensate for base64 padding.
@@ -257,12 +257,12 @@ public sealed class ModelStateValidationTests
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
 
-        SocialMediaAccountPostRequestDocument requestBody = new()
+        var requestBody = new CreateSocialMediaAccountRequestDocument
         {
-            Data = new SocialMediaAccountDataInPostRequest
+            Data = new DataInCreateSocialMediaAccountRequest
             {
                 Type = SocialMediaAccountResourceType.SocialMediaAccounts,
-                Attributes = new SocialMediaAccountAttributesInPostRequest
+                Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
                     Password = Enumerable.Repeat((byte)'X', SocialMediaAccount.MaxPasswordChars + 1).ToArray()
@@ -299,11 +299,11 @@ public sealed class ModelStateValidationTests
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
 
-        SocialMediaAccountPostRequestDocument requestBody = new()
+        var requestBody = new CreateSocialMediaAccountRequestDocument
         {
-            Data = new SocialMediaAccountDataInPostRequest
+            Data = new DataInCreateSocialMediaAccountRequest
             {
-                Attributes = new SocialMediaAccountAttributesInPostRequest
+                Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
                     Age = age
@@ -334,11 +334,11 @@ public sealed class ModelStateValidationTests
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
 
-        SocialMediaAccountPostRequestDocument requestBody = new()
+        var requestBody = new CreateSocialMediaAccountRequestDocument
         {
-            Data = new SocialMediaAccountDataInPostRequest
+            Data = new DataInCreateSocialMediaAccountRequest
             {
-                Attributes = new SocialMediaAccountAttributesInPostRequest
+                Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
                     BackgroundPicture = new Uri("relativeurl", UriKind.Relative)
@@ -371,11 +371,11 @@ public sealed class ModelStateValidationTests
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
 
-        SocialMediaAccountPostRequestDocument requestBody = new()
+        var requestBody = new CreateSocialMediaAccountRequestDocument
         {
-            Data = new SocialMediaAccountDataInPostRequest
+            Data = new DataInCreateSocialMediaAccountRequest
             {
-                Attributes = new SocialMediaAccountAttributesInPostRequest
+                Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
                     Tags = Enumerable.Repeat("-", length).ToList()
@@ -406,11 +406,11 @@ public sealed class ModelStateValidationTests
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
 
-        SocialMediaAccountPostRequestDocument requestBody = new()
+        var requestBody = new CreateSocialMediaAccountRequestDocument
         {
-            Data = new SocialMediaAccountDataInPostRequest
+            Data = new DataInCreateSocialMediaAccountRequest
             {
-                Attributes = new SocialMediaAccountAttributesInPostRequest
+                Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
                     CountryCode = "XX"
@@ -441,11 +441,11 @@ public sealed class ModelStateValidationTests
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
 
-        SocialMediaAccountPostRequestDocument requestBody = new()
+        var requestBody = new CreateSocialMediaAccountRequestDocument
         {
-            Data = new SocialMediaAccountDataInPostRequest
+            Data = new DataInCreateSocialMediaAccountRequest
             {
-                Attributes = new SocialMediaAccountAttributesInPostRequest
+                Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
                     Planet = "pluto"
@@ -476,11 +476,11 @@ public sealed class ModelStateValidationTests
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
 
-        SocialMediaAccountPostRequestDocument requestBody = new()
+        var requestBody = new CreateSocialMediaAccountRequestDocument
         {
-            Data = new SocialMediaAccountDataInPostRequest
+            Data = new DataInCreateSocialMediaAccountRequest
             {
-                Attributes = new SocialMediaAccountAttributesInPostRequest
+                Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
                     NextRevalidation = TimeSpan.FromSeconds(1).ToString()
@@ -511,11 +511,11 @@ public sealed class ModelStateValidationTests
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ModelStateValidationClient apiClient = new(httpClient);
 
-        SocialMediaAccountPostRequestDocument requestBody = new()
+        var requestBody = new CreateSocialMediaAccountRequestDocument
         {
-            Data = new SocialMediaAccountDataInPostRequest
+            Data = new DataInCreateSocialMediaAccountRequest
             {
-                Attributes = new SocialMediaAccountAttributesInPostRequest
+                Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     AlternativeId = newAccount.AlternativeId,
                     FirstName = newAccount.FirstName,

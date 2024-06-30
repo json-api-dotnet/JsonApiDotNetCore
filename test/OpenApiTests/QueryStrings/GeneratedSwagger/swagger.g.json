@@ -180,7 +180,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/nameValuePairPostRequestDocument"
+                    "$ref": "#/components/schemas/createNameValuePairRequestDocument"
                   }
                 ]
               }
@@ -475,7 +475,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/nameValuePairPatchRequestDocument"
+                    "$ref": "#/components/schemas/updateNameValuePairRequestDocument"
                   }
                 ]
               }
@@ -1159,7 +1159,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/nodePostRequestDocument"
+                    "$ref": "#/components/schemas/createNodeRequestDocument"
                   }
                 ]
               }
@@ -1454,7 +1454,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/nodePatchRequestDocument"
+                    "$ref": "#/components/schemas/updateNodeRequestDocument"
                   }
                 ]
               }
@@ -3075,18 +3075,163 @@
   },
   "components": {
     "schemas": {
-      "dataInResponse": {
+      "attributesInCreateNameValuePairRequest": {
         "required": [
-          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "attributesInCreateNodeRequest": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "comment": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "attributesInUpdateNameValuePairRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "attributesInUpdateNodeRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "comment": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "createNameValuePairRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreateNameValuePairRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "createNodeRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreateNodeRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInCreateNameValuePairRequest": {
+        "required": [
           "type"
         ],
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nameValuePairResourceType"
+              }
+            ]
           },
-          "id": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInCreateNameValuePairRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipsInCreateNameValuePairRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInCreateNodeRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nodeResourceType"
+              }
+            ]
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInCreateNodeRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipsInCreateNodeRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInResponse": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
             "minLength": 1,
             "type": "string"
           }
@@ -3100,6 +3245,76 @@
           }
         },
         "x-abstract": true
+      },
+      "dataInUpdateNameValuePairRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nameValuePairResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInUpdateNameValuePairRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipsInUpdateNameValuePairRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInUpdateNodeRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nodeResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInUpdateNodeRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipsInUpdateNodeRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
       },
       "errorLinks": {
         "type": "object",
@@ -3154,9 +3369,11 @@
             "nullable": true
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": { },
-            "nullable": true
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3182,11 +3399,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3221,34 +3438,11 @@
         },
         "additionalProperties": false
       },
-      "nameValuePairAttributesInPatchRequest": {
+      "meta": {
         "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "value": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "nameValuePairAttributesInPostRequest": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "value": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
+        "additionalProperties": {
+          "nullable": true
+        }
       },
       "nameValuePairAttributesInResponse": {
         "type": "object",
@@ -3290,66 +3484,9 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "nameValuePairDataInPatchRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/nameValuePairResourceType"
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/nameValuePairAttributesInPatchRequest"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nameValuePairRelationshipsInPatchRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "nameValuePairDataInPostRequest": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/nameValuePairResourceType"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nameValuePairAttributesInPostRequest"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nameValuePairRelationshipsInPostRequest"
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -3362,8 +3499,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -3386,33 +3530,16 @@
                 ]
               },
               "meta": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "object",
-                  "nullable": true
-                }
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/meta"
+                  }
+                ]
               }
             },
             "additionalProperties": false
           }
         ],
-        "additionalProperties": false
-      },
-      "nameValuePairIdentifier": {
-        "required": [
-          "id",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/nameValuePairResourceType"
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
         "additionalProperties": false
       },
       "nameValuePairIdentifierCollectionResponseDocument": {
@@ -3432,47 +3559,57 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/nameValuePairIdentifier"
+              "$ref": "#/components/schemas/nameValuePairIdentifierInResponse"
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "nameValuePairPatchRequestDocument": {
-        "required": [
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/nameValuePairDataInPatchRequest"
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
         },
         "additionalProperties": false
       },
-      "nameValuePairPostRequestDocument": {
+      "nameValuePairIdentifierInRequest": {
         "required": [
-          "data"
+          "id",
+          "type"
         ],
         "type": "object",
         "properties": {
-          "data": {
+          "type": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/nameValuePairDataInPostRequest"
+                "$ref": "#/components/schemas/nameValuePairResourceType"
               }
             ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "nameValuePairIdentifierInResponse": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nameValuePairResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -3505,38 +3642,9 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "nameValuePairRelationshipsInPatchRequest": {
-        "type": "object",
-        "properties": {
-          "owner": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/toOneNodeInRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "nameValuePairRelationshipsInPostRequest": {
-        "required": [
-          "owner"
-        ],
-        "type": "object",
-        "properties": {
-          "owner": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toOneNodeInRequest"
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -3561,35 +3669,6 @@
           "nameValuePairs"
         ],
         "type": "string",
-        "additionalProperties": false
-      },
-      "nodeAttributesInPatchRequest": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "comment": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "nodeAttributesInPostRequest": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "comment": {
-            "type": "string",
-            "nullable": true
-          }
-        },
         "additionalProperties": false
       },
       "nodeAttributesInResponse": {
@@ -3632,66 +3711,9 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "nodeDataInPatchRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/nodeResourceType"
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/nodeAttributesInPatchRequest"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nodeRelationshipsInPatchRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "nodeDataInPostRequest": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/nodeResourceType"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nodeAttributesInPostRequest"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nodeRelationshipsInPostRequest"
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -3704,8 +3726,15 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
+            "required": [
+              "id"
+            ],
             "type": "object",
             "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string"
+              },
               "attributes": {
                 "allOf": [
                   {
@@ -3728,33 +3757,16 @@
                 ]
               },
               "meta": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "object",
-                  "nullable": true
-                }
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/meta"
+                  }
+                ]
               }
             },
             "additionalProperties": false
           }
         ],
-        "additionalProperties": false
-      },
-      "nodeIdentifier": {
-        "required": [
-          "id",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/nodeResourceType"
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
         "additionalProperties": false
       },
       "nodeIdentifierCollectionResponseDocument": {
@@ -3774,15 +3786,57 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/nodeIdentifier"
+              "$ref": "#/components/schemas/nodeIdentifierInResponse"
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "nodeIdentifierInRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nodeResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "nodeIdentifierInResponse": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nodeResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -3804,46 +3858,14 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/nodeIdentifier"
+                "$ref": "#/components/schemas/nodeIdentifierInResponse"
               }
             ]
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "nodePatchRequestDocument": {
-        "required": [
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/nodeDataInPatchRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "nodePostRequestDocument": {
-        "required": [
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nodeDataInPostRequest"
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -3878,63 +3900,9 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "nodeRelationshipsInPatchRequest": {
-        "type": "object",
-        "properties": {
-          "values": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/toManyNameValuePairInRequest"
-              }
-            ]
-          },
-          "parent": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOneNodeInRequest"
-              }
-            ]
-          },
-          "children": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyNodeInRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "nodeRelationshipsInPostRequest": {
-        "type": "object",
-        "properties": {
-          "values": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyNameValuePairInRequest"
-              }
-            ]
-          },
-          "parent": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOneNodeInRequest"
-              }
-            ]
-          },
-          "children": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyNodeInRequest"
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -4003,11 +3971,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4029,17 +3997,17 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/nodeIdentifier"
+                "$ref": "#/components/schemas/nodeIdentifierInResponse"
               }
             ],
             "nullable": true
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4073,11 +4041,11 @@
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4091,7 +4059,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/nodeIdentifier"
+                "$ref": "#/components/schemas/nodeIdentifierInRequest"
               }
             ],
             "nullable": true
@@ -4112,17 +4080,17 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/nodeIdentifier"
+                "$ref": "#/components/schemas/nodeIdentifierInResponse"
               }
             ],
             "nullable": true
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4135,6 +4103,89 @@
           },
           "related": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "relationshipsInCreateNameValuePairRequest": {
+        "required": [
+          "owner"
+        ],
+        "type": "object",
+        "properties": {
+          "owner": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneNodeInRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "relationshipsInCreateNodeRequest": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyNameValuePairInRequest"
+              }
+            ]
+          },
+          "parent": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullableToOneNodeInRequest"
+              }
+            ]
+          },
+          "children": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyNodeInRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "relationshipsInUpdateNameValuePairRequest": {
+        "type": "object",
+        "properties": {
+          "owner": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneNodeInRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "relationshipsInUpdateNodeRequest": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyNameValuePairInRequest"
+              }
+            ]
+          },
+          "parent": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullableToOneNodeInRequest"
+              }
+            ]
+          },
+          "children": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyNodeInRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4235,7 +4286,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/nameValuePairIdentifier"
+              "$ref": "#/components/schemas/nameValuePairIdentifierInRequest"
             }
           }
         },
@@ -4254,15 +4305,15 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/nameValuePairIdentifier"
+              "$ref": "#/components/schemas/nameValuePairIdentifierInResponse"
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4276,7 +4327,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/nodeIdentifier"
+              "$ref": "#/components/schemas/nodeIdentifierInRequest"
             }
           }
         },
@@ -4295,15 +4346,15 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/nodeIdentifier"
+              "$ref": "#/components/schemas/nodeIdentifierInResponse"
             }
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4317,7 +4368,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/nodeIdentifier"
+                "$ref": "#/components/schemas/nodeIdentifierInRequest"
               }
             ]
           }
@@ -4337,16 +4388,48 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/nodeIdentifier"
+                "$ref": "#/components/schemas/nodeIdentifierInResponse"
               }
             ]
           },
           "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "updateNameValuePairRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInUpdateNameValuePairRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "updateNodeRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInUpdateNodeRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false

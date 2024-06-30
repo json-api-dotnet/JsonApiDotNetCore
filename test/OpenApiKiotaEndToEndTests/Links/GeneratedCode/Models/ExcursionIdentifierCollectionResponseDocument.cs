@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class ExcursionIdentifierCollectionResponseDocument : IBackedModel, IParsable 
+    public class ExcursionIdentifierCollectionResponseDocument : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,47 +16,53 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public List<ExcursionIdentifier>? Data {
-            get { return BackingStore?.Get<List<ExcursionIdentifier>?>("data"); }
+        public List<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ExcursionIdentifierInResponse>? Data
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ExcursionIdentifierInResponse>?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public List<ExcursionIdentifier> Data {
-            get { return BackingStore?.Get<List<ExcursionIdentifier>>("data"); }
+        public List<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ExcursionIdentifierInResponse> Data
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ExcursionIdentifierInResponse>>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ResourceIdentifierCollectionTopLevelLinks? Links {
-            get { return BackingStore?.Get<ResourceIdentifierCollectionTopLevelLinks?>("links"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks? Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public ResourceIdentifierCollectionTopLevelLinks Links {
-            get { return BackingStore?.Get<ResourceIdentifierCollectionTopLevelLinks>("links"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ExcursionIdentifierCollectionResponseDocument_meta? Meta {
-            get { return BackingStore?.Get<ExcursionIdentifierCollectionResponseDocument_meta?>("meta"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta? Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public ExcursionIdentifierCollectionResponseDocument_meta Meta {
-            get { return BackingStore?.Get<ExcursionIdentifierCollectionResponseDocument_meta>("meta"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="ExcursionIdentifierCollectionResponseDocument"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ExcursionIdentifierCollectionResponseDocument"/> and sets the default values.
         /// </summary>
         public ExcursionIdentifierCollectionResponseDocument()
         {
@@ -64,12 +71,12 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="ExcursionIdentifierCollectionResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ExcursionIdentifierCollectionResponseDocument"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static ExcursionIdentifierCollectionResponseDocument CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ExcursionIdentifierCollectionResponseDocument CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new ExcursionIdentifierCollectionResponseDocument();
+            return new OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ExcursionIdentifierCollectionResponseDocument();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -79,9 +86,9 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"data", n => { Data = n.GetCollectionOfObjectValues<ExcursionIdentifier>(ExcursionIdentifier.CreateFromDiscriminatorValue)?.ToList(); } },
-                {"links", n => { Links = n.GetObjectValue<ResourceIdentifierCollectionTopLevelLinks>(ResourceIdentifierCollectionTopLevelLinks.CreateFromDiscriminatorValue); } },
-                {"meta", n => { Meta = n.GetObjectValue<ExcursionIdentifierCollectionResponseDocument_meta>(ExcursionIdentifierCollectionResponseDocument_meta.CreateFromDiscriminatorValue); } },
+                { "data", n => { Data = n.GetCollectionOfObjectValues<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ExcursionIdentifierInResponse>(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ExcursionIdentifierInResponse.CreateFromDiscriminatorValue)?.ToList(); } },
+                { "links", n => { Links = n.GetObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks>(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta>(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -91,9 +98,9 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteCollectionOfObjectValues<ExcursionIdentifier>("data", Data);
-            writer.WriteObjectValue<ResourceIdentifierCollectionTopLevelLinks>("links", Links);
-            writer.WriteObjectValue<ExcursionIdentifierCollectionResponseDocument_meta>("meta", Meta);
+            writer.WriteCollectionOfObjectValues<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ExcursionIdentifierInResponse>("data", Data);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ResourceIdentifierCollectionTopLevelLinks>("links", Links);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta>("meta", Meta);
         }
     }
 }

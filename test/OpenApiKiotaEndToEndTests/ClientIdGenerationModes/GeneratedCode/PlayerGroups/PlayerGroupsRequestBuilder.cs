@@ -8,14 +8,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.PlayerGroups {
+namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.PlayerGroups
+{
     /// <summary>
     /// Builds and executes requests for operations under \playerGroups
     /// </summary>
-    public class PlayerGroupsRequestBuilder : BaseRequestBuilder 
+    public class PlayerGroupsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="PlayerGroupsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.PlayerGroups.PlayerGroupsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -23,7 +24,7 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Player
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="PlayerGroupsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.PlayerGroups.PlayerGroupsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -33,35 +34,35 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Player
         /// <summary>
         /// Creates a new playerGroup.
         /// </summary>
-        /// <returns>A <see cref="PlayerGroupPrimaryResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.PlayerGroupPrimaryResponseDocument"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="ErrorResponseDocument">When receiving a 400 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 403 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 404 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 409 status code</exception>
-        /// <exception cref="ErrorResponseDocument">When receiving a 422 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument">When receiving a 403 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument">When receiving a 409 status code</exception>
+        /// <exception cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<PlayerGroupPrimaryResponseDocument?> PostAsync(PlayerGroupPostRequestDocument body, Action<RequestConfiguration<PlayerGroupsRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.PlayerGroupPrimaryResponseDocument?> PostAsync(OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.CreatePlayerGroupRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.PlayerGroups.PlayerGroupsRequestBuilder.PlayerGroupsRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<PlayerGroupPrimaryResponseDocument> PostAsync(PlayerGroupPostRequestDocument body, Action<RequestConfiguration<PlayerGroupsRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.PlayerGroupPrimaryResponseDocument> PostAsync(OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.CreatePlayerGroupRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.PlayerGroups.PlayerGroupsRequestBuilder.PlayerGroupsRequestBuilderPostQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPostRequestInformation(body, requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"403", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"409", ErrorResponseDocument.CreateFromDiscriminatorValue},
-                {"422", ErrorResponseDocument.CreateFromDiscriminatorValue},
+                { "400", OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "403", OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "404", OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "409", OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "422", OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<PlayerGroupPrimaryResponseDocument>(requestInfo, PlayerGroupPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.PlayerGroupPrimaryResponseDocument>(requestInfo, OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.PlayerGroupPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Creates a new playerGroup.
@@ -71,11 +72,11 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Player
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPostRequestInformation(PlayerGroupPostRequestDocument body, Action<RequestConfiguration<PlayerGroupsRequestBuilderPostQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.CreatePlayerGroupRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.PlayerGroups.PlayerGroupsRequestBuilder.PlayerGroupsRequestBuilderPostQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPostRequestInformation(PlayerGroupPostRequestDocument body, Action<RequestConfiguration<PlayerGroupsRequestBuilderPostQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.CreatePlayerGroupRequestDocument body, Action<RequestConfiguration<OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.PlayerGroups.PlayerGroupsRequestBuilder.PlayerGroupsRequestBuilderPostQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -88,11 +89,11 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Player
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="PlayerGroupsRequestBuilder"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.PlayerGroups.PlayerGroupsRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public PlayerGroupsRequestBuilder WithUrl(string rawUrl)
+        public OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.PlayerGroups.PlayerGroupsRequestBuilder WithUrl(string rawUrl)
         {
-            return new PlayerGroupsRequestBuilder(rawUrl, RequestAdapter);
+            return new OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.PlayerGroups.PlayerGroupsRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Creates a new playerGroup.

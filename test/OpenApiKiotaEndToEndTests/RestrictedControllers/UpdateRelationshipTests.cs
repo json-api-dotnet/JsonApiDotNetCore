@@ -49,7 +49,7 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
 
         var requestBody = new NullableToOneDataStreamInRequest
         {
-            Data = new DataStreamIdentifier
+            Data = new DataStreamIdentifierInRequest
             {
                 Type = DataStreamResourceType.DataStreams,
                 Id = existingVideoStream.StringId!
@@ -141,7 +141,7 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
         {
             Data =
             [
-                new DataStreamIdentifier
+                new DataStreamIdentifierInRequest
                 {
                     Type = DataStreamResourceType.DataStreams,
                     Id = existingAudioStream.StringId!
@@ -234,7 +234,7 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
         {
             Data =
             [
-                new DataStreamIdentifier
+                new DataStreamIdentifierInRequest
                 {
                     Type = DataStreamResourceType.DataStreams,
                     Id = existingAudioStream.StringId!
@@ -284,12 +284,12 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
         {
             Data =
             [
-                new DataStreamIdentifier
+                new DataStreamIdentifierInRequest
                 {
                     Type = DataStreamResourceType.DataStreams,
                     Id = existingChannel.AudioStreams.ElementAt(0).StringId!
                 },
-                new DataStreamIdentifier
+                new DataStreamIdentifierInRequest
                 {
                     Type = DataStreamResourceType.DataStreams,
                     Id = existingChannel.AudioStreams.ElementAt(1).StringId!
@@ -366,12 +366,12 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
         {
             Data =
             [
-                new DataStreamIdentifier
+                new DataStreamIdentifierInRequest
                 {
                     Type = DataStreamResourceType.DataStreams,
                     Id = unknownAudioStreamId1
                 },
-                new DataStreamIdentifier
+                new DataStreamIdentifierInRequest
                 {
                     Type = DataStreamResourceType.DataStreams,
                     Id = unknownAudioStreamId2

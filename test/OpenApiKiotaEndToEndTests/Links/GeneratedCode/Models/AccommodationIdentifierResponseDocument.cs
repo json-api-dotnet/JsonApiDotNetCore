@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class AccommodationIdentifierResponseDocument : IBackedModel, IParsable 
+    public class AccommodationIdentifierResponseDocument : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,47 +16,53 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public AccommodationIdentifier? Data {
-            get { return BackingStore?.Get<AccommodationIdentifier?>("data"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AccommodationIdentifierInResponse? Data
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AccommodationIdentifierInResponse?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public AccommodationIdentifier Data {
-            get { return BackingStore?.Get<AccommodationIdentifier>("data"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AccommodationIdentifierInResponse Data
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AccommodationIdentifierInResponse>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ResourceIdentifierTopLevelLinks? Links {
-            get { return BackingStore?.Get<ResourceIdentifierTopLevelLinks?>("links"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ResourceIdentifierTopLevelLinks? Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ResourceIdentifierTopLevelLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public ResourceIdentifierTopLevelLinks Links {
-            get { return BackingStore?.Get<ResourceIdentifierTopLevelLinks>("links"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ResourceIdentifierTopLevelLinks Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ResourceIdentifierTopLevelLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public AccommodationIdentifierResponseDocument_meta? Meta {
-            get { return BackingStore?.Get<AccommodationIdentifierResponseDocument_meta?>("meta"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta? Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public AccommodationIdentifierResponseDocument_meta Meta {
-            get { return BackingStore?.Get<AccommodationIdentifierResponseDocument_meta>("meta"); }
+        public OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="AccommodationIdentifierResponseDocument"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AccommodationIdentifierResponseDocument"/> and sets the default values.
         /// </summary>
         public AccommodationIdentifierResponseDocument()
         {
@@ -64,12 +71,12 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="AccommodationIdentifierResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AccommodationIdentifierResponseDocument"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static AccommodationIdentifierResponseDocument CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AccommodationIdentifierResponseDocument CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new AccommodationIdentifierResponseDocument();
+            return new OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AccommodationIdentifierResponseDocument();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -79,9 +86,9 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"data", n => { Data = n.GetObjectValue<AccommodationIdentifier>(AccommodationIdentifier.CreateFromDiscriminatorValue); } },
-                {"links", n => { Links = n.GetObjectValue<ResourceIdentifierTopLevelLinks>(ResourceIdentifierTopLevelLinks.CreateFromDiscriminatorValue); } },
-                {"meta", n => { Meta = n.GetObjectValue<AccommodationIdentifierResponseDocument_meta>(AccommodationIdentifierResponseDocument_meta.CreateFromDiscriminatorValue); } },
+                { "data", n => { Data = n.GetObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AccommodationIdentifierInResponse>(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AccommodationIdentifierInResponse.CreateFromDiscriminatorValue); } },
+                { "links", n => { Links = n.GetObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ResourceIdentifierTopLevelLinks>(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ResourceIdentifierTopLevelLinks.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta>(OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -91,9 +98,9 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<AccommodationIdentifier>("data", Data);
-            writer.WriteObjectValue<ResourceIdentifierTopLevelLinks>("links", Links);
-            writer.WriteObjectValue<AccommodationIdentifierResponseDocument_meta>("meta", Meta);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.AccommodationIdentifierInResponse>("data", Data);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ResourceIdentifierTopLevelLinks>("links", Links);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.Meta>("meta", Meta);
         }
     }
 }

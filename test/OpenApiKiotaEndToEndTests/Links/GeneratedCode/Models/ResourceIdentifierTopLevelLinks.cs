@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class ResourceIdentifierTopLevelLinks : IBackedModel, IParsable 
+    public class ResourceIdentifierTopLevelLinks : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,13 +16,15 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>The describedby property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Describedby {
+        public string? Describedby
+        {
             get { return BackingStore?.Get<string?>("describedby"); }
             set { BackingStore?.Set("describedby", value); }
         }
 #nullable restore
 #else
-        public string Describedby {
+        public string Describedby
+        {
             get { return BackingStore?.Get<string>("describedby"); }
             set { BackingStore?.Set("describedby", value); }
         }
@@ -29,13 +32,15 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>The related property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Related {
+        public string? Related
+        {
             get { return BackingStore?.Get<string?>("related"); }
             set { BackingStore?.Set("related", value); }
         }
 #nullable restore
 #else
-        public string Related {
+        public string Related
+        {
             get { return BackingStore?.Get<string>("related"); }
             set { BackingStore?.Set("related", value); }
         }
@@ -43,19 +48,21 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>The self property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Self {
+        public string? Self
+        {
             get { return BackingStore?.Get<string?>("self"); }
             set { BackingStore?.Set("self", value); }
         }
 #nullable restore
 #else
-        public string Self {
+        public string Self
+        {
             get { return BackingStore?.Get<string>("self"); }
             set { BackingStore?.Set("self", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="ResourceIdentifierTopLevelLinks"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ResourceIdentifierTopLevelLinks"/> and sets the default values.
         /// </summary>
         public ResourceIdentifierTopLevelLinks()
         {
@@ -64,12 +71,12 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="ResourceIdentifierTopLevelLinks"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ResourceIdentifierTopLevelLinks"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static ResourceIdentifierTopLevelLinks CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ResourceIdentifierTopLevelLinks CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new ResourceIdentifierTopLevelLinks();
+            return new OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ResourceIdentifierTopLevelLinks();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -79,9 +86,9 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"describedby", n => { Describedby = n.GetStringValue(); } },
-                {"related", n => { Related = n.GetStringValue(); } },
-                {"self", n => { Self = n.GetStringValue(); } },
+                { "describedby", n => { Describedby = n.GetStringValue(); } },
+                { "related", n => { Related = n.GetStringValue(); } },
+                { "self", n => { Self = n.GetStringValue(); } },
             };
         }
         /// <summary>

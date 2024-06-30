@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class ErrorSource : IBackedModel, IParsable 
+    public class ErrorSource : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,13 +16,15 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
         /// <summary>The header property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Header {
+        public string? Header
+        {
             get { return BackingStore?.Get<string?>("header"); }
             set { BackingStore?.Set("header", value); }
         }
 #nullable restore
 #else
-        public string Header {
+        public string Header
+        {
             get { return BackingStore?.Get<string>("header"); }
             set { BackingStore?.Set("header", value); }
         }
@@ -29,13 +32,15 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
         /// <summary>The parameter property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Parameter {
+        public string? Parameter
+        {
             get { return BackingStore?.Get<string?>("parameter"); }
             set { BackingStore?.Set("parameter", value); }
         }
 #nullable restore
 #else
-        public string Parameter {
+        public string Parameter
+        {
             get { return BackingStore?.Get<string>("parameter"); }
             set { BackingStore?.Set("parameter", value); }
         }
@@ -43,19 +48,21 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
         /// <summary>The pointer property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Pointer {
+        public string? Pointer
+        {
             get { return BackingStore?.Get<string?>("pointer"); }
             set { BackingStore?.Set("pointer", value); }
         }
 #nullable restore
 #else
-        public string Pointer {
+        public string Pointer
+        {
             get { return BackingStore?.Get<string>("pointer"); }
             set { BackingStore?.Set("pointer", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="ErrorSource"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorSource"/> and sets the default values.
         /// </summary>
         public ErrorSource()
         {
@@ -64,12 +71,12 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="ErrorSource"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorSource"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static ErrorSource CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorSource CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new ErrorSource();
+            return new OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorSource();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -79,9 +86,9 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"header", n => { Header = n.GetStringValue(); } },
-                {"parameter", n => { Parameter = n.GetStringValue(); } },
-                {"pointer", n => { Pointer = n.GetStringValue(); } },
+                { "header", n => { Header = n.GetStringValue(); } },
+                { "parameter", n => { Parameter = n.GetStringValue(); } },
+                { "pointer", n => { Pointer = n.GetStringValue(); } },
             };
         }
         /// <summary>

@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models
+{
     #pragma warning disable CS1591
-    public class ReadOnlyResourceChannelPrimaryResponseDocument : IBackedModel, IParsable 
+    public class ReadOnlyResourceChannelPrimaryResponseDocument : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -15,61 +16,69 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ReadOnlyResourceChannels? Data {
-            get { return BackingStore?.Get<ReadOnlyResourceChannels?>("data"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyResourceChannelDataInResponse? Data
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyResourceChannelDataInResponse?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #nullable restore
 #else
-        public ReadOnlyResourceChannels Data {
-            get { return BackingStore?.Get<ReadOnlyResourceChannels>("data"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyResourceChannelDataInResponse Data
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyResourceChannelDataInResponse>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 #endif
         /// <summary>The included property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public List<DataInResponse>? Included {
-            get { return BackingStore?.Get<List<DataInResponse>?>("included"); }
+        public List<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataInResponse>? Included
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataInResponse>?>("included"); }
             set { BackingStore?.Set("included", value); }
         }
 #nullable restore
 #else
-        public List<DataInResponse> Included {
-            get { return BackingStore?.Get<List<DataInResponse>>("included"); }
+        public List<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataInResponse> Included
+        {
+            get { return BackingStore?.Get<List<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataInResponse>>("included"); }
             set { BackingStore?.Set("included", value); }
         }
 #endif
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ResourceTopLevelLinks? Links {
-            get { return BackingStore?.Get<ResourceTopLevelLinks?>("links"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceTopLevelLinks? Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceTopLevelLinks?>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #nullable restore
 #else
-        public ResourceTopLevelLinks Links {
-            get { return BackingStore?.Get<ResourceTopLevelLinks>("links"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceTopLevelLinks Links
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceTopLevelLinks>("links"); }
             set { BackingStore?.Set("links", value); }
         }
 #endif
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public ReadOnlyResourceChannelPrimaryResponseDocument_meta? Meta {
-            get { return BackingStore?.Get<ReadOnlyResourceChannelPrimaryResponseDocument_meta?>("meta"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta? Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta?>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #nullable restore
 #else
-        public ReadOnlyResourceChannelPrimaryResponseDocument_meta Meta {
-            get { return BackingStore?.Get<ReadOnlyResourceChannelPrimaryResponseDocument_meta>("meta"); }
+        public OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta Meta
+        {
+            get { return BackingStore?.Get<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta>("meta"); }
             set { BackingStore?.Set("meta", value); }
         }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="ReadOnlyResourceChannelPrimaryResponseDocument"/> and sets the default values.
+        /// Instantiates a new <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyResourceChannelPrimaryResponseDocument"/> and sets the default values.
         /// </summary>
         public ReadOnlyResourceChannelPrimaryResponseDocument()
         {
@@ -78,12 +87,12 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="ReadOnlyResourceChannelPrimaryResponseDocument"/></returns>
+        /// <returns>A <see cref="OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyResourceChannelPrimaryResponseDocument"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static ReadOnlyResourceChannelPrimaryResponseDocument CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyResourceChannelPrimaryResponseDocument CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new ReadOnlyResourceChannelPrimaryResponseDocument();
+            return new OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyResourceChannelPrimaryResponseDocument();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -93,10 +102,10 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                {"data", n => { Data = n.GetObjectValue<ReadOnlyResourceChannels>(ReadOnlyResourceChannels.CreateFromDiscriminatorValue); } },
-                {"included", n => { Included = n.GetCollectionOfObjectValues<DataInResponse>(DataInResponse.CreateFromDiscriminatorValue)?.ToList(); } },
-                {"links", n => { Links = n.GetObjectValue<ResourceTopLevelLinks>(ResourceTopLevelLinks.CreateFromDiscriminatorValue); } },
-                {"meta", n => { Meta = n.GetObjectValue<ReadOnlyResourceChannelPrimaryResponseDocument_meta>(ReadOnlyResourceChannelPrimaryResponseDocument_meta.CreateFromDiscriminatorValue); } },
+                { "data", n => { Data = n.GetObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyResourceChannelDataInResponse>(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyResourceChannelDataInResponse.CreateFromDiscriminatorValue); } },
+                { "included", n => { Included = n.GetCollectionOfObjectValues<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataInResponse>(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataInResponse.CreateFromDiscriminatorValue)?.ToList(); } },
+                { "links", n => { Links = n.GetObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceTopLevelLinks>(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceTopLevelLinks.CreateFromDiscriminatorValue); } },
+                { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta>(OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -106,10 +115,10 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<ReadOnlyResourceChannels>("data", Data);
-            writer.WriteCollectionOfObjectValues<DataInResponse>("included", Included);
-            writer.WriteObjectValue<ResourceTopLevelLinks>("links", Links);
-            writer.WriteObjectValue<ReadOnlyResourceChannelPrimaryResponseDocument_meta>("meta", Meta);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ReadOnlyResourceChannelDataInResponse>("data", Data);
+            writer.WriteCollectionOfObjectValues<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.DataInResponse>("included", Included);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ResourceTopLevelLinks>("links", Links);
+            writer.WriteObjectValue<OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.Meta>("meta", Meta);
         }
     }
 }
