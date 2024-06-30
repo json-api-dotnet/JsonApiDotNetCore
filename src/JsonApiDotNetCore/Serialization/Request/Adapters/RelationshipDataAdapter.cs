@@ -1,4 +1,5 @@
 using System.Collections;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -71,6 +72,7 @@ public sealed class RelationshipDataAdapter : BaseAdapter, IRelationshipDataAdap
         {
             ResourceType = relationship.RightType,
             EvaluateIdConstraint = _ => JsonElementConstraint.Required,
+            EvaluateAllowLid = _ => state.Request.Kind == EndpointKind.AtomicOperations,
             RelationshipName = relationship.PublicName
         };
 
