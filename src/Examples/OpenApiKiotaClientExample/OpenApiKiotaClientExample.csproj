@@ -20,7 +20,14 @@
     <PackageReference Include="Microsoft.Kiota.Serialization.Text" Version="$(KiotaVersion)" />
   </ItemGroup>
 
-  <Target Name="KiotaRunTool" BeforeTargets="BeforeCompile;CoreCompile" Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
+  <Target Name="RemoveKiotaGeneratedCode" BeforeTargets="BeforeCompile;CoreCompile" Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
+    <ItemGroup>
+      <Compile Remove="**\GeneratedCode\**\*.cs" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="KiotaRunTool" BeforeTargets="BeforeCompile;CoreCompile" AfterTargets="RemoveKiotaGeneratedCode"
+    Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
     <!--
       Created from sources:
       - https://github.com/microsoft/kiota/issues/3005#issuecomment-1657806848
@@ -30,10 +37,11 @@
     -->
     <Exec
       Command="dotnet kiota generate --language CSharp --class-name ExampleApiClient --namespace-name OpenApiKiotaClientExample.GeneratedCode --output ./GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../JsonApiDotNetCoreExample/GeneratedSwagger/JsonApiDotNetCoreExample.json" />
+  </Target>
 
+  <Target Name="IncludeKiotaGeneratedCode" BeforeTargets="BeforeCompile;CoreCompile" AfterTargets="KiotaRunTool"
+    Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
     <ItemGroup>
-      <!-- This isn't entirely reliable: may require a second build after the source swagger.json has changed, to get rid of compile errors. -->
-      <Compile Remove="**\GeneratedCode\**\*.cs" />
       <Compile Include="**\GeneratedCode\**\*.cs" />
     </ItemGroup>
   </Target>

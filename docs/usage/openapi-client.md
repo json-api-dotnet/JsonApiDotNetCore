@@ -226,16 +226,24 @@ The available command-line switches for Kiota are described [here](https://learn
 
 At the time of writing, Kiota provides [no official integration](https://github.com/microsoft/kiota/issues/3005) with MSBuild.
 Our [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/openapi/src/Examples/OpenApiKiotaClientExample) takes a stab at it,
-although it has glitches. If you're an MSBuild expert, please help out!
+which seems to work. If you're an MSBuild expert, please help out!
 
 ```xml
-<Target Name="KiotaRunTool" BeforeTargets="BeforeCompile;CoreCompile" Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
-  <Exec
-    Command="dotnet kiota generate --language CSharp --class-name ExampleApiClient --namespace-name OpenApiKiotaClientExample.GeneratedCode --output ./GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --openapi ..\JsonApiDotNetCoreExample\GeneratedSwagger\JsonApiDotNetCoreExample.json" />
-
+<Target Name="RemoveKiotaGeneratedCode" BeforeTargets="BeforeCompile;CoreCompile" Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
   <ItemGroup>
-    <!-- This isn't entirely reliable: may require a second build after the source swagger.json has changed, to get rid of compile errors. -->
     <Compile Remove="**\GeneratedCode\**\*.cs" />
+  </ItemGroup>
+</Target>
+
+<Target Name="KiotaRunTool" BeforeTargets="BeforeCompile;CoreCompile" AfterTargets="RemoveKiotaGeneratedCode"
+  Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
+  <Exec
+    Command="dotnet kiota generate --language CSharp --class-name ExampleApiClient --namespace-name OpenApiKiotaClientExample.GeneratedCode --output ./GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../JsonApiDotNetCoreExample/GeneratedSwagger/JsonApiDotNetCoreExample.json" />
+</Target>
+
+<Target Name="IncludeKiotaGeneratedCode" BeforeTargets="BeforeCompile;CoreCompile" AfterTargets="KiotaRunTool"
+  Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
+  <ItemGroup>
     <Compile Include="**\GeneratedCode\**\*.cs" />
   </ItemGroup>
 </Target>
