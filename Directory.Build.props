@@ -1,10 +1,10 @@
 <Project>
   <PropertyGroup>
-    <NetCoreAppVersion>netcoreapp3.1</NetCoreAppVersion>
+    <NetCoreAppVersion>net6.0</NetCoreAppVersion>
     <NetStandardVersion>netstandard2.1</NetStandardVersion>
-    <AspNetCoreVersion>5.0.*</AspNetCoreVersion>
-    <EFCoreVersion>5.0.*</EFCoreVersion>
-    <NpgsqlPostgreSQLVersion>5.0.*</NpgsqlPostgreSQLVersion>
+    <AspNetCoreVersion>6.0.*</AspNetCoreVersion>
+    <EFCoreVersion>6.0.32</EFCoreVersion>
+    <NpgsqlPostgreSQLVersion>6.0.*</NpgsqlPostgreSQLVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
