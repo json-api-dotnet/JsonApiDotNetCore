@@ -160,7 +160,7 @@ namespace JsonApiDotNetCore.Builders
             _services.AddScoped(typeof(IGetByIdService<>), typeof(DefaultResourceService<>));
             _services.AddScoped(typeof(IGetByIdService<,>), typeof(DefaultResourceService<,>));
 
-            _services.AddScoped(typeof(IGetRelationshipService<,>), typeof(DefaultResourceService<>));
+            _services.AddScoped(typeof(IGetRelationshipService<>), typeof(DefaultResourceService<>));
             _services.AddScoped(typeof(IGetRelationshipService<,>), typeof(DefaultResourceService<,>));
 
             _services.AddScoped(typeof(IUpdateService<>), typeof(DefaultResourceService<>));
