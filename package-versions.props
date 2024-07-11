@@ -37,6 +37,6 @@
     <AspNetCoreVersion>6.0.*</AspNetCoreVersion>
     <DateOnlyTimeOnlyVersion>2.1.*</DateOnlyTimeOnlyVersion>
     <EntityFrameworkCoreVersion>7.0.*</EntityFrameworkCoreVersion>
-    <SystemTextJsonVersion>7.0.*</SystemTextJsonVersion>
+    <SystemTextJsonVersion>8.0.*</SystemTextJsonVersion>
   </PropertyGroup>
 </Project>
