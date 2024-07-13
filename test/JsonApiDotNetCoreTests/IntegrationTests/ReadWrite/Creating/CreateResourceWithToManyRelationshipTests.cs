@@ -232,7 +232,7 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
     {
         // Arrange
         List<WorkTag> existingTags = _fakers.WorkTag.Generate(3);
-        WorkItem workItemToCreate = _fakers.WorkItem.Generate();
+        WorkItem newWorkItem = _fakers.WorkItem.Generate();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -247,8 +247,8 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
                 type = "workItems",
                 attributes = new
                 {
-                    description = workItemToCreate.Description,
-                    priority = workItemToCreate.Priority
+                    description = newWorkItem.Description,
+                    priority = newWorkItem.Priority
                 },
                 relationships = new
                 {
@@ -287,7 +287,7 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Attributes.ShouldHaveCount(1);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(workItemToCreate.Priority));
+        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(newWorkItem.Priority));
         responseDocument.Data.SingleValue.Relationships.ShouldHaveCount(1);
 
         responseDocument.Data.SingleValue.Relationships.ShouldContainKey("tags").With(value =>

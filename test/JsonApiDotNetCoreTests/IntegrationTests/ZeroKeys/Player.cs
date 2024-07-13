@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys")]
-public sealed class Player : Identifiable<string>
+public sealed class Player : Identifiable<string?>
 {
     [Attr]
     public string EmailAddress { get; set; } = null!;
