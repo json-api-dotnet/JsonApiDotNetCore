@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Globalization;
 using JetBrains.Annotations;
 
@@ -12,6 +13,8 @@ namespace JsonApiDotNetCore.Resources;
 public static class RuntimeTypeConverter
 {
     private const string ParseQueryStringsUsingCurrentCultureSwitchName = "JsonApiDotNetCore.ParseQueryStringsUsingCurrentCulture";
+
+    private static readonly ConcurrentDictionary<Type, object?> DefaultTypeCache = new();
 
     /// <summary>
     /// Converts the specified value to the specified type.
@@ -137,6 +140,8 @@ public static class RuntimeTypeConverter
     /// </summary>
     public static bool CanContainNull(Type type)
     {
+        ArgumentGuard.NotNull(type);
+
         return !type.IsValueType || Nullable.GetUnderlyingType(type) != null;
     }
 
@@ -148,6 +153,8 @@ public static class RuntimeTypeConverter
     /// </returns>
     public static object? GetDefaultValue(Type type)
     {
-        return type.IsValueType ? Activator.CreateInstance(type) : null;
+        ArgumentGuard.NotNull(type);
+
+        return type.IsValueType ? DefaultTypeCache.GetOrAdd(type, Activator.CreateInstance) : null;
     }
 }
