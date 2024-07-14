@@ -27,6 +27,7 @@
   <ItemGroup>
     <None Include="..\..\package-icon.png" Visible="false" Pack="True" PackagePath="" />
     <None Include="..\..\PackageReadme.md" Visible="false" Pack="True" PackagePath="" />
+    <None Include="Build\*.targets" Pack="True" PackagePath="build" />
   </ItemGroup>
 
   <ItemGroup>
