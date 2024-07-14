@@ -14,21 +14,11 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
         /// <summary>Stores model information.</summary>
         public IBackingStore BackingStore { get; private set; }
         /// <summary>The id property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public string? Id
+        public Guid? Id
         {
-            get { return BackingStore?.Get<string?>("id"); }
+            get { return BackingStore?.Get<Guid?>("id"); }
             set { BackingStore?.Set("id", value); }
         }
-#nullable restore
-#else
-        public string Id
-        {
-            get { return BackingStore?.Get<string>("id"); }
-            set { BackingStore?.Set("id", value); }
-        }
-#endif
         /// <summary>The lid property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -82,7 +72,7 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                { "id", n => { Id = n.GetStringValue(); } },
+                { "id", n => { Id = n.GetGuidValue(); } },
                 { "lid", n => { Lid = n.GetStringValue(); } },
                 { "relationship", n => { Relationship = n.GetEnumValue<OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.CourseTaughtByRelationshipName>(); } },
                 { "type", n => { Type = n.GetEnumValue<OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.CourseResourceType>(); } },
@@ -95,7 +85,7 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteStringValue("id", Id);
+            writer.WriteGuidValue("id", Id);
             writer.WriteStringValue("lid", Lid);
             writer.WriteEnumValue<OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.CourseTaughtByRelationshipName>("relationship", Relationship);
             writer.WriteEnumValue<OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.CourseResourceType>("type", Type);

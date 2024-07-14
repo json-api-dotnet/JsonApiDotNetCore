@@ -279,7 +279,9 @@
             "description": "The identifier of the resource to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           },
           {
@@ -372,7 +374,9 @@
             "description": "The identifier of the resource to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           },
           {
@@ -451,7 +455,9 @@
             "description": "The identifier of the resource to update.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           },
           {
@@ -552,7 +558,9 @@
             "description": "The identifier of the resource to delete.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           }
         ],
@@ -587,7 +595,9 @@
             "description": "The identifier of the resource whose related empties to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           },
           {
@@ -680,7 +690,9 @@
             "description": "The identifier of the resource whose related empties to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           },
           {
@@ -761,7 +773,9 @@
             "description": "The identifier of the resource whose related empty identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           },
           {
@@ -854,7 +868,9 @@
             "description": "The identifier of the resource whose related empty identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           },
           {
@@ -933,7 +949,9 @@
             "description": "The identifier of the resource to add empties to.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           }
         ],
@@ -1001,7 +1019,9 @@
             "description": "The identifier of the resource whose requiredToMany relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           }
         ],
@@ -1069,7 +1089,9 @@
             "description": "The identifier of the resource to remove empties from.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           }
         ],
@@ -1139,7 +1161,9 @@
             "description": "The identifier of the resource whose related empty to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           },
           {
@@ -1232,7 +1256,9 @@
             "description": "The identifier of the resource whose related empty to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           },
           {
@@ -1313,7 +1339,9 @@
             "description": "The identifier of the resource whose related empty identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           },
           {
@@ -1406,7 +1434,9 @@
             "description": "The identifier of the resource whose related empty identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           },
           {
@@ -1485,7 +1515,9 @@
             "description": "The identifier of the resource whose requiredToOne relationship to assign or clear.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           }
         ],
@@ -1555,7 +1587,9 @@
             "description": "The identifier of the resource whose related empties to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           },
           {
@@ -1648,7 +1682,9 @@
             "description": "The identifier of the resource whose related empties to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           },
           {
@@ -1729,7 +1765,9 @@
             "description": "The identifier of the resource whose related empty identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           },
           {
@@ -1822,7 +1860,9 @@
             "description": "The identifier of the resource whose related empty identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           },
           {
@@ -1901,7 +1941,9 @@
             "description": "The identifier of the resource to add empties to.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           }
         ],
@@ -1969,7 +2011,9 @@
             "description": "The identifier of the resource whose toMany relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           }
         ],
@@ -2037,7 +2081,9 @@
             "description": "The identifier of the resource to remove empties from.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           }
         ],
@@ -2107,7 +2153,9 @@
             "description": "The identifier of the resource whose related empty to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           },
           {
@@ -2200,7 +2248,9 @@
             "description": "The identifier of the resource whose related empty to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           },
           {
@@ -2281,7 +2331,9 @@
             "description": "The identifier of the resource whose related empty identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           },
           {
@@ -2374,7 +2426,9 @@
             "description": "The identifier of the resource whose related empty identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           },
           {
@@ -2453,7 +2507,9 @@
             "description": "The identifier of the resource whose toOne relationship to assign or clear.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
             }
           }
         ],
@@ -2666,7 +2722,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int32"
           },
           "attributes": {
             "allOf": [
@@ -2734,7 +2791,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "int32"
               },
               "links": {
                 "allOf": [
@@ -2802,7 +2860,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -2823,7 +2882,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -3268,7 +3328,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "int32"
               },
               "attributes": {
                 "allOf": [

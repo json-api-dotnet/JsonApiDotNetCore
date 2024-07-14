@@ -370,7 +370,8 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     },
                     "id": {
                       "minLength": 1,
-                      "type": "string"
+                      "type": "string",
+                      "format": "uuid"
                     },
                     "attributes": {
                       "allOf": [
@@ -491,7 +492,8 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     },
                     "id": {
                       "minLength": 1,
-                      "type": "string"
+                      "type": "string",
+                      "format": "uuid"
                     },
                     "lid": {
                       "minLength": 1,
@@ -696,7 +698,8 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     },
                     "id": {
                       "minLength": 1,
-                      "type": "string"
+                      "type": "string",
+                      "format": "uuid"
                     },
                     "lid": {
                       "minLength": 1,
@@ -724,7 +727,8 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     },
                     "id": {
                       "minLength": 1,
-                      "type": "string"
+                      "type": "string",
+                      "format": "uuid"
                     },
                     "lid": {
                       "minLength": 1,
@@ -934,7 +938,8 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     },
                     "id": {
                       "minLength": 1,
-                      "type": "string"
+                      "type": "string",
+                      "format": "int64"
                     },
                     "lid": {
                       "minLength": 1,
@@ -1188,7 +1193,8 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     },
                     "id": {
                       "minLength": 1,
-                      "type": "string"
+                      "type": "string",
+                      "format": "int64"
                     },
                     "lid": {
                       "minLength": 1,
@@ -1216,7 +1222,8 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     },
                     "id": {
                       "minLength": 1,
-                      "type": "string"
+                      "type": "string",
+                      "format": "int64"
                     },
                     "lid": {
                       "minLength": 1,
@@ -1261,7 +1268,8 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     },
                     "id": {
                       "minLength": 1,
-                      "type": "string"
+                      "type": "string",
+                      "format": "int64"
                     },
                     "lid": {
                       "minLength": 1,
@@ -1471,7 +1479,8 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     },
                     "id": {
                       "minLength": 1,
-                      "type": "string"
+                      "type": "string",
+                      "format": "int64"
                     },
                     "lid": {
                       "minLength": 1,
@@ -1714,7 +1723,8 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     },
                     "id": {
                       "minLength": 1,
-                      "type": "string"
+                      "type": "string",
+                      "format": "int64"
                     },
                     "lid": {
                       "minLength": 1,
@@ -1742,7 +1752,8 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     },
                     "id": {
                       "minLength": 1,
-                      "type": "string"
+                      "type": "string",
+                      "format": "int64"
                     },
                     "lid": {
                       "minLength": 1,
@@ -1955,7 +1966,8 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     },
                     "id": {
                       "minLength": 1,
-                      "type": "string"
+                      "type": "string",
+                      "format": "int64"
                     },
                     "lid": {
                       "minLength": 1,
@@ -2117,7 +2129,8 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     },
                     "id": {
                       "minLength": 1,
-                      "type": "string"
+                      "type": "string",
+                      "format": "int64"
                     },
                     "lid": {
                       "minLength": 1,
@@ -2145,7 +2158,8 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     },
                     "id": {
                       "minLength": 1,
-                      "type": "string"
+                      "type": "string",
+                      "format": "int64"
                     },
                     "lid": {
                       "minLength": 1,

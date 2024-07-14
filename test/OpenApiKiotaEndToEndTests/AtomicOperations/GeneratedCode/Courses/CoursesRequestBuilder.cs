@@ -19,7 +19,7 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Courses
         /// <summary>Gets an item from the OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.courses.item collection</summary>
         /// <param name="position">The identifier of the course to retrieve.</param>
         /// <returns>A <see cref="OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Courses.Item.CoursesItemRequestBuilder"/></returns>
-        public OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Courses.Item.CoursesItemRequestBuilder this[string position]
+        public OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Courses.Item.CoursesItemRequestBuilder this[Guid position]
         {
             get
             {

@@ -438,7 +438,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "attributes": {
             "allOf": [
@@ -496,7 +497,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "attributes": {
             "allOf": [
@@ -685,7 +687,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "uuid"
               },
               "attributes": {
                 "allOf": [
@@ -730,7 +733,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           }
         },
         "additionalProperties": false
@@ -751,7 +755,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           }
         },
         "additionalProperties": false
@@ -828,7 +833,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "uuid"
               },
               "attributes": {
                 "allOf": [
@@ -886,7 +892,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "int64"
               },
               "attributes": {
                 "allOf": [
@@ -938,7 +945,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -959,7 +967,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -1037,7 +1046,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           }
         },
         "additionalProperties": false
@@ -1058,7 +1068,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           }
         },
         "additionalProperties": false

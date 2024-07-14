@@ -95,6 +95,7 @@ public static class ServiceCollectionExtensions
 
         services.TryAddSingleton<AtomicOperationCodeSchemaGenerator>();
         services.TryAddSingleton<ResourceTypeSchemaGenerator>();
+        services.TryAddSingleton<ResourceIdSchemaGenerator>();
         services.TryAddSingleton<MetaSchemaGenerator>();
         services.TryAddSingleton<ResourceIdentifierSchemaGenerator>();
         services.TryAddSingleton<RelationshipIdentifierSchemaGenerator>();

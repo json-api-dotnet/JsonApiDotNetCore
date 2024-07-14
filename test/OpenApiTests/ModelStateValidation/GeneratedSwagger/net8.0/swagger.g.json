@@ -138,7 +138,9 @@
             "description": "The identifier of the socialMediaAccount to update.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -518,7 +520,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "attributes": {
             "allOf": [
@@ -797,7 +800,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "uuid"
               },
               "attributes": {
                 "allOf": [

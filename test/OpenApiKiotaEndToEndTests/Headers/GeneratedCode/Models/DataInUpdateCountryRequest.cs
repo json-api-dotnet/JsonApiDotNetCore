@@ -30,21 +30,11 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
         /// <summary>Stores model information.</summary>
         public IBackingStore BackingStore { get; private set; }
         /// <summary>The id property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public string? Id
+        public Guid? Id
         {
-            get { return BackingStore?.Get<string?>("id"); }
+            get { return BackingStore?.Get<Guid?>("id"); }
             set { BackingStore?.Set("id", value); }
         }
-#nullable restore
-#else
-        public string Id
-        {
-            get { return BackingStore?.Get<string>("id"); }
-            set { BackingStore?.Set("id", value); }
-        }
-#endif
         /// <summary>The relationships property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -93,7 +83,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
             return new Dictionary<string, Action<IParseNode>>
             {
                 { "attributes", n => { Attributes = n.GetObjectValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.AttributesInUpdateCountryRequest>(OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.AttributesInUpdateCountryRequest.CreateFromDiscriminatorValue); } },
-                { "id", n => { Id = n.GetStringValue(); } },
+                { "id", n => { Id = n.GetGuidValue(); } },
                 { "relationships", n => { Relationships = n.GetObjectValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.RelationshipsInUpdateCountryRequest>(OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.RelationshipsInUpdateCountryRequest.CreateFromDiscriminatorValue); } },
                 { "type", n => { Type = n.GetEnumValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.CountryResourceType>(); } },
             };
@@ -106,7 +96,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.AttributesInUpdateCountryRequest>("attributes", Attributes);
-            writer.WriteStringValue("id", Id);
+            writer.WriteGuidValue("id", Id);
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.RelationshipsInUpdateCountryRequest>("relationships", Relationships);
             writer.WriteEnumValue<OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.CountryResourceType>("type", Type);
         }

@@ -10,17 +10,20 @@ internal sealed class ResourceIdentifierSchemaGenerator
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly GenerationCacheSchemaGenerator _generationCacheSchemaGenerator;
     private readonly ResourceTypeSchemaGenerator _resourceTypeSchemaGenerator;
+    private readonly ResourceIdSchemaGenerator _resourceIdSchemaGenerator;
 
     public ResourceIdentifierSchemaGenerator(SchemaGenerator defaultSchemaGenerator, GenerationCacheSchemaGenerator generationCacheSchemaGenerator,
-        ResourceTypeSchemaGenerator resourceTypeSchemaGenerator)
+        ResourceTypeSchemaGenerator resourceTypeSchemaGenerator, ResourceIdSchemaGenerator resourceIdSchemaGenerator)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);
         ArgumentGuard.NotNull(generationCacheSchemaGenerator);
         ArgumentGuard.NotNull(resourceTypeSchemaGenerator);
+        ArgumentGuard.NotNull(resourceIdSchemaGenerator);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _generationCacheSchemaGenerator = generationCacheSchemaGenerator;
         _resourceTypeSchemaGenerator = resourceTypeSchemaGenerator;
+        _resourceIdSchemaGenerator = resourceIdSchemaGenerator;
     }
 
     public OpenApiSchema GenerateSchema(ResourceType resourceType, bool forRequestSchema, SchemaRepository schemaRepository)
@@ -42,10 +45,22 @@ internal sealed class ResourceIdentifierSchemaGenerator
                 fullSchemaForIdentifier.Required.Add(JsonApiPropertyName.Id);
             }
 
-            OpenApiSchema referenceSchemaForResourceType = _resourceTypeSchemaGenerator.GenerateSchema(resourceType, schemaRepository);
-            fullSchemaForIdentifier.Properties[JsonApiPropertyName.Type] = referenceSchemaForResourceType.WrapInExtendedSchema();
+            SetResourceType(fullSchemaForIdentifier, resourceType, schemaRepository);
+            SetResourceId(fullSchemaForIdentifier, resourceType, schemaRepository);
         }
 
         return referenceSchemaForIdentifier;
+    }
+
+    private void SetResourceType(OpenApiSchema fullSchemaForIdentifier, ResourceType resourceType, SchemaRepository schemaRepository)
+    {
+        OpenApiSchema referenceSchema = _resourceTypeSchemaGenerator.GenerateSchema(resourceType, schemaRepository);
+        fullSchemaForIdentifier.Properties[JsonApiPropertyName.Type] = referenceSchema.WrapInExtendedSchema();
+    }
+
+    private void SetResourceId(OpenApiSchema fullSchemaForResourceData, ResourceType resourceType, SchemaRepository schemaRepository)
+    {
+        OpenApiSchema idSchema = _resourceIdSchemaGenerator.GenerateSchema(resourceType, schemaRepository);
+        fullSchemaForResourceData.Properties[JsonApiPropertyName.Id] = idSchema;
     }
 }

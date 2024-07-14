@@ -368,7 +368,9 @@
             "description": "The identifier of the person to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -461,7 +463,9 @@
             "description": "The identifier of the person to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -540,7 +544,9 @@
             "description": "The identifier of the person to update.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -641,7 +647,9 @@
             "description": "The identifier of the person to delete.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -676,7 +684,9 @@
             "description": "The identifier of the person whose related todoItems to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -769,7 +779,9 @@
             "description": "The identifier of the person whose related todoItems to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -850,7 +862,9 @@
             "description": "The identifier of the person whose related todoItem identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -943,7 +957,9 @@
             "description": "The identifier of the person whose related todoItem identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1022,7 +1038,9 @@
             "description": "The identifier of the person to add todoItems to.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -1090,7 +1108,9 @@
             "description": "The identifier of the person whose assignedTodoItems relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -1158,7 +1178,9 @@
             "description": "The identifier of the person to remove todoItems from.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -1228,7 +1250,9 @@
             "description": "The identifier of the person whose related todoItems to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1321,7 +1345,9 @@
             "description": "The identifier of the person whose related todoItems to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1402,7 +1428,9 @@
             "description": "The identifier of the person whose related todoItem identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1495,7 +1523,9 @@
             "description": "The identifier of the person whose related todoItem identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1574,7 +1604,9 @@
             "description": "The identifier of the person to add todoItems to.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -1642,7 +1674,9 @@
             "description": "The identifier of the person whose ownedTodoItems relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -1710,7 +1744,9 @@
             "description": "The identifier of the person to remove todoItems from.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -2035,7 +2071,9 @@
             "description": "The identifier of the tag to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2128,7 +2166,9 @@
             "description": "The identifier of the tag to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2207,7 +2247,9 @@
             "description": "The identifier of the tag to update.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2308,7 +2350,9 @@
             "description": "The identifier of the tag to delete.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -2343,7 +2387,9 @@
             "description": "The identifier of the tag whose related todoItems to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2436,7 +2482,9 @@
             "description": "The identifier of the tag whose related todoItems to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2517,7 +2565,9 @@
             "description": "The identifier of the tag whose related todoItem identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2610,7 +2660,9 @@
             "description": "The identifier of the tag whose related todoItem identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2689,7 +2741,9 @@
             "description": "The identifier of the tag to add todoItems to.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -2757,7 +2811,9 @@
             "description": "The identifier of the tag whose todoItems relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -2825,7 +2881,9 @@
             "description": "The identifier of the tag to remove todoItems from.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -3150,7 +3208,9 @@
             "description": "The identifier of the todoItem to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3243,7 +3303,9 @@
             "description": "The identifier of the todoItem to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3322,7 +3384,9 @@
             "description": "The identifier of the todoItem to update.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3423,7 +3487,9 @@
             "description": "The identifier of the todoItem to delete.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -3458,7 +3524,9 @@
             "description": "The identifier of the todoItem whose related person to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3551,7 +3619,9 @@
             "description": "The identifier of the todoItem whose related person to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3632,7 +3702,9 @@
             "description": "The identifier of the todoItem whose related person identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3725,7 +3797,9 @@
             "description": "The identifier of the todoItem whose related person identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3804,7 +3878,9 @@
             "description": "The identifier of the todoItem whose assignee relationship to assign or clear.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -3874,7 +3950,9 @@
             "description": "The identifier of the todoItem whose related person to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3967,7 +4045,9 @@
             "description": "The identifier of the todoItem whose related person to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -4048,7 +4128,9 @@
             "description": "The identifier of the todoItem whose related person identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -4141,7 +4223,9 @@
             "description": "The identifier of the todoItem whose related person identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -4220,7 +4304,9 @@
             "description": "The identifier of the todoItem whose owner relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -4290,7 +4376,9 @@
             "description": "The identifier of the todoItem whose related tags to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -4383,7 +4471,9 @@
             "description": "The identifier of the todoItem whose related tags to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -4464,7 +4554,9 @@
             "description": "The identifier of the todoItem whose related tag identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -4557,7 +4649,9 @@
             "description": "The identifier of the todoItem whose related tag identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -4636,7 +4730,9 @@
             "description": "The identifier of the todoItem to add tags to.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -4704,7 +4800,9 @@
             "description": "The identifier of the todoItem whose tags relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -4772,7 +4870,9 @@
             "description": "The identifier of the todoItem to remove tags from.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -5439,7 +5539,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -5477,7 +5578,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -5515,7 +5617,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -5947,7 +6050,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -6036,7 +6140,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "int64"
               },
               "attributes": {
                 "allOf": [
@@ -6087,7 +6192,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -6112,7 +6218,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -6164,7 +6271,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -6731,7 +6839,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "int64"
               },
               "attributes": {
                 "allOf": [
@@ -6812,7 +6921,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -6837,7 +6947,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -6915,7 +7026,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -7079,7 +7191,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -7181,7 +7294,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "int64"
               },
               "attributes": {
                 "allOf": [
@@ -7262,7 +7376,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -7287,7 +7402,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -7308,7 +7424,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -7426,7 +7543,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,

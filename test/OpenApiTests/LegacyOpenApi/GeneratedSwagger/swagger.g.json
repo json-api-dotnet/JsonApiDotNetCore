@@ -5975,7 +5975,6 @@
             "type": "object",
             "properties": {
               "id": {
-                "minLength": 1,
                 "type": "string"
               },
               "attributes": {
@@ -6440,7 +6439,6 @@
             ]
           },
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "attributes": {
@@ -6475,7 +6473,6 @@
             ]
           },
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "attributes": {
@@ -6510,7 +6507,6 @@
             ]
           },
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "attributes": {
@@ -6545,7 +6541,6 @@
             ]
           },
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "attributes": {
@@ -6767,7 +6762,6 @@
             "type": "object",
             "properties": {
               "id": {
-                "minLength": 1,
                 "type": "string"
               },
               "attributes": {
@@ -6856,7 +6850,6 @@
             ]
           },
           "id": {
-            "minLength": 1,
             "type": "string"
           }
         },
@@ -6877,7 +6870,6 @@
             ]
           },
           "id": {
-            "minLength": 1,
             "type": "string"
           }
         },
@@ -7129,7 +7121,6 @@
             "type": "object",
             "properties": {
               "id": {
-                "minLength": 1,
                 "type": "string"
               },
               "attributes": {
@@ -7218,7 +7209,6 @@
             ]
           },
           "id": {
-            "minLength": 1,
             "type": "string"
           }
         },
@@ -7239,7 +7229,6 @@
             ]
           },
           "id": {
-            "minLength": 1,
             "type": "string"
           }
         },
@@ -7565,7 +7554,6 @@
             "type": "object",
             "properties": {
               "id": {
-                "minLength": 1,
                 "type": "string"
               },
               "attributes": {
@@ -7647,7 +7635,6 @@
             ]
           },
           "id": {
-            "minLength": 1,
             "type": "string"
           }
         },
@@ -7668,7 +7655,6 @@
             ]
           },
           "id": {
-            "minLength": 1,
             "type": "string"
           }
         },

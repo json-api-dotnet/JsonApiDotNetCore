@@ -279,7 +279,9 @@
             "description": "The identifier of the nameValuePair to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -372,7 +374,9 @@
             "description": "The identifier of the nameValuePair to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -451,7 +455,9 @@
             "description": "The identifier of the nameValuePair to update.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -552,7 +558,9 @@
             "description": "The identifier of the nameValuePair to delete.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -587,7 +595,9 @@
             "description": "The identifier of the nameValuePair whose related node to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -680,7 +690,9 @@
             "description": "The identifier of the nameValuePair whose related node to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -761,7 +773,9 @@
             "description": "The identifier of the nameValuePair whose related node identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -854,7 +868,9 @@
             "description": "The identifier of the nameValuePair whose related node identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -933,7 +949,9 @@
             "description": "The identifier of the nameValuePair whose owner relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -1258,7 +1276,9 @@
             "description": "The identifier of the node to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1351,7 +1371,9 @@
             "description": "The identifier of the node to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1430,7 +1452,9 @@
             "description": "The identifier of the node to update.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1531,7 +1555,9 @@
             "description": "The identifier of the node to delete.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -1566,7 +1592,9 @@
             "description": "The identifier of the node whose related nodes to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1659,7 +1687,9 @@
             "description": "The identifier of the node whose related nodes to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1740,7 +1770,9 @@
             "description": "The identifier of the node whose related node identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1833,7 +1865,9 @@
             "description": "The identifier of the node whose related node identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1912,7 +1946,9 @@
             "description": "The identifier of the node to add nodes to.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -1980,7 +2016,9 @@
             "description": "The identifier of the node whose children relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -2048,7 +2086,9 @@
             "description": "The identifier of the node to remove nodes from.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -2118,7 +2158,9 @@
             "description": "The identifier of the node whose related node to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2211,7 +2253,9 @@
             "description": "The identifier of the node whose related node to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2292,7 +2336,9 @@
             "description": "The identifier of the node whose related node identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2385,7 +2431,9 @@
             "description": "The identifier of the node whose related node identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2464,7 +2512,9 @@
             "description": "The identifier of the node whose parent relationship to assign or clear.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -2534,7 +2584,9 @@
             "description": "The identifier of the node whose related nameValuePairs to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2627,7 +2679,9 @@
             "description": "The identifier of the node whose related nameValuePairs to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2708,7 +2762,9 @@
             "description": "The identifier of the node whose related nameValuePair identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2801,7 +2857,9 @@
             "description": "The identifier of the node whose related nameValuePair identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2880,7 +2938,9 @@
             "description": "The identifier of the node to add nameValuePairs to.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -2948,7 +3008,9 @@
             "description": "The identifier of the node whose values relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -3016,7 +3078,9 @@
             "description": "The identifier of the node to remove nameValuePairs from.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -3262,7 +3326,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "attributes": {
             "allOf": [
@@ -3297,7 +3362,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "attributes": {
             "allOf": [
@@ -3506,7 +3572,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "int64"
               },
               "attributes": {
                 "allOf": [
@@ -3588,7 +3655,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -3609,7 +3677,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -3733,7 +3802,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "int64"
               },
               "attributes": {
                 "allOf": [
@@ -3815,7 +3885,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -3836,7 +3907,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         },
         "additionalProperties": false

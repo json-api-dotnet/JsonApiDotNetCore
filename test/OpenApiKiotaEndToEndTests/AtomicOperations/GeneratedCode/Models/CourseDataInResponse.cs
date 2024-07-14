@@ -27,21 +27,11 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
         }
 #endif
         /// <summary>The id property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public string? Id
+        public Guid? Id
         {
-            get { return BackingStore?.Get<string?>("id"); }
+            get { return BackingStore?.Get<Guid?>("id"); }
             set { BackingStore?.Set("id", value); }
         }
-#nullable restore
-#else
-        public string Id
-        {
-            get { return BackingStore?.Get<string>("id"); }
-            set { BackingStore?.Set("id", value); }
-        }
-#endif
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -109,7 +99,7 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
             return new Dictionary<string, Action<IParseNode>>(base.GetFieldDeserializers())
             {
                 { "attributes", n => { Attributes = n.GetObjectValue<OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.CourseAttributesInResponse>(OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.CourseAttributesInResponse.CreateFromDiscriminatorValue); } },
-                { "id", n => { Id = n.GetStringValue(); } },
+                { "id", n => { Id = n.GetGuidValue(); } },
                 { "links", n => { Links = n.GetObjectValue<OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.ResourceLinks>(OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.ResourceLinks.CreateFromDiscriminatorValue); } },
                 { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.Meta>(OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
                 { "relationships", n => { Relationships = n.GetObjectValue<OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.CourseRelationshipsInResponse>(OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.CourseRelationshipsInResponse.CreateFromDiscriminatorValue); } },
@@ -124,7 +114,7 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             base.Serialize(writer);
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.CourseAttributesInResponse>("attributes", Attributes);
-            writer.WriteStringValue("id", Id);
+            writer.WriteGuidValue("id", Id);
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.ResourceLinks>("links", Links);
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.Meta>("meta", Meta);
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.CourseRelationshipsInResponse>("relationships", Relationships);

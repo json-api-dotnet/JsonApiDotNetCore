@@ -19,7 +19,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries
         /// <summary>Gets an item from the OpenApiKiotaEndToEndTests.Headers.GeneratedCode.countries.item collection</summary>
         /// <param name="position">The identifier of the country to retrieve.</param>
         /// <returns>A <see cref="OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.CountriesItemRequestBuilder"/></returns>
-        public OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.CountriesItemRequestBuilder this[string position]
+        public OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.CountriesItemRequestBuilder this[Guid position]
         {
             get
             {

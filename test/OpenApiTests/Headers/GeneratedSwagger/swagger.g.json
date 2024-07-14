@@ -279,7 +279,9 @@
             "description": "The identifier of the country to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -372,7 +374,9 @@
             "description": "The identifier of the country to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -451,7 +455,9 @@
             "description": "The identifier of the country to update.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -552,7 +558,9 @@
             "description": "The identifier of the country to delete.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -587,7 +595,9 @@
             "description": "The identifier of the country whose related languages to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -680,7 +690,9 @@
             "description": "The identifier of the country whose related languages to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -761,7 +773,9 @@
             "description": "The identifier of the country whose related language identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -854,7 +868,9 @@
             "description": "The identifier of the country whose related language identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -933,7 +949,9 @@
             "description": "The identifier of the country to add languages to.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -1001,7 +1019,9 @@
             "description": "The identifier of the country whose languages relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -1069,7 +1089,9 @@
             "description": "The identifier of the country to remove languages from.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -1219,7 +1241,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "uuid"
               },
               "attributes": {
                 "allOf": [
@@ -1395,7 +1418,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "attributes": {
             "allOf": [
@@ -1597,7 +1621,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "uuid"
               },
               "attributes": {
                 "allOf": [
@@ -1672,7 +1697,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           }
         },
         "additionalProperties": false
@@ -1693,7 +1719,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           }
         },
         "additionalProperties": false

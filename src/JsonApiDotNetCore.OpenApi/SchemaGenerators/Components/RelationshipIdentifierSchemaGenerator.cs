@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.OpenApi.Models;
@@ -19,19 +20,23 @@ internal sealed class RelationshipIdentifierSchemaGenerator
 
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly ResourceTypeSchemaGenerator _resourceTypeSchemaGenerator;
+    private readonly ResourceIdSchemaGenerator _resourceIdSchemaGenerator;
     private readonly RelationshipNameSchemaGenerator _relationshipNameSchemaGenerator;
     private readonly JsonApiSchemaIdSelector _jsonApiSchemaIdSelector;
 
     public RelationshipIdentifierSchemaGenerator(SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator,
-        RelationshipNameSchemaGenerator relationshipNameSchemaGenerator, JsonApiSchemaIdSelector jsonApiSchemaIdSelector)
+        ResourceIdSchemaGenerator resourceIdSchemaGenerator, RelationshipNameSchemaGenerator relationshipNameSchemaGenerator,
+        JsonApiSchemaIdSelector jsonApiSchemaIdSelector)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);
         ArgumentGuard.NotNull(resourceTypeSchemaGenerator);
+        ArgumentGuard.NotNull(resourceIdSchemaGenerator);
         ArgumentGuard.NotNull(relationshipNameSchemaGenerator);
         ArgumentGuard.NotNull(jsonApiSchemaIdSelector);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _resourceTypeSchemaGenerator = resourceTypeSchemaGenerator;
+        _resourceIdSchemaGenerator = resourceIdSchemaGenerator;
         _relationshipNameSchemaGenerator = relationshipNameSchemaGenerator;
         _jsonApiSchemaIdSelector = jsonApiSchemaIdSelector;
     }
@@ -65,11 +70,9 @@ internal sealed class RelationshipIdentifierSchemaGenerator
         OpenApiSchema referenceSchemaForIdentifier = _defaultSchemaGenerator.GenerateSchema(relationshipIdentifierConstructedType, schemaRepository);
         OpenApiSchema fullSchemaForIdentifier = schemaRepository.Schemas[referenceSchemaForIdentifier.Reference.Id];
 
-        OpenApiSchema referenceSchemaForResourceType = _resourceTypeSchemaGenerator.GenerateSchema(relationship.LeftType, schemaRepository);
-        fullSchemaForIdentifier.Properties[JsonApiPropertyName.Type] = referenceSchemaForResourceType.WrapInExtendedSchema();
-
-        OpenApiSchema referenceSchemaForRelationshipName = _relationshipNameSchemaGenerator.GenerateSchema(relationship, schemaRepository);
-        fullSchemaForIdentifier.Properties[JsonApiPropertyName.Relationship] = referenceSchemaForRelationshipName.WrapInExtendedSchema();
+        SetResourceType(fullSchemaForIdentifier, relationship.LeftType, schemaRepository);
+        SetResourceId(fullSchemaForIdentifier, relationship.LeftType, schemaRepository);
+        SetRelationship(fullSchemaForIdentifier, relationship, schemaRepository);
 
 #if NET6_0
         fullSchemaForIdentifier.ReorderProperties(RelationshipIdentifierPropertyNamesInOrder);
@@ -79,5 +82,23 @@ internal sealed class RelationshipIdentifierSchemaGenerator
         referenceSchemaForIdentifier.Reference.Id = schemaId;
 
         return referenceSchemaForIdentifier;
+    }
+
+    private void SetResourceType(OpenApiSchema fullSchemaForIdentifier, ResourceType resourceType, SchemaRepository schemaRepository)
+    {
+        OpenApiSchema referenceSchema = _resourceTypeSchemaGenerator.GenerateSchema(resourceType, schemaRepository);
+        fullSchemaForIdentifier.Properties[JsonApiPropertyName.Type] = referenceSchema.WrapInExtendedSchema();
+    }
+
+    private void SetResourceId(OpenApiSchema fullSchemaForResourceData, ResourceType resourceType, SchemaRepository schemaRepository)
+    {
+        OpenApiSchema idSchema = _resourceIdSchemaGenerator.GenerateSchema(resourceType, schemaRepository);
+        fullSchemaForResourceData.Properties[JsonApiPropertyName.Id] = idSchema;
+    }
+
+    private void SetRelationship(OpenApiSchema fullSchemaForIdentifier, RelationshipAttribute relationship, SchemaRepository schemaRepository)
+    {
+        OpenApiSchema referenceSchema = _relationshipNameSchemaGenerator.GenerateSchema(relationship, schemaRepository);
+        fullSchemaForIdentifier.Properties[JsonApiPropertyName.Relationship] = referenceSchema.WrapInExtendedSchema();
     }
 }

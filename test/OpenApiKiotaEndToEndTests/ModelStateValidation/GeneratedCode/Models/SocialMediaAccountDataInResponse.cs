@@ -27,21 +27,11 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models
         }
 #endif
         /// <summary>The id property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public string? Id
+        public Guid? Id
         {
-            get { return BackingStore?.Get<string?>("id"); }
+            get { return BackingStore?.Get<Guid?>("id"); }
             set { BackingStore?.Set("id", value); }
         }
-#nullable restore
-#else
-        public string Id
-        {
-            get { return BackingStore?.Get<string>("id"); }
-            set { BackingStore?.Set("id", value); }
-        }
-#endif
         /// <summary>The links property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -93,7 +83,7 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models
             return new Dictionary<string, Action<IParseNode>>(base.GetFieldDeserializers())
             {
                 { "attributes", n => { Attributes = n.GetObjectValue<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountAttributesInResponse>(OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountAttributesInResponse.CreateFromDiscriminatorValue); } },
-                { "id", n => { Id = n.GetStringValue(); } },
+                { "id", n => { Id = n.GetGuidValue(); } },
                 { "links", n => { Links = n.GetObjectValue<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ResourceLinks>(OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ResourceLinks.CreateFromDiscriminatorValue); } },
                 { "meta", n => { Meta = n.GetObjectValue<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.Meta>(OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
             };
@@ -107,7 +97,7 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             base.Serialize(writer);
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountAttributesInResponse>("attributes", Attributes);
-            writer.WriteStringValue("id", Id);
+            writer.WriteGuidValue("id", Id);
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ResourceLinks>("links", Links);
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.Meta>("meta", Meta);
         }
