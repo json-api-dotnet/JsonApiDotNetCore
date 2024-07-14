@@ -1,0 +1,6 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="WarnAboutObsoletePackage" BeforeTargets="BeforeBuild">
+    <!-- Add <NoWarn>$(NoWarn);JADNC-OA</NoWarn> in a PropertyGroup in your project file to suppress this warning. -->
+    <Warning Code="JADNC-OA" Text="The 'JsonApiDotNetCore.OpenApi' package has been renamed, please use 'JsonApiDotNetCore.OpenApi.Swashbuckle' instead." />
+  </Target>
+</Project>
