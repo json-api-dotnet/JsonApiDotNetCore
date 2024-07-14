@@ -17,6 +17,9 @@ public sealed class Game : Identifiable<int?>
     [Attr]
     public Guid SessionToken => Guid.NewGuid();
 
+    [HasOne]
+    public Player? Host { get; set; }
+
     [HasMany]
     public ICollection<Player> ActivePlayers { get; set; } = new List<Player>();
 

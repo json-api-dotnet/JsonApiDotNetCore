@@ -116,6 +116,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
             AssertHasNoId(identity, state);
         }
 
+        AssertNoBrokenId(identity, resourceType.IdentityClrType, state);
         AssertSameIdValue(identity, requirements.IdValue, state);
         AssertSameLidValue(identity, requirements.LidValue, state);
 
@@ -174,6 +175,25 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         {
             using IDisposable _ = state.Position.PushElement("id");
             throw new ModelConversionException(state.Position, "The use of client-generated IDs is disabled.", null, HttpStatusCode.Forbidden);
+        }
+    }
+
+    private static void AssertNoBrokenId(ResourceIdentity identity, Type resourceIdClrType, RequestAdapterState state)
+    {
+        if (identity.Id != null)
+        {
+            if (resourceIdClrType == typeof(string))
+            {
+                // Empty and whitespace strings are valid when TId is string.
+                return;
+            }
+
+            string? defaultIdValue = RuntimeTypeConverter.GetDefaultValue(resourceIdClrType)?.ToString();
+
+            if (string.IsNullOrWhiteSpace(identity.Id) || identity.Id == defaultIdValue)
+            {
+                throw new ModelConversionException(state.Position, "The 'id' element is invalid.", null);
+            }
         }
     }
 
