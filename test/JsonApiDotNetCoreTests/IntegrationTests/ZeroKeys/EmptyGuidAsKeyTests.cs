@@ -572,9 +572,9 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            Map? gameInDatabase = await dbContext.Maps.FirstWithIdOrDefaultAsync(existingMap.Id);
+            Map? mapInDatabase = await dbContext.Maps.FirstWithIdOrDefaultAsync(existingMap.Id);
 
-            gameInDatabase.Should().BeNull();
+            mapInDatabase.Should().BeNull();
         });
     }
 }

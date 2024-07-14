@@ -34,6 +34,7 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
     private readonly TestControllerProvider _testControllerProvider = new();
     private Action<ILoggingBuilder>? _loggingConfiguration;
     private Action<IServiceCollection>? _configureServices;
+    private Action<IServiceCollection>? _postConfigureServices;
 
     protected override JsonSerializerOptions SerializerOptions
     {
@@ -83,6 +84,8 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
             });
         });
 
+        factory.PostConfigureServices(_postConfigureServices);
+
         // We have placed an appsettings.json in the TestBuildingBlocks project directory and set the content root to there. Note that
         // controllers are not discovered in the content root, but are registered manually using IntegrationTestContext.UseController.
         WebApplicationFactory<TStartup> factoryWithConfiguredContentRoot =
@@ -113,6 +116,11 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
         _configureServices = configureServices;
     }
 
+    public void PostConfigureServices(Action<IServiceCollection> configureServices)
+    {
+        _postConfigureServices = configureServices;
+    }
+
     public async Task RunOnDatabaseAsync(Func<TDbContext, Task> asyncAction)
     {
         await using AsyncServiceScope scope = Factory.Services.CreateAsyncScope();
@@ -141,6 +149,7 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
     {
         private Action<ILoggingBuilder>? _loggingConfiguration;
         private Action<IServiceCollection>? _configureServices;
+        private Action<IServiceCollection>? _postConfigureServices;
 
         public void ConfigureLogging(Action<ILoggingBuilder>? loggingConfiguration)
         {
@@ -150,6 +159,11 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
         public void ConfigureServices(Action<IServiceCollection>? configureServices)
         {
             _configureServices = configureServices;
+        }
+
+        public void PostConfigureServices(Action<IServiceCollection>? configureServices)
+        {
+            _postConfigureServices = configureServices;
         }
 
         protected override IHostBuilder CreateHostBuilder()
@@ -172,6 +186,7 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
                 {
                     webBuilder.ConfigureServices(services => _configureServices?.Invoke(services));
                     webBuilder.UseStartup<TStartup>();
+                    webBuilder.ConfigureServices(services => _postConfigureServices?.Invoke(services));
                 })
                 .ConfigureLogging(options => _loggingConfiguration?.Invoke(options));
 
