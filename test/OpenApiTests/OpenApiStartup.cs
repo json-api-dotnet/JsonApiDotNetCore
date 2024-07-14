@@ -1,6 +1,6 @@
 using System.Reflection;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.OpenApi;
+using JsonApiDotNetCore.OpenApi.Swashbuckle;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -15,7 +15,7 @@ public class OpenApiStartup<TDbContext> : TestableStartup<TDbContext>
     {
         base.ConfigureServices(services);
 
-        services.AddOpenApi(SetupSwaggerGenAction);
+        services.AddOpenApiForJsonApi(SetupSwaggerGenAction);
     }
 
     protected override void SetJsonApiOptions(JsonApiOptions options)

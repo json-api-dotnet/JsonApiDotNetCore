@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
-using JsonApiDotNetCore.OpenApi;
+using JsonApiDotNetCore.OpenApi.Swashbuckle;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
@@ -83,9 +83,9 @@ static void ConfigureServices(WebApplicationBuilder builder)
         }, discovery => discovery.AddCurrentAssembly());
     }
 
-    using (CodeTimingSessionManager.Current.Measure("AddOpenApi()"))
+    using (CodeTimingSessionManager.Current.Measure("AddOpenApiForJsonApi()"))
     {
-        builder.Services.AddOpenApi(options => options.DocumentFilter<SetOpenApiServerAtBuildTimeFilter>());
+        builder.Services.AddOpenApiForJsonApi(options => options.DocumentFilter<SetOpenApiServerAtBuildTimeFilter>());
     }
 }
 

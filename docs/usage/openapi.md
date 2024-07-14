@@ -4,15 +4,15 @@ Exposing an [OpenAPI document](https://swagger.io/specification/) for your JSON:
 [documentation website](https://swagger.io/tools/swagger-ui/) and to generate typed
 [client libraries](https://openapi-generator.tech/docs/generators/) in various languages.
 
-The [JsonApiDotNetCore.OpenApi](https://github.com/json-api-dotnet/JsonApiDotNetCore/pkgs/nuget/JsonApiDotNetCore.OpenApi) NuGet package
+The [JsonApiDotNetCore.OpenApi.Swashbuckle](https://github.com/json-api-dotnet/JsonApiDotNetCore/pkgs/nuget/JsonApiDotNetCore.OpenApi.Swashbuckle) NuGet package
 provides OpenAPI support for JSON:API by integrating with [Swashbuckle](https://github.com/domaindrivendev/Swashbuckle.AspNetCore).
 
 ## Getting started
 
-1.  Install the `JsonApiDotNetCore.OpenApi` NuGet package:
+1.  Install the `JsonApiDotNetCore.OpenApi.Swashbuckle` NuGet package:
 
     ```
-    dotnet add package JsonApiDotNetCore.OpenApi
+    dotnet add package JsonApiDotNetCore.OpenApi.Swashbuckle
     ```
 
     > [!NOTE]
@@ -25,7 +25,7 @@ provides OpenAPI support for JSON:API by integrating with [Swashbuckle](https://
     builder.Services.AddJsonApi<AppDbContext>();
 
     // Configure Swashbuckle for JSON:API.
-    builder.Services.AddOpenApi();
+    builder.Services.AddOpenApiForJsonApi();
 
     var app = builder.Build();
 
