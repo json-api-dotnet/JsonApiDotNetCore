@@ -62,7 +62,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DapperExample", "src\Exampl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DapperTests", "test\DapperTests\DapperTests.csproj", "{80E322F5-5F5D-4670-A30F-02D33C2C7900}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCore.OpenApi", "src\JsonApiDotNetCore.OpenApi\JsonApiDotNetCore.OpenApi.csproj", "{71287D6F-6C3B-44B4-9FCA-E78FE3F02289}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCore.OpenApi.Swashbuckle", "src\JsonApiDotNetCore.OpenApi.Swashbuckle\JsonApiDotNetCore.OpenApi.Swashbuckle.csproj", "{71287D6F-6C3B-44B4-9FCA-E78FE3F02289}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiTests", "test\OpenApiTests\OpenApiTests.csproj", "{B693DE14-BB28-496F-AB39-B4E674ABCA80}"
 EndProject
