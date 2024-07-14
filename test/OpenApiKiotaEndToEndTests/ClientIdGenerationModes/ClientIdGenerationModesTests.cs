@@ -82,7 +82,7 @@ public sealed class ClientIdGenerationModesTests
             Data = new DataInCreatePlayerRequest
             {
                 Type = PlayerResourceType.Players,
-                Id = newPlayer.StringId,
+                Id = newPlayer.Id,
                 Attributes = new AttributesInCreatePlayerRequest
                 {
                     UserName = newPlayer.UserName
@@ -132,13 +132,12 @@ public sealed class ClientIdGenerationModesTests
         // Assert
         document.ShouldNotBeNull();
         document.Data.ShouldNotBeNull();
-        document.Data.Id.ShouldNotBeNullOrEmpty();
-
-        Guid newGameId = Guid.Parse(document.Data.Id);
+        document.Data.Id.ShouldNotBeNull();
+        document.Data.Id.Value.Should().NotBe(Guid.Empty);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            Game gameInDatabase = await dbContext.Games.FirstWithIdAsync(newGameId);
+            Game gameInDatabase = await dbContext.Games.FirstWithIdAsync(document.Data.Id.Value);
 
             gameInDatabase.Title.Should().Be(newGame.Title);
             gameInDatabase.PurchasePrice.Should().Be(newGame.PurchasePrice);
@@ -160,7 +159,7 @@ public sealed class ClientIdGenerationModesTests
             Data = new DataInCreateGameRequest
             {
                 Type = GameResourceType.Games,
-                Id = newGame.StringId,
+                Id = newGame.Id,
                 Attributes = new AttributesInCreateGameRequest
                 {
                     Title = newGame.Title,
@@ -204,7 +203,7 @@ public sealed class ClientIdGenerationModesTests
             Data = new DataInCreateGameRequest
             {
                 Type = GameResourceType.Games,
-                Id = existingGame.StringId,
+                Id = existingGame.Id,
                 Attributes = new AttributesInCreateGameRequest
                 {
                     Title = existingGame.Title,

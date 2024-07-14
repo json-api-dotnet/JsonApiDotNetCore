@@ -269,7 +269,9 @@
             "description": "The identifier of the course to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -362,7 +364,9 @@
             "description": "The identifier of the course to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -441,7 +445,9 @@
             "description": "The identifier of the course to update.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -542,7 +548,9 @@
             "description": "The identifier of the course to delete.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -577,7 +585,9 @@
             "description": "The identifier of the course whose related enrollments to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -670,7 +680,9 @@
             "description": "The identifier of the course whose related enrollments to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -751,7 +763,9 @@
             "description": "The identifier of the course whose related enrollment identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -844,7 +858,9 @@
             "description": "The identifier of the course whose related enrollment identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -923,7 +939,9 @@
             "description": "The identifier of the course to add enrollments to.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -991,7 +1009,9 @@
             "description": "The identifier of the course whose enrollments relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -1061,7 +1081,9 @@
             "description": "The identifier of the course whose related teachers to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -1154,7 +1176,9 @@
             "description": "The identifier of the course whose related teachers to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -1235,7 +1259,9 @@
             "description": "The identifier of the course whose related teacher identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -1328,7 +1354,9 @@
             "description": "The identifier of the course whose related teacher identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -1407,7 +1435,9 @@
             "description": "The identifier of the course to add teachers to.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -1475,7 +1505,9 @@
             "description": "The identifier of the course whose taughtBy relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -1800,7 +1832,9 @@
             "description": "The identifier of the enrollment to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1893,7 +1927,9 @@
             "description": "The identifier of the enrollment to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1972,7 +2008,9 @@
             "description": "The identifier of the enrollment to update.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2073,7 +2111,9 @@
             "description": "The identifier of the enrollment to delete.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -2108,7 +2148,9 @@
             "description": "The identifier of the enrollment whose related course to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2201,7 +2243,9 @@
             "description": "The identifier of the enrollment whose related course to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2282,7 +2326,9 @@
             "description": "The identifier of the enrollment whose related course identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2375,7 +2421,9 @@
             "description": "The identifier of the enrollment whose related course identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2454,7 +2502,9 @@
             "description": "The identifier of the enrollment whose course relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -2524,7 +2574,9 @@
             "description": "The identifier of the enrollment whose related student to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2617,7 +2669,9 @@
             "description": "The identifier of the enrollment whose related student to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2698,7 +2752,9 @@
             "description": "The identifier of the enrollment whose related student identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2791,7 +2847,9 @@
             "description": "The identifier of the enrollment whose related student identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2870,7 +2928,9 @@
             "description": "The identifier of the enrollment whose student relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -3284,7 +3344,9 @@
             "description": "The identifier of the student to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3377,7 +3439,9 @@
             "description": "The identifier of the student to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3456,7 +3520,9 @@
             "description": "The identifier of the student to update.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3559,7 +3625,9 @@
             "description": "The identifier of the student whose related enrollments to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3652,7 +3720,9 @@
             "description": "The identifier of the student whose related enrollments to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3733,7 +3803,9 @@
             "description": "The identifier of the student whose related enrollment identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3826,7 +3898,9 @@
             "description": "The identifier of the student whose related enrollment identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3905,7 +3979,9 @@
             "description": "The identifier of the student to add enrollments to.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -3973,7 +4049,9 @@
             "description": "The identifier of the student whose enrollments relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -4041,7 +4119,9 @@
             "description": "The identifier of the student to remove enrollments from.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -4111,7 +4191,9 @@
             "description": "The identifier of the student whose related teacher to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -4204,7 +4286,9 @@
             "description": "The identifier of the student whose related teacher to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -4285,7 +4369,9 @@
             "description": "The identifier of the student whose related teacher identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -4378,7 +4464,9 @@
             "description": "The identifier of the student whose related teacher identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -4457,7 +4545,9 @@
             "description": "The identifier of the student whose mentor relationship to assign or clear.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -4782,7 +4872,9 @@
             "description": "The identifier of the teacher to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -4875,7 +4967,9 @@
             "description": "The identifier of the teacher to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -4954,7 +5048,9 @@
             "description": "The identifier of the teacher to update.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -5055,7 +5151,9 @@
             "description": "The identifier of the teacher to delete.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -5090,7 +5188,9 @@
             "description": "The identifier of the teacher whose related students to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -5183,7 +5283,9 @@
             "description": "The identifier of the teacher whose related students to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -5264,7 +5366,9 @@
             "description": "The identifier of the teacher whose related student identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -5357,7 +5461,9 @@
             "description": "The identifier of the teacher whose related student identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -5436,7 +5542,9 @@
             "description": "The identifier of the teacher to add students to.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -5504,7 +5612,9 @@
             "description": "The identifier of the teacher whose mentors relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -5572,7 +5682,9 @@
             "description": "The identifier of the teacher to remove students from.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -5642,7 +5754,9 @@
             "description": "The identifier of the teacher whose related courses to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -5735,7 +5849,9 @@
             "description": "The identifier of the teacher whose related courses to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -5816,7 +5932,9 @@
             "description": "The identifier of the teacher whose related course identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -5909,7 +6027,9 @@
             "description": "The identifier of the teacher whose related course identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -5988,7 +6108,9 @@
             "description": "The identifier of the teacher to add courses to.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -6056,7 +6178,9 @@
             "description": "The identifier of the teacher whose teaches relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -6124,7 +6248,9 @@
             "description": "The identifier of the teacher to remove courses from.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -6638,7 +6764,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "uuid"
               },
               "attributes": {
                 "allOf": [
@@ -6690,7 +6817,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "lid": {
             "minLength": 1,
@@ -6765,7 +6893,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "lid": {
             "minLength": 1,
@@ -6790,7 +6919,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           }
         },
         "additionalProperties": false
@@ -6964,7 +7094,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "lid": {
             "minLength": 1,
@@ -7195,7 +7326,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "attributes": {
             "allOf": [
@@ -7354,7 +7486,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "lid": {
             "minLength": 1,
@@ -7392,7 +7525,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -7430,7 +7564,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -7468,7 +7603,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -7665,7 +7801,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -7701,7 +7838,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "int64"
               },
               "attributes": {
                 "allOf": [
@@ -7789,7 +7927,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -7814,7 +7953,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -7906,7 +8046,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -8737,7 +8878,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "int64"
               },
               "attributes": {
                 "allOf": [
@@ -8789,7 +8931,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -8864,7 +9007,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -8889,7 +9033,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -8948,7 +9093,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -9155,7 +9301,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "int64"
               },
               "attributes": {
                 "allOf": [
@@ -9243,7 +9390,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -9268,7 +9416,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -9289,7 +9438,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,
@@ -9399,7 +9549,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "lid": {
             "minLength": 1,

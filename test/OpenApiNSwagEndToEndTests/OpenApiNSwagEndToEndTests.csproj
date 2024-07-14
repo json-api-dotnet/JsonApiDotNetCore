@@ -28,14 +28,14 @@
       <ClassName>ClientIdGenerationModesClient</ClassName>
       <OutputPath>ClientIdGenerationModesClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag /GenerateNullableReferenceTypes:true</Options>
+      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag /GenerateNullableReferenceTypes:true /GenerateOptionalPropertiesAsNullable:true /GenerateOptionalParameters:true</Options>
     </OpenApiReference>
     <OpenApiReference Include="..\OpenApiTests\ModelStateValidation\GeneratedSwagger\$(TargetFramework)\swagger.g.json">
       <Namespace>OpenApiNSwagEndToEndTests.ModelStateValidation.GeneratedCode</Namespace>
       <ClassName>ModelStateValidationClient</ClassName>
       <OutputPath>ModelStateValidationClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag /GenerateNullableReferenceTypes:true /GenerateOptionalParameters:true</Options>
+      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag /GenerateNullableReferenceTypes:true /GenerateOptionalPropertiesAsNullable:true /GenerateOptionalParameters:true</Options>
     </OpenApiReference>
     <OpenApiReference Include="..\OpenApiTests\Headers\GeneratedSwagger\swagger.g.json">
       <Namespace>OpenApiNSwagEndToEndTests.Headers.GeneratedCode</Namespace>

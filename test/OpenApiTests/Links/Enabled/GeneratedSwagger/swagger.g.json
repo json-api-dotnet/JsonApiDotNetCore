@@ -279,7 +279,9 @@
             "description": "The identifier of the accommodation to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -372,7 +374,9 @@
             "description": "The identifier of the accommodation to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -451,7 +455,9 @@
             "description": "The identifier of the accommodation to update.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -552,7 +558,9 @@
             "description": "The identifier of the accommodation to delete.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -842,7 +850,9 @@
             "description": "The identifier of the excursion to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -935,7 +945,9 @@
             "description": "The identifier of the excursion to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1014,7 +1026,9 @@
             "description": "The identifier of the excursion to update.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1115,7 +1129,9 @@
             "description": "The identifier of the excursion to delete.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -1405,7 +1421,9 @@
             "description": "The identifier of the transport to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1498,7 +1516,9 @@
             "description": "The identifier of the transport to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1577,7 +1597,9 @@
             "description": "The identifier of the transport to update.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1678,7 +1700,9 @@
             "description": "The identifier of the transport to delete.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -1968,7 +1992,9 @@
             "description": "The identifier of the vacation to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2061,7 +2087,9 @@
             "description": "The identifier of the vacation to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2140,7 +2168,9 @@
             "description": "The identifier of the vacation to update.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2241,7 +2271,9 @@
             "description": "The identifier of the vacation to delete.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -2276,7 +2308,9 @@
             "description": "The identifier of the vacation whose related accommodation to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2369,7 +2403,9 @@
             "description": "The identifier of the vacation whose related accommodation to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2450,7 +2486,9 @@
             "description": "The identifier of the vacation whose related accommodation identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2543,7 +2581,9 @@
             "description": "The identifier of the vacation whose related accommodation identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2622,7 +2662,9 @@
             "description": "The identifier of the vacation whose accommodation relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -2692,7 +2734,9 @@
             "description": "The identifier of the vacation whose related excursions to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2785,7 +2829,9 @@
             "description": "The identifier of the vacation whose related excursions to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2866,7 +2912,9 @@
             "description": "The identifier of the vacation whose related excursion identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2959,7 +3007,9 @@
             "description": "The identifier of the vacation whose related excursion identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3038,7 +3088,9 @@
             "description": "The identifier of the vacation to add excursions to.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -3106,7 +3158,9 @@
             "description": "The identifier of the vacation whose excursions relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -3174,7 +3228,9 @@
             "description": "The identifier of the vacation to remove excursions from.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -3244,7 +3300,9 @@
             "description": "The identifier of the vacation whose related transport to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3337,7 +3395,9 @@
             "description": "The identifier of the vacation whose related transport to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3418,7 +3478,9 @@
             "description": "The identifier of the vacation whose related transport identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3511,7 +3573,9 @@
             "description": "The identifier of the vacation whose related transport identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3590,7 +3654,9 @@
             "description": "The identifier of the vacation whose transport relationship to assign or clear.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -3707,7 +3773,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "int64"
               },
               "attributes": {
                 "allOf": [
@@ -3752,7 +3819,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -3773,7 +3841,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -4213,7 +4282,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "attributes": {
             "allOf": [
@@ -4241,7 +4311,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "attributes": {
             "allOf": [
@@ -4269,7 +4340,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "attributes": {
             "allOf": [
@@ -4297,7 +4369,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "attributes": {
             "allOf": [
@@ -4500,7 +4573,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "int64"
               },
               "attributes": {
                 "allOf": [
@@ -4575,7 +4649,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -4596,7 +4671,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -5072,7 +5148,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "int64"
               },
               "attributes": {
                 "allOf": [
@@ -5117,7 +5194,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -5138,7 +5216,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -5324,7 +5403,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "int64"
               },
               "attributes": {
                 "allOf": [

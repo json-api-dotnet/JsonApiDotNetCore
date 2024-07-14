@@ -30,21 +30,11 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
         /// <summary>Stores model information.</summary>
         public IBackingStore BackingStore { get; private set; }
         /// <summary>The id property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public string? Id
+        public Guid? Id
         {
-            get { return BackingStore?.Get<string?>("id"); }
+            get { return BackingStore?.Get<Guid?>("id"); }
             set { BackingStore?.Set("id", value); }
         }
-#nullable restore
-#else
-        public string Id
-        {
-            get { return BackingStore?.Get<string>("id"); }
-            set { BackingStore?.Set("id", value); }
-        }
-#endif
         /// <summary>The lid property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -109,7 +99,7 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
             return new Dictionary<string, Action<IParseNode>>
             {
                 { "attributes", n => { Attributes = n.GetObjectValue<OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AttributesInUpdateCourseRequest>(OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AttributesInUpdateCourseRequest.CreateFromDiscriminatorValue); } },
-                { "id", n => { Id = n.GetStringValue(); } },
+                { "id", n => { Id = n.GetGuidValue(); } },
                 { "lid", n => { Lid = n.GetStringValue(); } },
                 { "relationships", n => { Relationships = n.GetObjectValue<OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.RelationshipsInUpdateCourseRequest>(OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.RelationshipsInUpdateCourseRequest.CreateFromDiscriminatorValue); } },
                 { "type", n => { Type = n.GetEnumValue<OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.CourseResourceType>(); } },
@@ -123,7 +113,7 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AttributesInUpdateCourseRequest>("attributes", Attributes);
-            writer.WriteStringValue("id", Id);
+            writer.WriteGuidValue("id", Id);
             writer.WriteStringValue("lid", Lid);
             writer.WriteObjectValue<OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.RelationshipsInUpdateCourseRequest>("relationships", Relationships);
             writer.WriteEnumValue<OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.CourseResourceType>("type", Type);

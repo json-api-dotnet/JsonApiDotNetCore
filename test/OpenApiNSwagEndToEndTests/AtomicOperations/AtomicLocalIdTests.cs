@@ -66,7 +66,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                 {
                     Data = new DataInCreateCourseRequest
                     {
-                        Id = newCourse.StringId!,
+                        Id = newCourse.Id,
                         Attributes = new AttributesInCreateCourseRequest
                         {
                             Subject = newCourse.Subject,
@@ -84,7 +84,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                     [
                         new CourseIdentifierInRequest
                         {
-                            Id = newCourse.StringId!
+                            Id = newCourse.Id
                         }
                     ]
                 },
@@ -115,7 +115,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                             {
                                 Data = new CourseIdentifierInRequest
                                 {
-                                    Id = newCourse.StringId!
+                                    Id = newCourse.Id
                                 }
                             },
                             Student = new ToOneStudentInRequest

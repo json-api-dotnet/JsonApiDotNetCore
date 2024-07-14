@@ -19,7 +19,7 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMed
         /// <summary>Gets an item from the OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.socialMediaAccounts.item collection</summary>
         /// <param name="position">The identifier of the socialMediaAccount to update.</param>
         /// <returns>A <see cref="OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMediaAccounts.Item.SocialMediaAccountsItemRequestBuilder"/></returns>
-        public OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMediaAccounts.Item.SocialMediaAccountsItemRequestBuilder this[string position]
+        public OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMediaAccounts.Item.SocialMediaAccountsItemRequestBuilder this[Guid position]
         {
             get
             {

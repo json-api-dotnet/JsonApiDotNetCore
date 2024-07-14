@@ -1,8 +1,6 @@
 using System.Net;
 using FluentAssertions;
-using FluentAssertions.Specialized;
 using JsonApiDotNetCore.OpenApi.Client.NSwag;
-using Newtonsoft.Json;
 using OpenApiNSwagEndToEndTests.ClientIdGenerationModes.GeneratedCode;
 using OpenApiTests;
 using OpenApiTests.ClientIdGenerationModes;
@@ -51,11 +49,20 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        Func<Task> action = async () => await ApiResponse.TranslateAsync(async () => await apiClient.PostPlayerAsync(null, requestBody));
+        Func<Task> action = async () => await ApiResponse.TranslateAsync(async () => await apiClient.PostPlayerAsync(requestBody));
 
         // Assert
-        ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
-        assertion.Which.Message.Should().Be("Cannot write a null value for property 'id'. Property requires a value. Path 'data'.");
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
+        exception.StatusCode.Should().Be((int)HttpStatusCode.UnprocessableEntity);
+        exception.Message.Should().Be("HTTP 422: Validation of the request body failed.");
+        exception.Result.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("422");
+        error.Title.Should().Be("Failed to deserialize request body: The 'id' element is invalid.");
+        error.Detail.Should().BeNull();
+        error.Source.ShouldNotBeNull();
+        error.Source.Pointer.Should().Be("/data");
     }
 
     [Fact]
@@ -72,7 +79,7 @@ public sealed class ClientIdGenerationModesTests
         {
             Data = new DataInCreatePlayerRequest
             {
-                Id = newPlayer.StringId!,
+                Id = newPlayer.Id,
                 Attributes = new AttributesInCreatePlayerRequest
                 {
                     UserName = newPlayer.UserName
@@ -81,7 +88,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        PlayerPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PostPlayerAsync(null, requestBody));
+        PlayerPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PostPlayerAsync(requestBody));
 
         // Assert
         document.Should().BeNull();
@@ -116,17 +123,15 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        GamePrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PostGameAsync(null, requestBody));
+        GamePrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PostGameAsync(requestBody));
 
         // Assert
         document.ShouldNotBeNull();
-        document.Data.Id.ShouldNotBeNullOrEmpty();
-
-        Guid newGameId = Guid.Parse(document.Data.Id);
+        document.Data.Id.Should().NotBe(Guid.Empty);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            Game gameInDatabase = await dbContext.Games.FirstWithIdAsync(newGameId);
+            Game gameInDatabase = await dbContext.Games.FirstWithIdAsync(document.Data.Id);
 
             gameInDatabase.Title.Should().Be(newGame.Title);
             gameInDatabase.PurchasePrice.Should().Be(newGame.PurchasePrice);
@@ -147,7 +152,7 @@ public sealed class ClientIdGenerationModesTests
         {
             Data = new DataInCreateGameRequest
             {
-                Id = newGame.StringId!,
+                Id = newGame.Id,
                 Attributes = new AttributesInCreateGameRequest
                 {
                     Title = newGame.Title,
@@ -157,7 +162,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        GamePrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PostGameAsync(null, requestBody));
+        GamePrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PostGameAsync(requestBody));
 
         // Assert
         document.Should().BeNull();
@@ -190,7 +195,7 @@ public sealed class ClientIdGenerationModesTests
         {
             Data = new DataInCreateGameRequest
             {
-                Id = existingGame.StringId!,
+                Id = existingGame.Id,
                 Attributes = new AttributesInCreateGameRequest
                 {
                     Title = existingGame.Title,
@@ -200,7 +205,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        Func<Task> action = async () => _ = await apiClient.PostGameAsync(null, requestBody);
+        Func<Task> action = async () => _ = await apiClient.PostGameAsync(requestBody);
 
         // Assert
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
@@ -235,7 +240,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        PlayerGroupPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PostPlayerGroupAsync(null, requestBody));
+        PlayerGroupPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PostPlayerGroupAsync(requestBody));
 
         // Assert
         document.ShouldNotBeNull();

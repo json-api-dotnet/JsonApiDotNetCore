@@ -25,6 +25,7 @@ internal sealed class DataSchemaGenerator
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly GenerationCacheSchemaGenerator _generationCacheSchemaGenerator;
     private readonly ResourceTypeSchemaGenerator _resourceTypeSchemaGenerator;
+    private readonly ResourceIdSchemaGenerator _resourceIdSchemaGenerator;
     private readonly ResourceIdentifierSchemaGenerator _resourceIdentifierSchemaGenerator;
     private readonly LinksVisibilitySchemaGenerator _linksVisibilitySchemaGenerator;
     private readonly IResourceGraph _resourceGraph;
@@ -34,14 +35,15 @@ internal sealed class DataSchemaGenerator
     private readonly ResourceDocumentationReader _resourceDocumentationReader;
 
     public DataSchemaGenerator(SchemaGenerator defaultSchemaGenerator, GenerationCacheSchemaGenerator generationCacheSchemaGenerator,
-        ResourceTypeSchemaGenerator resourceTypeSchemaGenerator, ResourceIdentifierSchemaGenerator resourceIdentifierSchemaGenerator,
-        LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, IResourceGraph resourceGraph, IJsonApiOptions options,
-        ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider, RelationshipTypeFactory relationshipTypeFactory,
-        ResourceDocumentationReader resourceDocumentationReader)
+        ResourceTypeSchemaGenerator resourceTypeSchemaGenerator, ResourceIdSchemaGenerator resourceIdSchemaGenerator,
+        ResourceIdentifierSchemaGenerator resourceIdentifierSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator,
+        IResourceGraph resourceGraph, IJsonApiOptions options, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider,
+        RelationshipTypeFactory relationshipTypeFactory, ResourceDocumentationReader resourceDocumentationReader)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);
         ArgumentGuard.NotNull(generationCacheSchemaGenerator);
         ArgumentGuard.NotNull(resourceTypeSchemaGenerator);
+        ArgumentGuard.NotNull(resourceIdSchemaGenerator);
         ArgumentGuard.NotNull(resourceIdentifierSchemaGenerator);
         ArgumentGuard.NotNull(linksVisibilitySchemaGenerator);
         ArgumentGuard.NotNull(resourceGraph);
@@ -53,6 +55,7 @@ internal sealed class DataSchemaGenerator
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _generationCacheSchemaGenerator = generationCacheSchemaGenerator;
         _resourceTypeSchemaGenerator = resourceTypeSchemaGenerator;
+        _resourceIdSchemaGenerator = resourceIdSchemaGenerator;
         _resourceIdentifierSchemaGenerator = resourceIdentifierSchemaGenerator;
         _linksVisibilitySchemaGenerator = linksVisibilitySchemaGenerator;
         _resourceGraph = resourceGraph;
@@ -87,6 +90,8 @@ internal sealed class DataSchemaGenerator
             AdaptResourceIdentity(resourceTypeInfo, fullSchemaForResourceData, hasAtomicOperationsEndpoint);
             SetResourceType(fullSchemaForResourceData, resourceTypeInfo.ResourceType, schemaRepository);
         }
+
+        SetResourceId(fullSchemaForDerivedType, resourceTypeInfo.ResourceType, schemaRepository);
 
         fullSchemaForResourceData.Description = _resourceDocumentationReader.GetDocumentationForType(resourceTypeInfo.ResourceType);
 
@@ -160,6 +165,15 @@ internal sealed class DataSchemaGenerator
     {
         OpenApiSchema referenceSchema = _resourceTypeSchemaGenerator.GenerateSchema(resourceType, schemaRepository);
         fullSchemaForResourceData.Properties[JsonApiPropertyName.Type] = referenceSchema.WrapInExtendedSchema();
+    }
+
+    private void SetResourceId(OpenApiSchema fullSchemaForResourceData, ResourceType resourceType, SchemaRepository schemaRepository)
+    {
+        if (fullSchemaForResourceData.Properties.ContainsKey(JsonApiPropertyName.Id))
+        {
+            OpenApiSchema idSchema = _resourceIdSchemaGenerator.GenerateSchema(resourceType, schemaRepository);
+            fullSchemaForResourceData.Properties[JsonApiPropertyName.Id] = idSchema;
+        }
     }
 
     private void SetResourceAttributes(OpenApiSchema fullSchemaForResourceData, bool forRequestSchema, ResourceFieldSchemaBuilder builder,

@@ -121,7 +121,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
                                 Data = new CourseIdentifierInRequest
                                 {
                                     Type = CourseResourceType.Courses,
-                                    Id = existingCourse.StringId!
+                                    Id = existingCourse.Id
                                 }
                             },
                             Student = new ToOneStudentInRequest
@@ -183,7 +183,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
                     Data = new DataInCreateCourseRequest
                     {
                         Type = CourseResourceType.Courses,
-                        Id = newCourse.StringId!,
+                        Id = newCourse.Id,
                         Attributes = new AttributesInCreateCourseRequest
                         {
                             Subject = newCourse.Subject

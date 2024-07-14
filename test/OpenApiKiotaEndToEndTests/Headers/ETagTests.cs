@@ -94,7 +94,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
     public async Task Returns_no_ETag_for_failed_GET_request()
     {
         // Arrange
-        string unknownCountryId = Unknown.StringId.For<Country, Guid>();
+        Guid unknownCountryId = Unknown.TypedId.Guid;
 
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new HeadersClient(requestAdapter);

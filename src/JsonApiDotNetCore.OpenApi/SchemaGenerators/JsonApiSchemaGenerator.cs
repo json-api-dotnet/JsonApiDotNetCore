@@ -1,6 +1,7 @@
 using System.Reflection;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.OpenApi.SchemaGenerators.Bodies;
+using JsonApiDotNetCore.OpenApi.SchemaGenerators.Components;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -9,17 +10,15 @@ namespace JsonApiDotNetCore.OpenApi.SchemaGenerators;
 
 internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
 {
-    private static readonly OpenApiSchema IdTypeSchema = new()
-    {
-        Type = "string"
-    };
-
+    private readonly ResourceIdSchemaGenerator _resourceIdSchemaGenerator;
     private readonly ICollection<BodySchemaGenerator> _bodySchemaGenerators;
 
-    public JsonApiSchemaGenerator(IEnumerable<BodySchemaGenerator> bodySchemaGenerators)
+    public JsonApiSchemaGenerator(ResourceIdSchemaGenerator resourceIdSchemaGenerator, IEnumerable<BodySchemaGenerator> bodySchemaGenerators)
     {
+        ArgumentGuard.NotNull(resourceIdSchemaGenerator);
         ArgumentGuard.NotNull(bodySchemaGenerators);
 
+        _resourceIdSchemaGenerator = resourceIdSchemaGenerator;
         _bodySchemaGenerators = bodySchemaGenerators.ToArray();
     }
 
@@ -31,7 +30,7 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
 
         if (parameterInfo is { Name: "id" } && IsJsonApiParameter(parameterInfo))
         {
-            return IdTypeSchema;
+            return _resourceIdSchemaGenerator.GenerateSchema(modelType, schemaRepository);
         }
 
         BodySchemaGenerator schemaGenerator = GetBodySchemaGenerator(modelType);

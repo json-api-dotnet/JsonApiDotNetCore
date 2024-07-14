@@ -193,7 +193,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
                             {
                                 Data = new CourseIdentifierInRequest
                                 {
-                                    Id = existingCourse.StringId!
+                                    Id = existingCourse.Id
                                 }
                             },
                             Student = new ToOneStudentInRequest

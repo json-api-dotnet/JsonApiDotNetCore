@@ -167,7 +167,9 @@
             "description": "The identifier of the dataStream to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -260,7 +262,9 @@
             "description": "The identifier of the dataStream to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -484,7 +488,9 @@
             "description": "The identifier of the readOnlyChannel to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -577,7 +583,9 @@
             "description": "The identifier of the readOnlyChannel to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -658,7 +666,9 @@
             "description": "The identifier of the readOnlyChannel whose related dataStreams to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -751,7 +761,9 @@
             "description": "The identifier of the readOnlyChannel whose related dataStreams to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -832,7 +844,9 @@
             "description": "The identifier of the readOnlyChannel whose related dataStream identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -925,7 +939,9 @@
             "description": "The identifier of the readOnlyChannel whose related dataStream identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1006,7 +1022,9 @@
             "description": "The identifier of the readOnlyChannel whose related dataStream to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1099,7 +1117,9 @@
             "description": "The identifier of the readOnlyChannel whose related dataStream to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1180,7 +1200,9 @@
             "description": "The identifier of the readOnlyChannel whose related dataStream identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1273,7 +1295,9 @@
             "description": "The identifier of the readOnlyChannel whose related dataStream identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1354,7 +1378,9 @@
             "description": "The identifier of the readOnlyChannel whose related dataStream to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1447,7 +1473,9 @@
             "description": "The identifier of the readOnlyChannel whose related dataStream to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1528,7 +1556,9 @@
             "description": "The identifier of the readOnlyChannel whose related dataStream identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1621,7 +1651,9 @@
             "description": "The identifier of the readOnlyChannel whose related dataStream identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1845,7 +1877,9 @@
             "description": "The identifier of the readOnlyResourceChannel to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -1938,7 +1972,9 @@
             "description": "The identifier of the readOnlyResourceChannel to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2019,7 +2055,9 @@
             "description": "The identifier of the readOnlyResourceChannel whose related dataStreams to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2112,7 +2150,9 @@
             "description": "The identifier of the readOnlyResourceChannel whose related dataStreams to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2193,7 +2233,9 @@
             "description": "The identifier of the readOnlyResourceChannel whose related dataStream to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2286,7 +2328,9 @@
             "description": "The identifier of the readOnlyResourceChannel whose related dataStream to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2367,7 +2411,9 @@
             "description": "The identifier of the readOnlyResourceChannel whose related dataStream to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2460,7 +2506,9 @@
             "description": "The identifier of the readOnlyResourceChannel whose related dataStream to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2541,7 +2589,9 @@
             "description": "The identifier of the relationshipChannel whose related dataStream identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2634,7 +2684,9 @@
             "description": "The identifier of the relationshipChannel whose related dataStream identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -2713,7 +2765,9 @@
             "description": "The identifier of the relationshipChannel to add dataStreams to.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -2781,7 +2835,9 @@
             "description": "The identifier of the relationshipChannel whose audioStreams relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -2849,7 +2905,9 @@
             "description": "The identifier of the relationshipChannel to remove dataStreams from.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -2919,7 +2977,9 @@
             "description": "The identifier of the relationshipChannel whose related dataStream identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3012,7 +3072,9 @@
             "description": "The identifier of the relationshipChannel whose related dataStream identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3091,7 +3153,9 @@
             "description": "The identifier of the relationshipChannel whose ultraHighDefinitionVideoStream relationship to assign or clear.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -3161,7 +3225,9 @@
             "description": "The identifier of the relationshipChannel whose related dataStream identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3254,7 +3320,9 @@
             "description": "The identifier of the relationshipChannel whose related dataStream identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3333,7 +3401,9 @@
             "description": "The identifier of the relationshipChannel whose videoStream relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -3517,7 +3587,9 @@
             "description": "The identifier of the writeOnlyChannel to update.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           },
           {
@@ -3618,7 +3690,9 @@
             "description": "The identifier of the writeOnlyChannel to delete.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -3653,7 +3727,9 @@
             "description": "The identifier of the writeOnlyChannel to add dataStreams to.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -3721,7 +3797,9 @@
             "description": "The identifier of the writeOnlyChannel whose audioStreams relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -3789,7 +3867,9 @@
             "description": "The identifier of the writeOnlyChannel to remove dataStreams from.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -3859,7 +3939,9 @@
             "description": "The identifier of the writeOnlyChannel whose ultraHighDefinitionVideoStream relationship to assign or clear.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -3929,7 +4011,9 @@
             "description": "The identifier of the writeOnlyChannel whose videoStream relationship to assign.",
             "required": true,
             "schema": {
-              "type": "string"
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
             }
           }
         ],
@@ -4109,7 +4193,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           "attributes": {
             "allOf": [
@@ -4187,7 +4272,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "int64"
               },
               "attributes": {
                 "allOf": [
@@ -4262,7 +4348,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -4283,7 +4370,8 @@
           },
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -4710,7 +4798,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "int64"
               },
               "attributes": {
                 "allOf": [
@@ -4877,7 +4966,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "int64"
               },
               "attributes": {
                 "allOf": [
@@ -5264,7 +5354,8 @@
             "properties": {
               "id": {
                 "minLength": 1,
-                "type": "string"
+                "type": "string",
+                "format": "int64"
               },
               "attributes": {
                 "allOf": [

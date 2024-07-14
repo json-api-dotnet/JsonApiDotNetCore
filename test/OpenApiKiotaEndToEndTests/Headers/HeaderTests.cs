@@ -117,7 +117,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         };
 
         // Act
-        await apiClient.Countries[existingCountry.StringId].HeadAsync(configuration => configuration.Options.Add(headerInspector));
+        await apiClient.Countries[existingCountry.Id].HeadAsync(configuration => configuration.Options.Add(headerInspector));
 
         // Assert
         string[] contentLengthHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ContentLength).WhoseValue.ToArray();
@@ -147,7 +147,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         };
 
         // Act
-        await apiClient.Countries[existingCountry.StringId].Languages.HeadAsync(configuration => configuration.Options.Add(headerInspector));
+        await apiClient.Countries[existingCountry.Id].Languages.HeadAsync(configuration => configuration.Options.Add(headerInspector));
 
         // Assert
         string[] contentLengthHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ContentLength).WhoseValue.ToArray();
@@ -177,7 +177,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         };
 
         // Act
-        await apiClient.Countries[existingCountry.StringId].Relationships.Languages.HeadAsync(configuration => configuration.Options.Add(headerInspector));
+        await apiClient.Countries[existingCountry.Id].Relationships.Languages.HeadAsync(configuration => configuration.Options.Add(headerInspector));
 
         // Assert
         string[] contentLengthHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ContentLength).WhoseValue.ToArray();
