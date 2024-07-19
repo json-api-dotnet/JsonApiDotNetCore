@@ -7,7 +7,7 @@ After [enabling OpenAPI](~/usage/openapi.md), you can generate a typed JSON:API 
 > [client libraries](https://jsonapi.org/implementations/#client-libraries).
 
 The following code generators are supported, though you may try others as well:
-- [NSwag](https://github.com/RicoSuter/NSwag): Produces clients for C# and TypeScript
+- [NSwag](https://github.com/RicoSuter/NSwag) (v14.1 or higher): Produces clients for C# and TypeScript
 - [Kiota](https://learn.microsoft.com/en-us/openapi/kiota/overview): Produces clients for C#, Go, Java, PHP, Python, Ruby, Swift and TypeScript
 
 # [NSwag](#tab/nswag)
@@ -39,11 +39,11 @@ To generate your C# client, follow the steps below.
 ### Visual Studio
 
 The easiest way to get started is by using the built-in capabilities of Visual Studio.
-The following steps describe how to generate and use a JSON:API client in C#, using our package.
+The following steps describe how to generate and use a JSON:API client in C#, combined with our NuGet package.
 
 1.  In **Solution Explorer**, right-click your client project, select **Add** > **Service Reference** and choose **OpenAPI**.
 
-2.  On the next page, specify the OpenAPI URL to your JSON:API server, for example: `http://localhost:14140/swagger/v1/swagger.json`.
+1.  On the next page, specify the OpenAPI URL to your JSON:API server, for example: `http://localhost:14140/swagger/v1/swagger.json`.
     Specify `ExampleApiClient` as the class name, optionally provide a namespace and click **Finish**.
     Visual Studio now downloads your swagger.json and updates your project file.
     This adds a pre-build step that generates the client code.
@@ -52,25 +52,15 @@ The following steps describe how to generate and use a JSON:API client in C#, us
     > To later re-download swagger.json and regenerate the client code,
     > right-click **Dependencies** > **Manage Connected Services** and click the **Refresh** icon.
 
-3.  Although not strictly required, we recommend running package update now, which fixes some issues.
+1.  Run package update now, which fixes incompatibilities and bugs from older versions.
 
-    > [!WARNING]
-    > NSwag v14 is currently *incompatible* with JsonApiDotNetCore (tracked [here](https://github.com/RicoSuter/NSwag/issues/4662)).
-    > Stick with v13.x for the moment.
-
-4.  Add our client package to your project:
+1.  Add our client package to your project:
 
     ```
     dotnet add package JsonApiDotNetCore.OpenApi.Client.NSwag
     ```
 
-5.  Add the following line inside the **OpenApiReference** section in your project file:
-
-    ```xml
-    <Options>/GenerateExceptionClasses:false /GenerateNullableReferenceTypes:true /GenerateOptionalPropertiesAsNullable:true /GenerateOptionalParameters:true /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag</Options>
-    ```
-
-6.  Add the following glue code to connect our package with your generated code.
+1.  Add the following glue code to connect our package with your generated code.
 
     > [!NOTE]
     > The class name must be the same as specified in step 2.
@@ -83,14 +73,15 @@ The following steps describe how to generate and use a JSON:API client in C#, us
 
     partial class ExampleApiClient : JsonApiClient
     {
-        partial void UpdateJsonSerializerSettings(JsonSerializerSettings settings)
+        partial void Initialize()
         {
-            SetSerializerSettingsForJsonApi(settings);
+            _instanceSettings = new JsonSerializerSettings(_settings.Value);
+            SetSerializerSettingsForJsonApi(_instanceSettings);
         }
     }
     ```
 
-7.  Add code that calls one of your JSON:API endpoints.
+1.  Add code that calls one of your JSON:API endpoints.
 
     ```c#
     using var httpClient = new HttpClient();
@@ -101,7 +92,7 @@ The following steps describe how to generate and use a JSON:API client in C#, us
         ["filter"] = "has(assignedTodoItems)",
         ["sort"] = "-lastName",
         ["page[size]"] = "5"
-    }, null);
+    });
 
     foreach (var person in getResponse.Data)
     {
@@ -109,7 +100,7 @@ The following steps describe how to generate and use a JSON:API client in C#, us
     }
     ```
 
-8.  Extend your demo code to send a partial PATCH request with the help of our package:
+1.  Extend the demo code to send a partial PATCH request with the help of our package:
 
     ```c#
     var updatePersonRequest = new UpdatePersonRequestDocument
@@ -163,16 +154,15 @@ Alternatively, the following section shows what to add to your client project fi
 <ItemGroup>
   <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="8.0.*" PrivateAssets="all" />
   <PackageReference Include="Newtonsoft.Json" Version="13.0.*" />
-  <PackageReference Include="NSwag.ApiDescription.Client" Version="13.20.*" PrivateAssets="all" />
+  <PackageReference Include="NSwag.ApiDescription.Client" Version="14.1.*" PrivateAssets="all" />
 </ItemGroup>
 
 <ItemGroup>
   <OpenApiReference Include="OpenAPIs\swagger.json">
     <SourceUri>http://localhost:14140/swagger/v1/swagger.json</SourceUri>
-      <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <ClassName>ExampleApiClient</ClassName>
-      <OutputPath>ExampleApiClient.cs</OutputPath>
-      <Options>/GenerateExceptionClasses:false /GenerateNullableReferenceTypes:true /GenerateOptionalPropertiesAsNullable:true /GenerateOptionalParameters:true /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag</Options>
+    <CodeGenerator>NSwagCSharp</CodeGenerator>
+    <ClassName>ExampleApiClient</ClassName>
+    <OutputPath>ExampleApiClient.cs</OutputPath>
   </OpenApiReference>
 </ItemGroup>
 ```
@@ -203,22 +193,23 @@ Various switches enable you to tweak the client generation to your needs. See th
 
 # [NSwag](#tab/nswag)
 
-The `OpenApiReference` element in the project file accepts an `Options` element to pass additional settings to the client generator,
-which are listed [here](https://github.com/RicoSuter/NSwag/blob/master/src/NSwag.Commands/Commands/CodeGeneration/OpenApiToCSharpClientCommand.cs).
-A guide with common best practices is available [here](https://stevetalkscode.co.uk/openapireference-commands).
+The `OpenApiReference` can be customized using various [NSwag-specific MSBuild properties](https://github.com/RicoSuter/NSwag/blob/7d6df3af95081f3f0ed6dee04be8d27faa86f91a/src/NSwag.ApiDescription.Client/NSwag.ApiDescription.Client.props).
+See [the source code](https://github.com/RicoSuter/NSwag/blob/master/src/NSwag.Commands/Commands/CodeGeneration/OpenApiToCSharpClientCommand.cs) for their meaning.
 
-For example, the following section puts the generated code in a namespace and generates an interface (which is handy for dependency injection):
+> [!NOTE]
+> Earlier versions of NSwag required the use of `<Options>` to specify command-line switches directly.
+> This is no longer recommended and may conflict with the new MSBuild properties.
+
+For example, the following section puts the generated code in a namespace and generates an interface (handy when writing tests):
 
 ```xml
 <OpenApiReference Include="swagger.json">
   <Namespace>ExampleProject.GeneratedCode</Namespace>
   <ClassName>SalesApiClient</ClassName>
   <CodeGenerator>NSwagCSharp</CodeGenerator>
-  <Options>/GenerateClientInterfaces:true</Options>
+  <NSwagGenerateClientInterfaces>true</NSwagGenerateClientInterfaces>
 </OpenApiReference>
 ```
-
-Likewise, you can enable nullable reference types by adding `/GenerateNullableReferenceTypes:true /GenerateOptionalPropertiesAsNullable:true /GenerateOptionalParameters:true`.
 
 # [Kiota](#tab/kiota)
 
@@ -257,10 +248,10 @@ The use of HTTP headers varies per client generator. To use [ETags for caching](
 
 # [NSwag](#tab/nswag)
 
-NSwag needs extra settings to make response headers accessible. Specify the following in the `<Options>` element of your project file:
+To gain access to HTTP response headers, add the following in a `PropertyGroup` or directly in the `OpenApiReference`:
 
 ```
-/GenerateExceptionClasses:false /WrapResponses:true /GenerateResponseClasses:false /ResponseClass:ApiResponse /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag
+<NSwagWrapResponses>true</NSwagWrapResponses>
 ```
 
 This enables the following code, which is explained below:
@@ -272,7 +263,7 @@ Console.WriteLine($"Retrieved {getResponse.Result?.Data.Count ?? 0} people.");
 
 // wait some time...
 
-getResponse = await ApiResponse.TranslateAsync(() => apiClient.GetPersonCollectionAsync(null, eTag));
+getResponse = await ApiResponse.TranslateAsync(() => apiClient.GetPersonCollectionAsync(if_None_Match: eTag));
 
 if (getResponse is { StatusCode: (int)HttpStatusCode.NotModified, Result: null })
 {
@@ -287,7 +278,7 @@ If you only want to ask whether data has changed without fetching it, use a HEAD
 
 # [Kiota](#tab/kiota)
 
-Use `HeadersInspectionHandlerOption` to gain access to response headers. For example:
+Use `HeadersInspectionHandlerOption` to gain access to HTTP response headers. For example:
 
 ```c#
 var headerInspector = new HeadersInspectionHandlerOption

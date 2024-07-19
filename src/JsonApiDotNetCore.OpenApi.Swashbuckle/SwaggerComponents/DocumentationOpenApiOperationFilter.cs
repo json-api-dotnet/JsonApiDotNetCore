@@ -540,7 +540,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         // The next best thing is to expose the query string parameters as unstructured and optional.
         // - This makes SwaggerUI ask for JSON, which is a bit odd, but it works. For example: {"sort":"-id"} produces: ?sort=-id
         // - This makes NSwag produce a C# client with method signature: GetAsync(IDictionary<string, string?>? query)
-        //     when combined with <Options>/GenerateNullableReferenceTypes:true</Options> in the project file.
+        //     when combined with <NSwagGenerateNullableReferenceTypes>true</NSwagGenerateNullableReferenceTypes> in the project file.
 
         operation.Parameters.Add(new OpenApiParameter
         {

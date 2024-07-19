@@ -1,0 +1,12 @@
+<Project>
+  <PropertyGroup>
+    <CodeGenerator>NSwagCSharp</CodeGenerator>
+    <NSwagGenerateExceptionClasses>false</NSwagGenerateExceptionClasses>
+    <NSwagGenerateResponseClasses>false</NSwagGenerateResponseClasses>
+    <NSwagResponseClass>ApiResponse</NSwagResponseClass>
+    <NSwagAdditionalNamespaceUsages>JsonApiDotNetCore.OpenApi.Client.NSwag</NSwagAdditionalNamespaceUsages>
+    <NSwagGenerateNullableReferenceTypes>true</NSwagGenerateNullableReferenceTypes>
+    <NSwagGenerateOptionalPropertiesAsNullable>true</NSwagGenerateOptionalPropertiesAsNullable>
+    <NSwagGenerateOptionalParameters>true</NSwagGenerateOptionalParameters>
+  </PropertyGroup>
+</Project>

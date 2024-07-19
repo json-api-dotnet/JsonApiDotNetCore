@@ -7,12 +7,14 @@ namespace OpenApiNSwagClientExample;
 [UsedImplicitly(ImplicitUseTargetFlags.Itself)]
 public partial class ExampleApiClient : JsonApiClient
 {
-    partial void UpdateJsonSerializerSettings(JsonSerializerSettings settings)
+    partial void Initialize()
     {
-        SetSerializerSettingsForJsonApi(settings);
+        _instanceSettings = new JsonSerializerSettings(_settings.Value);
 
 #if DEBUG
-        settings.Formatting = Formatting.Indented;
+        _instanceSettings.Formatting = Formatting.Indented;
 #endif
+
+        SetSerializerSettingsForJsonApi(_instanceSettings);
     }
 }

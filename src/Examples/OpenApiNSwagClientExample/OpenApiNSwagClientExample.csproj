@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <Import Project="..\..\..\package-versions.props" />
+  <Import Project="..\..\JsonApiDotNetCore.OpenApi.Client.NSwag\Build\JsonApiDotNetCore.OpenApi.Client.NSwag.props" />
 
   <ItemGroup>
     <ProjectReference Include="..\..\JsonApiDotNetCore.OpenApi.Client.NSwag\JsonApiDotNetCore.OpenApi.Client.NSwag.csproj" />
@@ -20,11 +21,11 @@
 
   <ItemGroup>
     <OpenApiReference Include="..\JsonApiDotNetCoreExample\GeneratedSwagger\JsonApiDotNetCoreExample.json">
-      <Namespace>OpenApiNSwagClientExample</Namespace>
-      <ClassName>ExampleApiClient</ClassName>
-      <OutputPath>ExampleApiClient.cs</OutputPath>
-      <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/GenerateExceptionClasses:false /WrapResponses:true /GenerateResponseClasses:false /ResponseClass:ApiResponse /GenerateNullableReferenceTypes:true /GenerateOptionalPropertiesAsNullable:true /GenerateOptionalParameters:true /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag</Options>
+      <Name>ExampleApi</Name>
+      <Namespace>$(MSBuildProjectName)</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+      <NSwagWrapResponses>true</NSwagWrapResponses>
     </OpenApiReference>
   </ItemGroup>
 </Project>
