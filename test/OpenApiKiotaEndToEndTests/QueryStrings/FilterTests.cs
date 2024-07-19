@@ -57,8 +57,13 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
             response.ShouldNotBeNull();
             response.Data.ShouldHaveCount(1);
             response.Data.ElementAt(0).Id.Should().Be(nodes[1].StringId);
-            response.Data.ElementAt(0).Attributes!.Name.Should().Be(nodes[1].Name);
-            response.Data.ElementAt(0).Attributes!.Comment.Should().Be(nodes[1].Comment);
+
+            response.Data.ElementAt(0).Attributes.ShouldNotBeNull().With(attributes =>
+            {
+                attributes.Name.Should().Be(nodes[1].Name);
+                attributes.Comment.Should().Be(nodes[1].Comment);
+            });
+
             response.Meta.ShouldNotBeNull();
             response.Meta.AdditionalData.ShouldContainKey("total").With(total => total.Should().Be(1));
         }
@@ -97,8 +102,13 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
             response.ShouldNotBeNull();
             response.Data.ShouldHaveCount(1);
             response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
-            response.Data.ElementAt(0).Attributes!.Name.Should().Be(node.Children.ElementAt(1).Name);
-            response.Data.ElementAt(0).Attributes!.Comment.Should().Be(node.Children.ElementAt(1).Comment);
+
+            response.Data.ElementAt(0).Attributes.ShouldNotBeNull().With(attributes =>
+            {
+                attributes.Name.Should().Be(node.Children.ElementAt(1).Name);
+                attributes.Comment.Should().Be(node.Children.ElementAt(1).Comment);
+            });
+
             response.Meta.ShouldNotBeNull();
             response.Meta.AdditionalData.ShouldContainKey("total").With(total => total.Should().Be(1));
         }

@@ -158,6 +158,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
         response.Atomic_results.ShouldHaveCount(7);
 
         TeacherDataInResponse teacherInResponse = response.Atomic_results.ElementAt(0).Data.Should().BeOfType<TeacherDataInResponse>().Which;
+        teacherInResponse.Attributes.ShouldNotBeNull();
         teacherInResponse.Attributes.Name.Should().Be(newTeacher.Name);
         teacherInResponse.Attributes.EmailAddress.Should().Be(newTeacher.EmailAddress);
         long newTeacherId = long.Parse(teacherInResponse.Id);
@@ -166,11 +167,13 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
         response.Atomic_results.ElementAt(2).Data.Should().BeNull();
 
         StudentDataInResponse studentInResponse = response.Atomic_results.ElementAt(3).Data.Should().BeOfType<StudentDataInResponse>().Which;
+        studentInResponse.Attributes.ShouldNotBeNull();
         studentInResponse.Attributes.Name.Should().Be(newStudent.Name);
         studentInResponse.Attributes.EmailAddress.Should().Be(newStudent.EmailAddress);
         long newStudentId = long.Parse(studentInResponse.Id);
 
         EnrollmentDataInResponse enrollmentInResponse = response.Atomic_results.ElementAt(4).Data.Should().BeOfType<EnrollmentDataInResponse>().Which;
+        enrollmentInResponse.Attributes.ShouldNotBeNull();
         enrollmentInResponse.Attributes.EnrolledAt.Should().Be(newEnrolledAt.ToDateTime(TimeOnly.MinValue));
         long newEnrollmentId = long.Parse(enrollmentInResponse.Id);
 

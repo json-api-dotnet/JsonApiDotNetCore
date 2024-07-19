@@ -48,13 +48,18 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         };
 
         // Act
-        NodeCollectionResponseDocument response = await apiClient.GetNodeCollectionAsync(queryString, null);
+        NodeCollectionResponseDocument response = await apiClient.GetNodeCollectionAsync(queryString);
 
         // Assert
         response.Data.ShouldHaveCount(1);
         response.Data.ElementAt(0).Id.Should().Be(nodes[1].StringId);
-        response.Data.ElementAt(0).Attributes.Name.Should().Be(nodes[1].Name);
-        response.Data.ElementAt(0).Attributes.Comment.Should().Be(nodes[1].Comment);
+
+        response.Data.ElementAt(0).Attributes.ShouldNotBeNull().With(attributes =>
+        {
+            attributes.Name.Should().Be(nodes[1].Name);
+            attributes.Comment.Should().Be(nodes[1].Comment);
+        });
+
         response.Meta.ShouldNotBeNull();
         response.Meta.ShouldContainKey("total").With(total => total.Should().Be(1));
     }
@@ -84,13 +89,18 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         };
 
         // Act
-        NodeCollectionResponseDocument response = await apiClient.GetNodeChildrenAsync(node.StringId!, queryString, null);
+        NodeCollectionResponseDocument response = await apiClient.GetNodeChildrenAsync(node.StringId!, queryString);
 
         // Assert
         response.Data.ShouldHaveCount(1);
         response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
-        response.Data.ElementAt(0).Attributes.Name.Should().Be(node.Children.ElementAt(1).Name);
-        response.Data.ElementAt(0).Attributes.Comment.Should().Be(node.Children.ElementAt(1).Comment);
+
+        response.Data.ElementAt(0).Attributes.ShouldNotBeNull().With(attributes =>
+        {
+            attributes.Name.Should().Be(node.Children.ElementAt(1).Name);
+            attributes.Comment.Should().Be(node.Children.ElementAt(1).Comment);
+        });
+
         response.Meta.ShouldNotBeNull();
         response.Meta.ShouldContainKey("total").With(total => total.Should().Be(1));
     }
@@ -120,7 +130,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         };
 
         // Act
-        NodeIdentifierCollectionResponseDocument response = await apiClient.GetNodeChildrenRelationshipAsync(node.StringId!, queryString, null);
+        NodeIdentifierCollectionResponseDocument response = await apiClient.GetNodeChildrenRelationshipAsync(node.StringId!, queryString);
 
         // Assert
         response.Data.ShouldHaveCount(1);
@@ -144,7 +154,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         };
 
         // Act
-        Func<Task> action = async () => _ = await apiClient.GetNodeAsync(Unknown.StringId.Int64, queryString, null);
+        Func<Task> action = async () => _ = await apiClient.GetNodeAsync(Unknown.StringId.Int64, queryString);
 
         // Assert
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;

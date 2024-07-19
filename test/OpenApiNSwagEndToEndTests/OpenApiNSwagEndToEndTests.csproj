@@ -25,8 +25,6 @@
 
   <PropertyGroup>
     <NSwagClientClassAccessModifier>internal</NSwagClientClassAccessModifier>
-    <NSwagGenerateOptionalPropertiesAsNullable>false</NSwagGenerateOptionalPropertiesAsNullable>
-    <NSwagGenerateOptionalParameters>false</NSwagGenerateOptionalParameters>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,16 +33,12 @@
       <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
-      <NSwagGenerateOptionalPropertiesAsNullable>true</NSwagGenerateOptionalPropertiesAsNullable>
-      <NSwagGenerateOptionalParameters>true</NSwagGenerateOptionalParameters>
     </OpenApiReference>
     <OpenApiReference Include="..\OpenApiTests\ModelStateValidation\GeneratedSwagger\$(TargetFramework)\swagger.g.json">
       <Name>ModelStateValidation</Name>
       <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
-      <NSwagGenerateOptionalPropertiesAsNullable>true</NSwagGenerateOptionalPropertiesAsNullable>
-      <NSwagGenerateOptionalParameters>true</NSwagGenerateOptionalParameters>
     </OpenApiReference>
     <OpenApiReference Include="..\OpenApiTests\Headers\GeneratedSwagger\swagger.g.json">
       <Name>Headers</Name>

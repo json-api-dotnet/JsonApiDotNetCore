@@ -85,7 +85,8 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         StudentDataInResponse studentDataInResponse = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<StudentDataInResponse>().Which;
 
         studentDataInResponse.Id.Should().Be(existingStudent.StringId);
-        studentDataInResponse.Attributes!.Name.Should().Be(newName);
+        studentDataInResponse.Attributes.ShouldNotBeNull();
+        studentDataInResponse.Attributes.Name.Should().Be(newName);
         studentDataInResponse.Attributes.EmailAddress.Should().Be(newEmailAddress);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -148,7 +149,8 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         StudentDataInResponse studentDataInResponse = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<StudentDataInResponse>().Which;
 
         studentDataInResponse.Id.Should().Be(existingStudent.StringId);
-        studentDataInResponse.Attributes!.Name.Should().Be(existingStudent.Name);
+        studentDataInResponse.Attributes.ShouldNotBeNull();
+        studentDataInResponse.Attributes.Name.Should().Be(existingStudent.Name);
         studentDataInResponse.Attributes.EmailAddress.Should().Be(newEmailAddress);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -230,7 +232,8 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         EnrollmentDataInResponse enrollmentDataInResponse = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<EnrollmentDataInResponse>().Which;
 
         enrollmentDataInResponse.Id.Should().Be(existingEnrollment.StringId);
-        enrollmentDataInResponse.Attributes!.EnrolledAt.Should().Be((Date)newEnrolledAt);
+        enrollmentDataInResponse.Attributes.ShouldNotBeNull();
+        enrollmentDataInResponse.Attributes.EnrolledAt.Should().Be((Date)newEnrolledAt);
         enrollmentDataInResponse.Attributes.GraduatedAt.Should().Be((Date)existingEnrollment.GraduatedAt!.Value);
         enrollmentDataInResponse.Attributes.HasGraduated.Should().Be(existingEnrollment.HasGraduated);
 

@@ -69,7 +69,8 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         response.AtomicResults.ShouldHaveCount(1);
         TeacherDataInResponse teacherDataInResponse = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<TeacherDataInResponse>().Which;
 
-        teacherDataInResponse.Attributes!.Name.Should().Be(newTeacher.Name);
+        teacherDataInResponse.Attributes.ShouldNotBeNull();
+        teacherDataInResponse.Attributes.Name.Should().Be(newTeacher.Name);
         teacherDataInResponse.Attributes.EmailAddress.Should().Be(newTeacher.EmailAddress);
 
         long newTeacherId = long.Parse(teacherDataInResponse.Id!);
@@ -147,7 +148,8 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         response.AtomicResults.ShouldHaveCount(1);
         EnrollmentDataInResponse enrollmentDataInResponse = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<EnrollmentDataInResponse>().Which;
 
-        enrollmentDataInResponse.Attributes!.EnrolledAt.Should().Be((Date)newEnrollment.EnrolledAt);
+        enrollmentDataInResponse.Attributes.ShouldNotBeNull();
+        enrollmentDataInResponse.Attributes.EnrolledAt.Should().Be((Date)newEnrollment.EnrolledAt);
         enrollmentDataInResponse.Attributes.GraduatedAt.Should().BeNull();
         enrollmentDataInResponse.Attributes.HasGraduated.Should().BeFalse();
 
