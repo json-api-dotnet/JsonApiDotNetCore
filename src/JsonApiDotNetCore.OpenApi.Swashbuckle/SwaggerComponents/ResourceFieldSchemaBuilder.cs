@@ -207,8 +207,6 @@ internal sealed class ResourceFieldSchemaBuilder
         if (JsonApiSchemaFacts.IsRelationshipInResponseType(relationshipSchemaType))
         {
             _linksVisibilitySchemaGenerator.UpdateSchemaForRelationship(relationshipSchemaType, fullSchema, schemaRepository);
-
-            fullSchema.Required.Remove(JsonApiPropertyName.Data);
         }
 
         return referenceSchema;
