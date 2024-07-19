@@ -48,7 +48,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         };
 
         // Act
-        NodeCollectionResponseDocument response = await apiClient.GetNodeCollectionAsync(queryString, null);
+        NodeCollectionResponseDocument response = await apiClient.GetNodeCollectionAsync(queryString);
 
         // Assert
         response.Data.ShouldHaveCount(2);
@@ -81,7 +81,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         };
 
         // Act
-        NodeCollectionResponseDocument response = await apiClient.GetNodeChildrenAsync(node.StringId!, queryString, null);
+        NodeCollectionResponseDocument response = await apiClient.GetNodeChildrenAsync(node.StringId!, queryString);
 
         // Assert
         response.Data.ShouldHaveCount(2);
@@ -114,7 +114,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         };
 
         // Act
-        NodeIdentifierCollectionResponseDocument response = await apiClient.GetNodeChildrenRelationshipAsync(node.StringId!, queryString, null);
+        NodeIdentifierCollectionResponseDocument response = await apiClient.GetNodeChildrenRelationshipAsync(node.StringId!, queryString);
 
         // Assert
         response.Data.ShouldHaveCount(2);
@@ -135,7 +135,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         };
 
         // Act
-        Func<Task> action = async () => _ = await apiClient.GetNodeAsync(Unknown.StringId.Int64, queryString, null);
+        Func<Task> action = async () => _ = await apiClient.GetNodeAsync(Unknown.StringId.Int64, queryString);
 
         // Assert
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;

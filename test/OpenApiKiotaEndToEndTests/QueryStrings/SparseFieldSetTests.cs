@@ -55,9 +55,13 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
             response.ShouldNotBeNull();
             response.Data.ShouldHaveCount(1);
             response.Data.ElementAt(0).Id.Should().Be(node.StringId);
-            response.Data.ElementAt(0).Attributes.ShouldNotBeNull();
-            response.Data.ElementAt(0).Attributes!.Name.Should().Be(node.Name);
-            response.Data.ElementAt(0).Attributes!.Comment.Should().BeNull();
+
+            response.Data.ElementAt(0).Attributes.ShouldNotBeNull().With(attributes =>
+            {
+                attributes.Name.Should().Be(node.Name);
+                attributes.Comment.Should().BeNull();
+            });
+
             response.Data.ElementAt(0).Relationships.Should().BeNull();
         }
     }
@@ -131,12 +135,18 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
             response.ShouldNotBeNull();
             response.Data.ShouldHaveCount(1);
             response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(0).StringId);
-            response.Data.ElementAt(0).Attributes.ShouldNotBeNull();
-            response.Data.ElementAt(0).Attributes!.Name.Should().BeNull();
-            response.Data.ElementAt(0).Attributes!.Comment.Should().Be(node.Children.ElementAt(0).Comment);
-            response.Data.ElementAt(0).Relationships.ShouldNotBeNull();
-            response.Data.ElementAt(0).Relationships!.Parent.Should().BeNull();
-            response.Data.ElementAt(0).Relationships!.Children.ShouldNotBeNull();
+
+            response.Data.ElementAt(0).Attributes.ShouldNotBeNull().With(attributes =>
+            {
+                attributes.Name.Should().BeNull();
+                attributes.Comment.Should().Be(node.Children.ElementAt(0).Comment);
+            });
+
+            response.Data.ElementAt(0).Relationships.ShouldNotBeNull().With(relationships =>
+            {
+                relationships.Parent.Should().BeNull();
+                relationships.Children.ShouldNotBeNull();
+            });
         }
     }
 

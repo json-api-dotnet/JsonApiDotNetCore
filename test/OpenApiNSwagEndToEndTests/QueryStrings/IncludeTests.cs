@@ -46,7 +46,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         };
 
         // Act
-        NodeCollectionResponseDocument response = await apiClient.GetNodeCollectionAsync(queryString, null);
+        NodeCollectionResponseDocument response = await apiClient.GetNodeCollectionAsync(queryString);
 
         // Assert
         response.Data.ShouldHaveCount(1);
@@ -85,7 +85,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         };
 
         // Act
-        NodePrimaryResponseDocument response = await apiClient.GetNodeAsync(node.StringId!, queryString, null);
+        NodePrimaryResponseDocument response = await apiClient.GetNodeAsync(node.StringId!, queryString);
 
         // Assert
         response.Data.Id.Should().Be(node.StringId);
@@ -126,7 +126,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         };
 
         // Act
-        NameValuePairCollectionResponseDocument response = await apiClient.GetNodeValuesAsync(node.StringId!, queryString, null);
+        NameValuePairCollectionResponseDocument response = await apiClient.GetNodeValuesAsync(node.StringId!, queryString);
 
         // Assert
         response.Data.ShouldHaveCount(2);
@@ -160,7 +160,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         };
 
         // Act
-        NullableNodeSecondaryResponseDocument response = await apiClient.GetNodeParentAsync(node.StringId!, queryString, null);
+        NullableNodeSecondaryResponseDocument response = await apiClient.GetNodeParentAsync(node.StringId!, queryString);
 
         // Assert
         response.Data.ShouldNotBeNull();
@@ -170,6 +170,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
 
         NodeDataInResponse? include = response.Included.ElementAt(0).Should().BeOfType<NodeDataInResponse>().Subject;
         include.Id.Should().Be(node.Parent.Parent.StringId);
+        include.Attributes.ShouldNotBeNull();
         include.Attributes.Name.Should().Be(node.Parent.Parent.Name);
     }
 
@@ -194,7 +195,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         };
 
         // Act
-        NodePrimaryResponseDocument response = await apiClient.GetNodeAsync(node.StringId!, queryString, null);
+        NodePrimaryResponseDocument response = await apiClient.GetNodeAsync(node.StringId!, queryString);
 
         // Assert
         response.Data.Id.Should().Be(node.StringId);

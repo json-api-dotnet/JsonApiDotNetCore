@@ -5,10 +5,13 @@ namespace OpenApiNSwagClientTests.ResourceFieldValidation.NullableReferenceTypes
 
 internal partial class NrtOffMsvOffClient : JsonApiClient
 {
-    partial void UpdateJsonSerializerSettings(JsonSerializerSettings settings)
+    partial void Initialize()
     {
-        SetSerializerSettingsForJsonApi(settings);
+        _instanceSettings = new JsonSerializerSettings(_settings.Value)
+        {
+            Formatting = Formatting.Indented
+        };
 
-        settings.Formatting = Formatting.Indented;
+        SetSerializerSettingsForJsonApi(_instanceSettings);
     }
 }

@@ -42,7 +42,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         var apiClient = new RestrictedControllersClient(httpClient);
 
         // Act
-        DataStreamIdentifierResponseDocument response = await apiClient.GetReadOnlyChannelVideoStreamRelationshipAsync(channel.StringId!, null, null);
+        DataStreamIdentifierResponseDocument response = await apiClient.GetReadOnlyChannelVideoStreamRelationshipAsync(channel.StringId!);
 
         // Assert
         response.Data.ShouldNotBeNull();
@@ -67,7 +67,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
 
         // Act
         NullableDataStreamIdentifierResponseDocument response =
-            await apiClient.GetReadOnlyChannelUltraHighDefinitionVideoStreamRelationshipAsync(channel.StringId!, null, null);
+            await apiClient.GetReadOnlyChannelUltraHighDefinitionVideoStreamRelationshipAsync(channel.StringId!);
 
         // Assert
         response.Data.Should().BeNull();
@@ -91,8 +91,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         var apiClient = new RestrictedControllersClient(httpClient);
 
         // Act
-        DataStreamIdentifierCollectionResponseDocument
-            response = await apiClient.GetReadOnlyChannelAudioStreamsRelationshipAsync(channel.StringId!, null, null);
+        DataStreamIdentifierCollectionResponseDocument response = await apiClient.GetReadOnlyChannelAudioStreamsRelationshipAsync(channel.StringId!);
 
         // Assert
         response.Data.ShouldHaveCount(2);
@@ -117,8 +116,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         var apiClient = new RestrictedControllersClient(httpClient);
 
         // Act
-        DataStreamIdentifierCollectionResponseDocument
-            response = await apiClient.GetReadOnlyChannelAudioStreamsRelationshipAsync(channel.StringId!, null, null);
+        DataStreamIdentifierCollectionResponseDocument response = await apiClient.GetReadOnlyChannelAudioStreamsRelationshipAsync(channel.StringId!);
 
         // Assert
         response.Data.ShouldHaveCount(0);
@@ -134,7 +132,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         var apiClient = new RestrictedControllersClient(httpClient);
 
         // Act
-        Func<Task> action = async () => _ = await apiClient.GetReadOnlyChannelVideoStreamRelationshipAsync(unknownChannelId, null, null);
+        Func<Task> action = async () => _ = await apiClient.GetReadOnlyChannelVideoStreamRelationshipAsync(unknownChannelId);
 
         // Assert
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;

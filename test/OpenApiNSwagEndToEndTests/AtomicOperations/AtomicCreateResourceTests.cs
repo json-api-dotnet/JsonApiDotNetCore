@@ -66,6 +66,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         response.Atomic_results.ShouldHaveCount(1);
         TeacherDataInResponse teacherDataInResponse = response.Atomic_results.ElementAt(0).Data.Should().BeOfType<TeacherDataInResponse>().Which;
 
+        teacherDataInResponse.Attributes.ShouldNotBeNull();
         teacherDataInResponse.Attributes.Name.Should().Be(newTeacher.Name);
         teacherDataInResponse.Attributes.EmailAddress.Should().Be(newTeacher.EmailAddress);
 
@@ -140,6 +141,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         response.Atomic_results.ShouldHaveCount(1);
         EnrollmentDataInResponse enrollmentDataInResponse = response.Atomic_results.ElementAt(0).Data.Should().BeOfType<EnrollmentDataInResponse>().Which;
 
+        enrollmentDataInResponse.Attributes.ShouldNotBeNull();
         enrollmentDataInResponse.Attributes.EnrolledAt.Should().Be(newEnrollment.EnrolledAt.ToDateTime(TimeOnly.MinValue));
         enrollmentDataInResponse.Attributes.GraduatedAt.Should().BeNull();
         enrollmentDataInResponse.Attributes.HasGraduated.Should().BeFalse();

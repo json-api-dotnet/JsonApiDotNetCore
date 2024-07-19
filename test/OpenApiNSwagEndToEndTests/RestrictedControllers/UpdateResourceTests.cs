@@ -91,16 +91,21 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
 
         // Act
         WriteOnlyChannelPrimaryResponseDocument? response = await ApiResponse.TranslateAsync(async () =>
-            await apiClient.PatchWriteOnlyChannelAsync(existingChannel.StringId!, queryString, requestBody));
+            await apiClient.PatchWriteOnlyChannelAsync(existingChannel.StringId!, requestBody, queryString));
 
         response.ShouldNotBeNull();
 
         response.Data.Id.Should().Be(existingChannel.StringId);
+        response.Data.Attributes.ShouldNotBeNull();
         response.Data.Attributes.Name.Should().Be(newChannelName);
         response.Data.Attributes.IsCommercial.Should().Be(existingChannel.IsCommercial);
         response.Data.Attributes.IsAdultOnly.Should().BeNull();
+        response.Data.Relationships.ShouldNotBeNull();
+        response.Data.Relationships.VideoStream.ShouldNotBeNull();
+        response.Data.Relationships.VideoStream.Data.ShouldNotBeNull();
         response.Data.Relationships.VideoStream.Data.Id.Should().Be(existingVideoStream.StringId);
         response.Data.Relationships.UltraHighDefinitionVideoStream.Should().BeNull();
+        response.Data.Relationships.AudioStreams.ShouldNotBeNull();
         response.Data.Relationships.AudioStreams.Data.Should().BeEmpty();
 
         response.Included.ShouldHaveCount(1);
@@ -165,16 +170,21 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
 
         // Act
         WriteOnlyChannelPrimaryResponseDocument? response =
-            await ApiResponse.TranslateAsync(async () => await apiClient.PatchWriteOnlyChannelAsync(existingChannel.StringId!, null, requestBody));
+            await ApiResponse.TranslateAsync(async () => await apiClient.PatchWriteOnlyChannelAsync(existingChannel.StringId!, requestBody));
 
         response.ShouldNotBeNull();
 
         response.Data.Id.Should().Be(existingChannel.StringId);
+        response.Data.Attributes.ShouldNotBeNull();
         response.Data.Attributes.Name.Should().Be(existingChannel.Name);
         response.Data.Attributes.IsCommercial.Should().Be(existingChannel.IsCommercial);
         response.Data.Attributes.IsAdultOnly.Should().Be(existingChannel.IsAdultOnly);
+        response.Data.Relationships.ShouldNotBeNull();
+        response.Data.Relationships.VideoStream.ShouldNotBeNull();
         response.Data.Relationships.VideoStream.Data.Should().BeNull();
+        response.Data.Relationships.UltraHighDefinitionVideoStream.ShouldNotBeNull();
         response.Data.Relationships.UltraHighDefinitionVideoStream.Data.Should().BeNull();
+        response.Data.Relationships.AudioStreams.ShouldNotBeNull();
         response.Data.Relationships.AudioStreams.Data.Should().BeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -224,7 +234,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         UpdateWriteOnlyChannelRequestDocument requestBody = null!;
 
         // Act
-        Func<Task> action = async () => _ = await apiClient.PatchWriteOnlyChannelAsync(existingChannel.StringId!, null, requestBody);
+        Func<Task> action = async () => _ = await apiClient.PatchWriteOnlyChannelAsync(existingChannel.StringId!, requestBody);
 
         // Assert
         await action.Should().ThrowExactlyAsync<ArgumentNullException>().WithParameterName("body");
@@ -277,7 +287,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         };
 
         // Act
-        Func<Task> action = async () => _ = await apiClient.PatchWriteOnlyChannelAsync(existingChannel.StringId!, null, requestBody);
+        Func<Task> action = async () => _ = await apiClient.PatchWriteOnlyChannelAsync(existingChannel.StringId!, requestBody);
 
         // Assert
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;

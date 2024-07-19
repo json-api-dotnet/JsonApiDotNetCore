@@ -20,7 +20,7 @@
     <InheritDocVersion>2.0.*</InheritDocVersion>
     <KiotaVersion>1.*</KiotaVersion>
     <MicrosoftApiClientVersion>8.0.*</MicrosoftApiClientVersion>
-    <NSwagApiClientVersion>13.20.*</NSwagApiClientVersion>
+    <NSwagApiClientVersion>14.1.*</NSwagApiClientVersion>
     <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
     <SourceLinkVersion>8.0.*</SourceLinkVersion>
     <SwashbuckleVersion>6.*-*</SwashbuckleVersion>

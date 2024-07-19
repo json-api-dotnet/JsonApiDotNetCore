@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Links;
@@ -15,7 +14,7 @@ internal sealed class ToManyRelationshipInResponse<TResource>
     [JsonPropertyName("links")]
     public RelationshipLinks Links { get; set; } = null!;
 
-    [Required]
+    // Non-required because related data may not be included in the response.
     [JsonPropertyName("data")]
     public ICollection<ResourceIdentifierInResponse<TResource>> Data { get; set; } = null!;
 

@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <Import Project="..\..\package-versions.props" />
+  <Import Project="..\..\src\JsonApiDotNetCore.OpenApi.Client.NSwag\Build\JsonApiDotNetCore.OpenApi.Client.NSwag.props" />
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\JsonApiDotNetCore.OpenApi.Client.NSwag\JsonApiDotNetCore.OpenApi.Client.NSwag.csproj" />
@@ -22,55 +23,53 @@
     <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="$(MicrosoftApiClientVersion)" PrivateAssets="All" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <NSwagClientClassAccessModifier>internal</NSwagClientClassAccessModifier>
+  </PropertyGroup>
+
   <ItemGroup>
     <OpenApiReference Include="..\OpenApiTests\ClientIdGenerationModes\GeneratedSwagger\swagger.g.json">
-      <Namespace>OpenApiNSwagEndToEndTests.ClientIdGenerationModes.GeneratedCode</Namespace>
-      <ClassName>ClientIdGenerationModesClient</ClassName>
-      <OutputPath>ClientIdGenerationModesClient.cs</OutputPath>
-      <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag /GenerateNullableReferenceTypes:true /GenerateOptionalPropertiesAsNullable:true /GenerateOptionalParameters:true</Options>
+      <Name>ClientIdGenerationModes</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
     </OpenApiReference>
     <OpenApiReference Include="..\OpenApiTests\ModelStateValidation\GeneratedSwagger\$(TargetFramework)\swagger.g.json">
-      <Namespace>OpenApiNSwagEndToEndTests.ModelStateValidation.GeneratedCode</Namespace>
-      <ClassName>ModelStateValidationClient</ClassName>
-      <OutputPath>ModelStateValidationClient.cs</OutputPath>
-      <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag /GenerateNullableReferenceTypes:true /GenerateOptionalPropertiesAsNullable:true /GenerateOptionalParameters:true</Options>
+      <Name>ModelStateValidation</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
     </OpenApiReference>
     <OpenApiReference Include="..\OpenApiTests\Headers\GeneratedSwagger\swagger.g.json">
-      <Namespace>OpenApiNSwagEndToEndTests.Headers.GeneratedCode</Namespace>
-      <ClassName>HeadersClient</ClassName>
-      <OutputPath>HeadersClient.cs</OutputPath>
-      <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /WrapResponses:true /GenerateResponseClasses:false /ResponseClass:ApiResponse /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag /GenerateNullableReferenceTypes:true</Options>
+      <Name>Headers</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+      <NSwagWrapResponses>true</NSwagWrapResponses>
     </OpenApiReference>
     <OpenApiReference Include="..\OpenApiTests\QueryStrings\GeneratedSwagger\swagger.g.json">
-      <Namespace>OpenApiNSwagEndToEndTests.QueryStrings.GeneratedCode</Namespace>
-      <ClassName>QueryStringsClient</ClassName>
-      <OutputPath>QueryStringsClient.cs</OutputPath>
-      <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag /GenerateNullableReferenceTypes:true</Options>
+      <Name>QueryStrings</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
     </OpenApiReference>
     <OpenApiReference Include="..\OpenApiTests\RestrictedControllers\GeneratedSwagger\swagger.g.json">
-      <Namespace>OpenApiNSwagEndToEndTests.RestrictedControllers.GeneratedCode</Namespace>
-      <ClassName>RestrictedControllersClient</ClassName>
-      <OutputPath>RestrictedControllersClient.cs</OutputPath>
-      <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag /GenerateNullableReferenceTypes:true</Options>
+      <Name>RestrictedControllers</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
     </OpenApiReference>
     <OpenApiReference Include="..\OpenApiTests\Links\Enabled\GeneratedSwagger\swagger.g.json">
-      <Namespace>OpenApiNSwagEndToEndTests.Links.GeneratedCode</Namespace>
-      <ClassName>LinksClient</ClassName>
-      <OutputPath>LinksClient.cs</OutputPath>
-      <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag /GenerateNullableReferenceTypes:true</Options>
+      <Name>Links</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
     </OpenApiReference>
     <OpenApiReference Include="..\OpenApiTests\AtomicOperations\GeneratedSwagger\swagger.g.json">
-      <Namespace>OpenApiNSwagEndToEndTests.AtomicOperations.GeneratedCode</Namespace>
-      <ClassName>AtomicOperationsClient</ClassName>
-      <OutputPath>AtomicOperationsClient.cs</OutputPath>
-      <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag /GenerateNullableReferenceTypes:true</Options>
+      <Name>AtomicOperations</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
     </OpenApiReference>
   </ItemGroup>
 </Project>

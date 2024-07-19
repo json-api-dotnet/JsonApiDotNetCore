@@ -81,6 +81,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         StudentDataInResponse studentDataInResponse = response.Atomic_results.ElementAt(0).Data.Should().BeOfType<StudentDataInResponse>().Which;
 
         studentDataInResponse.Id.Should().Be(existingStudent.StringId);
+        studentDataInResponse.Attributes.ShouldNotBeNull();
         studentDataInResponse.Attributes.Name.Should().Be(newName);
         studentDataInResponse.Attributes.EmailAddress.Should().Be(newEmailAddress);
 
@@ -141,6 +142,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         StudentDataInResponse studentDataInResponse = response.Atomic_results.ElementAt(0).Data.Should().BeOfType<StudentDataInResponse>().Which;
 
         studentDataInResponse.Id.Should().Be(existingStudent.StringId);
+        studentDataInResponse.Attributes.ShouldNotBeNull();
         studentDataInResponse.Attributes.Name.Should().Be(existingStudent.Name);
         studentDataInResponse.Attributes.EmailAddress.Should().Be(newEmailAddress);
 
@@ -219,6 +221,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         EnrollmentDataInResponse enrollmentDataInResponse = response.Atomic_results.ElementAt(0).Data.Should().BeOfType<EnrollmentDataInResponse>().Which;
 
         enrollmentDataInResponse.Id.Should().Be(existingEnrollment.StringId);
+        enrollmentDataInResponse.Attributes.ShouldNotBeNull();
         enrollmentDataInResponse.Attributes.EnrolledAt.Should().Be(newEnrolledAt.ToDateTime(TimeOnly.MinValue));
         enrollmentDataInResponse.Attributes.GraduatedAt.Should().Be(existingEnrollment.GraduatedAt!.Value.ToDateTime(TimeOnly.MinValue));
         enrollmentDataInResponse.Attributes.HasGraduated.Should().Be(existingEnrollment.HasGraduated);

@@ -84,15 +84,20 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
 
         // Act
         WriteOnlyChannelPrimaryResponseDocument? response =
-            await ApiResponse.TranslateAsync(async () => await apiClient.PostWriteOnlyChannelAsync(queryString, requestBody));
+            await ApiResponse.TranslateAsync(async () => await apiClient.PostWriteOnlyChannelAsync(requestBody, queryString));
 
         response.ShouldNotBeNull();
 
+        response.Data.Attributes.ShouldNotBeNull();
         response.Data.Attributes.Name.Should().Be(newChannel.Name);
         response.Data.Attributes.IsCommercial.Should().BeNull();
         response.Data.Attributes.IsAdultOnly.Should().BeNull();
+        response.Data.Relationships.ShouldNotBeNull();
+        response.Data.Relationships.VideoStream.ShouldNotBeNull();
+        response.Data.Relationships.VideoStream.Data.ShouldNotBeNull();
         response.Data.Relationships.VideoStream.Data.Id.Should().Be(existingVideoStream.StringId);
         response.Data.Relationships.UltraHighDefinitionVideoStream.Should().BeNull();
+        response.Data.Relationships.AudioStreams.ShouldNotBeNull();
         response.Data.Relationships.AudioStreams.Data.ShouldHaveCount(1);
         response.Data.Relationships.AudioStreams.Data.ElementAt(0).Id.Should().Be(existingAudioStream.StringId);
 
@@ -100,9 +105,11 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
         DataStreamDataInResponse[] dataStreamIncludes = response.Included.OfType<DataStreamDataInResponse>().ToArray();
 
         DataStreamDataInResponse videoStream = dataStreamIncludes.Single(include => include.Id == existingVideoStream.StringId);
+        videoStream.Attributes.ShouldNotBeNull();
         videoStream.Attributes.BytesTransmitted.Should().Be((long?)existingVideoStream.BytesTransmitted);
 
         DataStreamDataInResponse audioStream = dataStreamIncludes.Single(include => include.Id == existingAudioStream.StringId);
+        audioStream.Attributes.ShouldNotBeNull();
         audioStream.Attributes.BytesTransmitted.Should().Be((long?)existingAudioStream.BytesTransmitted);
 
         long newChannelId = int.Parse(response.Data.Id.ShouldNotBeNull());
@@ -142,7 +149,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
         CreateWriteOnlyChannelRequestDocument requestBody = null!;
 
         // Act
-        Func<Task> action = async () => _ = await apiClient.PostWriteOnlyChannelAsync(null, requestBody);
+        Func<Task> action = async () => _ = await apiClient.PostWriteOnlyChannelAsync(requestBody);
 
         // Assert
         await action.Should().ThrowExactlyAsync<ArgumentNullException>().WithParameterName("body");
@@ -181,7 +188,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
         };
 
         // Act
-        Func<Task> action = async () => _ = await apiClient.PostWriteOnlyChannelAsync(null, requestBody);
+        Func<Task> action = async () => _ = await apiClient.PostWriteOnlyChannelAsync(requestBody);
 
         // Assert
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
