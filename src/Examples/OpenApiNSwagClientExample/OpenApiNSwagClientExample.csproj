@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <OpenApiReference Include="..\JsonApiDotNetCoreExample\GeneratedSwagger\JsonApiDotNetCoreExample.json">
+    <OpenApiReference Include="..\JsonApiDotNetCoreExample\GeneratedSwagger\JsonApiDotNetCoreExample2.json">
       <Name>ExampleApi</Name>
       <Namespace>$(MSBuildProjectName)</Namespace>
       <ClassName>%(Name)Client</ClassName>

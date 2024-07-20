@@ -1,0 +1,5112 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenApiTests",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost"
+    }
+  ],
+  "paths": {
+    "/buildings": {
+      "get": {
+        "tags": [
+          "buildings"
+        ],
+        "summary": "Retrieves a collection of buildings.",
+        "operationId": "getBuildingCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found buildings, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/buildingCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "buildings"
+        ],
+        "summary": "Retrieves a collection of buildings without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headBuildingCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "buildings"
+        ],
+        "summary": "Creates a new building.",
+        "operationId": "postBuilding",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the building to create.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/createBuildingRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The building was successfully created, which resulted in additional changes. The newly created building is returned.",
+            "headers": {
+              "Location": {
+                "description": "The URL at which the newly created building can be retrieved.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/buildingPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The building was successfully created, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/buildings/{id}": {
+      "get": {
+        "tags": [
+          "buildings"
+        ],
+        "summary": "Retrieves an individual building by its identifier.",
+        "operationId": "getBuilding",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the building to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found building.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/buildingPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The building does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "buildings"
+        ],
+        "summary": "Retrieves an individual building by its identifier without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headBuilding",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the building to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The building does not exist."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "buildings"
+        ],
+        "summary": "Updates an existing building.",
+        "operationId": "patchBuilding",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the building to update.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the building to update. Omitted fields are left unchanged.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateBuildingRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The building was successfully updated, which resulted in additional changes. The updated building is returned.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/buildingPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The building was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The building or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "buildings"
+        ],
+        "summary": "Deletes an existing building by its identifier.",
+        "operationId": "deleteBuilding",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the building to delete.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The building was successfully deleted."
+          },
+          "404": {
+            "description": "The building does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/districts": {
+      "get": {
+        "tags": [
+          "districts"
+        ],
+        "summary": "Retrieves a collection of districts.",
+        "operationId": "getDistrictCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found districts, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/districtCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "districts"
+        ],
+        "summary": "Retrieves a collection of districts without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headDistrictCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "districts"
+        ],
+        "summary": "Creates a new district.",
+        "operationId": "postDistrict",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the district to create.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/createDistrictRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The district was successfully created, which resulted in additional changes. The newly created district is returned.",
+            "headers": {
+              "Location": {
+                "description": "The URL at which the newly created district can be retrieved.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/districtPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The district was successfully created, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/districts/{id}": {
+      "get": {
+        "tags": [
+          "districts"
+        ],
+        "summary": "Retrieves an individual district by its identifier.",
+        "operationId": "getDistrict",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the district to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found district.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/districtPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The district does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "districts"
+        ],
+        "summary": "Retrieves an individual district by its identifier without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headDistrict",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the district to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The district does not exist."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "districts"
+        ],
+        "summary": "Updates an existing district.",
+        "operationId": "patchDistrict",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the district to update.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the district to update. Omitted fields are left unchanged.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateDistrictRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The district was successfully updated, which resulted in additional changes. The updated district is returned.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/districtPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The district was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The district or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "districts"
+        ],
+        "summary": "Deletes an existing district by its identifier.",
+        "operationId": "deleteDistrict",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the district to delete.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The district was successfully deleted."
+          },
+          "404": {
+            "description": "The district does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/districts/{id}/buildings": {
+      "get": {
+        "tags": [
+          "districts"
+        ],
+        "summary": "Retrieves the related buildings of an individual district's buildings relationship.",
+        "operationId": "getDistrictBuildings",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the district whose related buildings to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found buildings, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/buildingCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The district does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "districts"
+        ],
+        "summary": "Retrieves the related buildings of an individual district's buildings relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headDistrictBuildings",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the district whose related buildings to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The district does not exist."
+          }
+        }
+      }
+    },
+    "/districts/{id}/relationships/buildings": {
+      "get": {
+        "tags": [
+          "districts"
+        ],
+        "summary": "Retrieves the related building identities of an individual district's buildings relationship.",
+        "operationId": "getDistrictBuildingsRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the district whose related building identities to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found building identities, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/buildingIdentifierCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The district does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "districts"
+        ],
+        "summary": "Retrieves the related building identities of an individual district's buildings relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headDistrictBuildingsRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the district whose related building identities to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The district does not exist."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "districts"
+        ],
+        "summary": "Adds existing buildings to the buildings relationship of an individual district.",
+        "operationId": "postDistrictBuildingsRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the district to add buildings to.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identities of the buildings to add to the buildings relationship.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyBuildingInRequest"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "The buildings were successfully added, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The district or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "districts"
+        ],
+        "summary": "Assigns existing buildings to the buildings relationship of an individual district.",
+        "operationId": "patchDistrictBuildingsRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the district whose buildings relationship to assign.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identities of the buildings to assign to the buildings relationship, or an empty array to clear the relationship.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyBuildingInRequest"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "The buildings relationship was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The district or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "districts"
+        ],
+        "summary": "Removes existing buildings from the buildings relationship of an individual district.",
+        "operationId": "deleteDistrictBuildingsRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the district to remove buildings from.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identities of the buildings to remove from the buildings relationship.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyBuildingInRequest"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "The buildings were successfully removed, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The district or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/familyHomes": {
+      "get": {
+        "tags": [
+          "familyHomes"
+        ],
+        "summary": "Retrieves a collection of familyHomes.",
+        "operationId": "getFamilyHomeCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found familyHomes, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/familyHomeCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "familyHomes"
+        ],
+        "summary": "Retrieves a collection of familyHomes without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headFamilyHomeCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "familyHomes"
+        ],
+        "summary": "Creates a new familyHome.",
+        "operationId": "postFamilyHome",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the familyHome to create.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/createFamilyHomeRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The familyHome was successfully created, which resulted in additional changes. The newly created familyHome is returned.",
+            "headers": {
+              "Location": {
+                "description": "The URL at which the newly created familyHome can be retrieved.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/familyHomePrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The familyHome was successfully created, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/familyHomes/{id}": {
+      "get": {
+        "tags": [
+          "familyHomes"
+        ],
+        "summary": "Retrieves an individual familyHome by its identifier.",
+        "operationId": "getFamilyHome",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the familyHome to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found familyHome.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/familyHomePrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The familyHome does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "familyHomes"
+        ],
+        "summary": "Retrieves an individual familyHome by its identifier without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headFamilyHome",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the familyHome to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The familyHome does not exist."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "familyHomes"
+        ],
+        "summary": "Updates an existing familyHome.",
+        "operationId": "patchFamilyHome",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the familyHome to update.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the familyHome to update. Omitted fields are left unchanged.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateFamilyHomeRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The familyHome was successfully updated, which resulted in additional changes. The updated familyHome is returned.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/familyHomePrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The familyHome was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The familyHome or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "familyHomes"
+        ],
+        "summary": "Deletes an existing familyHome by its identifier.",
+        "operationId": "deleteFamilyHome",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the familyHome to delete.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The familyHome was successfully deleted."
+          },
+          "404": {
+            "description": "The familyHome does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mansions": {
+      "get": {
+        "tags": [
+          "mansions"
+        ],
+        "summary": "Retrieves a collection of mansions.",
+        "operationId": "getMansionCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found mansions, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/mansionCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "mansions"
+        ],
+        "summary": "Retrieves a collection of mansions without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headMansionCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "mansions"
+        ],
+        "summary": "Creates a new mansion.",
+        "operationId": "postMansion",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the mansion to create.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/createMansionRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The mansion was successfully created, which resulted in additional changes. The newly created mansion is returned.",
+            "headers": {
+              "Location": {
+                "description": "The URL at which the newly created mansion can be retrieved.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/mansionPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The mansion was successfully created, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mansions/{id}": {
+      "get": {
+        "tags": [
+          "mansions"
+        ],
+        "summary": "Retrieves an individual mansion by its identifier.",
+        "operationId": "getMansion",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the mansion to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found mansion.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/mansionPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The mansion does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "mansions"
+        ],
+        "summary": "Retrieves an individual mansion by its identifier without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headMansion",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the mansion to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The mansion does not exist."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "mansions"
+        ],
+        "summary": "Updates an existing mansion.",
+        "operationId": "patchMansion",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the mansion to update.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the mansion to update. Omitted fields are left unchanged.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateMansionRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The mansion was successfully updated, which resulted in additional changes. The updated mansion is returned.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/mansionPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The mansion was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The mansion or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "mansions"
+        ],
+        "summary": "Deletes an existing mansion by its identifier.",
+        "operationId": "deleteMansion",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the mansion to delete.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The mansion was successfully deleted."
+          },
+          "404": {
+            "description": "The mansion does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/residences": {
+      "get": {
+        "tags": [
+          "residences"
+        ],
+        "summary": "Retrieves a collection of residences.",
+        "operationId": "getResidenceCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found residences, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/residenceCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "residences"
+        ],
+        "summary": "Retrieves a collection of residences without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headResidenceCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "residences"
+        ],
+        "summary": "Creates a new residence.",
+        "operationId": "postResidence",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the residence to create.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/createResidenceRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The residence was successfully created, which resulted in additional changes. The newly created residence is returned.",
+            "headers": {
+              "Location": {
+                "description": "The URL at which the newly created residence can be retrieved.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/residencePrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The residence was successfully created, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/residences/{id}": {
+      "get": {
+        "tags": [
+          "residences"
+        ],
+        "summary": "Retrieves an individual residence by its identifier.",
+        "operationId": "getResidence",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the residence to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found residence.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/residencePrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The residence does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "residences"
+        ],
+        "summary": "Retrieves an individual residence by its identifier without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headResidence",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the residence to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The residence does not exist."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "residences"
+        ],
+        "summary": "Updates an existing residence.",
+        "operationId": "patchResidence",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the residence to update.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the residence to update. Omitted fields are left unchanged.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateResidenceRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The residence was successfully updated, which resulted in additional changes. The updated residence is returned.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/residencePrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The residence was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The residence or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "residences"
+        ],
+        "summary": "Deletes an existing residence by its identifier.",
+        "operationId": "deleteResidence",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the residence to delete.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The residence was successfully deleted."
+          },
+          "404": {
+            "description": "The residence does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "attributesInCreateBuildingRequest": {
+        "required": [
+          "surfaceInSquareMeters"
+        ],
+        "type": "object",
+        "properties": {
+          "surfaceInSquareMeters": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "attributesInCreateDistrictRequest": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "attributesInCreateFamilyHomeRequest": {
+        "required": [
+          "numberOfResidents",
+          "surfaceInSquareMeters"
+        ],
+        "type": "object",
+        "properties": {
+          "surfaceInSquareMeters": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfResidents": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "floorCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "attributesInCreateMansionRequest": {
+        "required": [
+          "numberOfResidents",
+          "ownerName",
+          "surfaceInSquareMeters"
+        ],
+        "type": "object",
+        "properties": {
+          "surfaceInSquareMeters": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfResidents": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ownerName": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "attributesInCreateResidenceRequest": {
+        "required": [
+          "numberOfResidents",
+          "surfaceInSquareMeters"
+        ],
+        "type": "object",
+        "properties": {
+          "surfaceInSquareMeters": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfResidents": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "attributesInUpdateBuildingRequest": {
+        "type": "object",
+        "properties": {
+          "surfaceInSquareMeters": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "attributesInUpdateDistrictRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "attributesInUpdateFamilyHomeRequest": {
+        "type": "object",
+        "properties": {
+          "surfaceInSquareMeters": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfResidents": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "floorCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "attributesInUpdateMansionRequest": {
+        "type": "object",
+        "properties": {
+          "surfaceInSquareMeters": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfResidents": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ownerName": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "attributesInUpdateResidenceRequest": {
+        "type": "object",
+        "properties": {
+          "surfaceInSquareMeters": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfResidents": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "buildingAttributesInResponse": {
+        "type": "object",
+        "properties": {
+          "surfaceInSquareMeters": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "buildingCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/buildingDataInResponse"
+            }
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "buildingDataInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/buildingAttributesInResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              },
+              "meta": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/meta"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "buildingIdentifierCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceIdentifierCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/buildingIdentifierInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "buildingIdentifierInRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/buildingResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "buildingIdentifierInResponse": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/buildingResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "buildingPrimaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/buildingDataInResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "buildingResourceType": {
+        "enum": [
+          "residences",
+          "familyHomes",
+          "mansions"
+        ],
+        "type": "string",
+        "additionalProperties": false
+      },
+      "createBuildingRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreateBuildingRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "createDistrictRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreateDistrictRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "createFamilyHomeRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreateFamilyHomeRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "createMansionRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreateMansionRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "createResidenceRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreateResidenceRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInCreateBuildingRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/buildingResourceType"
+              }
+            ]
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInCreateBuildingRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInCreateDistrictRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/districtResourceType"
+              }
+            ]
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInCreateDistrictRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipsInCreateDistrictRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInCreateFamilyHomeRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/familyHomeResourceType"
+              }
+            ]
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInCreateFamilyHomeRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInCreateMansionRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/mansionResourceType"
+              }
+            ]
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInCreateMansionRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInCreateResidenceRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/residenceResourceType"
+              }
+            ]
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInCreateResidenceRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInResponse": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "buildings": "#/components/schemas/buildingDataInResponse",
+            "districts": "#/components/schemas/districtDataInResponse",
+            "familyHomes": "#/components/schemas/familyHomeDataInResponse",
+            "mansions": "#/components/schemas/mansionDataInResponse",
+            "residences": "#/components/schemas/residenceDataInResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "dataInUpdateBuildingRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/buildingResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int64"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInUpdateBuildingRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInUpdateDistrictRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/districtResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "uuid"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInUpdateDistrictRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipsInUpdateDistrictRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInUpdateFamilyHomeRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/familyHomeResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int64"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInUpdateFamilyHomeRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInUpdateMansionRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/mansionResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int64"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInUpdateMansionRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInUpdateResidenceRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/residenceResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int64"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInUpdateResidenceRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "districtAttributesInResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "districtCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/districtDataInResponse"
+            }
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "districtDataInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "uuid"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/districtAttributesInResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/districtRelationshipsInResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              },
+              "meta": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/meta"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "districtPrimaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/districtDataInResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "districtRelationshipsInResponse": {
+        "type": "object",
+        "properties": {
+          "buildings": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyBuildingInResponse"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "districtResourceType": {
+        "enum": [
+          "districts"
+        ],
+        "type": "string",
+        "additionalProperties": false
+      },
+      "errorLinks": {
+        "type": "object",
+        "properties": {
+          "about": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/errorLinks"
+              }
+            ],
+            "nullable": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "source": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/errorSource"
+              }
+            ],
+            "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorResponseDocument": {
+        "required": [
+          "errors",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/errorTopLevelLinks"
+              }
+            ]
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/errorObject"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorSource": {
+        "type": "object",
+        "properties": {
+          "pointer": {
+            "type": "string",
+            "nullable": true
+          },
+          "parameter": {
+            "type": "string",
+            "nullable": true
+          },
+          "header": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "familyHomeAttributesInResponse": {
+        "type": "object",
+        "properties": {
+          "surfaceInSquareMeters": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfResidents": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "floorCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "familyHomeCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/familyHomeDataInResponse"
+            }
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "familyHomeDataInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/familyHomeAttributesInResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              },
+              "meta": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/meta"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "familyHomePrimaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/familyHomeDataInResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "familyHomeResourceType": {
+        "enum": [
+          "familyHomes"
+        ],
+        "type": "string",
+        "additionalProperties": false
+      },
+      "mansionAttributesInResponse": {
+        "type": "object",
+        "properties": {
+          "surfaceInSquareMeters": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfResidents": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ownerName": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "mansionCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/mansionDataInResponse"
+            }
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "mansionDataInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/mansionAttributesInResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              },
+              "meta": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/meta"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "mansionPrimaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/mansionDataInResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "mansionResourceType": {
+        "enum": [
+          "mansions"
+        ],
+        "type": "string",
+        "additionalProperties": false
+      },
+      "meta": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        }
+      },
+      "relationshipLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "related": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "relationshipsInCreateDistrictRequest": {
+        "type": "object",
+        "properties": {
+          "buildings": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyBuildingInRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "relationshipsInUpdateDistrictRequest": {
+        "type": "object",
+        "properties": {
+          "buildings": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyBuildingInRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "residenceAttributesInResponse": {
+        "type": "object",
+        "properties": {
+          "surfaceInSquareMeters": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfResidents": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "residenceCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/residenceDataInResponse"
+            }
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "residenceDataInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/residenceAttributesInResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              },
+              "meta": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/meta"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "residencePrimaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/residenceDataInResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "residenceResourceType": {
+        "enum": [
+          "residences",
+          "familyHomes",
+          "mansions"
+        ],
+        "type": "string",
+        "additionalProperties": false
+      },
+      "resourceCollectionTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "first": {
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          },
+          "prev": {
+            "type": "string"
+          },
+          "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceIdentifierCollectionTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "related": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "first": {
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          },
+          "prev": {
+            "type": "string"
+          },
+          "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "toManyBuildingInRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/buildingIdentifierInRequest"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "toManyBuildingInResponse": {
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/buildingIdentifierInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "updateBuildingRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInUpdateBuildingRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "updateDistrictRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInUpdateDistrictRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "updateFamilyHomeRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInUpdateFamilyHomeRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "updateMansionRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInUpdateMansionRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "updateResidenceRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInUpdateResidenceRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
