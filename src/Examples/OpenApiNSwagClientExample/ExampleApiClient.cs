@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 namespace OpenApiNSwagClientExample;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Itself)]
-public partial class ExampleApiClient : JsonApiClient
+public partial class ExampleApiClient : NewJsonApiClient
 {
     partial void Initialize()
     {

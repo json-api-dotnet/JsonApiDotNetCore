@@ -8,5 +8,7 @@
     <NSwagGenerateNullableReferenceTypes>true</NSwagGenerateNullableReferenceTypes>
     <NSwagGenerateOptionalPropertiesAsNullable>true</NSwagGenerateOptionalPropertiesAsNullable>
     <NSwagGenerateOptionalParameters>true</NSwagGenerateOptionalParameters>
+    <NSwagTemplateDirectory>$(MSBuildThisFileDirectory)../Templates</NSwagTemplateDirectory>
+    <NSwagClassStyle>INPC</NSwagClassStyle>
   </PropertyGroup>
 </Project>

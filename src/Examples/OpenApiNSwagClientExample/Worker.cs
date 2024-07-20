@@ -11,26 +11,26 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
     {
         try
         {
-            var queryString = new Dictionary<string, string?>
-            {
-                ["filter"] = "has(assignedTodoItems)",
-                ["sort"] = "-lastName",
-                ["page[size]"] = "5",
-                ["include"] = "assignedTodoItems.tags"
-            };
+            //var queryString = new Dictionary<string, string?>
+            //{
+            //    ["filter"] = "has(assignedTodoItems)",
+            //    ["sort"] = "-lastName",
+            //    ["page[size]"] = "5",
+            //    ["include"] = "assignedTodoItems.tags"
+            //};
 
-            ApiResponse<PersonCollectionResponseDocument?> getResponse = await GetPeopleAsync(_apiClient, queryString, null, stoppingToken);
-            PeopleMessageFormatter.PrintPeople(getResponse);
+            //ApiResponse<PersonCollectionResponseDocument?> getResponse = await GetPeopleAsync(_apiClient, queryString, null, stoppingToken);
+            //PeopleMessageFormatter.PrintPeople(getResponse);
 
-            string eTag = getResponse.Headers["ETag"].Single();
-            ApiResponse<PersonCollectionResponseDocument?> getResponseAgain = await GetPeopleAsync(_apiClient, queryString, eTag, stoppingToken);
-            PeopleMessageFormatter.PrintPeople(getResponseAgain);
+            //string eTag = getResponse.Headers["ETag"].Single();
+            //ApiResponse<PersonCollectionResponseDocument?> getResponseAgain = await GetPeopleAsync(_apiClient, queryString, eTag, stoppingToken);
+            //PeopleMessageFormatter.PrintPeople(getResponseAgain);
 
             await UpdatePersonAsync(stoppingToken);
 
             await SendOperationsRequestAsync(stoppingToken);
 
-            _ = await _apiClient.GetPersonAsync("999999", null, null, stoppingToken);
+            //_ = await _apiClient.GetPersonAsync("999999", null, null, stoppingToken);
         }
         catch (ApiException<ErrorResponseDocument> exception)
         {
@@ -57,20 +57,22 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
             Data = new DataInUpdatePersonRequest
             {
                 Id = "1",
-                Attributes = new AttributesInUpdatePersonRequest
+                // This line results in sending "firstName: null" instead of omitting it.
+                Attributes = new TrackChangesFor<AttributesInUpdatePersonRequest>(_apiClient)
                 {
-                    LastName = "Doe"
-                }
+                    Initializer =
+                    {
+                        FirstName = null,
+                        LastName = "Knight Rider"
+                    }
+                }.Initializer
             }
         };
 
-        // This line results in sending "firstName: null" instead of omitting it.
-        using (_apiClient.WithPartialAttributeSerialization<UpdatePersonRequestDocument, AttributesInUpdatePersonRequest>(updatePersonRequest,
-            person => person.FirstName))
-        {
-            _ = await ApiResponse.TranslateAsync(async () =>
-                await _apiClient.PatchPersonAsync(updatePersonRequest.Data.Id, updatePersonRequest, cancellationToken: cancellationToken));
-        }
+        _ = await ApiResponse.TranslateAsync(async () =>
+            await _apiClient.PatchPersonAsync(updatePersonRequest.Data.Id, updatePersonRequest, cancellationToken: cancellationToken));
+
+        _apiClient.Reset();
     }
 
     private async Task SendOperationsRequestAsync(CancellationToken cancellationToken)
@@ -95,10 +97,15 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
                     Data = new DataInCreatePersonRequest
                     {
                         Lid = "new-person",
-                        Attributes = new AttributesInCreatePersonRequest
+                        // This line results in sending "firstName: null" instead of omitting it.
+                        Attributes = new TrackChangesFor<AttributesInCreatePersonRequest>(_apiClient)
                         {
-                            LastName = "Cinderella"
-                        }
+                            Initializer =
+                            {
+                                FirstName = null,
+                                LastName = "Cinderella"
+                            }
+                        }.Initializer
                     }
                 },
                 new CreateTodoItemOperation
@@ -151,5 +158,7 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
 
         var newTodoItem = (TodoItemDataInResponse)operationsResponse.Result.Atomic_results.ElementAt(2).Data!;
         Console.WriteLine($"Created todo-item with ID {newTodoItem.Id}: {newTodoItem.Attributes!.Description}.");
+
+        _apiClient.Reset();
     }
 }
