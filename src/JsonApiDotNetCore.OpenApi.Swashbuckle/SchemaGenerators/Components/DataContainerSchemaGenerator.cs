@@ -37,6 +37,11 @@ internal sealed class DataContainerSchemaGenerator
         ArgumentGuard.NotNull(resourceType);
         ArgumentGuard.NotNull(schemaRepository);
 
+        if (schemaRepository.TryLookupByType(dataContainerConstructedType, out OpenApiSchema referenceSchemaForData))
+        {
+            return referenceSchemaForData;
+        }
+
         if (!forRequestSchema)
         {
             // There's no way to intercept in the Swashbuckle recursive component schema generation when using schema inheritance, which we need
@@ -54,14 +59,29 @@ internal sealed class DataContainerSchemaGenerator
             EnsureResourceDataInResponseDerivedTypesAreMappedInDiscriminator(dataConstructedType, schemaRepository);
         }
 
-        OpenApiSchema referenceSchemaForData = _dataSchemaGenerator.GenerateSchema(dataConstructedType, schemaRepository);
+        referenceSchemaForData = _dataSchemaGenerator.GenerateSchema(dataConstructedType, schemaRepository);
 
         if (!forRequestSchema)
         {
+            // TODO: Move into DataSchemaGenerator?
+            if (resourceType.BaseType != null)
+            {
+                SetBaseSchemaType(dataConstructedType, referenceSchemaForData.Reference.Id, resourceType.BaseType, schemaRepository);
+            }
+
             _abstractResourceDataSchemaGenerator.MapDiscriminator(dataConstructedType, referenceSchemaForData, schemaRepository);
         }
 
         return referenceSchemaForData;
+    }
+
+    private void SetBaseSchemaType(Type dataConstructedType, string dataSchemaId, ResourceType baseResourceType, SchemaRepository schemaRepository)
+    {
+        OpenApiSchema fullSchemaForData = schemaRepository.Schemas[dataSchemaId];
+        Type baseDataConstructedType = dataConstructedType.GetGenericTypeDefinition().MakeGenericType(baseResourceType.ClrType);
+        OpenApiSchema referenceSchemaForBaseData = _dataSchemaGenerator.GenerateSchema(baseDataConstructedType, schemaRepository);
+
+        fullSchemaForData.AllOf[0] = referenceSchemaForBaseData;
     }
 
     private static Type GetInnerTypeOfDataProperty(Type dataContainerConstructedType, ResourceType resourceType)

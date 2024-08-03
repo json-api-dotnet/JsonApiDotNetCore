@@ -4507,7 +4507,7 @@
       "familyHomeDataInResponse": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/dataInResponse"
+            "$ref": "#/components/schemas/residenceDataInResponse"
           },
           {
             "required": [
@@ -4647,7 +4647,7 @@
       "mansionDataInResponse": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/dataInResponse"
+            "$ref": "#/components/schemas/residenceDataInResponse"
           },
           {
             "required": [
@@ -4828,7 +4828,7 @@
       "residenceDataInResponse": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/dataInResponse"
+            "$ref": "#/components/schemas/buildingDataInResponse"
           },
           {
             "required": [

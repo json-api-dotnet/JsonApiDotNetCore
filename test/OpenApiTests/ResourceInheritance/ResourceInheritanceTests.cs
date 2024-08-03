@@ -21,7 +21,7 @@ public sealed class ResourceInheritanceTests : IClassFixture<OpenApiTestContext<
     }
 
     [Fact]
-    public async Task Endpoints_do_not_have_query_string_parameter()
+    public async Task Test1()
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
