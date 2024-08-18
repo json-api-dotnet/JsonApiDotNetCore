@@ -23,9 +23,9 @@ public sealed class AtomicRollbackTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_rollback_on_error()
     {
         // Arrange
-        string newArtistName = _fakers.Performer.Generate().ArtistName!;
-        DateTimeOffset newBornAt = _fakers.Performer.Generate().BornAt;
-        string newTitle = _fakers.MusicTrack.Generate().Title;
+        string newArtistName = _fakers.Performer.GenerateOne().ArtistName!;
+        DateTimeOffset newBornAt = _fakers.Performer.GenerateOne().BornAt;
+        string newTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -111,7 +111,7 @@ public sealed class AtomicRollbackTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_restore_to_previous_savepoint_on_error()
     {
         // Arrange
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

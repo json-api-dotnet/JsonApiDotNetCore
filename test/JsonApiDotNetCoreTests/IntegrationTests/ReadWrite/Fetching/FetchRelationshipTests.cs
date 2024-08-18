@@ -22,8 +22,8 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
     [Fact]
     public async Task Can_get_ManyToOne_relationship()
     {
-        WorkItem workItem = _fakers.WorkItem.Generate();
-        workItem.Assignee = _fakers.UserAccount.Generate();
+        WorkItem workItem = _fakers.WorkItem.GenerateOne();
+        workItem.Assignee = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -49,7 +49,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
     [Fact]
     public async Task Can_get_empty_ManyToOne_relationship()
     {
-        WorkItem workItem = _fakers.WorkItem.Generate();
+        WorkItem workItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -72,8 +72,8 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
     public async Task Can_get_OneToMany_relationship()
     {
         // Arrange
-        UserAccount userAccount = _fakers.UserAccount.Generate();
-        userAccount.AssignedItems = _fakers.WorkItem.Generate(2).ToHashSet();
+        UserAccount userAccount = _fakers.UserAccount.GenerateOne();
+        userAccount.AssignedItems = _fakers.WorkItem.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -106,7 +106,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
     public async Task Can_get_empty_OneToMany_relationship()
     {
         // Arrange
-        UserAccount userAccount = _fakers.UserAccount.Generate();
+        UserAccount userAccount = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -129,8 +129,8 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
     public async Task Can_get_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem workItem = _fakers.WorkItem.Generate();
-        workItem.Tags = _fakers.WorkTag.Generate(2).ToHashSet();
+        WorkItem workItem = _fakers.WorkItem.GenerateOne();
+        workItem.Tags = _fakers.WorkTag.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -163,7 +163,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
     public async Task Can_get_empty_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem workItem = _fakers.WorkItem.Generate();
+        WorkItem workItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -220,7 +220,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
     [Fact]
     public async Task Cannot_get_relationship_for_unknown_relationship_type()
     {
-        WorkItem workItem = _fakers.WorkItem.Generate();
+        WorkItem workItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

@@ -25,8 +25,8 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_add_to_ManyToOne_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        UserAccount existingUserAccount = _fakers.UserAccount.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -65,10 +65,10 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     public async Task Can_add_to_OneToMany_relationship_with_already_assigned_resources()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Subscribers = _fakers.UserAccount.Generate(2).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Subscribers = _fakers.UserAccount.GenerateSet(2);
 
-        UserAccount existingSubscriber = _fakers.UserAccount.Generate();
+        UserAccount existingSubscriber = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -118,9 +118,9 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     public async Task Can_add_to_ManyToMany_relationship_with_already_assigned_resources()
     {
         // Arrange
-        List<WorkItem> existingWorkItems = _fakers.WorkItem.Generate(2);
-        existingWorkItems[0].Tags = _fakers.WorkTag.Generate(1).ToHashSet();
-        existingWorkItems[1].Tags = _fakers.WorkTag.Generate(1).ToHashSet();
+        List<WorkItem> existingWorkItems = _fakers.WorkItem.GenerateList(2);
+        existingWorkItems[0].Tags = _fakers.WorkTag.GenerateSet(1);
+        existingWorkItems[1].Tags = _fakers.WorkTag.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -179,7 +179,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_add_for_missing_request_body()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -214,7 +214,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_add_for_null_request_body()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -246,7 +246,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_add_for_missing_type()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -288,7 +288,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_add_for_unknown_type()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -331,7 +331,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_add_for_missing_ID()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -373,7 +373,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_add_unknown_IDs_to_OneToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -428,7 +428,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_add_unknown_IDs_to_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -483,8 +483,8 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_add_to_unknown_resource_type_in_url()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        UserAccount existingSubscriber = _fakers.UserAccount.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        UserAccount existingSubscriber = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -519,7 +519,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_add_to_unknown_resource_ID_in_url()
     {
         // Arrange
-        UserAccount existingSubscriber = _fakers.UserAccount.Generate();
+        UserAccount existingSubscriber = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -563,7 +563,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_add_to_unknown_relationship_in_url()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -605,8 +605,8 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_add_for_relationship_mismatch_between_url_and_body()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        UserAccount existingSubscriber = _fakers.UserAccount.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        UserAccount existingSubscriber = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -649,8 +649,8 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     public async Task Can_add_with_duplicates()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        UserAccount existingSubscriber = _fakers.UserAccount.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        UserAccount existingSubscriber = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -698,7 +698,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     public async Task Can_add_with_empty_list()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -733,7 +733,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_add_with_missing_data_in_OneToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -767,7 +767,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_add_with_null_data_in_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -803,7 +803,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_add_with_object_data_in_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -841,8 +841,8 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     public async Task Can_add_self_to_cyclic_OneToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Children = _fakers.WorkItem.Generate(1);
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Children = _fakers.WorkItem.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -886,8 +886,8 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     public async Task Can_add_self_to_cyclic_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.RelatedTo = _fakers.WorkItem.Generate(1);
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.RelatedTo = _fakers.WorkItem.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -943,7 +943,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_add_with_blocked_capability()
     {
         // Arrange
-        WorkItemGroup existingWorkItemGroup = _fakers.WorkItemGroup.Generate();
+        WorkItemGroup existingWorkItemGroup = _fakers.WorkItemGroup.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

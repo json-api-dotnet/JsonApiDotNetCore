@@ -31,8 +31,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_include_in_primary_resources()
     {
         // Arrange
-        BlogPost post = _fakers.BlogPost.Generate();
-        post.Author = _fakers.WebAccount.Generate();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
+        post.Author = _fakers.WebAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -63,8 +63,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_include_in_primary_resource_by_ID()
     {
         // Arrange
-        BlogPost post = _fakers.BlogPost.Generate();
-        post.Author = _fakers.WebAccount.Generate();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
+        post.Author = _fakers.WebAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -94,9 +94,9 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_include_in_secondary_resource()
     {
         // Arrange
-        Blog blog = _fakers.Blog.Generate();
-        blog.Owner = _fakers.WebAccount.Generate();
-        blog.Owner.Posts = _fakers.BlogPost.Generate(1);
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Owner = _fakers.WebAccount.GenerateOne();
+        blog.Owner.Posts = _fakers.BlogPost.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -126,9 +126,9 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_include_in_secondary_resources()
     {
         // Arrange
-        Blog blog = _fakers.Blog.Generate();
-        blog.Posts = _fakers.BlogPost.Generate(1);
-        blog.Posts[0].Author = _fakers.WebAccount.Generate();
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Posts = _fakers.BlogPost.GenerateList(1);
+        blog.Posts[0].Author = _fakers.WebAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -158,9 +158,9 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_include_ToOne_relationships()
     {
         // Arrange
-        Comment comment = _fakers.Comment.Generate();
-        comment.Author = _fakers.WebAccount.Generate();
-        comment.Parent = _fakers.BlogPost.Generate();
+        Comment comment = _fakers.Comment.GenerateOne();
+        comment.Author = _fakers.WebAccount.GenerateOne();
+        comment.Parent = _fakers.BlogPost.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -195,8 +195,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_include_OneToMany_relationship()
     {
         // Arrange
-        BlogPost post = _fakers.BlogPost.Generate();
-        post.Comments = _fakers.Comment.Generate(1).ToHashSet();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
+        post.Comments = _fakers.Comment.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -228,8 +228,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_include_ManyToMany_relationship()
     {
         // Arrange
-        BlogPost post = _fakers.BlogPost.Generate();
-        post.Labels = _fakers.Label.Generate(1).ToHashSet();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
+        post.Labels = _fakers.Label.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -259,8 +259,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_include_ManyToMany_relationship_at_secondary_endpoint()
     {
         // Arrange
-        BlogPost post = _fakers.BlogPost.Generate();
-        post.Labels = _fakers.Label.Generate(1).ToHashSet();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
+        post.Labels = _fakers.Label.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -291,10 +291,10 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_include_chain_of_ToOne_relationships()
     {
         // Arrange
-        Comment comment = _fakers.Comment.Generate();
-        comment.Parent = _fakers.BlogPost.Generate();
-        comment.Parent.Author = _fakers.WebAccount.Generate();
-        comment.Parent.Author.Preferences = _fakers.AccountPreferences.Generate();
+        Comment comment = _fakers.Comment.GenerateOne();
+        comment.Parent = _fakers.BlogPost.GenerateOne();
+        comment.Parent.Author = _fakers.WebAccount.GenerateOne();
+        comment.Parent.Author.Preferences = _fakers.AccountPreferences.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -335,9 +335,9 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_include_chain_of_OneToMany_relationships()
     {
         // Arrange
-        Blog blog = _fakers.Blog.Generate();
-        blog.Posts = _fakers.BlogPost.Generate(1);
-        blog.Posts[0].Comments = _fakers.Comment.Generate(1).ToHashSet();
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Posts = _fakers.BlogPost.GenerateList(1);
+        blog.Posts[0].Comments = _fakers.Comment.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -374,11 +374,11 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_include_chain_of_recursive_relationships()
     {
         // Arrange
-        Comment comment = _fakers.Comment.Generate();
-        comment.Parent = _fakers.BlogPost.Generate();
-        comment.Parent.Author = _fakers.WebAccount.Generate();
-        comment.Parent.Comments = _fakers.Comment.Generate(2).ToHashSet();
-        comment.Parent.Comments.ElementAt(0).Author = _fakers.WebAccount.Generate();
+        Comment comment = _fakers.Comment.GenerateOne();
+        comment.Parent = _fakers.BlogPost.GenerateOne();
+        comment.Parent.Author = _fakers.WebAccount.GenerateOne();
+        comment.Parent.Comments = _fakers.Comment.GenerateSet(2);
+        comment.Parent.Comments.ElementAt(0).Author = _fakers.WebAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -423,13 +423,13 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_include_chain_of_relationships_with_multiple_paths()
     {
         // Arrange
-        Blog blog = _fakers.Blog.Generate();
-        blog.Posts = _fakers.BlogPost.Generate(1);
-        blog.Posts[0].Author = _fakers.WebAccount.Generate();
-        blog.Posts[0].Author!.Preferences = _fakers.AccountPreferences.Generate();
-        blog.Posts[0].Comments = _fakers.Comment.Generate(2).ToHashSet();
-        blog.Posts[0].Comments.ElementAt(0).Author = _fakers.WebAccount.Generate();
-        blog.Posts[0].Comments.ElementAt(0).Author!.Posts = _fakers.BlogPost.Generate(1);
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Posts = _fakers.BlogPost.GenerateList(1);
+        blog.Posts[0].Author = _fakers.WebAccount.GenerateOne();
+        blog.Posts[0].Author!.Preferences = _fakers.AccountPreferences.GenerateOne();
+        blog.Posts[0].Comments = _fakers.Comment.GenerateSet(2);
+        blog.Posts[0].Comments.ElementAt(0).Author = _fakers.WebAccount.GenerateOne();
+        blog.Posts[0].Comments.ElementAt(0).Author!.Posts = _fakers.BlogPost.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -553,23 +553,23 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     [Fact]
     public async Task Can_include_chain_of_relationships_with_reused_resources()
     {
-        WebAccount author = _fakers.WebAccount.Generate();
-        author.Preferences = _fakers.AccountPreferences.Generate();
-        author.LoginAttempts = _fakers.LoginAttempt.Generate(1);
+        WebAccount author = _fakers.WebAccount.GenerateOne();
+        author.Preferences = _fakers.AccountPreferences.GenerateOne();
+        author.LoginAttempts = _fakers.LoginAttempt.GenerateList(1);
 
-        WebAccount reviewer = _fakers.WebAccount.Generate();
-        reviewer.Preferences = _fakers.AccountPreferences.Generate();
-        reviewer.LoginAttempts = _fakers.LoginAttempt.Generate(1);
+        WebAccount reviewer = _fakers.WebAccount.GenerateOne();
+        reviewer.Preferences = _fakers.AccountPreferences.GenerateOne();
+        reviewer.LoginAttempts = _fakers.LoginAttempt.GenerateList(1);
 
-        BlogPost post1 = _fakers.BlogPost.Generate();
+        BlogPost post1 = _fakers.BlogPost.GenerateOne();
         post1.Author = author;
         post1.Reviewer = reviewer;
 
-        WebAccount person = _fakers.WebAccount.Generate();
-        person.Preferences = _fakers.AccountPreferences.Generate();
-        person.LoginAttempts = _fakers.LoginAttempt.Generate(1);
+        WebAccount person = _fakers.WebAccount.GenerateOne();
+        person.Preferences = _fakers.AccountPreferences.GenerateOne();
+        person.LoginAttempts = _fakers.LoginAttempt.GenerateList(1);
 
-        BlogPost post2 = _fakers.BlogPost.Generate();
+        BlogPost post2 = _fakers.BlogPost.GenerateOne();
         post2.Author = person;
         post2.Reviewer = person;
 
@@ -699,11 +699,11 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     [Fact]
     public async Task Can_include_chain_with_cyclic_dependency()
     {
-        List<BlogPost> posts = _fakers.BlogPost.Generate(1);
+        List<BlogPost> posts = _fakers.BlogPost.GenerateList(1);
 
-        Blog blog = _fakers.Blog.Generate();
+        Blog blog = _fakers.Blog.GenerateOne();
         blog.Posts = posts;
-        blog.Posts[0].Author = _fakers.WebAccount.Generate();
+        blog.Posts[0].Author = _fakers.WebAccount.GenerateOne();
         blog.Posts[0].Author!.Posts = posts;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -761,9 +761,9 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Prevents_duplicate_includes_over_single_resource()
     {
         // Arrange
-        WebAccount account = _fakers.WebAccount.Generate();
+        WebAccount account = _fakers.WebAccount.GenerateOne();
 
-        BlogPost post = _fakers.BlogPost.Generate();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
         post.Author = account;
         post.Reviewer = account;
 
@@ -795,9 +795,9 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Prevents_duplicate_includes_over_multiple_resources()
     {
         // Arrange
-        WebAccount account = _fakers.WebAccount.Generate();
+        WebAccount account = _fakers.WebAccount.GenerateOne();
 
-        List<BlogPost> posts = _fakers.BlogPost.Generate(2);
+        List<BlogPost> posts = _fakers.BlogPost.GenerateList(2);
         posts[0].Author = account;
         posts[1].Author = account;
 
@@ -828,7 +828,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_select_empty_includes()
     {
         // Arrange
-        WebAccount account = _fakers.WebAccount.Generate();
+        WebAccount account = _fakers.WebAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -945,8 +945,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Hides_relationship_and_related_resources_when_viewing_blocked()
     {
         // Arrange
-        Calendar calendar = _fakers.Calendar.Generate();
-        calendar.Appointments = _fakers.Appointment.Generate(2).ToHashSet();
+        Calendar calendar = _fakers.Calendar.GenerateOne();
+        calendar.Appointments = _fakers.Appointment.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -976,8 +976,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Hides_relationship_but_includes_related_resource_when_viewing_blocked_but_accessible_via_other_path()
     {
         // Arrange
-        Calendar calendar = _fakers.Calendar.Generate();
-        calendar.MostRecentAppointment = _fakers.Appointment.Generate();
+        Calendar calendar = _fakers.Calendar.GenerateOne();
+        calendar.MostRecentAppointment = _fakers.Appointment.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -986,7 +986,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
             calendar.Appointments = new[]
             {
-                _fakers.Appointment.Generate(),
+                _fakers.Appointment.GenerateOne(),
                 calendar.MostRecentAppointment
             }.ToHashSet();
 
@@ -1024,8 +1024,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Ignores_null_parent_in_nested_include()
     {
         // Arrange
-        List<BlogPost> posts = _fakers.BlogPost.Generate(2);
-        posts[0].Reviewer = _fakers.WebAccount.Generate();
+        List<BlogPost> posts = _fakers.BlogPost.GenerateList(2);
+        posts[0].Reviewer = _fakers.WebAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1071,7 +1071,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.MaximumIncludeDepth = 1;
 
-        Blog blog = _fakers.Blog.Generate();
+        Blog blog = _fakers.Blog.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

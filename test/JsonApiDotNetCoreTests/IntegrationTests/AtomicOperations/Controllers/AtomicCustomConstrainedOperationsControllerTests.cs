@@ -23,8 +23,8 @@ public sealed class AtomicCustomConstrainedOperationsControllerTests
     public async Task Can_create_resources_for_matching_resource_type()
     {
         // Arrange
-        string newTitle1 = _fakers.MusicTrack.Generate().Title;
-        string newTitle2 = _fakers.MusicTrack.Generate().Title;
+        string newTitle1 = _fakers.MusicTrack.GenerateOne().Title;
+        string newTitle2 = _fakers.MusicTrack.GenerateOne().Title;
 
         var requestBody = new
         {
@@ -112,7 +112,7 @@ public sealed class AtomicCustomConstrainedOperationsControllerTests
     public async Task Cannot_update_resource_for_inaccessible_operation()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -161,8 +161,8 @@ public sealed class AtomicCustomConstrainedOperationsControllerTests
     public async Task Cannot_add_to_ToMany_relationship_for_inaccessible_operation()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        Performer existingPerformer = _fakers.Performer.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        Performer existingPerformer = _fakers.Performer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

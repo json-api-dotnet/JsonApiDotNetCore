@@ -28,8 +28,8 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        List<Tag> tags = _fakers.Tag.Generate(3);
-        tags.ForEach(tag => tag.Color = _fakers.RgbColor.Generate());
+        List<Tag> tags = _fakers.Tag.GenerateList(3);
+        tags.ForEach(tag => tag.Color = _fakers.RgbColor.GenerateOne());
 
         tags[0].Color!.StringId = "FF0000";
         tags[1].Color!.StringId = "00FF00";
@@ -93,8 +93,8 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        List<Tag> tags = _fakers.Tag.Generate(3);
-        tags.ForEach(tag => tag.Color = _fakers.RgbColor.Generate());
+        List<Tag> tags = _fakers.Tag.GenerateList(3);
+        tags.ForEach(tag => tag.Color = _fakers.RgbColor.GenerateOne());
 
         tags[0].Color!.StringId = "FF0000";
         tags[1].Color!.StringId = "00FF00";
@@ -160,9 +160,9 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person person = _fakers.Person.Generate();
-        person.OwnedTodoItems = _fakers.TodoItem.Generate(2).ToHashSet();
-        person.OwnedTodoItems.ElementAt(0).Assignee = _fakers.Person.Generate();
+        Person person = _fakers.Person.GenerateOne();
+        person.OwnedTodoItems = _fakers.TodoItem.GenerateSet(2);
+        person.OwnedTodoItems.ElementAt(0).Assignee = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -227,8 +227,8 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person person = _fakers.Person.Generate();
-        person.OwnedTodoItems = _fakers.TodoItem.Generate(2).ToHashSet();
+        Person person = _fakers.Person.GenerateOne();
+        person.OwnedTodoItems = _fakers.TodoItem.GenerateSet(2);
         person.OwnedTodoItems.ElementAt(1).DurationInHours = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -292,8 +292,8 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        List<TodoItem> todoItems = _fakers.TodoItem.Generate(3);
-        todoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.Generate());
+        List<TodoItem> todoItems = _fakers.TodoItem.GenerateList(3);
+        todoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.GenerateOne());
         todoItems.ForEach(todoItem => todoItem.Priority = TodoItemPriority.Low);
 
         todoItems[1].Priority = TodoItemPriority.Medium;
@@ -354,9 +354,9 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person person = _fakers.Person.Generate();
-        person.AssignedTodoItems = _fakers.TodoItem.Generate(2).ToHashSet();
-        person.AssignedTodoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.Generate());
+        Person person = _fakers.Person.GenerateOne();
+        person.AssignedTodoItems = _fakers.TodoItem.GenerateSet(2);
+        person.AssignedTodoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.GenerateOne());
 
         person.AssignedTodoItems.ElementAt(1).Description = "Take exam";
 
@@ -424,9 +424,9 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        List<TodoItem> todoItems = _fakers.TodoItem.Generate(2);
-        todoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.Generate());
-        todoItems.ForEach(todoItem => todoItem.Assignee = _fakers.Person.Generate());
+        List<TodoItem> todoItems = _fakers.TodoItem.GenerateList(2);
+        todoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.GenerateOne());
+        todoItems.ForEach(todoItem => todoItem.Assignee = _fakers.Person.GenerateOne());
 
         todoItems[1].Assignee!.FirstName = todoItems[1].Assignee!.LastName;
 
@@ -486,8 +486,8 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person person = _fakers.Person.Generate();
-        person.OwnedTodoItems = _fakers.TodoItem.Generate(2).ToHashSet();
+        Person person = _fakers.Person.GenerateOne();
+        person.OwnedTodoItems = _fakers.TodoItem.GenerateSet(2);
 
         person.OwnedTodoItems.ElementAt(0).Priority = TodoItemPriority.Low;
         person.OwnedTodoItems.ElementAt(1).Priority = TodoItemPriority.Medium;
@@ -555,9 +555,9 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        TodoItem todoItem = _fakers.TodoItem.Generate();
+        TodoItem todoItem = _fakers.TodoItem.GenerateOne();
         todoItem.Description = "X";
-        todoItem.Owner = _fakers.Person.Generate();
+        todoItem.Owner = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -615,7 +615,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        List<Person> people = _fakers.Person.Generate(3);
+        List<Person> people = _fakers.Person.GenerateList(3);
         people[0].FirstName = "X";
         people[1].FirstName = null;
         people[2].FirstName = "Y";
@@ -677,10 +677,10 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        List<TodoItem> todoItems = _fakers.TodoItem.Generate(2);
-        todoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.Generate());
+        List<TodoItem> todoItems = _fakers.TodoItem.GenerateList(2);
+        todoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.GenerateOne());
 
-        todoItems[1].Assignee = _fakers.Person.Generate();
+        todoItems[1].Assignee = _fakers.Person.GenerateOne();
         todoItems[1].Assignee!.FirstName = "X";
         todoItems[1].Assignee!.LastName = "Y";
 
@@ -744,8 +744,8 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        List<TodoItem> todoItems = _fakers.TodoItem.Generate(3);
-        todoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.Generate());
+        List<TodoItem> todoItems = _fakers.TodoItem.GenerateList(3);
+        todoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.GenerateOne());
 
         todoItems[0].Description = "One";
         todoItems[1].Description = "Two";
@@ -815,7 +815,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        List<Tag> tags = _fakers.Tag.Generate(6);
+        List<Tag> tags = _fakers.Tag.GenerateList(6);
         tags[0].Name = "A%Z";
         tags[1].Name = "A_Z";
         tags[2].Name = @"A\Z";
@@ -881,8 +881,8 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        List<TodoItem> todoItems = _fakers.TodoItem.Generate(3);
-        todoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.Generate());
+        List<TodoItem> todoItems = _fakers.TodoItem.GenerateList(3);
+        todoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.GenerateOne());
 
         todoItems[0].DurationInHours = 100;
         todoItems[1].DurationInHours = 200;
@@ -947,11 +947,11 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        List<TodoItem> todoItems = _fakers.TodoItem.Generate(2);
-        todoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.Generate());
+        List<TodoItem> todoItems = _fakers.TodoItem.GenerateList(2);
+        todoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.GenerateOne());
 
-        todoItems[1].Owner.AssignedTodoItems = _fakers.TodoItem.Generate(2).ToHashSet();
-        todoItems[1].Owner.AssignedTodoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.Generate());
+        todoItems[1].Owner.AssignedTodoItems = _fakers.TodoItem.GenerateSet(2);
+        todoItems[1].Owner.AssignedTodoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.GenerateOne());
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1021,17 +1021,17 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        List<TodoItem> todoItems = _fakers.TodoItem.Generate(2);
-        todoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.Generate());
+        List<TodoItem> todoItems = _fakers.TodoItem.GenerateList(2);
+        todoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.GenerateOne());
 
-        todoItems[1].Owner.AssignedTodoItems = _fakers.TodoItem.Generate(2).ToHashSet();
+        todoItems[1].Owner.AssignedTodoItems = _fakers.TodoItem.GenerateSet(2);
 
         todoItems[1].Owner.AssignedTodoItems.ForEach(todoItem =>
         {
             todoItem.Description = "Homework";
-            todoItem.Owner = _fakers.Person.Generate();
+            todoItem.Owner = _fakers.Person.GenerateOne();
             todoItem.Owner.LastName = "Smith";
-            todoItem.Tags = _fakers.Tag.Generate(1).ToHashSet();
+            todoItem.Tags = _fakers.Tag.GenerateSet(1);
         });
 
         todoItems[1].Owner.AssignedTodoItems.ElementAt(1).Tags.ElementAt(0).Name = "Personal";
@@ -1117,14 +1117,14 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        List<Person> people = _fakers.Person.Generate(3);
-        people.ForEach(person => person.OwnedTodoItems = _fakers.TodoItem.Generate(1).ToHashSet());
+        List<Person> people = _fakers.Person.GenerateList(3);
+        people.ForEach(person => person.OwnedTodoItems = _fakers.TodoItem.GenerateSet(1));
 
         people[0].OwnedTodoItems.ElementAt(0).Assignee = null;
 
-        people[1].OwnedTodoItems.ElementAt(0).Assignee = _fakers.Person.Generate();
+        people[1].OwnedTodoItems.ElementAt(0).Assignee = _fakers.Person.GenerateOne();
 
-        people[2].OwnedTodoItems.ElementAt(0).Assignee = _fakers.Person.Generate();
+        people[2].OwnedTodoItems.ElementAt(0).Assignee = _fakers.Person.GenerateOne();
         people[2].OwnedTodoItems.ElementAt(0).Assignee!.FirstName = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -1191,8 +1191,8 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        List<TodoItem> todoItems = _fakers.TodoItem.Generate(5);
-        todoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.Generate());
+        List<TodoItem> todoItems = _fakers.TodoItem.GenerateList(5);
+        todoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.GenerateOne());
 
         todoItems[0].Description = "0";
         todoItems[0].Priority = TodoItemPriority.High;
@@ -1276,7 +1276,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person person = _fakers.Person.Generate();
+        Person person = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

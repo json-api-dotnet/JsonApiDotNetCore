@@ -27,8 +27,8 @@ public sealed class ScopeOperationsTests : IClassFixture<IntegrationTestContext<
     public async Task Cannot_create_resources_without_scopes()
     {
         // Arrange
-        Genre newGenre = _fakers.Genre.Generate();
-        Movie newMovie = _fakers.Movie.Generate();
+        Genre newGenre = _fakers.Genre.GenerateOne();
+        Movie newMovie = _fakers.Movie.GenerateOne();
 
         const string genreLocalId = "genre-1";
 
@@ -99,7 +99,7 @@ public sealed class ScopeOperationsTests : IClassFixture<IntegrationTestContext<
     public async Task Cannot_create_resource_with_read_scope()
     {
         // Arrange
-        Genre newGenre = _fakers.Genre.Generate();
+        Genre newGenre = _fakers.Genre.GenerateOne();
 
         var requestBody = new
         {
@@ -145,8 +145,8 @@ public sealed class ScopeOperationsTests : IClassFixture<IntegrationTestContext<
     public async Task Cannot_update_resources_without_scopes()
     {
         // Arrange
-        string newTitle = _fakers.Movie.Generate().Title;
-        DateTime newBornAt = _fakers.Actor.Generate().BornAt;
+        string newTitle = _fakers.Movie.GenerateOne().Title;
+        DateTime newBornAt = _fakers.Actor.GenerateOne().BornAt;
 
         var requestBody = new
         {
@@ -203,7 +203,7 @@ public sealed class ScopeOperationsTests : IClassFixture<IntegrationTestContext<
     public async Task Cannot_update_resource_with_relationships_without_scopes()
     {
         // Arrange
-        string newTitle = _fakers.Movie.Generate().Title;
+        string newTitle = _fakers.Movie.GenerateOne().Title;
 
         var requestBody = new
         {

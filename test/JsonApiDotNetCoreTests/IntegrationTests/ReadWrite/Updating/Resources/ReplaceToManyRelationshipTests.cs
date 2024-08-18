@@ -28,8 +28,8 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Can_clear_OneToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Subscribers = _fakers.UserAccount.Generate(2).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Subscribers = _fakers.UserAccount.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -75,8 +75,8 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Can_clear_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Tags = _fakers.WorkTag.Generate(1).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Tags = _fakers.WorkTag.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -122,10 +122,10 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Can_replace_OneToMany_relationship_with_already_assigned_resources()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Subscribers = _fakers.UserAccount.Generate(2).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Subscribers = _fakers.UserAccount.GenerateSet(2);
 
-        UserAccount existingSubscriber = _fakers.UserAccount.Generate();
+        UserAccount existingSubscriber = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -185,10 +185,10 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Can_replace_ManyToMany_relationship_with_already_assigned_resources()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Tags = _fakers.WorkTag.Generate(2).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Tags = _fakers.WorkTag.GenerateSet(2);
 
-        List<WorkTag> existingTags = _fakers.WorkTag.Generate(2);
+        List<WorkTag> existingTags = _fakers.WorkTag.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -255,8 +255,8 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Can_replace_OneToMany_relationship_with_include()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        UserAccount existingUserAccount = _fakers.UserAccount.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -321,8 +321,8 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Can_replace_ManyToMany_relationship_with_include_and_fieldsets()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        WorkTag existingTag = _fakers.WorkTag.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        WorkTag existingTag = _fakers.WorkTag.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -397,7 +397,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Cannot_replace_for_missing_relationship_type()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -450,7 +450,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Cannot_replace_for_unknown_relationship_type()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -504,7 +504,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Cannot_replace_for_missing_relationship_ID()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -557,7 +557,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Cannot_replace_with_unknown_relationship_IDs()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -650,7 +650,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Cannot_replace_on_relationship_type_mismatch()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -704,10 +704,10 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Can_replace_with_duplicates()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Subscribers = _fakers.UserAccount.Generate(1).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Subscribers = _fakers.UserAccount.GenerateSet(1);
 
-        UserAccount existingSubscriber = _fakers.UserAccount.Generate();
+        UserAccount existingSubscriber = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -766,7 +766,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Cannot_replace_with_missing_data_in_OneToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -812,7 +812,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Cannot_replace_with_null_data_in_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -859,7 +859,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Cannot_replace_with_object_data_in_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -908,7 +908,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Can_clear_cyclic_OneToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -957,7 +957,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Can_clear_cyclic_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1016,7 +1016,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Can_assign_cyclic_OneToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1070,7 +1070,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Can_assign_cyclic_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1136,7 +1136,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Cannot_assign_relationship_with_blocked_capability()
     {
         // Arrange
-        WorkItemGroup existingWorkItemGroup = _fakers.WorkItemGroup.Generate();
+        WorkItemGroup existingWorkItemGroup = _fakers.WorkItemGroup.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

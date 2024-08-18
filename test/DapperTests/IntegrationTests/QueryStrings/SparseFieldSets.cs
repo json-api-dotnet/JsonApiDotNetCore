@@ -28,9 +28,9 @@ public sealed class SparseFieldSets : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        TodoItem todoItem = _fakers.TodoItem.Generate();
-        todoItem.Owner = _fakers.Person.Generate();
-        todoItem.Assignee = _fakers.Person.Generate();
+        TodoItem todoItem = _fakers.TodoItem.GenerateOne();
+        todoItem.Owner = _fakers.Person.GenerateOne();
+        todoItem.Assignee = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -117,8 +117,8 @@ public sealed class SparseFieldSets : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        TodoItem todoItem = _fakers.TodoItem.Generate();
-        todoItem.Owner = _fakers.Person.Generate();
+        TodoItem todoItem = _fakers.TodoItem.GenerateOne();
+        todoItem.Owner = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -163,9 +163,9 @@ public sealed class SparseFieldSets : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        TodoItem todoItem = _fakers.TodoItem.Generate();
-        todoItem.Owner = _fakers.Person.Generate();
-        todoItem.Tags = _fakers.Tag.Generate(1).ToHashSet();
+        TodoItem todoItem = _fakers.TodoItem.GenerateOne();
+        todoItem.Owner = _fakers.Person.GenerateOne();
+        todoItem.Tags = _fakers.Tag.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -230,7 +230,7 @@ public sealed class SparseFieldSets : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person person = _fakers.Person.Generate();
+        Person person = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -274,7 +274,7 @@ public sealed class SparseFieldSets : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person person = _fakers.Person.Generate();
+        Person person = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -318,7 +318,7 @@ public sealed class SparseFieldSets : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person person = _fakers.Person.Generate();
+        Person person = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -363,9 +363,9 @@ public sealed class SparseFieldSets : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        TodoItem todoItem = _fakers.TodoItem.Generate();
-        todoItem.Owner = _fakers.Person.Generate();
-        todoItem.Tags = _fakers.Tag.Generate(2).ToHashSet();
+        TodoItem todoItem = _fakers.TodoItem.GenerateOne();
+        todoItem.Owner = _fakers.Person.GenerateOne();
+        todoItem.Tags = _fakers.Tag.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

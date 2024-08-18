@@ -136,7 +136,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     public async Task Cannot_create_resource_with_invalid_DateOnly_TimeOnly_attribute_value()
     {
         // Arrange
-        SystemFile newFile = _fakers.SystemFile.Generate();
+        SystemFile newFile = _fakers.SystemFile.GenerateOne();
 
         var requestBody = new
         {
@@ -183,7 +183,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     public async Task Can_create_resource_with_valid_attribute_value()
     {
         // Arrange
-        SystemDirectory newDirectory = _fakers.SystemDirectory.Generate();
+        SystemDirectory newDirectory = _fakers.SystemDirectory.GenerateOne();
 
         var requestBody = new
         {
@@ -301,11 +301,11 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     public async Task Can_create_resource_with_annotated_relationships()
     {
         // Arrange
-        SystemDirectory existingParentDirectory = _fakers.SystemDirectory.Generate();
-        SystemDirectory existingSubdirectory = _fakers.SystemDirectory.Generate();
-        SystemFile existingFile = _fakers.SystemFile.Generate();
+        SystemDirectory existingParentDirectory = _fakers.SystemDirectory.GenerateOne();
+        SystemDirectory existingSubdirectory = _fakers.SystemDirectory.GenerateOne();
+        SystemFile existingFile = _fakers.SystemFile.GenerateOne();
 
-        SystemDirectory newDirectory = _fakers.SystemDirectory.Generate();
+        SystemDirectory newDirectory = _fakers.SystemDirectory.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -377,8 +377,8 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     public async Task Can_add_to_annotated_ToMany_relationship()
     {
         // Arrange
-        SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
-        SystemFile existingFile = _fakers.SystemFile.Generate();
+        SystemDirectory existingDirectory = _fakers.SystemDirectory.GenerateOne();
+        SystemFile existingFile = _fakers.SystemFile.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -413,9 +413,9 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     public async Task Can_update_resource_with_omitted_required_attribute_value()
     {
         // Arrange
-        SystemFile existingFile = _fakers.SystemFile.Generate();
+        SystemFile existingFile = _fakers.SystemFile.GenerateOne();
 
-        long? newSizeInBytes = _fakers.SystemFile.Generate().SizeInBytes;
+        long? newSizeInBytes = _fakers.SystemFile.GenerateOne().SizeInBytes;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -451,7 +451,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     public async Task Cannot_update_resource_with_null_for_required_attribute_values()
     {
         // Arrange
-        SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
+        SystemDirectory existingDirectory = _fakers.SystemDirectory.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -502,7 +502,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     public async Task Cannot_update_resource_with_invalid_attribute_value()
     {
         // Arrange
-        SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
+        SystemDirectory existingDirectory = _fakers.SystemDirectory.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -597,9 +597,9 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     public async Task Can_update_resource_with_valid_attribute_value()
     {
         // Arrange
-        SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
+        SystemDirectory existingDirectory = _fakers.SystemDirectory.GenerateOne();
 
-        string newDirectoryName = _fakers.SystemDirectory.Generate().Name;
+        string newDirectoryName = _fakers.SystemDirectory.GenerateOne().Name;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -635,16 +635,16 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     public async Task Can_update_resource_with_annotated_relationships()
     {
         // Arrange
-        SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
-        existingDirectory.Subdirectories = _fakers.SystemDirectory.Generate(1);
-        existingDirectory.Files = _fakers.SystemFile.Generate(1);
-        existingDirectory.Parent = _fakers.SystemDirectory.Generate();
+        SystemDirectory existingDirectory = _fakers.SystemDirectory.GenerateOne();
+        existingDirectory.Subdirectories = _fakers.SystemDirectory.GenerateList(1);
+        existingDirectory.Files = _fakers.SystemFile.GenerateList(1);
+        existingDirectory.Parent = _fakers.SystemDirectory.GenerateOne();
 
-        SystemDirectory existingParent = _fakers.SystemDirectory.Generate();
-        SystemDirectory existingSubdirectory = _fakers.SystemDirectory.Generate();
-        SystemFile existingFile = _fakers.SystemFile.Generate();
+        SystemDirectory existingParent = _fakers.SystemDirectory.GenerateOne();
+        SystemDirectory existingSubdirectory = _fakers.SystemDirectory.GenerateOne();
+        SystemFile existingFile = _fakers.SystemFile.GenerateOne();
 
-        string newDirectoryName = _fakers.SystemDirectory.Generate().Name;
+        string newDirectoryName = _fakers.SystemDirectory.GenerateOne().Name;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -714,7 +714,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     public async Task Can_update_resource_with_multiple_self_references()
     {
         // Arrange
-        SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
+        SystemDirectory existingDirectory = _fakers.SystemDirectory.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -765,7 +765,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     public async Task Can_update_resource_with_collection_of_self_references()
     {
         // Arrange
-        SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
+        SystemDirectory existingDirectory = _fakers.SystemDirectory.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -811,10 +811,10 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     public async Task Can_replace_annotated_ToOne_relationship()
     {
         // Arrange
-        SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
-        existingDirectory.Parent = _fakers.SystemDirectory.Generate();
+        SystemDirectory existingDirectory = _fakers.SystemDirectory.GenerateOne();
+        existingDirectory.Parent = _fakers.SystemDirectory.GenerateOne();
 
-        SystemDirectory otherExistingDirectory = _fakers.SystemDirectory.Generate();
+        SystemDirectory otherExistingDirectory = _fakers.SystemDirectory.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -846,10 +846,10 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     public async Task Can_replace_annotated_ToMany_relationship()
     {
         // Arrange
-        SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
-        existingDirectory.Files = _fakers.SystemFile.Generate(2);
+        SystemDirectory existingDirectory = _fakers.SystemDirectory.GenerateOne();
+        existingDirectory.Files = _fakers.SystemFile.GenerateList(2);
 
-        SystemFile existingFile = _fakers.SystemFile.Generate();
+        SystemFile existingFile = _fakers.SystemFile.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -884,8 +884,8 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     public async Task Can_remove_from_annotated_ToMany_relationship()
     {
         // Arrange
-        SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
-        existingDirectory.Files = _fakers.SystemFile.Generate(1);
+        SystemDirectory existingDirectory = _fakers.SystemDirectory.GenerateOne();
+        existingDirectory.Files = _fakers.SystemFile.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

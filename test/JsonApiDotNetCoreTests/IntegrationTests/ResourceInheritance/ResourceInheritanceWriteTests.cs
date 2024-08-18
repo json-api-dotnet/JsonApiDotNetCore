@@ -75,7 +75,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_create_abstract_resource_at_abstract_endpoint()
     {
         // Arrange
-        Tandem newTandem = _fakers.Tandem.Generate();
+        Tandem newTandem = _fakers.Tandem.GenerateOne();
 
         var requestBody = new
         {
@@ -113,12 +113,12 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var bikeStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Bike, long>>();
 
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
-        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.Generate();
-        Box existingBox = _fakers.Box.Generate();
-        BicycleLight existingLight = _fakers.BicycleLight.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
+        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.GenerateOne();
+        Box existingBox = _fakers.Box.GenerateOne();
+        BicycleLight existingLight = _fakers.BicycleLight.GenerateOne();
 
-        Bike newBike = _fakers.Bike.Generate();
+        Bike newBike = _fakers.Bike.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -243,13 +243,13 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var carStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Car, long>>();
 
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
-        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.Generate();
-        GasolineEngine existingGasolineEngine = _fakers.GasolineEngine.Generate();
-        NavigationSystem existingNavigationSystem = _fakers.NavigationSystem.Generate();
-        GenericFeature existingFeature = _fakers.GenericFeature.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
+        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.GenerateOne();
+        GasolineEngine existingGasolineEngine = _fakers.GasolineEngine.GenerateOne();
+        NavigationSystem existingNavigationSystem = _fakers.NavigationSystem.GenerateOne();
+        GenericFeature existingFeature = _fakers.GenericFeature.GenerateOne();
 
-        Car newCar = _fakers.Car.Generate();
+        Car newCar = _fakers.Car.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -390,13 +390,13 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
-        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.Generate();
-        Box existingBox = _fakers.Box.Generate();
-        BicycleLight existingLight = _fakers.BicycleLight.Generate();
-        GenericFeature existingFeature = _fakers.GenericFeature.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
+        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.GenerateOne();
+        Box existingBox = _fakers.Box.GenerateOne();
+        BicycleLight existingLight = _fakers.BicycleLight.GenerateOne();
+        GenericFeature existingFeature = _fakers.GenericFeature.GenerateOne();
 
-        Tandem newTandem = _fakers.Tandem.Generate();
+        Tandem newTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -537,7 +537,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_create_concrete_base_resource_at_concrete_derived_endpoint()
     {
         // Arrange
-        Bike newBike = _fakers.Bike.Generate();
+        Bike newBike = _fakers.Bike.GenerateOne();
 
         var requestBody = new
         {
@@ -575,7 +575,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_create_resource_with_abstract_relationship_type()
     {
         // Arrange
-        DieselEngine existingEngine = _fakers.DieselEngine.Generate();
+        DieselEngine existingEngine = _fakers.DieselEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -626,7 +626,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var carbonWheelStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<CarbonWheel, long>>();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -688,7 +688,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var carbonWheelStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<CarbonWheel, long>>();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -750,7 +750,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var manufacturerStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<VehicleManufacturer, long>>();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -813,7 +813,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_create_resource_with_concrete_derived_ToOne_relationship_type_stored_as_sibling_derived_type_at_resource_endpoint()
     {
         // Arrange
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -861,8 +861,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_create_resource_with_concrete_derived_ToMany_relationship_type_stored_as_sibling_derived_type_at_resource_endpoint()
     {
         // Arrange
-        Truck existingTruck = _fakers.Truck.Generate();
-        existingTruck.Engine = _fakers.DieselEngine.Generate();
+        Truck existingTruck = _fakers.Truck.GenerateOne();
+        existingTruck.Engine = _fakers.DieselEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1000,9 +1000,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_update_abstract_resource_at_abstract_endpoint()
     {
         // Arrange
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
-        int newPassengerCount = _fakers.Tandem.Generate().PassengerCount;
+        int newPassengerCount = _fakers.Tandem.GenerateOne().PassengerCount;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1047,13 +1047,13 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var bikeStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Bike, long>>();
 
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
-        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.Generate();
-        Box existingBox = _fakers.Box.Generate();
-        BicycleLight existingLight = _fakers.BicycleLight.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
+        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.GenerateOne();
+        Box existingBox = _fakers.Box.GenerateOne();
+        BicycleLight existingLight = _fakers.BicycleLight.GenerateOne();
 
-        Bike existingBike = _fakers.Bike.Generate();
-        Bike newBike = _fakers.Bike.Generate();
+        Bike existingBike = _fakers.Bike.GenerateOne();
+        Bike newBike = _fakers.Bike.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1175,13 +1175,13 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
-        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.Generate();
-        Box existingBox = _fakers.Box.Generate();
-        BicycleLight existingLight = _fakers.BicycleLight.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
+        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.GenerateOne();
+        Box existingBox = _fakers.Box.GenerateOne();
+        BicycleLight existingLight = _fakers.BicycleLight.GenerateOne();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
-        Bike newBike = _fakers.Bike.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
+        Bike newBike = _fakers.Bike.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1301,9 +1301,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_update_concrete_base_resource_at_concrete_derived_endpoint()
     {
         // Arrange
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
-        int newPassengerCount = _fakers.Tandem.Generate().PassengerCount;
+        int newPassengerCount = _fakers.Tandem.GenerateOne().PassengerCount;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1346,10 +1346,10 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_update_resource_with_abstract_relationship_type()
     {
         // Arrange
-        Truck existingTruck = _fakers.Truck.Generate();
-        existingTruck.Engine = _fakers.GasolineEngine.Generate();
+        Truck existingTruck = _fakers.Truck.GenerateOne();
+        existingTruck.Engine = _fakers.GasolineEngine.GenerateOne();
 
-        DieselEngine existingEngine = _fakers.DieselEngine.Generate();
+        DieselEngine existingEngine = _fakers.DieselEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1402,9 +1402,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var carbonWheelStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<CarbonWheel, long>>();
 
-        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.Generate();
+        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.GenerateOne();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1463,9 +1463,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var manufacturerStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<VehicleManufacturer, long>>();
 
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1525,9 +1525,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_update_resource_with_concrete_derived_ToOne_relationship_type_stored_as_sibling_derived_type_at_resource_endpoint()
     {
         // Arrange
-        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.Generate();
+        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.GenerateOne();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1577,10 +1577,10 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_update_resource_with_concrete_derived_ToMany_relationship_type_stored_as_sibling_derived_type_at_resource_endpoint()
     {
         // Arrange
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
 
-        Truck existingTruck = _fakers.Truck.Generate();
-        existingTruck.Engine = _fakers.DieselEngine.Generate();
+        Truck existingTruck = _fakers.Truck.GenerateOne();
+        existingTruck.Engine = _fakers.DieselEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1633,7 +1633,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_update_resource_with_unknown_resource_in_ToOne_relationship_at_resource_endpoint()
     {
         // Arrange
-        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.Generate();
+        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.GenerateOne();
 
         string unknownTruckId = Unknown.StringId.For<Truck, long>();
 
@@ -1684,7 +1684,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_update_resource_with_unknown_resources_in_ToMany_relationship_at_resource_endpoint()
     {
         // Arrange
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
 
         string unknownTruckId = Unknown.StringId.For<Truck, long>();
 
@@ -1740,7 +1740,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1773,7 +1773,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_delete_concrete_base_resource_at_concrete_derived_endpoint()
     {
         // Arrange
-        Bike existingBike = _fakers.Bike.Generate();
+        Bike existingBike = _fakers.Bike.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1804,9 +1804,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var carbonWheelStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<CarbonWheel, long>>();
 
-        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.Generate();
+        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.GenerateOne();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1855,9 +1855,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
-        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.Generate();
+        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1909,9 +1909,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var carbonWheelStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<CarbonWheel, long>>();
 
-        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.Generate();
+        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.GenerateOne();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1960,9 +1960,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var manufacturerStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<VehicleManufacturer, long>>();
 
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2011,9 +2011,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_set_concrete_derived_resource_stored_as_concrete_base_at_abstract_ToOne_relationship_endpoint()
     {
         // Arrange
-        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.Generate();
+        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.GenerateOne();
 
-        Bike existingBike = _fakers.Bike.Generate();
+        Bike existingBike = _fakers.Bike.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2052,10 +2052,10 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_set_concrete_derived_resources_stored_as_sibling_derived_at_ToMany_relationship_endpoint()
     {
         // Arrange
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
 
-        Truck existingTruck = _fakers.Truck.Generate();
-        existingTruck.Engine = _fakers.DieselEngine.Generate();
+        Truck existingTruck = _fakers.Truck.GenerateOne();
+        existingTruck.Engine = _fakers.DieselEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2097,7 +2097,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_set_unknown_resources_at_ToMany_relationship_endpoint()
     {
         // Arrange
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
 
         string unknownTruckId = Unknown.StringId.For<Truck, long>();
 
@@ -2139,8 +2139,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     [Fact]
     public async Task Cannot_clear_ToOne_relationship_for_left_type_stored_as_sibling_type()
     {
-        Truck existingTruck = _fakers.Truck.Generate();
-        existingTruck.Engine = _fakers.DieselEngine.Generate();
+        Truck existingTruck = _fakers.Truck.GenerateOne();
+        existingTruck.Engine = _fakers.DieselEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2176,10 +2176,10 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
-        existingTandem.Wheels = _fakers.CarbonWheel.Generate(1).Cast<Wheel>().ToHashSet();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
+        existingTandem.Wheels = _fakers.CarbonWheel.GenerateSet<CarbonWheel, Wheel>(1);
 
-        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.Generate();
+        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2233,10 +2233,10 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
-        existingTandem.Wheels = _fakers.CarbonWheel.Generate(1).Cast<Wheel>().ToHashSet();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
+        existingTandem.Wheels = _fakers.CarbonWheel.GenerateSet<CarbonWheel, Wheel>(1);
 
-        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.Generate();
+        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2290,11 +2290,11 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var manufacturerStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<VehicleManufacturer, long>>();
 
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
-        existingManufacturer.Vehicles = _fakers.Car.Generate(1).Cast<Vehicle>().ToHashSet();
-        ((Car)existingManufacturer.Vehicles.ElementAt(0)).Engine = _fakers.GasolineEngine.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
+        existingManufacturer.Vehicles = _fakers.Car.GenerateSet<Car, Vehicle>(1);
+        ((Car)existingManufacturer.Vehicles.ElementAt(0)).Engine = _fakers.GasolineEngine.GenerateOne();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2352,9 +2352,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_add_concrete_derived_resources_stored_as_sibling_derived_at_abstract_ToMany_relationship_endpoint()
     {
         // Arrange
-        Bike existingBike = _fakers.Bike.Generate();
+        Bike existingBike = _fakers.Bike.GenerateOne();
 
-        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.Generate();
+        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2396,7 +2396,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_add_unknown_resources_at_ToMany_relationship_endpoint()
     {
         // Arrange
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
 
         string unknownTruckId = Unknown.StringId.For<Truck, long>();
 
@@ -2438,8 +2438,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     [Fact]
     public async Task Cannot_add_to_ToMany_relationship_for_left_type_stored_as_sibling_type()
     {
-        Truck existingTruck = _fakers.Truck.Generate();
-        existingTruck.Engine = _fakers.DieselEngine.Generate();
+        Truck existingTruck = _fakers.Truck.GenerateOne();
+        existingTruck.Engine = _fakers.DieselEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2475,8 +2475,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
-        existingTandem.Wheels = _fakers.ChromeWheel.Generate(2).Cast<Wheel>().ToHashSet();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
+        existingTandem.Wheels = _fakers.ChromeWheel.GenerateSet<ChromeWheel, Wheel>(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2527,8 +2527,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
-        existingTandem.Wheels = _fakers.ChromeWheel.Generate(2).Cast<Wheel>().ToHashSet();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
+        existingTandem.Wheels = _fakers.ChromeWheel.GenerateSet<ChromeWheel, Wheel>(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2579,9 +2579,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var manufacturerStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<VehicleManufacturer, long>>();
 
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
-        existingManufacturer.Vehicles = _fakers.Tandem.Generate(1).Cast<Vehicle>().Concat(_fakers.Car.Generate(1)).ToHashSet();
-        ((Car)existingManufacturer.Vehicles.ElementAt(1)).Engine = _fakers.GasolineEngine.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
+        existingManufacturer.Vehicles = _fakers.Tandem.GenerateSet<Tandem, Vehicle>(1).Concat(_fakers.Car.GenerateSet<Car, Vehicle>(1)).ToHashSet();
+        ((Car)existingManufacturer.Vehicles.ElementAt(1)).Engine = _fakers.GasolineEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2629,8 +2629,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_remove_concrete_derived_resources_stored_as_sibling_derived_at_abstract_ToMany_relationship_endpoint()
     {
         // Arrange
-        Bike existingBike = _fakers.Bike.Generate();
-        existingBike.Wheels = _fakers.ChromeWheel.Generate(2).Cast<Wheel>().ToHashSet();
+        Bike existingBike = _fakers.Bike.GenerateOne();
+        existingBike.Wheels = _fakers.ChromeWheel.GenerateSet<ChromeWheel, Wheel>(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2673,7 +2673,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_remove_unknown_resources_at_ToMany_relationship_endpoint()
     {
         // Arrange
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
 
         string unknownTruckId = Unknown.StringId.For<Truck, long>();
 
@@ -2715,8 +2715,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     [Fact]
     public async Task Cannot_remove_from_ToMany_relationship_for_left_type_stored_as_sibling_type()
     {
-        Truck existingTruck = _fakers.Truck.Generate();
-        existingTruck.Engine = _fakers.DieselEngine.Generate();
+        Truck existingTruck = _fakers.Truck.GenerateOne();
+        existingTruck.Engine = _fakers.DieselEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

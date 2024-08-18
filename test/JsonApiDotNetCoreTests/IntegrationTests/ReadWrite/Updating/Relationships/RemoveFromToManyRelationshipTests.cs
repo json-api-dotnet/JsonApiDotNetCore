@@ -36,8 +36,8 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Cannot_remove_from_ManyToOne_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Assignee = _fakers.UserAccount.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Assignee = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -76,9 +76,9 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Can_remove_from_OneToMany_relationship_with_unassigned_existing_resource()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Subscribers = _fakers.UserAccount.Generate(2).ToHashSet();
-        UserAccount existingSubscriber = _fakers.UserAccount.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Subscribers = _fakers.UserAccount.GenerateSet(2);
+        UserAccount existingSubscriber = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -130,8 +130,8 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Can_remove_from_OneToMany_relationship_with_extra_removals_from_resource_definition()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Subscribers = _fakers.UserAccount.Generate(3).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Subscribers = _fakers.UserAccount.GenerateSet(3);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -183,10 +183,10 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Can_remove_from_ManyToMany_relationship_with_unassigned_existing_resource()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Tags = _fakers.WorkTag.Generate(2).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Tags = _fakers.WorkTag.GenerateSet(2);
 
-        WorkTag existingTag = _fakers.WorkTag.Generate();
+        WorkTag existingTag = _fakers.WorkTag.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -238,8 +238,8 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Can_remove_from_ManyToMany_relationship_with_extra_removals_from_resource_definition()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Tags = _fakers.WorkTag.Generate(3).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Tags = _fakers.WorkTag.GenerateSet(3);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -291,7 +291,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Cannot_remove_for_missing_request_body()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -326,7 +326,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Cannot_remove_for_null_request_body()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -358,8 +358,8 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Cannot_remove_for_missing_type()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Subscribers = _fakers.UserAccount.Generate(1).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Subscribers = _fakers.UserAccount.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -401,7 +401,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Cannot_remove_for_unknown_type()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -444,7 +444,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Cannot_remove_for_missing_ID()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -486,7 +486,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Cannot_remove_unknown_IDs_from_OneToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -541,7 +541,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Cannot_remove_unknown_IDs_from_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -596,8 +596,8 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Cannot_remove_from_unknown_resource_type_in_url()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Subscribers = _fakers.UserAccount.Generate(1).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Subscribers = _fakers.UserAccount.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -632,7 +632,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Cannot_remove_from_unknown_resource_ID_in_url()
     {
         // Arrange
-        UserAccount existingSubscriber = _fakers.UserAccount.Generate();
+        UserAccount existingSubscriber = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -676,7 +676,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Cannot_remove_from_unknown_relationship_in_url()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -718,8 +718,8 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Cannot_remove_for_relationship_mismatch_between_url_and_body()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Subscribers = _fakers.UserAccount.Generate(1).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Subscribers = _fakers.UserAccount.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -762,8 +762,8 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Can_remove_with_duplicates()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Subscribers = _fakers.UserAccount.Generate(2).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Subscribers = _fakers.UserAccount.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -811,8 +811,8 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Can_remove_with_empty_list()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Subscribers = _fakers.UserAccount.Generate(1).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Subscribers = _fakers.UserAccount.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -848,7 +848,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Cannot_remove_with_missing_data_in_OneToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -882,7 +882,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Cannot_remove_with_null_data_in_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -918,7 +918,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Cannot_remove_with_object_data_in_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -956,8 +956,8 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Can_remove_self_from_cyclic_OneToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Children = _fakers.WorkItem.Generate(1);
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Children = _fakers.WorkItem.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1003,8 +1003,8 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Can_remove_self_from_cyclic_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.RelatedFrom = _fakers.WorkItem.Generate(1);
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.RelatedFrom = _fakers.WorkItem.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1061,7 +1061,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     public async Task Cannot_remove_with_blocked_capability()
     {
         // Arrange
-        WorkItemGroup existingWorkItemGroup = _fakers.WorkItemGroup.Generate();
+        WorkItemGroup existingWorkItemGroup = _fakers.WorkItemGroup.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

@@ -23,8 +23,8 @@ public sealed class AtomicAddToToManyRelationshipTests : IClassFixture<Integrati
     public async Task Cannot_add_to_ManyToOne_relationship()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        RecordCompany existingCompany = _fakers.RecordCompany.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        RecordCompany existingCompany = _fakers.RecordCompany.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -77,10 +77,10 @@ public sealed class AtomicAddToToManyRelationshipTests : IClassFixture<Integrati
     public async Task Can_add_to_OneToMany_relationship()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        existingTrack.Performers = _fakers.Performer.Generate(1);
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        existingTrack.Performers = _fakers.Performer.GenerateList(1);
 
-        List<Performer> existingPerformers = _fakers.Performer.Generate(2);
+        List<Performer> existingPerformers = _fakers.Performer.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -157,10 +157,10 @@ public sealed class AtomicAddToToManyRelationshipTests : IClassFixture<Integrati
     public async Task Can_add_to_ManyToMany_relationship()
     {
         // Arrange
-        Playlist existingPlaylist = _fakers.Playlist.Generate();
-        existingPlaylist.Tracks = _fakers.MusicTrack.Generate(1);
+        Playlist existingPlaylist = _fakers.Playlist.GenerateOne();
+        existingPlaylist.Tracks = _fakers.MusicTrack.GenerateList(1);
 
-        List<MusicTrack> existingTracks = _fakers.MusicTrack.Generate(2);
+        List<MusicTrack> existingTracks = _fakers.MusicTrack.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -390,7 +390,7 @@ public sealed class AtomicAddToToManyRelationshipTests : IClassFixture<Integrati
     public async Task Cannot_add_for_unknown_ID_in_ref()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -568,7 +568,7 @@ public sealed class AtomicAddToToManyRelationshipTests : IClassFixture<Integrati
     public async Task Cannot_add_for_missing_data()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -616,7 +616,7 @@ public sealed class AtomicAddToToManyRelationshipTests : IClassFixture<Integrati
     public async Task Cannot_add_for_null_data()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -665,7 +665,7 @@ public sealed class AtomicAddToToManyRelationshipTests : IClassFixture<Integrati
     public async Task Cannot_add_for_object_data()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -907,7 +907,7 @@ public sealed class AtomicAddToToManyRelationshipTests : IClassFixture<Integrati
     public async Task Cannot_add_for_unknown_IDs_in_data()
     {
         // Arrange
-        RecordCompany existingCompany = _fakers.RecordCompany.Generate();
+        RecordCompany existingCompany = _fakers.RecordCompany.GenerateOne();
 
         string[] trackIds =
         [
@@ -980,7 +980,7 @@ public sealed class AtomicAddToToManyRelationshipTests : IClassFixture<Integrati
     public async Task Cannot_add_for_relationship_mismatch_between_ref_and_data()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1036,8 +1036,8 @@ public sealed class AtomicAddToToManyRelationshipTests : IClassFixture<Integrati
     public async Task Can_add_with_empty_data_array()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        existingTrack.Performers = _fakers.Performer.Generate(1);
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        existingTrack.Performers = _fakers.Performer.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1086,7 +1086,7 @@ public sealed class AtomicAddToToManyRelationshipTests : IClassFixture<Integrati
     public async Task Cannot_add_with_blocked_capability()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

@@ -40,7 +40,7 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
         var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
         loggerFactory.Logger.Clear();
 
-        AuditEntry newEntry = _fakers.AuditEntry.Generate();
+        AuditEntry newEntry = _fakers.AuditEntry.GenerateOne();
 
         var requestBody = new
         {
@@ -126,7 +126,7 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
         loggerFactory.Logger.Clear();
 
         var existingBowl = new FruitBowl();
-        Banana existingBanana = _fakers.Banana.Generate();
+        Banana existingBanana = _fakers.Banana.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -236,7 +236,7 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
         loggerFactory.Logger.Clear();
 
         var existingBowl = new FruitBowl();
-        Peach existingPeach = _fakers.Peach.Generate();
+        Peach existingPeach = _fakers.Peach.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

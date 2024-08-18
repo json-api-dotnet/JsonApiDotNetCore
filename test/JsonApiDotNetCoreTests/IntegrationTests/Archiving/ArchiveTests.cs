@@ -28,7 +28,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_get_archived_resource_by_ID()
     {
         // Arrange
-        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.Generate();
+        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -53,7 +53,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_get_unarchived_resource_by_ID()
     {
         // Arrange
-        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.Generate();
+        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.GenerateOne();
         broadcast.ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -79,7 +79,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Get_primary_resources_excludes_archived()
     {
         // Arrange
-        List<TelevisionBroadcast> broadcasts = _fakers.TelevisionBroadcast.Generate(2);
+        List<TelevisionBroadcast> broadcasts = _fakers.TelevisionBroadcast.GenerateList(2);
         broadcasts[1].ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -106,7 +106,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Get_primary_resources_with_filter_includes_archived()
     {
         // Arrange
-        List<TelevisionBroadcast> broadcasts = _fakers.TelevisionBroadcast.Generate(2);
+        List<TelevisionBroadcast> broadcasts = _fakers.TelevisionBroadcast.GenerateList(2);
         broadcasts[1].ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -136,8 +136,8 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Get_primary_resource_by_ID_with_include_excludes_archived()
     {
         // Arrange
-        TelevisionStation station = _fakers.TelevisionStation.Generate();
-        station.Broadcasts = _fakers.TelevisionBroadcast.Generate(2).ToHashSet();
+        TelevisionStation station = _fakers.TelevisionStation.GenerateOne();
+        station.Broadcasts = _fakers.TelevisionBroadcast.GenerateSet(2);
         station.Broadcasts.ElementAt(1).ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -166,8 +166,8 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Get_primary_resource_by_ID_with_include_and_filter_includes_archived()
     {
         // Arrange
-        TelevisionStation station = _fakers.TelevisionStation.Generate();
-        station.Broadcasts = _fakers.TelevisionBroadcast.Generate(2).ToHashSet();
+        TelevisionStation station = _fakers.TelevisionStation.GenerateOne();
+        station.Broadcasts = _fakers.TelevisionBroadcast.GenerateSet(2);
         station.Broadcasts.ElementAt(1).ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -198,8 +198,8 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Get_secondary_resource_includes_archived()
     {
         // Arrange
-        BroadcastComment comment = _fakers.BroadcastComment.Generate();
-        comment.AppliesTo = _fakers.TelevisionBroadcast.Generate();
+        BroadcastComment comment = _fakers.BroadcastComment.GenerateOne();
+        comment.AppliesTo = _fakers.TelevisionBroadcast.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -224,8 +224,8 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Get_secondary_resources_excludes_archived()
     {
         // Arrange
-        TelevisionStation station = _fakers.TelevisionStation.Generate();
-        station.Broadcasts = _fakers.TelevisionBroadcast.Generate(2).ToHashSet();
+        TelevisionStation station = _fakers.TelevisionStation.GenerateOne();
+        station.Broadcasts = _fakers.TelevisionBroadcast.GenerateSet(2);
         station.Broadcasts.ElementAt(1).ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -251,8 +251,8 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Get_secondary_resources_with_filter_includes_archived()
     {
         // Arrange
-        TelevisionStation station = _fakers.TelevisionStation.Generate();
-        station.Broadcasts = _fakers.TelevisionBroadcast.Generate(2).ToHashSet();
+        TelevisionStation station = _fakers.TelevisionStation.GenerateOne();
+        station.Broadcasts = _fakers.TelevisionBroadcast.GenerateSet(2);
         station.Broadcasts.ElementAt(1).ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -283,9 +283,9 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Get_secondary_resource_by_ID_with_include_excludes_archived()
     {
         // Arrange
-        TelevisionNetwork network = _fakers.TelevisionNetwork.Generate();
-        network.Stations = _fakers.TelevisionStation.Generate(1).ToHashSet();
-        network.Stations.ElementAt(0).Broadcasts = _fakers.TelevisionBroadcast.Generate(2).ToHashSet();
+        TelevisionNetwork network = _fakers.TelevisionNetwork.GenerateOne();
+        network.Stations = _fakers.TelevisionStation.GenerateSet(1);
+        network.Stations.ElementAt(0).Broadcasts = _fakers.TelevisionBroadcast.GenerateSet(2);
         network.Stations.ElementAt(0).Broadcasts.ElementAt(1).ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -313,9 +313,9 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     [Fact]
     public async Task Get_secondary_resource_by_ID_with_include_and_filter_includes_archived()
     {
-        TelevisionNetwork network = _fakers.TelevisionNetwork.Generate();
-        network.Stations = _fakers.TelevisionStation.Generate(1).ToHashSet();
-        network.Stations.ElementAt(0).Broadcasts = _fakers.TelevisionBroadcast.Generate(2).ToHashSet();
+        TelevisionNetwork network = _fakers.TelevisionNetwork.GenerateOne();
+        network.Stations = _fakers.TelevisionStation.GenerateSet(1);
+        network.Stations.ElementAt(0).Broadcasts = _fakers.TelevisionBroadcast.GenerateSet(2);
         network.Stations.ElementAt(0).Broadcasts.ElementAt(1).ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -349,8 +349,8 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Get_ToMany_relationship_excludes_archived()
     {
         // Arrange
-        TelevisionStation station = _fakers.TelevisionStation.Generate();
-        station.Broadcasts = _fakers.TelevisionBroadcast.Generate(2).ToHashSet();
+        TelevisionStation station = _fakers.TelevisionStation.GenerateOne();
+        station.Broadcasts = _fakers.TelevisionBroadcast.GenerateSet(2);
         station.Broadcasts.ElementAt(1).ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -375,8 +375,8 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Get_ToMany_relationship_with_filter_includes_archived()
     {
         // Arrange
-        TelevisionStation station = _fakers.TelevisionStation.Generate();
-        station.Broadcasts = _fakers.TelevisionBroadcast.Generate(2).ToHashSet();
+        TelevisionStation station = _fakers.TelevisionStation.GenerateOne();
+        station.Broadcasts = _fakers.TelevisionBroadcast.GenerateSet(2);
         station.Broadcasts.ElementAt(1).ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -402,7 +402,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_create_unarchived_resource()
     {
         // Arrange
-        TelevisionBroadcast newBroadcast = _fakers.TelevisionBroadcast.Generate();
+        TelevisionBroadcast newBroadcast = _fakers.TelevisionBroadcast.GenerateOne();
 
         var requestBody = new
         {
@@ -435,7 +435,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Cannot_create_archived_resource()
     {
         // Arrange
-        TelevisionBroadcast newBroadcast = _fakers.TelevisionBroadcast.Generate();
+        TelevisionBroadcast newBroadcast = _fakers.TelevisionBroadcast.GenerateOne();
 
         var requestBody = new
         {
@@ -471,10 +471,10 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_archive_resource()
     {
         // Arrange
-        TelevisionBroadcast existingBroadcast = _fakers.TelevisionBroadcast.Generate();
+        TelevisionBroadcast existingBroadcast = _fakers.TelevisionBroadcast.GenerateOne();
         existingBroadcast.ArchivedAt = null;
 
-        DateTimeOffset newArchivedAt = _fakers.TelevisionBroadcast.Generate().ArchivedAt!.Value;
+        DateTimeOffset newArchivedAt = _fakers.TelevisionBroadcast.GenerateOne().ArchivedAt!.Value;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -517,7 +517,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_unarchive_resource()
     {
         // Arrange
-        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.Generate();
+        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -560,9 +560,9 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Cannot_shift_archive_date()
     {
         // Arrange
-        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.Generate();
+        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.GenerateOne();
 
-        DateTimeOffset? newArchivedAt = _fakers.TelevisionBroadcast.Generate().ArchivedAt;
+        DateTimeOffset? newArchivedAt = _fakers.TelevisionBroadcast.GenerateOne().ArchivedAt;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -603,7 +603,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_delete_archived_resource()
     {
         // Arrange
-        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.Generate();
+        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -633,7 +633,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Cannot_delete_unarchived_resource()
     {
         // Arrange
-        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.Generate();
+        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.GenerateOne();
         broadcast.ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>

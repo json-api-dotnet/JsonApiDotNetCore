@@ -39,16 +39,16 @@ public sealed class AtomicTraceLoggingTests : IClassFixture<IntegrationTestConte
         var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
         loggerFactory.Logger.Clear();
 
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        existingTrack.Lyric = _fakers.Lyric.Generate();
-        existingTrack.OwnedBy = _fakers.RecordCompany.Generate();
-        existingTrack.Performers = _fakers.Performer.Generate(1);
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        existingTrack.Lyric = _fakers.Lyric.GenerateOne();
+        existingTrack.OwnedBy = _fakers.RecordCompany.GenerateOne();
+        existingTrack.Performers = _fakers.Performer.GenerateList(1);
 
-        string newGenre = _fakers.MusicTrack.Generate().Genre!;
+        string newGenre = _fakers.MusicTrack.GenerateOne().Genre!;
 
-        Lyric existingLyric = _fakers.Lyric.Generate();
-        RecordCompany existingCompany = _fakers.RecordCompany.Generate();
-        Performer existingPerformer = _fakers.Performer.Generate();
+        Lyric existingLyric = _fakers.Lyric.GenerateOne();
+        RecordCompany existingCompany = _fakers.RecordCompany.GenerateOne();
+        Performer existingPerformer = _fakers.Performer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

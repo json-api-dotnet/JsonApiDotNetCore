@@ -42,7 +42,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Returns_no_body_for_successful_HEAD_request()
     {
         // Arrange
-        Meeting meeting = _fakers.Meeting.Generate();
+        Meeting meeting = _fakers.Meeting.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -84,8 +84,8 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_get_primary_resources_with_include()
     {
         // Arrange
-        Meeting meeting = _fakers.Meeting.Generate();
-        meeting.Attendees = _fakers.MeetingAttendee.Generate(1);
+        Meeting meeting = _fakers.Meeting.GenerateOne();
+        meeting.Attendees = _fakers.MeetingAttendee.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -178,7 +178,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_get_primary_resource_with_empty_ToOne_include()
     {
         // Arrange
-        MeetingAttendee attendee = _fakers.MeetingAttendee.Generate();
+        MeetingAttendee attendee = _fakers.MeetingAttendee.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -233,7 +233,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_get_primary_resources_with_empty_ToMany_include()
     {
         // Arrange
-        Meeting meeting = _fakers.Meeting.Generate();
+        Meeting meeting = _fakers.Meeting.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -296,7 +296,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_get_primary_resource_by_ID()
     {
         // Arrange
-        Meeting meeting = _fakers.Meeting.Generate();
+        Meeting meeting = _fakers.Meeting.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -382,8 +382,8 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_get_secondary_resource()
     {
         // Arrange
-        MeetingAttendee attendee = _fakers.MeetingAttendee.Generate();
-        attendee.Meeting = _fakers.Meeting.Generate();
+        MeetingAttendee attendee = _fakers.MeetingAttendee.GenerateOne();
+        attendee.Meeting = _fakers.Meeting.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -436,7 +436,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_get_unknown_secondary_resource()
     {
         // Arrange
-        MeetingAttendee attendee = _fakers.MeetingAttendee.Generate();
+        MeetingAttendee attendee = _fakers.MeetingAttendee.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -466,8 +466,8 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_get_secondary_resources()
     {
         // Arrange
-        Meeting meeting = _fakers.Meeting.Generate();
-        meeting.Attendees = _fakers.MeetingAttendee.Generate(1);
+        Meeting meeting = _fakers.Meeting.GenerateOne();
+        meeting.Attendees = _fakers.MeetingAttendee.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -527,7 +527,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_get_unknown_secondary_resources()
     {
         // Arrange
-        Meeting meeting = _fakers.Meeting.Generate();
+        Meeting meeting = _fakers.Meeting.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -561,8 +561,8 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_get_ToOne_relationship()
     {
         // Arrange
-        MeetingAttendee attendee = _fakers.MeetingAttendee.Generate();
-        attendee.Meeting = _fakers.Meeting.Generate();
+        MeetingAttendee attendee = _fakers.MeetingAttendee.GenerateOne();
+        attendee.Meeting = _fakers.Meeting.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -596,8 +596,8 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_get_ToMany_relationship()
     {
         // Arrange
-        Meeting meeting = _fakers.Meeting.Generate();
-        meeting.Attendees = _fakers.MeetingAttendee.Generate(2);
+        Meeting meeting = _fakers.Meeting.GenerateOne();
+        meeting.Attendees = _fakers.MeetingAttendee.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -644,7 +644,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_create_resource_with_side_effects()
     {
         // Arrange
-        Meeting newMeeting = _fakers.Meeting.Generate();
+        Meeting newMeeting = _fakers.Meeting.GenerateOne();
         newMeeting.Id = Guid.NewGuid();
 
         var requestBody = new
@@ -712,7 +712,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_update_resource_with_side_effects()
     {
         // Arrange
-        MeetingAttendee existingAttendee = _fakers.MeetingAttendee.Generate();
+        MeetingAttendee existingAttendee = _fakers.MeetingAttendee.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -778,8 +778,8 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_update_resource_with_relationship_for_type_at_end()
     {
         // Arrange
-        MeetingAttendee existingAttendee = _fakers.MeetingAttendee.Generate();
-        existingAttendee.Meeting = _fakers.Meeting.Generate();
+        MeetingAttendee existingAttendee = _fakers.MeetingAttendee.GenerateOne();
+        existingAttendee.Meeting = _fakers.Meeting.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -827,7 +827,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.IncludeJsonApiVersion = true;
 
-        MeetingAttendee attendee = _fakers.MeetingAttendee.Generate();
+        MeetingAttendee attendee = _fakers.MeetingAttendee.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

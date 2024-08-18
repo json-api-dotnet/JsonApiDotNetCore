@@ -28,8 +28,8 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
     public async Task Can_create_OneToMany_relationship()
     {
         // Arrange
-        List<Performer> existingPerformers = _fakers.Performer.Generate(2);
-        string newTitle = _fakers.MusicTrack.Generate().Title;
+        List<Performer> existingPerformers = _fakers.Performer.GenerateList(2);
+        string newTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -108,8 +108,8 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
     public async Task Can_create_ManyToMany_relationship()
     {
         // Arrange
-        List<MusicTrack> existingTracks = _fakers.MusicTrack.Generate(3);
-        string newName = _fakers.Playlist.Generate().Name;
+        List<MusicTrack> existingTracks = _fakers.MusicTrack.GenerateList(3);
+        string newName = _fakers.Playlist.GenerateOne().Name;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -348,7 +348,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
     public async Task Cannot_create_for_unknown_relationship_IDs()
     {
         // Arrange
-        string newTitle = _fakers.MusicTrack.Generate().Title;
+        string newTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         string performerId1 = Unknown.StringId.For<Performer, int>();
         string performerId2 = Unknown.StringId.AltFor<Performer, int>();
@@ -474,8 +474,8 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
     public async Task Can_create_with_duplicates()
     {
         // Arrange
-        Performer existingPerformer = _fakers.Performer.Generate();
-        string newTitle = _fakers.MusicTrack.Generate().Title;
+        Performer existingPerformer = _fakers.Performer.GenerateOne();
+        string newTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
