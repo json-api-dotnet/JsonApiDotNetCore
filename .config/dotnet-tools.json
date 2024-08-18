@@ -3,28 +3,32 @@
   "isRoot": true,
   "tools": {
     "jetbrains.resharper.globaltools": {
-      "version": "2024.1.4",
+      "version": "2024.1.6",
       "commands": [
         "jb"
-      ]
+      ],
+      "rollForward": false
     },
     "regitlint": {
       "version": "6.3.13",
       "commands": [
         "regitlint"
-      ]
+      ],
+      "rollForward": false
     },
     "dotnet-reportgenerator-globaltool": {
       "version": "5.3.8",
       "commands": [
         "reportgenerator"
-      ]
+      ],
+      "rollForward": false
     },
     "docfx": {
       "version": "2.77.0",
       "commands": [
         "docfx"
-      ]
+      ],
+      "rollForward": false
     }
   }
 }
