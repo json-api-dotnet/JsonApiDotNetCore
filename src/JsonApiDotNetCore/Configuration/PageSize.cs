@@ -9,10 +9,14 @@ public sealed class PageSize : IEquatable<PageSize>
 
     public PageSize(int value)
     {
+#if NET6_0
         if (value < 1)
         {
             throw new ArgumentOutOfRangeException(nameof(value));
         }
+#else
+        ArgumentOutOfRangeException.ThrowIfLessThan(value, 1);
+#endif
 
         Value = value;
     }
