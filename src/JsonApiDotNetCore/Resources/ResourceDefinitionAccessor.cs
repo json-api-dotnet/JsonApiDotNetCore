@@ -92,7 +92,7 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
         ArgumentGuard.NotNullNorEmpty(parameterName);
 
         dynamic resourceDefinition = ResolveResourceDefinition(resourceClrType);
-        dynamic handlers = resourceDefinition.OnRegisterQueryableHandlersForQueryStringParameters();
+        dynamic? handlers = resourceDefinition.OnRegisterQueryableHandlersForQueryStringParameters();
 
         if (handlers != null)
         {

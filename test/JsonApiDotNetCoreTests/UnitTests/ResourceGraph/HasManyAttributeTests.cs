@@ -73,10 +73,7 @@ public sealed class HasManyAttributeTests
 
         var resource = new TestResource();
 
-        var children = new List<TestResource>
-        {
-            resource
-        };
+        List<TestResource> children = [resource];
 
         // Act
         attribute.SetValue(resource, children);
@@ -96,11 +93,11 @@ public sealed class HasManyAttributeTests
 
         var resource = new TestResource();
 
-        var children = new List<TestResource>
-        {
+        List<TestResource> children =
+        [
             resource,
             null!
-        };
+        ];
 
         // Act
         Action action = () => attribute.SetValue(resource, children);
@@ -120,11 +117,11 @@ public sealed class HasManyAttributeTests
 
         var resource = new TestResource();
 
-        var children = new List<object>
-        {
+        List<object> children =
+        [
             resource,
             1
-        };
+        ];
 
         // Act
         Action action = () => attribute.SetValue(resource, children);

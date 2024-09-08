@@ -31,7 +31,7 @@ public sealed class SingleOrManyDataConverterFactory : JsonConverterFactory
     {
         public override SingleOrManyData<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var objects = new List<T?>();
+            List<T?> objects = [];
             bool isManyData = false;
             bool hasCompletedToMany = false;
 

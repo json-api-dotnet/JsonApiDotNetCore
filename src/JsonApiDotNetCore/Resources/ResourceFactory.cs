@@ -92,7 +92,7 @@ internal sealed class ResourceFactory : IResourceFactory
             return Expression.New(resourceClrType);
         }
 
-        var constructorArguments = new List<Expression>();
+        List<Expression> constructorArguments = [];
 
         ConstructorInfo longestConstructor = GetLongestConstructor(resourceClrType);
 

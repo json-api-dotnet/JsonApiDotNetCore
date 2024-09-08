@@ -73,7 +73,7 @@ internal sealed class DapperFacade
             }
         }
 
-        return sqlCommands;
+        return sqlCommands.AsReadOnly();
     }
 
     public IReadOnlyCollection<CommandDefinition> BuildSqlCommandsForChangedRelationshipsHavingForeignKeyAtRightSide<TId>(ResourceChangeDetector changeDetector,
@@ -120,7 +120,7 @@ internal sealed class DapperFacade
             }
         }
 
-        return sqlCommands;
+        return sqlCommands.AsReadOnly();
     }
 
     public CommandDefinition BuildSqlCommandForRemoveFromToMany(RelationshipForeignKey foreignKey, object[] rightResourceIdValues,

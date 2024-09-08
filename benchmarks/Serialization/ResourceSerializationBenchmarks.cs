@@ -1,7 +1,6 @@
 using System.Collections.Immutable;
 using System.Text.Json;
 using BenchmarkDotNet.Attributes;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
@@ -97,10 +96,15 @@ public class ResourceSerializationBenchmarks : SerializationBenchmarkBase
 
         resource1.Single2 = resource2;
         resource2.Single3 = resource3;
-        resource3.Multi4 = resource4.AsHashSet();
-        resource4.Multi5 = resource5.AsHashSet();
+        resource3.Multi4 = ToHashSet(resource4);
+        resource4.Multi5 = ToHashSet(resource5);
 
         return resource1;
+    }
+
+    private static HashSet<T> ToHashSet<T>(T element)
+    {
+        return [element];
     }
 
     [Benchmark]

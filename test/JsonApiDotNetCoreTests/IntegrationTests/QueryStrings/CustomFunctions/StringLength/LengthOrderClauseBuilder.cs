@@ -19,7 +19,7 @@ internal sealed class LengthOrderClauseBuilder : OrderClauseBuilder
         return base.DefaultVisit(expression, context);
     }
 
-    private Expression VisitLength(LengthExpression expression, QueryClauseBuilderContext context)
+    private MemberExpression VisitLength(LengthExpression expression, QueryClauseBuilderContext context)
     {
         Expression propertyAccess = Visit(expression.TargetAttribute, context);
         return Expression.Property(propertyAccess, LengthPropertyGetter);

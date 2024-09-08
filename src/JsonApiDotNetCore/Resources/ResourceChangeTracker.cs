@@ -12,9 +12,9 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
     private readonly IJsonApiRequest _request;
     private readonly ITargetedFields _targetedFields;
 
-    private IDictionary<string, object?>? _initiallyStoredAttributeValues;
-    private IDictionary<string, object?>? _requestAttributeValues;
-    private IDictionary<string, object?>? _finallyStoredAttributeValues;
+    private Dictionary<string, object?>? _initiallyStoredAttributeValues;
+    private Dictionary<string, object?>? _requestAttributeValues;
+    private Dictionary<string, object?>? _finallyStoredAttributeValues;
 
     public ResourceChangeTracker(IJsonApiRequest request, ITargetedFields targetedFields)
     {
@@ -49,7 +49,7 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
         _finallyStoredAttributeValues = CreateAttributeDictionary(resource, _request.PrimaryResourceType!.Attributes);
     }
 
-    private IDictionary<string, object?> CreateAttributeDictionary(TResource resource, IEnumerable<AttrAttribute> attributes)
+    private Dictionary<string, object?> CreateAttributeDictionary(TResource resource, IEnumerable<AttrAttribute> attributes)
     {
         var result = new Dictionary<string, object?>();
 

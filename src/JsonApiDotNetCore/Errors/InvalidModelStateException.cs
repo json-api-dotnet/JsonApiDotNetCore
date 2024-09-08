@@ -20,7 +20,7 @@ public sealed class InvalidModelStateException(
     Func<Type, int, Type?>? getCollectionElementTypeCallback = null) : JsonApiException(FromModelStateDictionary(modelState, modelType, resourceGraph,
     includeExceptionStackTraceInErrors, getCollectionElementTypeCallback))
 {
-    private static IEnumerable<ErrorObject> FromModelStateDictionary(IReadOnlyDictionary<string, ModelStateEntry?> modelState, Type modelType,
+    private static List<ErrorObject> FromModelStateDictionary(IReadOnlyDictionary<string, ModelStateEntry?> modelState, Type modelType,
         IResourceGraph resourceGraph, bool includeExceptionStackTraceInErrors, Func<Type, int, Type?>? getCollectionElementTypeCallback)
     {
         ArgumentGuard.NotNull(modelState);

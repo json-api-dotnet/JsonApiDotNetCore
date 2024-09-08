@@ -219,7 +219,7 @@ public class LinkBuilder : ILinkBuilder
 
     private string GetQueryStringInPaginationLink(int pageOffset, string? pageSizeValue)
     {
-        IDictionary<string, string?> parameters = HttpContext.Request.Query.ToDictionary(pair => pair.Key, pair => (string?)pair.Value.ToString());
+        Dictionary<string, string?> parameters = HttpContext.Request.Query.ToDictionary(pair => pair.Key, pair => (string?)pair.Value.ToString());
 
         if (pageSizeValue == null)
         {
@@ -275,7 +275,7 @@ public class LinkBuilder : ILinkBuilder
     private string? GetLinkForResourceSelf(ResourceType resourceType, IIdentifiable resource)
     {
         string? controllerName = _controllerResourceMapping.GetControllerNameForResourceType(resourceType);
-        IDictionary<string, object?> routeValues = GetRouteValues(resource.StringId!, null);
+        RouteValueDictionary routeValues = GetRouteValues(resource.StringId!, null);
 
         return RenderLinkForAction(controllerName, GetPrimaryControllerActionName, routeValues);
     }
@@ -304,7 +304,7 @@ public class LinkBuilder : ILinkBuilder
     private string? GetLinkForRelationshipSelf(string leftId, RelationshipAttribute relationship)
     {
         string? controllerName = _controllerResourceMapping.GetControllerNameForResourceType(relationship.LeftType);
-        IDictionary<string, object?> routeValues = GetRouteValues(leftId, relationship.PublicName);
+        RouteValueDictionary routeValues = GetRouteValues(leftId, relationship.PublicName);
 
         return RenderLinkForAction(controllerName, GetRelationshipControllerActionName, routeValues);
     }
@@ -312,12 +312,12 @@ public class LinkBuilder : ILinkBuilder
     private string? GetLinkForRelationshipRelated(string leftId, RelationshipAttribute relationship)
     {
         string? controllerName = _controllerResourceMapping.GetControllerNameForResourceType(relationship.LeftType);
-        IDictionary<string, object?> routeValues = GetRouteValues(leftId, relationship.PublicName);
+        RouteValueDictionary routeValues = GetRouteValues(leftId, relationship.PublicName);
 
         return RenderLinkForAction(controllerName, GetSecondaryControllerActionName, routeValues);
     }
 
-    private IDictionary<string, object?> GetRouteValues(string primaryId, string? relationshipName)
+    private RouteValueDictionary GetRouteValues(string primaryId, string? relationshipName)
     {
         // By default, we copy all route parameters from the *current* endpoint, which helps in case all endpoints have the same
         // set of non-standard parameters. There is no way we can know which non-standard parameters a *different* endpoint needs,

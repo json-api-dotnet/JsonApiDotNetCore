@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using DapperExample.TranslationToSql.DataModel;
 using DapperExample.TranslationToSql.TreeNodes;
 using JsonApiDotNetCore;
@@ -16,12 +17,12 @@ internal sealed class InsertStatementBuilder(IDataModelService dataModelService)
         ResetState();
 
         TableNode table = GetTable(resourceType, null);
-        List<ColumnAssignmentNode> assignments = GetColumnAssignments(columnsToSet, table);
+        ReadOnlyCollection<ColumnAssignmentNode> assignments = GetColumnAssignments(columnsToSet, table);
 
         return new InsertNode(table, assignments);
     }
 
-    private List<ColumnAssignmentNode> GetColumnAssignments(IReadOnlyDictionary<string, object?> columnsToSet, TableNode table)
+    private ReadOnlyCollection<ColumnAssignmentNode> GetColumnAssignments(IReadOnlyDictionary<string, object?> columnsToSet, TableNode table)
     {
         List<ColumnAssignmentNode> assignments = [];
         ColumnNode idColumn = table.GetIdColumn(table.Alias);
@@ -45,6 +46,6 @@ internal sealed class InsertStatementBuilder(IDataModelService dataModelService)
             assignments.Add(assignment);
         }
 
-        return assignments;
+        return assignments.AsReadOnly();
     }
 }

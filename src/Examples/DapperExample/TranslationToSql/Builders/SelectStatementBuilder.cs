@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Net;
 using DapperExample.TranslationToSql.DataModel;
 using DapperExample.TranslationToSql.Generators;
@@ -57,7 +58,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
 
         ResetState(selectShape);
 
-        TableAccessorNode primaryTableAccessor = CreatePrimaryTable(queryLayer.ResourceType);
+        FromNode primaryTableAccessor = CreatePrimaryTable(queryLayer.ResourceType);
         ConvertQueryLayer(queryLayer, primaryTableAccessor);
 
         SelectNode select = ToSelect(false, false);
@@ -84,7 +85,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
         _selectShape = selectShape;
     }
 
-    private TableAccessorNode CreatePrimaryTable(ResourceType resourceType)
+    private FromNode CreatePrimaryTable(ResourceType resourceType)
     {
         IReadOnlyDictionary<string, ResourceFieldAttribute?> columnMappings = _queryState.DataModelService.GetColumnMappings(resourceType);
         var table = new TableNode(resourceType, columnMappings, _queryState.TableAliasGenerator.GetNext());
@@ -194,8 +195,8 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
         // When selecting from a table, use a deterministic order to simplify test assertions.
         // When selecting from a sub-query (typically spanning multiple tables and renamed columns), existing order must be preserved.
         _selectorsPerTable[tableAccessor] = tableAccessor.Source is SelectNode
-            ? PreserveColumnOrderEnsuringUniqueNames(columns)
-            : OrderColumnsWithIdAtFrontEnsuringUniqueNames(columns);
+            ? PreserveColumnOrderEnsuringUniqueNames(columns).AsReadOnly()
+            : OrderColumnsWithIdAtFrontEnsuringUniqueNames(columns).AsReadOnly();
     }
 
     private List<SelectorNode> PreserveColumnOrderEnsuringUniqueNames(IEnumerable<ColumnNode> columns)
@@ -213,7 +214,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
         return selectors;
     }
 
-    private List<SelectorNode> OrderColumnsWithIdAtFrontEnsuringUniqueNames(IEnumerable<ColumnNode> columns)
+    private SelectorNode[] OrderColumnsWithIdAtFrontEnsuringUniqueNames(IEnumerable<ColumnNode> columns)
     {
         Dictionary<string, List<SelectorNode>> selectorsPerTable = [];
 
@@ -236,7 +237,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
             }
         }
 
-        return selectorsPerTable.SelectMany(selector => selector.Value).ToList();
+        return selectorsPerTable.SelectMany(selector => selector.Value).ToArray();
     }
 
     private string GetUniqueSelectorName(string columnName)
@@ -260,7 +261,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
         {
             var subSelectBuilder = new SelectStatementBuilder(_queryState);
 
-            TableAccessorNode primaryTableAccessor = subSelectBuilder.CreatePrimaryTable(relationship.RightType);
+            FromNode primaryTableAccessor = subSelectBuilder.CreatePrimaryTable(relationship.RightType);
             subSelectBuilder.ConvertQueryLayer(nextLayer, primaryTableAccessor);
 
             string[] innerTableAliases = subSelectBuilder._selectorsPerTable.Keys.Select(accessor => accessor.Source.Alias).Cast<string>().ToArray();
@@ -271,7 +272,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
             subSelectBuilder.SelectAllColumnsInAllTables(selectorsToKeep.Keys);
 
             // Since there's no pagination support, it's pointless to preserve orderings in the sub-query.
-            List<OrderByTermNode> orderingsToKeep = subSelectBuilder._orderByTerms.ToList();
+            OrderByTermNode[] orderingsToKeep = subSelectBuilder._orderByTerms.ToArray();
             subSelectBuilder._orderByTerms.Clear();
 
             SelectNode aliasedSubQuery = subSelectBuilder.ToSelect(true, true);
@@ -283,10 +284,11 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
             TableAccessorNode outerTableAccessor = CreateRelatedTable(tableAccessor, relationship, aliasedSubQuery);
 
             // In the outer query, select only what was originally selected.
-            _selectorsPerTable[outerTableAccessor] = MapSelectorsFromSubQuery(selectorsToKeep.SelectMany(selector => selector.Value), aliasedSubQuery);
+            _selectorsPerTable[outerTableAccessor] =
+                MapSelectorsFromSubQuery(selectorsToKeep.SelectMany(selector => selector.Value), aliasedSubQuery).AsReadOnly();
 
             // To achieve total ordering, all orderings from sub-query must always appear in the root query.
-            IReadOnlyList<OrderByTermNode> outerOrderingsToAdd = MapOrderingsFromSubQuery(orderingsToKeep, aliasedSubQuery);
+            List<OrderByTermNode> outerOrderingsToAdd = MapOrderingsFromSubQuery(orderingsToKeep, aliasedSubQuery);
             _orderByTerms.AddRange(outerOrderingsToAdd);
         }
         else
@@ -356,7 +358,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
         _queryState.RelatedTables[leftTableAccessor].Add(relationship, rightTableAccessor);
     }
 
-    private IReadOnlyList<SelectorNode> MapSelectorsFromSubQuery(IEnumerable<SelectorNode> innerSelectorsToKeep, SelectNode select)
+    private List<SelectorNode> MapSelectorsFromSubQuery(IEnumerable<SelectorNode> innerSelectorsToKeep, SelectNode select)
     {
         List<ColumnNode> outerColumnsToKeep = [];
 
@@ -379,7 +381,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
         return PreserveColumnOrderEnsuringUniqueNames(outerColumnsToKeep);
     }
 
-    private IReadOnlyList<OrderByTermNode> MapOrderingsFromSubQuery(IEnumerable<OrderByTermNode> innerOrderingsToKeep, SelectNode select)
+    private List<OrderByTermNode> MapOrderingsFromSubQuery(IEnumerable<OrderByTermNode> innerOrderingsToKeep, SelectNode select)
     {
         List<OrderByTermNode> orderingsToKeep = [];
 
@@ -419,9 +421,9 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
         return relatedTableAccessor;
     }
 
-    private TableAccessorNode CreatePrimaryTableWithIdentityCondition(TableSourceNode outerTableSource, RelationshipAttribute relationship)
+    private FromNode CreatePrimaryTableWithIdentityCondition(TableSourceNode outerTableSource, RelationshipAttribute relationship)
     {
-        TableAccessorNode innerTableAccessor = CreatePrimaryTable(relationship.RightType);
+        FromNode innerTableAccessor = CreatePrimaryTable(relationship.RightType);
 
         ComparisonNode joinCondition = CreateJoinCondition(outerTableSource, relationship, innerTableAccessor.Source);
         _whereFilters.Add(joinCondition);
@@ -438,14 +440,14 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
     private SelectNode ToSelect(bool isSubQuery, bool createAlias)
     {
         WhereNode? where = GetWhere();
-        OrderByNode? orderBy = _orderByTerms.Count == 0 ? null : new OrderByNode(_orderByTerms);
+        OrderByNode? orderBy = _orderByTerms.Count == 0 ? null : new OrderByNode(_orderByTerms.AsReadOnly());
 
         // Materialization using Dapper requires selectors to match property names, so adjust selector names accordingly.
         Dictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> selectorsPerTable =
             isSubQuery ? _selectorsPerTable : AliasSelectorsToTableColumnNames(_selectorsPerTable);
 
         string? alias = createAlias ? _queryState.TableAliasGenerator.GetNext() : null;
-        return new SelectNode(selectorsPerTable, where, orderBy, alias);
+        return new SelectNode(selectorsPerTable.AsReadOnly(), where, orderBy, alias);
     }
 
     private WhereNode? GetWhere()
@@ -457,7 +459,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
 
         var combinator = new LogicalCombinator();
 
-        FilterNode filter = _whereFilters.Count == 1 ? _whereFilters[0] : new LogicalNode(LogicalOperator.And, _whereFilters);
+        FilterNode filter = _whereFilters.Count == 1 ? _whereFilters[0] : new LogicalNode(LogicalOperator.And, _whereFilters.AsReadOnly());
         FilterNode collapsed = combinator.Collapse(filter);
 
         return new WhereNode(collapsed);
@@ -470,7 +472,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
 
         foreach ((TableAccessorNode tableAccessor, IReadOnlyList<SelectorNode> tableSelectors) in selectorsPerTable)
         {
-            aliasedSelectors[tableAccessor] = tableSelectors.Select(AliasToTableColumnName).ToList();
+            aliasedSelectors[tableAccessor] = tableSelectors.Select(AliasToTableColumnName).ToArray().AsReadOnly();
         }
 
         return aliasedSelectors;
@@ -569,15 +571,15 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
 
     public override SqlTreeNode VisitLogical(LogicalExpression expression, TableAccessorNode tableAccessor)
     {
-        FilterNode[] terms = VisitSequence<FilterExpression, FilterNode>(expression.Terms, tableAccessor).ToArray();
+        ReadOnlyCollection<FilterNode> terms = VisitSequence<FilterExpression, FilterNode>(expression.Terms, tableAccessor);
         return new LogicalNode(expression.Operator, terms);
     }
 
-    private IEnumerable<TOut> VisitSequence<TIn, TOut>(IEnumerable<TIn> source, TableAccessorNode tableAccessor)
+    private ReadOnlyCollection<TOut> VisitSequence<TIn, TOut>(IEnumerable<TIn> source, TableAccessorNode tableAccessor)
         where TIn : QueryExpression
         where TOut : SqlTreeNode
     {
-        return source.Select(expression => (TOut)Visit(expression, tableAccessor)).ToList();
+        return source.Select(expression => (TOut)Visit(expression, tableAccessor)).ToArray().AsReadOnly();
     }
 
     public override SqlTreeNode VisitNot(NotExpression expression, TableAccessorNode tableAccessor)
@@ -590,10 +592,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
 
         if (finder.AttributesToNullCheck.Count > 0)
         {
-            var orTerms = new List<FilterNode>
-            {
-                filter
-            };
+            List<FilterNode> orTerms = [filter];
 
             foreach (ResourceFieldChainExpression fieldChain in finder.AttributesToNullCheck)
             {
@@ -602,7 +601,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
                 orTerms.Add(isNullCheck);
             }
 
-            return new LogicalNode(LogicalOperator.Or, orTerms);
+            return new LogicalNode(LogicalOperator.Or, orTerms.AsReadOnly());
         }
 
         return filter;
@@ -656,7 +655,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
 
     public override SqlTreeNode VisitSort(SortExpression expression, TableAccessorNode tableAccessor)
     {
-        OrderByTermNode[] terms = VisitSequence<SortElementExpression, OrderByTermNode>(expression.Elements, tableAccessor).ToArray();
+        ReadOnlyCollection<OrderByTermNode> terms = VisitSequence<SortElementExpression, OrderByTermNode>(expression.Elements, tableAccessor);
         return new OrderByNode(terms);
     }
 
@@ -688,17 +687,17 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
     {
         var column = (ColumnNode)Visit(expression.TargetAttribute, tableAccessor);
 
-        ParameterNode[] parameters =
-            VisitSequence<LiteralConstantExpression, ParameterNode>(expression.Constants.OrderBy(constant => constant.TypedValue), tableAccessor).ToArray();
+        ReadOnlyCollection<ParameterNode> parameters =
+            VisitSequence<LiteralConstantExpression, ParameterNode>(expression.Constants.OrderBy(constant => constant.TypedValue), tableAccessor);
 
-        return parameters.Length == 1 ? new ComparisonNode(ComparisonOperator.Equals, column, parameters[0]) : new InNode(column, parameters);
+        return parameters.Count == 1 ? new ComparisonNode(ComparisonOperator.Equals, column, parameters[0]) : new InNode(column, parameters);
     }
 
     private sealed class NullableAttributeFinder : QueryExpressionRewriter<object?>
     {
         private readonly IDataModelService _dataModelService;
 
-        public IList<ResourceFieldChainExpression> AttributesToNullCheck { get; } = new List<ResourceFieldChainExpression>();
+        public List<ResourceFieldChainExpression> AttributesToNullCheck { get; } = [];
 
         public NullableAttributeFinder(IDataModelService dataModelService)
         {

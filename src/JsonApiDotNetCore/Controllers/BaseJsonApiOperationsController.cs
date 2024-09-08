@@ -197,7 +197,7 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
         using IDisposable _ = new RevertRequestStateOnDispose(_request, _targetedFields);
 
         int operationIndex = 0;
-        var requestModelState = new List<(string key, ModelStateEntry? entry)>();
+        List<(string key, ModelStateEntry? entry)> requestModelState = [];
         int maxErrorsRemaining = ModelState.MaxAllowedErrors;
 
         foreach (OperationContainer operation in operations)

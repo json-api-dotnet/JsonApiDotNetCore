@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using DapperExample.TranslationToSql.TreeNodes;
 using JsonApiDotNetCore;
@@ -59,12 +60,13 @@ internal sealed partial class StaleColumnReferenceRewriter : SqlTreeNodeVisitor<
     {
         IncludeTableAliasInCurrentScope(node);
 
-        using IDisposable scope = EnterSelectScope();
-
-        IReadOnlyDictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> selectors = VisitSelectors(node.Selectors, mode);
-        WhereNode? where = TypedVisit(node.Where, mode);
-        OrderByNode? orderBy = TypedVisit(node.OrderBy, mode);
-        return new SelectNode(selectors, where, orderBy, node.Alias);
+        using (EnterSelectScope())
+        {
+            ReadOnlyDictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> selectors = VisitSelectors(node.Selectors, mode);
+            WhereNode? where = TypedVisit(node.Where, mode);
+            OrderByNode? orderBy = TypedVisit(node.OrderBy, mode);
+            return new SelectNode(selectors, where, orderBy, node.Alias);
+        }
     }
 
     private void IncludeTableAliasInCurrentScope(TableSourceNode tableSource)
@@ -76,7 +78,7 @@ internal sealed partial class StaleColumnReferenceRewriter : SqlTreeNodeVisitor<
         }
     }
 
-    private IDisposable EnterSelectScope()
+    private PopStackOnDispose<Dictionary<string, TableSourceNode>> EnterSelectScope()
     {
         Dictionary<string, TableSourceNode> newScope = CopyTopStackElement();
         _tablesInScopeStack.Push(newScope);
@@ -95,7 +97,7 @@ internal sealed partial class StaleColumnReferenceRewriter : SqlTreeNodeVisitor<
         return new Dictionary<string, TableSourceNode>(topElement);
     }
 
-    private IReadOnlyDictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> VisitSelectors(
+    private ReadOnlyDictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> VisitSelectors(
         IReadOnlyDictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> selectors, ColumnVisitMode mode)
     {
         Dictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> newSelectors = [];
@@ -103,12 +105,12 @@ internal sealed partial class StaleColumnReferenceRewriter : SqlTreeNodeVisitor<
         foreach ((TableAccessorNode tableAccessor, IReadOnlyList<SelectorNode> tableSelectors) in selectors)
         {
             TableAccessorNode newTableAccessor = TypedVisit(tableAccessor, mode);
-            IReadOnlyList<SelectorNode> newTableSelectors = VisitList(tableSelectors, ColumnVisitMode.Declaration);
+            ReadOnlyCollection<SelectorNode> newTableSelectors = VisitSequence(tableSelectors, ColumnVisitMode.Declaration);
 
             newSelectors.Add(newTableAccessor, newTableSelectors);
         }
 
-        return newSelectors;
+        return newSelectors.AsReadOnly();
     }
 
     public override SqlTreeNode VisitTable(TableNode node, ColumnVisitMode mode)
@@ -142,7 +144,7 @@ internal sealed partial class StaleColumnReferenceRewriter : SqlTreeNodeVisitor<
         return MapColumnInTable(node, tablesInScope);
     }
 
-    private ColumnNode MapColumnInTable(ColumnInTableNode column, IDictionary<string, TableSourceNode> tablesInScope)
+    private ColumnNode MapColumnInTable(ColumnInTableNode column, Dictionary<string, TableSourceNode> tablesInScope)
     {
         if (column.TableAlias != null && !tablesInScope.ContainsKey(column.TableAlias))
         {
@@ -213,7 +215,7 @@ internal sealed partial class StaleColumnReferenceRewriter : SqlTreeNodeVisitor<
 
     public override SqlTreeNode VisitLogical(LogicalNode node, ColumnVisitMode mode)
     {
-        IReadOnlyList<FilterNode> terms = VisitList(node.Terms, mode);
+        ReadOnlyCollection<FilterNode> terms = VisitSequence(node.Terms, mode);
         return new LogicalNode(node.Operator, terms);
     }
 
@@ -233,7 +235,7 @@ internal sealed partial class StaleColumnReferenceRewriter : SqlTreeNodeVisitor<
     public override SqlTreeNode VisitIn(InNode node, ColumnVisitMode mode)
     {
         ColumnNode column = TypedVisit(node.Column, mode);
-        IReadOnlyList<SqlValueNode> values = VisitList(node.Values, mode);
+        ReadOnlyCollection<SqlValueNode> values = VisitSequence(node.Values, mode);
         return new InNode(column, values);
     }
 
@@ -251,7 +253,7 @@ internal sealed partial class StaleColumnReferenceRewriter : SqlTreeNodeVisitor<
 
     public override SqlTreeNode VisitOrderBy(OrderByNode node, ColumnVisitMode mode)
     {
-        IReadOnlyList<OrderByTermNode> terms = VisitList(node.Terms, mode);
+        ReadOnlyCollection<OrderByTermNode> terms = VisitSequence(node.Terms, mode);
         return new OrderByNode(terms);
     }
 
@@ -284,10 +286,10 @@ internal sealed partial class StaleColumnReferenceRewriter : SqlTreeNodeVisitor<
         return node != null ? (T)Visit(node, mode) : null;
     }
 
-    private IReadOnlyList<T> VisitList<T>(IEnumerable<T> nodes, ColumnVisitMode mode)
+    private ReadOnlyCollection<T> VisitSequence<T>(IEnumerable<T> nodes, ColumnVisitMode mode)
         where T : SqlTreeNode
     {
-        return nodes.Select(element => TypedVisit(element, mode)).ToList();
+        return nodes.Select(element => TypedVisit(element, mode)).ToArray().AsReadOnly();
     }
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Mapped inaccessible column {FromColumn} to {ToColumn}.")]

@@ -9,7 +9,13 @@ public class ReportService : IGetAllService<Report, int>
 {
     public Task<IReadOnlyCollection<Report>> GetAsync(CancellationToken cancellationToken)
     {
-        List<Report> reports =
+        IReadOnlyCollection<Report> reports = GetReports().AsReadOnly();
+        return Task.FromResult(reports);
+    }
+
+    private List<Report> GetReports()
+    {
+        return
         [
             new Report
             {
@@ -22,7 +28,5 @@ public class ReportService : IGetAllService<Report, int>
                 }
             }
         ];
-
-        return Task.FromResult<IReadOnlyCollection<Report>>(reports);
     }
 }

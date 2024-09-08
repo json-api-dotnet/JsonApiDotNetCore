@@ -18,13 +18,13 @@ public sealed class NullSafeExpressionRewriterTests
         // Arrange
         var generator = new IdGenerator();
 
-        var dataSource = new List<TestResource>
-        {
-            new()
+        List<TestResource> dataSource =
+        [
+            new TestResource
             {
                 Id = generator.GetNext()
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -32,7 +32,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Id = generator.GetNext()
                 }
             }
-        };
+        ];
 
         TestResource lastInDataSource = dataSource.Last();
 
@@ -57,13 +57,13 @@ public sealed class NullSafeExpressionRewriterTests
         // Arrange
         var generator = new IdGenerator();
 
-        var dataSource = new List<TestResource>
-        {
-            new()
+        List<TestResource> dataSource =
+        [
+            new TestResource
             {
                 Id = generator.GetNext()
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -71,7 +71,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Id = generator.GetNext()
                 }
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -86,7 +86,7 @@ public sealed class NullSafeExpressionRewriterTests
                     }
                 }
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -102,7 +102,7 @@ public sealed class NullSafeExpressionRewriterTests
                     }
                 }
             }
-        };
+        ];
 
         TestResource lastInDataSource = dataSource.Last();
         lastInDataSource.FirstChild!.Parent!.Id = lastInDataSource.Parent!.Id;
@@ -130,13 +130,13 @@ public sealed class NullSafeExpressionRewriterTests
         // Arrange
         var generator = new IdGenerator();
 
-        var dataSource = new List<TestResource>
-        {
-            new()
+        List<TestResource> dataSource =
+        [
+            new TestResource
             {
                 Id = generator.GetNext()
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -144,7 +144,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Id = generator.GetNext()
                 }
             }
-        };
+        ];
 
         // ReSharper disable once NegativeEqualityExpression
         Expression<Func<IEnumerable<TestResource>, IEnumerable<TestResource>>> expression = source => source.Where(resource => !(resource.Parent!.Id == 3));
@@ -168,13 +168,13 @@ public sealed class NullSafeExpressionRewriterTests
         // Arrange
         var generator = new IdGenerator();
 
-        var dataSource = new List<TestResource>
-        {
-            new()
+        List<TestResource> dataSource =
+        [
+            new TestResource
             {
                 Id = generator.GetNext()
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -182,7 +182,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Id = generator.GetNext()
                 }
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -201,7 +201,7 @@ public sealed class NullSafeExpressionRewriterTests
                     }
                 }
             }
-        };
+        ];
 
         TestResource lastInDataSource = dataSource.Last();
 
@@ -228,13 +228,13 @@ public sealed class NullSafeExpressionRewriterTests
         // Arrange
         var generator = new IdGenerator();
 
-        var dataSource = new List<TestResource>
-        {
-            new()
+        List<TestResource> dataSource =
+        [
+            new TestResource
             {
                 Id = generator.GetNext()
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -242,7 +242,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Id = generator.GetNext()
                 }
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Children =
@@ -260,7 +260,7 @@ public sealed class NullSafeExpressionRewriterTests
                     }
                 }
             }
-        };
+        ];
 
         // ReSharper disable once NegativeEqualityExpression
         Expression<Func<IEnumerable<TestResource>, IEnumerable<TestResource>>> expression = source => source.Where(resource =>
@@ -287,14 +287,14 @@ public sealed class NullSafeExpressionRewriterTests
         // Arrange
         var generator = new IdGenerator();
 
-        var dataSource = new List<TestResource>
-        {
-            new()
+        List<TestResource> dataSource =
+        [
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Children = null!
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Children =
@@ -312,7 +312,7 @@ public sealed class NullSafeExpressionRewriterTests
                     }
                 }
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Children =
@@ -335,7 +335,7 @@ public sealed class NullSafeExpressionRewriterTests
                     }
                 }
             }
-        };
+        ];
 
         TestResource lastInDataSource = dataSource.Last();
 
@@ -363,13 +363,13 @@ public sealed class NullSafeExpressionRewriterTests
         // Arrange
         var generator = new IdGenerator();
 
-        var dataSource = new List<TestResource>
-        {
-            new()
+        List<TestResource> dataSource =
+        [
+            new TestResource
             {
                 Id = generator.GetNext()
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -378,7 +378,7 @@ public sealed class NullSafeExpressionRewriterTests
                 },
                 Children = null!
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -404,7 +404,7 @@ public sealed class NullSafeExpressionRewriterTests
                     }
                 }
             }
-        };
+        ];
 
         TestResource lastInDataSource = dataSource.Last();
 
@@ -435,13 +435,13 @@ public sealed class NullSafeExpressionRewriterTests
         // Arrange
         var generator = new IdGenerator();
 
-        var dataSource = new List<TestResource>
-        {
-            new()
+        List<TestResource> dataSource =
+        [
+            new TestResource
             {
                 Id = generator.GetNext()
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -449,7 +449,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Id = generator.GetNext()
                 }
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -457,7 +457,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Id = generator.GetNext()
                 }
             }
-        };
+        ];
 
         Expression<Func<IEnumerable<TestResource>, IEnumerable<TestResource>>> expression = source => source.OrderBy(resource => resource.Parent!.Id);
 
@@ -482,13 +482,13 @@ public sealed class NullSafeExpressionRewriterTests
         // Arrange
         var generator = new IdGenerator();
 
-        var dataSource = new List<TestResource>
-        {
-            new()
+        List<TestResource> dataSource =
+        [
+            new TestResource
             {
                 Id = generator.GetNext()
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -496,7 +496,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Id = generator.GetNext()
                 }
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -505,7 +505,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Pointer = OnePointer
                 }
             }
-        };
+        ];
 
         Expression<Func<IEnumerable<TestResource>, IEnumerable<TestResource>>> expression = source => source.OrderBy(resource => resource.Parent!.Pointer);
 
@@ -531,13 +531,13 @@ public sealed class NullSafeExpressionRewriterTests
         // Arrange
         var generator = new IdGenerator();
 
-        var dataSource = new List<TestResource>
-        {
-            new()
+        List<TestResource> dataSource =
+        [
+            new TestResource
             {
                 Id = generator.GetNext()
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -545,7 +545,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Id = generator.GetNext()
                 }
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -554,7 +554,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Number = -1
                 }
             }
-        };
+        ];
 
         Expression<Func<IEnumerable<TestResource>, IEnumerable<TestResource>>> expression = source => source.OrderBy(resource => resource.Parent!.Number);
 
@@ -579,13 +579,13 @@ public sealed class NullSafeExpressionRewriterTests
         // Arrange
         var generator = new IdGenerator();
 
-        var dataSource = new List<TestResource>
-        {
-            new()
+        List<TestResource> dataSource =
+        [
+            new TestResource
             {
                 Id = generator.GetNext()
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -593,7 +593,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Id = generator.GetNext()
                 }
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -602,7 +602,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Enum = TestEnum.Two
                 }
             }
-        };
+        ];
 
         Expression<Func<IEnumerable<TestResource>, IEnumerable<TestResource>>> expression = source => source.OrderBy(resource => resource.Parent!.Enum);
 
@@ -627,13 +627,13 @@ public sealed class NullSafeExpressionRewriterTests
         // Arrange
         var generator = new IdGenerator();
 
-        var dataSource = new List<TestResource>
-        {
-            new()
+        List<TestResource> dataSource =
+        [
+            new TestResource
             {
                 Id = generator.GetNext()
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -641,7 +641,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Id = generator.GetNext()
                 }
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -650,7 +650,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Name = "X"
                 }
             }
-        };
+        ];
 
         Expression<Func<IEnumerable<TestResource>, IEnumerable<TestResource>>> expression = source => source.OrderBy(resource => resource.Parent!.Name);
 
@@ -675,13 +675,13 @@ public sealed class NullSafeExpressionRewriterTests
         // Arrange
         var generator = new IdGenerator();
 
-        var dataSource = new List<TestResource>
-        {
-            new()
+        List<TestResource> dataSource =
+        [
+            new TestResource
             {
                 Id = generator.GetNext()
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -689,7 +689,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Id = generator.GetNext()
                 }
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -698,7 +698,7 @@ public sealed class NullSafeExpressionRewriterTests
                 },
                 Children = null!
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -713,7 +713,7 @@ public sealed class NullSafeExpressionRewriterTests
                     }
                 }
             }
-        };
+        ];
 
 #pragma warning disable CA1829 // Use Length/Count property instead of Count() when available
         // ReSharper disable once UseCollectionCountProperty
@@ -744,13 +744,13 @@ public sealed class NullSafeExpressionRewriterTests
         // Arrange
         var generator = new IdGenerator();
 
-        var dataSource = new List<TestResource>
-        {
-            new()
+        List<TestResource> dataSource =
+        [
+            new TestResource
             {
                 Id = generator.GetNext()
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -760,7 +760,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Number = 1
                 }
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -770,7 +770,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Number = 10
                 }
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -780,7 +780,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Number = 1
                 }
             },
-            new()
+            new TestResource
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -790,7 +790,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Number = 10
                 }
             }
-        };
+        ];
 
         Expression<Func<IEnumerable<TestResource>, IEnumerable<TestResource>>> expression = source =>
             source.OrderByDescending(resource => resource.Parent!.Name).ThenByDescending(resource => resource.Parent!.Number);

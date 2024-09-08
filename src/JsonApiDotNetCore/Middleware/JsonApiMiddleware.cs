@@ -144,7 +144,7 @@ public sealed partial class JsonApiMiddleware
             : null;
     }
 
-    private static async Task<bool> ValidateContentTypeHeaderAsync(ICollection<string> allowedContentTypes, HttpContext httpContext,
+    private static async Task<bool> ValidateContentTypeHeaderAsync(string[] allowedContentTypes, HttpContext httpContext,
         JsonSerializerOptions serializerOptions)
     {
         string? contentType = httpContext.Request.ContentType;
@@ -169,7 +169,7 @@ public sealed partial class JsonApiMiddleware
         return true;
     }
 
-    private static async Task<bool> ValidateAcceptHeaderAsync(ICollection<MediaTypeHeaderValue> allowedMediaTypes, HttpContext httpContext,
+    private static async Task<bool> ValidateAcceptHeaderAsync(MediaTypeHeaderValue[] allowedMediaTypes, HttpContext httpContext,
         JsonSerializerOptions serializerOptions)
     {
         string[] acceptHeaders = httpContext.Request.Headers.GetCommaSeparatedValues("Accept");

@@ -39,7 +39,7 @@ internal sealed class IncludeChainConverter
         var converter = new IncludeToChainsConverter();
         converter.Visit(include, null);
 
-        return converter.Chains;
+        return converter.Chains.AsReadOnly();
     }
 
     private sealed class IncludeToChainsConverter : QueryExpressionVisitor<object?, object?>

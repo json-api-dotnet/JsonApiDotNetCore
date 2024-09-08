@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using JsonApiDotNetCore;
 using Microsoft.Extensions.Logging;
 
 namespace TestBuildingBlocks;
@@ -64,14 +65,16 @@ public sealed class FakeLoggerFactory(LogLevel minimumLevel) : ILoggerFactory, I
         {
             lock (_lockObject)
             {
-                List<FakeLogMessage> snapshot = _messages.ToList();
-                return snapshot.AsReadOnly();
+                return _messages.ToArray().AsReadOnly();
             }
         }
 
         public IReadOnlyList<string> GetLines()
         {
-            return GetMessages().Select(message => message.ToString()).ToArray();
+            lock (_lockObject)
+            {
+                return _messages.Select(message => message.ToString()).ToArray().AsReadOnly();
+            }
         }
 
         private sealed class NullScope : IDisposable

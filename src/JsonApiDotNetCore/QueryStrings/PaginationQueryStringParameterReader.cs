@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
@@ -194,9 +195,9 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
             entry.PageNumber ??= PageNumber.ValueOne;
         }
 
-        public IReadOnlyCollection<ExpressionInScope> GetExpressionsInScope()
+        public ReadOnlyCollection<ExpressionInScope> GetExpressionsInScope()
         {
-            return EnumerateExpressionsInScope().ToArray();
+            return EnumerateExpressionsInScope().ToArray().AsReadOnly();
         }
 
         private IEnumerable<ExpressionInScope> EnumerateExpressionsInScope()

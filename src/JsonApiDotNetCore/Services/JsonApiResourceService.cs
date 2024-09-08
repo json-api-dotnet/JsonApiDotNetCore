@@ -267,7 +267,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
     private async Task ValidateResourcesToAssignInRelationshipsExistWithRefreshAsync(TResource primaryResource, bool onlyIfTypeHierarchy,
         CancellationToken cancellationToken)
     {
-        var missingResources = new List<MissingResourceInRelationship>();
+        List<MissingResourceInRelationship> missingResources = [];
 
         foreach ((QueryLayer queryLayer, RelationshipAttribute relationship) in _queryLayerComposer.ComposeForGetTargetedSecondaryResourceIds(primaryResource))
         {
@@ -301,7 +301,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
     }
 
     private async IAsyncEnumerable<MissingResourceInRelationship> GetMissingRightResourcesAsync(QueryLayer existingRightResourceIdsQueryLayer,
-        RelationshipAttribute relationship, ISet<IIdentifiable> rightResourceIds, [EnumeratorCancellation] CancellationToken cancellationToken)
+        RelationshipAttribute relationship, HashSet<IIdentifiable> rightResourceIds, [EnumeratorCancellation] CancellationToken cancellationToken)
     {
         IReadOnlyCollection<IIdentifiable> existingResources = await _repositoryAccessor.GetAsync(existingRightResourceIdsQueryLayer.ResourceType,
             existingRightResourceIdsQueryLayer, cancellationToken);

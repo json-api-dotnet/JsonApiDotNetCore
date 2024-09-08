@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using System.Reflection;
 using JetBrains.Annotations;
@@ -117,12 +118,12 @@ public sealed class ResourceGraph : IResourceGraph
         return FilterFields<TResource, RelationshipAttribute>(selector);
     }
 
-    private IReadOnlyCollection<TField> FilterFields<TResource, TField>(Expression<Func<TResource, object?>> selector)
+    private ReadOnlyCollection<TField> FilterFields<TResource, TField>(Expression<Func<TResource, object?>> selector)
         where TResource : class, IIdentifiable
         where TField : ResourceFieldAttribute
     {
         IReadOnlyCollection<TField> source = GetFieldsOfType<TResource, TField>();
-        var matches = new List<TField>();
+        List<TField> matches = [];
 
         foreach (string memberName in ToMemberNames(selector))
         {
@@ -136,7 +137,7 @@ public sealed class ResourceGraph : IResourceGraph
             matches.Add(matchingField);
         }
 
-        return matches;
+        return matches.AsReadOnly();
     }
 
     private IReadOnlyCollection<TKind> GetFieldsOfType<TResource, TKind>()

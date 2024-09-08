@@ -103,11 +103,12 @@ public class ResponseModelAdapter : IResponseModelAdapter
         }
         else if (model is IEnumerable<ErrorObject> errorObjects)
         {
-            document.Errors = errorObjects.ToArray();
+            document.Errors = errorObjects.ToList();
         }
         else if (model is ErrorObject errorObject)
         {
-            document.Errors = [errorObject];
+            List<ErrorObject> errors = [errorObject];
+            document.Errors = errors;
         }
         else
         {

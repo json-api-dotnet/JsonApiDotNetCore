@@ -5,7 +5,7 @@ namespace JsonApiDotNetCore.Queries;
 /// <inheritdoc cref="IEvaluatedIncludeCache" />
 internal sealed class EvaluatedIncludeCache : IEvaluatedIncludeCache
 {
-    private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
+    private readonly IQueryConstraintProvider[] _constraintProviders;
     private IncludeExpression? _include;
     private bool _isAssigned;
 
@@ -13,7 +13,7 @@ internal sealed class EvaluatedIncludeCache : IEvaluatedIncludeCache
     {
         ArgumentGuard.NotNull(constraintProviders);
 
-        _constraintProviders = constraintProviders;
+        _constraintProviders = constraintProviders as IQueryConstraintProvider[] ?? constraintProviders.ToArray();
     }
 
     /// <inheritdoc />

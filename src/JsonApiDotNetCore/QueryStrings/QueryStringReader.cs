@@ -12,7 +12,7 @@ public sealed partial class QueryStringReader : IQueryStringReader
 {
     private readonly IJsonApiOptions _options;
     private readonly IRequestQueryStringAccessor _queryStringAccessor;
-    private readonly IEnumerable<IQueryStringParameterReader> _parameterReaders;
+    private readonly IQueryStringParameterReader[] _parameterReaders;
     private readonly ILogger<QueryStringReader> _logger;
 
     public QueryStringReader(IJsonApiOptions options, IRequestQueryStringAccessor queryStringAccessor,
@@ -25,7 +25,7 @@ public sealed partial class QueryStringReader : IQueryStringReader
 
         _options = options;
         _queryStringAccessor = queryStringAccessor;
-        _parameterReaders = parameterReaders;
+        _parameterReaders = parameterReaders as IQueryStringParameterReader[] ?? parameterReaders.ToArray();
         _logger = loggerFactory.CreateLogger<QueryStringReader>();
     }
 

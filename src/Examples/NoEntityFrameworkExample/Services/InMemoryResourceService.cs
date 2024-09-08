@@ -40,7 +40,7 @@ public abstract partial class InMemoryResourceService<TResource, TId>(
     private readonly IJsonApiOptions _options = options;
     private readonly IQueryLayerComposer _queryLayerComposer = queryLayerComposer;
     private readonly IPaginationContext _paginationContext = paginationContext;
-    private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders = constraintProviders;
+    private readonly IQueryConstraintProvider[] _constraintProviders = constraintProviders as IQueryConstraintProvider[] ?? constraintProviders.ToArray();
     private readonly ILogger<InMemoryResourceService<TResource, TId>> _logger = loggerFactory.CreateLogger<InMemoryResourceService<TResource, TId>>();
     private readonly ResourceType _resourceType = resourceGraph.GetResourceType<TResource>();
     private readonly QueryLayerToLinqConverter _queryLayerToLinqConverter = new(entityModel, queryableBuilder);
@@ -58,14 +58,18 @@ public abstract partial class InMemoryResourceService<TResource, TId>(
         QueryLayer queryLayer = _queryLayerComposer.ComposeFromConstraints(_resourceType);
 
         IEnumerable<TResource> dataSource = GetDataSource(_resourceType).Cast<TResource>();
-        List<TResource> resources = _queryLayerToLinqConverter.ApplyQueryLayer(queryLayer, dataSource).ToList();
+        TResource[] resources = _queryLayerToLinqConverter.ApplyQueryLayer(queryLayer, dataSource).ToArray();
 
-        if (queryLayer.Pagination?.PageSize?.Value == resources.Count)
+        if (queryLayer.Pagination?.PageSize?.Value == resources.Length)
         {
             _paginationContext.IsPageFull = true;
         }
 
-        return Task.FromResult<IReadOnlyCollection<TResource>>(resources);
+#if NET6_0
+        return Task.FromResult<IReadOnlyCollection<TResource>>(Array.AsReadOnly(resources));
+#else
+        return Task.FromResult<IReadOnlyCollection<TResource>>(resources.AsReadOnly());
+#endif
     }
 
     private void LogFiltersInTopScope()

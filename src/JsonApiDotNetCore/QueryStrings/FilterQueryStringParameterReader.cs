@@ -153,7 +153,7 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
     /// <inheritdoc />
     public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
     {
-        return EnumerateFiltersInScopes().ToArray();
+        return EnumerateFiltersInScopes().ToArray().AsReadOnly();
     }
 
     private IEnumerable<ExpressionInScope> EnumerateFiltersInScopes()

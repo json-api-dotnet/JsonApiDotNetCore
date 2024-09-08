@@ -110,7 +110,7 @@ public sealed class ResourceTypeCapturingDefinition<TResource, TId> : JsonApiRes
         }
     }
 
-    private IJsonApiRequest TakeRequestSnapshot()
+    private JsonApiRequest TakeRequestSnapshot()
     {
         var requestSnapshot = new JsonApiRequest();
         requestSnapshot.CopyFrom(_request);

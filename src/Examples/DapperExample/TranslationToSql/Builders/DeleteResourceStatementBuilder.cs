@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using DapperExample.TranslationToSql.DataModel;
 using DapperExample.TranslationToSql.TreeNodes;
 using JsonApiDotNetCore;
@@ -25,7 +26,7 @@ internal sealed class DeleteResourceStatementBuilder(IDataModelService dataModel
 
     private WhereNode GetWhere(ColumnNode idColumn, IEnumerable<object> idValues)
     {
-        List<ParameterNode> parameters = idValues.Select(idValue => ParameterGenerator.Create(idValue)).ToList();
+        ReadOnlyCollection<ParameterNode> parameters = idValues.Select(idValue => ParameterGenerator.Create(idValue)).ToArray().AsReadOnly();
         FilterNode filter = parameters.Count == 1 ? new ComparisonNode(ComparisonOperator.Equals, idColumn, parameters[0]) : new InNode(idColumn, parameters);
         return new WhereNode(filter);
     }

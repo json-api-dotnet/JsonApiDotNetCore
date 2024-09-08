@@ -7,8 +7,8 @@ namespace JsonApiDotNetCore.Resources;
 [PublicAPI]
 public sealed class TargetedFields : ITargetedFields
 {
-    IReadOnlySet<AttrAttribute> ITargetedFields.Attributes => Attributes;
-    IReadOnlySet<RelationshipAttribute> ITargetedFields.Relationships => Relationships;
+    IReadOnlySet<AttrAttribute> ITargetedFields.Attributes => Attributes.AsReadOnly();
+    IReadOnlySet<RelationshipAttribute> ITargetedFields.Relationships => Relationships.AsReadOnly();
 
     public HashSet<AttrAttribute> Attributes { get; } = [];
     public HashSet<RelationshipAttribute> Relationships { get; } = [];

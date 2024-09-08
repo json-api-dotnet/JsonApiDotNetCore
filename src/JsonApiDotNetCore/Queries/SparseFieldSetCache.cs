@@ -13,8 +13,8 @@ public sealed class SparseFieldSetCache : ISparseFieldSetCache
     private static readonly ConcurrentDictionary<ResourceType, SparseFieldSetExpression> ViewableFieldSetCache = new();
 
     private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
-    private readonly Lazy<IDictionary<ResourceType, IImmutableSet<ResourceFieldAttribute>>> _lazySourceTable;
-    private readonly IDictionary<ResourceType, IImmutableSet<ResourceFieldAttribute>> _visitedTable;
+    private readonly Lazy<Dictionary<ResourceType, ImmutableHashSet<ResourceFieldAttribute>>> _lazySourceTable;
+    private readonly Dictionary<ResourceType, IImmutableSet<ResourceFieldAttribute>> _visitedTable = [];
 
     public SparseFieldSetCache(IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor)
     {
@@ -22,11 +22,11 @@ public sealed class SparseFieldSetCache : ISparseFieldSetCache
         ArgumentGuard.NotNull(resourceDefinitionAccessor);
 
         _resourceDefinitionAccessor = resourceDefinitionAccessor;
-        _lazySourceTable = new Lazy<IDictionary<ResourceType, IImmutableSet<ResourceFieldAttribute>>>(() => BuildSourceTable(constraintProviders));
-        _visitedTable = new Dictionary<ResourceType, IImmutableSet<ResourceFieldAttribute>>();
+        _lazySourceTable = new Lazy<Dictionary<ResourceType, ImmutableHashSet<ResourceFieldAttribute>>>(() => BuildSourceTable(constraintProviders));
     }
 
-    private static IDictionary<ResourceType, IImmutableSet<ResourceFieldAttribute>> BuildSourceTable(IEnumerable<IQueryConstraintProvider> constraintProviders)
+    private static Dictionary<ResourceType, ImmutableHashSet<ResourceFieldAttribute>> BuildSourceTable(
+        IEnumerable<IQueryConstraintProvider> constraintProviders)
     {
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
@@ -56,7 +56,7 @@ public sealed class SparseFieldSetCache : ISparseFieldSetCache
             AddSparseFieldsToSet(sparseFieldSet.Fields, builder);
         }
 
-        return mergedTable.ToDictionary(pair => pair.Key, pair => (IImmutableSet<ResourceFieldAttribute>)pair.Value.ToImmutable());
+        return mergedTable.ToDictionary(pair => pair.Key, pair => pair.Value.ToImmutable());
     }
 
     private static void AddSparseFieldsToSet(IImmutableSet<ResourceFieldAttribute> sparseFieldsToAdd,
@@ -73,23 +73,20 @@ public sealed class SparseFieldSetCache : ISparseFieldSetCache
     {
         ArgumentGuard.NotNull(resourceType);
 
-        if (!_visitedTable.TryGetValue(resourceType, out IImmutableSet<ResourceFieldAttribute>? fieldSet))
+        if (!_visitedTable.TryGetValue(resourceType, out IImmutableSet<ResourceFieldAttribute>? outputFields))
         {
-            SparseFieldSetExpression? inputExpression = _lazySourceTable.Value.TryGetValue(resourceType, out IImmutableSet<ResourceFieldAttribute>? inputFields)
-                ? new SparseFieldSetExpression(inputFields)
-                : null;
+            SparseFieldSetExpression? inputExpression =
+                _lazySourceTable.Value.TryGetValue(resourceType, out ImmutableHashSet<ResourceFieldAttribute>? inputFields)
+                    ? new SparseFieldSetExpression(inputFields)
+                    : null;
 
             SparseFieldSetExpression? outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
+            outputFields = outputExpression == null ? ImmutableHashSet<ResourceFieldAttribute>.Empty : outputExpression.Fields;
 
-            IImmutableSet<ResourceFieldAttribute> outputFields = outputExpression == null
-                ? ImmutableHashSet<ResourceFieldAttribute>.Empty
-                : outputExpression.Fields;
-
-            fieldSet = outputFields;
-            _visitedTable[resourceType] = fieldSet;
+            _visitedTable[resourceType] = outputFields;
         }
 
-        return fieldSet;
+        return outputFields;
     }
 
     /// <inheritdoc />
@@ -116,30 +113,30 @@ public sealed class SparseFieldSetCache : ISparseFieldSetCache
     {
         ArgumentGuard.NotNull(resourceType);
 
-        if (!_visitedTable.TryGetValue(resourceType, out IImmutableSet<ResourceFieldAttribute>? fieldSet))
+        if (!_visitedTable.TryGetValue(resourceType, out IImmutableSet<ResourceFieldAttribute>? outputFields))
         {
-            SparseFieldSetExpression inputExpression = _lazySourceTable.Value.TryGetValue(resourceType, out IImmutableSet<ResourceFieldAttribute>? inputFields)
-                ? new SparseFieldSetExpression(inputFields)
-                : GetCachedViewableFieldSet(resourceType);
+            SparseFieldSetExpression inputExpression =
+                _lazySourceTable.Value.TryGetValue(resourceType, out ImmutableHashSet<ResourceFieldAttribute>? inputFields)
+                    ? new SparseFieldSetExpression(inputFields)
+                    : GetCachedViewableFieldSet(resourceType);
 
             SparseFieldSetExpression? outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
 
-            IImmutableSet<ResourceFieldAttribute> outputFields = outputExpression == null
+            outputFields = outputExpression == null
                 ? GetCachedViewableFieldSet(resourceType).Fields
                 : inputExpression.Fields.Intersect(outputExpression.Fields);
 
-            fieldSet = outputFields;
-            _visitedTable[resourceType] = fieldSet;
+            _visitedTable[resourceType] = outputFields;
         }
 
-        return fieldSet;
+        return outputFields;
     }
 
     private static SparseFieldSetExpression GetCachedViewableFieldSet(ResourceType resourceType)
     {
         if (!ViewableFieldSetCache.TryGetValue(resourceType, out SparseFieldSetExpression? fieldSet))
         {
-            IImmutableSet<ResourceFieldAttribute> viewableFields = GetViewableFields(resourceType);
+            ImmutableHashSet<ResourceFieldAttribute> viewableFields = GetViewableFields(resourceType);
             fieldSet = new SparseFieldSetExpression(viewableFields);
             ViewableFieldSetCache[resourceType] = fieldSet;
         }
@@ -147,16 +144,9 @@ public sealed class SparseFieldSetCache : ISparseFieldSetCache
         return fieldSet;
     }
 
-    private static IImmutableSet<ResourceFieldAttribute> GetViewableFields(ResourceType resourceType)
+    private static ImmutableHashSet<ResourceFieldAttribute> GetViewableFields(ResourceType resourceType)
     {
-        ImmutableHashSet<ResourceFieldAttribute>.Builder fieldSetBuilder = ImmutableHashSet.CreateBuilder<ResourceFieldAttribute>();
-
-        foreach (ResourceFieldAttribute field in resourceType.Fields.Where(nextField => !nextField.IsViewBlocked()))
-        {
-            fieldSetBuilder.Add(field);
-        }
-
-        return fieldSetBuilder.ToImmutable();
+        return resourceType.Fields.Where(nextField => !nextField.IsViewBlocked()).ToImmutableHashSet();
     }
 
     public void Reset()

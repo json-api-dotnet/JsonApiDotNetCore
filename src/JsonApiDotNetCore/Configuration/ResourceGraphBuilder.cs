@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Reflection;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Errors;
@@ -34,7 +35,7 @@ public partial class ResourceGraphBuilder
     /// </summary>
     public IResourceGraph Build()
     {
-        HashSet<ResourceType> resourceTypes = [.. _resourceTypesByClrType.Values];
+        IReadOnlySet<ResourceType> resourceTypes = _resourceTypesByClrType.Values.ToHashSet().AsReadOnly();
 
         if (resourceTypes.Count == 0)
         {
@@ -103,7 +104,10 @@ public partial class ResourceGraphBuilder
 
         foreach ((ResourceType baseType, HashSet<ResourceType> directlyDerivedTypes) in directlyDerivedTypesPerBaseType)
         {
-            baseType.DirectlyDerivedTypes = directlyDerivedTypes;
+            if (directlyDerivedTypes.Count > 0)
+            {
+                baseType.DirectlyDerivedTypes = directlyDerivedTypes.AsReadOnly();
+            }
         }
     }
 
@@ -239,9 +243,9 @@ public partial class ResourceGraphBuilder
     {
         ClientIdGenerationMode? clientIdGeneration = GetClientIdGeneration(resourceClrType);
 
-        IReadOnlyCollection<AttrAttribute> attributes = GetAttributes(resourceClrType);
-        IReadOnlyCollection<RelationshipAttribute> relationships = GetRelationships(resourceClrType);
-        IReadOnlyCollection<EagerLoadAttribute> eagerLoads = GetEagerLoads(resourceClrType);
+        Dictionary<string, AttrAttribute>.ValueCollection attributes = GetAttributes(resourceClrType);
+        Dictionary<string, RelationshipAttribute>.ValueCollection relationships = GetRelationships(resourceClrType);
+        ReadOnlyCollection<EagerLoadAttribute> eagerLoads = GetEagerLoads(resourceClrType);
 
         AssertNoDuplicatePublicName(attributes, relationships);
 
@@ -259,7 +263,7 @@ public partial class ResourceGraphBuilder
         return resourceAttribute?.NullableClientIdGeneration;
     }
 
-    private IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceClrType)
+    private Dictionary<string, AttrAttribute>.ValueCollection GetAttributes(Type resourceClrType)
     {
         var attributesByName = new Dictionary<string, AttrAttribute>();
 
@@ -302,7 +306,7 @@ public partial class ResourceGraphBuilder
         return attributesByName.Values;
     }
 
-    private IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type resourceClrType)
+    private Dictionary<string, RelationshipAttribute>.ValueCollection GetRelationships(Type resourceClrType)
     {
         var relationshipsByName = new Dictionary<string, RelationshipAttribute>();
         PropertyInfo[] properties = resourceClrType.GetProperties();
@@ -376,11 +380,11 @@ public partial class ResourceGraphBuilder
         }
     }
 
-    private IReadOnlyCollection<EagerLoadAttribute> GetEagerLoads(Type resourceClrType, int recursionDepth = 0)
+    private ReadOnlyCollection<EagerLoadAttribute> GetEagerLoads(Type resourceClrType, int recursionDepth = 0)
     {
         AssertNoInfiniteRecursion(recursionDepth);
 
-        var attributes = new List<EagerLoadAttribute>();
+        List<EagerLoadAttribute> eagerLoads = [];
         PropertyInfo[] properties = resourceClrType.GetProperties();
 
         foreach (PropertyInfo property in properties)
@@ -396,10 +400,10 @@ public partial class ResourceGraphBuilder
             eagerLoad.Children = GetEagerLoads(innerType, recursionDepth + 1);
             eagerLoad.Property = property;
 
-            attributes.Add(eagerLoad);
+            eagerLoads.Add(eagerLoad);
         }
 
-        return attributes;
+        return eagerLoads.AsReadOnly();
     }
 
     private static void IncludeField<TField>(Dictionary<string, TField> fieldsByName, TField field)

@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using System.Text;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -86,7 +87,7 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
         // that there's currently no way to include Products without Articles. We could add such optional upcast syntax
         // in the future, if desired.
 
-        ICollection<IncludeTreeNode> children = ParseRelationshipName(source, [treeRoot]);
+        ReadOnlyCollection<IncludeTreeNode> children = ParseRelationshipName(source, [treeRoot]);
 
         while (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Period)
         {
@@ -96,7 +97,7 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
         }
     }
 
-    private ICollection<IncludeTreeNode> ParseRelationshipName(string source, ICollection<IncludeTreeNode> parents)
+    private ReadOnlyCollection<IncludeTreeNode> ParseRelationshipName(string source, IReadOnlyCollection<IncludeTreeNode> parents)
     {
         int position = GetNextTokenPositionOrEnd();
 
@@ -108,8 +109,8 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
         throw new QueryParseException("Relationship name expected.", position);
     }
 
-    private static ICollection<IncludeTreeNode> LookupRelationshipName(string relationshipName, ICollection<IncludeTreeNode> parents, string source,
-        int position)
+    private static ReadOnlyCollection<IncludeTreeNode> LookupRelationshipName(string relationshipName, IReadOnlyCollection<IncludeTreeNode> parents,
+        string source, int position)
     {
         List<IncludeTreeNode> children = [];
         HashSet<RelationshipAttribute> relationshipsFound = [];
@@ -125,7 +126,7 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
                 relationshipsFound.UnionWith(relationships);
 
                 RelationshipAttribute[] relationshipsToInclude = relationships.Where(relationship => !relationship.IsIncludeBlocked()).ToArray();
-                ICollection<IncludeTreeNode> affectedChildren = parent.EnsureChildren(relationshipsToInclude);
+                ReadOnlyCollection<IncludeTreeNode> affectedChildren = parent.EnsureChildren(relationshipsToInclude);
                 children.AddRange(affectedChildren);
             }
         }
@@ -133,11 +134,11 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
         AssertRelationshipsFound(relationshipsFound, relationshipName, parents, position);
         AssertAtLeastOneCanBeIncluded(relationshipsFound, relationshipName, source, position);
 
-        return children;
+        return children.AsReadOnly();
     }
 
-    private static void AssertRelationshipsFound(ISet<RelationshipAttribute> relationshipsFound, string relationshipName, ICollection<IncludeTreeNode> parents,
-        int position)
+    private static void AssertRelationshipsFound(HashSet<RelationshipAttribute> relationshipsFound, string relationshipName,
+        IReadOnlyCollection<IncludeTreeNode> parents, int position)
     {
         if (relationshipsFound.Count > 0)
         {
@@ -152,11 +153,11 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
         throw new QueryParseException(message, position);
     }
 
-    private static string GetErrorMessageForNoneFound(string relationshipName, ICollection<ResourceType> parentResourceTypes, bool hasDerivedTypes)
+    private static string GetErrorMessageForNoneFound(string relationshipName, ResourceType[] parentResourceTypes, bool hasDerivedTypes)
     {
         var builder = new StringBuilder($"Relationship '{relationshipName}'");
 
-        if (parentResourceTypes.Count == 1)
+        if (parentResourceTypes.Length == 1)
         {
             builder.Append($" does not exist on resource type '{parentResourceTypes.First().PublicName}'");
         }
@@ -171,7 +172,7 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
         return builder.ToString();
     }
 
-    private static void AssertAtLeastOneCanBeIncluded(ISet<RelationshipAttribute> relationshipsFound, string relationshipName, string source, int position)
+    private static void AssertAtLeastOneCanBeIncluded(HashSet<RelationshipAttribute> relationshipsFound, string relationshipName, string source, int position)
     {
         if (relationshipsFound.All(relationship => relationship.IsIncludeBlocked()))
         {
@@ -220,7 +221,7 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
 
     private sealed class IncludeTreeNode
     {
-        private readonly IDictionary<RelationshipAttribute, IncludeTreeNode> _children = new Dictionary<RelationshipAttribute, IncludeTreeNode>();
+        private readonly Dictionary<RelationshipAttribute, IncludeTreeNode> _children = [];
 
         public RelationshipAttribute Relationship { get; }
 
@@ -235,7 +236,7 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
             return new IncludeTreeNode(relationship);
         }
 
-        public ICollection<IncludeTreeNode> EnsureChildren(ICollection<RelationshipAttribute> relationships)
+        public ReadOnlyCollection<IncludeTreeNode> EnsureChildren(RelationshipAttribute[] relationships)
         {
             foreach (RelationshipAttribute relationship in relationships)
             {
@@ -246,7 +247,7 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
                 }
             }
 
-            return _children.Where(pair => relationships.Contains(pair.Key)).Select(pair => pair.Value).ToList();
+            return _children.Where(pair => relationships.Contains(pair.Key)).Select(pair => pair.Value).ToArray().AsReadOnly();
         }
 
         public IncludeExpression ToExpression()

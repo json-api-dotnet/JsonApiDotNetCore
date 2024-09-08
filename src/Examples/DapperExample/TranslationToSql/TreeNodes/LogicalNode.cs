@@ -14,7 +14,7 @@ internal sealed class LogicalNode : FilterNode
     public IReadOnlyList<FilterNode> Terms { get; }
 
     public LogicalNode(LogicalOperator @operator, params FilterNode[] terms)
-        : this(@operator, terms.ToList())
+        : this(@operator, terms.AsReadOnly())
     {
     }
 

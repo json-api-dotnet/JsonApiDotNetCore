@@ -34,7 +34,7 @@ public class IncludeClauseBuilder : QueryClauseBuilder, IIncludeClauseBuilder
         return ToExpression(context.Source, context.LambdaScope.Parameter.Type, propertyPaths);
     }
 
-    private static void ProcessRelationshipChain(ResourceFieldChainExpression chain, ISet<string> outputPropertyPaths)
+    private static void ProcessRelationshipChain(ResourceFieldChainExpression chain, HashSet<string> outputPropertyPaths)
     {
         string? path = null;
 
@@ -71,7 +71,7 @@ public class IncludeClauseBuilder : QueryClauseBuilder, IIncludeClauseBuilder
         return expression;
     }
 
-    private static Expression IncludeExtensionMethodCall(Expression source, Type entityType, string navigationPropertyPath)
+    private static MethodCallExpression IncludeExtensionMethodCall(Expression source, Type entityType, string navigationPropertyPath)
     {
         Expression navigationExpression = Expression.Constant(navigationPropertyPath);
 

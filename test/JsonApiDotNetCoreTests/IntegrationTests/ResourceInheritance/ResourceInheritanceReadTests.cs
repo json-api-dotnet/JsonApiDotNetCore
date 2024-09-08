@@ -90,7 +90,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
             resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights");
 
-            foreach ((string? name, RelationshipObject? value) in resource.Relationships)
+            foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -114,7 +114,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
             resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "features");
 
-            foreach ((string? name, RelationshipObject? value) in resource.Relationships)
+            foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -138,7 +138,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
             resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "engine", "navigationSystem", "features");
 
-            foreach ((string? name, RelationshipObject? value) in resource.Relationships)
+            foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -162,7 +162,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
             resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "engine", "navigationSystem", "sleepingArea", "features");
 
-            foreach ((string? name, RelationshipObject? value) in resource.Relationships)
+            foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -213,7 +213,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
             resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights");
 
-            foreach ((string? name, RelationshipObject? value) in resource.Relationships)
+            foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -237,7 +237,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
             resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "features");
 
-            foreach ((string? name, RelationshipObject? value) in resource.Relationships)
+            foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -289,7 +289,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
             resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "features");
 
-            foreach ((string? name, RelationshipObject? value) in resource.Relationships)
+            foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();

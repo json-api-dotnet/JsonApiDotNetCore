@@ -51,7 +51,7 @@ public class OperationsProcessor : IOperationsProcessor
         _localIdValidator.Validate(operations);
         _localIdTracker.Reset();
 
-        var results = new List<OperationContainer?>();
+        List<OperationContainer?> results = [];
 
         await using IOperationsTransaction transaction = await _operationsTransactionFactory.BeginTransactionAsync(cancellationToken);
 

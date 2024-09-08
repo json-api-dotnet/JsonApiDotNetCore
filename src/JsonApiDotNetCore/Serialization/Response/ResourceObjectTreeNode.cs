@@ -92,11 +92,11 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
     {
         AssertIsTreeRoot();
 
-        var visited = new HashSet<ResourceObjectTreeNode>();
+        HashSet<ResourceObjectTreeNode> visited = [];
 
         VisitSubtree(this, visited);
 
-        return visited;
+        return visited.AsReadOnly();
     }
 
     private static void VisitSubtree(ResourceObjectTreeNode treeNode, ISet<ResourceObjectTreeNode> visited)
@@ -151,7 +151,7 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
     public IReadOnlySet<ResourceObjectTreeNode>? GetRightNodesInRelationship(RelationshipAttribute relationship)
     {
         return _childrenByRelationship != null && _childrenByRelationship.TryGetValue(relationship, out HashSet<ResourceObjectTreeNode>? rightNodes)
-            ? rightNodes
+            ? rightNodes.AsReadOnly()
             : null;
     }
 
@@ -162,7 +162,7 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
     {
         AssertIsTreeRoot();
 
-        return GetDirectChildren().Select(child => child.ResourceObject).ToArray();
+        return GetDirectChildren().Select(child => child.ResourceObject).ToArray().AsReadOnly();
     }
 
     /// <summary>
@@ -174,14 +174,14 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
     {
         AssertIsTreeRoot();
 
-        var visited = new HashSet<ResourceObjectTreeNode>();
+        HashSet<ResourceObjectTreeNode> visited = [];
 
         foreach (ResourceObjectTreeNode child in GetDirectChildren())
         {
             VisitRelationshipChildrenInSubtree(child, visited);
         }
 
-        ISet<ResourceObject> primaryResourceObjectSet = GetDirectChildren().Select(node => node.ResourceObject).ToHashSet(ResourceObjectComparer.Instance);
+        HashSet<ResourceObject> primaryResourceObjectSet = GetDirectChildren().Select(node => node.ResourceObject).ToHashSet(ResourceObjectComparer.Instance);
         List<ResourceObject> includes = [];
 
         foreach (ResourceObject include in visited.Select(node => node.ResourceObject))

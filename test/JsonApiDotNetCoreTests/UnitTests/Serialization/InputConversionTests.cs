@@ -56,17 +56,17 @@ public sealed class InputConversionTests
             Value = "Single"
         };
 
-        var complexObjectList = new List<ComplexObject>
-        {
-            new()
+        List<ComplexObject> complexObjectList =
+        [
+            new ComplexObject
             {
                 Value = "One"
             },
-            new()
+            new ComplexObject
             {
                 Value = "Two"
             }
-        };
+        ];
 
         var document = new Document
         {

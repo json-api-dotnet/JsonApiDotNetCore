@@ -71,6 +71,6 @@ public class ResourceDefinitionQueryableParameterReader : IResourceDefinitionQue
     /// <inheritdoc />
     public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
     {
-        return _constraints;
+        return _constraints.AsReadOnly();
     }
 }
