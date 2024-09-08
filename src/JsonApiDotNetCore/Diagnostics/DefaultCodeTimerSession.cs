@@ -27,10 +27,14 @@ public sealed class DefaultCodeTimerSession : ICodeTimerSession
 
     private void AssertNotDisposed()
     {
+#if NET6_0
         if (_codeTimerInContext.Value == null)
         {
             throw new ObjectDisposedException(nameof(DefaultCodeTimerSession));
         }
+#else
+        ObjectDisposedException.ThrowIf(_codeTimerInContext.Value == null, this);
+#endif
     }
 
     public void Dispose()
