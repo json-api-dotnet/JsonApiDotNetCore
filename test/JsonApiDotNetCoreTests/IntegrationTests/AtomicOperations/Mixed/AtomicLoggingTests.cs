@@ -165,7 +165,7 @@ public sealed class AtomicLoggingTests : IClassFixture<IntegrationTestContext<Te
             {
                 if (_owner.ThrowOnOperationStart)
                 {
-                    throw new Exception("Simulated failure.");
+                    throw new InvalidOperationException("Simulated failure.");
                 }
 
                 return Task.CompletedTask;

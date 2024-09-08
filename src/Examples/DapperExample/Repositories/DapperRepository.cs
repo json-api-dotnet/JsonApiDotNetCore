@@ -1,3 +1,4 @@
+using System.Data;
 using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
 using Dapper;
@@ -216,7 +217,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
 
                 if (rowsAffected > 1)
                 {
-                    throw new DataStoreUpdateException(new Exception("Multiple rows found."));
+                    throw new DataStoreUpdateException(new DataException("Multiple rows found."));
                 }
             }
 
@@ -233,7 +234,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
 
                 if (rowsAffected == 0)
                 {
-                    throw new DataStoreUpdateException(new Exception("Row does not exist."));
+                    throw new DataStoreUpdateException(new DataException("Row does not exist."));
                 }
             }
         }, cancellationToken);
@@ -324,7 +325,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
 
                     if (rowsAffected > 1)
                     {
-                        throw new DataStoreUpdateException(new Exception("Multiple rows found."));
+                        throw new DataStoreUpdateException(new DataException("Multiple rows found."));
                     }
                 }
 
@@ -335,7 +336,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
 
                     if (rowsAffected != 1)
                     {
-                        throw new DataStoreUpdateException(new Exception("Row does not exist or multiple rows found."));
+                        throw new DataStoreUpdateException(new DataException("Row does not exist or multiple rows found."));
                     }
                 }
 
@@ -346,7 +347,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
 
                     if (rowsAffected == 0)
                     {
-                        throw new DataStoreUpdateException(new Exception("Row does not exist."));
+                        throw new DataStoreUpdateException(new DataException("Row does not exist."));
                     }
                 }
             }, cancellationToken);
@@ -374,7 +375,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
 
             if (rowsAffected != 1)
             {
-                throw new DataStoreUpdateException(new Exception("Row does not exist or multiple rows found."));
+                throw new DataStoreUpdateException(new DataException("Row does not exist or multiple rows found."));
             }
         }, cancellationToken);
 
@@ -420,7 +421,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
 
                     if (rowsAffected > 1)
                     {
-                        throw new DataStoreUpdateException(new Exception("Multiple rows found."));
+                        throw new DataStoreUpdateException(new DataException("Multiple rows found."));
                     }
                 }
 
@@ -431,7 +432,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
 
                     if (rowsAffected != 1)
                     {
-                        throw new DataStoreUpdateException(new Exception("Row does not exist or multiple rows found."));
+                        throw new DataStoreUpdateException(new DataException("Row does not exist or multiple rows found."));
                     }
                 }
 
@@ -442,7 +443,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
 
                     if (rowsAffected == 0)
                     {
-                        throw new DataStoreUpdateException(new Exception("Row does not exist."));
+                        throw new DataStoreUpdateException(new DataException("Row does not exist."));
                     }
                 }
             }, cancellationToken);
@@ -482,7 +483,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
 
                 if (rowsAffected != rightResourceIdValues.Length)
                 {
-                    throw new DataStoreUpdateException(new Exception("Row does not exist or multiple rows found."));
+                    throw new DataStoreUpdateException(new DataException("Row does not exist or multiple rows found."));
                 }
             }, cancellationToken);
 
@@ -516,7 +517,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
 
                 if (rowsAffected != rightResourceIdValues.Length)
                 {
-                    throw new DataStoreUpdateException(new Exception("Row does not exist or multiple rows found."));
+                    throw new DataStoreUpdateException(new DataException("Row does not exist or multiple rows found."));
                 }
             }, cancellationToken);
 
