@@ -408,10 +408,12 @@ public sealed class NullSafeExpressionRewriterTests
 
         TestResource lastInDataSource = dataSource.Last();
 
+#pragma warning disable CA1829 // Use Length/Count property instead of Count() when available
         // ReSharper disable UseCollectionCountProperty
         Expression<Func<IEnumerable<TestResource>, IEnumerable<TestResource>>> expression = source =>
             source.Where(resource => resource.Children.Count() > resource.Parent!.Children.Count());
         // ReSharper restore UseCollectionCountProperty
+#pragma warning restore CA1829 // Use Length/Count property instead of Count() when available
 
         var rewriter = new NullSafeExpressionRewriter();
 
@@ -713,9 +715,11 @@ public sealed class NullSafeExpressionRewriterTests
             }
         };
 
+#pragma warning disable CA1829 // Use Length/Count property instead of Count() when available
         // ReSharper disable once UseCollectionCountProperty
         Expression<Func<IEnumerable<TestResource>, IEnumerable<TestResource>>> expression = source =>
             source.OrderBy(resource => resource.Parent!.Children.Count());
+#pragma warning restore CA1829 // Use Length/Count property instead of Count() when available
 
         var rewriter = new NullSafeExpressionRewriter();
 
