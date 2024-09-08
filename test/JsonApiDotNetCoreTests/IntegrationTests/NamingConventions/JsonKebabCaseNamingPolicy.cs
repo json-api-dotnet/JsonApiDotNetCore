@@ -76,6 +76,6 @@ internal sealed class JsonKebabCaseNamingPolicy : JsonNamingPolicy
             }
         }
 
-        return stringBuilder.ToString().ToLower();
+        return stringBuilder.ToString().ToLowerInvariant();
     }
 }
