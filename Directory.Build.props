@@ -13,6 +13,10 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
+  <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Tests'))">
+    <NoWarn>$(NoWarn);CA1707</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2023.3.*" PrivateAssets="All" />
     <PackageReference Include="CSharpGuidelinesAnalyzer" Version="3.8.*" PrivateAssets="All" />
