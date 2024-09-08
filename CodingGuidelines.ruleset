@@ -25,6 +25,7 @@
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.NetAnalyzers" RuleNamespace="Microsoft.CodeAnalysis.NetAnalyzers">
     <Rule Id="CA1305" Action="None" />
+    <Rule Id="CA1720" Action="None" />
     <Rule Id="CA1725" Action="None" />
     <Rule Id="CA1822" Action="None" />
   </Rules>
