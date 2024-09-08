@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 
 namespace JsonApiDotNetCore.Serialization.Response;
@@ -161,8 +162,8 @@ public sealed partial class JsonApiWriter : IJsonApiWriter
 
     private static bool RequestContainsMatchingETag(IHeaderDictionary requestHeaders, EntityTagHeaderValue responseETag)
     {
-        if (requestHeaders.ContainsKey(HeaderNames.IfNoneMatch) &&
-            EntityTagHeaderValue.TryParseList(requestHeaders[HeaderNames.IfNoneMatch], out IList<EntityTagHeaderValue>? requestETags))
+        if (requestHeaders.TryGetValue(HeaderNames.IfNoneMatch, out StringValues headerValues) &&
+            EntityTagHeaderValue.TryParseList(headerValues, out IList<EntityTagHeaderValue>? requestETags))
         {
             foreach (EntityTagHeaderValue requestETag in requestETags)
             {

@@ -91,12 +91,13 @@ public partial class ResourceGraphBuilder
             {
                 resourceType.BaseType = baseType;
 
-                if (!directlyDerivedTypesPerBaseType.ContainsKey(baseType))
+                if (!directlyDerivedTypesPerBaseType.TryGetValue(baseType, out HashSet<ResourceType>? directlyDerivedTypes))
                 {
-                    directlyDerivedTypesPerBaseType[baseType] = [];
+                    directlyDerivedTypes = [];
+                    directlyDerivedTypesPerBaseType[baseType] = directlyDerivedTypes;
                 }
 
-                directlyDerivedTypesPerBaseType[baseType].Add(resourceType);
+                directlyDerivedTypes.Add(resourceType);
             }
         }
 

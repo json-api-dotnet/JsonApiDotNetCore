@@ -140,12 +140,13 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
         }
         else
         {
-            if (!_filtersPerScope.ContainsKey(scope))
+            if (!_filtersPerScope.TryGetValue(scope, out ImmutableArray<FilterExpression>.Builder? builder))
             {
-                _filtersPerScope[scope] = ImmutableArray.CreateBuilder<FilterExpression>();
+                builder = ImmutableArray.CreateBuilder<FilterExpression>();
+                _filtersPerScope[scope] = builder;
             }
 
-            _filtersPerScope[scope].Add(filter);
+            builder.Add(filter);
         }
     }
 
