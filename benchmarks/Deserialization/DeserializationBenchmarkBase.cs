@@ -13,8 +13,8 @@ namespace Benchmarks.Deserialization;
 
 public abstract class DeserializationBenchmarkBase
 {
-    protected readonly JsonSerializerOptions SerializerReadOptions;
-    protected readonly DocumentAdapter DocumentAdapter;
+    protected JsonSerializerOptions SerializerReadOptions { get; }
+    protected DocumentAdapter DocumentAdapter { get; }
 
     protected DeserializationBenchmarkBase()
     {

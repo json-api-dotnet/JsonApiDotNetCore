@@ -14,9 +14,9 @@ namespace Benchmarks.Serialization;
 
 public abstract class SerializationBenchmarkBase
 {
-    protected readonly JsonSerializerOptions SerializerWriteOptions;
-    protected readonly IResponseModelAdapter ResponseModelAdapter;
-    protected readonly IResourceGraph ResourceGraph;
+    protected JsonSerializerOptions SerializerWriteOptions { get; }
+    protected IResponseModelAdapter ResponseModelAdapter { get; }
+    protected IResourceGraph ResourceGraph { get; }
 
     protected SerializationBenchmarkBase()
     {
