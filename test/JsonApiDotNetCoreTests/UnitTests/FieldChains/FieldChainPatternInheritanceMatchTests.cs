@@ -15,7 +15,7 @@ using Xunit.Abstractions;
 
 namespace JsonApiDotNetCoreTests.UnitTests.FieldChains;
 
-public sealed class FieldChainPatternInheritanceMatchTests
+public sealed class FieldChainPatternInheritanceMatchTests : IDisposable
 {
     private const string TBase = "bases";
     private const string TDerivedQ = "derivedQs";
@@ -154,6 +154,11 @@ public sealed class FieldChainPatternInheritanceMatchTests
         result.FailurePosition.Should().Be(fieldChainSource.Position);
         result.FieldChain.Should().BeEmpty();
         result.IsSuccess.Should().BeFalse();
+    }
+
+    public void Dispose()
+    {
+        _loggerFactory.Dispose();
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]

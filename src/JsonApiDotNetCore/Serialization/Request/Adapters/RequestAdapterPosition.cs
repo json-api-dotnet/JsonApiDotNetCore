@@ -1,6 +1,8 @@
 using System.Text;
 using JetBrains.Annotations;
 
+#pragma warning disable CA1001 // Types that own disposable fields should be disposable
+
 namespace JsonApiDotNetCore.Serialization.Request.Adapters;
 
 /// <summary>

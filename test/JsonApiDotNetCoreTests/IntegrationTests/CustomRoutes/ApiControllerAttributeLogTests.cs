@@ -6,7 +6,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes;
 
-public sealed class ApiControllerAttributeLogTests : IntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext>
+public sealed class ApiControllerAttributeLogTests : IntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext>, IAsyncDisposable
 {
     private readonly FakeLoggerFactory _loggerFactory;
 
@@ -40,5 +40,16 @@ public sealed class ApiControllerAttributeLogTests : IntegrationTestContext<Test
 
         logLines[0].Should().Be(
             $"[WARNING] Found JSON:API controller '{typeof(CiviliansController)}' with [ApiController]. Please remove this attribute for optimal JSON:API compliance.");
+    }
+
+    public override Task DisposeAsync()
+    {
+        _loggerFactory.Dispose();
+        return base.DisposeAsync();
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        await DisposeAsync();
     }
 }

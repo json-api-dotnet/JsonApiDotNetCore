@@ -15,7 +15,7 @@ using Xunit.Abstractions;
 
 namespace JsonApiDotNetCoreTests.UnitTests.FieldChains;
 
-public sealed class FieldChainPatternMatchTests
+public sealed class FieldChainPatternMatchTests : IDisposable
 {
     private const string T = "resources";
     private const string X = "unknown";
@@ -397,6 +397,11 @@ public sealed class FieldChainPatternMatchTests
         result.FailurePosition.Should().Be(fieldChainSource.Position);
         result.FieldChain.Should().BeEmpty();
         result.IsSuccess.Should().BeFalse();
+    }
+
+    public void Dispose()
+    {
+        _loggerFactory.Dispose();
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
