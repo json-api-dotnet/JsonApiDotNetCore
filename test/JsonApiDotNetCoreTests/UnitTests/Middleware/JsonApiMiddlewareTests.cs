@@ -167,7 +167,9 @@ public sealed class JsonApiMiddlewareTests
         No
     }
 
+#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
     public enum IsCollection
+#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
     {
         Yes,
         No
