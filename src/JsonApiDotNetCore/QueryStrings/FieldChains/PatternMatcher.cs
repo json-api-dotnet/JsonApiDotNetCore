@@ -157,7 +157,7 @@ internal sealed class PatternMatcher
 
             HashSet<ResourceFieldAttribute> fields = LookupFields(state.ResourceType, publicName);
 
-            if (!fields.Any())
+            if (fields.Count == 0)
             {
                 return state.FailureForUnknownField(publicName, _allowDerivedTypes);
             }

@@ -147,7 +147,7 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
 
         BinaryExpression tempExpression = applyOperator(left, right);
 
-        while (argumentQueue.Any())
+        while (argumentQueue.Count > 0)
         {
             Expression nextArgument = argumentQueue.Dequeue();
             tempExpression = applyOperator(tempExpression, nextArgument);

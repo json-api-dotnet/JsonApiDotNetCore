@@ -137,7 +137,7 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder
     {
         ArgumentGuard.NotNull(dbContextTypes);
 
-        if (dbContextTypes.Any())
+        if (dbContextTypes.Count > 0)
         {
             _services.TryAddScoped(typeof(DbContextResolver<>));
 

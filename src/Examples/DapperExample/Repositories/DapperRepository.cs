@@ -313,7 +313,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
         IReadOnlyCollection<CommandDefinition> postSqlCommands =
             _dapperFacade.BuildSqlCommandsForChangedRelationshipsHavingForeignKeyAtRightSide(changeDetector, resourceFromDatabase.Id, cancellationToken);
 
-        if (preSqlCommands.Any() || updateCommand != null || postSqlCommands.Any())
+        if (preSqlCommands.Count > 0 || updateCommand != null || postSqlCommands.Count > 0)
         {
             await ExecuteInTransactionAsync(async transaction =>
             {
@@ -409,7 +409,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
         IReadOnlyCollection<CommandDefinition> postSqlCommands =
             _dapperFacade.BuildSqlCommandsForChangedRelationshipsHavingForeignKeyAtRightSide(changeDetector, leftResource.Id, cancellationToken);
 
-        if (preSqlCommands.Any() || updateCommand != null || postSqlCommands.Any())
+        if (preSqlCommands.Count > 0 || updateCommand != null || postSqlCommands.Count > 0)
         {
             await ExecuteInTransactionAsync(async transaction =>
             {
@@ -467,7 +467,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
 
         await _resourceDefinitionAccessor.OnWritingAsync(leftPlaceholderResource, WriteOperationKind.AddToRelationship, cancellationToken);
 
-        if (rightResourceIds.Any())
+        if (rightResourceIds.Count > 0)
         {
             RelationshipForeignKey foreignKey = _dataModelService.GetForeignKey(relationship);
             object[] rightResourceIdValues = rightResourceIds.Select(resource => resource.GetTypedId()).ToArray();
@@ -503,7 +503,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
 
         await _resourceDefinitionAccessor.OnWritingAsync(leftResource, WriteOperationKind.RemoveFromRelationship, cancellationToken);
 
-        if (rightResourceIds.Any())
+        if (rightResourceIds.Count > 0)
         {
             RelationshipForeignKey foreignKey = _dataModelService.GetForeignKey(relationship);
             object[] rightResourceIdValues = rightResourceIds.Select(resource => resource.GetTypedId()).ToArray();
@@ -532,7 +532,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
 
         if (_logger.IsEnabled(LogLevel.Information))
         {
-            if (parameters?.Any() == true)
+            if (parameters?.Count > 0)
             {
                 string parametersText = string.Join(", ", parameters.Select(parameter => _parameterFormatter.Format(parameter.Key, parameter.Value)));
                 LogExecuteWithParameters(Environment.NewLine, command.CommandText, parametersText);

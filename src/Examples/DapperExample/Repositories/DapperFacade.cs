@@ -107,13 +107,13 @@ internal sealed class DapperFacade
             object[] rightIdsToRemove = currentRightIds.Except(newRightIds).ToArray();
             object[] rightIdsToAdd = newRightIds.Except(currentRightIds).ToArray();
 
-            if (rightIdsToRemove.Any())
+            if (rightIdsToRemove.Length > 0)
             {
                 CommandDefinition sqlCommand = BuildSqlCommandForRemoveFromToMany(foreignKey, rightIdsToRemove, cancellationToken);
                 sqlCommands.Add(sqlCommand);
             }
 
-            if (rightIdsToAdd.Any())
+            if (rightIdsToAdd.Length > 0)
             {
                 CommandDefinition sqlCommand = BuildSqlCommandForAddToToMany(foreignKey, leftId!, rightIdsToAdd, cancellationToken);
                 sqlCommands.Add(sqlCommand);
@@ -180,7 +180,7 @@ internal sealed class DapperFacade
 
         IReadOnlyDictionary<string, object?> columnsToUpdate = changeDetector.GetChangedColumnValues();
 
-        if (columnsToUpdate.Any())
+        if (columnsToUpdate.Count > 0)
         {
             var updateBuilder = new UpdateResourceStatementBuilder(_dataModelService);
             UpdateNode updateNode = updateBuilder.Build(changeDetector.ResourceType, columnsToUpdate, leftId!);

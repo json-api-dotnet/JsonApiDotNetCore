@@ -29,7 +29,7 @@ public class SparseFieldSetParser : QueryExpressionParser, ISparseFieldSetParser
     {
         ImmutableHashSet<ResourceFieldAttribute>.Builder fieldSetBuilder = ImmutableHashSet.CreateBuilder<ResourceFieldAttribute>();
 
-        while (TokenStack.Any())
+        while (TokenStack.Count > 0)
         {
             if (fieldSetBuilder.Count > 0)
             {
@@ -43,7 +43,7 @@ public class SparseFieldSetParser : QueryExpressionParser, ISparseFieldSetParser
             fieldSetBuilder.Add(nextField);
         }
 
-        return fieldSetBuilder.Any() ? new SparseFieldSetExpression(fieldSetBuilder.ToImmutable()) : null;
+        return fieldSetBuilder.Count > 0 ? new SparseFieldSetExpression(fieldSetBuilder.ToImmutable()) : null;
     }
 
     protected override void ValidateField(ResourceFieldAttribute field, int position)

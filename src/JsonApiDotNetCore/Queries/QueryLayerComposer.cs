@@ -192,7 +192,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         IImmutableSet<IncludeElementExpression> includeElements = ProcessIncludeSet(include.Elements, topLayer, new List<RelationshipAttribute>(), constraints);
 
         return !ReferenceEquals(includeElements, include.Elements)
-            ? includeElements.Any() ? new IncludeExpression(includeElements) : IncludeExpression.Empty
+            ? includeElements.Count > 0 ? new IncludeExpression(includeElements) : IncludeExpression.Empty
             : include;
     }
 
@@ -248,7 +248,7 @@ public class QueryLayerComposer : IQueryLayerComposer
             }
         }
 
-        return !updatesInChildren.Any() ? includeElementsEvaluated : ApplyIncludeElementUpdates(includeElementsEvaluated, updatesInChildren);
+        return updatesInChildren.Count == 0 ? includeElementsEvaluated : ApplyIncludeElementUpdates(includeElementsEvaluated, updatesInChildren);
     }
 
     private static IImmutableSet<IncludeElementExpression> ApplyIncludeElementUpdates(IImmutableSet<IncludeElementExpression> includeElements,
@@ -391,7 +391,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         AttrAttribute primaryIdAttribute = GetIdAttribute(primaryResourceType);
 
         QueryLayer primaryLayer = ComposeTopLayer(Array.Empty<ExpressionInScope>(), primaryResourceType);
-        primaryLayer.Include = includeElements.Any() ? new IncludeExpression(includeElements) : IncludeExpression.Empty;
+        primaryLayer.Include = includeElements.Count > 0 ? new IncludeExpression(includeElements) : IncludeExpression.Empty;
         primaryLayer.Sort = null;
         primaryLayer.Pagination = null;
         primaryLayer.Filter = CreateFilterByIds([id], primaryIdAttribute, primaryLayer.Filter);
@@ -410,7 +410,7 @@ public class QueryLayerComposer : IQueryLayerComposer
             object? rightValue = relationship.GetValue(primaryResource);
             HashSet<IIdentifiable> rightResourceIds = _collectionConverter.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
 
-            if (rightResourceIds.Any())
+            if (rightResourceIds.Count > 0)
             {
                 QueryLayer queryLayer = ComposeForGetRelationshipRightIds(relationship, rightResourceIds);
                 yield return (queryLayer, relationship);
@@ -546,7 +546,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         {
             IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForQuery(nextType);
 
-            if (!fieldSet.Any())
+            if (fieldSet.Count == 0)
             {
                 continue;
             }

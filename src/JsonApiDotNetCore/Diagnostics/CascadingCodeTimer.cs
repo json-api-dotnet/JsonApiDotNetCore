@@ -65,7 +65,7 @@ internal sealed class CascadingCodeTimer : ICodeTimer
 
         _activeScopeStack.Pop();
 
-        if (!_activeScopeStack.Any())
+        if (_activeScopeStack.Count == 0)
         {
             _completedScopes.Add(scope);
         }
@@ -92,7 +92,7 @@ internal sealed class CascadingCodeTimer : ICodeTimer
             maxLength = Math.Max(maxLength, nextLength);
         }
 
-        if (_activeScopeStack.Any())
+        if (_activeScopeStack.Count > 0)
         {
             MeasureScope scope = _activeScopeStack.Peek();
             int nextLength = scope.GetPaddingLength();
@@ -109,7 +109,7 @@ internal sealed class CascadingCodeTimer : ICodeTimer
             scope.WriteResult(builder, 0, paddingLength);
         }
 
-        if (_activeScopeStack.Any())
+        if (_activeScopeStack.Count > 0)
         {
             MeasureScope scope = _activeScopeStack.Peek();
             scope.WriteResult(builder, 0, paddingLength);

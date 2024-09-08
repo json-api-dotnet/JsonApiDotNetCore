@@ -86,7 +86,7 @@ public sealed class CustomRouteTests : IClassFixture<IntegrationTestContext<Test
 
         responseDocument.Data.ManyValue.ShouldHaveCount(5);
         responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Type == "towns");
-        responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Attributes.ShouldNotBeNull().Any());
-        responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.ShouldNotBeNull().Any());
+        responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Attributes.ShouldNotBeNull().Count > 0);
+        responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.ShouldNotBeNull().Count > 0);
     }
 }

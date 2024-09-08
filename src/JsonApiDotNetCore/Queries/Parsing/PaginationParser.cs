@@ -32,7 +32,7 @@ public class PaginationParser : QueryExpressionParser, IPaginationParser
         PaginationElementQueryStringValueExpression element = ParsePaginationElement(resourceType);
         elementsBuilder.Add(element);
 
-        while (TokenStack.Any())
+        while (TokenStack.Count > 0)
         {
             EatSingleCharacterToken(TokenKind.Comma);
 

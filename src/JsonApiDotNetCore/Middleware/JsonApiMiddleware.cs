@@ -174,7 +174,7 @@ public sealed partial class JsonApiMiddleware
     {
         string[] acceptHeaders = httpContext.Request.Headers.GetCommaSeparatedValues("Accept");
 
-        if (!acceptHeaders.Any())
+        if (acceptHeaders.Length == 0)
         {
             return true;
         }

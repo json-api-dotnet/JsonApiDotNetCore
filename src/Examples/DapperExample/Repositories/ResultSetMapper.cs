@@ -124,7 +124,7 @@ internal sealed class ResultSetMapper<TResource, TId>
 
             SetRelationship(leftResource, includeElement.Relationship, rightResource);
 
-            if (rightResource != null && includeElement.Children.Any())
+            if (rightResource != null && includeElement.Children.Count > 0)
             {
                 RecursiveSetRelationships(rightResource, includeElement.Children, joinObjects);
             }

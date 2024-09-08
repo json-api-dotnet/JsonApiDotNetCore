@@ -95,7 +95,7 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
     /// <inheritdoc />
     public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
     {
-        return _sparseFieldTableBuilder.Any()
+        return _sparseFieldTableBuilder.Count > 0
             ? [new ExpressionInScope(null, new SparseFieldTableExpression(_sparseFieldTableBuilder.ToImmutable()))]
             : Array.Empty<ExpressionInScope>();
     }

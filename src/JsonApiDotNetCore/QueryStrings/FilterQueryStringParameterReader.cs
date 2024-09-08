@@ -157,7 +157,7 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
 
     private IEnumerable<ExpressionInScope> EnumerateFiltersInScopes()
     {
-        if (_filtersInGlobalScope.Any())
+        if (_filtersInGlobalScope.Count > 0)
         {
             FilterExpression filter = MergeFilters(_filtersInGlobalScope.ToImmutable());
             yield return new ExpressionInScope(null, filter);

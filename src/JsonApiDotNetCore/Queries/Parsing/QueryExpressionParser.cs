@@ -176,7 +176,7 @@ public abstract class QueryExpressionParser
     /// </summary>
     protected void AssertTokenStackIsEmpty()
     {
-        if (TokenStack.Any())
+        if (TokenStack.Count > 0)
         {
             int position = GetNextTokenPositionOrEnd();
             throw new QueryParseException("End of expression expected.", position);

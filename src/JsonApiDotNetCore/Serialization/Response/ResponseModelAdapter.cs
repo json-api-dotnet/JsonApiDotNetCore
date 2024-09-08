@@ -260,7 +260,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
             attrMap.Add(attr.PublicName, value);
         }
 
-        return attrMap.Any() ? attrMap : null;
+        return attrMap.Count > 0 ? attrMap : null;
     }
 
     private void TraverseRelationships(IIdentifiable leftResource, ResourceObjectTreeNode leftTreeNode, IImmutableSet<IncludeElementExpression> includeElements,
@@ -393,7 +393,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
     {
         IList<ResourceObject> resourceObjects = rootNode.GetResponseIncluded();
 
-        if (resourceObjects.Any())
+        if (resourceObjects.Count > 0)
         {
             return resourceObjects;
         }

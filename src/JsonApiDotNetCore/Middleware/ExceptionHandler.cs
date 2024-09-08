@@ -103,7 +103,7 @@ public partial class ExceptionHandler : IExceptionHandler
     {
         string[] stackTraceLines = exception.ToString().Split(Environment.NewLine);
 
-        if (stackTraceLines.Any())
+        if (stackTraceLines.Length > 0)
         {
             foreach (ErrorObject error in errors)
             {

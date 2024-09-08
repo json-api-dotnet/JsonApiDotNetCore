@@ -34,7 +34,7 @@ public sealed class InverseNavigationResolver : IInverseNavigationResolver
 
     private void Resolve(DbContext dbContext)
     {
-        foreach (ResourceType resourceType in _resourceGraph.GetResourceTypes().Where(resourceType => resourceType.Relationships.Any()))
+        foreach (ResourceType resourceType in _resourceGraph.GetResourceTypes().Where(resourceType => resourceType.Relationships.Count > 0))
         {
             IEntityType? entityType = dbContext.Model.FindEntityType(resourceType.ClrType);
 

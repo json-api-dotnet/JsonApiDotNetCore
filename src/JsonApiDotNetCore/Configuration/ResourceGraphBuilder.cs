@@ -36,7 +36,7 @@ public partial class ResourceGraphBuilder
     {
         HashSet<ResourceType> resourceTypes = [.. _resourceTypesByClrType.Values];
 
-        if (!resourceTypes.Any())
+        if (resourceTypes.Count == 0)
         {
             LogResourceGraphIsEmpty();
         }

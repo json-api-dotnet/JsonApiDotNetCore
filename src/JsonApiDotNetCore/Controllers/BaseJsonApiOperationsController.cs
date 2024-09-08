@@ -212,7 +212,7 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
             operationIndex++;
         }
 
-        if (requestModelState.Any())
+        if (requestModelState.Count > 0)
         {
             Dictionary<string, ModelStateEntry?> modelStateDictionary = requestModelState.ToDictionary(tuple => tuple.key, tuple => tuple.entry);
 
