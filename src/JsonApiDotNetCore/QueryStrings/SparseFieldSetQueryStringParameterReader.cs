@@ -24,7 +24,7 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
         ImmutableDictionary.CreateBuilder<ResourceType, SparseFieldSetExpression>();
 
     /// <inheritdoc />
-    bool IQueryStringParameterReader.AllowEmptyValue => true;
+    public bool AllowEmptyValue => true;
 
     public SparseFieldSetQueryStringParameterReader(ISparseFieldTypeParser scopeParser, ISparseFieldSetParser sparseFieldSetParser, IJsonApiRequest request,
         IResourceGraph resourceGraph)
