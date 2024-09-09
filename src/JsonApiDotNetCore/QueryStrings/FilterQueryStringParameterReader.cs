@@ -173,6 +173,6 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
 
     private static FilterExpression MergeFilters(IImmutableList<FilterExpression> filters)
     {
-        return filters.Count > 1 ? new LogicalExpression(LogicalOperator.Or, filters) : filters.First();
+        return filters.Count > 1 ? new LogicalExpression(LogicalOperator.Or, filters) : filters[0];
     }
 }
