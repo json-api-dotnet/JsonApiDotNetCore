@@ -70,7 +70,7 @@ internal sealed partial class MatchTraceScope : IDisposable
             }
             else
             {
-                List<string> chain = [..resultState.FieldsMatched.Select(attribute => attribute.PublicName)];
+                List<string> chain = [.. resultState.FieldsMatched.Select(attribute => attribute.PublicName)];
 
                 if (resultState.FieldsRemaining != null)
                 {

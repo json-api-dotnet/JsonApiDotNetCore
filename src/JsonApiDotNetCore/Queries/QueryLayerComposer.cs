@@ -139,7 +139,7 @@ public class QueryLayerComposer : IQueryLayerComposer
 #if NET6_0
         ImmutableArray<ExpressionInScope> constraints = _constraintProviders.SelectMany(provider => provider.GetConstraints()).ToImmutableArray();
 #else
-        ImmutableArray<ExpressionInScope> constraints = [.._constraintProviders.SelectMany(provider => provider.GetConstraints())];
+        ImmutableArray<ExpressionInScope> constraints = [.. _constraintProviders.SelectMany(provider => provider.GetConstraints())];
 #endif
 
         QueryLayer topLayer = ComposeTopLayer(constraints, requestResourceType);

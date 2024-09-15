@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using SysNotNull = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 #pragma warning disable AV1008 // Class should not be static
+#pragma warning disable format
 
 namespace JsonApiDotNetCore;
 

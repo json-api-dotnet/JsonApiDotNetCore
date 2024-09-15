@@ -271,7 +271,7 @@ public sealed class InvalidModelStateException(
 
                 if (bracketCloseIndex != -1)
                 {
-                    segmentValue = key[1.. bracketCloseIndex];
+                    segmentValue = key[1..bracketCloseIndex];
 
                     int nextKeyStartIndex = key.Length > bracketCloseIndex + 1 && key[bracketCloseIndex + 1] == Dot
                         ? bracketCloseIndex + 2

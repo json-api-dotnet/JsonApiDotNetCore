@@ -6,6 +6,8 @@ using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
+#pragma warning disable format
+
 namespace JsonApiDotNetCore.Controllers;
 
 /// <summary>
