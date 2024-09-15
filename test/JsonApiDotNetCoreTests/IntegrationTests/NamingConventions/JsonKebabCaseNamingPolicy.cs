@@ -36,9 +36,9 @@ internal sealed class JsonKebabCaseNamingPolicy : JsonNamingPolicy
 
                 if (position + 1 != spanName.Length)
                 {
-                    isNextLower = spanName[position + 1] > 96 && spanName[position + 1] < 123;
-                    isNextUpper = spanName[position + 1] > 64 && spanName[position + 1] < 91;
-                    isNextSpace = spanName[position + 1] == 32;
+                    isNextLower = spanName[position + 1] is >= 'a' and <= 'z';
+                    isNextUpper = spanName[position + 1] is >= 'A' and <= 'Z';
+                    isNextSpace = spanName[position + 1] == ' ';
                 }
 
                 if (isCurrentSpace && (isPreviousSpace || isPreviousSeparator || isNextUpper || isNextSpace))
@@ -47,9 +47,9 @@ internal sealed class JsonKebabCaseNamingPolicy : JsonNamingPolicy
                 }
                 else
                 {
-                    bool isCurrentUpper = spanName[position] > 64 && spanName[position] < 91;
-                    bool isPreviousLower = spanName[position - 1] > 96 && spanName[position - 1] < 123;
-                    bool isPreviousNumber = spanName[position - 1] > 47 && spanName[position - 1] < 58;
+                    bool isCurrentUpper = spanName[position] is >= 'A' and <= 'Z';
+                    bool isPreviousLower = spanName[position - 1] is >= 'a' and <= 'z';
+                    bool isPreviousNumber = spanName[position - 1] is >= '0' and <= '9';
 
                     if (isCurrentUpper && (isPreviousLower || isPreviousNumber || isNextLower || isNextSpace))
                     {
