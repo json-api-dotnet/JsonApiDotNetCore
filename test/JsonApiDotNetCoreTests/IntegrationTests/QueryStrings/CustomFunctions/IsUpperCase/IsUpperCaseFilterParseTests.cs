@@ -20,7 +20,8 @@ public sealed class IsUpperCaseFilterParseTests : BaseParseTests
 
     public IsUpperCaseFilterParseTests()
     {
-        var resourceFactory = new ResourceFactory(new ServiceContainer());
+        using var serviceProvider = new ServiceContainer();
+        var resourceFactory = new ResourceFactory(serviceProvider);
         var scopeParser = new QueryStringParameterScopeParser();
         var valueParser = new IsUpperCaseFilterParser(resourceFactory);
 

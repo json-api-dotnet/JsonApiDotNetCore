@@ -14,8 +14,9 @@ namespace Benchmarks.QueryString;
 [MarkdownExporter]
 [SimpleJob(3, 10, 20)]
 [MemoryDiagnoser]
-public class QueryStringParserBenchmarks
+public class QueryStringParserBenchmarks : IDisposable
 {
+    private readonly ServiceContainer _serviceProvider = new();
     private readonly FakeRequestQueryStringAccessor _queryStringAccessor = new();
     private readonly QueryStringReader _queryStringReader;
 
@@ -34,7 +35,7 @@ public class QueryStringParserBenchmarks
             IsCollection = true
         };
 
-        var resourceFactory = new ResourceFactory(new ServiceContainer());
+        var resourceFactory = new ResourceFactory(_serviceProvider);
 
         var includeParser = new IncludeParser(options);
         var includeReader = new IncludeQueryStringParameterReader(includeParser, request, resourceGraph);
@@ -91,5 +92,21 @@ public class QueryStringParserBenchmarks
 
         _queryStringAccessor.SetQueryString(queryString);
         _queryStringReader.ReadAll(null);
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+#pragma warning disable CA1063 // Implement IDisposable Correctly
+    private void Dispose(bool disposing)
+#pragma warning restore CA1063 // Implement IDisposable Correctly
+    {
+        if (disposing)
+        {
+            _serviceProvider.Dispose();
+        }
     }
 }

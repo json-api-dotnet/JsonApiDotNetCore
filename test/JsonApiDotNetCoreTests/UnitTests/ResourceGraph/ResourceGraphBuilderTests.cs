@@ -256,14 +256,15 @@ public sealed class ResourceGraphBuilderTests
     {
         // Arrange
         var options = new JsonApiOptions();
-        var loggerFactory = new FakeLoggerFactory(LogLevel.Warning);
+        using var loggerProvider = new CapturingLoggerProvider(LogLevel.Warning);
+        using var loggerFactory = new LoggerFactory([loggerProvider]);
         var builder = new ResourceGraphBuilder(options, loggerFactory);
 
         // Act
         builder.Add(typeof(NonResource));
 
         // Assert
-        IReadOnlyList<string> logLines = loggerFactory.Logger.GetLines();
+        IReadOnlyList<string> logLines = loggerProvider.GetLines();
         logLines.ShouldHaveCount(1);
 
         logLines[0].Should().Be(
@@ -275,14 +276,15 @@ public sealed class ResourceGraphBuilderTests
     {
         // Arrange
         var options = new JsonApiOptions();
-        var loggerFactory = new FakeLoggerFactory(LogLevel.Warning);
+        using var loggerProvider = new CapturingLoggerProvider(LogLevel.Warning);
+        using var loggerFactory = new LoggerFactory([loggerProvider]);
         var builder = new ResourceGraphBuilder(options, loggerFactory);
 
         // Act
         builder.Add(typeof(NonResourceWithSuppression));
 
         // Assert
-        IReadOnlyList<string> logLines = loggerFactory.Logger.GetLines();
+        IReadOnlyList<string> logLines = loggerProvider.GetLines();
         logLines.Should().BeEmpty();
     }
 
@@ -291,14 +293,15 @@ public sealed class ResourceGraphBuilderTests
     {
         // Arrange
         var options = new JsonApiOptions();
-        var loggerFactory = new FakeLoggerFactory(LogLevel.Warning);
+        using var loggerProvider = new CapturingLoggerProvider(LogLevel.Warning);
+        using var loggerFactory = new LoggerFactory([loggerProvider]);
         var builder = new ResourceGraphBuilder(options, loggerFactory);
 
         // Act
         builder.Add<ResourceWithHasOneRelationship, int>();
 
         // Assert
-        IReadOnlyList<string> logLines = loggerFactory.Logger.GetLines();
+        IReadOnlyList<string> logLines = loggerProvider.GetLines();
         logLines.ShouldHaveCount(1);
 
         logLines[0].Should().Be($"[WARNING] Type '{typeof(ResourceWithHasOneRelationship)}' does not contain any attributes.");
@@ -309,14 +312,15 @@ public sealed class ResourceGraphBuilderTests
     {
         // Arrange
         var options = new JsonApiOptions();
-        var loggerFactory = new FakeLoggerFactory(LogLevel.Warning);
+        using var loggerProvider = new CapturingLoggerProvider(LogLevel.Warning);
+        using var loggerFactory = new LoggerFactory([loggerProvider]);
         var builder = new ResourceGraphBuilder(options, loggerFactory);
 
         // Act
         builder.Build();
 
         // Assert
-        IReadOnlyList<string> logLines = loggerFactory.Logger.GetLines();
+        IReadOnlyList<string> logLines = loggerProvider.GetLines();
         logLines.ShouldHaveCount(1);
 
         logLines[0].Should().Be("[WARNING] The resource graph is empty.");

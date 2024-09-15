@@ -3,6 +3,8 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
 
+#pragma warning disable CA2000 // Dispose objects before losing scope
+
 namespace JsonApiDotNetCore.Diagnostics;
 
 /// <summary>

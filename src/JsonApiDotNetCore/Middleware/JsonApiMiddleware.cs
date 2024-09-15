@@ -53,7 +53,9 @@ public sealed partial class JsonApiMiddleware
         _options = options;
         _logger = logger;
 
+#pragma warning disable CA2000 // Dispose objects before losing scope
         var session = new AspNetCodeTimerSession(httpContextAccessor);
+#pragma warning restore CA2000 // Dispose objects before losing scope
         CodeTimingSessionManager.Capture(session);
     }
 

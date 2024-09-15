@@ -22,7 +22,8 @@ public sealed class FilterParseTests : BaseParseTests
     {
         Options.EnableLegacyFilterNotation = false;
 
-        var resourceFactory = new ResourceFactory(new ServiceContainer());
+        using var serviceProvider = new ServiceContainer();
+        var resourceFactory = new ResourceFactory(serviceProvider);
         var scopeParser = new QueryStringParameterScopeParser();
         var valueParser = new FilterParser(resourceFactory);
         _reader = new FilterQueryStringParameterReader(scopeParser, valueParser, Request, ResourceGraph, Options);
@@ -221,7 +222,8 @@ public sealed class FilterParseTests : BaseParseTests
     public void Throws_When_ResourceType_Scope_Not_Disposed()
     {
         // Arrange
-        var resourceFactory = new ResourceFactory(new ServiceContainer());
+        using var serviceProvider = new ServiceContainer();
+        var resourceFactory = new ResourceFactory(serviceProvider);
         var parser = new NotDisposingFilterParser(resourceFactory);
 
         // Act
@@ -236,7 +238,8 @@ public sealed class FilterParseTests : BaseParseTests
     public void Throws_When_No_ResourceType_In_Scope()
     {
         // Arrange
-        var resourceFactory = new ResourceFactory(new ServiceContainer());
+        using var serviceProvider = new ServiceContainer();
+        var resourceFactory = new ResourceFactory(serviceProvider);
         var parser = new ResourceTypeAccessingFilterParser(resourceFactory);
 
         // Act

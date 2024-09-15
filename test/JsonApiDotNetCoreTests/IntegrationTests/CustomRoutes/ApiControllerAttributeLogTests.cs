@@ -8,34 +8,33 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes;
 
 public sealed class ApiControllerAttributeLogTests : IntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext>, IAsyncDisposable
 {
-    private readonly FakeLoggerFactory _loggerFactory;
+    private readonly CapturingLoggerProvider _loggerProvider;
 
     public ApiControllerAttributeLogTests()
     {
         UseController<CiviliansController>();
 
-        _loggerFactory = new FakeLoggerFactory(LogLevel.Warning);
+        _loggerProvider = new CapturingLoggerProvider(LogLevel.Warning);
 
         ConfigureLogging(options =>
         {
-            options.ClearProviders();
-            options.AddProvider(_loggerFactory);
-        });
+            options.AddProvider(_loggerProvider);
 
-        ConfigureServices(services => services.AddSingleton(_loggerFactory));
+            options.Services.AddSingleton(_loggerProvider);
+        });
     }
 
     [Fact]
     public void Logs_warning_at_startup_when_ApiControllerAttribute_found()
     {
         // Arrange
-        _loggerFactory.Logger.Clear();
+        _loggerProvider.Clear();
 
         // Act
         _ = Factory;
 
         // Assert
-        IReadOnlyList<string> logLines = _loggerFactory.Logger.GetLines();
+        IReadOnlyList<string> logLines = _loggerProvider.GetLines();
         logLines.ShouldHaveCount(1);
 
         logLines[0].Should().Be(
@@ -44,7 +43,7 @@ public sealed class ApiControllerAttributeLogTests : IntegrationTestContext<Test
 
     public override Task DisposeAsync()
     {
-        _loggerFactory.Dispose();
+        _loggerProvider.Dispose();
         return base.DisposeAsync();
     }
 

@@ -28,8 +28,13 @@ public sealed class FieldChainPatternMatchTests : IDisposable
 
     public FieldChainPatternMatchTests(ITestOutputHelper testOutputHelper)
     {
+#pragma warning disable CA2000 // Dispose objects before losing scope
+        // Justification: LoggerFactory.AddProvider takes ownership (passing the provider as a constructor parameter does not).
         var loggerProvider = new XUnitLoggerProvider(testOutputHelper, null, LogOutputFields.Message);
-        _loggerFactory = new LoggerFactory([loggerProvider]);
+#pragma warning restore CA2000 // Dispose objects before losing scope
+
+        _loggerFactory = new LoggerFactory();
+        _loggerFactory.AddProvider(loggerProvider);
 
         var options = new JsonApiOptions();
         IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<Resource, long>().Build();

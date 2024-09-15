@@ -11,8 +11,10 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Benchmarks.Deserialization;
 
-public abstract class DeserializationBenchmarkBase
+public abstract class DeserializationBenchmarkBase : IDisposable
 {
+    private readonly ServiceContainer _serviceProvider = new();
+
     protected JsonSerializerOptions SerializerReadOptions { get; }
     protected DocumentAdapter DocumentAdapter { get; }
 
@@ -23,12 +25,11 @@ public abstract class DeserializationBenchmarkBase
         options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph));
         SerializerReadOptions = ((IJsonApiOptions)options).SerializerReadOptions;
 
-        var serviceContainer = new ServiceContainer();
-        var resourceFactory = new ResourceFactory(serviceContainer);
-        var resourceDefinitionAccessor = new ResourceDefinitionAccessor(resourceGraph, serviceContainer);
+        var resourceFactory = new ResourceFactory(_serviceProvider);
+        var resourceDefinitionAccessor = new ResourceDefinitionAccessor(resourceGraph, _serviceProvider);
 
-        serviceContainer.AddService(typeof(IResourceDefinitionAccessor), resourceDefinitionAccessor);
-        serviceContainer.AddService(typeof(IResourceDefinition<IncomingResource, int>), new JsonApiResourceDefinition<IncomingResource, int>(resourceGraph));
+        _serviceProvider.AddService(typeof(IResourceDefinitionAccessor), resourceDefinitionAccessor);
+        _serviceProvider.AddService(typeof(IResourceDefinition<IncomingResource, int>), new JsonApiResourceDefinition<IncomingResource, int>(resourceGraph));
 
         // ReSharper disable once VirtualMemberCallInConstructor
         JsonApiRequest request = CreateJsonApiRequest(resourceGraph);
@@ -52,6 +53,22 @@ public abstract class DeserializationBenchmarkBase
     }
 
     protected abstract JsonApiRequest CreateJsonApiRequest(IResourceGraph resourceGraph);
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+#pragma warning disable CA1063 // Implement IDisposable Correctly
+    private void Dispose(bool disposing)
+#pragma warning restore CA1063 // Implement IDisposable Correctly
+    {
+        if (disposing)
+        {
+            _serviceProvider.Dispose();
+        }
+    }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class IncomingResource : Identifiable<int>

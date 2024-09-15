@@ -19,25 +19,24 @@ public sealed class AtomicTraceLoggingTests : IClassFixture<IntegrationTestConte
 
         testContext.UseController<OperationsController>();
 
-        var loggerFactory = new FakeLoggerFactory(LogLevel.Trace);
-
         testContext.ConfigureLogging(options =>
         {
-            options.ClearProviders();
-            options.AddProvider(loggerFactory);
-            options.SetMinimumLevel(LogLevel.Trace);
-            options.AddFilter((category, _) => category != null && category.StartsWith("JsonApiDotNetCore.", StringComparison.Ordinal));
-        });
+            var loggerProvider = new CapturingLoggerProvider((category, level) =>
+                level >= LogLevel.Trace && category.StartsWith("JsonApiDotNetCore.", StringComparison.Ordinal));
 
-        testContext.ConfigureServices(services => services.AddSingleton(loggerFactory));
+            options.AddProvider(loggerProvider);
+            options.SetMinimumLevel(LogLevel.Trace);
+
+            options.Services.AddSingleton(loggerProvider);
+        });
     }
 
     [Fact]
     public async Task Logs_execution_flow_at_Trace_level_on_operations_request()
     {
         // Arrange
-        var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
-        loggerFactory.Logger.Clear();
+        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        loggerProvider.Clear();
 
         MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
         existingTrack.Lyric = _fakers.Lyric.GenerateOne();
@@ -116,7 +115,7 @@ public sealed class AtomicTraceLoggingTests : IClassFixture<IntegrationTestConte
 
         responseDocument.Should().BeEmpty();
 
-        IReadOnlyList<string> logLines = loggerFactory.Logger.GetLines();
+        IReadOnlyList<string> logLines = loggerProvider.GetLines();
 
         logLines.Should().BeEquivalentTo(new[]
         {

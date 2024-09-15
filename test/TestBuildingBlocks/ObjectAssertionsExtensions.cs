@@ -60,10 +60,12 @@ public static class ObjectAssertionsExtensions
     private static string ToJsonString(JsonDocument document)
     {
         using var stream = new MemoryStream();
-        var writer = new Utf8JsonWriter(stream, JsonWriterOptions);
 
-        document.WriteTo(writer);
-        writer.Flush();
+        using (var writer = new Utf8JsonWriter(stream, JsonWriterOptions))
+        {
+            document.WriteTo(writer);
+        }
+
         return Encoding.UTF8.GetString(stream.ToArray());
     }
 
