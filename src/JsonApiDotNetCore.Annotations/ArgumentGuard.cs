@@ -31,7 +31,7 @@ internal static class ArgumentGuard
     {
         ArgumentNullException.ThrowIfNull(value, parameterName);
 
-        if (value == string.Empty)
+        if (value.Length == 0)
         {
             throw new ArgumentException("String cannot be null or empty.", parameterName);
         }

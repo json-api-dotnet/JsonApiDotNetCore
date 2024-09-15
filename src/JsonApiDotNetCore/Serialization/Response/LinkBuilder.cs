@@ -189,7 +189,7 @@ public class LinkBuilder : ILinkBuilder
         string parameterValue = string.Join(',',
             elements.Select(expression => expression.Scope == null ? expression.Value.ToString() : $"{expression.Scope}:{expression.Value}"));
 
-        return parameterValue == string.Empty ? null : parameterValue;
+        return parameterValue.Length == 0 ? null : parameterValue;
     }
 
     private IImmutableList<PaginationElementQueryStringValueExpression> ParsePageSizeExpression(string? pageSizeParameterValue, ResourceType resourceType)

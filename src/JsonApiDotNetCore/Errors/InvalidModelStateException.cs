@@ -246,7 +246,7 @@ public sealed class InvalidModelStateException(
         {
             ArgumentGuard.NotNull(modelType);
 
-            return _nextKey == string.Empty ? null : CreateSegment(modelType, _nextKey, isInComplexType, this, sourcePointer, GetCollectionElementTypeCallback);
+            return _nextKey.Length == 0 ? null : CreateSegment(modelType, _nextKey, isInComplexType, this, sourcePointer, GetCollectionElementTypeCallback);
         }
 
         public static ModelStateKeySegment Create(Type modelType, string key, Func<Type, int, Type?>? getCollectionElementTypeCallback)
