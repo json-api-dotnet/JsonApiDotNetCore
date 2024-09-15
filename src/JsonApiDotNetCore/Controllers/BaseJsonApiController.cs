@@ -214,7 +214,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
 
         if (newResource == null)
         {
-            HttpContext.Response.Headers["Location"] = locationUrl;
+            HttpContext.Response.Headers.Location = locationUrl;
             return NoContent();
         }
 
