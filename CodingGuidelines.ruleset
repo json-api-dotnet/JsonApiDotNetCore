@@ -35,5 +35,6 @@
     <Rule Id="CA1063" Action="Warning" />
     <Rule Id="CA1064" Action="Warning" />
     <Rule Id="CA1065" Action="Warning" />
+    <Rule Id="CA1066" Action="Warning" />
   </Rules>
 </RuleSet>
