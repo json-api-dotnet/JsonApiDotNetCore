@@ -24,6 +24,13 @@
     <Rule Id="AV2318" Action="Warning" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.NetAnalyzers" RuleNamespace="Microsoft.CodeAnalysis.NetAnalyzers">
+    <Rule Id="CA1027" Action="Warning" />
+    <Rule Id="CA1033" Action="Warning" />
+    <Rule Id="CA1062" Action="Warning" />
+    <Rule Id="CA1063" Action="Warning" />
+    <Rule Id="CA1064" Action="Warning" />
+    <Rule Id="CA1065" Action="Warning" />
+    <Rule Id="CA1066" Action="Warning" />
     <Rule Id="CA1305" Action="None" />
     <Rule Id="CA1716" Action="None" />
     <Rule Id="CA1720" Action="None" />
@@ -31,13 +38,6 @@
     <Rule Id="CA1810" Action="Warning" />
     <Rule Id="CA1820" Action="Warning" />
     <Rule Id="CA1822" Action="None" />
-    <Rule Id="CA1033" Action="Warning" />
-    <Rule Id="CA1027" Action="Warning" />
-    <Rule Id="CA1062" Action="Warning" />
-    <Rule Id="CA1063" Action="Warning" />
-    <Rule Id="CA1064" Action="Warning" />
-    <Rule Id="CA1065" Action="Warning" />
-    <Rule Id="CA1066" Action="Warning" />
     <Rule Id="CA1849" Action="Warning" />
     <Rule Id="CA2000" Action="Warning" />
     <Rule Id="CA2119" Action="Warning" />
