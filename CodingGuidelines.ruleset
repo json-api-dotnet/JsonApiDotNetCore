@@ -45,4 +45,7 @@
     <Rule Id="CA2207" Action="Warning" />
     <Rule Id="CA2217" Action="Warning" />
   </Rules>
+  <Rules AnalyzerId="System.Text.RegularExpressions.Generator" RuleNamespace="System.Text.RegularExpressions.Generator">
+    <Rule Id="SYSLIB1045" Action="Warning" />
+  </Rules>
 </RuleSet>
