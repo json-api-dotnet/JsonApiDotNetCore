@@ -486,7 +486,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
         HashSet<IIdentifiable> rightResourceIdsStored = _collectionConverter
             .ExtractResources(rightValueStored)
-            .Select(rightResource => _dbContext.GetTrackedOrAttach(rightResource))
+            .Select(_dbContext.GetTrackedOrAttach)
             .ToHashSet(IdentifiableComparer.Instance);
 
         // @formatter:wrap_before_first_method_call restore
@@ -536,7 +536,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             IIdentifiable[] rightResourceIdsStored = _collectionConverter
                 .ExtractResources(rightValueStored)
                 .Concat(extraResourceIdsToRemove)
-                .Select(rightResource => _dbContext.GetTrackedOrAttach(rightResource))
+                .Select(_dbContext.GetTrackedOrAttach)
                 .ToArray();
 
             // @formatter:wrap_before_first_method_call restore
@@ -625,7 +625,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         }
 
         IReadOnlyCollection<IIdentifiable> rightResources = _collectionConverter.ExtractResources(rightValue);
-        IIdentifiable[] rightResourcesTracked = rightResources.Select(rightResource => _dbContext.GetTrackedOrAttach(rightResource)).ToArray();
+        IIdentifiable[] rightResourcesTracked = rightResources.Select(_dbContext.GetTrackedOrAttach).ToArray();
 
         return rightValue is IEnumerable
             ? _collectionConverter.CopyToTypedCollection(rightResourcesTracked, relationshipPropertyType)

@@ -39,8 +39,7 @@ public class CarCompositeKeyAwareRepository<TResource, TId>(
 
         if (queryLayer.Selection is { IsEmpty: false })
         {
-            foreach (QueryLayer? nextLayer in queryLayer.Selection.GetResourceTypes()
-                .Select(resourceType => queryLayer.Selection.GetOrCreateSelectors(resourceType))
+            foreach (QueryLayer? nextLayer in queryLayer.Selection.GetResourceTypes().Select(queryLayer.Selection.GetOrCreateSelectors)
                 .SelectMany(selectors => selectors.Select(selector => selector.Value).Where(layer => layer != null)))
             {
                 RecursiveRewriteFilterInLayer(nextLayer!);

@@ -44,7 +44,7 @@ internal sealed class UpdateResourceStatementBuilder(IDataModelService dataModel
 
     private WhereNode GetWhere(ColumnNode idColumn, IEnumerable<object> idValues)
     {
-        ReadOnlyCollection<ParameterNode> parameters = idValues.Select(idValue => ParameterGenerator.Create(idValue)).ToArray().AsReadOnly();
+        ReadOnlyCollection<ParameterNode> parameters = idValues.Select(ParameterGenerator.Create).ToArray().AsReadOnly();
         FilterNode filter = parameters.Count == 1 ? new ComparisonNode(ComparisonOperator.Equals, idColumn, parameters[0]) : new InNode(idColumn, parameters);
         return new WhereNode(filter);
     }
