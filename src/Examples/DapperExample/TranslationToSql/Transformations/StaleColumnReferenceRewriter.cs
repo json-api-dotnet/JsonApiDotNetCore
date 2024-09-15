@@ -279,7 +279,7 @@ internal sealed partial class StaleColumnReferenceRewriter : SqlTreeNodeVisitor<
         return node;
     }
 
-    [return: NotNullIfNotNull("node")]
+    [return: NotNullIfNotNull(nameof(node))]
     private T? TypedVisit<T>(T? node, ColumnVisitMode mode)
         where T : SqlTreeNode
     {

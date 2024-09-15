@@ -205,7 +205,7 @@ internal sealed partial class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<
         return new OrderByCountNode(count, node.IsAscending);
     }
 
-    [return: NotNullIfNotNull("node")]
+    [return: NotNullIfNotNull(nameof(node))]
     private T? TypedVisit<T>(T? node, ISet<ColumnNode> usedColumns)
         where T : SqlTreeNode
     {
