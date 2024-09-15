@@ -14,7 +14,12 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Tests'))">
-    <NoWarn>$(NoWarn);CA1707</NoWarn>
+    <NoWarn>$(NoWarn);CA1707;CA1062</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup
+    Condition="$(MSBuildProjectName.EndsWith('Example')) Or '$(MSBuildProjectName)' == 'TestBuildingBlocks' Or '$(MSBuildProjectName)' == 'Benchmarks'">
+    <NoWarn>$(NoWarn);CA1062</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">

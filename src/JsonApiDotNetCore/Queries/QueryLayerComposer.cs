@@ -487,6 +487,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     protected virtual IImmutableSet<IncludeElementExpression> GetIncludeElements(IImmutableSet<IncludeElementExpression> includeElements,
         ResourceType resourceType)
     {
+        ArgumentGuard.NotNull(includeElements);
         ArgumentGuard.NotNull(resourceType);
 
         return _resourceDefinitionAccessor.OnApplyIncludes(resourceType, includeElements);

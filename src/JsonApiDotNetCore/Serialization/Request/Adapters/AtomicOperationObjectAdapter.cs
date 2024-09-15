@@ -31,6 +31,9 @@ public sealed class AtomicOperationObjectAdapter : IAtomicOperationObjectAdapter
     /// <inheritdoc />
     public OperationContainer Convert(AtomicOperationObject atomicOperationObject, RequestAdapterState state)
     {
+        ArgumentGuard.NotNull(atomicOperationObject);
+        ArgumentGuard.NotNull(state);
+
         AssertNoHref(atomicOperationObject, state);
 
         WriteOperationKind writeOperation = ConvertOperationCode(atomicOperationObject, state);

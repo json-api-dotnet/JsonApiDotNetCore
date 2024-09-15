@@ -114,6 +114,8 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
     protected virtual IQueryable<TResource> ApplyQueryLayer(QueryLayer queryLayer)
     {
+        ArgumentGuard.NotNull(queryLayer);
+
         _traceWriter.LogMethodStart(new
         {
             queryLayer
@@ -317,6 +319,8 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
     protected void AssertIsNotClearingRequiredToOneRelationship(RelationshipAttribute relationship, object? rightValue)
     {
+        ArgumentGuard.NotNull(relationship);
+
         if (relationship is HasOneAttribute)
         {
             INavigation? navigation = GetNavigation(relationship);
@@ -597,6 +601,9 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
     protected async Task UpdateRelationshipAsync(RelationshipAttribute relationship, TResource leftResource, object? valueToAssign,
         CancellationToken cancellationToken)
     {
+        ArgumentGuard.NotNull(relationship);
+        ArgumentGuard.NotNull(leftResource);
+
         object? trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType);
 
         if (RequireLoadOfInverseRelationship(relationship, trackedValueToAssign))

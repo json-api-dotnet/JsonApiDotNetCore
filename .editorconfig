@@ -128,3 +128,6 @@ dotnet_naming_style.camel_case_prefix_with_underscore.required_prefix = _
 dotnet_naming_style.camel_case_prefix_with_underscore.capitalization = camel_case
 
 dotnet_naming_style.camel_case.capitalization = camel_case
+
+# CA1062: Validate arguments of public methods
+dotnet_code_quality.CA1062.excluded_symbol_names = Accept|DefaultVisit|Visit*|Apply*

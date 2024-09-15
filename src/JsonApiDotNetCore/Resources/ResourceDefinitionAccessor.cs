@@ -216,12 +216,16 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
 
     protected object ResolveResourceDefinition(Type resourceClrType)
     {
+        ArgumentGuard.NotNull(resourceClrType);
+
         ResourceType resourceType = _resourceGraph.GetResourceType(resourceClrType);
         return ResolveResourceDefinition(resourceType);
     }
 
     protected virtual object ResolveResourceDefinition(ResourceType resourceType)
     {
+        ArgumentGuard.NotNull(resourceType);
+
         Type resourceDefinitionType = typeof(IResourceDefinition<,>).MakeGenericType(resourceType.ClrType, resourceType.IdentityClrType);
         return _serviceProvider.GetRequiredService(resourceDefinitionType);
     }

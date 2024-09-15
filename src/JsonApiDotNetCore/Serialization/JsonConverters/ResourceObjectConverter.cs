@@ -224,6 +224,9 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
     /// </summary>
     public override void Write(Utf8JsonWriter writer, ResourceObject value, JsonSerializerOptions options)
     {
+        ArgumentGuard.NotNull(writer);
+        ArgumentGuard.NotNull(value);
+
         writer.WriteStartObject();
 
         writer.WriteString(TypeText, value.Type);

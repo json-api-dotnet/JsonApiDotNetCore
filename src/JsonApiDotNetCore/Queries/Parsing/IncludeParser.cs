@@ -39,6 +39,9 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
 
     protected virtual IncludeExpression ParseInclude(string source, ResourceType resourceType)
     {
+        ArgumentGuard.NotNull(source);
+        ArgumentGuard.NotNull(resourceType);
+
         var treeRoot = IncludeTreeNode.CreateRoot(resourceType);
         bool isAtStart = true;
 

@@ -238,6 +238,8 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
 
     protected async Task AssertPrimaryResourceDoesNotExistAsync(TResource resource, CancellationToken cancellationToken)
     {
+        ArgumentGuard.NotNull(resource);
+
         if (!Equals(resource.Id, default(TId)))
         {
             TResource? existingResource = await GetPrimaryResourceByIdOrDefaultAsync(resource.Id!, TopFieldSelection.OnlyIdAttribute, cancellationToken);
@@ -251,6 +253,8 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
 
     protected virtual async Task InitializeResourceAsync(TResource resourceForDatabase, CancellationToken cancellationToken)
     {
+        ArgumentGuard.NotNull(resourceForDatabase);
+
         await _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceForDatabase, WriteOperationKind.CreateResource, cancellationToken);
     }
 
@@ -261,6 +265,8 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
 
     protected async Task AssertResourcesToAssignInRelationshipsExistAsync(TResource primaryResource, CancellationToken cancellationToken)
     {
+        ArgumentGuard.NotNull(primaryResource);
+
         await ValidateResourcesToAssignInRelationshipsExistWithRefreshAsync(primaryResource, false, cancellationToken);
     }
 

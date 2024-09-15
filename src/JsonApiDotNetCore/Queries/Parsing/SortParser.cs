@@ -27,6 +27,8 @@ public class SortParser : QueryExpressionParser, ISortParser
 
     protected virtual SortExpression ParseSort(ResourceType resourceType)
     {
+        ArgumentGuard.NotNull(resourceType);
+
         SortElementExpression firstElement = ParseSortElement(resourceType);
 
         ImmutableArray<SortElementExpression>.Builder elementsBuilder = ImmutableArray.CreateBuilder<SortElementExpression>();
@@ -45,6 +47,8 @@ public class SortParser : QueryExpressionParser, ISortParser
 
     protected virtual SortElementExpression ParseSortElement(ResourceType resourceType)
     {
+        ArgumentGuard.NotNull(resourceType);
+
         bool isAscending = true;
 
         if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Minus)
@@ -134,6 +138,8 @@ public class SortParser : QueryExpressionParser, ISortParser
 
     protected override void ValidateField(ResourceFieldAttribute field, int position)
     {
+        ArgumentGuard.NotNull(field);
+
         if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowSort))
         {
             throw new QueryParseException($"Sorting on attribute '{attribute.PublicName}' is not allowed.", position);

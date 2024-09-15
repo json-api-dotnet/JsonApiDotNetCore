@@ -23,7 +23,9 @@ public sealed class DocumentInOperationsRequestAdapter : BaseAdapter, IDocumentI
     /// <inheritdoc />
     public IList<OperationContainer> Convert(Document document, RequestAdapterState state)
     {
+        ArgumentGuard.NotNull(document);
         ArgumentGuard.NotNull(state);
+
         AssertHasOperations(document.Operations, state);
 
         using IDisposable _ = state.Position.PushElement("atomic:operations");

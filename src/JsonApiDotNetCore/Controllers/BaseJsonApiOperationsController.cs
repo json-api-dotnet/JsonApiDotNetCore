@@ -129,6 +129,8 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
 
     protected virtual void ValidateEnabledOperations(IList<OperationContainer> operations)
     {
+        ArgumentGuard.NotNull(operations);
+
         List<ErrorObject> errors = [];
 
         for (int operationIndex = 0; operationIndex < operations.Count; operationIndex++)
@@ -191,6 +193,8 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
 
     protected virtual void ValidateModelState(IList<OperationContainer> operations)
     {
+        ArgumentGuard.NotNull(operations);
+
         // We must validate the resource inside each operation manually, because they are typed as IIdentifiable.
         // Instead of validating IIdentifiable we need to validate the resource runtime-type.
 

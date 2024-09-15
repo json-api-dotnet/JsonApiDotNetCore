@@ -26,6 +26,8 @@ public class PaginationParser : QueryExpressionParser, IPaginationParser
 
     protected virtual PaginationQueryStringValueExpression ParsePagination(ResourceType resourceType)
     {
+        ArgumentGuard.NotNull(resourceType);
+
         ImmutableArray<PaginationElementQueryStringValueExpression>.Builder elementsBuilder =
             ImmutableArray.CreateBuilder<PaginationElementQueryStringValueExpression>();
 
@@ -45,6 +47,8 @@ public class PaginationParser : QueryExpressionParser, IPaginationParser
 
     protected virtual PaginationElementQueryStringValueExpression ParsePaginationElement(ResourceType resourceType)
     {
+        ArgumentGuard.NotNull(resourceType);
+
         int position = GetNextTokenPositionOrEnd();
         int? number = TryParseNumber();
 

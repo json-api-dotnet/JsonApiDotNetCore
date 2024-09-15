@@ -16,6 +16,8 @@ public sealed class TargetedFields : ITargetedFields
     /// <inheritdoc />
     public void CopyFrom(ITargetedFields other)
     {
+        ArgumentGuard.NotNull(other);
+
         Clear();
 
         Attributes.UnionWith(other.Attributes);

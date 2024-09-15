@@ -332,6 +332,9 @@ public class LinkBuilder : ILinkBuilder
 
     protected virtual string? RenderLinkForAction(string? controllerName, string actionName, IDictionary<string, object?> routeValues)
     {
+        ArgumentGuard.NotNull(actionName);
+        ArgumentGuard.NotNull(routeValues);
+
         if (controllerName == null)
         {
             // When passing null to LinkGenerator, it uses the controller for the current endpoint. This is incorrect for

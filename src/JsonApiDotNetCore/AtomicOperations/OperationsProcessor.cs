@@ -101,6 +101,8 @@ public class OperationsProcessor : IOperationsProcessor
 
     protected virtual async Task<OperationContainer?> ProcessOperationAsync(OperationContainer operation, CancellationToken cancellationToken)
     {
+        ArgumentGuard.NotNull(operation);
+
         cancellationToken.ThrowIfCancellationRequested();
 
         TrackLocalIdsForOperation(operation);
@@ -113,6 +115,8 @@ public class OperationsProcessor : IOperationsProcessor
 
     protected void TrackLocalIdsForOperation(OperationContainer operation)
     {
+        ArgumentGuard.NotNull(operation);
+
         if (operation.Request.WriteOperation == WriteOperationKind.CreateResource)
         {
             DeclareLocalId(operation.Resource, operation.Request.PrimaryResourceType!);

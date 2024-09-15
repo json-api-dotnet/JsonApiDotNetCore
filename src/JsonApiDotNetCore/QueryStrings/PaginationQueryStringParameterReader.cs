@@ -93,6 +93,8 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
 
     protected virtual void ValidatePageSize(PaginationQueryStringValueExpression constraint)
     {
+        ArgumentGuard.NotNull(constraint);
+
         foreach (PaginationElementQueryStringValueExpression element in constraint.Elements)
         {
             if (_options.MaximumPageSize != null)
@@ -117,6 +119,8 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
 
     protected virtual void ValidatePageNumber(PaginationQueryStringValueExpression constraint)
     {
+        ArgumentGuard.NotNull(constraint);
+
         foreach (PaginationElementQueryStringValueExpression element in constraint.Elements)
         {
             if (_options.MaximumPageNumber != null)

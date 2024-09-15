@@ -109,12 +109,12 @@ public abstract class QueryExpressionVisitor<TArgument, TResult>
         return DefaultVisit(expression, argument);
     }
 
-    public virtual TResult PaginationQueryStringValue(PaginationQueryStringValueExpression expression, TArgument argument)
+    public virtual TResult VisitPaginationQueryStringValue(PaginationQueryStringValueExpression expression, TArgument argument)
     {
         return DefaultVisit(expression, argument);
     }
 
-    public virtual TResult PaginationElementQueryStringValue(PaginationElementQueryStringValueExpression expression, TArgument argument)
+    public virtual TResult VisitPaginationElementQueryStringValue(PaginationElementQueryStringValueExpression expression, TArgument argument)
     {
         return DefaultVisit(expression, argument);
     }

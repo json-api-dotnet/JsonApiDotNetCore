@@ -27,6 +27,8 @@ public class SparseFieldSetParser : QueryExpressionParser, ISparseFieldSetParser
 
     protected virtual SparseFieldSetExpression? ParseSparseFieldSet(ResourceType resourceType)
     {
+        ArgumentGuard.NotNull(resourceType);
+
         ImmutableHashSet<ResourceFieldAttribute>.Builder fieldSetBuilder = ImmutableHashSet.CreateBuilder<ResourceFieldAttribute>();
 
         while (TokenStack.Count > 0)
@@ -48,6 +50,8 @@ public class SparseFieldSetParser : QueryExpressionParser, ISparseFieldSetParser
 
     protected override void ValidateField(ResourceFieldAttribute field, int position)
     {
+        ArgumentGuard.NotNull(field);
+
         if (field.IsViewBlocked())
         {
             string kind = field is AttrAttribute ? "attribute" : "relationship";
