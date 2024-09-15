@@ -122,10 +122,14 @@ public sealed class DapperTestContext : IntegrationTest
                     _ => throw new NotSupportedException($"Unsupported database provider '{databaseProvider}'.")
                 };
 
+#if !NET6_0
 #pragma warning disable EF1002 // Risk of vulnerability to SQL injection.
+#endif
                 // Justification: Table names cannot be parameterized.
                 await dbContext.Database.ExecuteSqlRawAsync($"DELETE FROM {escapedTableName}");
+#if !NET6_0
 #pragma warning restore EF1002 // Risk of vulnerability to SQL injection.
+#endif
             }
         }
     }
