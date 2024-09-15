@@ -2,6 +2,8 @@ using System.Collections.Immutable;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 
+#pragma warning disable IDE0019 // Use pattern matching
+
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
