@@ -210,7 +210,7 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
 
     public bool Equals(ResourceObjectTreeNode? other)
     {
-        if (ReferenceEquals(null, other))
+        if (other is null)
         {
             return false;
         }

@@ -23,7 +23,7 @@ public sealed class PageSize : IEquatable<PageSize>
 
     public bool Equals(PageSize? other)
     {
-        if (ReferenceEquals(null, other))
+        if (other is null)
         {
             return false;
         }

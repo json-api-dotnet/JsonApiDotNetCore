@@ -25,7 +25,7 @@ public sealed class PageNumber : IEquatable<PageNumber>
 
     public bool Equals(PageNumber? other)
     {
-        if (ReferenceEquals(null, other))
+        if (other is null)
         {
             return false;
         }
