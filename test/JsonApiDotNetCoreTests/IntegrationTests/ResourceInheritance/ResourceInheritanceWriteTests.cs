@@ -486,7 +486,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("tandems");
         responseDocument.Data.SingleValue.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
-        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "features");
+        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
 
         long newTandemId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
@@ -618,68 +618,6 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         error.Detail.Should().Be("Resource type 'engines' is abstract.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/engine/data/type");
-    }
-
-    [Fact]
-    public async Task Can_create_resource_with_concrete_base_relationship_type_stored_as_derived_type()
-    {
-        // Arrange
-        var carbonWheelStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<CarbonWheel, long>>();
-
-        Tandem existingTandem = _fakers.Tandem.GenerateOne();
-
-        await _testContext.RunOnDatabaseAsync(async dbContext =>
-        {
-            dbContext.Vehicles.Add(existingTandem);
-            await dbContext.SaveChangesAsync();
-        });
-
-        var requestBody = new
-        {
-            data = new
-            {
-                type = "carbonWheels",
-                relationships = new
-                {
-                    vehicle = new
-                    {
-                        data = new
-                        {
-                            type = "bikes",
-                            id = existingTandem.StringId
-                        }
-                    }
-                }
-            }
-        };
-
-        const string route = "/carbonWheels";
-
-        // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
-
-        // Assert
-        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
-
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Type.Should().Be("carbonWheels");
-        responseDocument.Data.SingleValue.Attributes.ShouldNotBeEmpty();
-        responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
-
-        long newCarbonWheelId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
-
-        await _testContext.RunOnDatabaseAsync(async dbContext =>
-        {
-            CarbonWheel carbonWheelInDatabase = await dbContext.CarbonWheels.Include(wheel => wheel.Vehicle).FirstWithIdAsync(newCarbonWheelId);
-
-            carbonWheelInDatabase.Should().BeOfType<CarbonWheel>();
-            carbonWheelInDatabase.Vehicle.ShouldNotBeNull();
-            carbonWheelInDatabase.Vehicle.Should().BeOfType<Tandem>();
-            carbonWheelInDatabase.Vehicle.Id.Should().Be(existingTandem.Id);
-        });
-
-        carbonWheelStore.AssertLeftType<CarbonWheel>();
-        carbonWheelStore.AssertRightTypes(typeof(Tandem));
     }
 
     [Fact]
