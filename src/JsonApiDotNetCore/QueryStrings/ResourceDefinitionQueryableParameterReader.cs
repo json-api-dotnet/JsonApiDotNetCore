@@ -37,6 +37,8 @@ public class ResourceDefinitionQueryableParameterReader : IResourceDefinitionQue
     /// <inheritdoc />
     public virtual bool CanRead(string parameterName)
     {
+        ArgumentGuard.NotNullNorEmpty(parameterName);
+
         if (_request.Kind == EndpointKind.AtomicOperations)
         {
             return false;

@@ -49,6 +49,8 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
     /// <inheritdoc />
     public virtual bool CanRead(string parameterName)
     {
+        ArgumentGuard.NotNullNorEmpty(parameterName);
+
         return parameterName is PageSizeParameterName or PageNumberParameterName;
     }
 

@@ -179,7 +179,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     protected virtual LogicalExpression ParseLogical(string operatorName)
     {
-        ArgumentGuard.NotNull(operatorName);
+        ArgumentGuard.NotNullNorEmpty(operatorName);
 
         EatText(operatorName);
         EatSingleCharacterToken(TokenKind.OpenParen);
@@ -210,7 +210,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     protected virtual ComparisonExpression ParseComparison(string operatorName)
     {
-        ArgumentGuard.NotNull(operatorName);
+        ArgumentGuard.NotNullNorEmpty(operatorName);
 
         var comparisonOperator = Enum.Parse<ComparisonOperator>(operatorName.Pascalize());
 
@@ -315,7 +315,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     protected virtual MatchTextExpression ParseTextMatch(string operatorName)
     {
-        ArgumentGuard.NotNull(operatorName);
+        ArgumentGuard.NotNullNorEmpty(operatorName);
 
         EatText(operatorName);
         EatSingleCharacterToken(TokenKind.OpenParen);

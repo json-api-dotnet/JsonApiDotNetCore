@@ -111,7 +111,7 @@ public sealed class ResourceType
         IReadOnlyCollection<EagerLoadAttribute>? eagerLoads, LinkTypes topLevelLinks = LinkTypes.NotConfigured,
         LinkTypes resourceLinks = LinkTypes.NotConfigured, LinkTypes relationshipLinks = LinkTypes.NotConfigured)
     {
-        ArgumentGuard.NotNullNorEmpty(publicName);
+        ArgumentGuard.NotNullNorWhitespace(publicName);
         ArgumentGuard.NotNull(clrType);
         ArgumentGuard.NotNull(identityClrType);
 

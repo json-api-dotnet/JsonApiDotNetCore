@@ -32,7 +32,7 @@ public sealed class CapturingLoggerProvider : ILoggerProvider
 
     public ILogger CreateLogger(string categoryName)
     {
-        ArgumentGuard.NotNull(categoryName);
+        ArgumentGuard.NotNullNorEmpty(categoryName);
 
         return new CapturingLogger(this, categoryName, _filter);
     }
