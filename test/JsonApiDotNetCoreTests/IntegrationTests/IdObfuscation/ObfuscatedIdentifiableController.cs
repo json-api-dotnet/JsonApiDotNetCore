@@ -31,14 +31,16 @@ public abstract class ObfuscatedIdentifiableController<TResource>(
     }
 
     [HttpGet("{id}/{relationshipName}")]
-    public Task<IActionResult> GetSecondaryAsync([Required] string id, [Required] string relationshipName, CancellationToken cancellationToken)
+    public Task<IActionResult> GetSecondaryAsync([Required] string id, [Required] [PreserveEmptyString] string relationshipName,
+        CancellationToken cancellationToken)
     {
         int idValue = _codec.Decode(id);
         return base.GetSecondaryAsync(idValue, relationshipName, cancellationToken);
     }
 
     [HttpGet("{id}/relationships/{relationshipName}")]
-    public Task<IActionResult> GetRelationshipAsync([Required] string id, [Required] string relationshipName, CancellationToken cancellationToken)
+    public Task<IActionResult> GetRelationshipAsync([Required] string id, [Required] [PreserveEmptyString] string relationshipName,
+        CancellationToken cancellationToken)
     {
         int idValue = _codec.Decode(id);
         return base.GetRelationshipAsync(idValue, relationshipName, cancellationToken);
@@ -51,7 +53,7 @@ public abstract class ObfuscatedIdentifiableController<TResource>(
     }
 
     [HttpPost("{id}/relationships/{relationshipName}")]
-    public Task<IActionResult> PostRelationshipAsync([Required] string id, [Required] string relationshipName,
+    public Task<IActionResult> PostRelationshipAsync([Required] string id, [Required] [PreserveEmptyString] string relationshipName,
         [FromBody] [Required] ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
     {
         int idValue = _codec.Decode(id);
@@ -67,8 +69,8 @@ public abstract class ObfuscatedIdentifiableController<TResource>(
 
     [HttpPatch("{id}/relationships/{relationshipName}")]
     // Parameter `[Required] object? rightValue` makes Swashbuckle generate the OpenAPI request body as required. We don't actually validate ModelState, so it doesn't hurt.
-    public Task<IActionResult> PatchRelationshipAsync([Required] string id, [Required] string relationshipName, [FromBody] [Required] object? rightValue,
-        CancellationToken cancellationToken)
+    public Task<IActionResult> PatchRelationshipAsync([Required] string id, [Required] [PreserveEmptyString] string relationshipName,
+        [FromBody] [Required] object? rightValue, CancellationToken cancellationToken)
     {
         int idValue = _codec.Decode(id);
         return base.PatchRelationshipAsync(idValue, relationshipName, rightValue, cancellationToken);
@@ -82,7 +84,7 @@ public abstract class ObfuscatedIdentifiableController<TResource>(
     }
 
     [HttpDelete("{id}/relationships/{relationshipName}")]
-    public Task<IActionResult> DeleteRelationshipAsync([Required] string id, [Required] string relationshipName,
+    public Task<IActionResult> DeleteRelationshipAsync([Required] string id, [Required] [PreserveEmptyString] string relationshipName,
         [FromBody] [Required] ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
     {
         int idValue = _codec.Decode(id);

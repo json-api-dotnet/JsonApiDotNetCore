@@ -715,6 +715,48 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     }
 
     [Fact]
+    public async Task Cannot_remove_from_whitespace_relationship_in_url()
+    {
+        // Arrange
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.WorkItems.Add(existingWorkItem);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
+            {
+                new
+                {
+                    type = "userAccounts",
+                    id = Unknown.StringId.For<UserAccount, long>()
+                }
+            }
+        };
+
+        string route = $"/workItems/{existingWorkItem.StringId}/relationships/%20";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested relationship does not exist.");
+        error.Detail.Should().Be("Resource of type 'workItems' does not contain a relationship named ' '.");
+        error.Source.Should().BeNull();
+        error.Meta.Should().NotContainKey("requestBody");
+    }
+
+    [Fact]
     public async Task Cannot_remove_for_relationship_mismatch_between_url_and_body()
     {
         // Arrange

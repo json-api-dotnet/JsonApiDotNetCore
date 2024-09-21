@@ -109,6 +109,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Get secondary resource(s)");
 
+        ArgumentGuard.NotNull(relationshipName);
         AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
         AssertHasRelationship(_request.Relationship, relationshipName);
 
@@ -146,10 +147,9 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             relationshipName
         });
 
-        ArgumentGuard.NotNullNorEmpty(relationshipName);
-
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Get relationship");
 
+        ArgumentGuard.NotNull(relationshipName);
         AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
         AssertHasRelationship(_request.Relationship, relationshipName);
 
@@ -350,11 +350,10 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             rightResourceIds
         });
 
-        ArgumentGuard.NotNullNorEmpty(relationshipName);
-        ArgumentGuard.NotNull(rightResourceIds);
-
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Add to to-many relationship");
 
+        ArgumentGuard.NotNull(relationshipName);
+        ArgumentGuard.NotNull(rightResourceIds);
         AssertHasRelationship(_request.Relationship, relationshipName);
 
         TResource? resourceFromDatabase = null;
@@ -501,10 +500,9 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             rightValue
         });
 
-        ArgumentGuard.NotNullNorEmpty(relationshipName);
-
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Set relationship");
 
+        ArgumentGuard.NotNull(relationshipName);
         AssertHasRelationship(_request.Relationship, relationshipName);
 
         object? effectiveRightValue = _request.Relationship.RightType.IsPartOfTypeHierarchy()
@@ -573,11 +571,10 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             rightResourceIds
         });
 
-        ArgumentGuard.NotNullNorEmpty(relationshipName);
-        ArgumentGuard.NotNull(rightResourceIds);
-
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Remove from to-many relationship");
 
+        ArgumentGuard.NotNull(relationshipName);
+        ArgumentGuard.NotNull(rightResourceIds);
         AssertHasRelationship(_request.Relationship, relationshipName);
         var hasManyRelationship = (HasManyAttribute)_request.Relationship;
 

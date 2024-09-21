@@ -243,4 +243,31 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         error.Title.Should().Be("The requested relationship does not exist.");
         error.Detail.Should().Be($"Resource of type 'workItems' does not contain a relationship named '{Unknown.Relationship}'.");
     }
+
+    [Fact]
+    public async Task Cannot_get_relationship_for_whitespace_relationship_name()
+    {
+        WorkItem workItem = _fakers.WorkItem.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.WorkItems.Add(workItem);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/workItems/{workItem.StringId}/relationships/%20%20";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested relationship does not exist.");
+        error.Detail.Should().Be("Resource of type 'workItems' does not contain a relationship named '  '.");
+    }
 }
