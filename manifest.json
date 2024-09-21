@@ -544,6 +544,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.PreserveEmptyStringAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.PreserveEmptyStringAttribute.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Controllers.yml",
       "output": {
         ".html": {
@@ -3516,11 +3526,11 @@
       "type": "Toc",
       "source_relative_path": "api/toc.yml",
       "output": {
-        ".html": {
-          "relative_path": "api/toc.html"
-        },
         ".json": {
           "relative_path": "api/toc.json"
+        },
+        ".html": {
+          "relative_path": "api/toc.html"
         }
       },
       "version": ""
@@ -3599,11 +3609,11 @@
       "type": "Toc",
       "source_relative_path": "getting-started/toc.md",
       "output": {
-        ".html": {
-          "relative_path": "getting-started/toc.html"
-        },
         ".json": {
           "relative_path": "getting-started/toc.json"
+        },
+        ".html": {
+          "relative_path": "getting-started/toc.html"
         }
       },
       "version": ""
@@ -3632,11 +3642,11 @@
       "type": "Toc",
       "source_relative_path": "internals/toc.md",
       "output": {
-        ".html": {
-          "relative_path": "internals/toc.html"
-        },
         ".json": {
           "relative_path": "internals/toc.json"
+        },
+        ".html": {
+          "relative_path": "internals/toc.html"
         }
       },
       "version": ""
@@ -3655,11 +3665,11 @@
       "type": "Toc",
       "source_relative_path": "request-examples/toc.md",
       "output": {
-        ".html": {
-          "relative_path": "request-examples/toc.html"
-        },
         ".json": {
           "relative_path": "request-examples/toc.json"
+        },
+        ".html": {
+          "relative_path": "request-examples/toc.html"
         }
       },
       "version": ""
@@ -3668,11 +3678,11 @@
       "type": "Toc",
       "source_relative_path": "toc.yml",
       "output": {
-        ".html": {
-          "relative_path": "toc.html"
-        },
         ".json": {
           "relative_path": "toc.json"
+        },
+        ".html": {
+          "relative_path": "toc.html"
         }
       },
       "version": ""
@@ -3931,11 +3941,11 @@
       "type": "Toc",
       "source_relative_path": "usage/toc.md",
       "output": {
-        ".html": {
-          "relative_path": "usage/toc.html"
-        },
         ".json": {
           "relative_path": "usage/toc.json"
+        },
+        ".html": {
+          "relative_path": "usage/toc.html"
         }
       },
       "version": ""

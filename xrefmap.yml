@@ -3568,6 +3568,31 @@ references:
   fullName.vb: JsonApiDotNetCore.Controllers.JsonApiQueryController(Of TResource, TId).New
   nameWithType: JsonApiQueryController<TResource, TId>.JsonApiQueryController
   nameWithType.vb: JsonApiQueryController(Of TResource, TId).New
+- uid: JsonApiDotNetCore.Controllers.PreserveEmptyStringAttribute
+  name: PreserveEmptyStringAttribute
+  href: api/JsonApiDotNetCore.Controllers.PreserveEmptyStringAttribute.html
+  commentId: T:JsonApiDotNetCore.Controllers.PreserveEmptyStringAttribute
+  fullName: JsonApiDotNetCore.Controllers.PreserveEmptyStringAttribute
+  nameWithType: PreserveEmptyStringAttribute
+- uid: JsonApiDotNetCore.Controllers.PreserveEmptyStringAttribute.#ctor
+  name: PreserveEmptyStringAttribute()
+  href: api/JsonApiDotNetCore.Controllers.PreserveEmptyStringAttribute.html#JsonApiDotNetCore_Controllers_PreserveEmptyStringAttribute__ctor
+  commentId: M:JsonApiDotNetCore.Controllers.PreserveEmptyStringAttribute.#ctor
+  name.vb: New()
+  fullName: JsonApiDotNetCore.Controllers.PreserveEmptyStringAttribute.PreserveEmptyStringAttribute()
+  fullName.vb: JsonApiDotNetCore.Controllers.PreserveEmptyStringAttribute.New()
+  nameWithType: PreserveEmptyStringAttribute.PreserveEmptyStringAttribute()
+  nameWithType.vb: PreserveEmptyStringAttribute.New()
+- uid: JsonApiDotNetCore.Controllers.PreserveEmptyStringAttribute.#ctor*
+  name: PreserveEmptyStringAttribute
+  href: api/JsonApiDotNetCore.Controllers.PreserveEmptyStringAttribute.html#JsonApiDotNetCore_Controllers_PreserveEmptyStringAttribute__ctor_
+  commentId: Overload:JsonApiDotNetCore.Controllers.PreserveEmptyStringAttribute.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: JsonApiDotNetCore.Controllers.PreserveEmptyStringAttribute.PreserveEmptyStringAttribute
+  fullName.vb: JsonApiDotNetCore.Controllers.PreserveEmptyStringAttribute.New
+  nameWithType: PreserveEmptyStringAttribute.PreserveEmptyStringAttribute
+  nameWithType.vb: PreserveEmptyStringAttribute.New
 - uid: JsonApiDotNetCore.Diagnostics
   name: JsonApiDotNetCore.Diagnostics
   href: api/JsonApiDotNetCore.Diagnostics.html
@@ -4962,15 +4987,15 @@ references:
   commentId: T:JsonApiDotNetCore.Middleware.JsonApiMiddleware
   fullName: JsonApiDotNetCore.Middleware.JsonApiMiddleware
   nameWithType: JsonApiMiddleware
-- uid: JsonApiDotNetCore.Middleware.JsonApiMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.AspNetCore.Http.IHttpContextAccessor)
-  name: JsonApiMiddleware(RequestDelegate?, IHttpContextAccessor)
-  href: api/JsonApiDotNetCore.Middleware.JsonApiMiddleware.html#JsonApiDotNetCore_Middleware_JsonApiMiddleware__ctor_Microsoft_AspNetCore_Http_RequestDelegate_Microsoft_AspNetCore_Http_IHttpContextAccessor_
-  commentId: M:JsonApiDotNetCore.Middleware.JsonApiMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.AspNetCore.Http.IHttpContextAccessor)
-  name.vb: New(RequestDelegate, IHttpContextAccessor)
-  fullName: JsonApiDotNetCore.Middleware.JsonApiMiddleware.JsonApiMiddleware(Microsoft.AspNetCore.Http.RequestDelegate?, Microsoft.AspNetCore.Http.IHttpContextAccessor)
-  fullName.vb: JsonApiDotNetCore.Middleware.JsonApiMiddleware.New(Microsoft.AspNetCore.Http.RequestDelegate, Microsoft.AspNetCore.Http.IHttpContextAccessor)
-  nameWithType: JsonApiMiddleware.JsonApiMiddleware(RequestDelegate?, IHttpContextAccessor)
-  nameWithType.vb: JsonApiMiddleware.New(RequestDelegate, IHttpContextAccessor)
+- uid: JsonApiDotNetCore.Middleware.JsonApiMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.AspNetCore.Http.IHttpContextAccessor,JsonApiDotNetCore.Middleware.IControllerResourceMapping,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILogger{JsonApiDotNetCore.Middleware.JsonApiMiddleware})
+  name: JsonApiMiddleware(RequestDelegate?, IHttpContextAccessor, IControllerResourceMapping, IJsonApiOptions, ILogger<JsonApiMiddleware>)
+  href: api/JsonApiDotNetCore.Middleware.JsonApiMiddleware.html#JsonApiDotNetCore_Middleware_JsonApiMiddleware__ctor_Microsoft_AspNetCore_Http_RequestDelegate_Microsoft_AspNetCore_Http_IHttpContextAccessor_JsonApiDotNetCore_Middleware_IControllerResourceMapping_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILogger_JsonApiDotNetCore_Middleware_JsonApiMiddleware__
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.AspNetCore.Http.IHttpContextAccessor,JsonApiDotNetCore.Middleware.IControllerResourceMapping,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILogger{JsonApiDotNetCore.Middleware.JsonApiMiddleware})
+  name.vb: New(RequestDelegate, IHttpContextAccessor, IControllerResourceMapping, IJsonApiOptions, ILogger(Of JsonApiMiddleware))
+  fullName: JsonApiDotNetCore.Middleware.JsonApiMiddleware.JsonApiMiddleware(Microsoft.AspNetCore.Http.RequestDelegate?, Microsoft.AspNetCore.Http.IHttpContextAccessor, JsonApiDotNetCore.Middleware.IControllerResourceMapping, JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILogger<JsonApiDotNetCore.Middleware.JsonApiMiddleware>)
+  fullName.vb: JsonApiDotNetCore.Middleware.JsonApiMiddleware.New(Microsoft.AspNetCore.Http.RequestDelegate, Microsoft.AspNetCore.Http.IHttpContextAccessor, JsonApiDotNetCore.Middleware.IControllerResourceMapping, JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILogger(Of JsonApiDotNetCore.Middleware.JsonApiMiddleware))
+  nameWithType: JsonApiMiddleware.JsonApiMiddleware(RequestDelegate?, IHttpContextAccessor, IControllerResourceMapping, IJsonApiOptions, ILogger<JsonApiMiddleware>)
+  nameWithType.vb: JsonApiMiddleware.New(RequestDelegate, IHttpContextAccessor, IControllerResourceMapping, IJsonApiOptions, ILogger(Of JsonApiMiddleware))
 - uid: JsonApiDotNetCore.Middleware.JsonApiMiddleware.#ctor*
   name: JsonApiMiddleware
   href: api/JsonApiDotNetCore.Middleware.JsonApiMiddleware.html#JsonApiDotNetCore_Middleware_JsonApiMiddleware__ctor_
@@ -4981,15 +5006,12 @@ references:
   fullName.vb: JsonApiDotNetCore.Middleware.JsonApiMiddleware.New
   nameWithType: JsonApiMiddleware.JsonApiMiddleware
   nameWithType.vb: JsonApiMiddleware.New
-- uid: JsonApiDotNetCore.Middleware.JsonApiMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext,JsonApiDotNetCore.Middleware.IControllerResourceMapping,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Middleware.IJsonApiRequest,Microsoft.Extensions.Logging.ILogger{JsonApiDotNetCore.Middleware.JsonApiMiddleware})
-  name: InvokeAsync(HttpContext, IControllerResourceMapping, IJsonApiOptions, IJsonApiRequest, ILogger<JsonApiMiddleware>)
-  href: api/JsonApiDotNetCore.Middleware.JsonApiMiddleware.html#JsonApiDotNetCore_Middleware_JsonApiMiddleware_InvokeAsync_Microsoft_AspNetCore_Http_HttpContext_JsonApiDotNetCore_Middleware_IControllerResourceMapping_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Middleware_IJsonApiRequest_Microsoft_Extensions_Logging_ILogger_JsonApiDotNetCore_Middleware_JsonApiMiddleware__
-  commentId: M:JsonApiDotNetCore.Middleware.JsonApiMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext,JsonApiDotNetCore.Middleware.IControllerResourceMapping,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Middleware.IJsonApiRequest,Microsoft.Extensions.Logging.ILogger{JsonApiDotNetCore.Middleware.JsonApiMiddleware})
-  name.vb: InvokeAsync(HttpContext, IControllerResourceMapping, IJsonApiOptions, IJsonApiRequest, ILogger(Of JsonApiMiddleware))
-  fullName: JsonApiDotNetCore.Middleware.JsonApiMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext, JsonApiDotNetCore.Middleware.IControllerResourceMapping, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Middleware.IJsonApiRequest, Microsoft.Extensions.Logging.ILogger<JsonApiDotNetCore.Middleware.JsonApiMiddleware>)
-  fullName.vb: JsonApiDotNetCore.Middleware.JsonApiMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext, JsonApiDotNetCore.Middleware.IControllerResourceMapping, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Middleware.IJsonApiRequest, Microsoft.Extensions.Logging.ILogger(Of JsonApiDotNetCore.Middleware.JsonApiMiddleware))
-  nameWithType: JsonApiMiddleware.InvokeAsync(HttpContext, IControllerResourceMapping, IJsonApiOptions, IJsonApiRequest, ILogger<JsonApiMiddleware>)
-  nameWithType.vb: JsonApiMiddleware.InvokeAsync(HttpContext, IControllerResourceMapping, IJsonApiOptions, IJsonApiRequest, ILogger(Of JsonApiMiddleware))
+- uid: JsonApiDotNetCore.Middleware.JsonApiMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext,JsonApiDotNetCore.Middleware.IJsonApiRequest)
+  name: InvokeAsync(HttpContext, IJsonApiRequest)
+  href: api/JsonApiDotNetCore.Middleware.JsonApiMiddleware.html#JsonApiDotNetCore_Middleware_JsonApiMiddleware_InvokeAsync_Microsoft_AspNetCore_Http_HttpContext_JsonApiDotNetCore_Middleware_IJsonApiRequest_
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext,JsonApiDotNetCore.Middleware.IJsonApiRequest)
+  fullName: JsonApiDotNetCore.Middleware.JsonApiMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext, JsonApiDotNetCore.Middleware.IJsonApiRequest)
+  nameWithType: JsonApiMiddleware.InvokeAsync(HttpContext, IJsonApiRequest)
 - uid: JsonApiDotNetCore.Middleware.JsonApiMiddleware.InvokeAsync*
   name: InvokeAsync
   href: api/JsonApiDotNetCore.Middleware.JsonApiMiddleware.html#JsonApiDotNetCore_Middleware_JsonApiMiddleware_InvokeAsync_
@@ -7352,40 +7374,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).DefaultVisit
   nameWithType: QueryExpressionRewriter<TArgument>.DefaultVisit
   nameWithType.vb: QueryExpressionRewriter(Of TArgument).DefaultVisit
-- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.PaginationElementQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression,`0)
-  name: PaginationElementQueryStringValue(PaginationElementQueryStringValueExpression, TArgument)
-  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_PaginationElementQueryStringValue_JsonApiDotNetCore_Queries_Expressions_PaginationElementQueryStringValueExpression__0_
-  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.PaginationElementQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression,`0)
-  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.PaginationElementQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression, TArgument)
-  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).PaginationElementQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression, TArgument)
-  nameWithType: QueryExpressionRewriter<TArgument>.PaginationElementQueryStringValue(PaginationElementQueryStringValueExpression, TArgument)
-  nameWithType.vb: QueryExpressionRewriter(Of TArgument).PaginationElementQueryStringValue(PaginationElementQueryStringValueExpression, TArgument)
-- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.PaginationElementQueryStringValue*
-  name: PaginationElementQueryStringValue
-  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_PaginationElementQueryStringValue_
-  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.PaginationElementQueryStringValue
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.PaginationElementQueryStringValue
-  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).PaginationElementQueryStringValue
-  nameWithType: QueryExpressionRewriter<TArgument>.PaginationElementQueryStringValue
-  nameWithType.vb: QueryExpressionRewriter(Of TArgument).PaginationElementQueryStringValue
-- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.PaginationQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression,`0)
-  name: PaginationQueryStringValue(PaginationQueryStringValueExpression, TArgument)
-  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_PaginationQueryStringValue_JsonApiDotNetCore_Queries_Expressions_PaginationQueryStringValueExpression__0_
-  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.PaginationQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression,`0)
-  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.PaginationQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression, TArgument)
-  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).PaginationQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression, TArgument)
-  nameWithType: QueryExpressionRewriter<TArgument>.PaginationQueryStringValue(PaginationQueryStringValueExpression, TArgument)
-  nameWithType.vb: QueryExpressionRewriter(Of TArgument).PaginationQueryStringValue(PaginationQueryStringValueExpression, TArgument)
-- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.PaginationQueryStringValue*
-  name: PaginationQueryStringValue
-  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_PaginationQueryStringValue_
-  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.PaginationQueryStringValue
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.PaginationQueryStringValue
-  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).PaginationQueryStringValue
-  nameWithType: QueryExpressionRewriter<TArgument>.PaginationQueryStringValue
-  nameWithType.vb: QueryExpressionRewriter(Of TArgument).PaginationQueryStringValue
 - uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.Visit(JsonApiDotNetCore.Queries.Expressions.QueryExpression,`0)
   name: Visit(QueryExpression, TArgument)
   href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_Visit_JsonApiDotNetCore_Queries_Expressions_QueryExpression__0_
@@ -7642,6 +7630,40 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitPagination
   nameWithType: QueryExpressionRewriter<TArgument>.VisitPagination
   nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitPagination
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitPaginationElementQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression,`0)
+  name: VisitPaginationElementQueryStringValue(PaginationElementQueryStringValueExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitPaginationElementQueryStringValue_JsonApiDotNetCore_Queries_Expressions_PaginationElementQueryStringValueExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitPaginationElementQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitPaginationElementQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitPaginationElementQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitPaginationElementQueryStringValue(PaginationElementQueryStringValueExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitPaginationElementQueryStringValue(PaginationElementQueryStringValueExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitPaginationElementQueryStringValue*
+  name: VisitPaginationElementQueryStringValue
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitPaginationElementQueryStringValue_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitPaginationElementQueryStringValue
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitPaginationElementQueryStringValue
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitPaginationElementQueryStringValue
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitPaginationElementQueryStringValue
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitPaginationElementQueryStringValue
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitPaginationQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression,`0)
+  name: VisitPaginationQueryStringValue(PaginationQueryStringValueExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitPaginationQueryStringValue_JsonApiDotNetCore_Queries_Expressions_PaginationQueryStringValueExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitPaginationQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitPaginationQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitPaginationQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression, TArgument)
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitPaginationQueryStringValue(PaginationQueryStringValueExpression, TArgument)
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitPaginationQueryStringValue(PaginationQueryStringValueExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitPaginationQueryStringValue*
+  name: VisitPaginationQueryStringValue
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitPaginationQueryStringValue_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitPaginationQueryStringValue
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter<TArgument>.VisitPaginationQueryStringValue
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter(Of TArgument).VisitPaginationQueryStringValue
+  nameWithType: QueryExpressionRewriter<TArgument>.VisitPaginationQueryStringValue
+  nameWithType.vb: QueryExpressionRewriter(Of TArgument).VisitPaginationQueryStringValue
 - uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter`1.VisitQueryStringParameterScope(JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression,`0)
   name: VisitQueryStringParameterScope(QueryStringParameterScopeExpression, TArgument)
   href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionRewriter_1_VisitQueryStringParameterScope_JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression__0_
@@ -7805,40 +7827,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult).DefaultVisit
   nameWithType: QueryExpressionVisitor<TArgument, TResult>.DefaultVisit
   nameWithType.vb: QueryExpressionVisitor(Of TArgument, TResult).DefaultVisit
-- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2.PaginationElementQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression,`0)
-  name: PaginationElementQueryStringValue(PaginationElementQueryStringValueExpression, TArgument)
-  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_PaginationElementQueryStringValue_JsonApiDotNetCore_Queries_Expressions_PaginationElementQueryStringValueExpression__0_
-  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2.PaginationElementQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression,`0)
-  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor<TArgument, TResult>.PaginationElementQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression, TArgument)
-  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult).PaginationElementQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression, TArgument)
-  nameWithType: QueryExpressionVisitor<TArgument, TResult>.PaginationElementQueryStringValue(PaginationElementQueryStringValueExpression, TArgument)
-  nameWithType.vb: QueryExpressionVisitor(Of TArgument, TResult).PaginationElementQueryStringValue(PaginationElementQueryStringValueExpression, TArgument)
-- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2.PaginationElementQueryStringValue*
-  name: PaginationElementQueryStringValue
-  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_PaginationElementQueryStringValue_
-  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2.PaginationElementQueryStringValue
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor<TArgument, TResult>.PaginationElementQueryStringValue
-  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult).PaginationElementQueryStringValue
-  nameWithType: QueryExpressionVisitor<TArgument, TResult>.PaginationElementQueryStringValue
-  nameWithType.vb: QueryExpressionVisitor(Of TArgument, TResult).PaginationElementQueryStringValue
-- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2.PaginationQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression,`0)
-  name: PaginationQueryStringValue(PaginationQueryStringValueExpression, TArgument)
-  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_PaginationQueryStringValue_JsonApiDotNetCore_Queries_Expressions_PaginationQueryStringValueExpression__0_
-  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2.PaginationQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression,`0)
-  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor<TArgument, TResult>.PaginationQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression, TArgument)
-  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult).PaginationQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression, TArgument)
-  nameWithType: QueryExpressionVisitor<TArgument, TResult>.PaginationQueryStringValue(PaginationQueryStringValueExpression, TArgument)
-  nameWithType.vb: QueryExpressionVisitor(Of TArgument, TResult).PaginationQueryStringValue(PaginationQueryStringValueExpression, TArgument)
-- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2.PaginationQueryStringValue*
-  name: PaginationQueryStringValue
-  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_PaginationQueryStringValue_
-  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2.PaginationQueryStringValue
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor<TArgument, TResult>.PaginationQueryStringValue
-  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult).PaginationQueryStringValue
-  nameWithType: QueryExpressionVisitor<TArgument, TResult>.PaginationQueryStringValue
-  nameWithType.vb: QueryExpressionVisitor(Of TArgument, TResult).PaginationQueryStringValue
 - uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2.Visit(JsonApiDotNetCore.Queries.Expressions.QueryExpression,`0)
   name: Visit(QueryExpression, TArgument)
   href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_Visit_JsonApiDotNetCore_Queries_Expressions_QueryExpression__0_
@@ -8077,6 +8065,40 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult).VisitPagination
   nameWithType: QueryExpressionVisitor<TArgument, TResult>.VisitPagination
   nameWithType.vb: QueryExpressionVisitor(Of TArgument, TResult).VisitPagination
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2.VisitPaginationElementQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression,`0)
+  name: VisitPaginationElementQueryStringValue(PaginationElementQueryStringValueExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitPaginationElementQueryStringValue_JsonApiDotNetCore_Queries_Expressions_PaginationElementQueryStringValueExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2.VisitPaginationElementQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor<TArgument, TResult>.VisitPaginationElementQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult).VisitPaginationElementQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression, TArgument)
+  nameWithType: QueryExpressionVisitor<TArgument, TResult>.VisitPaginationElementQueryStringValue(PaginationElementQueryStringValueExpression, TArgument)
+  nameWithType.vb: QueryExpressionVisitor(Of TArgument, TResult).VisitPaginationElementQueryStringValue(PaginationElementQueryStringValueExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2.VisitPaginationElementQueryStringValue*
+  name: VisitPaginationElementQueryStringValue
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitPaginationElementQueryStringValue_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2.VisitPaginationElementQueryStringValue
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor<TArgument, TResult>.VisitPaginationElementQueryStringValue
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult).VisitPaginationElementQueryStringValue
+  nameWithType: QueryExpressionVisitor<TArgument, TResult>.VisitPaginationElementQueryStringValue
+  nameWithType.vb: QueryExpressionVisitor(Of TArgument, TResult).VisitPaginationElementQueryStringValue
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2.VisitPaginationQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression,`0)
+  name: VisitPaginationQueryStringValue(PaginationQueryStringValueExpression, TArgument)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitPaginationQueryStringValue_JsonApiDotNetCore_Queries_Expressions_PaginationQueryStringValueExpression__0_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2.VisitPaginationQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression,`0)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor<TArgument, TResult>.VisitPaginationQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression, TArgument)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult).VisitPaginationQueryStringValue(JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression, TArgument)
+  nameWithType: QueryExpressionVisitor<TArgument, TResult>.VisitPaginationQueryStringValue(PaginationQueryStringValueExpression, TArgument)
+  nameWithType.vb: QueryExpressionVisitor(Of TArgument, TResult).VisitPaginationQueryStringValue(PaginationQueryStringValueExpression, TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2.VisitPaginationQueryStringValue*
+  name: VisitPaginationQueryStringValue
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitPaginationQueryStringValue_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2.VisitPaginationQueryStringValue
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor<TArgument, TResult>.VisitPaginationQueryStringValue
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult).VisitPaginationQueryStringValue
+  nameWithType: QueryExpressionVisitor<TArgument, TResult>.VisitPaginationQueryStringValue
+  nameWithType.vb: QueryExpressionVisitor(Of TArgument, TResult).VisitPaginationQueryStringValue
 - uid: JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor`2.VisitQueryStringParameterScope(JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression,`0)
   name: VisitQueryStringParameterScope(QueryStringParameterScopeExpression, TArgument)
   href: api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitQueryStringParameterScope_JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression__0_
@@ -13430,6 +13452,19 @@ references:
   fullName.vb: JsonApiDotNetCore.QueryStrings.SparseFieldSetQueryStringParameterReader.New
   nameWithType: SparseFieldSetQueryStringParameterReader.SparseFieldSetQueryStringParameterReader
   nameWithType.vb: SparseFieldSetQueryStringParameterReader.New
+- uid: JsonApiDotNetCore.QueryStrings.SparseFieldSetQueryStringParameterReader.AllowEmptyValue
+  name: AllowEmptyValue
+  href: api/JsonApiDotNetCore.QueryStrings.SparseFieldSetQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_SparseFieldSetQueryStringParameterReader_AllowEmptyValue
+  commentId: P:JsonApiDotNetCore.QueryStrings.SparseFieldSetQueryStringParameterReader.AllowEmptyValue
+  fullName: JsonApiDotNetCore.QueryStrings.SparseFieldSetQueryStringParameterReader.AllowEmptyValue
+  nameWithType: SparseFieldSetQueryStringParameterReader.AllowEmptyValue
+- uid: JsonApiDotNetCore.QueryStrings.SparseFieldSetQueryStringParameterReader.AllowEmptyValue*
+  name: AllowEmptyValue
+  href: api/JsonApiDotNetCore.QueryStrings.SparseFieldSetQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_SparseFieldSetQueryStringParameterReader_AllowEmptyValue_
+  commentId: Overload:JsonApiDotNetCore.QueryStrings.SparseFieldSetQueryStringParameterReader.AllowEmptyValue
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.QueryStrings.SparseFieldSetQueryStringParameterReader.AllowEmptyValue
+  nameWithType: SparseFieldSetQueryStringParameterReader.AllowEmptyValue
 - uid: JsonApiDotNetCore.QueryStrings.SparseFieldSetQueryStringParameterReader.CanRead(System.String)
   name: CanRead(string)
   href: api/JsonApiDotNetCore.QueryStrings.SparseFieldSetQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_SparseFieldSetQueryStringParameterReader_CanRead_System_String_
@@ -19669,15 +19704,15 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.Request.JsonApiReader
   fullName: JsonApiDotNetCore.Serialization.Request.JsonApiReader
   nameWithType: JsonApiReader
-- uid: JsonApiDotNetCore.Serialization.Request.JsonApiReader.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Serialization.Request.Adapters.IDocumentAdapter,Microsoft.Extensions.Logging.ILoggerFactory)
-  name: JsonApiReader(IJsonApiOptions, IDocumentAdapter, ILoggerFactory)
-  href: api/JsonApiDotNetCore.Serialization.Request.JsonApiReader.html#JsonApiDotNetCore_Serialization_Request_JsonApiReader__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Serialization_Request_Adapters_IDocumentAdapter_Microsoft_Extensions_Logging_ILoggerFactory_
-  commentId: M:JsonApiDotNetCore.Serialization.Request.JsonApiReader.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Serialization.Request.Adapters.IDocumentAdapter,Microsoft.Extensions.Logging.ILoggerFactory)
-  name.vb: New(IJsonApiOptions, IDocumentAdapter, ILoggerFactory)
-  fullName: JsonApiDotNetCore.Serialization.Request.JsonApiReader.JsonApiReader(JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Serialization.Request.Adapters.IDocumentAdapter, Microsoft.Extensions.Logging.ILoggerFactory)
-  fullName.vb: JsonApiDotNetCore.Serialization.Request.JsonApiReader.New(JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Serialization.Request.Adapters.IDocumentAdapter, Microsoft.Extensions.Logging.ILoggerFactory)
-  nameWithType: JsonApiReader.JsonApiReader(IJsonApiOptions, IDocumentAdapter, ILoggerFactory)
-  nameWithType.vb: JsonApiReader.New(IJsonApiOptions, IDocumentAdapter, ILoggerFactory)
+- uid: JsonApiDotNetCore.Serialization.Request.JsonApiReader.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Serialization.Request.Adapters.IDocumentAdapter,Microsoft.Extensions.Logging.ILogger{JsonApiDotNetCore.Serialization.Request.JsonApiReader})
+  name: JsonApiReader(IJsonApiOptions, IDocumentAdapter, ILogger<JsonApiReader>)
+  href: api/JsonApiDotNetCore.Serialization.Request.JsonApiReader.html#JsonApiDotNetCore_Serialization_Request_JsonApiReader__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Serialization_Request_Adapters_IDocumentAdapter_Microsoft_Extensions_Logging_ILogger_JsonApiDotNetCore_Serialization_Request_JsonApiReader__
+  commentId: M:JsonApiDotNetCore.Serialization.Request.JsonApiReader.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Serialization.Request.Adapters.IDocumentAdapter,Microsoft.Extensions.Logging.ILogger{JsonApiDotNetCore.Serialization.Request.JsonApiReader})
+  name.vb: New(IJsonApiOptions, IDocumentAdapter, ILogger(Of JsonApiReader))
+  fullName: JsonApiDotNetCore.Serialization.Request.JsonApiReader.JsonApiReader(JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Serialization.Request.Adapters.IDocumentAdapter, Microsoft.Extensions.Logging.ILogger<JsonApiDotNetCore.Serialization.Request.JsonApiReader>)
+  fullName.vb: JsonApiDotNetCore.Serialization.Request.JsonApiReader.New(JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Serialization.Request.Adapters.IDocumentAdapter, Microsoft.Extensions.Logging.ILogger(Of JsonApiDotNetCore.Serialization.Request.JsonApiReader))
+  nameWithType: JsonApiReader.JsonApiReader(IJsonApiOptions, IDocumentAdapter, ILogger<JsonApiReader>)
+  nameWithType.vb: JsonApiReader.New(IJsonApiOptions, IDocumentAdapter, ILogger(Of JsonApiReader))
 - uid: JsonApiDotNetCore.Serialization.Request.JsonApiReader.#ctor*
   name: JsonApiReader
   href: api/JsonApiDotNetCore.Serialization.Request.JsonApiReader.html#JsonApiDotNetCore_Serialization_Request_JsonApiReader__ctor_
@@ -20015,15 +20050,15 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.Response.JsonApiWriter
   fullName: JsonApiDotNetCore.Serialization.Response.JsonApiWriter
   nameWithType: JsonApiWriter
-- uid: JsonApiDotNetCore.Serialization.Response.JsonApiWriter.#ctor(JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Serialization.Response.IResponseModelAdapter,JsonApiDotNetCore.Middleware.IExceptionHandler,JsonApiDotNetCore.Serialization.Response.IETagGenerator,Microsoft.Extensions.Logging.ILoggerFactory)
-  name: JsonApiWriter(IJsonApiRequest, IJsonApiOptions, IResponseModelAdapter, IExceptionHandler, IETagGenerator, ILoggerFactory)
-  href: api/JsonApiDotNetCore.Serialization.Response.JsonApiWriter.html#JsonApiDotNetCore_Serialization_Response_JsonApiWriter__ctor_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Serialization_Response_IResponseModelAdapter_JsonApiDotNetCore_Middleware_IExceptionHandler_JsonApiDotNetCore_Serialization_Response_IETagGenerator_Microsoft_Extensions_Logging_ILoggerFactory_
-  commentId: M:JsonApiDotNetCore.Serialization.Response.JsonApiWriter.#ctor(JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Serialization.Response.IResponseModelAdapter,JsonApiDotNetCore.Middleware.IExceptionHandler,JsonApiDotNetCore.Serialization.Response.IETagGenerator,Microsoft.Extensions.Logging.ILoggerFactory)
-  name.vb: New(IJsonApiRequest, IJsonApiOptions, IResponseModelAdapter, IExceptionHandler, IETagGenerator, ILoggerFactory)
-  fullName: JsonApiDotNetCore.Serialization.Response.JsonApiWriter.JsonApiWriter(JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Serialization.Response.IResponseModelAdapter, JsonApiDotNetCore.Middleware.IExceptionHandler, JsonApiDotNetCore.Serialization.Response.IETagGenerator, Microsoft.Extensions.Logging.ILoggerFactory)
-  fullName.vb: JsonApiDotNetCore.Serialization.Response.JsonApiWriter.New(JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Serialization.Response.IResponseModelAdapter, JsonApiDotNetCore.Middleware.IExceptionHandler, JsonApiDotNetCore.Serialization.Response.IETagGenerator, Microsoft.Extensions.Logging.ILoggerFactory)
-  nameWithType: JsonApiWriter.JsonApiWriter(IJsonApiRequest, IJsonApiOptions, IResponseModelAdapter, IExceptionHandler, IETagGenerator, ILoggerFactory)
-  nameWithType.vb: JsonApiWriter.New(IJsonApiRequest, IJsonApiOptions, IResponseModelAdapter, IExceptionHandler, IETagGenerator, ILoggerFactory)
+- uid: JsonApiDotNetCore.Serialization.Response.JsonApiWriter.#ctor(JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Serialization.Response.IResponseModelAdapter,JsonApiDotNetCore.Middleware.IExceptionHandler,JsonApiDotNetCore.Serialization.Response.IETagGenerator,Microsoft.Extensions.Logging.ILogger{JsonApiDotNetCore.Serialization.Response.JsonApiWriter})
+  name: JsonApiWriter(IJsonApiRequest, IJsonApiOptions, IResponseModelAdapter, IExceptionHandler, IETagGenerator, ILogger<JsonApiWriter>)
+  href: api/JsonApiDotNetCore.Serialization.Response.JsonApiWriter.html#JsonApiDotNetCore_Serialization_Response_JsonApiWriter__ctor_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Serialization_Response_IResponseModelAdapter_JsonApiDotNetCore_Middleware_IExceptionHandler_JsonApiDotNetCore_Serialization_Response_IETagGenerator_Microsoft_Extensions_Logging_ILogger_JsonApiDotNetCore_Serialization_Response_JsonApiWriter__
+  commentId: M:JsonApiDotNetCore.Serialization.Response.JsonApiWriter.#ctor(JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Serialization.Response.IResponseModelAdapter,JsonApiDotNetCore.Middleware.IExceptionHandler,JsonApiDotNetCore.Serialization.Response.IETagGenerator,Microsoft.Extensions.Logging.ILogger{JsonApiDotNetCore.Serialization.Response.JsonApiWriter})
+  name.vb: New(IJsonApiRequest, IJsonApiOptions, IResponseModelAdapter, IExceptionHandler, IETagGenerator, ILogger(Of JsonApiWriter))
+  fullName: JsonApiDotNetCore.Serialization.Response.JsonApiWriter.JsonApiWriter(JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Serialization.Response.IResponseModelAdapter, JsonApiDotNetCore.Middleware.IExceptionHandler, JsonApiDotNetCore.Serialization.Response.IETagGenerator, Microsoft.Extensions.Logging.ILogger<JsonApiDotNetCore.Serialization.Response.JsonApiWriter>)
+  fullName.vb: JsonApiDotNetCore.Serialization.Response.JsonApiWriter.New(JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Serialization.Response.IResponseModelAdapter, JsonApiDotNetCore.Middleware.IExceptionHandler, JsonApiDotNetCore.Serialization.Response.IETagGenerator, Microsoft.Extensions.Logging.ILogger(Of JsonApiDotNetCore.Serialization.Response.JsonApiWriter))
+  nameWithType: JsonApiWriter.JsonApiWriter(IJsonApiRequest, IJsonApiOptions, IResponseModelAdapter, IExceptionHandler, IETagGenerator, ILogger<JsonApiWriter>)
+  nameWithType.vb: JsonApiWriter.New(IJsonApiRequest, IJsonApiOptions, IResponseModelAdapter, IExceptionHandler, IETagGenerator, ILogger(Of JsonApiWriter))
 - uid: JsonApiDotNetCore.Serialization.Response.JsonApiWriter.#ctor*
   name: JsonApiWriter
   href: api/JsonApiDotNetCore.Serialization.Response.JsonApiWriter.html#JsonApiDotNetCore_Serialization_Response_JsonApiWriter__ctor_

@@ -209,7 +209,7 @@ public abstract class QueryExpressionParser</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_AssertTokenStackIsEmpty" data-uid="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.AssertTokenStackIsEmpty">
   AssertTokenStackIsEmpty()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/QueryExpressionParser.cs/#L177"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/QueryExpressionParser.cs/#L181"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Throws a <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryParseException.html">QueryParseException</a> when <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_TokenStack">TokenStack</a> isn't empty. Derived types should call this when parsing has completed, to
@@ -237,7 +237,7 @@ ensure all input has been processed.</p>
 
   <h3 id="JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_EatSingleCharacterToken_JsonApiDotNetCore_Queries_Parsing_TokenKind_" data-uid="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.EatSingleCharacterToken(JsonApiDotNetCore.Queries.Parsing.TokenKind)">
   EatSingleCharacterToken(TokenKind)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/QueryExpressionParser.cs/#L132"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/QueryExpressionParser.cs/#L136"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Consumes the expected token kind from the top of <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_TokenStack">TokenStack</a>. Throws a <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryParseException.html">QueryParseException</a> if a different token kind is
@@ -270,7 +270,7 @@ at the top, or if there are no more tokens available.</p>
 
   <h3 id="JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_EatText_System_String_" data-uid="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.EatText(System.String)">
   EatText(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/QueryExpressionParser.cs/#L119"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/QueryExpressionParser.cs/#L121"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Consumes a token containing the expected text from the top of <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_TokenStack">TokenStack</a>. Throws a <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryParseException.html">QueryParseException</a> if a different
@@ -303,7 +303,7 @@ token kind is at the top, it contains a different text, or if there are no more 
 
   <h3 id="JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_GetNextTokenPositionOrEnd" data-uid="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.GetNextTokenPositionOrEnd">
   GetNextTokenPositionOrEnd()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/QueryExpressionParser.cs/#L146"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/QueryExpressionParser.cs/#L150"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the zero-based position of the token at the top of <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_TokenStack">TokenStack</a>, or the position at the end of the source text if there are no more
@@ -336,7 +336,7 @@ tokens available.</p>
 
   <h3 id="JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_GetRelativePositionOfLastFieldInChain_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_" data-uid="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.GetRelativePositionOfLastFieldInChain(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression)">
   GetRelativePositionOfLastFieldInChain(ResourceFieldChainExpression)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/QueryExpressionParser.cs/#L159"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/QueryExpressionParser.cs/#L163"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the zero-based position of the last field in the specified resource field chain.</p>
@@ -373,7 +373,7 @@ tokens available.</p>
 
   <h3 id="JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_ParseFieldChain_JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPattern_JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPatternMatchOptions_JsonApiDotNetCore_Configuration_ResourceType_System_String_" data-uid="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.ParseFieldChain(JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern,JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPatternMatchOptions,JsonApiDotNetCore.Configuration.ResourceType,System.String)">
   ParseFieldChain(FieldChainPattern, FieldChainPatternMatchOptions, ResourceType, string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/QueryExpressionParser.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/QueryExpressionParser.cs/#L56"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Parses a dot-separated path of field names into a chain of resource fields, while matching it against the specified pattern.</p>
