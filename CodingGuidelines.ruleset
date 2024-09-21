@@ -48,4 +48,7 @@
   <Rules AnalyzerId="System.Text.RegularExpressions.Generator" RuleNamespace="System.Text.RegularExpressions.Generator">
     <Rule Id="SYSLIB1045" Action="Warning" />
   </Rules>
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.NetAnalyzers" RuleNamespace="Microsoft.CodeAnalysis.CSharp.NetAnalyzers">
+    <Rule Id="CA1508" Action="Info" />
+  </Rules>
 </RuleSet>
