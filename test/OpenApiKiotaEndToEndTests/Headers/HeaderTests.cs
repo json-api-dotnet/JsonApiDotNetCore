@@ -30,7 +30,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
     public async Task Returns_Location_for_post_resource_request()
     {
         // Arrange
-        Country newCountry = _fakers.Country.Generate();
+        Country newCountry = _fakers.Country.GenerateOne();
 
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new HeadersClient(requestAdapter);
@@ -70,7 +70,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
     public async Task Returns_ContentLength_for_head_primary_resources_request()
     {
         // Arrange
-        Country existingCountry = _fakers.Country.Generate();
+        Country existingCountry = _fakers.Country.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -100,7 +100,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
     public async Task Returns_ContentLength_for_head_primary_resource_request()
     {
         // Arrange
-        Country existingCountry = _fakers.Country.Generate();
+        Country existingCountry = _fakers.Country.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -129,8 +129,8 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
     public async Task Returns_ContentLength_for_head_secondary_resource_request()
     {
         // Arrange
-        Country existingCountry = _fakers.Country.Generate();
-        existingCountry.Languages = _fakers.Language.Generate(1).ToHashSet();
+        Country existingCountry = _fakers.Country.GenerateOne();
+        existingCountry.Languages = _fakers.Language.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -159,8 +159,8 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
     public async Task Returns_ContentLength_for_head_relationship_request()
     {
         // Arrange
-        Country existingCountry = _fakers.Country.Generate();
-        existingCountry.Languages = _fakers.Language.Generate(1).ToHashSet();
+        Country existingCountry = _fakers.Country.GenerateOne();
+        existingCountry.Languages = _fakers.Language.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

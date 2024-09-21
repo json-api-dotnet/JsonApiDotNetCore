@@ -28,7 +28,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
     public async Task Can_sort_in_primary_resources()
     {
         // Arrange
-        List<Node> nodes = _fakers.Node.Generate(2);
+        List<Node> nodes = _fakers.Node.GenerateList(2);
         nodes[0].Name = "A";
         nodes[1].Name = "B";
 
@@ -60,8 +60,8 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
     public async Task Can_sort_in_secondary_resources()
     {
         // Arrange
-        Node node = _fakers.Node.Generate();
-        node.Children = _fakers.Node.Generate(2).ToHashSet();
+        Node node = _fakers.Node.GenerateOne();
+        node.Children = _fakers.Node.GenerateSet(2);
         node.Children.ElementAt(0).Name = "B";
         node.Children.ElementAt(1).Name = "A";
 
@@ -93,10 +93,10 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
     public async Task Can_sort_at_ToMany_relationship_endpoint()
     {
         // Arrange
-        Node node = _fakers.Node.Generate();
-        node.Children = _fakers.Node.Generate(2).ToHashSet();
-        node.Children.ElementAt(0).Children = _fakers.Node.Generate(1).ToHashSet();
-        node.Children.ElementAt(1).Children = _fakers.Node.Generate(2).ToHashSet();
+        Node node = _fakers.Node.GenerateOne();
+        node.Children = _fakers.Node.GenerateSet(2);
+        node.Children.ElementAt(0).Children = _fakers.Node.GenerateSet(1);
+        node.Children.ElementAt(1).Children = _fakers.Node.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

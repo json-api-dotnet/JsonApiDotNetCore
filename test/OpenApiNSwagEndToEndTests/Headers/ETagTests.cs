@@ -29,7 +29,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
     public async Task Returns_ETag_for_HEAD_request()
     {
         // Arrange
-        List<Country> countries = _fakers.Country.Generate(2);
+        List<Country> countries = _fakers.Country.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -56,7 +56,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
     public async Task Returns_ETag_for_GET_request()
     {
         // Arrange
-        List<Country> countries = _fakers.Country.Generate(2);
+        List<Country> countries = _fakers.Country.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -110,7 +110,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
     public async Task Returns_no_ETag_for_POST_request()
     {
         // Arrange
-        Country newCountry = _fakers.Country.Generate();
+        Country newCountry = _fakers.Country.GenerateOne();
 
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new HeadersClient(httpClient);
@@ -142,7 +142,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
     public async Task Returns_NotModified_for_matching_ETag()
     {
         // Arrange
-        List<Country> countries = _fakers.Country.Generate(2);
+        List<Country> countries = _fakers.Country.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -176,7 +176,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
     public async Task Returns_content_for_mismatching_ETag()
     {
         // Arrange
-        List<Country> countries = _fakers.Country.Generate(2);
+        List<Country> countries = _fakers.Country.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

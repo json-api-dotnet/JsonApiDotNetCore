@@ -29,8 +29,8 @@ public sealed class DeleteResourceTests : IClassFixture<IntegrationTestContext<O
     public async Task Can_delete_existing_resource()
     {
         // Arrange
-        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.Generate();
-        existingChannel.VideoStream = _fakers.DataStream.Generate();
+        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.GenerateOne();
+        existingChannel.VideoStream = _fakers.DataStream.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

@@ -29,7 +29,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
     public async Task Can_select_attribute_in_primary_resources()
     {
         // Arrange
-        Node node = _fakers.Node.Generate();
+        Node node = _fakers.Node.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -70,7 +70,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
     public async Task Can_select_fields_in_primary_resource()
     {
         // Arrange
-        Node node = _fakers.Node.Generate();
+        Node node = _fakers.Node.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -108,8 +108,8 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
     public async Task Can_select_fields_in_secondary_resources()
     {
         // Arrange
-        Node node = _fakers.Node.Generate();
-        node.Children = _fakers.Node.Generate(1).ToHashSet();
+        Node node = _fakers.Node.GenerateOne();
+        node.Children = _fakers.Node.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -154,8 +154,8 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
     public async Task Can_select_fields_in_secondary_resource()
     {
         // Arrange
-        Node node = _fakers.Node.Generate();
-        node.Parent = _fakers.Node.Generate();
+        Node node = _fakers.Node.GenerateOne();
+        node.Parent = _fakers.Node.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -193,7 +193,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
     public async Task Can_select_empty_fieldset()
     {
         // Arrange
-        Node node = _fakers.Node.Generate();
+        Node node = _fakers.Node.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

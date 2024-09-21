@@ -31,9 +31,9 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
     public async Task Can_create_resource_with_includes_and_fieldsets()
     {
         // Arrange
-        DataStream existingVideoStream = _fakers.DataStream.Generate();
-        DataStream existingAudioStream = _fakers.DataStream.Generate();
-        WriteOnlyChannel newChannel = _fakers.WriteOnlyChannel.Generate();
+        DataStream existingVideoStream = _fakers.DataStream.GenerateOne();
+        DataStream existingAudioStream = _fakers.DataStream.GenerateOne();
+        WriteOnlyChannel newChannel = _fakers.WriteOnlyChannel.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -166,7 +166,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
     public async Task Cannot_create_resource_with_unknown_relationship_ID()
     {
         // Arrange
-        WriteOnlyChannel newChannel = _fakers.WriteOnlyChannel.Generate();
+        WriteOnlyChannel newChannel = _fakers.WriteOnlyChannel.GenerateOne();
 
         string unknownVideoStreamId = Unknown.StringId.For<DataStream, long>();
 

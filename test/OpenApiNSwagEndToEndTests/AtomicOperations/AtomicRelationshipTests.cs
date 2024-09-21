@@ -34,11 +34,11 @@ public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestConte
     public async Task Can_update_ToOne_relationship()
     {
         // Arrange
-        Enrollment existingEnrollment = _fakers.Enrollment.Generate();
-        existingEnrollment.Student = _fakers.Student.Generate();
-        existingEnrollment.Course = _fakers.Course.Generate();
+        Enrollment existingEnrollment = _fakers.Enrollment.GenerateOne();
+        existingEnrollment.Student = _fakers.Student.GenerateOne();
+        existingEnrollment.Course = _fakers.Course.GenerateOne();
 
-        Student existingStudent = _fakers.Student.Generate();
+        Student existingStudent = _fakers.Student.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -86,9 +86,9 @@ public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestConte
     public async Task Can_update_ToMany_relationship()
     {
         // Arrange
-        Teacher existingTeacher = _fakers.Teacher.Generate();
-        existingTeacher.Teaches = _fakers.Course.Generate(1).ToHashSet();
-        List<Course> existingCourses = _fakers.Course.Generate(2).ToList();
+        Teacher existingTeacher = _fakers.Teacher.GenerateOne();
+        existingTeacher.Teaches = _fakers.Course.GenerateSet(1);
+        List<Course> existingCourses = _fakers.Course.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -145,9 +145,9 @@ public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestConte
     public async Task Can_add_to_ToMany_relationship()
     {
         // Arrange
-        Teacher existingTeacher = _fakers.Teacher.Generate();
-        existingTeacher.Teaches = _fakers.Course.Generate(1).ToHashSet();
-        List<Course> existingCourses = _fakers.Course.Generate(2).ToList();
+        Teacher existingTeacher = _fakers.Teacher.GenerateOne();
+        existingTeacher.Teaches = _fakers.Course.GenerateSet(1);
+        List<Course> existingCourses = _fakers.Course.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -205,8 +205,8 @@ public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestConte
     public async Task Can_remove_from_ToMany_relationship()
     {
         // Arrange
-        Teacher existingTeacher = _fakers.Teacher.Generate();
-        existingTeacher.Teaches = _fakers.Course.Generate(3).ToHashSet();
+        Teacher existingTeacher = _fakers.Teacher.GenerateOne();
+        existingTeacher.Teaches = _fakers.Course.GenerateSet(3);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

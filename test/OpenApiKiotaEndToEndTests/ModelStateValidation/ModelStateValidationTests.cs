@@ -37,7 +37,7 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_exceed_length_constraint(string firstName)
     {
         // Arrange
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.GenerateOne();
 
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         ModelStateValidationClient apiClient = new(requestAdapter);
@@ -75,7 +75,7 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_exceed_string_length_constraint(string userName)
     {
         // Arrange
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.GenerateOne();
 
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         ModelStateValidationClient apiClient = new(requestAdapter);
@@ -111,7 +111,7 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_violate_regular_expression_constraint()
     {
         // Arrange
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.GenerateOne();
 
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         ModelStateValidationClient apiClient = new(requestAdapter);
@@ -147,7 +147,7 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_use_invalid_credit_card_number()
     {
         // Arrange
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.GenerateOne();
 
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         ModelStateValidationClient apiClient = new(requestAdapter);
@@ -183,7 +183,7 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_use_invalid_email_address()
     {
         // Arrange
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.GenerateOne();
 
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         ModelStateValidationClient apiClient = new(requestAdapter);
@@ -219,7 +219,7 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_exceed_min_length_constraint()
     {
         // Arrange
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.GenerateOne();
 
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         ModelStateValidationClient apiClient = new(requestAdapter);
@@ -258,7 +258,7 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_exceed_max_length_constraint()
     {
         // Arrange
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.GenerateOne();
 
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         ModelStateValidationClient apiClient = new(requestAdapter);
@@ -296,7 +296,7 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_use_invalid_base64()
     {
         // Arrange
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.GenerateOne();
 
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         ModelStateValidationClient apiClient = new(requestAdapter);
@@ -336,7 +336,7 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_use_double_outside_of_valid_range(double age)
     {
         // Arrange
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.GenerateOne();
 
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         ModelStateValidationClient apiClient = new(requestAdapter);
@@ -372,7 +372,7 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_use_relative_url()
     {
         // Arrange
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.GenerateOne();
 
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         ModelStateValidationClient apiClient = new(requestAdapter);
@@ -410,7 +410,7 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_exceed_collection_length_constraint(int length)
     {
         // Arrange
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.GenerateOne();
 
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         ModelStateValidationClient apiClient = new(requestAdapter);
@@ -446,7 +446,7 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_use_non_allowed_value()
     {
         // Arrange
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.GenerateOne();
 
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         ModelStateValidationClient apiClient = new(requestAdapter);
@@ -482,7 +482,7 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_use_denied_value()
     {
         // Arrange
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.GenerateOne();
 
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         ModelStateValidationClient apiClient = new(requestAdapter);
@@ -518,7 +518,7 @@ public sealed class ModelStateValidationTests
     public async Task Cannot_use_TimeSpan_outside_of_valid_range()
     {
         // Arrange
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.GenerateOne();
 
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         ModelStateValidationClient apiClient = new(requestAdapter);
@@ -554,7 +554,7 @@ public sealed class ModelStateValidationTests
     public async Task Can_create_resource_with_valid_properties()
     {
         // Arrange
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.Generate();
+        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.GenerateOne();
 
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         ModelStateValidationClient apiClient = new(requestAdapter);

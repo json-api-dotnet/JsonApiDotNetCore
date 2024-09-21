@@ -31,11 +31,11 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
     public async Task Can_replace_ToOne_relationship()
     {
         // Arrange
-        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.Generate();
-        existingChannel.VideoStream = _fakers.DataStream.Generate();
-        existingChannel.UltraHighDefinitionVideoStream = _fakers.DataStream.Generate();
+        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.GenerateOne();
+        existingChannel.VideoStream = _fakers.DataStream.GenerateOne();
+        existingChannel.UltraHighDefinitionVideoStream = _fakers.DataStream.GenerateOne();
 
-        DataStream existingVideoStream = _fakers.DataStream.Generate();
+        DataStream existingVideoStream = _fakers.DataStream.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -80,9 +80,9 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
     public async Task Can_clear_ToOne_relationship()
     {
         // Arrange
-        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.Generate();
-        existingChannel.VideoStream = _fakers.DataStream.Generate();
-        existingChannel.UltraHighDefinitionVideoStream = _fakers.DataStream.Generate();
+        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.GenerateOne();
+        existingChannel.VideoStream = _fakers.DataStream.GenerateOne();
+        existingChannel.UltraHighDefinitionVideoStream = _fakers.DataStream.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -121,11 +121,11 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
     public async Task Can_replace_ToMany_relationship()
     {
         // Arrange
-        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.Generate();
-        existingChannel.VideoStream = _fakers.DataStream.Generate();
-        existingChannel.AudioStreams = _fakers.DataStream.Generate(2).ToHashSet();
+        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.GenerateOne();
+        existingChannel.VideoStream = _fakers.DataStream.GenerateOne();
+        existingChannel.AudioStreams = _fakers.DataStream.GenerateSet(2);
 
-        DataStream existingAudioStream = _fakers.DataStream.Generate();
+        DataStream existingAudioStream = _fakers.DataStream.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -173,9 +173,9 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
     public async Task Can_clear_ToMany_relationship()
     {
         // Arrange
-        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.Generate();
-        existingChannel.VideoStream = _fakers.DataStream.Generate();
-        existingChannel.AudioStreams = _fakers.DataStream.Generate(2).ToHashSet();
+        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.GenerateOne();
+        existingChannel.VideoStream = _fakers.DataStream.GenerateOne();
+        existingChannel.AudioStreams = _fakers.DataStream.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -214,11 +214,11 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
     public async Task Can_add_to_ToMany_relationship()
     {
         // Arrange
-        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.Generate();
-        existingChannel.VideoStream = _fakers.DataStream.Generate();
-        existingChannel.AudioStreams = _fakers.DataStream.Generate(1).ToHashSet();
+        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.GenerateOne();
+        existingChannel.VideoStream = _fakers.DataStream.GenerateOne();
+        existingChannel.AudioStreams = _fakers.DataStream.GenerateSet(1);
 
-        DataStream existingAudioStream = _fakers.DataStream.Generate();
+        DataStream existingAudioStream = _fakers.DataStream.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -267,9 +267,9 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
     public async Task Can_remove_from_ToMany_relationship()
     {
         // Arrange
-        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.Generate();
-        existingChannel.VideoStream = _fakers.DataStream.Generate();
-        existingChannel.AudioStreams = _fakers.DataStream.Generate(3).ToHashSet();
+        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.GenerateOne();
+        existingChannel.VideoStream = _fakers.DataStream.GenerateOne();
+        existingChannel.AudioStreams = _fakers.DataStream.GenerateSet(3);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -321,8 +321,8 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
     public async Task Cannot_update_relationship_for_missing_request_body()
     {
         // Arrange
-        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.Generate();
-        existingChannel.VideoStream = _fakers.DataStream.Generate();
+        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.GenerateOne();
+        existingChannel.VideoStream = _fakers.DataStream.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -347,8 +347,8 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
     public async Task Cannot_update_relationship_with_unknown_relationship_IDs()
     {
         // Arrange
-        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.Generate();
-        existingChannel.VideoStream = _fakers.DataStream.Generate();
+        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.GenerateOne();
+        existingChannel.VideoStream = _fakers.DataStream.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

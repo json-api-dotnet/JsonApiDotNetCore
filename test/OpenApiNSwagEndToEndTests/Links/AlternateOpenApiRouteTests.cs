@@ -31,7 +31,7 @@ public sealed class AlternateOpenApiRouteTests : IClassFixture<IntegrationTestCo
     public async Task DescribedBy_link_matches_alternate_OpenAPI_route()
     {
         // Arrange
-        Excursion excursion = _fakers.Excursion.Generate();
+        Excursion excursion = _fakers.Excursion.GenerateOne();
 
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new LinksClient(httpClient);

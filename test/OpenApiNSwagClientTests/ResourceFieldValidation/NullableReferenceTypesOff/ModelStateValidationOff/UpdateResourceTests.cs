@@ -22,13 +22,13 @@ public sealed class UpdateResourceTests : BaseOpenApiNSwagClientTests
         {
             Data = new DataInUpdateResourceRequest
             {
-                Attributes = _fakers.PatchAttributes.Generate(),
+                Attributes = _fakers.PatchAttributes.GenerateOne(),
                 Relationships = new RelationshipsInUpdateResourceRequest
                 {
-                    ToOne = _fakers.NullableToOne.Generate(),
-                    RequiredToOne = _fakers.NullableToOne.Generate(),
-                    ToMany = _fakers.ToMany.Generate(),
-                    RequiredToMany = _fakers.ToMany.Generate()
+                    ToOne = _fakers.NullableToOne.GenerateOne(),
+                    RequiredToOne = _fakers.NullableToOne.GenerateOne(),
+                    ToMany = _fakers.ToMany.GenerateOne(),
+                    RequiredToMany = _fakers.ToMany.GenerateOne()
                 }
             }
         };
@@ -60,13 +60,13 @@ public sealed class UpdateResourceTests : BaseOpenApiNSwagClientTests
             Data = new DataInUpdateResourceRequest
             {
                 Id = Unknown.StringId.Int32,
-                Attributes = _fakers.PatchAttributes.Generate(),
+                Attributes = _fakers.PatchAttributes.GenerateOne(),
                 Relationships = new RelationshipsInUpdateResourceRequest
                 {
-                    ToOne = _fakers.NullableToOne.Generate(),
-                    RequiredToOne = _fakers.NullableToOne.Generate(),
-                    ToMany = _fakers.ToMany.Generate(),
-                    RequiredToMany = _fakers.ToMany.Generate()
+                    ToOne = _fakers.NullableToOne.GenerateOne(),
+                    RequiredToOne = _fakers.NullableToOne.GenerateOne(),
+                    ToMany = _fakers.ToMany.GenerateOne(),
+                    RequiredToMany = _fakers.ToMany.GenerateOne()
                 }
             }
         };
@@ -103,13 +103,13 @@ public sealed class UpdateResourceTests : BaseOpenApiNSwagClientTests
             Data = new DataInUpdateResourceRequest
             {
                 Id = Unknown.StringId.Int32,
-                Attributes = _fakers.PatchAttributes.Generate(),
+                Attributes = _fakers.PatchAttributes.GenerateOne(),
                 Relationships = new RelationshipsInUpdateResourceRequest
                 {
-                    ToOne = _fakers.NullableToOne.Generate(),
-                    RequiredToOne = _fakers.NullableToOne.Generate(),
-                    ToMany = _fakers.ToMany.Generate(),
-                    RequiredToMany = _fakers.ToMany.Generate()
+                    ToOne = _fakers.NullableToOne.GenerateOne(),
+                    RequiredToOne = _fakers.NullableToOne.GenerateOne(),
+                    ToMany = _fakers.ToMany.GenerateOne(),
+                    RequiredToMany = _fakers.ToMany.GenerateOne()
                 }
             }
         };

@@ -32,7 +32,7 @@ public sealed class ClientIdGenerationModesTests
     public async Task Cannot_create_resource_without_ID_when_supplying_ID_is_required()
     {
         // Arrange
-        Player newPlayer = _fakers.Player.Generate();
+        Player newPlayer = _fakers.Player.GenerateOne();
 
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ClientIdGenerationModesClient apiClient = new(httpClient);
@@ -69,7 +69,7 @@ public sealed class ClientIdGenerationModesTests
     public async Task Can_create_resource_with_ID_when_supplying_ID_is_required()
     {
         // Arrange
-        Player newPlayer = _fakers.Player.Generate();
+        Player newPlayer = _fakers.Player.GenerateOne();
         newPlayer.Id = Guid.NewGuid();
 
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
@@ -105,7 +105,7 @@ public sealed class ClientIdGenerationModesTests
     public async Task Can_create_resource_without_ID_when_supplying_ID_is_allowed()
     {
         // Arrange
-        Game newGame = _fakers.Game.Generate();
+        Game newGame = _fakers.Game.GenerateOne();
 
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ClientIdGenerationModesClient apiClient = new(httpClient);
@@ -142,7 +142,7 @@ public sealed class ClientIdGenerationModesTests
     public async Task Can_create_resource_with_ID_when_supplying_ID_is_allowed()
     {
         // Arrange
-        Game newGame = _fakers.Game.Generate();
+        Game newGame = _fakers.Game.GenerateOne();
         newGame.Id = Guid.NewGuid();
 
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
@@ -180,7 +180,7 @@ public sealed class ClientIdGenerationModesTests
     public async Task Cannot_create_resource_with_existing_ID_when_supplying_ID_is_allowed()
     {
         // Arrange
-        Game existingGame = _fakers.Game.Generate();
+        Game existingGame = _fakers.Game.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -223,7 +223,7 @@ public sealed class ClientIdGenerationModesTests
     public async Task Can_create_resource_without_ID_when_supplying_ID_is_forbidden()
     {
         // Arrange
-        PlayerGroup newPlayerGroup = _fakers.Group.Generate();
+        PlayerGroup newPlayerGroup = _fakers.Group.GenerateOne();
 
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ClientIdGenerationModesClient apiClient = new(httpClient);

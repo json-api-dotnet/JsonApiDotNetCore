@@ -35,7 +35,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Can_create_resource_with_attributes()
     {
         // Arrange
-        Teacher newTeacher = _fakers.Teacher.Generate();
+        Teacher newTeacher = _fakers.Teacher.GenerateOne();
 
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new AtomicOperationsClient(requestAdapter);
@@ -88,9 +88,9 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Can_create_resource_with_attributes_and_relationships()
     {
         // Arrange
-        Student existingStudent = _fakers.Student.Generate();
-        Course existingCourse = _fakers.Course.Generate();
-        Enrollment newEnrollment = _fakers.Enrollment.Generate();
+        Student existingStudent = _fakers.Student.GenerateOne();
+        Course existingCourse = _fakers.Course.GenerateOne();
+        Enrollment newEnrollment = _fakers.Enrollment.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -169,7 +169,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Can_create_resource_with_client_generated_ID()
     {
         // Arrange
-        Course newCourse = _fakers.Course.Generate();
+        Course newCourse = _fakers.Course.GenerateOne();
         newCourse.Id = Guid.NewGuid();
 
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);

@@ -35,13 +35,13 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
     public async Task Can_update_resource_with_includes_and_fieldsets()
     {
         // Arrange
-        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.Generate();
-        existingChannel.VideoStream = _fakers.DataStream.Generate();
-        existingChannel.UltraHighDefinitionVideoStream = _fakers.DataStream.Generate();
-        existingChannel.AudioStreams = _fakers.DataStream.Generate(2).ToHashSet();
+        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.GenerateOne();
+        existingChannel.VideoStream = _fakers.DataStream.GenerateOne();
+        existingChannel.UltraHighDefinitionVideoStream = _fakers.DataStream.GenerateOne();
+        existingChannel.AudioStreams = _fakers.DataStream.GenerateSet(2);
 
-        DataStream existingVideoStream = _fakers.DataStream.Generate();
-        string? newChannelName = _fakers.WriteOnlyChannel.Generate().Name;
+        DataStream existingVideoStream = _fakers.DataStream.GenerateOne();
+        string? newChannelName = _fakers.WriteOnlyChannel.GenerateOne().Name;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -150,10 +150,10 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
     public async Task Can_update_resource_without_attributes_or_relationships()
     {
         // Arrange
-        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.Generate();
-        existingChannel.VideoStream = _fakers.DataStream.Generate();
-        existingChannel.UltraHighDefinitionVideoStream = _fakers.DataStream.Generate();
-        existingChannel.AudioStreams = _fakers.DataStream.Generate(2).ToHashSet();
+        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.GenerateOne();
+        existingChannel.VideoStream = _fakers.DataStream.GenerateOne();
+        existingChannel.UltraHighDefinitionVideoStream = _fakers.DataStream.GenerateOne();
+        existingChannel.AudioStreams = _fakers.DataStream.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -226,8 +226,8 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
     public async Task Cannot_update_resource_for_missing_request_body()
     {
         // Arrange
-        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.Generate();
-        existingChannel.VideoStream = _fakers.DataStream.Generate();
+        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.GenerateOne();
+        existingChannel.VideoStream = _fakers.DataStream.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -251,8 +251,8 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
     public async Task Cannot_update_resource_with_unknown_relationship_IDs()
     {
         // Arrange
-        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.Generate();
-        existingChannel.VideoStream = _fakers.DataStream.Generate();
+        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.GenerateOne();
+        existingChannel.VideoStream = _fakers.DataStream.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
