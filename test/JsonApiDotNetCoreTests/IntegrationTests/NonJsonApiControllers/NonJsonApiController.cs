@@ -15,7 +15,8 @@ public sealed class NonJsonApiController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> PostAsync()
     {
-        string name = await new StreamReader(Request.Body).ReadToEndAsync();
+        using var reader = new StreamReader(Request.Body, leaveOpen: true);
+        string name = await reader.ReadToEndAsync();
 
         if (string.IsNullOrEmpty(name))
         {

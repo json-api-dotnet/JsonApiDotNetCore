@@ -24,7 +24,7 @@ public sealed class ScopeWriteTests : IClassFixture<IntegrationTestContext<Scope
     public async Task Cannot_create_resource_without_scopes()
     {
         // Arrange
-        Movie newMovie = _fakers.Movie.Generate();
+        Movie newMovie = _fakers.Movie.GenerateOne();
 
         var requestBody = new
         {
@@ -62,7 +62,7 @@ public sealed class ScopeWriteTests : IClassFixture<IntegrationTestContext<Scope
     public async Task Cannot_create_resource_with_relationships_without_scopes()
     {
         // Arrange
-        Movie newMovie = _fakers.Movie.Generate();
+        Movie newMovie = _fakers.Movie.GenerateOne();
 
         var requestBody = new
         {
@@ -122,7 +122,7 @@ public sealed class ScopeWriteTests : IClassFixture<IntegrationTestContext<Scope
     public async Task Cannot_create_resource_with_relationships_with_read_scopes()
     {
         // Arrange
-        Movie newMovie = _fakers.Movie.Generate();
+        Movie newMovie = _fakers.Movie.GenerateOne();
 
         var requestBody = new
         {
@@ -185,7 +185,7 @@ public sealed class ScopeWriteTests : IClassFixture<IntegrationTestContext<Scope
     public async Task Cannot_update_resource_without_scopes()
     {
         // Arrange
-        string newTitle = _fakers.Movie.Generate().Title;
+        string newTitle = _fakers.Movie.GenerateOne().Title;
 
         var requestBody = new
         {
@@ -222,7 +222,7 @@ public sealed class ScopeWriteTests : IClassFixture<IntegrationTestContext<Scope
     public async Task Cannot_update_resource_with_relationships_without_scopes()
     {
         // Arrange
-        string newTitle = _fakers.Movie.Generate().Title;
+        string newTitle = _fakers.Movie.GenerateOne().Title;
 
         var requestBody = new
         {

@@ -28,12 +28,12 @@ public sealed class IncludeTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person owner = _fakers.Person.Generate();
+        Person owner = _fakers.Person.GenerateOne();
 
-        List<TodoItem> todoItems = _fakers.TodoItem.Generate(2);
+        List<TodoItem> todoItems = _fakers.TodoItem.GenerateList(2);
         todoItems.ForEach(todoItem => todoItem.Owner = owner);
-        todoItems.ForEach(todoItem => todoItem.Tags = _fakers.Tag.Generate(2).ToHashSet());
-        todoItems[1].Assignee = _fakers.Person.Generate();
+        todoItems.ForEach(todoItem => todoItem.Tags = _fakers.Tag.GenerateSet(2));
+        todoItems[1].Assignee = _fakers.Person.GenerateOne();
 
         todoItems[0].Priority = TodoItemPriority.High;
         todoItems[1].Priority = TodoItemPriority.Low;
@@ -179,10 +179,10 @@ public sealed class IncludeTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        List<TodoItem> todoItems = _fakers.TodoItem.Generate(25);
-        todoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.Generate());
-        todoItems.ForEach(todoItem => todoItem.Tags = _fakers.Tag.Generate(15).ToHashSet());
-        todoItems.ForEach(todoItem => todoItem.Tags.ForEach(tag => tag.Color = _fakers.RgbColor.Generate()));
+        List<TodoItem> todoItems = _fakers.TodoItem.GenerateList(25);
+        todoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.GenerateOne());
+        todoItems.ForEach(todoItem => todoItem.Tags = _fakers.Tag.GenerateSet(15));
+        todoItems.ForEach(todoItem => todoItem.Tags.ForEach(tag => tag.Color = _fakers.RgbColor.GenerateOne()));
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

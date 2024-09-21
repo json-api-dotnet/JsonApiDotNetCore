@@ -71,7 +71,7 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
 
                 if (!fieldSelectors.IsEmpty)
                 {
-                    ICollection<PropertySelector> propertySelectors =
+                    Dictionary<PropertyInfo, PropertySelector>.ValueCollection propertySelectors =
                         ToPropertySelectors(fieldSelectors, resourceType, entityType.ClrType, context.EntityModel);
 
                     MemberBinding[] propertyAssignments = propertySelectors.Select(selector => CreatePropertyAssignment(selector, lambdaScope, context))
@@ -101,11 +101,13 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
         return Expression.MakeBinary(ExpressionType.Equal, getTypeCall, concreteTypeConstant, false, TypeOpEqualityMethod);
     }
 
-    private Expression CreateLambdaBodyInitializerForSingleType(FieldSelection selection, ResourceType resourceType, LambdaScope lambdaScope,
+    private MemberInitExpression CreateLambdaBodyInitializerForSingleType(FieldSelection selection, ResourceType resourceType, LambdaScope lambdaScope,
         QueryClauseBuilderContext context)
     {
         FieldSelectors fieldSelectors = selection.GetOrCreateSelectors(resourceType);
-        ICollection<PropertySelector> propertySelectors = ToPropertySelectors(fieldSelectors, resourceType, lambdaScope.Accessor.Type, context.EntityModel);
+
+        Dictionary<PropertyInfo, PropertySelector>.ValueCollection propertySelectors =
+            ToPropertySelectors(fieldSelectors, resourceType, lambdaScope.Accessor.Type, context.EntityModel);
 
         MemberBinding[] propertyAssignments = propertySelectors.Select(selector => CreatePropertyAssignment(selector, lambdaScope, context))
             .Cast<MemberBinding>().ToArray();
@@ -114,8 +116,8 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
         return Expression.MemberInit(createInstance, propertyAssignments);
     }
 
-    private static ICollection<PropertySelector> ToPropertySelectors(FieldSelectors fieldSelectors, ResourceType resourceType, Type elementType,
-        IReadOnlyModel entityModel)
+    private static Dictionary<PropertyInfo, PropertySelector>.ValueCollection ToPropertySelectors(FieldSelectors fieldSelectors, ResourceType resourceType,
+        Type elementType, IReadOnlyModel entityModel)
     {
         var propertySelectors = new Dictionary<PropertyInfo, PropertySelector>();
 
@@ -221,8 +223,8 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
         return CreateLambdaBodyInitializer(layer.Selection, layer.ResourceType, scope, true, context);
     }
 
-    private static Expression CreateCollectionInitializer(LambdaScope lambdaScope, PropertyInfo collectionProperty, Type elementType, QueryLayer layer,
-        QueryClauseBuilderContext context)
+    private static MethodCallExpression CreateCollectionInitializer(LambdaScope lambdaScope, PropertyInfo collectionProperty, Type elementType,
+        QueryLayer layer, QueryClauseBuilderContext context)
     {
         MemberExpression propertyExpression = Expression.Property(lambdaScope.Accessor, collectionProperty);
 
@@ -235,18 +237,18 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
         return CopyCollectionExtensionMethodCall(layerExpression, operationName, elementType);
     }
 
-    private static Expression TestForNull(Expression expressionToTest, Expression ifFalseExpression)
+    private static ConditionalExpression TestForNull(Expression expressionToTest, Expression ifFalseExpression)
     {
         BinaryExpression equalsNull = Expression.Equal(expressionToTest, NullConstant);
         return Expression.Condition(equalsNull, Expression.Convert(NullConstant, expressionToTest.Type), ifFalseExpression);
     }
 
-    private static Expression CopyCollectionExtensionMethodCall(Expression source, string operationName, Type elementType)
+    private static MethodCallExpression CopyCollectionExtensionMethodCall(Expression source, string operationName, Type elementType)
     {
         return Expression.Call(typeof(Enumerable), operationName, [elementType], source);
     }
 
-    private static Expression SelectExtensionMethodCall(Type extensionType, Expression source, Type elementType, Expression selectBody)
+    private static MethodCallExpression SelectExtensionMethodCall(Type extensionType, Expression source, Type elementType, Expression selectBody)
     {
         Type[] typeArguments =
         [

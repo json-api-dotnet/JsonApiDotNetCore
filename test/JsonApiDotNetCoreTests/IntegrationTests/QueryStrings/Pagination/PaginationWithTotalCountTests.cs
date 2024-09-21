@@ -37,7 +37,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
     public async Task Can_paginate_in_primary_resources()
     {
         // Arrange
-        List<BlogPost> posts = _fakers.BlogPost.Generate(2);
+        List<BlogPost> posts = _fakers.BlogPost.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -69,7 +69,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
     public async Task Cannot_paginate_in_primary_resource()
     {
         // Arrange
-        BlogPost post = _fakers.BlogPost.Generate();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -99,11 +99,11 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
     public async Task Can_paginate_in_secondary_resources()
     {
         // Arrange
-        Blog blog = _fakers.Blog.Generate();
-        blog.Posts = _fakers.BlogPost.Generate(5);
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Posts = _fakers.BlogPost.GenerateList(5);
 
-        Blog otherBlog = _fakers.Blog.Generate();
-        otherBlog.Posts = _fakers.BlogPost.Generate(1);
+        Blog otherBlog = _fakers.Blog.GenerateOne();
+        otherBlog.Posts = _fakers.BlogPost.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -134,8 +134,8 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
     public async Task Can_paginate_in_secondary_resources_without_inverse_relationship()
     {
         // Arrange
-        WebAccount? account = _fakers.WebAccount.Generate();
-        account.LoginAttempts = _fakers.LoginAttempt.Generate(2);
+        WebAccount account = _fakers.WebAccount.GenerateOne();
+        account.LoginAttempts = _fakers.LoginAttempt.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -166,7 +166,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
     public async Task Cannot_paginate_in_secondary_resource()
     {
         // Arrange
-        BlogPost post = _fakers.BlogPost.Generate();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -196,9 +196,9 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
     public async Task Can_paginate_in_scope_of_OneToMany_relationship()
     {
         // Arrange
-        List<Blog> blogs = _fakers.Blog.Generate(3);
-        blogs[0].Posts = _fakers.BlogPost.Generate(2);
-        blogs[1].Posts = _fakers.BlogPost.Generate(2);
+        List<Blog> blogs = _fakers.Blog.GenerateList(3);
+        blogs[0].Posts = _fakers.BlogPost.GenerateList(2);
+        blogs[1].Posts = _fakers.BlogPost.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -233,9 +233,9 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
     public async Task Can_paginate_in_scope_of_OneToMany_relationship_at_secondary_endpoint()
     {
         // Arrange
-        Blog blog = _fakers.Blog.Generate();
-        blog.Owner = _fakers.WebAccount.Generate();
-        blog.Owner.Posts = _fakers.BlogPost.Generate(2);
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Owner = _fakers.WebAccount.GenerateOne();
+        blog.Owner.Posts = _fakers.BlogPost.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -267,8 +267,8 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
     public async Task Can_paginate_OneToMany_relationship_at_relationship_endpoint()
     {
         // Arrange
-        Blog blog = _fakers.Blog.Generate();
-        blog.Posts = _fakers.BlogPost.Generate(4);
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Posts = _fakers.BlogPost.GenerateList(4);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -299,8 +299,8 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
     public async Task Can_paginate_OneToMany_relationship_at_relationship_endpoint_without_inverse_relationship()
     {
         // Arrange
-        WebAccount? account = _fakers.WebAccount.Generate();
-        account.LoginAttempts = _fakers.LoginAttempt.Generate(2);
+        WebAccount account = _fakers.WebAccount.GenerateOne();
+        account.LoginAttempts = _fakers.LoginAttempt.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -333,9 +333,9 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
     public async Task Can_paginate_in_scope_of_ManyToMany_relationship()
     {
         // Arrange
-        List<BlogPost> posts = _fakers.BlogPost.Generate(2);
-        posts[0].Labels = _fakers.Label.Generate(2).ToHashSet();
-        posts[1].Labels = _fakers.Label.Generate(2).ToHashSet();
+        List<BlogPost> posts = _fakers.BlogPost.GenerateList(2);
+        posts[0].Labels = _fakers.Label.GenerateSet(2);
+        posts[1].Labels = _fakers.Label.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -370,8 +370,8 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
     public async Task Can_paginate_ManyToMany_relationship_at_relationship_endpoint()
     {
         // Arrange
-        BlogPost post = _fakers.BlogPost.Generate();
-        post.Labels = _fakers.Label.Generate(4).ToHashSet();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
+        post.Labels = _fakers.Label.GenerateSet(4);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -403,10 +403,10 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
     public async Task Can_paginate_in_multiple_scopes()
     {
         // Arrange
-        List<Blog> blogs = _fakers.Blog.Generate(2);
-        blogs[1].Owner = _fakers.WebAccount.Generate();
-        blogs[1].Owner!.Posts = _fakers.BlogPost.Generate(2);
-        blogs[1].Owner!.Posts[1].Comments = _fakers.Comment.Generate(2).ToHashSet();
+        List<Blog> blogs = _fakers.Blog.GenerateList(2);
+        blogs[1].Owner = _fakers.WebAccount.GenerateOne();
+        blogs[1].Owner!.Posts = _fakers.BlogPost.GenerateList(2);
+        blogs[1].Owner!.Posts[1].Comments = _fakers.Comment.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -501,9 +501,9 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.DefaultPageSize = new PageSize(2);
 
-        Blog blog = _fakers.Blog.Generate();
-        blog.Posts = _fakers.BlogPost.Generate(3);
-        blog.Posts.ForEach(post => post.Labels = _fakers.Label.Generate(3).ToHashSet());
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Posts = _fakers.BlogPost.GenerateList(3);
+        blog.Posts.ForEach(post => post.Labels = _fakers.Label.GenerateSet(3));
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -540,8 +540,8 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.DefaultPageSize = null;
 
-        Blog blog = _fakers.Blog.Generate();
-        blog.Posts = _fakers.BlogPost.Generate(25);
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Posts = _fakers.BlogPost.GenerateList(25);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -575,10 +575,10 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
     public async Task Renders_correct_top_level_links_for_page_number(int pageNumber, int? firstLink, int? lastLink, int? prevLink, int? nextLink)
     {
         // Arrange
-        WebAccount account = _fakers.WebAccount.Generate();
+        WebAccount account = _fakers.WebAccount.GenerateOne();
 
         const int totalCount = 3 * DefaultPageSize + 3;
-        List<BlogPost> posts = _fakers.BlogPost.Generate(totalCount);
+        List<BlogPost> posts = _fakers.BlogPost.GenerateList(totalCount);
 
         foreach (BlogPost post in posts)
         {

@@ -23,8 +23,8 @@ public sealed class PaginationTests : IClassFixture<DapperTestContext>
     public async Task Cannot_use_pagination()
     {
         // Arrange
-        TodoItem todoItem = _fakers.TodoItem.Generate();
-        todoItem.Owner = _fakers.Person.Generate();
+        TodoItem todoItem = _fakers.TodoItem.GenerateOne();
+        todoItem.Owner = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

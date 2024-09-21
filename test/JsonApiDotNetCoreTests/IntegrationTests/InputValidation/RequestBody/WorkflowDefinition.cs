@@ -11,24 +11,28 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody;
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class WorkflowDefinition(IResourceGraph resourceGraph) : JsonApiResourceDefinition<Workflow, Guid>(resourceGraph)
 {
-    private static readonly Dictionary<WorkflowStage, ICollection<WorkflowStage>> StageTransitionTable = new()
+    private static readonly Dictionary<WorkflowStage, WorkflowStage[]> StageTransitionTable = new()
     {
-        [WorkflowStage.Created] = new[]
-        {
+        // @formatter:place_simple_list_pattern_on_single_line false
+
+        [WorkflowStage.Created] =
+        [
             WorkflowStage.InProgress
-        },
-        [WorkflowStage.InProgress] = new[]
-        {
+        ],
+        [WorkflowStage.InProgress] =
+        [
             WorkflowStage.OnHold,
             WorkflowStage.Succeeded,
             WorkflowStage.Failed,
             WorkflowStage.Canceled
-        },
-        [WorkflowStage.OnHold] = new[]
-        {
+        ],
+        [WorkflowStage.OnHold] =
+        [
             WorkflowStage.InProgress,
             WorkflowStage.Canceled
-        }
+        ]
+
+        // @formatter:place_simple_list_pattern_on_single_line restore
     };
 
     private WorkflowStage _previousStage;
@@ -93,7 +97,7 @@ public sealed class WorkflowDefinition(IResourceGraph resourceGraph) : JsonApiRe
 
     private static bool CanTransitionToStage(WorkflowStage fromStage, WorkflowStage toStage)
     {
-        if (StageTransitionTable.TryGetValue(fromStage, out ICollection<WorkflowStage>? possibleNextStages))
+        if (StageTransitionTable.TryGetValue(fromStage, out WorkflowStage[]? possibleNextStages))
         {
             return possibleNextStages.Contains(toStage);
         }

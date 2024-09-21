@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
@@ -48,6 +49,8 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
     /// <inheritdoc />
     public virtual bool CanRead(string parameterName)
     {
+        ArgumentGuard.NotNullNorEmpty(parameterName);
+
         return parameterName is PageSizeParameterName or PageNumberParameterName;
     }
 
@@ -92,6 +95,8 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
 
     protected virtual void ValidatePageSize(PaginationQueryStringValueExpression constraint)
     {
+        ArgumentGuard.NotNull(constraint);
+
         foreach (PaginationElementQueryStringValueExpression element in constraint.Elements)
         {
             if (_options.MaximumPageSize != null)
@@ -116,6 +121,8 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
 
     protected virtual void ValidatePageNumber(PaginationQueryStringValueExpression constraint)
     {
+        ArgumentGuard.NotNull(constraint);
+
         foreach (PaginationElementQueryStringValueExpression element in constraint.Elements)
         {
             if (_options.MaximumPageNumber != null)
@@ -194,9 +201,9 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
             entry.PageNumber ??= PageNumber.ValueOne;
         }
 
-        public IReadOnlyCollection<ExpressionInScope> GetExpressionsInScope()
+        public ReadOnlyCollection<ExpressionInScope> GetExpressionsInScope()
         {
-            return EnumerateExpressionsInScope().ToArray();
+            return EnumerateExpressionsInScope().ToArray().AsReadOnly();
         }
 
         private IEnumerable<ExpressionInScope> EnumerateExpressionsInScope()

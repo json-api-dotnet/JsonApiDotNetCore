@@ -36,8 +36,8 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Can_create_resource()
     {
         // Arrange
-        string newArtistName = _fakers.Performer.Generate().ArtistName!;
-        DateTimeOffset newBornAt = _fakers.Performer.Generate().BornAt;
+        string newArtistName = _fakers.Performer.GenerateOne().ArtistName!;
+        DateTimeOffset newBornAt = _fakers.Performer.GenerateOne().BornAt;
 
         var requestBody = new
         {
@@ -94,7 +94,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Arrange
         const int elementCount = 5;
 
-        List<MusicTrack> newTracks = _fakers.MusicTrack.Generate(elementCount);
+        List<MusicTrack> newTracks = _fakers.MusicTrack.GenerateList(elementCount);
 
         var operationElements = new List<object>(elementCount);
 
@@ -228,7 +228,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Cannot_create_resource_with_unknown_attribute()
     {
         // Arrange
-        string newName = _fakers.Playlist.Generate().Name;
+        string newName = _fakers.Playlist.GenerateOne().Name;
 
         var requestBody = new
         {
@@ -276,7 +276,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownFieldsInRequestBody = true;
 
-        string newName = _fakers.Playlist.Generate().Name;
+        string newName = _fakers.Playlist.GenerateOne().Name;
 
         var requestBody = new
         {
@@ -381,7 +381,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownFieldsInRequestBody = true;
 
-        string newLyricText = _fakers.Lyric.Generate().Text;
+        string newLyricText = _fakers.Lyric.GenerateOne().Text;
 
         var requestBody = new
         {
@@ -444,7 +444,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Cannot_create_resource_with_client_generated_ID()
     {
         // Arrange
-        MusicTrack newTrack = _fakers.MusicTrack.Generate();
+        MusicTrack newTrack = _fakers.MusicTrack.GenerateOne();
         newTrack.Id = Guid.NewGuid();
 
         var requestBody = new
@@ -632,7 +632,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Cannot_create_resource_for_array_data()
     {
         // Arrange
-        string newArtistName = _fakers.Performer.Generate().ArtistName!;
+        string newArtistName = _fakers.Performer.GenerateOne().ArtistName!;
 
         var requestBody = new
         {
@@ -757,7 +757,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Cannot_create_resource_with_readonly_attribute()
     {
         // Arrange
-        string newPlaylistName = _fakers.Playlist.Generate().Name;
+        string newPlaylistName = _fakers.Playlist.GenerateOne().Name;
 
         var requestBody = new
         {
@@ -844,11 +844,11 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Can_create_resource_with_attributes_and_multiple_relationship_types()
     {
         // Arrange
-        Lyric existingLyric = _fakers.Lyric.Generate();
-        RecordCompany existingCompany = _fakers.RecordCompany.Generate();
-        Performer existingPerformer = _fakers.Performer.Generate();
+        Lyric existingLyric = _fakers.Lyric.GenerateOne();
+        RecordCompany existingCompany = _fakers.RecordCompany.GenerateOne();
+        Performer existingPerformer = _fakers.Performer.GenerateOne();
 
-        string newTitle = _fakers.MusicTrack.Generate().Title;
+        string newTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

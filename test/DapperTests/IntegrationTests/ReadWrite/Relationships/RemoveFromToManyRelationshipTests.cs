@@ -28,9 +28,9 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<DapperTest
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person existingPerson = _fakers.Person.Generate();
-        existingPerson.AssignedTodoItems = _fakers.TodoItem.Generate(3).ToHashSet();
-        existingPerson.AssignedTodoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.Generate());
+        Person existingPerson = _fakers.Person.GenerateOne();
+        existingPerson.AssignedTodoItems = _fakers.TodoItem.GenerateSet(3);
+        existingPerson.AssignedTodoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.GenerateOne());
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -134,8 +134,8 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<DapperTest
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person existingPerson = _fakers.Person.Generate();
-        existingPerson.OwnedTodoItems = _fakers.TodoItem.Generate(3).ToHashSet();
+        Person existingPerson = _fakers.Person.GenerateOne();
+        existingPerson.OwnedTodoItems = _fakers.TodoItem.GenerateSet(3);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

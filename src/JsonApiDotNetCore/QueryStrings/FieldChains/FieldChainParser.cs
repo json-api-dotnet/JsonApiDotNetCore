@@ -9,7 +9,7 @@ internal sealed class FieldChainParser
     {
         ArgumentGuard.NotNull(source);
 
-        if (source != string.Empty)
+        if (source.Length > 0)
         {
             var fields = new List<string>(source.Split('.'));
             int position = 0;

@@ -120,7 +120,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
     public async Task Can_filter_on_ID()
     {
         // Arrange
-        List<WebAccount> accounts = _fakers.WebAccount.Generate(2);
+        List<WebAccount> accounts = _fakers.WebAccount.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

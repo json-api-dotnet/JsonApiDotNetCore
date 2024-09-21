@@ -20,7 +20,7 @@ public static class AsyncCollectionExtensions
     {
         ArgumentGuard.NotNull(source);
 
-        var list = new List<T>();
+        List<T> list = [];
 
         await foreach (T element in source.WithCancellation(cancellationToken))
         {

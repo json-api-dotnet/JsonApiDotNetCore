@@ -33,7 +33,7 @@ public sealed class AtomicRelativeLinksWithNamespaceTests
     public async Task Create_resource_with_side_effects_returns_relative_links()
     {
         // Arrange
-        string newCompanyName = _fakers.RecordCompany.Generate().Name;
+        string newCompanyName = _fakers.RecordCompany.GenerateOne().Name;
 
         var requestBody = new
         {

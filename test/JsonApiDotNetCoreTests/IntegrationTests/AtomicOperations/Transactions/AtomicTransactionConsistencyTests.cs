@@ -78,7 +78,7 @@ public sealed class AtomicTransactionConsistencyTests
     public async Task Cannot_use_transactional_repository_without_active_transaction()
     {
         // Arrange
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         var requestBody = new
         {
@@ -121,7 +121,7 @@ public sealed class AtomicTransactionConsistencyTests
     public async Task Cannot_use_distributed_transaction()
     {
         // Arrange
-        string newLyricText = _fakers.Lyric.Generate().Text;
+        string newLyricText = _fakers.Lyric.GenerateOne().Text;
 
         var requestBody = new
         {

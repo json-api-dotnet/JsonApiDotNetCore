@@ -29,7 +29,7 @@ public class PaginationElementQueryStringValueExpression(ResourceFieldChainExpre
 
     public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
     {
-        return visitor.PaginationElementQueryStringValue(this, argument);
+        return visitor.VisitPaginationElementQueryStringValue(this, argument);
     }
 
     public override string ToString()

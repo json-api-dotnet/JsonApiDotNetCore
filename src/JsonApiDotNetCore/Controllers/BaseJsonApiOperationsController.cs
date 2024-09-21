@@ -129,6 +129,8 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
 
     protected virtual void ValidateEnabledOperations(IList<OperationContainer> operations)
     {
+        ArgumentGuard.NotNull(operations);
+
         List<ErrorObject> errors = [];
 
         for (int operationIndex = 0; operationIndex < operations.Count; operationIndex++)
@@ -191,13 +193,15 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
 
     protected virtual void ValidateModelState(IList<OperationContainer> operations)
     {
+        ArgumentGuard.NotNull(operations);
+
         // We must validate the resource inside each operation manually, because they are typed as IIdentifiable.
         // Instead of validating IIdentifiable we need to validate the resource runtime-type.
 
         using IDisposable _ = new RevertRequestStateOnDispose(_request, _targetedFields);
 
         int operationIndex = 0;
-        var requestModelState = new List<(string key, ModelStateEntry? entry)>();
+        List<(string key, ModelStateEntry? entry)> requestModelState = [];
         int maxErrorsRemaining = ModelState.MaxAllowedErrors;
 
         foreach (OperationContainer operation in operations)
@@ -212,7 +216,7 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
             operationIndex++;
         }
 
-        if (requestModelState.Any())
+        if (requestModelState.Count > 0)
         {
             Dictionary<string, ModelStateEntry?> modelStateDictionary = requestModelState.ToDictionary(tuple => tuple.key, tuple => tuple.entry);
 

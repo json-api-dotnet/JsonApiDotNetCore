@@ -24,7 +24,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_filter_equality_in_primary_resources()
     {
         // Arrange
-        List<BankAccount> accounts = _fakers.BankAccount.Generate(2);
+        List<BankAccount> accounts = _fakers.BankAccount.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -72,7 +72,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_filter_any_in_primary_resources()
     {
         // Arrange
-        List<BankAccount> accounts = _fakers.BankAccount.Generate(2);
+        List<BankAccount> accounts = _fakers.BankAccount.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -118,8 +118,8 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_get_primary_resource_by_ID()
     {
         // Arrange
-        DebitCard card = _fakers.DebitCard.Generate();
-        card.Account = _fakers.BankAccount.Generate();
+        DebitCard card = _fakers.DebitCard.GenerateOne();
+        card.Account = _fakers.BankAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -143,8 +143,8 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_get_secondary_resources()
     {
         // Arrange
-        BankAccount account = _fakers.BankAccount.Generate();
-        account.Cards = _fakers.DebitCard.Generate(2);
+        BankAccount account = _fakers.BankAccount.GenerateOne();
+        account.Cards = _fakers.DebitCard.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -169,8 +169,8 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_include_resource_with_sparse_fieldset()
     {
         // Arrange
-        BankAccount account = _fakers.BankAccount.Generate();
-        account.Cards = _fakers.DebitCard.Generate(1);
+        BankAccount account = _fakers.BankAccount.GenerateOne();
+        account.Cards = _fakers.DebitCard.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -199,8 +199,8 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_get_relationship()
     {
         // Arrange
-        BankAccount account = _fakers.BankAccount.Generate();
-        account.Cards = _fakers.DebitCard.Generate(1);
+        BankAccount account = _fakers.BankAccount.GenerateOne();
+        account.Cards = _fakers.DebitCard.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -224,8 +224,8 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_create_resource_with_relationship()
     {
         // Arrange
-        BankAccount existingAccount = _fakers.BankAccount.Generate();
-        DebitCard newCard = _fakers.DebitCard.Generate();
+        BankAccount existingAccount = _fakers.BankAccount.GenerateOne();
+        DebitCard newCard = _fakers.DebitCard.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -289,13 +289,13 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_update_resource_with_relationship()
     {
         // Arrange
-        BankAccount existingAccount = _fakers.BankAccount.Generate();
-        existingAccount.Cards = _fakers.DebitCard.Generate(1);
+        BankAccount existingAccount = _fakers.BankAccount.GenerateOne();
+        existingAccount.Cards = _fakers.DebitCard.GenerateList(1);
 
-        DebitCard existingCard = _fakers.DebitCard.Generate();
-        existingCard.Account = _fakers.BankAccount.Generate();
+        DebitCard existingCard = _fakers.DebitCard.GenerateOne();
+        existingCard.Account = _fakers.BankAccount.GenerateOne();
 
-        string newIban = _fakers.BankAccount.Generate().Iban;
+        string newIban = _fakers.BankAccount.GenerateOne().Iban;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -356,11 +356,11 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_add_to_ToMany_relationship()
     {
         // Arrange
-        BankAccount existingAccount = _fakers.BankAccount.Generate();
-        existingAccount.Cards = _fakers.DebitCard.Generate(1);
+        BankAccount existingAccount = _fakers.BankAccount.GenerateOne();
+        existingAccount.Cards = _fakers.DebitCard.GenerateList(1);
 
-        DebitCard existingDebitCard = _fakers.DebitCard.Generate();
-        existingDebitCard.Account = _fakers.BankAccount.Generate();
+        DebitCard existingDebitCard = _fakers.DebitCard.GenerateOne();
+        existingDebitCard.Account = _fakers.BankAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -402,8 +402,8 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_remove_from_ToMany_relationship()
     {
         // Arrange
-        BankAccount existingAccount = _fakers.BankAccount.Generate();
-        existingAccount.Cards = _fakers.DebitCard.Generate(2);
+        BankAccount existingAccount = _fakers.BankAccount.GenerateOne();
+        existingAccount.Cards = _fakers.DebitCard.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -445,8 +445,8 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_delete_resource()
     {
         // Arrange
-        BankAccount existingAccount = _fakers.BankAccount.Generate();
-        existingAccount.Cards = _fakers.DebitCard.Generate(1);
+        BankAccount existingAccount = _fakers.BankAccount.GenerateOne();
+        existingAccount.Cards = _fakers.DebitCard.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

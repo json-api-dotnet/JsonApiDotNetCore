@@ -92,6 +92,6 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
     /// <inheritdoc />
     public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
     {
-        return _constraints;
+        return _constraints.AsReadOnly();
     }
 }

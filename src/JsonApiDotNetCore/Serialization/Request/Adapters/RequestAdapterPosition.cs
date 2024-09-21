@@ -1,6 +1,8 @@
 using System.Text;
 using JetBrains.Annotations;
 
+#pragma warning disable CA1001 // Types that own disposable fields should be disposable
+
 namespace JsonApiDotNetCore.Serialization.Request.Adapters;
 
 /// <summary>
@@ -19,7 +21,7 @@ public sealed class RequestAdapterPosition
 
     public IDisposable PushElement(string name)
     {
-        ArgumentGuard.NotNullNorEmpty(name);
+        ArgumentGuard.NotNullNorWhitespace(name);
 
         _stack.Push($"/{name}");
         return _disposable;
@@ -33,7 +35,7 @@ public sealed class RequestAdapterPosition
 
     public string? ToSourcePointer()
     {
-        if (!_stack.Any())
+        if (_stack.Count == 0)
         {
             return null;
         }
@@ -41,7 +43,7 @@ public sealed class RequestAdapterPosition
         var builder = new StringBuilder();
         var clone = new Stack<string>(_stack);
 
-        while (clone.Any())
+        while (clone.Count > 0)
         {
             string element = clone.Pop();
             builder.Append(element);

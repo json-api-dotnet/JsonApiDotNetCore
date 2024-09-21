@@ -29,10 +29,10 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        TodoItem newTodoItem = _fakers.TodoItem.Generate();
+        TodoItem newTodoItem = _fakers.TodoItem.GenerateOne();
 
-        Person existingPerson = _fakers.Person.Generate();
-        Tag existingTag = _fakers.Tag.Generate();
+        Person existingPerson = _fakers.Person.GenerateOne();
+        Tag existingTag = _fakers.Tag.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -186,9 +186,9 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        TodoItem newTodoItem = _fakers.TodoItem.Generate();
+        TodoItem newTodoItem = _fakers.TodoItem.GenerateOne();
 
-        Person existingPerson = _fakers.Person.Generate();
+        Person existingPerson = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -357,10 +357,10 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        AccountRecovery existingAccountRecovery = _fakers.AccountRecovery.Generate();
-        Person existingPerson = _fakers.Person.Generate();
+        AccountRecovery existingAccountRecovery = _fakers.AccountRecovery.GenerateOne();
+        Person existingPerson = _fakers.Person.GenerateOne();
 
-        string newUserName = _fakers.LoginAccount.Generate().UserName;
+        string newUserName = _fakers.LoginAccount.GenerateOne().UserName;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -497,7 +497,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person newPerson = _fakers.Person.Generate();
+        Person newPerson = _fakers.Person.GenerateOne();
 
         var requestBody = new
         {
@@ -574,9 +574,9 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Tag existingTag = _fakers.Tag.Generate();
+        Tag existingTag = _fakers.Tag.GenerateOne();
 
-        RgbColor newColor = _fakers.RgbColor.Generate();
+        RgbColor newColor = _fakers.RgbColor.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -673,10 +673,10 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        RgbColor existingColor = _fakers.RgbColor.Generate();
-        existingColor.Tag = _fakers.Tag.Generate();
+        RgbColor existingColor = _fakers.RgbColor.GenerateOne();
+        existingColor.Tag = _fakers.Tag.GenerateOne();
 
-        Tag existingTag = _fakers.Tag.Generate();
+        Tag existingTag = _fakers.Tag.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

@@ -43,7 +43,7 @@ public sealed class AtomicSparseFieldSetResourceDefinitionTests
         var provider = _testContext.Factory.Services.GetRequiredService<LyricPermissionProvider>();
         provider.CanViewText = false;
 
-        List<Lyric> newLyrics = _fakers.Lyric.Generate(2);
+        List<Lyric> newLyrics = _fakers.Lyric.GenerateList(2);
 
         var requestBody = new
         {
@@ -118,7 +118,7 @@ public sealed class AtomicSparseFieldSetResourceDefinitionTests
         var provider = _testContext.Factory.Services.GetRequiredService<LyricPermissionProvider>();
         provider.CanViewText = false;
 
-        List<Lyric> existingLyrics = _fakers.Lyric.Generate(2);
+        List<Lyric> existingLyrics = _fakers.Lyric.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

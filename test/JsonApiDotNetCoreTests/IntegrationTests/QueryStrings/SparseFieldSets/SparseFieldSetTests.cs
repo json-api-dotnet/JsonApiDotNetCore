@@ -39,7 +39,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
-        BlogPost post = _fakers.BlogPost.Generate();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -83,7 +83,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
-        BlogPost post = _fakers.BlogPost.Generate();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -118,7 +118,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
-        BlogPost post = _fakers.BlogPost.Generate();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -161,8 +161,8 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
-        Blog blog = _fakers.Blog.Generate();
-        blog.Posts = _fakers.BlogPost.Generate(1);
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Posts = _fakers.BlogPost.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -209,7 +209,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
-        BlogPost post = _fakers.BlogPost.Generate();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -252,8 +252,8 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
-        BlogPost post = _fakers.BlogPost.Generate();
-        post.Author = _fakers.WebAccount.Generate();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
+        post.Author = _fakers.WebAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -316,8 +316,8 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
-        WebAccount account = _fakers.WebAccount.Generate();
-        account.Posts = _fakers.BlogPost.Generate(1);
+        WebAccount account = _fakers.WebAccount.GenerateOne();
+        account.Posts = _fakers.BlogPost.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -377,9 +377,9 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
-        Blog blog = _fakers.Blog.Generate();
-        blog.Owner = _fakers.WebAccount.Generate();
-        blog.Owner.Posts = _fakers.BlogPost.Generate(1);
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Owner = _fakers.WebAccount.GenerateOne();
+        blog.Owner.Posts = _fakers.BlogPost.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -440,8 +440,8 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
-        BlogPost post = _fakers.BlogPost.Generate();
-        post.Labels = _fakers.Label.Generate(1).ToHashSet();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
+        post.Labels = _fakers.Label.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -492,9 +492,9 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
-        Blog blog = _fakers.Blog.Generate();
-        blog.Owner = _fakers.WebAccount.Generate();
-        blog.Owner.Posts = _fakers.BlogPost.Generate(1);
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Owner = _fakers.WebAccount.GenerateOne();
+        blog.Owner.Posts = _fakers.BlogPost.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -553,9 +553,9 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
-        Blog blog = _fakers.Blog.Generate();
-        blog.Owner = _fakers.WebAccount.Generate();
-        blog.Owner.Posts = _fakers.BlogPost.Generate(1);
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Owner = _fakers.WebAccount.GenerateOne();
+        blog.Owner.Posts = _fakers.BlogPost.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -633,7 +633,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
-        BlogPost post = _fakers.BlogPost.Generate();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -669,7 +669,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
-        BlogPost post = _fakers.BlogPost.Generate();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -723,7 +723,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_select_attribute_with_blocked_capability()
     {
         // Arrange
-        WebAccount account = _fakers.WebAccount.Generate();
+        WebAccount account = _fakers.WebAccount.GenerateOne();
 
         var parameterValue = new MarkedText("^password", '^');
         string route = $"/webAccounts/{account.Id}?fields[webAccounts]={parameterValue.Text}";
@@ -748,7 +748,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_select_ToOne_relationship_with_blocked_capability()
     {
         // Arrange
-        WebAccount account = _fakers.WebAccount.Generate();
+        WebAccount account = _fakers.WebAccount.GenerateOne();
 
         var parameterValue = new MarkedText("^person", '^');
         string route = $"/webAccounts/{account.Id}?fields[webAccounts]={parameterValue.Text}";
@@ -773,7 +773,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_select_ToMany_relationship_with_blocked_capability()
     {
         // Arrange
-        Calendar calendar = _fakers.Calendar.Generate();
+        Calendar calendar = _fakers.Calendar.GenerateOne();
 
         var parameterValue = new MarkedText("^appointments", '^');
         string route = $"/calendars/{calendar.Id}?fields[calendars]={parameterValue.Text}";
@@ -801,7 +801,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
-        Blog blog = _fakers.Blog.Generate();
+        Blog blog = _fakers.Blog.GenerateOne();
         blog.IsPublished = true;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -837,7 +837,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
         store.Clear();
 
-        BlogPost post = _fakers.BlogPost.Generate();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -879,8 +879,8 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     public async Task Returns_related_resources_on_broken_resource_linkage()
     {
         // Arrange
-        WebAccount account = _fakers.WebAccount.Generate();
-        account.Posts = _fakers.BlogPost.Generate(2);
+        WebAccount account = _fakers.WebAccount.GenerateOne();
+        account.Posts = _fakers.BlogPost.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

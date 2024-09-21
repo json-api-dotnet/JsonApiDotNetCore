@@ -20,7 +20,7 @@ public sealed class InvalidModelStateException(
     Func<Type, int, Type?>? getCollectionElementTypeCallback = null) : JsonApiException(FromModelStateDictionary(modelState, modelType, resourceGraph,
     includeExceptionStackTraceInErrors, getCollectionElementTypeCallback))
 {
-    private static IEnumerable<ErrorObject> FromModelStateDictionary(IReadOnlyDictionary<string, ModelStateEntry?> modelState, Type modelType,
+    private static List<ErrorObject> FromModelStateDictionary(IReadOnlyDictionary<string, ModelStateEntry?> modelState, Type modelType,
         IResourceGraph resourceGraph, bool includeExceptionStackTraceInErrors, Func<Type, int, Type?>? getCollectionElementTypeCallback)
     {
         ArgumentGuard.NotNull(modelState);
@@ -186,7 +186,7 @@ public sealed class InvalidModelStateException(
             Exception exception = modelError.Exception.Demystify();
             string[] stackTraceLines = exception.ToString().Split(Environment.NewLine);
 
-            if (stackTraceLines.Any())
+            if (stackTraceLines.Length > 0)
             {
                 error.Meta ??= new Dictionary<string, object?>();
                 error.Meta["StackTrace"] = stackTraceLines;
@@ -246,7 +246,7 @@ public sealed class InvalidModelStateException(
         {
             ArgumentGuard.NotNull(modelType);
 
-            return _nextKey == string.Empty ? null : CreateSegment(modelType, _nextKey, isInComplexType, this, sourcePointer, GetCollectionElementTypeCallback);
+            return _nextKey.Length == 0 ? null : CreateSegment(modelType, _nextKey, isInComplexType, this, sourcePointer, GetCollectionElementTypeCallback);
         }
 
         public static ModelStateKeySegment Create(Type modelType, string key, Func<Type, int, Type?>? getCollectionElementTypeCallback)
@@ -271,7 +271,7 @@ public sealed class InvalidModelStateException(
 
                 if (bracketCloseIndex != -1)
                 {
-                    segmentValue = key[1.. bracketCloseIndex];
+                    segmentValue = key[1..bracketCloseIndex];
 
                     int nextKeyStartIndex = key.Length > bracketCloseIndex + 1 && key[bracketCloseIndex + 1] == Dot
                         ? bracketCloseIndex + 2

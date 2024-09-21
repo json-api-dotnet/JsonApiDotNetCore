@@ -70,11 +70,6 @@ internal sealed class UriNormalizer
         string leftUserInfo = left.GetComponents(UriComponents.UserInfo, UriFormat.UriEscaped);
         string rightUserInfo = right.GetComponents(UriComponents.UserInfo, UriFormat.UriEscaped);
 
-        if (!string.Equals(leftUserInfo, rightUserInfo))
-        {
-            return false;
-        }
-
-        return true;
+        return leftUserInfo == rightUserInfo;
     }
 }

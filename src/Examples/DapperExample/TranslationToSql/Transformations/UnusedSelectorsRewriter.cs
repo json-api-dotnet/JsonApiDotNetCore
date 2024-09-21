@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using DapperExample.TranslationToSql.TreeNodes;
 using JsonApiDotNetCore;
@@ -26,7 +27,7 @@ namespace DapperExample.TranslationToSql.Transformations;
 /// </p>
 /// The selectors t1."AccountId" and t1."FirstName" have no references and can be removed.
 /// </example>
-internal sealed class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<ColumnNode>, SqlTreeNode>
+internal sealed partial class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<ColumnNode>, SqlTreeNode>
 {
     private readonly ColumnSelectorUsageCollector _usageCollector;
     private readonly ILogger<UnusedSelectorsRewriter> _logger;
@@ -52,9 +53,9 @@ internal sealed class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<ColumnNo
             _hasChanged = false;
             _usageCollector.Collect(_rootSelect);
 
-            _logger.LogDebug("Started removal of unused selectors.");
+            LogStarted();
             _rootSelect = TypedVisit(_rootSelect, _usageCollector.UsedColumns);
-            _logger.LogDebug("Finished removal of unused selectors.");
+            LogFinished();
         }
         while (_hasChanged);
 
@@ -68,13 +69,13 @@ internal sealed class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<ColumnNo
 
     public override SqlTreeNode VisitSelect(SelectNode node, ISet<ColumnNode> usedColumns)
     {
-        IReadOnlyDictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> selectors = VisitSelectors(node, usedColumns);
+        ReadOnlyDictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> selectors = VisitSelectors(node, usedColumns);
         WhereNode? where = TypedVisit(node.Where, usedColumns);
         OrderByNode? orderBy = TypedVisit(node.OrderBy, usedColumns);
         return new SelectNode(selectors, where, orderBy, node.Alias);
     }
 
-    private IReadOnlyDictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> VisitSelectors(SelectNode select, ISet<ColumnNode> usedColumns)
+    private ReadOnlyDictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> VisitSelectors(SelectNode select, ISet<ColumnNode> usedColumns)
     {
         Dictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> newSelectors = [];
 
@@ -85,10 +86,10 @@ internal sealed class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<ColumnNo
             newSelectors.Add(newTableAccessor, newTableSelectors);
         }
 
-        return newSelectors;
+        return newSelectors.AsReadOnly();
     }
 
-    private List<SelectorNode> VisitTableSelectors(IEnumerable<SelectorNode> selectors, ISet<ColumnNode> usedColumns)
+    private ReadOnlyCollection<SelectorNode> VisitTableSelectors(IEnumerable<SelectorNode> selectors, ISet<ColumnNode> usedColumns)
     {
         List<SelectorNode> newTableSelectors = [];
 
@@ -98,7 +99,7 @@ internal sealed class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<ColumnNo
             {
                 if (!usedColumns.Contains(columnSelector.Column))
                 {
-                    _logger.LogDebug($"Removing unused selector {columnSelector}.");
+                    LogSelectorRemoved(columnSelector);
                     _hasChanged = true;
                     continue;
                 }
@@ -107,7 +108,7 @@ internal sealed class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<ColumnNo
             newTableSelectors.Add(selector);
         }
 
-        return newTableSelectors;
+        return newTableSelectors.AsReadOnly();
     }
 
     public override SqlTreeNode VisitFrom(FromNode node, ISet<ColumnNode> usedColumns)
@@ -150,7 +151,7 @@ internal sealed class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<ColumnNo
 
     public override SqlTreeNode VisitLogical(LogicalNode node, ISet<ColumnNode> usedColumns)
     {
-        IReadOnlyList<FilterNode> terms = VisitList(node.Terms, usedColumns);
+        ReadOnlyCollection<FilterNode> terms = VisitSequence(node.Terms, usedColumns);
         return new LogicalNode(node.Operator, terms);
     }
 
@@ -170,7 +171,7 @@ internal sealed class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<ColumnNo
     public override SqlTreeNode VisitIn(InNode node, ISet<ColumnNode> usedColumns)
     {
         ColumnNode column = TypedVisit(node.Column, usedColumns);
-        IReadOnlyList<SqlValueNode> values = VisitList(node.Values, usedColumns);
+        ReadOnlyCollection<SqlValueNode> values = VisitSequence(node.Values, usedColumns);
         return new InNode(column, values);
     }
 
@@ -188,7 +189,7 @@ internal sealed class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<ColumnNo
 
     public override SqlTreeNode VisitOrderBy(OrderByNode node, ISet<ColumnNode> usedColumns)
     {
-        IReadOnlyList<OrderByTermNode> terms = VisitList(node.Terms, usedColumns);
+        ReadOnlyCollection<OrderByTermNode> terms = VisitSequence(node.Terms, usedColumns);
         return new OrderByNode(terms);
     }
 
@@ -204,16 +205,25 @@ internal sealed class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<ColumnNo
         return new OrderByCountNode(count, node.IsAscending);
     }
 
-    [return: NotNullIfNotNull("node")]
+    [return: NotNullIfNotNull(nameof(node))]
     private T? TypedVisit<T>(T? node, ISet<ColumnNode> usedColumns)
         where T : SqlTreeNode
     {
         return node != null ? (T)Visit(node, usedColumns) : null;
     }
 
-    private IReadOnlyList<T> VisitList<T>(IEnumerable<T> nodes, ISet<ColumnNode> usedColumns)
+    private ReadOnlyCollection<T> VisitSequence<T>(IEnumerable<T> nodes, ISet<ColumnNode> usedColumns)
         where T : SqlTreeNode
     {
-        return nodes.Select(element => TypedVisit(element, usedColumns)).ToList();
+        return nodes.Select(element => TypedVisit(element, usedColumns)).ToArray().AsReadOnly();
     }
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Started removal of unused selectors.")]
+    private partial void LogStarted();
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Finished removal of unused selectors.")]
+    private partial void LogFinished();
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Removing unused selector {Selector}.")]
+    private partial void LogSelectorRemoved(ColumnSelectorNode selector);
 }

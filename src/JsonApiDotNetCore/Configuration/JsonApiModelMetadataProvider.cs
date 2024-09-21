@@ -31,6 +31,8 @@ internal sealed class JsonApiModelMetadataProvider : DefaultModelMetadataProvide
     /// <inheritdoc />
     protected override ModelMetadata CreateModelMetadata(DefaultMetadataDetails entry)
     {
+        ArgumentGuard.NotNull(entry);
+
         var metadata = (DefaultModelMetadata)base.CreateModelMetadata(entry);
         metadata.ValidationMetadata.PropertyValidationFilter = _jsonApiValidationFilter;
 

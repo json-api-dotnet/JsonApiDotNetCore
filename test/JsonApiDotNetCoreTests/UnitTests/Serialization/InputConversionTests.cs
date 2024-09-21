@@ -15,8 +15,10 @@ using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Serialization;
 
-public sealed class InputConversionTests
+public sealed class InputConversionTests : IDisposable
 {
+    private readonly ServiceContainer _serviceProvider = new();
+
     [Fact]
     public void Converts_various_data_types_with_values()
     {
@@ -56,17 +58,17 @@ public sealed class InputConversionTests
             Value = "Single"
         };
 
-        var complexObjectList = new List<ComplexObject>
-        {
-            new()
+        List<ComplexObject> complexObjectList =
+        [
+            new ComplexObject
             {
                 Value = "One"
             },
-            new()
+            new ComplexObject
             {
                 Value = "Two"
             }
-        };
+        ];
 
         var document = new Document
         {
@@ -241,19 +243,18 @@ public sealed class InputConversionTests
         model.ComplexObjectList.Should().BeNull();
     }
 
-    private static DocumentAdapter CreateDocumentAdapter<TResource>(Func<IResourceGraph, JsonApiRequest> createRequest)
+    private DocumentAdapter CreateDocumentAdapter<TResource>(Func<IResourceGraph, JsonApiRequest> createRequest)
         where TResource : Identifiable<int>
     {
         var options = new JsonApiOptions();
         IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<TResource, int>().Build();
         options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph));
 
-        var serviceContainer = new ServiceContainer();
-        var resourceFactory = new ResourceFactory(serviceContainer);
-        var resourceDefinitionAccessor = new ResourceDefinitionAccessor(resourceGraph, serviceContainer);
+        var resourceFactory = new ResourceFactory(_serviceProvider);
+        var resourceDefinitionAccessor = new ResourceDefinitionAccessor(resourceGraph, _serviceProvider);
 
-        serviceContainer.AddService(typeof(IResourceDefinitionAccessor), resourceDefinitionAccessor);
-        serviceContainer.AddService(typeof(IResourceDefinition<TResource, int>), new JsonApiResourceDefinition<TResource, int>(resourceGraph));
+        _serviceProvider.AddService(typeof(IResourceDefinitionAccessor), resourceDefinitionAccessor);
+        _serviceProvider.AddService(typeof(IResourceDefinition<TResource, int>), new JsonApiResourceDefinition<TResource, int>(resourceGraph));
 
         JsonApiRequest request = createRequest(resourceGraph);
         var targetedFields = new TargetedFields();
@@ -273,6 +274,11 @@ public sealed class InputConversionTests
         var operationsDocumentAdapter = new DocumentInOperationsRequestAdapter(options, atomicOperationObjectAdapter);
 
         return new DocumentAdapter(request, targetedFields, resourceDocumentAdapter, operationsDocumentAdapter);
+    }
+
+    public void Dispose()
+    {
+        _serviceProvider.Dispose();
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]

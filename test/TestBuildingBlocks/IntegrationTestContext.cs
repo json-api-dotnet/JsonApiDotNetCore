@@ -86,16 +86,11 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
 
         factory.PostConfigureServices(_postConfigureServices);
 
-        // We have placed an appsettings.json in the TestBuildingBlocks project directory and set the content root to there. Note that
-        // controllers are not discovered in the content root, but are registered manually using IntegrationTestContext.UseController.
-        WebApplicationFactory<TStartup> factoryWithConfiguredContentRoot =
-            factory.WithWebHostBuilder(builder => builder.UseSolutionRelativeContentRoot($"test/{nameof(TestBuildingBlocks)}"));
-
-        using IServiceScope scope = factoryWithConfiguredContentRoot.Services.CreateScope();
+        using IServiceScope scope = factory.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
         dbContext.Database.EnsureCreated();
 
-        return factoryWithConfiguredContentRoot;
+        return factory;
     }
 
     [Conditional("DEBUG")]
@@ -164,6 +159,13 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
         public void PostConfigureServices(Action<IServiceCollection>? configureServices)
         {
             _postConfigureServices = configureServices;
+        }
+
+        protected override void ConfigureWebHost(IWebHostBuilder builder)
+        {
+            // We have placed an appsettings.json in the TestBuildingBlocks project directory and set the content root to there. Note that
+            // controllers are not discovered in the content root, but are registered manually using IntegrationTestContext.UseController.
+            builder.UseSolutionRelativeContentRoot($"test/{nameof(TestBuildingBlocks)}");
         }
 
         protected override IHostBuilder CreateHostBuilder()

@@ -16,7 +16,7 @@ public sealed class FieldSelection : Dictionary<ResourceType, FieldSelectors>
 
     public IReadOnlySet<ResourceType> GetResourceTypes()
     {
-        return Keys.ToHashSet();
+        return Keys.ToHashSet().AsReadOnly();
     }
 
 #pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection

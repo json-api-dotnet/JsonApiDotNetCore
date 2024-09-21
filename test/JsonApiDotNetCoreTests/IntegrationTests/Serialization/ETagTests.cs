@@ -24,7 +24,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Returns_ETag_for_HEAD_request()
     {
         // Arrange
-        List<Meeting> meetings = _fakers.Meeting.Generate(2);
+        List<Meeting> meetings = _fakers.Meeting.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -52,7 +52,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Returns_ETag_for_GET_request()
     {
         // Arrange
-        List<Meeting> meetings = _fakers.Meeting.Generate(2);
+        List<Meeting> meetings = _fakers.Meeting.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -98,7 +98,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
     {
         // Arrange
         var newId = Guid.NewGuid();
-        string newTitle = _fakers.Meeting.Generate().Title;
+        string newTitle = _fakers.Meeting.GenerateOne().Title;
 
         var requestBody = new
         {
@@ -130,9 +130,9 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Fails_on_ETag_in_PATCH_request()
     {
         // Arrange
-        Meeting existingMeeting = _fakers.Meeting.Generate();
+        Meeting existingMeeting = _fakers.Meeting.GenerateOne();
 
-        string newTitle = _fakers.Meeting.Generate().Title;
+        string newTitle = _fakers.Meeting.GenerateOne().Title;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -178,7 +178,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Returns_NotModified_for_matching_ETag()
     {
         // Arrange
-        List<Meeting> meetings = _fakers.Meeting.Generate(2);
+        List<Meeting> meetings = _fakers.Meeting.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -212,7 +212,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Returns_content_for_mismatching_ETag()
     {
         // Arrange
-        List<Meeting> meetings = _fakers.Meeting.Generate(2);
+        List<Meeting> meetings = _fakers.Meeting.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

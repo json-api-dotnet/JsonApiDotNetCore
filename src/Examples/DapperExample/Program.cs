@@ -86,7 +86,7 @@ app.MapControllers();
 
 await CreateDatabaseAsync(app.Services);
 
-app.Run();
+await app.RunAsync();
 
 static DatabaseProvider GetDatabaseProvider(IConfiguration configuration)
 {

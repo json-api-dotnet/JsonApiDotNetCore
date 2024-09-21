@@ -31,7 +31,7 @@ public sealed class IsUpperCaseFilterTests : IClassFixture<IntegrationTestContex
     public async Task Can_filter_casing_at_primary_endpoint()
     {
         // Arrange
-        List<Blog> blogs = _fakers.Blog.Generate(2);
+        List<Blog> blogs = _fakers.Blog.GenerateList(2);
 
         blogs[0].Title = blogs[0].Title.ToLowerInvariant();
         blogs[1].Title = blogs[1].Title.ToUpperInvariant();
@@ -60,8 +60,8 @@ public sealed class IsUpperCaseFilterTests : IClassFixture<IntegrationTestContex
     public async Task Can_filter_casing_in_compound_expression_at_secondary_endpoint()
     {
         // Arrange
-        Blog blog = _fakers.Blog.Generate();
-        blog.Posts = _fakers.BlogPost.Generate(3);
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Posts = _fakers.BlogPost.GenerateList(3);
 
         blog.Posts[0].Caption = blog.Posts[0].Caption.ToUpperInvariant();
         blog.Posts[0].Url = blog.Posts[0].Url.ToUpperInvariant();
@@ -95,11 +95,11 @@ public sealed class IsUpperCaseFilterTests : IClassFixture<IntegrationTestContex
     public async Task Can_filter_casing_in_included_resources()
     {
         // Arrange
-        List<Blog> blogs = _fakers.Blog.Generate(2);
+        List<Blog> blogs = _fakers.Blog.GenerateList(2);
         blogs[0].Title = blogs[0].Title.ToLowerInvariant();
         blogs[1].Title = blogs[1].Title.ToUpperInvariant();
 
-        blogs[1].Posts = _fakers.BlogPost.Generate(2);
+        blogs[1].Posts = _fakers.BlogPost.GenerateList(2);
         blogs[1].Posts[0].Caption = blogs[1].Posts[0].Caption.ToLowerInvariant();
         blogs[1].Posts[1].Caption = blogs[1].Posts[1].Caption.ToUpperInvariant();
 

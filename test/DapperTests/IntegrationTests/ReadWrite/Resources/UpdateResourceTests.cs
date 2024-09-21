@@ -29,8 +29,8 @@ public sealed class UpdateResourceTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Tag existingTag = _fakers.Tag.Generate();
-        existingTag.Color = _fakers.RgbColor.Generate();
+        Tag existingTag = _fakers.Tag.GenerateOne();
+        existingTag.Color = _fakers.RgbColor.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -107,13 +107,13 @@ public sealed class UpdateResourceTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        TodoItem existingTodoItem = _fakers.TodoItem.Generate();
-        existingTodoItem.Owner = _fakers.Person.Generate();
-        existingTodoItem.Assignee = _fakers.Person.Generate();
-        existingTodoItem.Tags = _fakers.Tag.Generate(1).ToHashSet();
+        TodoItem existingTodoItem = _fakers.TodoItem.GenerateOne();
+        existingTodoItem.Owner = _fakers.Person.GenerateOne();
+        existingTodoItem.Assignee = _fakers.Person.GenerateOne();
+        existingTodoItem.Tags = _fakers.Tag.GenerateSet(1);
 
-        string newDescription = _fakers.TodoItem.Generate().Description;
-        long newDurationInHours = _fakers.TodoItem.Generate().DurationInHours!.Value;
+        string newDescription = _fakers.TodoItem.GenerateOne().Description;
+        long newDurationInHours = _fakers.TodoItem.GenerateOne().DurationInHours!.Value;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -230,16 +230,16 @@ public sealed class UpdateResourceTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        TodoItem existingTodoItem = _fakers.TodoItem.Generate();
-        existingTodoItem.Owner = _fakers.Person.Generate();
-        existingTodoItem.Assignee = _fakers.Person.Generate();
-        existingTodoItem.Tags = _fakers.Tag.Generate(2).ToHashSet();
+        TodoItem existingTodoItem = _fakers.TodoItem.GenerateOne();
+        existingTodoItem.Owner = _fakers.Person.GenerateOne();
+        existingTodoItem.Assignee = _fakers.Person.GenerateOne();
+        existingTodoItem.Tags = _fakers.Tag.GenerateSet(2);
 
-        TodoItem newTodoItem = _fakers.TodoItem.Generate();
+        TodoItem newTodoItem = _fakers.TodoItem.GenerateOne();
 
-        Tag existingTag = _fakers.Tag.Generate();
-        Person existingPerson1 = _fakers.Person.Generate();
-        Person existingPerson2 = _fakers.Person.Generate();
+        Tag existingTag = _fakers.Tag.GenerateOne();
+        Person existingPerson1 = _fakers.Person.GenerateOne();
+        Person existingPerson2 = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

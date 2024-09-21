@@ -109,6 +109,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Get secondary resource(s)");
 
+        ArgumentGuard.NotNull(relationshipName);
         AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
         AssertHasRelationship(_request.Relationship, relationshipName);
 
@@ -146,10 +147,9 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             relationshipName
         });
 
-        ArgumentGuard.NotNullNorEmpty(relationshipName);
-
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Get relationship");
 
+        ArgumentGuard.NotNull(relationshipName);
         AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
         AssertHasRelationship(_request.Relationship, relationshipName);
 
@@ -238,6 +238,8 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
 
     protected async Task AssertPrimaryResourceDoesNotExistAsync(TResource resource, CancellationToken cancellationToken)
     {
+        ArgumentGuard.NotNull(resource);
+
         if (!Equals(resource.Id, default(TId)))
         {
             TResource? existingResource = await GetPrimaryResourceByIdOrDefaultAsync(resource.Id!, TopFieldSelection.OnlyIdAttribute, cancellationToken);
@@ -251,6 +253,8 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
 
     protected virtual async Task InitializeResourceAsync(TResource resourceForDatabase, CancellationToken cancellationToken)
     {
+        ArgumentGuard.NotNull(resourceForDatabase);
+
         await _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceForDatabase, WriteOperationKind.CreateResource, cancellationToken);
     }
 
@@ -261,13 +265,15 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
 
     protected async Task AssertResourcesToAssignInRelationshipsExistAsync(TResource primaryResource, CancellationToken cancellationToken)
     {
+        ArgumentGuard.NotNull(primaryResource);
+
         await ValidateResourcesToAssignInRelationshipsExistWithRefreshAsync(primaryResource, false, cancellationToken);
     }
 
     private async Task ValidateResourcesToAssignInRelationshipsExistWithRefreshAsync(TResource primaryResource, bool onlyIfTypeHierarchy,
         CancellationToken cancellationToken)
     {
-        var missingResources = new List<MissingResourceInRelationship>();
+        List<MissingResourceInRelationship> missingResources = [];
 
         foreach ((QueryLayer queryLayer, RelationshipAttribute relationship) in _queryLayerComposer.ComposeForGetTargetedSecondaryResourceIds(primaryResource))
         {
@@ -276,7 +282,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
                 object? rightValue = relationship.GetValue(primaryResource);
                 HashSet<IIdentifiable> rightResourceIds = _collectionConverter.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
 
-                if (rightResourceIds.Any())
+                if (rightResourceIds.Count > 0)
                 {
                     IAsyncEnumerable<MissingResourceInRelationship> missingResourcesInRelationship =
                         GetMissingRightResourcesAsync(queryLayer, relationship, rightResourceIds, cancellationToken);
@@ -294,14 +300,14 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             }
         }
 
-        if (missingResources.Any())
+        if (missingResources.Count > 0)
         {
             throw new ResourcesInRelationshipsNotFoundException(missingResources);
         }
     }
 
     private async IAsyncEnumerable<MissingResourceInRelationship> GetMissingRightResourcesAsync(QueryLayer existingRightResourceIdsQueryLayer,
-        RelationshipAttribute relationship, ISet<IIdentifiable> rightResourceIds, [EnumeratorCancellation] CancellationToken cancellationToken)
+        RelationshipAttribute relationship, HashSet<IIdentifiable> rightResourceIds, [EnumeratorCancellation] CancellationToken cancellationToken)
     {
         IReadOnlyCollection<IIdentifiable> existingResources = await _repositoryAccessor.GetAsync(existingRightResourceIdsQueryLayer.ResourceType,
             existingRightResourceIdsQueryLayer, cancellationToken);
@@ -344,16 +350,15 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             rightResourceIds
         });
 
-        ArgumentGuard.NotNullNorEmpty(relationshipName);
-        ArgumentGuard.NotNull(rightResourceIds);
-
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Add to to-many relationship");
 
+        ArgumentGuard.NotNull(relationshipName);
+        ArgumentGuard.NotNull(rightResourceIds);
         AssertHasRelationship(_request.Relationship, relationshipName);
 
         TResource? resourceFromDatabase = null;
 
-        if (rightResourceIds.Any() && _request.Relationship is HasManyAttribute { IsManyToMany: true } manyToManyRelationship)
+        if (rightResourceIds.Count > 0 && _request.Relationship is HasManyAttribute { IsManyToMany: true } manyToManyRelationship)
         {
             // In the case of a many-to-many relationship, creating a duplicate entry in the join table results in a
             // unique constraint violation. We avoid that by excluding already-existing entries from the set in advance.
@@ -420,7 +425,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         HashSet<IIdentifiable> rightResourceIds = _collectionConverter.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
         object? newRightValue = rightValue;
 
-        if (rightResourceIds.Any())
+        if (rightResourceIds.Count > 0)
         {
             QueryLayer queryLayer = _queryLayerComposer.ComposeForGetRelationshipRightIds(_request.Relationship, rightResourceIds);
 
@@ -433,7 +438,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
                 ? rightResourceIds.FirstOrDefault()
                 : _collectionConverter.CopyToTypedCollection(rightResourceIds, _request.Relationship.Property.PropertyType);
 
-            if (missingResources.Any())
+            if (missingResources.Count > 0)
             {
                 throw new ResourcesInRelationshipsNotFoundException(missingResources);
             }
@@ -495,10 +500,9 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             rightValue
         });
 
-        ArgumentGuard.NotNullNorEmpty(relationshipName);
-
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Set relationship");
 
+        ArgumentGuard.NotNull(relationshipName);
         AssertHasRelationship(_request.Relationship, relationshipName);
 
         object? effectiveRightValue = _request.Relationship.RightType.IsPartOfTypeHierarchy()
@@ -567,11 +571,10 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             rightResourceIds
         });
 
-        ArgumentGuard.NotNullNorEmpty(relationshipName);
-        ArgumentGuard.NotNull(rightResourceIds);
-
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Remove from to-many relationship");
 
+        ArgumentGuard.NotNull(relationshipName);
+        ArgumentGuard.NotNull(rightResourceIds);
         AssertHasRelationship(_request.Relationship, relationshipName);
         var hasManyRelationship = (HasManyAttribute)_request.Relationship;
 

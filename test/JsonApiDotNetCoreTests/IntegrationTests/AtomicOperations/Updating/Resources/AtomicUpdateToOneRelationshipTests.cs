@@ -23,8 +23,8 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
     public async Task Can_clear_OneToOne_relationship_from_principal_side()
     {
         // Arrange
-        Lyric existingLyric = _fakers.Lyric.Generate();
-        existingLyric.Track = _fakers.MusicTrack.Generate();
+        Lyric existingLyric = _fakers.Lyric.GenerateOne();
+        existingLyric.Track = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -81,8 +81,8 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
     public async Task Can_clear_OneToOne_relationship_from_dependent_side()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        existingTrack.Lyric = _fakers.Lyric.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        existingTrack.Lyric = _fakers.Lyric.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -139,8 +139,8 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
     public async Task Can_clear_ManyToOne_relationship()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        existingTrack.OwnedBy = _fakers.RecordCompany.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        existingTrack.OwnedBy = _fakers.RecordCompany.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -197,8 +197,8 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
     public async Task Can_create_OneToOne_relationship_from_principal_side()
     {
         // Arrange
-        Lyric existingLyric = _fakers.Lyric.Generate();
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        Lyric existingLyric = _fakers.Lyric.GenerateOne();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -256,8 +256,8 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
     public async Task Can_create_OneToOne_relationship_from_dependent_side()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        Lyric existingLyric = _fakers.Lyric.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        Lyric existingLyric = _fakers.Lyric.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -315,8 +315,8 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
     public async Task Can_create_ManyToOne_relationship()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        RecordCompany existingCompany = _fakers.RecordCompany.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        RecordCompany existingCompany = _fakers.RecordCompany.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -374,10 +374,10 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
     public async Task Can_replace_OneToOne_relationship_from_principal_side()
     {
         // Arrange
-        Lyric existingLyric = _fakers.Lyric.Generate();
-        existingLyric.Track = _fakers.MusicTrack.Generate();
+        Lyric existingLyric = _fakers.Lyric.GenerateOne();
+        existingLyric.Track = _fakers.MusicTrack.GenerateOne();
 
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -439,10 +439,10 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
     public async Task Can_replace_OneToOne_relationship_from_dependent_side()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        existingTrack.Lyric = _fakers.Lyric.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        existingTrack.Lyric = _fakers.Lyric.GenerateOne();
 
-        Lyric existingLyric = _fakers.Lyric.Generate();
+        Lyric existingLyric = _fakers.Lyric.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -504,10 +504,10 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
     public async Task Can_replace_ManyToOne_relationship()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        existingTrack.OwnedBy = _fakers.RecordCompany.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        existingTrack.OwnedBy = _fakers.RecordCompany.GenerateOne();
 
-        RecordCompany existingCompany = _fakers.RecordCompany.Generate();
+        RecordCompany existingCompany = _fakers.RecordCompany.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -569,7 +569,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
     public async Task Cannot_create_for_null_relationship()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -620,7 +620,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
     public async Task Cannot_create_for_missing_data_in_relationship()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -673,7 +673,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
     public async Task Cannot_create_for_array_data_in_relationship()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -933,7 +933,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
     public async Task Cannot_create_for_unknown_ID_in_relationship_data()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -993,7 +993,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
     public async Task Cannot_create_for_relationship_mismatch()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1051,7 +1051,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
     public async Task Cannot_assign_relationship_with_blocked_capability()
     {
         // Arrange
-        Lyric existingLyric = _fakers.Lyric.Generate();
+        Lyric existingLyric = _fakers.Lyric.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

@@ -15,15 +15,7 @@ namespace JsonApiDotNetCore.Controllers;
 /// <typeparam name="TId">
 /// The resource identifier type.
 /// </typeparam>
-public abstract class JsonApiQueryController<TResource, TId> : JsonApiController<TResource, TId>
-    where TResource : class, IIdentifiable<TId>
-{
-    /// <summary>
-    /// Creates an instance from a read-only service.
-    /// </summary>
-    protected JsonApiQueryController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
-        IResourceQueryService<TResource, TId> queryService)
-        : base(options, resourceGraph, loggerFactory, queryService, queryService, queryService, queryService)
-    {
-    }
-}
+public abstract class JsonApiQueryController<TResource, TId>(
+    IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceQueryService<TResource, TId> queryService)
+    : JsonApiController<TResource, TId>(options, resourceGraph, loggerFactory, queryService, queryService, queryService, queryService)
+    where TResource : class, IIdentifiable<TId>;

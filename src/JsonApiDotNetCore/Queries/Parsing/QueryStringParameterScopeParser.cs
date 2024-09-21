@@ -27,6 +27,9 @@ public class QueryStringParameterScopeParser : QueryExpressionParser, IQueryStri
     protected virtual QueryStringParameterScopeExpression ParseQueryStringParameterScope(ResourceType resourceType, FieldChainPattern pattern,
         FieldChainPatternMatchOptions options)
     {
+        ArgumentGuard.NotNull(resourceType);
+        ArgumentGuard.NotNull(pattern);
+
         int position = GetNextTokenPositionOrEnd();
 
         if (!TokenStack.TryPop(out Token? token) || token.Kind != TokenKind.Text)

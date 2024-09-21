@@ -40,8 +40,8 @@ public sealed class AtomicResourceMetaTests : IClassFixture<IntegrationTestConte
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        string newTitle1 = _fakers.MusicTrack.Generate().Title;
-        string newTitle2 = _fakers.MusicTrack.Generate().Title;
+        string newTitle1 = _fakers.MusicTrack.GenerateOne().Title;
+        string newTitle2 = _fakers.MusicTrack.GenerateOne().Title;
 
         var requestBody = new
         {
@@ -121,7 +121,7 @@ public sealed class AtomicResourceMetaTests : IClassFixture<IntegrationTestConte
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        TextLanguage existingLanguage = _fakers.TextLanguage.Generate();
+        TextLanguage existingLanguage = _fakers.TextLanguage.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

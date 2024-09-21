@@ -11,7 +11,7 @@ internal sealed class DeleteOneToOneStatementBuilder(IDataModelService dataModel
     public DeleteNode Build(ResourceType resourceType, string whereColumnName, object? whereValue)
     {
         ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(whereColumnName);
+        ArgumentGuard.NotNullNorEmpty(whereColumnName);
 
         ResetState();
 

@@ -33,6 +33,8 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
     public async Task<IReadOnlyCollection<TResource>> GetAsync<TResource>(QueryLayer queryLayer, CancellationToken cancellationToken)
         where TResource : class, IIdentifiable
     {
+        ArgumentGuard.NotNull(queryLayer);
+
         dynamic repository = ResolveReadRepository(typeof(TResource));
         return (IReadOnlyCollection<TResource>)await repository.GetAsync(queryLayer, cancellationToken);
     }
@@ -41,6 +43,7 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
     public async Task<IReadOnlyCollection<IIdentifiable>> GetAsync(ResourceType resourceType, QueryLayer queryLayer, CancellationToken cancellationToken)
     {
         ArgumentGuard.NotNull(resourceType);
+        ArgumentGuard.NotNull(queryLayer);
 
         dynamic repository = ResolveReadRepository(resourceType);
         return (IReadOnlyCollection<IIdentifiable>)await repository.GetAsync(queryLayer, cancellationToken);
@@ -49,6 +52,8 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
     /// <inheritdoc />
     public async Task<int> CountAsync(ResourceType resourceType, FilterExpression? filter, CancellationToken cancellationToken)
     {
+        ArgumentGuard.NotNull(resourceType);
+
         dynamic repository = ResolveReadRepository(resourceType);
         return (int)await repository.CountAsync(filter, cancellationToken);
     }
@@ -57,6 +62,8 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
     public async Task<TResource> GetForCreateAsync<TResource, TId>(Type resourceClrType, [DisallowNull] TId id, CancellationToken cancellationToken)
         where TResource : class, IIdentifiable<TId>
     {
+        ArgumentGuard.NotNull(resourceClrType);
+
         dynamic repository = GetWriteRepository(typeof(TResource));
         return await repository.GetForCreateAsync(resourceClrType, id, cancellationToken);
     }
@@ -65,6 +72,9 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
     public async Task CreateAsync<TResource>(TResource resourceFromRequest, TResource resourceForDatabase, CancellationToken cancellationToken)
         where TResource : class, IIdentifiable
     {
+        ArgumentGuard.NotNull(resourceFromRequest);
+        ArgumentGuard.NotNull(resourceForDatabase);
+
         dynamic repository = GetWriteRepository(typeof(TResource));
         await repository.CreateAsync(resourceFromRequest, resourceForDatabase, cancellationToken);
     }
@@ -73,6 +83,8 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
     public async Task<TResource?> GetForUpdateAsync<TResource>(QueryLayer queryLayer, CancellationToken cancellationToken)
         where TResource : class, IIdentifiable
     {
+        ArgumentGuard.NotNull(queryLayer);
+
         dynamic repository = GetWriteRepository(typeof(TResource));
         return await repository.GetForUpdateAsync(queryLayer, cancellationToken);
     }
@@ -81,6 +93,9 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
     public async Task UpdateAsync<TResource>(TResource resourceFromRequest, TResource resourceFromDatabase, CancellationToken cancellationToken)
         where TResource : class, IIdentifiable
     {
+        ArgumentGuard.NotNull(resourceFromRequest);
+        ArgumentGuard.NotNull(resourceFromDatabase);
+
         dynamic repository = GetWriteRepository(typeof(TResource));
         await repository.UpdateAsync(resourceFromRequest, resourceFromDatabase, cancellationToken);
     }
@@ -97,6 +112,8 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
     public async Task SetRelationshipAsync<TResource>(TResource leftResource, object? rightValue, CancellationToken cancellationToken)
         where TResource : class, IIdentifiable
     {
+        ArgumentGuard.NotNull(leftResource);
+
         dynamic repository = GetWriteRepository(typeof(TResource));
         await repository.SetRelationshipAsync(leftResource, rightValue, cancellationToken);
     }
@@ -106,6 +123,8 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
         CancellationToken cancellationToken)
         where TResource : class, IIdentifiable<TId>
     {
+        ArgumentGuard.NotNull(rightResourceIds);
+
         dynamic repository = GetWriteRepository(typeof(TResource));
         await repository.AddToToManyRelationshipAsync(leftResource, leftId, rightResourceIds, cancellationToken);
     }
@@ -115,18 +134,25 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
         CancellationToken cancellationToken)
         where TResource : class, IIdentifiable
     {
+        ArgumentGuard.NotNull(leftResource);
+        ArgumentGuard.NotNull(rightResourceIds);
+
         dynamic repository = GetWriteRepository(typeof(TResource));
         await repository.RemoveFromToManyRelationshipAsync(leftResource, rightResourceIds, cancellationToken);
     }
 
     protected object ResolveReadRepository(Type resourceClrType)
     {
+        ArgumentGuard.NotNull(resourceClrType);
+
         ResourceType resourceType = _resourceGraph.GetResourceType(resourceClrType);
         return ResolveReadRepository(resourceType);
     }
 
     protected virtual object ResolveReadRepository(ResourceType resourceType)
     {
+        ArgumentGuard.NotNull(resourceType);
+
         Type repositoryType = typeof(IResourceReadRepository<,>).MakeGenericType(resourceType.ClrType, resourceType.IdentityClrType);
         return _serviceProvider.GetRequiredService(repositoryType);
     }
@@ -154,6 +180,8 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
 
     protected virtual object ResolveWriteRepository(Type resourceClrType)
     {
+        ArgumentGuard.NotNull(resourceClrType);
+
         ResourceType resourceType = _resourceGraph.GetResourceType(resourceClrType);
 
         Type resourceDefinitionType = typeof(IResourceWriteRepository<,>).MakeGenericType(resourceType.ClrType, resourceType.IdentityClrType);

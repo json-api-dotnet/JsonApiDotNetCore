@@ -19,7 +19,7 @@ internal sealed class SelectNode : TableSourceNode
     public WhereNode? Where { get; }
     public OrderByNode? OrderBy { get; }
 
-    public override IReadOnlyList<ColumnInSelectNode> Columns => _columns;
+    public override IReadOnlyList<ColumnInSelectNode> Columns => _columns.AsReadOnly();
 
     public SelectNode(IReadOnlyDictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> selectors, WhereNode? where, OrderByNode? orderBy, string? alias)
         : base(alias)

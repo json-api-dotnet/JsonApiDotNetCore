@@ -31,7 +31,7 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     public async Task Cannot_create_dependent_side_of_required_ManyToOne_relationship_without_providing_principal_side()
     {
         // Arrange
-        Order order = _fakers.Order.Generate();
+        Order order = _fakers.Order.GenerateOne();
 
         var requestBody = new
         {
@@ -74,7 +74,7 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     public async Task Cannot_create_dependent_side_of_required_OneToOne_relationship_without_providing_principal_side()
     {
         // Arrange
-        Shipment shipment = _fakers.Shipment.Generate();
+        Shipment shipment = _fakers.Shipment.GenerateOne();
 
         var requestBody = new
         {
@@ -110,8 +110,8 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     public async Task Deleting_principal_side_of_required_OneToMany_relationship_triggers_cascading_delete()
     {
         // Arrange
-        Order existingOrder = _fakers.Order.Generate();
-        existingOrder.Customer = _fakers.Customer.Generate();
+        Order existingOrder = _fakers.Order.GenerateOne();
+        existingOrder.Customer = _fakers.Customer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -143,9 +143,9 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     public async Task Deleting_principal_side_of_required_OneToOne_relationship_triggers_cascading_delete()
     {
         // Arrange
-        Order existingOrder = _fakers.Order.Generate();
-        existingOrder.Shipment = _fakers.Shipment.Generate();
-        existingOrder.Customer = _fakers.Customer.Generate();
+        Order existingOrder = _fakers.Order.GenerateOne();
+        existingOrder.Shipment = _fakers.Shipment.GenerateOne();
+        existingOrder.Customer = _fakers.Customer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -180,9 +180,9 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     public async Task Cannot_clear_required_ManyToOne_relationship_at_primary_endpoint()
     {
         // Arrange
-        Order existingOrder = _fakers.Order.Generate();
-        existingOrder.Shipment = _fakers.Shipment.Generate();
-        existingOrder.Customer = _fakers.Customer.Generate();
+        Order existingOrder = _fakers.Order.GenerateOne();
+        existingOrder.Shipment = _fakers.Shipment.GenerateOne();
+        existingOrder.Customer = _fakers.Customer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -228,9 +228,9 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     public async Task Cannot_clear_required_ManyToOne_relationship_at_relationship_endpoint()
     {
         // Arrange
-        Order existingOrder = _fakers.Order.Generate();
-        existingOrder.Shipment = _fakers.Shipment.Generate();
-        existingOrder.Customer = _fakers.Customer.Generate();
+        Order existingOrder = _fakers.Order.GenerateOne();
+        existingOrder.Shipment = _fakers.Shipment.GenerateOne();
+        existingOrder.Customer = _fakers.Customer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -263,9 +263,9 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     public async Task Clearing_OneToMany_relationship_at_primary_endpoint_triggers_cascading_delete()
     {
         // Arrange
-        Order existingOrder = _fakers.Order.Generate();
-        existingOrder.Shipment = _fakers.Shipment.Generate();
-        existingOrder.Customer = _fakers.Customer.Generate();
+        Order existingOrder = _fakers.Order.GenerateOne();
+        existingOrder.Shipment = _fakers.Shipment.GenerateOne();
+        existingOrder.Customer = _fakers.Customer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -313,9 +313,9 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     public async Task Clearing_OneToMany_relationship_at_update_relationship_endpoint_triggers_cascading_delete()
     {
         // Arrange
-        Order existingOrder = _fakers.Order.Generate();
-        existingOrder.Shipment = _fakers.Shipment.Generate();
-        existingOrder.Customer = _fakers.Customer.Generate();
+        Order existingOrder = _fakers.Order.GenerateOne();
+        existingOrder.Shipment = _fakers.Shipment.GenerateOne();
+        existingOrder.Customer = _fakers.Customer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -352,9 +352,9 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     public async Task Clearing_OneToMany_relationship_at_delete_relationship_endpoint_triggers_cascading_delete()
     {
         // Arrange
-        Order existingOrder = _fakers.Order.Generate();
-        existingOrder.Shipment = _fakers.Shipment.Generate();
-        existingOrder.Customer = _fakers.Customer.Generate();
+        Order existingOrder = _fakers.Order.GenerateOne();
+        existingOrder.Shipment = _fakers.Shipment.GenerateOne();
+        existingOrder.Customer = _fakers.Customer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -398,12 +398,12 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     public async Task Can_reassign_dependent_side_of_ZeroOrOneToOne_relationship_at_primary_endpoint()
     {
         // Arrange
-        Order orderWithShipment = _fakers.Order.Generate();
-        orderWithShipment.Shipment = _fakers.Shipment.Generate();
-        orderWithShipment.Customer = _fakers.Customer.Generate();
+        Order orderWithShipment = _fakers.Order.GenerateOne();
+        orderWithShipment.Shipment = _fakers.Shipment.GenerateOne();
+        orderWithShipment.Customer = _fakers.Customer.GenerateOne();
 
-        Order orderWithoutShipment = _fakers.Order.Generate();
-        orderWithoutShipment.Customer = _fakers.Customer.Generate();
+        Order orderWithoutShipment = _fakers.Order.GenerateOne();
+        orderWithoutShipment.Customer = _fakers.Customer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -453,12 +453,12 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     public async Task Can_reassign_dependent_side_of_ZeroOrOneToOne_relationship_at_relationship_endpoint()
     {
         // Arrange
-        Order orderWithShipment = _fakers.Order.Generate();
-        orderWithShipment.Shipment = _fakers.Shipment.Generate();
-        orderWithShipment.Customer = _fakers.Customer.Generate();
+        Order orderWithShipment = _fakers.Order.GenerateOne();
+        orderWithShipment.Shipment = _fakers.Shipment.GenerateOne();
+        orderWithShipment.Customer = _fakers.Customer.GenerateOne();
 
-        Order orderWithoutShipment = _fakers.Order.Generate();
-        orderWithoutShipment.Customer = _fakers.Customer.Generate();
+        Order orderWithoutShipment = _fakers.Order.GenerateOne();
+        orderWithoutShipment.Customer = _fakers.Customer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

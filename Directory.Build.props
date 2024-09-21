@@ -1,4 +1,29 @@
 <Project>
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AnalysisMode>Recommended</AnalysisMode>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
+    <RunSettingsFilePath>$(MSBuildThisFileDirectory)tests.runsettings</RunSettingsFilePath>
+    <JsonApiDotNetCoreVersionPrefix>5.6.1</JsonApiDotNetCoreVersionPrefix>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!--
+      Disabled IDE analyzers for "Use collection expression" because they are dangerous in a subtle way.
+      For example, a suggestion for the following code is raised:
+        public IList<string> Items { get; } = new List<string>();
+      Taking the suggestion TODAY produces List<string>, but the spec doesn't require that, so the compiler may change it over time.
+      As a result, callers that cast back to List<string> will face a breaking change.
+     -->
+    <UseCollectionExpressionRules>IDE0028;IDE0300;IDE0301;IDE0302;IDE0303;IDE0304;IDE0305</UseCollectionExpressionRules>
+    <NoWarn>$(NoWarn);$(UseCollectionExpressionRules)</NoWarn>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <NoWarn>$(NoWarn);AV2210</NoWarn>
   </PropertyGroup>
@@ -13,20 +38,23 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
+  <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Tests'))">
+    <NoWarn>$(NoWarn);CA1707;CA1062</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup
+    Condition="$(MSBuildProjectName.EndsWith('Example')) Or '$(MSBuildProjectName)' == 'TestBuildingBlocks' Or '$(MSBuildProjectName)' == 'Benchmarks'">
+    <NoWarn>$(NoWarn);CA1062</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <!-- Workaround for https://github.com/dotnet/runtime/issues/72263 -->
+    <NoWarn>$(NoWarn);SYSLIB1006</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2023.3.*" PrivateAssets="All" />
     <PackageReference Include="CSharpGuidelinesAnalyzer" Version="3.8.*" PrivateAssets="All" />
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)CSharpGuidelinesAnalyzer.config" Visible="False" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <Nullable>enable</Nullable>
-    <LangVersion>latest</LangVersion>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <IsPackable>false</IsPackable>
-    <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
-    <RunSettingsFilePath>$(MSBuildThisFileDirectory)tests.runsettings</RunSettingsFilePath>
-    <JsonApiDotNetCoreVersionPrefix>5.6.1</JsonApiDotNetCoreVersionPrefix>
-  </PropertyGroup>
 </Project>

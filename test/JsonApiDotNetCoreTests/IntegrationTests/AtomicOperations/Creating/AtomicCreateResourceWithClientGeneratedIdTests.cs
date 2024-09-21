@@ -41,7 +41,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = mode;
 
-        TextLanguage newLanguage = _fakers.TextLanguage.Generate();
+        TextLanguage newLanguage = _fakers.TextLanguage.GenerateOne();
         newLanguage.Id = Guid.NewGuid();
 
         var requestBody = new
@@ -101,7 +101,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = mode;
 
-        MusicTrack newTrack = _fakers.MusicTrack.Generate();
+        MusicTrack newTrack = _fakers.MusicTrack.GenerateOne();
         newTrack.Id = Guid.NewGuid();
 
         var requestBody = new
@@ -153,7 +153,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = mode;
 
-        string? newIsoCode = _fakers.TextLanguage.Generate().IsoCode;
+        string? newIsoCode = _fakers.TextLanguage.GenerateOne().IsoCode;
 
         var requestBody = new
         {
@@ -211,7 +211,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = mode;
 
-        string? newIsoCode = _fakers.TextLanguage.Generate().IsoCode;
+        string? newIsoCode = _fakers.TextLanguage.GenerateOne().IsoCode;
 
         var requestBody = new
         {
@@ -260,10 +260,10 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = mode;
 
-        TextLanguage existingLanguage = _fakers.TextLanguage.Generate();
+        TextLanguage existingLanguage = _fakers.TextLanguage.GenerateOne();
         existingLanguage.Id = Guid.NewGuid();
 
-        TextLanguage languageToCreate = _fakers.TextLanguage.Generate();
+        TextLanguage languageToCreate = _fakers.TextLanguage.GenerateOne();
         languageToCreate.Id = existingLanguage.Id;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -368,7 +368,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = mode;
 
-        string newTitle = _fakers.MusicTrack.Generate().Title;
+        string newTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         var requestBody = new
         {

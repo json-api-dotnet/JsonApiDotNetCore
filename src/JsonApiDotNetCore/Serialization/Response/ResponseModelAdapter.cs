@@ -103,11 +103,12 @@ public class ResponseModelAdapter : IResponseModelAdapter
         }
         else if (model is IEnumerable<ErrorObject> errorObjects)
         {
-            document.Errors = errorObjects.ToArray();
+            document.Errors = errorObjects.ToList();
         }
         else if (model is ErrorObject errorObject)
         {
-            document.Errors = [errorObject];
+            List<ErrorObject> errors = [errorObject];
+            document.Errors = errors;
         }
         else
         {
@@ -124,6 +125,8 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
     protected virtual AtomicResultObject ConvertOperation(OperationContainer? operation, IImmutableSet<IncludeElementExpression> includeElements)
     {
+        ArgumentGuard.NotNull(includeElements);
+
         ResourceObject? resourceObject = null;
 
         if (operation != null)
@@ -205,6 +208,9 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
     protected virtual ResourceObject ConvertResource(IIdentifiable resource, ResourceType resourceType, EndpointKind kind)
     {
+        ArgumentGuard.NotNull(resource);
+        ArgumentGuard.NotNull(resourceType);
+
         bool isRelationship = kind == EndpointKind.Relationship;
 
         if (!isRelationship)
@@ -235,6 +241,10 @@ public class ResponseModelAdapter : IResponseModelAdapter
 #pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
         IImmutableSet<ResourceFieldAttribute> fieldSet)
     {
+        ArgumentGuard.NotNull(resource);
+        ArgumentGuard.NotNull(resourceType);
+        ArgumentGuard.NotNull(fieldSet);
+
         var attrMap = new Dictionary<string, object?>(resourceType.Attributes.Count);
 
         foreach (AttrAttribute attr in resourceType.Attributes)
@@ -260,7 +270,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
             attrMap.Add(attr.PublicName, value);
         }
 
-        return attrMap.Any() ? attrMap : null;
+        return attrMap.Count > 0 ? attrMap : null;
     }
 
     private void TraverseRelationships(IIdentifiable leftResource, ResourceObjectTreeNode leftTreeNode, IImmutableSet<IncludeElementExpression> includeElements,
@@ -393,7 +403,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
     {
         IList<ResourceObject> resourceObjects = rootNode.GetResponseIncluded();
 
-        if (resourceObjects.Any())
+        if (resourceObjects.Count > 0)
         {
             return resourceObjects;
         }

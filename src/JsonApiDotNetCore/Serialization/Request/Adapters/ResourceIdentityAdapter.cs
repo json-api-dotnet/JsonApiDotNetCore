@@ -238,6 +238,10 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
     protected static void AssertIsKnownRelationship([NotNull] RelationshipAttribute? relationship, string relationshipName, ResourceType resourceType,
         RequestAdapterState state)
     {
+        ArgumentGuard.NotNull(relationshipName);
+        ArgumentGuard.NotNull(resourceType);
+        ArgumentGuard.NotNull(state);
+
         if (relationship == null)
         {
             throw new ModelConversionException(state.Position, "Unknown relationship found.",
@@ -247,6 +251,9 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
 
     protected internal static void AssertToManyInAddOrRemoveRelationship(RelationshipAttribute relationship, RequestAdapterState state)
     {
+        ArgumentGuard.NotNull(relationship);
+        ArgumentGuard.NotNull(state);
+
         bool requireToManyRelationship = state.Request.WriteOperation is WriteOperationKind.AddToRelationship or WriteOperationKind.RemoveFromRelationship;
 
         if (requireToManyRelationship && relationship is not HasManyAttribute)

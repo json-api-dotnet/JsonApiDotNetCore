@@ -29,8 +29,8 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
     public async Task Can_clear_ManyToOne_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Assignee = _fakers.UserAccount.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Assignee = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -76,10 +76,10 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
     public async Task Can_create_OneToOne_relationship_from_principal_side()
     {
         // Arrange
-        WorkItemGroup existingGroup = _fakers.WorkItemGroup.Generate();
-        existingGroup.Color = _fakers.RgbColor.Generate();
+        WorkItemGroup existingGroup = _fakers.WorkItemGroup.GenerateOne();
+        existingGroup.Color = _fakers.RgbColor.GenerateOne();
 
-        RgbColor existingColor = _fakers.RgbColor.Generate();
+        RgbColor existingColor = _fakers.RgbColor.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -134,9 +134,9 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
     public async Task Can_replace_OneToOne_relationship_from_dependent_side()
     {
         // Arrange
-        List<WorkItemGroup> existingGroups = _fakers.WorkItemGroup.Generate(2);
-        existingGroups[0].Color = _fakers.RgbColor.Generate();
-        existingGroups[1].Color = _fakers.RgbColor.Generate();
+        List<WorkItemGroup> existingGroups = _fakers.WorkItemGroup.GenerateList(2);
+        existingGroups[0].Color = _fakers.RgbColor.GenerateOne();
+        existingGroups[1].Color = _fakers.RgbColor.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -201,8 +201,8 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
     public async Task Can_clear_OneToOne_relationship()
     {
         // Arrange
-        RgbColor existingColor = _fakers.RgbColor.Generate();
-        existingColor.Group = _fakers.WorkItemGroup.Generate();
+        RgbColor existingColor = _fakers.RgbColor.GenerateOne();
+        existingColor.Group = _fakers.WorkItemGroup.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -248,8 +248,8 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
     public async Task Can_replace_ManyToOne_relationship()
     {
         // Arrange
-        List<UserAccount> existingUserAccounts = _fakers.UserAccount.Generate(2);
-        existingUserAccounts[0].AssignedItems = _fakers.WorkItem.Generate(2).ToHashSet();
+        List<UserAccount> existingUserAccounts = _fakers.UserAccount.GenerateList(2);
+        existingUserAccounts[0].AssignedItems = _fakers.WorkItem.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -302,8 +302,8 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
     public async Task Can_create_relationship_with_include()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        UserAccount existingUserAccount = _fakers.UserAccount.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -367,10 +367,10 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
     public async Task Can_replace_relationship_with_include_and_fieldsets()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Assignee = _fakers.UserAccount.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Assignee = _fakers.UserAccount.GenerateOne();
 
-        UserAccount existingUserAccount = _fakers.UserAccount.Generate();
+        UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -442,8 +442,8 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_create_with_null_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        UserAccount existingUserAccount = _fakers.UserAccount.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -487,8 +487,8 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_create_with_missing_data_in_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        UserAccount existingUserAccount = _fakers.UserAccount.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -534,8 +534,8 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_create_with_array_data_in_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        UserAccount existingUserAccount = _fakers.UserAccount.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -589,7 +589,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_create_for_missing_relationship_type()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -639,7 +639,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_create_for_unknown_relationship_type()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -690,7 +690,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_create_for_missing_relationship_ID()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -740,7 +740,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_create_with_unknown_relationship_ID()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -792,7 +792,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_create_on_relationship_type_mismatch()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -843,7 +843,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
     public async Task Can_clear_cyclic_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -892,7 +892,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
     public async Task Can_assign_cyclic_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -943,7 +943,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
     public async Task Cannot_assign_relationship_with_blocked_capability()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
