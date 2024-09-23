@@ -137,12 +137,13 @@ public abstract class JsonApiClient : IJsonApiClient
 
             Type documentType = document.GetType();
 
-            if (!_documentsByType.ContainsKey(documentType))
+            if (!_documentsByType.TryGetValue(documentType, out ISet<object>? documents))
             {
-                _documentsByType[documentType] = new HashSet<object>();
+                documents = new HashSet<object>();
+                _documentsByType[documentType] = documents;
             }
 
-            _documentsByType[documentType].Add(document);
+            documents.Add(document);
         }
 
         public void UnRegisterDocument(object document)
