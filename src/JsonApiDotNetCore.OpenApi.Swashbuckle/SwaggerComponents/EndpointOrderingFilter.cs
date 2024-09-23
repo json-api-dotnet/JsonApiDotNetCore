@@ -6,10 +6,18 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+#if NET6_0
 internal sealed class EndpointOrderingFilter : IDocumentFilter
+#else
+internal sealed partial class EndpointOrderingFilter : IDocumentFilter
+#endif
 {
-    private static readonly Regex RelationshipNameInUrlPattern =
-        new($@".*{JsonApiRoutingTemplate.PrimaryEndpoint}/(?>{JsonApiRoutingTemplate.RelationshipsPart}\/)?(\w+)", RegexOptions.Compiled);
+    private const string PatternText = $@".*{JsonApiRoutingTemplate.PrimaryEndpoint}/(?>{JsonApiRoutingTemplate.RelationshipsPart}\/)?(?<RelationshipName>\w+)";
+
+#if NET6_0
+    private const RegexOptions RegexOptionsNet60 = RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture;
+    private static readonly Regex RelationshipNameInUrlPattern = new(PatternText, RegexOptionsNet60);
+#endif
 
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
@@ -39,8 +47,18 @@ internal sealed class EndpointOrderingFilter : IDocumentFilter
 
     private static string GetRelationshipName(KeyValuePair<string, OpenApiPathItem> entry)
     {
-        Match match = RelationshipNameInUrlPattern.Match(entry.Key);
+        Match match = RelationshipNameInUrlRegex().Match(entry.Key);
 
-        return match.Success ? match.Groups[1].Value : string.Empty;
+        return match.Success ? match.Groups["RelationshipName"].Value : string.Empty;
     }
+
+#if NET6_0
+    private static Regex RelationshipNameInUrlRegex()
+    {
+        return RelationshipNameInUrlPattern;
+    }
+#else
+    [GeneratedRegex(PatternText, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture)]
+    private static partial Regex RelationshipNameInUrlRegex();
+#endif
 }
