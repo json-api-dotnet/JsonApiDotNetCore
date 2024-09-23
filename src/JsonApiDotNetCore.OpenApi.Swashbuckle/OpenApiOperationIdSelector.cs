@@ -109,7 +109,7 @@ internal sealed class OpenApiOperationIdSelector
             .Replace("[Method]", method)
             .Replace("[PrimaryResourceName]", resourceType?.PublicName.Singularize())
             .Replace("[RelationshipName]", relationshipName)
-            .ToPascalCase();
+            .Pascalize();
 
         // @formatter:wrap_before_first_method_call true restore
         // @formatter:wrap_chained_method_calls restore
