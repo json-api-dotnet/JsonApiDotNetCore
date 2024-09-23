@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Resources;
 using System.Text.Json;
 using FluentAssertions;
 using TestBuildingBlocks;
@@ -39,7 +40,8 @@ public sealed class LegacyTests : OpenApiTestContext<LegacyStartup<LegacyIntegra
 
         if (stream == null)
         {
-            throw new Exception($"Failed to load embedded resource '{embeddedResourceName}'. Set Build Action to Embedded Resource in properties.");
+            throw new MissingManifestResourceException(
+                $"Failed to load embedded resource '{embeddedResourceName}'. Set Build Action to Embedded Resource in properties.");
         }
 
         using var reader = new StreamReader(stream);
