@@ -184,7 +184,7 @@ internal sealed class DataSchemaGenerator
 
         builder.SetMembersOfAttributes(fullSchemaForAttributes, forRequestSchema, schemaRepository);
 
-        if (!fullSchemaForAttributes.Properties.Any())
+        if (fullSchemaForAttributes.Properties.Count == 0)
         {
             fullSchemaForResourceData.Properties.Remove(JsonApiPropertyName.Attributes);
         }
@@ -202,7 +202,7 @@ internal sealed class DataSchemaGenerator
 
         builder.SetMembersOfRelationships(fullSchemaForRelationships, forRequestSchema, schemaRepository);
 
-        if (!fullSchemaForRelationships.Properties.Any())
+        if (fullSchemaForRelationships.Properties.Count == 0)
         {
             fullSchemaForResourceData.Properties.Remove(JsonApiPropertyName.Relationships);
         }

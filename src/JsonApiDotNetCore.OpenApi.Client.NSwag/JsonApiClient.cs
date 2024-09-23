@@ -153,7 +153,7 @@ public abstract class JsonApiClient : IJsonApiClient
                 Type documentType = document.GetType();
                 _documentsByType[documentType].Remove(document);
 
-                if (!_documentsByType[documentType].Any())
+                if (_documentsByType[documentType].Count == 0)
                 {
                     _documentsByType.Remove(documentType);
                 }

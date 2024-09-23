@@ -71,7 +71,7 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
 
         if (IsSecondaryOrRelationshipEndpoint(endpoint))
         {
-            if (!resourceType.Relationships.Any())
+            if (resourceType.Relationships.Count == 0)
             {
                 return true;
             }

@@ -52,7 +52,7 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
                 .. AddJsonApiMetadataToAction(endpoint, endpointMetadataContainer.ResponseMetadata)
             ];
 
-            if (replacementDescriptorsForEndpoint.Any())
+            if (replacementDescriptorsForEndpoint.Count > 0)
             {
                 newDescriptors.InsertRange(newDescriptors.IndexOf(endpoint) - 1, replacementDescriptorsForEndpoint);
                 newDescriptors.Remove(endpoint);
