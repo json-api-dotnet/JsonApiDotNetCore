@@ -94,7 +94,7 @@ internal sealed class FakeHttpClientWrapper : IDisposable
             // Capture the request body here, before it becomes inaccessible because the request has been disposed.
             if (request.Content != null)
             {
-                using Stream stream = request.Content.ReadAsStream();
+                using Stream stream = request.Content.ReadAsStream(cancellationToken);
                 using var reader = new StreamReader(stream, Encoding.UTF8);
                 RequestBody = reader.ReadToEnd();
             }
