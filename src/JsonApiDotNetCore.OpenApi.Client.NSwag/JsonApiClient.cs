@@ -147,10 +147,8 @@ public abstract class JsonApiClient : IJsonApiClient
 
         public void UnRegisterDocument(object document)
         {
-            if (_alwaysIncludedAttributesByDocument.ContainsKey(document))
+            if (_alwaysIncludedAttributesByDocument.Remove(document))
             {
-                _alwaysIncludedAttributesByDocument.Remove(document);
-
                 Type documentType = document.GetType();
                 _documentsByType[documentType].Remove(document);
 
