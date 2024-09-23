@@ -28,6 +28,7 @@ public abstract class JsonApiClient : IJsonApiClient
         where TRequestDocument : class
     {
         ArgumentGuard.NotNull(requestDocument);
+        ArgumentGuard.NotNull(alwaysIncludedAttributeSelectors);
 
         HashSet<string> attributeNames = [];
 
