@@ -10,7 +10,7 @@ namespace OpenApiTests.RestrictedControllers;
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public sealed class RestrictionFakers
 {
-    private static readonly IList<bool?> NullableBooleanValues =
+    private static readonly bool?[] NullableBooleanValues =
     [
         true,
         false,

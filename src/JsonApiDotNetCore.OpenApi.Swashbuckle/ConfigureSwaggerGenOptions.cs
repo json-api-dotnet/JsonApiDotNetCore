@@ -63,7 +63,7 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
         options.DocumentFilter<UnusedComponentSchemaCleaner>();
     }
 
-    private IEnumerable<Type> SelectDerivedTypes(Type baseType)
+    private List<Type> SelectDerivedTypes(Type baseType)
     {
         if (baseType == typeof(ResourceData))
         {
@@ -103,7 +103,7 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
         return derivedTypes;
     }
 
-    private static IList<string> GetOpenApiOperationTags(ApiDescription description, IControllerResourceMapping controllerResourceMapping)
+    private static List<string> GetOpenApiOperationTags(ApiDescription description, IControllerResourceMapping controllerResourceMapping)
     {
         MethodInfo actionMethod = description.ActionDescriptor.GetActionMethod();
         ResourceType? resourceType = controllerResourceMapping.GetResourceTypeForController(actionMethod.ReflectedType);

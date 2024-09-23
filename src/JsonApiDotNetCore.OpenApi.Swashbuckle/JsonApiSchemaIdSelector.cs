@@ -27,7 +27,7 @@ internal sealed class JsonApiSchemaIdSelector
     private const string RelationshipIdentifierSchemaIdTemplate = "[ResourceName] [RelationshipName] Relationship Identifier";
     private const string RelationshipNameSchemaIdTemplate = "[ResourceName] [RelationshipName] Relationship Name";
 
-    private static readonly IDictionary<Type, string> SchemaTypeToTemplateMap = new Dictionary<Type, string>
+    private static readonly Dictionary<Type, string> SchemaTypeToTemplateMap = new()
     {
         [typeof(CreateResourceRequestDocument<>)] = "Create [ResourceName] Request Document",
         [typeof(UpdateResourceRequestDocument<>)] = "Update [ResourceName] Request Document",

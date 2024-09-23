@@ -19,7 +19,7 @@ internal sealed class OpenApiOperationIdSelector
     private const string RelationshipIdTemplate = $"{SecondaryResourceIdTemplate} Relationship";
     private const string AtomicOperationsIdTemplate = "[Method] Operations";
 
-    private static readonly IDictionary<Type, string> SchemaOpenTypeToOpenApiOperationIdTemplateMap = new Dictionary<Type, string>
+    private static readonly Dictionary<Type, string> SchemaOpenTypeToOpenApiOperationIdTemplateMap = new()
     {
         [typeof(ResourceCollectionResponseDocument<>)] = ResourceCollectionIdTemplate,
         [typeof(PrimaryResourceResponseDocument<>)] = ResourceIdTemplate,

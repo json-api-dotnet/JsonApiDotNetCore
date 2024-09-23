@@ -29,7 +29,7 @@ public abstract class JsonApiClient : IJsonApiClient
     {
         ArgumentGuard.NotNull(requestDocument);
 
-        var attributeNames = new HashSet<string>();
+        HashSet<string> attributeNames = [];
 
         foreach (Expression<Func<TAttributesObject, object?>> selector in alwaysIncludedAttributeSelectors)
         {
@@ -96,10 +96,10 @@ public abstract class JsonApiClient : IJsonApiClient
     /// </summary>
     private sealed class AlwaysIncludedAttributes
     {
-        private readonly ISet<string> _propertyNames;
+        private readonly HashSet<string> _propertyNames;
         private readonly Type _attributesObjectType;
 
-        public AlwaysIncludedAttributes(ISet<string> propertyNames, Type attributesObjectType)
+        public AlwaysIncludedAttributes(HashSet<string> propertyNames, Type attributesObjectType)
         {
             ArgumentGuard.NotNull(propertyNames);
             ArgumentGuard.NotNull(attributesObjectType);

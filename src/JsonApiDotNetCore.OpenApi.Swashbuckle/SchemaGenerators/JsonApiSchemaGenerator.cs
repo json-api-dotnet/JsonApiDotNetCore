@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators;
 internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
 {
     private readonly ResourceIdSchemaGenerator _resourceIdSchemaGenerator;
-    private readonly ICollection<BodySchemaGenerator> _bodySchemaGenerators;
+    private readonly BodySchemaGenerator[] _bodySchemaGenerators;
 
     public JsonApiSchemaGenerator(ResourceIdSchemaGenerator resourceIdSchemaGenerator, IEnumerable<BodySchemaGenerator> bodySchemaGenerators)
     {
@@ -19,7 +19,7 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         ArgumentGuard.NotNull(bodySchemaGenerators);
 
         _resourceIdSchemaGenerator = resourceIdSchemaGenerator;
-        _bodySchemaGenerators = bodySchemaGenerators.ToArray();
+        _bodySchemaGenerators = bodySchemaGenerators as BodySchemaGenerator[] ?? bodySchemaGenerators.ToArray();
     }
 
     public OpenApiSchema GenerateSchema(Type modelType, SchemaRepository schemaRepository, MemberInfo? memberInfo = null, ParameterInfo? parameterInfo = null,

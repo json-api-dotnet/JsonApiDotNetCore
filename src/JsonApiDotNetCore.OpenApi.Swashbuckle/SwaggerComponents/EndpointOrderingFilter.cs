@@ -24,8 +24,8 @@ internal sealed partial class EndpointOrderingFilter : IDocumentFilter
         ArgumentGuard.NotNull(swaggerDoc);
         ArgumentGuard.NotNull(context);
 
-        List<KeyValuePair<string, OpenApiPathItem>> endpointsInOrder = swaggerDoc.Paths.OrderBy(GetPrimaryResourcePublicName)
-            .ThenBy(GetRelationshipName).ThenBy(IsSecondaryEndpoint).ToList();
+        KeyValuePair<string, OpenApiPathItem>[] endpointsInOrder = swaggerDoc.Paths.OrderBy(GetPrimaryResourcePublicName)
+            .ThenBy(GetRelationshipName).ThenBy(IsSecondaryEndpoint).ToArray();
 
         swaggerDoc.Paths.Clear();
 

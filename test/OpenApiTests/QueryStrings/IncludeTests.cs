@@ -36,7 +36,7 @@ public sealed class IncludeTests : IClassFixture<OpenApiTestContext<OpenApiStart
         // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>
         {
-            var discriminatorRefIds = new List<string>();
+            List<string> discriminatorRefIds = [];
 
             schemasElement.Should().ContainPath("dataInResponse.discriminator").With(discriminatorElement =>
             {

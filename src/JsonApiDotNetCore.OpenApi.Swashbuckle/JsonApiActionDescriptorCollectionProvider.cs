@@ -39,7 +39,7 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
     private ActionDescriptorCollection GetActionDescriptors()
     {
         List<ActionDescriptor> newDescriptors = _defaultProvider.ActionDescriptors.Items.ToList();
-        List<ActionDescriptor> endpoints = newDescriptors.Where(IsVisibleJsonApiEndpoint).ToList();
+        ActionDescriptor[] endpoints = newDescriptors.Where(IsVisibleJsonApiEndpoint).ToArray();
 
         foreach (ActionDescriptor endpoint in endpoints)
         {
@@ -69,7 +69,7 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
         return descriptor is ControllerActionDescriptor controllerAction && controllerAction.Properties.ContainsKey(typeof(ApiDescriptionActionData));
     }
 
-    private static IEnumerable<ActionDescriptor> AddJsonApiMetadataToAction(ActionDescriptor endpoint, IJsonApiEndpointMetadata? jsonApiEndpointMetadata)
+    private static List<ActionDescriptor> AddJsonApiMetadataToAction(ActionDescriptor endpoint, IJsonApiEndpointMetadata? jsonApiEndpointMetadata)
     {
         switch (jsonApiEndpointMetadata)
         {
@@ -133,10 +133,10 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
             contentType is HeaderConstants.MediaType or HeaderConstants.AtomicOperationsMediaType or HeaderConstants.RelaxedAtomicOperationsMediaType);
     }
 
-    private static IEnumerable<ActionDescriptor> Expand(ActionDescriptor genericEndpoint, NonPrimaryEndpointMetadata metadata,
+    private static List<ActionDescriptor> Expand(ActionDescriptor genericEndpoint, NonPrimaryEndpointMetadata metadata,
         Action<ActionDescriptor, Type, string> expansionCallback)
     {
-        var expansion = new List<ActionDescriptor>();
+        List<ActionDescriptor> expansion = [];
 
         foreach ((string relationshipName, Type documentType) in metadata.DocumentTypesByRelationshipName)
         {

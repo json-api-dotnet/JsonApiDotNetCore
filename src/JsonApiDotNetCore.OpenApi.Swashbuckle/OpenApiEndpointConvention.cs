@@ -144,7 +144,7 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
         }
     }
 
-    private static IEnumerable<HttpStatusCode> GetSuccessStatusCodesForEndpoint(JsonApiEndpoint endpoint)
+    private static HttpStatusCode[] GetSuccessStatusCodesForEndpoint(JsonApiEndpoint endpoint)
     {
         return endpoint switch
         {
@@ -176,7 +176,7 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
         };
     }
 
-    private IEnumerable<HttpStatusCode> GetErrorStatusCodesForEndpoint(JsonApiEndpoint endpoint, ResourceType? resourceType)
+    private HttpStatusCode[] GetErrorStatusCodesForEndpoint(JsonApiEndpoint endpoint, ResourceType? resourceType)
     {
         // Condition doesn't apply to atomic operations, because Forbidden is also used when an operation is not accessible.
         ClientIdGenerationMode clientIdGeneration = resourceType?.ClientIdGeneration ?? _options.ClientIdGeneration;
@@ -212,12 +212,12 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
                 HttpStatusCode.UnprocessableEntity
             ],
             JsonApiEndpoint.DeleteResource => [HttpStatusCode.NotFound],
-            JsonApiEndpoint.PostRelationship or JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship => new[]
-            {
+            JsonApiEndpoint.PostRelationship or JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship =>
+            [
                 HttpStatusCode.BadRequest,
                 HttpStatusCode.NotFound,
                 HttpStatusCode.Conflict
-            },
+            ],
             JsonApiEndpoint.PostOperations =>
             [
                 HttpStatusCode.BadRequest,

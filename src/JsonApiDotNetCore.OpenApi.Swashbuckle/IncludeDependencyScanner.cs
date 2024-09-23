@@ -12,7 +12,7 @@ internal sealed class IncludeDependencyScanner
     {
         ArgumentGuard.NotNull(resourceType);
 
-        var resourceTypesFound = new HashSet<ResourceType>();
+        HashSet<ResourceType> resourceTypesFound = [];
         AddTypesFromRelationships(resourceType.Relationships, resourceTypesFound);
         return resourceTypesFound;
     }

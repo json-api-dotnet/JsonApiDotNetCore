@@ -14,7 +14,7 @@ public sealed class PartialAttributeSerializationLifetimeTests
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
+        var apiClient = new LegacyClient(wrapper.HttpClient);
 
         const string airplaneId = "XUuiP";
 
@@ -58,7 +58,7 @@ public sealed class PartialAttributeSerializationLifetimeTests
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
+        var apiClient = new LegacyClient(wrapper.HttpClient);
 
         const string airplaneId = "XUuiP";
 
@@ -107,7 +107,7 @@ public sealed class PartialAttributeSerializationLifetimeTests
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
+        var apiClient = new LegacyClient(wrapper.HttpClient);
 
         const string airplaneId1 = "XUuiP";
 
@@ -164,7 +164,7 @@ public sealed class PartialAttributeSerializationLifetimeTests
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
+        var apiClient = new LegacyClient(wrapper.HttpClient);
 
         const string airplaneId = "XUuiP";
 
@@ -209,7 +209,7 @@ public sealed class PartialAttributeSerializationLifetimeTests
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
+        var apiClient = new LegacyClient(wrapper.HttpClient);
 
         const string airplaneId1 = "XUuiP";
 
@@ -262,7 +262,7 @@ public sealed class PartialAttributeSerializationLifetimeTests
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
+        var apiClient = new LegacyClient(wrapper.HttpClient);
 
         const string airplaneId1 = "XUuiP";
 
@@ -326,7 +326,7 @@ public sealed class PartialAttributeSerializationLifetimeTests
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
+        var apiClient = new LegacyClient(wrapper.HttpClient);
 
         var requestDocument1 = new CreateAirplaneRequestDocument
         {
@@ -390,7 +390,7 @@ public sealed class PartialAttributeSerializationLifetimeTests
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
+        var apiClient = new LegacyClient(wrapper.HttpClient);
 
         const string airplaneId1 = "XUuiP";
 
