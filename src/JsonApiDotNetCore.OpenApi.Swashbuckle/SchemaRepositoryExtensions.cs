@@ -7,9 +7,9 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 internal static class SchemaRepositoryExtensions
 {
     private const string ReservedIdsFieldName = "_reservedIds";
-    private static readonly FieldInfo ReservedIdsField;
+    private static readonly FieldInfo ReservedIdsField = GetReservedIdsField();
 
-    static SchemaRepositoryExtensions()
+    private static FieldInfo GetReservedIdsField()
     {
         FieldInfo? field = typeof(SchemaRepository).GetField(ReservedIdsFieldName, BindingFlags.Instance | BindingFlags.NonPublic);
 
@@ -25,7 +25,7 @@ internal static class SchemaRepositoryExtensions
                 $"in type '{typeof(SchemaRepository).FullName}' in assembly '{typeof(SchemaRepository).Assembly.FullName}'.");
         }
 
-        ReservedIdsField = field;
+        return field;
     }
 
     public static void ReplaceSchemaId(this SchemaRepository schemaRepository, Type oldSchemaType, string newSchemaId)
