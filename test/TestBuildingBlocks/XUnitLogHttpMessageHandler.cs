@@ -6,8 +6,9 @@ namespace TestBuildingBlocks;
 /// <summary>
 /// Writes incoming and outgoing HTTP messages to the test output window.
 /// </summary>
-public sealed class XUnitLogHttpMessageHandler : DelegatingHandler
+public sealed partial class XUnitLogHttpMessageHandler : DelegatingHandler
 {
+    private static readonly string BodySeparator = $"{Environment.NewLine}{Environment.NewLine}";
     private readonly ILogger<XUnitLogHttpMessageHandler> _logger;
 
     public XUnitLogHttpMessageHandler(ITestOutputHelper testOutputHelper)
@@ -23,11 +24,14 @@ public sealed class XUnitLogHttpMessageHandler : DelegatingHandler
         {
             string? requestBody = request.Content == null ? null : await request.Content.ReadAsStringAsync(cancellationToken);
 
-            string requestMessage = string.IsNullOrEmpty(requestBody)
-                ? $"--> {request}"
-                : $"--> {request}{Environment.NewLine}{Environment.NewLine}{requestBody}";
-
-            _logger.LogDebug(requestMessage);
+            if (!string.IsNullOrEmpty(requestBody))
+            {
+                LogRequestMessage(request.ToString(), BodySeparator, requestBody);
+            }
+            else
+            {
+                LogRequestMessage(request.ToString(), string.Empty, string.Empty);
+            }
         }
 
         HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
@@ -36,11 +40,14 @@ public sealed class XUnitLogHttpMessageHandler : DelegatingHandler
         {
             string responseBody = await response.Content.ReadAsStringAsync(cancellationToken);
 
-            string responseMessage = string.IsNullOrEmpty(responseBody)
-                ? $"<-- {response}"
-                : $"<-- {response}{Environment.NewLine}{Environment.NewLine}{responseBody}";
-
-            _logger.LogDebug(responseMessage);
+            if (!string.IsNullOrEmpty(responseBody))
+            {
+                LogResponseMessage(response.ToString(), BodySeparator, responseBody);
+            }
+            else
+            {
+                LogResponseMessage(response.ToString(), string.Empty, string.Empty);
+            }
         }
 
         return response;
@@ -52,4 +59,10 @@ public sealed class XUnitLogHttpMessageHandler : DelegatingHandler
         var loggerFactory = new LoggerFactory([loggerProvider]);
         return loggerFactory.CreateLogger<XUnitLogHttpMessageHandler>();
     }
+
+    [LoggerMessage(Level = LogLevel.Debug, SkipEnabledCheck = true, Message = "--> {RequestMessage}{Separator}{RequestBody}")]
+    private partial void LogRequestMessage(string requestMessage, string separator, string requestBody);
+
+    [LoggerMessage(Level = LogLevel.Debug, SkipEnabledCheck = true, Message = "<-- {ResponseMessage}{Separator}{ResponseBody}")]
+    private partial void LogResponseMessage(string responseMessage, string separator, string responseBody);
 }
