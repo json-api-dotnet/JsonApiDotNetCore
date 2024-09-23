@@ -8,7 +8,9 @@ namespace OpenApiTests.RestrictedControllers;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "OpenApiTests.RestrictedControllers", GenerateControllerEndpoints = JsonApiEndpoints.None)]
+#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
 public sealed class DataStream : Identifiable<long>
+#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
 {
     [Attr]
     [Required]
