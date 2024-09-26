@@ -6,9 +6,9 @@ namespace DapperTests.IntegrationTests;
 internal sealed class SqlTextAdapter(DatabaseProvider databaseProvider)
 {
 #if NET6_0
-    private const RegexOptions Options = RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture;
+    private const RegexOptions Options = RegexOptions.Compiled | RegexOptions.CultureInvariant;
 #else
-    private const RegexOptions Options = RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.NonBacktracking;
+    private const RegexOptions Options = RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.NonBacktracking;
 #endif
 
     private static readonly Dictionary<Regex, string> SqlServerReplacements = new()
