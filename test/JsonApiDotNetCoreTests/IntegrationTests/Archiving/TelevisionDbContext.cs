@@ -5,7 +5,8 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class TelevisionDbContext(DbContextOptions<TelevisionDbContext> options) : TestableDbContext(options)
+public sealed class TelevisionDbContext(DbContextOptions<TelevisionDbContext> options)
+    : TestableDbContext(options)
 {
     public DbSet<TelevisionNetwork> Networks => Set<TelevisionNetwork>();
     public DbSet<TelevisionStation> Stations => Set<TelevisionStation>();

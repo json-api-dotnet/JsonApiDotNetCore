@@ -6,7 +6,8 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-internal sealed class AssignIdToRgbColorDefinition(IResourceGraph resourceGraph) : JsonApiResourceDefinition<RgbColor, string?>(resourceGraph)
+internal sealed class AssignIdToRgbColorDefinition(IResourceGraph resourceGraph)
+    : JsonApiResourceDefinition<RgbColor, string?>(resourceGraph)
 {
     internal const string DefaultId = "0x000000";
     internal const string DefaultName = "Black";

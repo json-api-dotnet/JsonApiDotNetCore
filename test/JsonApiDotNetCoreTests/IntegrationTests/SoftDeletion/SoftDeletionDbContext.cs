@@ -7,7 +7,8 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class SoftDeletionDbContext(DbContextOptions<SoftDeletionDbContext> options) : TestableDbContext(options)
+public sealed class SoftDeletionDbContext(DbContextOptions<SoftDeletionDbContext> options)
+    : TestableDbContext(options)
 {
     public DbSet<Company> Companies => Set<Company>();
     public DbSet<Department> Departments => Set<Department>();

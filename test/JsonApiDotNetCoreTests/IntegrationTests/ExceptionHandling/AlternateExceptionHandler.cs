@@ -5,7 +5,8 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling;
 
-public sealed class AlternateExceptionHandler(ILoggerFactory loggerFactory, IJsonApiOptions options) : ExceptionHandler(loggerFactory, options)
+public sealed class AlternateExceptionHandler(ILoggerFactory loggerFactory, IJsonApiOptions options)
+    : ExceptionHandler(loggerFactory, options)
 {
     protected override LogLevel GetLogLevel(Exception exception)
     {

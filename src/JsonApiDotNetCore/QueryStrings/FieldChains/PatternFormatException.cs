@@ -6,7 +6,8 @@ namespace JsonApiDotNetCore.QueryStrings.FieldChains;
 /// The exception that is thrown when the format of a <see cref="FieldChainPattern" /> is invalid.
 /// </summary>
 [PublicAPI]
-public sealed class PatternFormatException(string pattern, int position, string message) : FormatException(message)
+public sealed class PatternFormatException(string pattern, int position, string message)
+    : FormatException(message)
 {
     /// <summary>
     /// Gets the text of the invalid pattern.

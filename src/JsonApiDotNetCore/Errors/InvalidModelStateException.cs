@@ -17,8 +17,8 @@ namespace JsonApiDotNetCore.Errors;
 [PublicAPI]
 public sealed class InvalidModelStateException(
     IReadOnlyDictionary<string, ModelStateEntry?> modelState, Type modelType, bool includeExceptionStackTraceInErrors, IResourceGraph resourceGraph,
-    Func<Type, int, Type?>? getCollectionElementTypeCallback = null) : JsonApiException(FromModelStateDictionary(modelState, modelType, resourceGraph,
-    includeExceptionStackTraceInErrors, getCollectionElementTypeCallback))
+    Func<Type, int, Type?>? getCollectionElementTypeCallback = null)
+    : JsonApiException(FromModelStateDictionary(modelState, modelType, resourceGraph, includeExceptionStackTraceInErrors, getCollectionElementTypeCallback))
 {
     private static List<ErrorObject> FromModelStateDictionary(IReadOnlyDictionary<string, ModelStateEntry?> modelState, Type modelType,
         IResourceGraph resourceGraph, bool includeExceptionStackTraceInErrors, Func<Type, int, Type?>? getCollectionElementTypeCallback)
@@ -316,8 +316,8 @@ public sealed class InvalidModelStateException(
     /// </summary>
     private sealed class ArrayIndexerSegment(
         int arrayIndex, Type modelType, bool isInComplexType, string nextKey, string? sourcePointer, ModelStateKeySegment? parent,
-        Func<Type, int, Type?>? getCollectionElementTypeCallback) : ModelStateKeySegment(modelType, isInComplexType, nextKey, sourcePointer, parent,
-        getCollectionElementTypeCallback)
+        Func<Type, int, Type?>? getCollectionElementTypeCallback)
+        : ModelStateKeySegment(modelType, isInComplexType, nextKey, sourcePointer, parent, getCollectionElementTypeCallback)
     {
         private static readonly CollectionConverter CollectionConverter = new();
 

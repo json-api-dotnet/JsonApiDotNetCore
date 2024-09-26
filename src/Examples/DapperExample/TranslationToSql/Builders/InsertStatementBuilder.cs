@@ -7,7 +7,8 @@ using JsonApiDotNetCore.Resources;
 
 namespace DapperExample.TranslationToSql.Builders;
 
-internal sealed class InsertStatementBuilder(IDataModelService dataModelService) : StatementBuilder(dataModelService)
+internal sealed class InsertStatementBuilder(IDataModelService dataModelService)
+    : StatementBuilder(dataModelService)
 {
     public InsertNode Build(ResourceType resourceType, IReadOnlyDictionary<string, object?> columnsToSet)
     {

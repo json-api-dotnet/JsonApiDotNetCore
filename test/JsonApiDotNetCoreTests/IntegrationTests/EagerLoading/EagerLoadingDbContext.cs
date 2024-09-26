@@ -7,7 +7,8 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class EagerLoadingDbContext(DbContextOptions<EagerLoadingDbContext> options) : TestableDbContext(options)
+public sealed class EagerLoadingDbContext(DbContextOptions<EagerLoadingDbContext> options)
+    : TestableDbContext(options)
 {
     public DbSet<State> States => Set<State>();
     public DbSet<Street> Streets => Set<Street>();

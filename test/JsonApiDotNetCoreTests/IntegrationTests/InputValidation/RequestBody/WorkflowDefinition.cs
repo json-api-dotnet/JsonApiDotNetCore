@@ -9,7 +9,8 @@ using JsonApiDotNetCore.Serialization.Objects;
 namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class WorkflowDefinition(IResourceGraph resourceGraph) : JsonApiResourceDefinition<Workflow, Guid>(resourceGraph)
+public sealed class WorkflowDefinition(IResourceGraph resourceGraph)
+    : JsonApiResourceDefinition<Workflow, Guid>(resourceGraph)
 {
     private static readonly Dictionary<WorkflowStage, WorkflowStage[]> StageTransitionTable = new()
     {
