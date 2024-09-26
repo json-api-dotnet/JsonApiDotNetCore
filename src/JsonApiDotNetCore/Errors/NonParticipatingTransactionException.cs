@@ -8,8 +8,9 @@ namespace JsonApiDotNetCore.Errors;
 /// The error that is thrown when a repository does not participate in the overarching transaction during an atomic:operations request.
 /// </summary>
 [PublicAPI]
-public sealed class NonParticipatingTransactionException() : JsonApiException(new ErrorObject(HttpStatusCode.UnprocessableEntity)
-{
-    Title = "Unsupported combination of resource types in atomic:operations request.",
-    Detail = "All operations need to participate in a single shared transaction, which is not the case for this request."
-});
+public sealed class NonParticipatingTransactionException()
+    : JsonApiException(new ErrorObject(HttpStatusCode.UnprocessableEntity)
+    {
+        Title = "Unsupported combination of resource types in atomic:operations request.",
+        Detail = "All operations need to participate in a single shared transaction, which is not the case for this request."
+    });

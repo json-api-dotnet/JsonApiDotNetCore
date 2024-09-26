@@ -7,7 +7,8 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class DefaultBehaviorDbContext(DbContextOptions<DefaultBehaviorDbContext> options) : TestableDbContext(options)
+public sealed class DefaultBehaviorDbContext(DbContextOptions<DefaultBehaviorDbContext> options)
+    : TestableDbContext(options)
 {
     public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<Order> Orders => Set<Order>();

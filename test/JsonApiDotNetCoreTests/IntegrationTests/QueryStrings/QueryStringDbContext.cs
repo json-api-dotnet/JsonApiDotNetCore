@@ -7,7 +7,8 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class QueryStringDbContext(DbContextOptions<QueryStringDbContext> options) : TestableDbContext(options)
+public sealed class QueryStringDbContext(DbContextOptions<QueryStringDbContext> options)
+    : TestableDbContext(options)
 {
     public DbSet<Blog> Blogs => Set<Blog>();
     public DbSet<BlogPost> Posts => Set<BlogPost>();

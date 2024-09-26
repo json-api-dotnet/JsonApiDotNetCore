@@ -13,8 +13,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling;
 public sealed class ConsumerArticleService(
     IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext, IJsonApiOptions options,
     ILoggerFactory loggerFactory, IJsonApiRequest request, IResourceChangeTracker<ConsumerArticle> resourceChangeTracker,
-    IResourceDefinitionAccessor resourceDefinitionAccessor) : JsonApiResourceService<ConsumerArticle, int>(repositoryAccessor, queryLayerComposer,
-    paginationContext, options, loggerFactory, request, resourceChangeTracker, resourceDefinitionAccessor)
+    IResourceDefinitionAccessor resourceDefinitionAccessor)
+    : JsonApiResourceService<ConsumerArticle, int>(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request,
+        resourceChangeTracker, resourceDefinitionAccessor)
 {
     private const string SupportEmailAddress = "company@email.com";
     internal const string UnavailableArticlePrefix = "X";

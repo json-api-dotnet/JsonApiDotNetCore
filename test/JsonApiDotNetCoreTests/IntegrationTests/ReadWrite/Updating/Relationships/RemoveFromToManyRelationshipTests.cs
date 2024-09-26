@@ -1142,7 +1142,8 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
     }
 
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    private sealed class RemoveExtraFromWorkItemDefinition(IResourceGraph resourceGraph) : JsonApiResourceDefinition<WorkItem, int>(resourceGraph)
+    private sealed class RemoveExtraFromWorkItemDefinition(IResourceGraph resourceGraph)
+        : JsonApiResourceDefinition<WorkItem, int>(resourceGraph)
     {
         // Enables to verify that not the full relationship was loaded upfront.
         public HashSet<UserAccount> PreloadedSubscribers { get; } = new(IdentifiableComparer.Instance);

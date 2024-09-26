@@ -249,7 +249,8 @@ public sealed class FilterParseTests : BaseParseTests
         action.Should().ThrowExactly<InvalidOperationException>().WithMessage("No resource type is currently in scope. Call Parse() first.");
     }
 
-    private sealed class NotDisposingFilterParser(IResourceFactory resourceFactory) : FilterParser(resourceFactory)
+    private sealed class NotDisposingFilterParser(IResourceFactory resourceFactory)
+        : FilterParser(resourceFactory)
     {
         protected override FilterExpression ParseFilter()
         {
@@ -260,7 +261,8 @@ public sealed class FilterParseTests : BaseParseTests
         }
     }
 
-    private sealed class ResourceTypeAccessingFilterParser(IResourceFactory resourceFactory) : FilterParser(resourceFactory)
+    private sealed class ResourceTypeAccessingFilterParser(IResourceFactory resourceFactory)
+        : FilterParser(resourceFactory)
     {
         protected override void Tokenize(string source)
         {

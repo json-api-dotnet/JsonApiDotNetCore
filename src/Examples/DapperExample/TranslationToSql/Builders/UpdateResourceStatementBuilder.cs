@@ -7,7 +7,8 @@ using JsonApiDotNetCore.Queries.Expressions;
 
 namespace DapperExample.TranslationToSql.Builders;
 
-internal sealed class UpdateResourceStatementBuilder(IDataModelService dataModelService) : StatementBuilder(dataModelService)
+internal sealed class UpdateResourceStatementBuilder(IDataModelService dataModelService)
+    : StatementBuilder(dataModelService)
 {
     public UpdateNode Build(ResourceType resourceType, IReadOnlyDictionary<string, object?> columnsToUpdate, params object[] idValues)
     {
