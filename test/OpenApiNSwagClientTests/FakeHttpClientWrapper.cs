@@ -75,14 +75,16 @@ internal sealed class FakeHttpClientWrapper : IDisposable
 
     private sealed class FakeHttpMessageHandler(HttpResponseMessage response) : HttpMessageHandler
     {
+        private HttpResponseMessage _response = response;
+
         public HttpRequestMessage? Request { get; private set; }
         public string? RequestBody { get; private set; }
 
-        public void SetResponse(HttpResponseMessage newResponse)
+        public void SetResponse(HttpResponseMessage response)
         {
-            ArgumentGuard.NotNull(newResponse);
+            ArgumentGuard.NotNull(response);
 
-            response = newResponse;
+            _response = response;
         }
 
         protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -97,12 +99,12 @@ internal sealed class FakeHttpClientWrapper : IDisposable
                 RequestBody = reader.ReadToEnd();
             }
 
-            return response;
+            return _response;
         }
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            Send(request, cancellationToken);
+            HttpResponseMessage response = Send(request, cancellationToken);
             return Task.FromResult(response);
         }
     }
