@@ -36,7 +36,10 @@ internal sealed class FakeHttpClientWrapper : IDisposable
 
     public static FakeHttpClientWrapper Create(HttpStatusCode statusCode, string? responseBody)
     {
+#pragma warning disable CA2000 // Dispose objects before losing scope
+        // Justification: FakeHttpMessageHandler takes ownership, which is owned by FakeHttpClientWrapper.
         HttpResponseMessage response = CreateResponse(statusCode, responseBody);
+#pragma warning restore CA2000 // Dispose objects before losing scope
         var handler = new FakeHttpMessageHandler(response);
 
         var httpClient = new HttpClient(handler)
@@ -106,6 +109,12 @@ internal sealed class FakeHttpClientWrapper : IDisposable
         {
             HttpResponseMessage response = Send(request, cancellationToken);
             return Task.FromResult(response);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _response.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

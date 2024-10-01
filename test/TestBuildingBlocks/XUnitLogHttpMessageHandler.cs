@@ -9,13 +9,22 @@ namespace TestBuildingBlocks;
 public sealed partial class XUnitLogHttpMessageHandler : DelegatingHandler
 {
     private static readonly string BodySeparator = $"{Environment.NewLine}{Environment.NewLine}";
+    private readonly LoggerFactory _loggerFactory;
     private readonly ILogger<XUnitLogHttpMessageHandler> _logger;
 
     public XUnitLogHttpMessageHandler(ITestOutputHelper testOutputHelper)
     {
         ArgumentNullException.ThrowIfNull(testOutputHelper);
 
-        _logger = CreateLogger(testOutputHelper);
+#pragma warning disable CA2000 // Dispose objects before losing scope
+        // Justification: LoggerFactory.AddProvider takes ownership (passing the provider as a constructor parameter does not).
+        var loggerProvider = new XUnitLoggerProvider(testOutputHelper, null, LogOutputFields.Message);
+#pragma warning restore CA2000 // Dispose objects before losing scope
+
+        _loggerFactory = new LoggerFactory();
+        _loggerFactory.AddProvider(loggerProvider);
+
+        _logger = _loggerFactory.CreateLogger<XUnitLogHttpMessageHandler>();
     }
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -53,11 +62,10 @@ public sealed partial class XUnitLogHttpMessageHandler : DelegatingHandler
         return response;
     }
 
-    private static ILogger<XUnitLogHttpMessageHandler> CreateLogger(ITestOutputHelper testOutputHelper)
+    protected override void Dispose(bool disposing)
     {
-        var loggerProvider = new XUnitLoggerProvider(testOutputHelper, null, LogOutputFields.Message);
-        var loggerFactory = new LoggerFactory([loggerProvider]);
-        return loggerFactory.CreateLogger<XUnitLogHttpMessageHandler>();
+        base.Dispose(disposing);
+        _loggerFactory.Dispose();
     }
 
     [LoggerMessage(Level = LogLevel.Debug, SkipEnabledCheck = true, Message = "--> {RequestMessage}{Separator}{RequestBody}")]
