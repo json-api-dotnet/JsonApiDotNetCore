@@ -54,7 +54,7 @@ public sealed class NoModelStateValidationTests : IClassFixture<IntegrationTestC
     public async Task Can_update_resource_with_invalid_attribute_value()
     {
         // Arrange
-        SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
+        SystemDirectory existingDirectory = _fakers.SystemDirectory.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -90,8 +90,8 @@ public sealed class NoModelStateValidationTests : IClassFixture<IntegrationTestC
     public async Task Cannot_clear_required_OneToOne_relationship_at_primary_endpoint()
     {
         // Arrange
-        SystemVolume existingVolume = _fakers.SystemVolume.Generate();
-        existingVolume.RootDirectory = _fakers.SystemDirectory.Generate();
+        SystemVolume existingVolume = _fakers.SystemVolume.GenerateOne();
+        existingVolume.RootDirectory = _fakers.SystemDirectory.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

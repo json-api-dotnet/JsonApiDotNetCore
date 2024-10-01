@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 using System;
 namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
 {
+    [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.18.0")]
     #pragma warning disable CS1591
     public enum LanguageResourceType
     #pragma warning restore CS1591

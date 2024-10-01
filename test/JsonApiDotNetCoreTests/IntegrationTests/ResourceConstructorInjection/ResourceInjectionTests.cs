@@ -33,7 +33,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
         clock.UtcNow = 27.January(2021).AsUtc();
 
-        GiftCertificate certificate = _fakers.GiftCertificate.Generate();
+        GiftCertificate certificate = _fakers.GiftCertificate.GenerateOne();
         certificate.IssueDate = 28.January(2020).AsUtc();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -63,7 +63,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
         clock.UtcNow = 27.January(2021).At(13, 53).AsUtc();
 
-        List<PostOffice> postOffices = _fakers.PostOffice.Generate(2);
+        List<PostOffice> postOffices = _fakers.PostOffice.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -93,8 +93,8 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
         clock.UtcNow = 27.January(2021).At(13, 53).AsUtc();
 
-        GiftCertificate certificate = _fakers.GiftCertificate.Generate();
-        certificate.Issuer = _fakers.PostOffice.Generate();
+        GiftCertificate certificate = _fakers.GiftCertificate.GenerateOne();
+        certificate.Issuer = _fakers.PostOffice.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -123,7 +123,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
         clock.UtcNow = 19.March(1998).At(6, 34).AsUtc();
 
-        PostOffice existingOffice = _fakers.PostOffice.Generate();
+        PostOffice existingOffice = _fakers.PostOffice.GenerateOne();
 
         DateTimeOffset newIssueDate = 18.March(1997).AsUtc();
 
@@ -205,10 +205,10 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
         clock.UtcNow = 19.March(1998).At(6, 34).AsUtc();
 
-        PostOffice existingOffice = _fakers.PostOffice.Generate();
-        existingOffice.GiftCertificates = _fakers.GiftCertificate.Generate(1);
+        PostOffice existingOffice = _fakers.PostOffice.GenerateOne();
+        existingOffice.GiftCertificates = _fakers.GiftCertificate.GenerateList(1);
 
-        string newAddress = _fakers.PostOffice.Generate().Address;
+        string newAddress = _fakers.PostOffice.GenerateOne().Address;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -268,7 +268,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
     public async Task Can_delete_resource()
     {
         // Arrange
-        PostOffice existingOffice = _fakers.PostOffice.Generate();
+        PostOffice existingOffice = _fakers.PostOffice.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -320,10 +320,10 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
     public async Task Can_add_to_ToMany_relationship()
     {
         // Arrange
-        PostOffice existingOffice = _fakers.PostOffice.Generate();
-        existingOffice.GiftCertificates = _fakers.GiftCertificate.Generate(1);
+        PostOffice existingOffice = _fakers.PostOffice.GenerateOne();
+        existingOffice.GiftCertificates = _fakers.GiftCertificate.GenerateList(1);
 
-        GiftCertificate existingCertificate = _fakers.GiftCertificate.Generate();
+        GiftCertificate existingCertificate = _fakers.GiftCertificate.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

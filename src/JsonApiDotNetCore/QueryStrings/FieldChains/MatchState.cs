@@ -253,7 +253,7 @@ internal sealed class MatchState
             fields.AddRange(matches);
         }
 
-        return fields;
+        return fields.AsReadOnly();
     }
 
     private static void AssertIsSuccess(MatchState state)

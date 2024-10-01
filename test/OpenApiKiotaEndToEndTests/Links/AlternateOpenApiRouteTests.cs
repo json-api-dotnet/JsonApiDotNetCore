@@ -12,7 +12,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiKiotaEndToEndTests.Links;
 
-public sealed class AlternateOpenApiRouteTests : IClassFixture<IntegrationTestContext<OpenApiStartup<LinkDbContext>, LinkDbContext>>
+public sealed class AlternateOpenApiRouteTests : IClassFixture<IntegrationTestContext<OpenApiStartup<LinkDbContext>, LinkDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<LinkDbContext>, LinkDbContext> _testContext;
     private readonly TestableHttpClientRequestAdapterFactory _requestAdapterFactory;
@@ -33,7 +33,7 @@ public sealed class AlternateOpenApiRouteTests : IClassFixture<IntegrationTestCo
     public async Task DescribedBy_link_matches_alternate_OpenAPI_route()
     {
         // Arrange
-        Excursion excursion = _fakers.Excursion.Generate();
+        Excursion excursion = _fakers.Excursion.GenerateOne();
 
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new LinksClient(requestAdapter);
@@ -51,5 +51,10 @@ public sealed class AlternateOpenApiRouteTests : IClassFixture<IntegrationTestCo
         response.ShouldNotBeNull();
         response.Links.ShouldNotBeNull();
         response.Links.Describedby.Should().Be("/api-docs/v1/swagger.yaml");
+    }
+
+    public void Dispose()
+    {
+        _requestAdapterFactory.Dispose();
     }
 }

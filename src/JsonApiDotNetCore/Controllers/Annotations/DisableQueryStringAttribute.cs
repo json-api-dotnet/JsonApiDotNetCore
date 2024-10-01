@@ -27,7 +27,7 @@ public sealed class DisableQueryStringAttribute : Attribute
     /// </summary>
     public DisableQueryStringAttribute(JsonApiQueryStringParameters parameters)
     {
-        var parameterNames = new HashSet<string>();
+        HashSet<string> parameterNames = [];
 
         foreach (JsonApiQueryStringParameters value in Enum.GetValues<JsonApiQueryStringParameters>())
         {
@@ -37,7 +37,7 @@ public sealed class DisableQueryStringAttribute : Attribute
             }
         }
 
-        ParameterNames = parameterNames;
+        ParameterNames = parameterNames.AsReadOnly();
     }
 
     /// <summary>
@@ -48,7 +48,7 @@ public sealed class DisableQueryStringAttribute : Attribute
     {
         ArgumentGuard.NotNullNorEmpty(parameterNames);
 
-        ParameterNames = parameterNames.Split(",").ToHashSet();
+        ParameterNames = parameterNames.Split(",").ToHashSet().AsReadOnly();
     }
 
     public bool ContainsParameter(JsonApiQueryStringParameters parameter)

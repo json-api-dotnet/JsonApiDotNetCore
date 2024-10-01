@@ -65,7 +65,7 @@ public interface IResourceGraph
     /// </typeparam>
     /// <param name="selector">
     /// Should be of the form: <![CDATA[
-    /// (TResource resource) => new { resource.attribute1, resource.Attribute2 }
+    /// (TResource resource) => new { resource.Attribute1, resource.Attribute2 }
     /// ]]>
     /// </param>
     IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, object?>> selector)

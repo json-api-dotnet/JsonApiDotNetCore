@@ -28,8 +28,9 @@ public abstract class JsonApiClient : IJsonApiClient
         where TRequestDocument : class
     {
         ArgumentGuard.NotNull(requestDocument);
+        ArgumentGuard.NotNull(alwaysIncludedAttributeSelectors);
 
-        var attributeNames = new HashSet<string>();
+        HashSet<string> attributeNames = [];
 
         foreach (Expression<Func<TAttributesObject, object?>> selector in alwaysIncludedAttributeSelectors)
         {
@@ -96,10 +97,10 @@ public abstract class JsonApiClient : IJsonApiClient
     /// </summary>
     private sealed class AlwaysIncludedAttributes
     {
-        private readonly ISet<string> _propertyNames;
+        private readonly HashSet<string> _propertyNames;
         private readonly Type _attributesObjectType;
 
-        public AlwaysIncludedAttributes(ISet<string> propertyNames, Type attributesObjectType)
+        public AlwaysIncludedAttributes(HashSet<string> propertyNames, Type attributesObjectType)
         {
             ArgumentGuard.NotNull(propertyNames);
             ArgumentGuard.NotNull(attributesObjectType);
@@ -136,24 +137,23 @@ public abstract class JsonApiClient : IJsonApiClient
 
             Type documentType = document.GetType();
 
-            if (!_documentsByType.ContainsKey(documentType))
+            if (!_documentsByType.TryGetValue(documentType, out ISet<object>? documents))
             {
-                _documentsByType[documentType] = new HashSet<object>();
+                documents = new HashSet<object>();
+                _documentsByType[documentType] = documents;
             }
 
-            _documentsByType[documentType].Add(document);
+            documents.Add(document);
         }
 
         public void UnRegisterDocument(object document)
         {
-            if (_alwaysIncludedAttributesByDocument.ContainsKey(document))
+            if (_alwaysIncludedAttributesByDocument.Remove(document))
             {
-                _alwaysIncludedAttributesByDocument.Remove(document);
-
                 Type documentType = document.GetType();
                 _documentsByType[documentType].Remove(document);
 
-                if (!_documentsByType[documentType].Any())
+                if (_documentsByType[documentType].Count == 0)
                 {
                     _documentsByType.Remove(documentType);
                 }

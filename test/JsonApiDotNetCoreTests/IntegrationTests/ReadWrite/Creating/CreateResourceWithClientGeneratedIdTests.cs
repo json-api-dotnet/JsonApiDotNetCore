@@ -39,7 +39,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = mode;
 
-        WorkItemGroup newGroup = _fakers.WorkItemGroup.Generate();
+        WorkItemGroup newGroup = _fakers.WorkItemGroup.GenerateOne();
         newGroup.Id = Guid.NewGuid();
 
         var requestBody = new
@@ -92,7 +92,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = mode;
 
-        WorkItemGroup newGroup = _fakers.WorkItemGroup.Generate();
+        WorkItemGroup newGroup = _fakers.WorkItemGroup.GenerateOne();
         newGroup.Id = Guid.NewGuid();
 
         var requestBody = new
@@ -146,7 +146,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = mode;
 
-        RgbColor newColor = _fakers.RgbColor.Generate();
+        RgbColor newColor = _fakers.RgbColor.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -197,7 +197,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = mode;
 
-        RgbColor newColor = _fakers.RgbColor.Generate();
+        RgbColor newColor = _fakers.RgbColor.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -247,7 +247,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = mode;
 
-        string newDisplayName = _fakers.RgbColor.Generate().DisplayName;
+        string newDisplayName = _fakers.RgbColor.GenerateOne().DisplayName;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -303,7 +303,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = mode;
 
-        string newDisplayName = _fakers.RgbColor.Generate().DisplayName;
+        string newDisplayName = _fakers.RgbColor.GenerateOne().DisplayName;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -350,7 +350,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = mode;
 
-        WorkItemGroup newGroup = _fakers.WorkItemGroup.Generate();
+        WorkItemGroup newGroup = _fakers.WorkItemGroup.GenerateOne();
 
         var requestBody = new
         {
@@ -393,7 +393,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = mode;
 
-        WorkItemGroup newGroup = _fakers.WorkItemGroup.Generate();
+        WorkItemGroup newGroup = _fakers.WorkItemGroup.GenerateOne();
 
         var requestBody = new
         {
@@ -436,7 +436,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = mode;
 
-        RgbColor newColor = _fakers.RgbColor.Generate();
+        RgbColor newColor = _fakers.RgbColor.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -487,7 +487,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = mode;
 
-        UserAccount newAccount = _fakers.UserAccount.Generate();
+        UserAccount newAccount = _fakers.UserAccount.GenerateOne();
 
         var requestBody = new
         {
@@ -531,7 +531,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = mode;
 
-        UserAccount newAccount = _fakers.UserAccount.Generate();
+        UserAccount newAccount = _fakers.UserAccount.GenerateOne();
 
         var requestBody = new
         {
@@ -575,9 +575,9 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = mode;
 
-        RgbColor existingColor = _fakers.RgbColor.Generate();
+        RgbColor existingColor = _fakers.RgbColor.GenerateOne();
 
-        RgbColor newColor = _fakers.RgbColor.Generate();
+        RgbColor newColor = _fakers.RgbColor.GenerateOne();
         newColor.Id = existingColor.Id;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>

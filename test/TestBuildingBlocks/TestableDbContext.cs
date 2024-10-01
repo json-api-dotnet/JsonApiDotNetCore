@@ -5,7 +5,8 @@ using Microsoft.Extensions.Logging;
 
 namespace TestBuildingBlocks;
 
-public abstract class TestableDbContext(DbContextOptions options) : DbContext(options)
+public abstract class TestableDbContext(DbContextOptions options)
+    : DbContext(options)
 {
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {

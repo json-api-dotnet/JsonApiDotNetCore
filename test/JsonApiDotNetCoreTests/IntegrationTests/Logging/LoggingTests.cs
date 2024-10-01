@@ -20,27 +20,26 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
         testContext.UseController<AuditEntriesController>();
         testContext.UseController<FruitBowlsController>();
 
-        var loggerFactory = new FakeLoggerFactory(LogLevel.Trace);
-
         testContext.ConfigureLogging(options =>
         {
-            options.ClearProviders();
-            options.AddProvider(loggerFactory);
-            options.SetMinimumLevel(LogLevel.Trace);
-            options.AddFilter((category, _) => category != null && category.StartsWith("JsonApiDotNetCore.", StringComparison.Ordinal));
-        });
+            var loggerProvider = new CapturingLoggerProvider((category, level) =>
+                level >= LogLevel.Trace && category.StartsWith("JsonApiDotNetCore.", StringComparison.Ordinal));
 
-        testContext.ConfigureServices(services => services.AddSingleton(loggerFactory));
+            options.AddProvider(loggerProvider);
+            options.SetMinimumLevel(LogLevel.Trace);
+
+            options.Services.AddSingleton(loggerProvider);
+        });
     }
 
     [Fact]
     public async Task Logs_request_body_at_Trace_level()
     {
         // Arrange
-        var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
-        loggerFactory.Logger.Clear();
+        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        loggerProvider.Clear();
 
-        AuditEntry newEntry = _fakers.AuditEntry.Generate();
+        AuditEntry newEntry = _fakers.AuditEntry.GenerateOne();
 
         var requestBody = new
         {
@@ -64,8 +63,7 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        IReadOnlyList<string> logLines = loggerFactory.Logger.GetLines();
-        logLines.ShouldNotBeEmpty();
+        IReadOnlyList<string> logLines = loggerProvider.GetLines();
 
         logLines.Should().ContainSingle(line =>
             line.StartsWith("[TRACE] Received POST request at 'http://localhost/auditEntries' with body: <<", StringComparison.Ordinal));
@@ -75,8 +73,8 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Logs_response_body_at_Trace_level()
     {
         // Arrange
-        var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
-        loggerFactory.Logger.Clear();
+        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        loggerProvider.Clear();
 
         // Arrange
         const string route = "/auditEntries";
@@ -87,8 +85,7 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        IReadOnlyList<string> logLines = loggerFactory.Logger.GetLines();
-        logLines.ShouldNotBeEmpty();
+        IReadOnlyList<string> logLines = loggerProvider.GetLines();
 
         logLines.Should().ContainSingle(line =>
             line.StartsWith("[TRACE] Sending 200 response for GET request at 'http://localhost/auditEntries' with body: <<", StringComparison.Ordinal));
@@ -98,8 +95,8 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Logs_invalid_request_body_error_at_Information_level()
     {
         // Arrange
-        var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
-        loggerFactory.Logger.Clear();
+        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        loggerProvider.Clear();
 
         // Arrange
         const string requestBody = "{ \"data\" {";
@@ -112,21 +109,19 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        IReadOnlyList<FakeLogMessage> logMessages = loggerFactory.Logger.GetMessages();
-        logMessages.ShouldNotBeEmpty();
-
-        logMessages.Should().ContainSingle(message => message.LogLevel == LogLevel.Information && message.Text.Contains("Failed to deserialize request body."));
+        LogMessage[] infoMessages = loggerProvider.GetMessages().Where(message => message.LogLevel == LogLevel.Information).ToArray();
+        infoMessages.Should().ContainSingle(message => message.Text.Contains("Failed to deserialize request body."));
     }
 
     [Fact]
     public async Task Logs_method_parameters_of_abstract_resource_type_at_Trace_level()
     {
         // Arrange
-        var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
-        loggerFactory.Logger.Clear();
+        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        loggerProvider.Clear();
 
         var existingBowl = new FruitBowl();
-        Banana existingBanana = _fakers.Banana.Generate();
+        Banana existingBanana = _fakers.Banana.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -157,7 +152,7 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Should().BeEmpty();
 
-        IReadOnlyList<string> logLines = loggerFactory.Logger.GetLines();
+        IReadOnlyList<string> logLines = loggerProvider.GetLines();
 
         logLines.Should().BeEquivalentTo(new[]
         {
@@ -232,11 +227,11 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Logs_method_parameters_of_concrete_resource_type_at_Trace_level()
     {
         // Arrange
-        var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
-        loggerFactory.Logger.Clear();
+        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        loggerProvider.Clear();
 
         var existingBowl = new FruitBowl();
-        Peach existingPeach = _fakers.Peach.Generate();
+        Peach existingPeach = _fakers.Peach.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -267,7 +262,7 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Should().BeEmpty();
 
-        IReadOnlyList<string> logLines = loggerFactory.Logger.GetLines();
+        IReadOnlyList<string> logLines = loggerProvider.GetLines();
 
         logLines.Should().BeEquivalentTo(new[]
         {

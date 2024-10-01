@@ -19,7 +19,7 @@ public abstract class QueryClauseBuilder : QueryExpressionVisitor<QueryClauseBui
     {
         Expression collectionExpression = Visit(expression.TargetCollection, context);
 
-        Expression? propertyExpression = GetCollectionCount(collectionExpression);
+        MemberExpression? propertyExpression = GetCollectionCount(collectionExpression);
 
         if (propertyExpression == null)
         {
@@ -29,7 +29,7 @@ public abstract class QueryClauseBuilder : QueryExpressionVisitor<QueryClauseBui
         return propertyExpression;
     }
 
-    private static Expression? GetCollectionCount(Expression? collectionExpression)
+    private static MemberExpression? GetCollectionCount(Expression? collectionExpression)
     {
         if (collectionExpression != null)
         {

@@ -36,7 +36,10 @@ internal sealed class FakeHttpClientWrapper : IDisposable
 
     public static FakeHttpClientWrapper Create(HttpStatusCode statusCode, string? responseBody)
     {
+#pragma warning disable CA2000 // Dispose objects before losing scope
+        // Justification: FakeHttpMessageHandler takes ownership, which is owned by FakeHttpClientWrapper.
         HttpResponseMessage response = CreateResponse(statusCode, responseBody);
+#pragma warning restore CA2000 // Dispose objects before losing scope
         var handler = new FakeHttpMessageHandler(response);
 
         var httpClient = new HttpClient(handler)
@@ -75,14 +78,16 @@ internal sealed class FakeHttpClientWrapper : IDisposable
 
     private sealed class FakeHttpMessageHandler(HttpResponseMessage response) : HttpMessageHandler
     {
+        private HttpResponseMessage _response = response;
+
         public HttpRequestMessage? Request { get; private set; }
         public string? RequestBody { get; private set; }
 
-        public void SetResponse(HttpResponseMessage newResponse)
+        public void SetResponse(HttpResponseMessage response)
         {
-            ArgumentGuard.NotNull(newResponse);
+            ArgumentGuard.NotNull(response);
 
-            response = newResponse;
+            _response = response;
         }
 
         protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -92,18 +97,24 @@ internal sealed class FakeHttpClientWrapper : IDisposable
             // Capture the request body here, before it becomes inaccessible because the request has been disposed.
             if (request.Content != null)
             {
-                using Stream stream = request.Content.ReadAsStream();
+                using Stream stream = request.Content.ReadAsStream(cancellationToken);
                 using var reader = new StreamReader(stream, Encoding.UTF8);
                 RequestBody = reader.ReadToEnd();
             }
 
-            return response;
+            return _response;
         }
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            Send(request, cancellationToken);
+            HttpResponseMessage response = Send(request, cancellationToken);
             return Task.FromResult(response);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _response.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

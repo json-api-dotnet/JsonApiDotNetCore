@@ -7,7 +7,8 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class MultiTenancyDbContext(DbContextOptions<MultiTenancyDbContext> options, ITenantProvider tenantProvider) : TestableDbContext(options)
+public sealed class MultiTenancyDbContext(DbContextOptions<MultiTenancyDbContext> options, ITenantProvider tenantProvider)
+    : TestableDbContext(options)
 {
     private readonly ITenantProvider _tenantProvider = tenantProvider;
 

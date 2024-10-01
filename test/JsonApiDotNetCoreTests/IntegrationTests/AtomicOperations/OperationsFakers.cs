@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations;
 
 internal sealed class OperationsFakers
 {
-    private static readonly Lazy<IReadOnlyList<string>> LazyLanguageIsoCodes = new(() => CultureInfo
+    private static readonly Lazy<string[]> LazyLanguageIsoCodes = new(() => CultureInfo
         .GetCultures(CultureTypes.NeutralCultures)
         .Where(culture => !string.IsNullOrEmpty(culture.Name))
         .Select(culture => culture.Name)
@@ -33,7 +33,7 @@ internal sealed class OperationsFakers
 
     private readonly Lazy<Faker<TextLanguage>> _lazyTextLanguageFaker = new(() => new Faker<TextLanguage>()
         .MakeDeterministic()
-        .RuleFor(textLanguage => textLanguage.IsoCode, faker => faker.PickRandom<string>(LazyLanguageIsoCodes.Value)));
+        .RuleFor(textLanguage => textLanguage.IsoCode, faker => faker.PickRandom(LazyLanguageIsoCodes.Value)));
 
     private readonly Lazy<Faker<Performer>> _lazyPerformerFaker = new(() => new Faker<Performer>()
         .MakeDeterministic()

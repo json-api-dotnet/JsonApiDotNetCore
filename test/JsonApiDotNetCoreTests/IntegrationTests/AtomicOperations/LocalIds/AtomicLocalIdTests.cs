@@ -23,8 +23,8 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_create_resource_with_ManyToOne_relationship_using_local_ID()
     {
         // Arrange
-        RecordCompany newCompany = _fakers.RecordCompany.Generate();
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+        RecordCompany newCompany = _fakers.RecordCompany.GenerateOne();
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         const string companyLocalId = "company-1";
 
@@ -117,8 +117,8 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_create_resource_with_OneToMany_relationship_using_local_ID()
     {
         // Arrange
-        Performer newPerformer = _fakers.Performer.Generate();
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+        Performer newPerformer = _fakers.Performer.GenerateOne();
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         const string performerLocalId = "performer-1";
 
@@ -214,8 +214,8 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_create_resource_with_ManyToMany_relationship_using_local_ID()
     {
         // Arrange
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
-        string newPlaylistName = _fakers.Playlist.Generate().Name;
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
+        string newPlaylistName = _fakers.Playlist.GenerateOne().Name;
 
         const string trackLocalId = "track-1";
 
@@ -310,7 +310,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Arrange
         const string companyLocalId = "company-1";
 
-        string newCompanyName = _fakers.RecordCompany.Generate().Name;
+        string newCompanyName = _fakers.RecordCompany.GenerateOne().Name;
 
         var requestBody = new
         {
@@ -374,7 +374,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     public async Task Cannot_reassign_local_ID()
     {
         // Arrange
-        string newPlaylistName = _fakers.Playlist.Generate().Name;
+        string newPlaylistName = _fakers.Playlist.GenerateOne().Name;
         const string playlistLocalId = "playlist-1";
 
         var requestBody = new
@@ -441,8 +441,8 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_update_resource_using_local_ID()
     {
         // Arrange
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
-        string newTrackGenre = _fakers.MusicTrack.Generate().Genre!;
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
+        string newTrackGenre = _fakers.MusicTrack.GenerateOne().Genre!;
 
         const string trackLocalId = "track-1";
 
@@ -514,9 +514,9 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_update_resource_with_relationships_using_local_ID()
     {
         // Arrange
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
-        string newArtistName = _fakers.Performer.Generate().ArtistName!;
-        string newCompanyName = _fakers.RecordCompany.Generate().Name;
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
+        string newArtistName = _fakers.Performer.GenerateOne().ArtistName!;
+        string newCompanyName = _fakers.RecordCompany.GenerateOne().Name;
 
         const string trackLocalId = "track-1";
         const string performerLocalId = "performer-1";
@@ -664,8 +664,8 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_create_ManyToOne_relationship_using_local_ID()
     {
         // Arrange
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
-        string newCompanyName = _fakers.RecordCompany.Generate().Name;
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
+        string newCompanyName = _fakers.RecordCompany.GenerateOne().Name;
 
         const string trackLocalId = "track-1";
         const string companyLocalId = "company-1";
@@ -763,8 +763,8 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_create_OneToMany_relationship_using_local_ID()
     {
         // Arrange
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
-        string newArtistName = _fakers.Performer.Generate().ArtistName!;
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
+        string newArtistName = _fakers.Performer.GenerateOne().ArtistName!;
 
         const string trackLocalId = "track-1";
         const string performerLocalId = "performer-1";
@@ -865,8 +865,8 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_create_ManyToMany_relationship_using_local_ID()
     {
         // Arrange
-        string newPlaylistName = _fakers.Playlist.Generate().Name;
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+        string newPlaylistName = _fakers.Playlist.GenerateOne().Name;
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         const string playlistLocalId = "playlist-1";
         const string trackLocalId = "track-1";
@@ -967,10 +967,10 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_replace_OneToMany_relationship_using_local_ID()
     {
         // Arrange
-        Performer existingPerformer = _fakers.Performer.Generate();
+        Performer existingPerformer = _fakers.Performer.GenerateOne();
 
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
-        string newArtistName = _fakers.Performer.Generate().ArtistName!;
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
+        string newArtistName = _fakers.Performer.GenerateOne().ArtistName!;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1091,10 +1091,10 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_replace_ManyToMany_relationship_using_local_ID()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
-        string newPlaylistName = _fakers.Playlist.Generate().Name;
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+        string newPlaylistName = _fakers.Playlist.GenerateOne().Name;
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1215,10 +1215,10 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_add_to_OneToMany_relationship_using_local_ID()
     {
         // Arrange
-        Performer existingPerformer = _fakers.Performer.Generate();
+        Performer existingPerformer = _fakers.Performer.GenerateOne();
 
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
-        string newArtistName = _fakers.Performer.Generate().ArtistName!;
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
+        string newArtistName = _fakers.Performer.GenerateOne().ArtistName!;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1343,10 +1343,10 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_add_to_ManyToMany_relationship_using_local_ID()
     {
         // Arrange
-        List<MusicTrack> existingTracks = _fakers.MusicTrack.Generate(2);
+        List<MusicTrack> existingTracks = _fakers.MusicTrack.GenerateList(2);
 
-        string newPlaylistName = _fakers.Playlist.Generate().Name;
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+        string newPlaylistName = _fakers.Playlist.GenerateOne().Name;
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         const string playlistLocalId = "playlist-1";
         const string trackLocalId = "track-1";
@@ -1488,11 +1488,11 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_remove_from_OneToMany_relationship_using_local_ID()
     {
         // Arrange
-        Performer existingPerformer = _fakers.Performer.Generate();
+        Performer existingPerformer = _fakers.Performer.GenerateOne();
 
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
-        string newArtistName1 = _fakers.Performer.Generate().ArtistName!;
-        string newArtistName2 = _fakers.Performer.Generate().ArtistName!;
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
+        string newArtistName1 = _fakers.Performer.GenerateOne().ArtistName!;
+        string newArtistName2 = _fakers.Performer.GenerateOne().ArtistName!;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1648,10 +1648,10 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_remove_from_ManyToMany_relationship_using_local_ID()
     {
         // Arrange
-        Playlist existingPlaylist = _fakers.Playlist.Generate();
-        existingPlaylist.Tracks = _fakers.MusicTrack.Generate(2);
+        Playlist existingPlaylist = _fakers.Playlist.GenerateOne();
+        existingPlaylist.Tracks = _fakers.MusicTrack.GenerateList(2);
 
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         const string trackLocalId = "track-1";
 
@@ -1771,7 +1771,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_delete_resource_using_local_ID()
     {
         // Arrange
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         const string trackLocalId = "track-1";
 
@@ -1934,7 +1934,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     public async Task Cannot_consume_unassigned_local_ID_in_data_array()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1998,7 +1998,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     public async Task Cannot_consume_unassigned_local_ID_in_relationship_data_element()
     {
         // Arrange
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         var requestBody = new
         {
@@ -2061,7 +2061,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     public async Task Cannot_consume_unassigned_local_ID_in_relationship_data_array()
     {
         // Arrange
-        string newPlaylistName = _fakers.Playlist.Generate().Name;
+        string newPlaylistName = _fakers.Playlist.GenerateOne().Name;
 
         var requestBody = new
         {
@@ -2128,7 +2128,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     {
         // Arrange
         const string trackLocalId = "track-1";
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         var requestBody = new
         {
@@ -2194,7 +2194,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Arrange
         const string companyLocalId = "company-1";
 
-        string newCompanyName = _fakers.RecordCompany.Generate().Name;
+        string newCompanyName = _fakers.RecordCompany.GenerateOne().Name;
 
         var requestBody = new
         {
@@ -2317,11 +2317,11 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     public async Task Cannot_consume_local_ID_of_different_type_in_data_array()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         const string companyLocalId = "company-1";
 
-        string newCompanyName = _fakers.RecordCompany.Generate().Name;
+        string newCompanyName = _fakers.RecordCompany.GenerateOne().Name;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2398,8 +2398,8 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     public async Task Cannot_consume_local_ID_of_different_type_in_relationship_data_element()
     {
         // Arrange
-        string newPlaylistName = _fakers.Playlist.Generate().Name;
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+        string newPlaylistName = _fakers.Playlist.GenerateOne().Name;
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         const string playlistLocalId = "playlist-1";
 
@@ -2478,7 +2478,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
     {
         // Arrange
         const string performerLocalId = "performer-1";
-        string newPlaylistName = _fakers.Playlist.Generate().Name;
+        string newPlaylistName = _fakers.Playlist.GenerateOne().Name;
 
         var requestBody = new
         {

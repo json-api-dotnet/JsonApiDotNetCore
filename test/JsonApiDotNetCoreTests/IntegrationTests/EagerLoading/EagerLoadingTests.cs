@@ -32,10 +32,10 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_get_primary_resource_with_eager_loads()
     {
         // Arrange
-        Building building = _fakers.Building.Generate();
-        building.Windows = _fakers.Window.Generate(4);
-        building.PrimaryDoor = _fakers.Door.Generate();
-        building.SecondaryDoor = _fakers.Door.Generate();
+        Building building = _fakers.Building.GenerateOne();
+        building.Windows = _fakers.Window.GenerateList(4);
+        building.PrimaryDoor = _fakers.Door.GenerateOne();
+        building.SecondaryDoor = _fakers.Door.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -63,15 +63,15 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_get_primary_resource_with_nested_eager_loads()
     {
         // Arrange
-        Street street = _fakers.Street.Generate();
-        street.Buildings = _fakers.Building.Generate(2);
+        Street street = _fakers.Street.GenerateOne();
+        street.Buildings = _fakers.Building.GenerateList(2);
 
-        street.Buildings[0].Windows = _fakers.Window.Generate(2);
-        street.Buildings[0].PrimaryDoor = _fakers.Door.Generate();
+        street.Buildings[0].Windows = _fakers.Window.GenerateList(2);
+        street.Buildings[0].PrimaryDoor = _fakers.Door.GenerateOne();
 
-        street.Buildings[1].Windows = _fakers.Window.Generate(3);
-        street.Buildings[1].PrimaryDoor = _fakers.Door.Generate();
-        street.Buildings[1].SecondaryDoor = _fakers.Door.Generate();
+        street.Buildings[1].Windows = _fakers.Window.GenerateList(3);
+        street.Buildings[1].PrimaryDoor = _fakers.Door.GenerateOne();
+        street.Buildings[1].SecondaryDoor = _fakers.Door.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -99,10 +99,10 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_get_primary_resource_with_fieldset()
     {
         // Arrange
-        Street street = _fakers.Street.Generate();
-        street.Buildings = _fakers.Building.Generate(1);
-        street.Buildings[0].Windows = _fakers.Window.Generate(3);
-        street.Buildings[0].PrimaryDoor = _fakers.Door.Generate();
+        Street street = _fakers.Street.GenerateOne();
+        street.Buildings = _fakers.Building.GenerateList(1);
+        street.Buildings[0].Windows = _fakers.Window.GenerateList(3);
+        street.Buildings[0].PrimaryDoor = _fakers.Door.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -129,12 +129,12 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_get_primary_resource_with_includes()
     {
         // Arrange
-        State state = _fakers.State.Generate();
-        state.Cities = _fakers.City.Generate(1);
-        state.Cities[0].Streets = _fakers.Street.Generate(1);
-        state.Cities[0].Streets[0].Buildings = _fakers.Building.Generate(1);
-        state.Cities[0].Streets[0].Buildings[0].PrimaryDoor = _fakers.Door.Generate();
-        state.Cities[0].Streets[0].Buildings[0].Windows = _fakers.Window.Generate(3);
+        State state = _fakers.State.GenerateOne();
+        state.Cities = _fakers.City.GenerateList(1);
+        state.Cities[0].Streets = _fakers.Street.GenerateList(1);
+        state.Cities[0].Streets[0].Buildings = _fakers.Building.GenerateList(1);
+        state.Cities[0].Streets[0].Buildings[0].PrimaryDoor = _fakers.Door.GenerateOne();
+        state.Cities[0].Streets[0].Buildings[0].Windows = _fakers.Window.GenerateList(3);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -171,13 +171,13 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_get_secondary_resources_with_include_and_fieldsets()
     {
         // Arrange
-        State state = _fakers.State.Generate();
-        state.Cities = _fakers.City.Generate(1);
-        state.Cities[0].Streets = _fakers.Street.Generate(1);
-        state.Cities[0].Streets[0].Buildings = _fakers.Building.Generate(1);
-        state.Cities[0].Streets[0].Buildings[0].PrimaryDoor = _fakers.Door.Generate();
-        state.Cities[0].Streets[0].Buildings[0].SecondaryDoor = _fakers.Door.Generate();
-        state.Cities[0].Streets[0].Buildings[0].Windows = _fakers.Window.Generate(1);
+        State state = _fakers.State.GenerateOne();
+        state.Cities = _fakers.City.GenerateList(1);
+        state.Cities[0].Streets = _fakers.Street.GenerateList(1);
+        state.Cities[0].Streets[0].Buildings = _fakers.Building.GenerateList(1);
+        state.Cities[0].Streets[0].Buildings[0].PrimaryDoor = _fakers.Door.GenerateOne();
+        state.Cities[0].Streets[0].Buildings[0].SecondaryDoor = _fakers.Door.GenerateOne();
+        state.Cities[0].Streets[0].Buildings[0].Windows = _fakers.Window.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -212,7 +212,7 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_create_resource()
     {
         // Arrange
-        Building newBuilding = _fakers.Building.Generate();
+        Building newBuilding = _fakers.Building.GenerateOne();
 
         var requestBody = new
         {
@@ -269,13 +269,13 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_update_resource()
     {
         // Arrange
-        Building existingBuilding = _fakers.Building.Generate();
-        existingBuilding.PrimaryDoor = _fakers.Door.Generate();
-        existingBuilding.SecondaryDoor = _fakers.Door.Generate();
-        existingBuilding.Windows = _fakers.Window.Generate(2);
+        Building existingBuilding = _fakers.Building.GenerateOne();
+        existingBuilding.PrimaryDoor = _fakers.Door.GenerateOne();
+        existingBuilding.SecondaryDoor = _fakers.Door.GenerateOne();
+        existingBuilding.Windows = _fakers.Window.GenerateList(2);
 
-        string newBuildingNumber = _fakers.Building.Generate().Number;
-        string newPrimaryDoorColor = _fakers.Door.Generate().Color;
+        string newBuildingNumber = _fakers.Building.GenerateOne().Number;
+        string newPrimaryDoorColor = _fakers.Door.GenerateOne().Color;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -334,8 +334,8 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_update_resource_when_primaryDoorColor_is_set_to_null()
     {
         // Arrange
-        Building existingBuilding = _fakers.Building.Generate();
-        existingBuilding.PrimaryDoor = _fakers.Door.Generate();
+        Building existingBuilding = _fakers.Building.GenerateOne();
+        existingBuilding.PrimaryDoor = _fakers.Door.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -378,8 +378,8 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_delete_resource()
     {
         // Arrange
-        Building existingBuilding = _fakers.Building.Generate();
-        existingBuilding.PrimaryDoor = _fakers.Door.Generate();
+        Building existingBuilding = _fakers.Building.GenerateOne();
+        existingBuilding.PrimaryDoor = _fakers.Door.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

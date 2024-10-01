@@ -3,6 +3,8 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
 
+#pragma warning disable CA2000 // Dispose objects before losing scope
+
 namespace JsonApiDotNetCore.Diagnostics;
 
 /// <summary>
@@ -65,7 +67,7 @@ internal sealed class CascadingCodeTimer : ICodeTimer
 
         _activeScopeStack.Pop();
 
-        if (!_activeScopeStack.Any())
+        if (_activeScopeStack.Count == 0)
         {
             _completedScopes.Add(scope);
         }
@@ -92,7 +94,7 @@ internal sealed class CascadingCodeTimer : ICodeTimer
             maxLength = Math.Max(maxLength, nextLength);
         }
 
-        if (_activeScopeStack.Any())
+        if (_activeScopeStack.Count > 0)
         {
             MeasureScope scope = _activeScopeStack.Peek();
             int nextLength = scope.GetPaddingLength();
@@ -109,7 +111,7 @@ internal sealed class CascadingCodeTimer : ICodeTimer
             scope.WriteResult(builder, 0, paddingLength);
         }
 
-        if (_activeScopeStack.Any())
+        if (_activeScopeStack.Count > 0)
         {
             MeasureScope scope = _activeScopeStack.Peek();
             scope.WriteResult(builder, 0, paddingLength);
@@ -130,7 +132,7 @@ internal sealed class CascadingCodeTimer : ICodeTimer
     private sealed class MeasureScope : IDisposable
     {
         private readonly CascadingCodeTimer _owner;
-        private readonly IList<MeasureScope> _children = new List<MeasureScope>();
+        private readonly List<MeasureScope> _children = [];
         private readonly bool _excludeInRelativeCost;
         private readonly TimeSpan _startedAt;
         private TimeSpan? _stoppedAt;

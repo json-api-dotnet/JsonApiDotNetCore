@@ -23,8 +23,8 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
     public async Task Can_clear_OneToMany_relationship()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        existingTrack.Performers = _fakers.Performer.Generate(2);
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        existingTrack.Performers = _fakers.Performer.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -76,8 +76,8 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
     public async Task Can_clear_ManyToMany_relationship()
     {
         // Arrange
-        Playlist existingPlaylist = _fakers.Playlist.Generate();
-        existingPlaylist.Tracks = _fakers.MusicTrack.Generate(2);
+        Playlist existingPlaylist = _fakers.Playlist.GenerateOne();
+        existingPlaylist.Tracks = _fakers.MusicTrack.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -130,10 +130,10 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
     public async Task Can_replace_OneToMany_relationship()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        existingTrack.Performers = _fakers.Performer.Generate(1);
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        existingTrack.Performers = _fakers.Performer.GenerateList(1);
 
-        List<Performer> existingPerformers = _fakers.Performer.Generate(2);
+        List<Performer> existingPerformers = _fakers.Performer.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -200,10 +200,10 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
     public async Task Can_replace_ManyToMany_relationship()
     {
         // Arrange
-        Playlist existingPlaylist = _fakers.Playlist.Generate();
-        existingPlaylist.Tracks = _fakers.MusicTrack.Generate(1);
+        Playlist existingPlaylist = _fakers.Playlist.GenerateOne();
+        existingPlaylist.Tracks = _fakers.MusicTrack.GenerateList(1);
 
-        List<MusicTrack> existingTracks = _fakers.MusicTrack.Generate(2);
+        List<MusicTrack> existingTracks = _fakers.MusicTrack.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -424,7 +424,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
     public async Task Cannot_replace_for_unknown_ID_in_ref()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -484,7 +484,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         // Arrange
         string guid = Unknown.StringId.Guid;
 
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -621,7 +621,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
     public async Task Cannot_replace_for_missing_data()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -669,7 +669,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
     public async Task Cannot_replace_for_null_data()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -718,7 +718,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
     public async Task Cannot_replace_for_object_data()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -960,7 +960,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
     public async Task Cannot_replace_for_unknown_IDs_in_data()
     {
         // Arrange
-        RecordCompany existingCompany = _fakers.RecordCompany.Generate();
+        RecordCompany existingCompany = _fakers.RecordCompany.GenerateOne();
 
         string[] trackIds =
         [
@@ -1033,7 +1033,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
     public async Task Cannot_replace_for_incompatible_ID_in_data()
     {
         // Arrange
-        RecordCompany existingCompany = _fakers.RecordCompany.Generate();
+        RecordCompany existingCompany = _fakers.RecordCompany.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1089,7 +1089,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
     public async Task Cannot_replace_for_relationship_mismatch_between_ref_and_data()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1145,7 +1145,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
     public async Task Cannot_assign_relationship_with_blocked_capability()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

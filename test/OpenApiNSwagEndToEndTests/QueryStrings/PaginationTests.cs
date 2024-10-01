@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiNSwagEndToEndTests.QueryStrings;
 
-public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>
+public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
     private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
@@ -28,7 +28,7 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
     public async Task Can_paginate_in_primary_resources()
     {
         // Arrange
-        List<Node> nodes = _fakers.Node.Generate(3);
+        List<Node> nodes = _fakers.Node.GenerateList(3);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -60,8 +60,8 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
     public async Task Can_paginate_in_secondary_resources()
     {
         // Arrange
-        Node node = _fakers.Node.Generate();
-        node.Children = _fakers.Node.Generate(3).ToHashSet();
+        Node node = _fakers.Node.GenerateOne();
+        node.Children = _fakers.Node.GenerateSet(3);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -94,8 +94,8 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
     public async Task Can_paginate_at_ToMany_relationship_endpoint()
     {
         // Arrange
-        Node node = _fakers.Node.Generate();
-        node.Children = _fakers.Node.Generate(3).ToHashSet();
+        Node node = _fakers.Node.GenerateOne();
+        node.Children = _fakers.Node.GenerateSet(3);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -179,5 +179,10 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
         error.Detail.Should().Be("Missing value for 'page[number]' query string parameter.");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
+    }
+
+    public void Dispose()
+    {
+        _logHttpMessageHandler.Dispose();
     }
 }

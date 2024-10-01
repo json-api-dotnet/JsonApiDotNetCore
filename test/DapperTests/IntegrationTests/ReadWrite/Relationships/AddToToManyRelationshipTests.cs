@@ -28,11 +28,11 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<DapperTestConte
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person existingPerson = _fakers.Person.Generate();
-        existingPerson.OwnedTodoItems = _fakers.TodoItem.Generate(1).ToHashSet();
+        Person existingPerson = _fakers.Person.GenerateOne();
+        existingPerson.OwnedTodoItems = _fakers.TodoItem.GenerateSet(1);
 
-        List<TodoItem> existingTodoItems = _fakers.TodoItem.Generate(2);
-        existingTodoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.Generate());
+        List<TodoItem> existingTodoItems = _fakers.TodoItem.GenerateList(2);
+        existingTodoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.GenerateOne());
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

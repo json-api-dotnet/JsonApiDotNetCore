@@ -35,7 +35,7 @@ public sealed class AbsoluteLinksWithoutNamespaceTests : IClassFixture<Integrati
     public async Task Get_primary_resource_by_ID_returns_absolute_links()
     {
         // Arrange
-        PhotoAlbum album = _fakers.PhotoAlbum.Generate();
+        PhotoAlbum album = _fakers.PhotoAlbum.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -77,8 +77,8 @@ public sealed class AbsoluteLinksWithoutNamespaceTests : IClassFixture<Integrati
     public async Task Get_primary_resources_with_include_returns_absolute_links()
     {
         // Arrange
-        PhotoAlbum album = _fakers.PhotoAlbum.Generate();
-        album.Photos = _fakers.Photo.Generate(1).ToHashSet();
+        PhotoAlbum album = _fakers.PhotoAlbum.GenerateOne();
+        album.Photos = _fakers.Photo.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -145,8 +145,8 @@ public sealed class AbsoluteLinksWithoutNamespaceTests : IClassFixture<Integrati
     public async Task Get_secondary_resource_returns_absolute_links()
     {
         // Arrange
-        Photo photo = _fakers.Photo.Generate();
-        photo.Album = _fakers.PhotoAlbum.Generate();
+        Photo photo = _fakers.Photo.GenerateOne();
+        photo.Album = _fakers.PhotoAlbum.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -190,8 +190,8 @@ public sealed class AbsoluteLinksWithoutNamespaceTests : IClassFixture<Integrati
     public async Task Get_secondary_resources_returns_absolute_links()
     {
         // Arrange
-        PhotoAlbum album = _fakers.PhotoAlbum.Generate();
-        album.Photos = _fakers.Photo.Generate(1).ToHashSet();
+        PhotoAlbum album = _fakers.PhotoAlbum.GenerateOne();
+        album.Photos = _fakers.Photo.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -239,8 +239,8 @@ public sealed class AbsoluteLinksWithoutNamespaceTests : IClassFixture<Integrati
     public async Task Get_ToOne_relationship_returns_absolute_links()
     {
         // Arrange
-        Photo photo = _fakers.Photo.Generate();
-        photo.Album = _fakers.PhotoAlbum.Generate();
+        Photo photo = _fakers.Photo.GenerateOne();
+        photo.Album = _fakers.PhotoAlbum.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -274,8 +274,8 @@ public sealed class AbsoluteLinksWithoutNamespaceTests : IClassFixture<Integrati
     public async Task Get_ToMany_relationship_returns_absolute_links()
     {
         // Arrange
-        PhotoAlbum album = _fakers.PhotoAlbum.Generate();
-        album.Photos = _fakers.Photo.Generate(1).ToHashSet();
+        PhotoAlbum album = _fakers.PhotoAlbum.GenerateOne();
+        album.Photos = _fakers.Photo.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -309,9 +309,9 @@ public sealed class AbsoluteLinksWithoutNamespaceTests : IClassFixture<Integrati
     public async Task Create_resource_with_side_effects_and_include_returns_absolute_links()
     {
         // Arrange
-        Photo existingPhoto = _fakers.Photo.Generate();
+        Photo existingPhoto = _fakers.Photo.GenerateOne();
 
-        string newAlbumName = _fakers.PhotoAlbum.Generate().Name;
+        string newAlbumName = _fakers.PhotoAlbum.GenerateOne().Name;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -402,8 +402,8 @@ public sealed class AbsoluteLinksWithoutNamespaceTests : IClassFixture<Integrati
     public async Task Update_resource_with_side_effects_and_include_returns_absolute_links()
     {
         // Arrange
-        Photo existingPhoto = _fakers.Photo.Generate();
-        PhotoAlbum existingAlbum = _fakers.PhotoAlbum.Generate();
+        Photo existingPhoto = _fakers.Photo.GenerateOne();
+        PhotoAlbum existingAlbum = _fakers.PhotoAlbum.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

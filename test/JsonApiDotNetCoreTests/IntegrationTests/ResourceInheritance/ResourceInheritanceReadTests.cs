@@ -46,15 +46,15 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_get_primary_resources_at_abstract_endpoint()
     {
         // Arrange
-        Bike bike = _fakers.Bike.Generate();
+        Bike bike = _fakers.Bike.GenerateOne();
 
-        Tandem tandem = _fakers.Tandem.Generate();
+        Tandem tandem = _fakers.Tandem.GenerateOne();
 
-        Car car = _fakers.Car.Generate();
-        car.Engine = _fakers.GasolineEngine.Generate();
+        Car car = _fakers.Car.GenerateOne();
+        car.Engine = _fakers.GasolineEngine.GenerateOne();
 
-        Truck truck = _fakers.Truck.Generate();
-        truck.Engine = _fakers.DieselEngine.Generate();
+        Truck truck = _fakers.Truck.GenerateOne();
+        truck.Engine = _fakers.DieselEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -90,7 +90,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
             resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights");
 
-            foreach ((string? name, RelationshipObject? value) in resource.Relationships)
+            foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -112,9 +112,9 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Attributes.ShouldContainKey("gearCount").With(value => value.Should().Be(tandem.GearCount));
             resource.Attributes.ShouldContainKey("passengerCount").With(value => value.Should().Be(tandem.PassengerCount));
 
-            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "features");
+            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
 
-            foreach ((string? name, RelationshipObject? value) in resource.Relationships)
+            foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -138,7 +138,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
             resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "engine", "navigationSystem", "features");
 
-            foreach ((string? name, RelationshipObject? value) in resource.Relationships)
+            foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -162,7 +162,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
             resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "engine", "navigationSystem", "sleepingArea", "features");
 
-            foreach ((string? name, RelationshipObject? value) in resource.Relationships)
+            foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -176,8 +176,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_get_primary_resources_at_concrete_base_endpoint()
     {
         // Arrange
-        Bike bike = _fakers.Bike.Generate();
-        Tandem tandem = _fakers.Tandem.Generate();
+        Bike bike = _fakers.Bike.GenerateOne();
+        Tandem tandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -213,7 +213,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
             resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights");
 
-            foreach ((string? name, RelationshipObject? value) in resource.Relationships)
+            foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -235,9 +235,9 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Attributes.ShouldContainKey("gearCount").With(value => value.Should().Be(tandem.GearCount));
             resource.Attributes.ShouldContainKey("passengerCount").With(value => value.Should().Be(tandem.PassengerCount));
 
-            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "features");
+            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
 
-            foreach ((string? name, RelationshipObject? value) in resource.Relationships)
+            foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -251,8 +251,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_get_primary_resources_at_concrete_derived_endpoint()
     {
         // Arrange
-        Bike bike = _fakers.Bike.Generate();
-        Tandem tandem = _fakers.Tandem.Generate();
+        Bike bike = _fakers.Bike.GenerateOne();
+        Tandem tandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -287,9 +287,9 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Attributes.ShouldContainKey("gearCount").With(value => value.Should().Be(tandem.GearCount));
             resource.Attributes.ShouldContainKey("passengerCount").With(value => value.Should().Be(tandem.PassengerCount));
 
-            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "features");
+            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
 
-            foreach ((string? name, RelationshipObject? value) in resource.Relationships)
+            foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -303,7 +303,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_get_primary_resource_at_abstract_endpoint()
     {
         // Arrange
-        Tandem tandem = _fakers.Tandem.Generate();
+        Tandem tandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -323,14 +323,14 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         responseDocument.Data.SingleValue.Type.Should().Be("tandems");
         responseDocument.Data.SingleValue.Id.Should().Be(tandem.StringId);
         responseDocument.Data.SingleValue.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
-        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "features");
+        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
     }
 
     [Fact]
     public async Task Can_get_primary_resource_at_concrete_base_endpoint()
     {
         // Arrange
-        Tandem tandem = _fakers.Tandem.Generate();
+        Tandem tandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -350,14 +350,14 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         responseDocument.Data.SingleValue.Type.Should().Be("tandems");
         responseDocument.Data.SingleValue.Id.Should().Be(tandem.StringId);
         responseDocument.Data.SingleValue.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
-        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "features");
+        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
     }
 
     [Fact]
     public async Task Can_get_primary_resource_at_concrete_derived_endpoint()
     {
         // Arrange
-        Tandem tandem = _fakers.Tandem.Generate();
+        Tandem tandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -377,15 +377,15 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         responseDocument.Data.SingleValue.Type.Should().Be("tandems");
         responseDocument.Data.SingleValue.Id.Should().Be(tandem.StringId);
         responseDocument.Data.SingleValue.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
-        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "features");
+        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
     }
 
     [Fact]
     public async Task Can_get_secondary_resource_at_abstract_base_endpoint()
     {
         // Arrange
-        Car car = _fakers.Car.Generate();
-        car.Engine = _fakers.GasolineEngine.Generate();
+        Car car = _fakers.Car.GenerateOne();
+        car.Engine = _fakers.GasolineEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -432,8 +432,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_get_secondary_resource_at_concrete_base_endpoint()
     {
         // Arrange
-        Tandem tandem = _fakers.Tandem.Generate();
-        tandem.CargoBox = _fakers.Box.Generate();
+        Tandem tandem = _fakers.Tandem.GenerateOne();
+        tandem.CargoBox = _fakers.Box.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -470,8 +470,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_get_secondary_resource_at_concrete_derived_endpoint()
     {
         // Arrange
-        Car car = _fakers.Car.Generate();
-        car.Engine = _fakers.GasolineEngine.Generate();
+        Car car = _fakers.Car.GenerateOne();
+        car.Engine = _fakers.GasolineEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -518,8 +518,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Cannot_get_secondary_resource_defined_in_derived_type_at_abstract_endpoint()
     {
         // Arrange
-        Car car = _fakers.Car.Generate();
-        car.Engine = _fakers.GasolineEngine.Generate();
+        Car car = _fakers.Car.GenerateOne();
+        car.Engine = _fakers.GasolineEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -548,8 +548,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Cannot_get_secondary_resource_defined_in_derived_type_at_concrete_base_endpoint()
     {
         // Arrange
-        Tandem tandem = _fakers.Tandem.Generate();
-        tandem.Features = _fakers.GenericFeature.Generate(1).ToHashSet();
+        Tandem tandem = _fakers.Tandem.GenerateOne();
+        tandem.FoldingDimensions = _fakers.Box.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -557,7 +557,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/bikes/{tandem.StringId}/features";
+        string route = $"/bikes/{tandem.StringId}/foldingDimensions";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -570,7 +570,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
         error.Title.Should().Be("The requested relationship does not exist.");
-        error.Detail.Should().Be("Resource of type 'bikes' does not contain a relationship named 'features'.");
+        error.Detail.Should().Be("Resource of type 'bikes' does not contain a relationship named 'foldingDimensions'.");
         error.Source.Should().BeNull();
     }
 
@@ -578,9 +578,9 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_get_secondary_resources_at_abstract_base_endpoint()
     {
         // Arrange
-        Car car = _fakers.Car.Generate();
-        car.Engine = _fakers.GasolineEngine.Generate();
-        car.Wheels = _fakers.ChromeWheel.Generate(2).Cast<Wheel>().Concat(_fakers.CarbonWheel.Generate(2)).ToHashSet();
+        Car car = _fakers.Car.GenerateOne();
+        car.Engine = _fakers.GasolineEngine.GenerateOne();
+        car.Wheels = _fakers.ChromeWheel.GenerateSet<ChromeWheel, Wheel>(2).Concat(_fakers.CarbonWheel.GenerateSet<CarbonWheel, Wheel>(2)).ToHashSet();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -640,8 +640,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_get_secondary_resources_at_concrete_base_endpoint()
     {
         // Arrange
-        Tandem tandem = _fakers.Tandem.Generate();
-        tandem.Wheels = _fakers.ChromeWheel.Generate(2).Cast<Wheel>().Concat(_fakers.CarbonWheel.Generate(2)).ToHashSet();
+        Tandem tandem = _fakers.Tandem.GenerateOne();
+        tandem.Wheels = _fakers.ChromeWheel.GenerateSet<ChromeWheel, Wheel>(2).Concat(_fakers.CarbonWheel.GenerateSet<CarbonWheel, Wheel>(2)).ToHashSet();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -708,9 +708,9 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_get_secondary_resources_at_concrete_derived_endpoint()
     {
         // Arrange
-        Car car = _fakers.Car.Generate();
-        car.Engine = _fakers.GasolineEngine.Generate();
-        car.Wheels = _fakers.ChromeWheel.Generate(2).Cast<Wheel>().Concat(_fakers.CarbonWheel.Generate(2)).ToHashSet();
+        Car car = _fakers.Car.GenerateOne();
+        car.Engine = _fakers.GasolineEngine.GenerateOne();
+        car.Wheels = _fakers.ChromeWheel.GenerateSet<ChromeWheel, Wheel>(2).Concat(_fakers.CarbonWheel.GenerateSet<CarbonWheel, Wheel>(2)).ToHashSet();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -770,9 +770,9 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Cannot_get_secondary_resources_defined_in_derived_type_at_abstract_endpoint()
     {
         // Arrange
-        Truck truck = _fakers.Truck.Generate();
-        truck.Engine = _fakers.DieselEngine.Generate();
-        truck.Features = _fakers.GenericFeature.Generate(1).ToHashSet();
+        Truck truck = _fakers.Truck.GenerateOne();
+        truck.Engine = _fakers.DieselEngine.GenerateOne();
+        truck.Features = _fakers.GenericFeature.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -801,8 +801,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Cannot_get_secondary_resources_defined_in_derived_type_at_concrete_base_endpoint()
     {
         // Arrange
-        Tandem tandem = _fakers.Tandem.Generate();
-        tandem.Features = _fakers.GenericFeature.Generate(1).ToHashSet();
+        Tandem tandem = _fakers.Tandem.GenerateOne();
+        tandem.Features = _fakers.GenericFeature.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -831,8 +831,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_get_ToOne_relationship_at_abstract_base_endpoint()
     {
         // Arrange
-        Car car = _fakers.Car.Generate();
-        car.Engine = _fakers.GasolineEngine.Generate();
+        Car car = _fakers.Car.GenerateOne();
+        car.Engine = _fakers.GasolineEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -862,8 +862,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_get_ToOne_relationship_at_concrete_base_endpoint()
     {
         // Arrange
-        Tandem tandem = _fakers.Tandem.Generate();
-        tandem.CargoBox = _fakers.Box.Generate();
+        Tandem tandem = _fakers.Tandem.GenerateOne();
+        tandem.CargoBox = _fakers.Box.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -893,8 +893,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_get_ToOne_relationship_at_concrete_derived_endpoint()
     {
         // Arrange
-        Car car = _fakers.Car.Generate();
-        car.Engine = _fakers.GasolineEngine.Generate();
+        Car car = _fakers.Car.GenerateOne();
+        car.Engine = _fakers.GasolineEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -924,8 +924,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Cannot_get_ToOne_relationship_defined_in_derived_type_at_abstract_endpoint()
     {
         // Arrange
-        Car car = _fakers.Car.Generate();
-        car.Engine = _fakers.GasolineEngine.Generate();
+        Car car = _fakers.Car.GenerateOne();
+        car.Engine = _fakers.GasolineEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -954,9 +954,9 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_get_ToMany_relationship_at_abstract_base_endpoint()
     {
         // Arrange
-        Car car = _fakers.Car.Generate();
-        car.Engine = _fakers.GasolineEngine.Generate();
-        car.Wheels = _fakers.ChromeWheel.Generate(2).Cast<Wheel>().Concat(_fakers.CarbonWheel.Generate(2)).ToHashSet();
+        Car car = _fakers.Car.GenerateOne();
+        car.Engine = _fakers.GasolineEngine.GenerateOne();
+        car.Wheels = _fakers.ChromeWheel.GenerateSet<ChromeWheel, Wheel>(2).Concat(_fakers.CarbonWheel.GenerateSet<CarbonWheel, Wheel>(2)).ToHashSet();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -993,8 +993,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_get_ToMany_relationship_at_concrete_base_endpoint()
     {
         // Arrange
-        Tandem tandem = _fakers.Tandem.Generate();
-        tandem.Wheels = _fakers.ChromeWheel.Generate(2).Cast<Wheel>().Concat(_fakers.CarbonWheel.Generate(2)).ToHashSet();
+        Tandem tandem = _fakers.Tandem.GenerateOne();
+        tandem.Wheels = _fakers.ChromeWheel.GenerateSet<ChromeWheel, Wheel>(2).Concat(_fakers.CarbonWheel.GenerateSet<CarbonWheel, Wheel>(2)).ToHashSet();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1038,9 +1038,9 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_get_ToMany_relationship_at_concrete_derived_endpoint()
     {
         // Arrange
-        Car car = _fakers.Car.Generate();
-        car.Engine = _fakers.GasolineEngine.Generate();
-        car.Wheels = _fakers.ChromeWheel.Generate(2).Cast<Wheel>().Concat(_fakers.CarbonWheel.Generate(2)).ToHashSet();
+        Car car = _fakers.Car.GenerateOne();
+        car.Engine = _fakers.GasolineEngine.GenerateOne();
+        car.Wheels = _fakers.ChromeWheel.GenerateSet<ChromeWheel, Wheel>(2).Concat(_fakers.CarbonWheel.GenerateSet<CarbonWheel, Wheel>(2)).ToHashSet();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1077,9 +1077,9 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Cannot_get_ToMany_relationship_defined_in_derived_type_at_abstract_endpoint()
     {
         // Arrange
-        Truck truck = _fakers.Truck.Generate();
-        truck.Engine = _fakers.DieselEngine.Generate();
-        truck.Features = _fakers.GenericFeature.Generate(1).ToHashSet();
+        Truck truck = _fakers.Truck.GenerateOne();
+        truck.Engine = _fakers.DieselEngine.GenerateOne();
+        truck.Features = _fakers.GenericFeature.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1108,8 +1108,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Cannot_get_ToMany_relationship_defined_in_derived_type_at_concrete_base_endpoint()
     {
         // Arrange
-        Tandem tandem = _fakers.Tandem.Generate();
-        tandem.Features = _fakers.GenericFeature.Generate(1).ToHashSet();
+        Tandem tandem = _fakers.Tandem.GenerateOne();
+        tandem.Features = _fakers.GenericFeature.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1138,15 +1138,15 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_get_primary_resources_at_abstract_endpoint_with_all_sparse_fieldsets()
     {
         // Arrange
-        Bike bike = _fakers.Bike.Generate();
+        Bike bike = _fakers.Bike.GenerateOne();
 
-        Tandem tandem = _fakers.Tandem.Generate();
+        Tandem tandem = _fakers.Tandem.GenerateOne();
 
-        Car car = _fakers.Car.Generate();
-        car.Engine = _fakers.GasolineEngine.Generate();
+        Car car = _fakers.Car.GenerateOne();
+        car.Engine = _fakers.GasolineEngine.GenerateOne();
 
-        Truck truck = _fakers.Truck.Generate();
-        truck.Engine = _fakers.DieselEngine.Generate();
+        Truck truck = _fakers.Truck.GenerateOne();
+        truck.Engine = _fakers.DieselEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1203,15 +1203,15 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_get_primary_resources_at_abstract_endpoint_with_some_sparse_fieldsets()
     {
         // Arrange
-        Bike bike = _fakers.Bike.Generate();
+        Bike bike = _fakers.Bike.GenerateOne();
 
-        Tandem tandem = _fakers.Tandem.Generate();
+        Tandem tandem = _fakers.Tandem.GenerateOne();
 
-        Car car = _fakers.Car.Generate();
-        car.Engine = _fakers.GasolineEngine.Generate();
+        Car car = _fakers.Car.GenerateOne();
+        car.Engine = _fakers.GasolineEngine.GenerateOne();
 
-        Truck truck = _fakers.Truck.Generate();
-        truck.Engine = _fakers.DieselEngine.Generate();
+        Truck truck = _fakers.Truck.GenerateOne();
+        truck.Engine = _fakers.DieselEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1244,7 +1244,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         {
             resource.Id.Should().Be(tandem.StringId);
             resource.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
-            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "lights", "cargoBox", "features");
+            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "lights", "cargoBox", "foldingDimensions", "features");
         });
 
         responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "cars").Subject.With(resource =>
@@ -1266,8 +1266,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_get_primary_resources_at_concrete_base_endpoint_with_all_sparse_fieldsets()
     {
         // Arrange
-        Bike bike = _fakers.Bike.Generate();
-        Tandem tandem = _fakers.Tandem.Generate();
+        Bike bike = _fakers.Bike.GenerateOne();
+        Tandem tandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1310,8 +1310,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_get_primary_resources_at_concrete_base_endpoint_with_some_sparse_fieldsets()
     {
         // Arrange
-        Bike bike = _fakers.Bike.Generate();
-        Tandem tandem = _fakers.Tandem.Generate();
+        Bike bike = _fakers.Bike.GenerateOne();
+        Tandem tandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1353,40 +1353,40 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_get_primary_resources_at_abstract_endpoint_with_derived_includes()
     {
         // Arrange
-        Bike bike = _fakers.Bike.Generate();
-        bike.Manufacturer = _fakers.VehicleManufacturer.Generate();
-        bike.Wheels = _fakers.CarbonWheel.Generate(1).Cast<Wheel>().ToHashSet();
-        bike.CargoBox = _fakers.Box.Generate();
-        bike.Lights = _fakers.BicycleLight.Generate(1).ToHashSet();
+        Bike bike = _fakers.Bike.GenerateOne();
+        bike.Manufacturer = _fakers.VehicleManufacturer.GenerateOne();
+        bike.Wheels = _fakers.CarbonWheel.GenerateSet<CarbonWheel, Wheel>(1);
+        bike.CargoBox = _fakers.Box.GenerateOne();
+        bike.Lights = _fakers.BicycleLight.GenerateSet(1);
 
-        Tandem tandem = _fakers.Tandem.Generate();
-        tandem.Manufacturer = _fakers.VehicleManufacturer.Generate();
-        tandem.Wheels = _fakers.ChromeWheel.Generate(1).Cast<Wheel>().ToHashSet();
-        tandem.CargoBox = _fakers.Box.Generate();
-        tandem.Lights = _fakers.BicycleLight.Generate(1).ToHashSet();
-        tandem.Features = _fakers.GenericFeature.Generate(1).ToHashSet();
-        tandem.Features.ElementAt(0).Properties = _fakers.StringProperty.Generate(1).Cast<GenericProperty>().ToHashSet();
-        ((StringProperty)tandem.Features.ElementAt(0).Properties.ElementAt(0)).Value = _fakers.StringValue.Generate();
+        Tandem tandem = _fakers.Tandem.GenerateOne();
+        tandem.Manufacturer = _fakers.VehicleManufacturer.GenerateOne();
+        tandem.Wheels = _fakers.ChromeWheel.GenerateSet<ChromeWheel, Wheel>(1);
+        tandem.CargoBox = _fakers.Box.GenerateOne();
+        tandem.Lights = _fakers.BicycleLight.GenerateSet(1);
+        tandem.Features = _fakers.GenericFeature.GenerateSet(1);
+        tandem.Features.ElementAt(0).Properties = _fakers.StringProperty.GenerateSet<StringProperty, GenericProperty>(1);
+        ((StringProperty)tandem.Features.ElementAt(0).Properties.ElementAt(0)).Value = _fakers.StringValue.GenerateOne();
 
-        Car car = _fakers.Car.Generate();
-        car.Manufacturer = _fakers.VehicleManufacturer.Generate();
-        car.Wheels = _fakers.CarbonWheel.Generate(1).Cast<Wheel>().ToHashSet();
-        car.Engine = _fakers.GasolineEngine.Generate();
-        ((GasolineEngine)car.Engine).Cylinders = _fakers.Cylinder.Generate(1).ToHashSet();
-        car.NavigationSystem = _fakers.NavigationSystem.Generate();
-        car.Features = _fakers.GenericFeature.Generate(1).ToHashSet();
-        car.Features.ElementAt(0).Properties = _fakers.NumberProperty.Generate(1).Cast<GenericProperty>().ToHashSet();
-        ((NumberProperty)car.Features.ElementAt(0).Properties.ElementAt(0)).Value = _fakers.NumberValue.Generate();
+        Car car = _fakers.Car.GenerateOne();
+        car.Manufacturer = _fakers.VehicleManufacturer.GenerateOne();
+        car.Wheels = _fakers.CarbonWheel.GenerateSet<CarbonWheel, Wheel>(1);
+        car.Engine = _fakers.GasolineEngine.GenerateOne();
+        ((GasolineEngine)car.Engine).Cylinders = _fakers.Cylinder.GenerateSet(1);
+        car.NavigationSystem = _fakers.NavigationSystem.GenerateOne();
+        car.Features = _fakers.GenericFeature.GenerateSet(1);
+        car.Features.ElementAt(0).Properties = _fakers.NumberProperty.GenerateSet<NumberProperty, GenericProperty>(1);
+        ((NumberProperty)car.Features.ElementAt(0).Properties.ElementAt(0)).Value = _fakers.NumberValue.GenerateOne();
 
-        Truck truck = _fakers.Truck.Generate();
-        truck.Manufacturer = _fakers.VehicleManufacturer.Generate();
-        truck.Wheels = _fakers.ChromeWheel.Generate(1).Cast<Wheel>().ToHashSet();
-        truck.Engine = _fakers.DieselEngine.Generate();
-        truck.NavigationSystem = _fakers.NavigationSystem.Generate();
-        truck.SleepingArea = _fakers.Box.Generate();
-        truck.Features = _fakers.GenericFeature.Generate(1).ToHashSet();
-        truck.Features.ElementAt(0).Properties = _fakers.StringProperty.Generate(1).Cast<GenericProperty>().ToHashSet();
-        ((StringProperty)truck.Features.ElementAt(0).Properties.ElementAt(0)).Value = _fakers.StringValue.Generate();
+        Truck truck = _fakers.Truck.GenerateOne();
+        truck.Manufacturer = _fakers.VehicleManufacturer.GenerateOne();
+        truck.Wheels = _fakers.ChromeWheel.GenerateSet<ChromeWheel, Wheel>(1);
+        truck.Engine = _fakers.DieselEngine.GenerateOne();
+        truck.NavigationSystem = _fakers.NavigationSystem.GenerateOne();
+        truck.SleepingArea = _fakers.Box.GenerateOne();
+        truck.Features = _fakers.GenericFeature.GenerateSet(1);
+        truck.Features.ElementAt(0).Properties = _fakers.StringProperty.GenerateSet<StringProperty, GenericProperty>(1);
+        ((StringProperty)truck.Features.ElementAt(0).Properties.ElementAt(0)).Value = _fakers.StringValue.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1547,6 +1547,12 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
                     "weight": {{tandem.Weight.ToString(CultureInfo.InvariantCulture)}}
                   },
                   "relationships": {
+                    "foldingDimensions": {
+                      "links": {
+                        "self": "/tandems/{{tandem.StringId}}/relationships/foldingDimensions",
+                        "related": "/tandems/{{tandem.StringId}}/foldingDimensions"
+                      }
+                    },
                     "features": {
                       "links": {
                         "self": "/tandems/{{tandem.StringId}}/relationships/features",
@@ -2021,12 +2027,12 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_filter_on_derived_resource_type_at_abstract_endpoint()
     {
         // Arrange
-        Bike bike = _fakers.Bike.Generate();
+        Bike bike = _fakers.Bike.GenerateOne();
 
-        Tandem tandem = _fakers.Tandem.Generate();
+        Tandem tandem = _fakers.Tandem.GenerateOne();
 
-        Car car = _fakers.Car.Generate();
-        car.Engine = _fakers.GasolineEngine.Generate();
+        Car car = _fakers.Car.GenerateOne();
+        car.Engine = _fakers.GasolineEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2053,15 +2059,15 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_filter_on_derived_resource_type_with_condition_at_abstract_endpoint()
     {
         // Arrange
-        Bike bike = _fakers.Bike.Generate();
+        Bike bike = _fakers.Bike.GenerateOne();
 
-        Car car = _fakers.Car.Generate();
+        Car car = _fakers.Car.GenerateOne();
         car.LicensePlate = "XX-99-YY";
-        car.Engine = _fakers.GasolineEngine.Generate();
+        car.Engine = _fakers.GasolineEngine.GenerateOne();
 
-        Truck truck = _fakers.Truck.Generate();
+        Truck truck = _fakers.Truck.GenerateOne();
         truck.LicensePlate = "AA-11-BB";
-        truck.Engine = _fakers.DieselEngine.Generate();
+        truck.Engine = _fakers.DieselEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2087,13 +2093,13 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_filter_on_derived_resource_type_and_derived_ToOne_relationship_type_at_abstract_endpoint()
     {
         // Arrange
-        Bike bike = _fakers.Bike.Generate();
+        Bike bike = _fakers.Bike.GenerateOne();
 
-        Car car = _fakers.Car.Generate();
-        car.Engine = _fakers.GasolineEngine.Generate();
+        Car car = _fakers.Car.GenerateOne();
+        car.Engine = _fakers.GasolineEngine.GenerateOne();
 
-        Truck truck = _fakers.Truck.Generate();
-        truck.Engine = _fakers.DieselEngine.Generate();
+        Truck truck = _fakers.Truck.GenerateOne();
+        truck.Engine = _fakers.DieselEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2119,15 +2125,15 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_filter_on_derived_resource_type_and_derived_ToOne_relationship_type_with_condition_at_abstract_endpoint()
     {
         // Arrange
-        Car car = _fakers.Car.Generate();
-        car.Engine = _fakers.GasolineEngine.Generate();
+        Car car = _fakers.Car.GenerateOne();
+        car.Engine = _fakers.GasolineEngine.GenerateOne();
 
-        Truck truck1 = _fakers.Truck.Generate();
-        truck1.Engine = _fakers.DieselEngine.Generate();
+        Truck truck1 = _fakers.Truck.GenerateOne();
+        truck1.Engine = _fakers.DieselEngine.GenerateOne();
         ((DieselEngine)truck1.Engine).Viscosity = 25;
 
-        Truck truck2 = _fakers.Truck.Generate();
-        truck2.Engine = _fakers.DieselEngine.Generate();
+        Truck truck2 = _fakers.Truck.GenerateOne();
+        truck2.Engine = _fakers.DieselEngine.GenerateOne();
         ((DieselEngine)truck2.Engine).Viscosity = 100;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -2154,12 +2160,12 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_filter_on_derived_resource_type_with_condition_at_concrete_base_endpoint()
     {
         // Arrange
-        Bike bike = _fakers.Bike.Generate();
+        Bike bike = _fakers.Bike.GenerateOne();
 
-        Tandem tandem1 = _fakers.Tandem.Generate();
+        Tandem tandem1 = _fakers.Tandem.GenerateOne();
 
-        Tandem tandem2 = _fakers.Tandem.Generate();
-        tandem2.Features = _fakers.GenericFeature.Generate(1).ToHashSet();
+        Tandem tandem2 = _fakers.Tandem.GenerateOne();
+        tandem2.Features = _fakers.GenericFeature.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2185,17 +2191,17 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_filter_on_derived_resource_type_with_condition_at_concrete_derived_endpoint()
     {
         // Arrange
-        Car car1 = _fakers.Car.Generate();
-        car1.Engine = _fakers.GasolineEngine.Generate();
-        car1.Wheels = _fakers.CarbonWheel.Generate(4).Cast<Wheel>().ToHashSet();
+        Car car1 = _fakers.Car.GenerateOne();
+        car1.Engine = _fakers.GasolineEngine.GenerateOne();
+        car1.Wheels = _fakers.CarbonWheel.GenerateSet<CarbonWheel, Wheel>(4);
 
-        Car car2 = _fakers.Car.Generate();
-        car2.Engine = _fakers.GasolineEngine.Generate();
-        car2.Wheels = _fakers.ChromeWheel.Generate(4).Cast<Wheel>().ToHashSet();
+        Car car2 = _fakers.Car.GenerateOne();
+        car2.Engine = _fakers.GasolineEngine.GenerateOne();
+        car2.Wheels = _fakers.ChromeWheel.GenerateSet<ChromeWheel, Wheel>(4);
 
-        Car car3 = _fakers.Car.Generate();
-        car3.Engine = _fakers.GasolineEngine.Generate();
-        car3.Wheels = _fakers.ChromeWheel.Generate(4).Cast<Wheel>().ToHashSet();
+        Car car3 = _fakers.Car.GenerateOne();
+        car3.Engine = _fakers.GasolineEngine.GenerateOne();
+        car3.Wheels = _fakers.ChromeWheel.GenerateSet<ChromeWheel, Wheel>(4);
         car3.Wheels.Cast<ChromeWheel>().ElementAt(0).PaintColor = "light-gray";
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -2222,17 +2228,17 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_sort_on_derived_attribute_at_abstract_endpoint()
     {
         // Arrange
-        Bike bike1 = _fakers.Bike.Generate();
+        Bike bike1 = _fakers.Bike.GenerateOne();
         bike1.GearCount = 3;
 
-        Bike bike2 = _fakers.Bike.Generate();
+        Bike bike2 = _fakers.Bike.GenerateOne();
         bike2.GearCount = 1;
 
-        Tandem tandem = _fakers.Tandem.Generate();
+        Tandem tandem = _fakers.Tandem.GenerateOne();
         tandem.GearCount = 2;
 
-        Car car = _fakers.Car.Generate();
-        car.Engine = _fakers.GasolineEngine.Generate();
+        Car car = _fakers.Car.GenerateOne();
+        car.Engine = _fakers.GasolineEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2268,12 +2274,12 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_sort_on_derived_attribute_at_concrete_base_endpoint()
     {
         // Arrange
-        Bike bike = _fakers.Bike.Generate();
+        Bike bike = _fakers.Bike.GenerateOne();
 
-        Tandem tandem1 = _fakers.Tandem.Generate();
+        Tandem tandem1 = _fakers.Tandem.GenerateOne();
         tandem1.PassengerCount = 2;
 
-        Tandem tandem2 = _fakers.Tandem.Generate();
+        Tandem tandem2 = _fakers.Tandem.GenerateOne();
         tandem2.PassengerCount = 4;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -2307,16 +2313,16 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_sort_on_derived_relationship_at_concrete_derived_endpoint()
     {
         // Arrange
-        Car car1 = _fakers.Car.Generate();
-        car1.Engine = _fakers.GasolineEngine.Generate();
-        ((GasolineEngine)car1.Engine).Cylinders = _fakers.Cylinder.Generate(2).ToHashSet();
+        Car car1 = _fakers.Car.GenerateOne();
+        car1.Engine = _fakers.GasolineEngine.GenerateOne();
+        ((GasolineEngine)car1.Engine).Cylinders = _fakers.Cylinder.GenerateSet(2);
 
-        Car car2 = _fakers.Car.Generate();
-        car2.Engine = _fakers.DieselEngine.Generate();
+        Car car2 = _fakers.Car.GenerateOne();
+        car2.Engine = _fakers.DieselEngine.GenerateOne();
 
-        Car car3 = _fakers.Car.Generate();
-        car3.Engine = _fakers.GasolineEngine.Generate();
-        ((GasolineEngine)car3.Engine).Cylinders = _fakers.Cylinder.Generate(4).ToHashSet();
+        Car car3 = _fakers.Car.GenerateOne();
+        car3.Engine = _fakers.GasolineEngine.GenerateOne();
+        ((GasolineEngine)car3.Engine).Cylinders = _fakers.Cylinder.GenerateSet(4);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2395,25 +2401,25 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_sort_on_derived_attribute_from_resource_definition_using_expression_syntax()
     {
         // Arrange
-        ChromeWheel chromeWheel1 = _fakers.ChromeWheel.Generate();
+        ChromeWheel chromeWheel1 = _fakers.ChromeWheel.GenerateOne();
         chromeWheel1.PaintColor = "blue";
-        chromeWheel1.Vehicle = _fakers.Car.Generate();
-        ((Car)chromeWheel1.Vehicle).Engine = _fakers.GasolineEngine.Generate();
-        ((GasolineEngine)((Car)chromeWheel1.Vehicle).Engine).Cylinders = _fakers.Cylinder.Generate(2).ToHashSet();
+        chromeWheel1.Vehicle = _fakers.Car.GenerateOne();
+        ((Car)chromeWheel1.Vehicle).Engine = _fakers.GasolineEngine.GenerateOne();
+        ((GasolineEngine)((Car)chromeWheel1.Vehicle).Engine).Cylinders = _fakers.Cylinder.GenerateSet(2);
 
-        ChromeWheel chromeWheel2 = _fakers.ChromeWheel.Generate();
+        ChromeWheel chromeWheel2 = _fakers.ChromeWheel.GenerateOne();
         chromeWheel2.PaintColor = "blue";
-        chromeWheel2.Vehicle = _fakers.Car.Generate();
-        ((Car)chromeWheel2.Vehicle).Engine = _fakers.GasolineEngine.Generate();
-        ((GasolineEngine)((Car)chromeWheel2.Vehicle).Engine).Cylinders = _fakers.Cylinder.Generate(1).ToHashSet();
+        chromeWheel2.Vehicle = _fakers.Car.GenerateOne();
+        ((Car)chromeWheel2.Vehicle).Engine = _fakers.GasolineEngine.GenerateOne();
+        ((GasolineEngine)((Car)chromeWheel2.Vehicle).Engine).Cylinders = _fakers.Cylinder.GenerateSet(1);
 
-        ChromeWheel chromeWheel3 = _fakers.ChromeWheel.Generate();
+        ChromeWheel chromeWheel3 = _fakers.ChromeWheel.GenerateOne();
         chromeWheel3.PaintColor = "black";
 
-        CarbonWheel carbonWheel1 = _fakers.CarbonWheel.Generate();
+        CarbonWheel carbonWheel1 = _fakers.CarbonWheel.GenerateOne();
         carbonWheel1.HasTube = false;
 
-        CarbonWheel carbonWheel2 = _fakers.CarbonWheel.Generate();
+        CarbonWheel carbonWheel2 = _fakers.CarbonWheel.GenerateOne();
         carbonWheel2.HasTube = true;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -2453,25 +2459,25 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Can_sort_on_derived_attribute_from_resource_definition_using_lambda_syntax()
     {
         // Arrange
-        ChromeWheel chromeWheel1 = _fakers.ChromeWheel.Generate();
+        ChromeWheel chromeWheel1 = _fakers.ChromeWheel.GenerateOne();
         chromeWheel1.PaintColor = "blue";
-        chromeWheel1.Vehicle = _fakers.Car.Generate();
-        ((Car)chromeWheel1.Vehicle).Engine = _fakers.GasolineEngine.Generate();
-        ((GasolineEngine)((Car)chromeWheel1.Vehicle).Engine).Cylinders = _fakers.Cylinder.Generate(2).ToHashSet();
+        chromeWheel1.Vehicle = _fakers.Car.GenerateOne();
+        ((Car)chromeWheel1.Vehicle).Engine = _fakers.GasolineEngine.GenerateOne();
+        ((GasolineEngine)((Car)chromeWheel1.Vehicle).Engine).Cylinders = _fakers.Cylinder.GenerateSet(2);
 
-        ChromeWheel chromeWheel2 = _fakers.ChromeWheel.Generate();
+        ChromeWheel chromeWheel2 = _fakers.ChromeWheel.GenerateOne();
         chromeWheel2.PaintColor = "blue";
-        chromeWheel2.Vehicle = _fakers.Car.Generate();
-        ((Car)chromeWheel2.Vehicle).Engine = _fakers.GasolineEngine.Generate();
-        ((GasolineEngine)((Car)chromeWheel2.Vehicle).Engine).Cylinders = _fakers.Cylinder.Generate(1).ToHashSet();
+        chromeWheel2.Vehicle = _fakers.Car.GenerateOne();
+        ((Car)chromeWheel2.Vehicle).Engine = _fakers.GasolineEngine.GenerateOne();
+        ((GasolineEngine)((Car)chromeWheel2.Vehicle).Engine).Cylinders = _fakers.Cylinder.GenerateSet(1);
 
-        ChromeWheel chromeWheel3 = _fakers.ChromeWheel.Generate();
+        ChromeWheel chromeWheel3 = _fakers.ChromeWheel.GenerateOne();
         chromeWheel3.PaintColor = "black";
 
-        CarbonWheel carbonWheel1 = _fakers.CarbonWheel.Generate();
+        CarbonWheel carbonWheel1 = _fakers.CarbonWheel.GenerateOne();
         carbonWheel1.HasTube = false;
 
-        CarbonWheel carbonWheel2 = _fakers.CarbonWheel.Generate();
+        CarbonWheel carbonWheel2 = _fakers.CarbonWheel.GenerateOne();
         carbonWheel2.HasTube = true;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>

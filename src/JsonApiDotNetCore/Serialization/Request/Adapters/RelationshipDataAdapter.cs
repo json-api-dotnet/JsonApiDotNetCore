@@ -95,7 +95,7 @@ public sealed class RelationshipDataAdapter : BaseAdapter, IRelationshipDataAdap
         AssertDataHasManyValue(data, state);
 
         int arrayIndex = 0;
-        var rightResources = new List<IIdentifiable>();
+        List<IIdentifiable> rightResources = [];
 
         foreach (ResourceIdentifierObject resourceIdentifierObject in data.ManyValue!)
         {

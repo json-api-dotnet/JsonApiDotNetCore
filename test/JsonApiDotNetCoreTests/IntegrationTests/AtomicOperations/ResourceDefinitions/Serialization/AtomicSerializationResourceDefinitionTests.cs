@@ -40,7 +40,7 @@ public sealed class AtomicSerializationResourceDefinitionTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        List<RecordCompany> newCompanies = _fakers.RecordCompany.Generate(2);
+        List<RecordCompany> newCompanies = _fakers.RecordCompany.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -133,9 +133,9 @@ public sealed class AtomicSerializationResourceDefinitionTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        RecordCompany existingCompany = _fakers.RecordCompany.Generate();
+        RecordCompany existingCompany = _fakers.RecordCompany.GenerateOne();
 
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -192,7 +192,7 @@ public sealed class AtomicSerializationResourceDefinitionTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        List<RecordCompany> existingCompanies = _fakers.RecordCompany.Generate(2);
+        List<RecordCompany> existingCompanies = _fakers.RecordCompany.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -285,8 +285,8 @@ public sealed class AtomicSerializationResourceDefinitionTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        RecordCompany existingCompany = _fakers.RecordCompany.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        RecordCompany existingCompany = _fakers.RecordCompany.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -343,8 +343,8 @@ public sealed class AtomicSerializationResourceDefinitionTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        RecordCompany existingCompany = _fakers.RecordCompany.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        RecordCompany existingCompany = _fakers.RecordCompany.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

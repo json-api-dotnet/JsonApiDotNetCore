@@ -7,7 +7,8 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.Links;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class LinksDbContext(DbContextOptions<LinksDbContext> options) : TestableDbContext(options)
+public sealed class LinksDbContext(DbContextOptions<LinksDbContext> options)
+    : TestableDbContext(options)
 {
     public DbSet<PhotoAlbum> PhotoAlbums => Set<PhotoAlbum>();
     public DbSet<Photo> Photos => Set<Photo>();

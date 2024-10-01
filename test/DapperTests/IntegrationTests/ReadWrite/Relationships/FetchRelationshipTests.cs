@@ -28,8 +28,8 @@ public sealed class FetchRelationshipTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        TodoItem todoItem = _fakers.TodoItem.Generate();
-        todoItem.Owner = _fakers.Person.Generate();
+        TodoItem todoItem = _fakers.TodoItem.GenerateOne();
+        todoItem.Owner = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -75,8 +75,8 @@ public sealed class FetchRelationshipTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        TodoItem todoItem = _fakers.TodoItem.Generate();
-        todoItem.Owner = _fakers.Person.Generate();
+        TodoItem todoItem = _fakers.TodoItem.GenerateOne();
+        todoItem.Owner = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -120,9 +120,9 @@ public sealed class FetchRelationshipTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        TodoItem todoItem = _fakers.TodoItem.Generate();
-        todoItem.Owner = _fakers.Person.Generate();
-        todoItem.Tags = _fakers.Tag.Generate(2).ToHashSet();
+        TodoItem todoItem = _fakers.TodoItem.GenerateOne();
+        todoItem.Owner = _fakers.Person.GenerateOne();
+        todoItem.Tags = _fakers.Tag.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

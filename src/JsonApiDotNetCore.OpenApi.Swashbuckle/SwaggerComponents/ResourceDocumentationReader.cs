@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Reflection;
+using System.Xml;
 using System.Xml.XPath;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -68,7 +69,8 @@ internal sealed class ResourceDocumentationReader
 
                 if (File.Exists(documentationPath))
                 {
-                    var document = new XPathDocument(documentationPath);
+                    using var reader = XmlReader.Create(documentationPath);
+                    var document = new XPathDocument(reader);
                     return document.CreateNavigator();
                 }
 

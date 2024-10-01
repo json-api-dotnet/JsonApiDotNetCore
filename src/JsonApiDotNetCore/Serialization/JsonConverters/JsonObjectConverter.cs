@@ -7,6 +7,8 @@ public abstract class JsonObjectConverter<TObject> : JsonConverter<TObject>
 {
     protected static TValue? ReadSubTree<TValue>(ref Utf8JsonReader reader, JsonSerializerOptions options)
     {
+        ArgumentGuard.NotNull(options);
+
         if (typeof(TValue) != typeof(object) && options.GetConverter(typeof(TValue)) is JsonConverter<TValue> converter)
         {
             return converter.Read(ref reader, typeof(TValue), options);
@@ -17,6 +19,8 @@ public abstract class JsonObjectConverter<TObject> : JsonConverter<TObject>
 
     protected static void WriteSubTree<TValue>(Utf8JsonWriter writer, TValue value, JsonSerializerOptions options)
     {
+        ArgumentGuard.NotNull(options);
+
         if (typeof(TValue) != typeof(object) && options.GetConverter(typeof(TValue)) is JsonConverter<TValue> converter)
         {
             converter.Write(writer, value, options);

@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiNSwagEndToEndTests.RestrictedControllers;
 
-public sealed class DeleteResourceTests : IClassFixture<IntegrationTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext>>
+public sealed class DeleteResourceTests : IClassFixture<IntegrationTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext> _testContext;
     private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
@@ -29,8 +29,8 @@ public sealed class DeleteResourceTests : IClassFixture<IntegrationTestContext<O
     public async Task Can_delete_existing_resource()
     {
         // Arrange
-        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.Generate();
-        existingChannel.VideoStream = _fakers.DataStream.Generate();
+        WriteOnlyChannel existingChannel = _fakers.WriteOnlyChannel.GenerateOne();
+        existingChannel.VideoStream = _fakers.DataStream.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -75,5 +75,10 @@ public sealed class DeleteResourceTests : IClassFixture<IntegrationTestContext<O
         error.Status.Should().Be("404");
         error.Title.Should().Be("The requested resource does not exist.");
         error.Detail.Should().Be($"Resource of type 'writeOnlyChannels' with ID '{unknownChannelId}' does not exist.");
+    }
+
+    public void Dispose()
+    {
+        _logHttpMessageHandler.Dispose();
     }
 }

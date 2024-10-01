@@ -21,7 +21,7 @@ internal sealed class TableNode : TableSourceNode
 
     public string Name => _resourceType.ClrType.Name.Pluralize();
 
-    public override IReadOnlyList<ColumnInTableNode> Columns => _columns;
+    public override IReadOnlyList<ColumnInTableNode> Columns => _columns.AsReadOnly();
 
     public TableNode(ResourceType resourceType, IReadOnlyDictionary<string, ResourceFieldAttribute?> columnMappings, string? alias)
         : base(alias)

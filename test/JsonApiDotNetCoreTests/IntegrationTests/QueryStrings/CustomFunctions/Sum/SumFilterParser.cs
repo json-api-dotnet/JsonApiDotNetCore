@@ -6,7 +6,8 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.Sum;
 
-internal sealed class SumFilterParser(IResourceFactory resourceFactory) : FilterParser(resourceFactory)
+internal sealed class SumFilterParser(IResourceFactory resourceFactory)
+    : FilterParser(resourceFactory)
 {
     private static readonly FieldChainPattern SingleToManyRelationshipChain = FieldChainPattern.Parse("M");
 

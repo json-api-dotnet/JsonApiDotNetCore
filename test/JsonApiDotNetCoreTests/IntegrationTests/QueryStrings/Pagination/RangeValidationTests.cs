@@ -89,7 +89,7 @@ public sealed class RangeValidationTests : IClassFixture<IntegrationTestContext<
     public async Task Returns_empty_set_of_resources_when_page_number_is_too_high()
     {
         // Arrange
-        List<Blog> blogs = _fakers.Blog.Generate(3);
+        List<Blog> blogs = _fakers.Blog.GenerateList(3);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

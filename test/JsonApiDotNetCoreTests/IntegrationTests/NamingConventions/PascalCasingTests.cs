@@ -24,8 +24,8 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
     public async Task Can_get_resources_with_include()
     {
         // Arrange
-        List<SwimmingPool> pools = _fakers.SwimmingPool.Generate(2);
-        pools[1].DivingBoards = _fakers.DivingBoard.Generate(1);
+        List<SwimmingPool> pools = _fakers.SwimmingPool.GenerateList(2);
+        pools[1].DivingBoards = _fakers.DivingBoard.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -68,8 +68,8 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
     public async Task Can_filter_secondary_resources_with_sparse_fieldset()
     {
         // Arrange
-        SwimmingPool pool = _fakers.SwimmingPool.Generate();
-        pool.WaterSlides = _fakers.WaterSlide.Generate(2);
+        SwimmingPool pool = _fakers.SwimmingPool.GenerateOne();
+        pool.WaterSlides = _fakers.WaterSlide.GenerateList(2);
         pool.WaterSlides[0].LengthInMeters = 1;
         pool.WaterSlides[1].LengthInMeters = 5;
 
@@ -97,7 +97,7 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
     public async Task Can_create_resource()
     {
         // Arrange
-        SwimmingPool newPool = _fakers.SwimmingPool.Generate();
+        SwimmingPool newPool = _fakers.SwimmingPool.GenerateOne();
 
         var requestBody = new
         {
@@ -176,7 +176,7 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
     public async Task Applies_casing_convention_on_source_pointer_from_ModelState()
     {
         // Arrange
-        DivingBoard existingBoard = _fakers.DivingBoard.Generate();
+        DivingBoard existingBoard = _fakers.DivingBoard.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

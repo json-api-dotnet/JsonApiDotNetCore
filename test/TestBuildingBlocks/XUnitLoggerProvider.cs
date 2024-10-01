@@ -24,7 +24,7 @@ public sealed class XUnitLoggerProvider : ILoggerProvider
 
     public ILogger CreateLogger(string categoryName)
     {
-        ArgumentGuard.NotNull(categoryName);
+        ArgumentGuard.NotNullNorEmpty(categoryName);
 
         if (_categoryPrefixFilter == null || categoryName.StartsWith(_categoryPrefixFilter, StringComparison.Ordinal))
         {

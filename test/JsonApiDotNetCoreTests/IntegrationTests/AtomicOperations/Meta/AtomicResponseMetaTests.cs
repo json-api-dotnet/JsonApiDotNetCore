@@ -91,7 +91,7 @@ public sealed class AtomicResponseMetaTests : IClassFixture<IntegrationTestConte
     public async Task Returns_top_level_meta_in_update_resource_with_side_effects()
     {
         // Arrange
-        TextLanguage existingLanguage = _fakers.TextLanguage.Generate();
+        TextLanguage existingLanguage = _fakers.TextLanguage.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

@@ -35,7 +35,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Sets_location_header_for_created_resource()
     {
         // Arrange
-        WorkItem newWorkItem = _fakers.WorkItem.Generate();
+        WorkItem newWorkItem = _fakers.WorkItem.GenerateOne();
 
         var requestBody = new
         {
@@ -73,7 +73,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_create_resource_with_int_ID()
     {
         // Arrange
-        WorkItem newWorkItem = _fakers.WorkItem.Generate();
+        WorkItem newWorkItem = _fakers.WorkItem.GenerateOne();
         newWorkItem.DueAt = null;
 
         var requestBody = new
@@ -121,7 +121,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_create_resource_with_long_ID()
     {
         // Arrange
-        UserAccount newUserAccount = _fakers.UserAccount.Generate();
+        UserAccount newUserAccount = _fakers.UserAccount.GenerateOne();
 
         var requestBody = new
         {
@@ -169,7 +169,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_create_resource_with_guid_ID()
     {
         // Arrange
-        WorkItemGroup newGroup = _fakers.WorkItemGroup.Generate();
+        WorkItemGroup newGroup = _fakers.WorkItemGroup.GenerateOne();
 
         var requestBody = new
         {
@@ -257,7 +257,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_create_resource_with_unknown_attribute()
     {
         // Arrange
-        WorkItem newWorkItem = _fakers.WorkItem.Generate();
+        WorkItem newWorkItem = _fakers.WorkItem.GenerateOne();
 
         var requestBody = new
         {
@@ -298,7 +298,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownFieldsInRequestBody = true;
 
-        WorkItem newWorkItem = _fakers.WorkItem.Generate();
+        WorkItem newWorkItem = _fakers.WorkItem.GenerateOne();
 
         var requestBody = new
         {
@@ -829,10 +829,10 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_create_resource_with_attributes_and_multiple_relationship_types()
     {
         // Arrange
-        List<UserAccount> existingUserAccounts = _fakers.UserAccount.Generate(2);
-        WorkTag existingTag = _fakers.WorkTag.Generate();
+        List<UserAccount> existingUserAccounts = _fakers.UserAccount.GenerateList(2);
+        WorkTag existingTag = _fakers.WorkTag.GenerateOne();
 
-        string newDescription = _fakers.WorkItem.Generate().Description!;
+        string newDescription = _fakers.WorkItem.GenerateOne().Description!;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

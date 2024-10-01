@@ -9,5 +9,5 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations;
 
 public sealed class OperationsController(
     IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IOperationsProcessor processor, IJsonApiRequest request,
-    ITargetedFields targetedFields, IAtomicOperationFilter operationFilter) : JsonApiOperationsController(options, resourceGraph, loggerFactory, processor,
-    request, targetedFields, operationFilter);
+    ITargetedFields targetedFields, IAtomicOperationFilter operationFilter)
+    : JsonApiOperationsController(options, resourceGraph, loggerFactory, processor, request, targetedFields, operationFilter);

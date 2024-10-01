@@ -157,7 +157,7 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
         return null;
     }
 
-    private static IDictionary<string, object?> ReadAttributes(ref Utf8JsonReader reader, JsonSerializerOptions options, ResourceType resourceType)
+    private static Dictionary<string, object?> ReadAttributes(ref Utf8JsonReader reader, JsonSerializerOptions options, ResourceType resourceType)
     {
         var attributes = new Dictionary<string, object?>();
 
@@ -224,6 +224,9 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
     /// </summary>
     public override void Write(Utf8JsonWriter writer, ResourceObject value, JsonSerializerOptions options)
     {
+        ArgumentGuard.NotNull(writer);
+        ArgumentGuard.NotNull(value);
+
         writer.WriteStartObject();
 
         writer.WriteString(TypeText, value.Type);

@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore;
 namespace GettingStarted.Data;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public class SampleDbContext(DbContextOptions<SampleDbContext> options) : DbContext(options)
+public class SampleDbContext(DbContextOptions<SampleDbContext> options)
+    : DbContext(options)
 {
     public DbSet<Book> Books => Set<Book>();
 }

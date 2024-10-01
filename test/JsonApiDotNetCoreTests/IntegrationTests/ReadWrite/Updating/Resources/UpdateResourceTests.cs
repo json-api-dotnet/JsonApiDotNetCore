@@ -40,7 +40,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_update_resource_without_attributes_or_relationships()
     {
         // Arrange
-        UserAccount existingUserAccount = _fakers.UserAccount.Generate();
+        UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -86,8 +86,8 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_update_resource_with_unknown_attribute()
     {
         // Arrange
-        UserAccount existingUserAccount = _fakers.UserAccount.Generate();
-        string newFirstName = _fakers.UserAccount.Generate().FirstName;
+        UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
+        string newFirstName = _fakers.UserAccount.GenerateOne().FirstName;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -135,8 +135,8 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownFieldsInRequestBody = true;
 
-        UserAccount existingUserAccount = _fakers.UserAccount.Generate();
-        string newFirstName = _fakers.UserAccount.Generate().FirstName;
+        UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
+        string newFirstName = _fakers.UserAccount.GenerateOne().FirstName;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -181,7 +181,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_update_resource_with_unknown_relationship()
     {
         // Arrange
-        UserAccount existingUserAccount = _fakers.UserAccount.Generate();
+        UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -235,7 +235,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownFieldsInRequestBody = true;
 
-        UserAccount existingUserAccount = _fakers.UserAccount.Generate();
+        UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -278,8 +278,8 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_partially_update_resource_with_guid_ID()
     {
         // Arrange
-        WorkItemGroup existingGroup = _fakers.WorkItemGroup.Generate();
-        string newName = _fakers.WorkItemGroup.Generate().Name;
+        WorkItemGroup existingGroup = _fakers.WorkItemGroup.GenerateOne();
+        string newName = _fakers.WorkItemGroup.GenerateOne().Name;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -334,8 +334,8 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_completely_update_resource_with_string_ID()
     {
         // Arrange
-        RgbColor existingColor = _fakers.RgbColor.Generate();
-        string newDisplayName = _fakers.RgbColor.Generate().DisplayName;
+        RgbColor existingColor = _fakers.RgbColor.GenerateOne();
+        string newDisplayName = _fakers.RgbColor.GenerateOne().DisplayName;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -382,8 +382,8 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_update_resource_without_side_effects()
     {
         // Arrange
-        UserAccount existingUserAccount = _fakers.UserAccount.Generate();
-        UserAccount newUserAccount = _fakers.UserAccount.Generate();
+        UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
+        UserAccount newUserAccount = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -428,8 +428,8 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_update_resource_with_side_effects()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        string newDescription = _fakers.WorkItem.Generate().Description!;
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        string newDescription = _fakers.WorkItem.GenerateOne().Description!;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -484,8 +484,8 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_update_resource_with_side_effects_with_primary_fieldset()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        string newDescription = _fakers.WorkItem.Generate().Description!;
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        string newDescription = _fakers.WorkItem.GenerateOne().Description!;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -539,10 +539,10 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_update_resource_with_side_effects_with_include_and_fieldsets()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Tags = _fakers.WorkTag.Generate(1).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Tags = _fakers.WorkTag.GenerateSet(1);
 
-        string newDescription = _fakers.WorkItem.Generate().Description!;
+        string newDescription = _fakers.WorkItem.GenerateOne().Description!;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -610,8 +610,8 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Update_resource_with_side_effects_hides_relationship_data_in_response()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Assignee = _fakers.UserAccount.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Assignee = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -646,7 +646,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_update_resource_for_missing_request_body()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -681,7 +681,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_update_resource_for_null_request_body()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -713,7 +713,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_update_resource_for_missing_data()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -751,7 +751,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_update_resource_for_null_data()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -787,7 +787,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_update_resource_for_array_data()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -830,7 +830,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_update_resource_for_missing_type()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -869,7 +869,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_update_resource_for_unknown_type()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -909,7 +909,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_update_resource_for_missing_ID()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -948,7 +948,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_update_resource_on_unknown_resource_type_in_url()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1013,7 +1013,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_update_on_resource_type_mismatch_between_url_and_body()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1053,7 +1053,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_update_on_resource_ID_mismatch_between_url_and_body()
     {
         // Arrange
-        List<WorkItem> existingWorkItems = _fakers.WorkItem.Generate(2);
+        List<WorkItem> existingWorkItems = _fakers.WorkItem.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1093,7 +1093,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_update_resource_with_readonly_attribute()
     {
         // Arrange
-        WorkItemGroup existingWorkItemGroup = _fakers.WorkItemGroup.Generate();
+        WorkItemGroup existingWorkItemGroup = _fakers.WorkItemGroup.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1137,7 +1137,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_update_resource_for_broken_JSON_request_body()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1169,7 +1169,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_change_ID_of_existing_resource()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1213,7 +1213,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_update_resource_with_incompatible_ID_value()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1255,7 +1255,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_update_resource_with_incompatible_attribute_value()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1303,15 +1303,15 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_update_resource_with_attributes_and_multiple_relationship_types()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Assignee = _fakers.UserAccount.Generate();
-        existingWorkItem.Subscribers = _fakers.UserAccount.Generate(1).ToHashSet();
-        existingWorkItem.Tags = _fakers.WorkTag.Generate(1).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Assignee = _fakers.UserAccount.GenerateOne();
+        existingWorkItem.Subscribers = _fakers.UserAccount.GenerateSet(1);
+        existingWorkItem.Tags = _fakers.WorkTag.GenerateSet(1);
 
-        List<UserAccount> existingUserAccounts = _fakers.UserAccount.Generate(2);
-        WorkTag existingTag = _fakers.WorkTag.Generate();
+        List<UserAccount> existingUserAccounts = _fakers.UserAccount.GenerateList(2);
+        WorkTag existingTag = _fakers.WorkTag.GenerateOne();
 
-        string newDescription = _fakers.WorkItem.Generate().Description!;
+        string newDescription = _fakers.WorkItem.GenerateOne().Description!;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1411,10 +1411,10 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_update_resource_with_multiple_cyclic_relationship_types()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Parent = _fakers.WorkItem.Generate();
-        existingWorkItem.Children = _fakers.WorkItem.Generate(1);
-        existingWorkItem.RelatedTo = _fakers.WorkItem.Generate(1);
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Parent = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Children = _fakers.WorkItem.GenerateList(1);
+        existingWorkItem.RelatedTo = _fakers.WorkItem.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1507,7 +1507,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_assign_attribute_with_blocked_capability()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

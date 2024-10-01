@@ -36,7 +36,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
     private readonly DbContext _dbContext;
     private readonly IResourceGraph _resourceGraph;
     private readonly IResourceFactory _resourceFactory;
-    private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
+    private readonly IQueryConstraintProvider[] _constraintProviders;
     private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
     private readonly TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>> _traceWriter;
 
@@ -59,7 +59,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         _dbContext = dbContextResolver.GetContext();
         _resourceGraph = resourceGraph;
         _resourceFactory = resourceFactory;
-        _constraintProviders = constraintProviders;
+        _constraintProviders = constraintProviders as IQueryConstraintProvider[] ?? constraintProviders.ToArray();
         _resourceDefinitionAccessor = resourceDefinitionAccessor;
         _traceWriter = new TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>>(loggerFactory);
     }
@@ -80,7 +80,8 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
             using (CodeTimingSessionManager.Current.Measure("Execute SQL (data)", MeasurementSettings.ExcludeDatabaseInPercentages))
             {
-                return await query.ToListAsync(cancellationToken);
+                List<TResource> resources = await query.ToListAsync(cancellationToken);
+                return resources.AsReadOnly();
             }
         }
     }
@@ -113,6 +114,8 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
     protected virtual IQueryable<TResource> ApplyQueryLayer(QueryLayer queryLayer)
     {
+        ArgumentGuard.NotNull(queryLayer);
+
         _traceWriter.LogMethodStart(new
         {
             queryLayer
@@ -316,6 +319,8 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
     protected void AssertIsNotClearingRequiredToOneRelationship(RelationshipAttribute relationship, object? rightValue)
     {
+        ArgumentGuard.NotNull(relationship);
+
         if (relationship is HasOneAttribute)
         {
             INavigation? navigation = GetNavigation(relationship);
@@ -455,10 +460,10 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
         await _resourceDefinitionAccessor.OnAddToRelationshipAsync(leftPlaceholderResource, relationship, rightResourceIds, cancellationToken);
 
-        if (rightResourceIds.Any())
+        if (rightResourceIds.Count > 0)
         {
             var leftResourceTracked = (TResource)_dbContext.GetTrackedOrAttach(leftPlaceholderResource);
-            IEnumerable rightValueToStore = GetRightValueToStoreForAddToToMany(leftResourceTracked, relationship, rightResourceIds);
+            ISet<IIdentifiable> rightValueToStore = GetRightValueToStoreForAddToToMany(leftResourceTracked, relationship, rightResourceIds);
 
             await UpdateRelationshipAsync(relationship, leftResourceTracked, rightValueToStore, cancellationToken);
 
@@ -471,7 +476,8 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         }
     }
 
-    private IEnumerable GetRightValueToStoreForAddToToMany(TResource leftResource, HasManyAttribute relationship, ISet<IIdentifiable> rightResourceIdsToAdd)
+    private ISet<IIdentifiable> GetRightValueToStoreForAddToToMany(TResource leftResource, HasManyAttribute relationship,
+        ISet<IIdentifiable> rightResourceIdsToAdd)
     {
         object? rightValueStored = relationship.GetValue(leftResource);
 
@@ -480,13 +486,13 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
         HashSet<IIdentifiable> rightResourceIdsStored = _collectionConverter
             .ExtractResources(rightValueStored)
-            .Select(rightResource => _dbContext.GetTrackedOrAttach(rightResource))
+            .Select(_dbContext.GetTrackedOrAttach)
             .ToHashSet(IdentifiableComparer.Instance);
 
         // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
-        if (rightResourceIdsStored.Any())
+        if (rightResourceIdsStored.Count > 0)
         {
             rightResourceIdsStored.UnionWith(rightResourceIdsToAdd);
             return rightResourceIdsStored;
@@ -515,7 +521,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
         await _resourceDefinitionAccessor.OnRemoveFromRelationshipAsync(leftResource, relationship, rightResourceIdsToRemove, cancellationToken);
 
-        if (rightResourceIdsToRemove.Any())
+        if (rightResourceIdsToRemove.Count > 0)
         {
             var leftResourceTracked = (TResource)_dbContext.GetTrackedOrAttach(leftResource);
 
@@ -530,7 +536,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             IIdentifiable[] rightResourceIdsStored = _collectionConverter
                 .ExtractResources(rightValueStored)
                 .Concat(extraResourceIdsToRemove)
-                .Select(rightResource => _dbContext.GetTrackedOrAttach(rightResource))
+                .Select(_dbContext.GetTrackedOrAttach)
                 .ToArray();
 
             // @formatter:wrap_before_first_method_call restore
@@ -576,7 +582,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
         string[] foreignKeyNames = skipNavigation.ForeignKey.Properties.Select(property => property.Name).ToArray();
 
-        foreach (EntityEntry joinEntry in _dbContext.ChangeTracker.Entries().Where(entry => entry.Metadata == skipNavigation.JoinEntityType).ToList())
+        foreach (EntityEntry joinEntry in _dbContext.ChangeTracker.Entries().Where(entry => entry.Metadata == skipNavigation.JoinEntityType).ToArray())
         {
             object?[] foreignKeyValues = GetCurrentKeyValues(joinEntry, foreignKeyNames);
 
@@ -595,6 +601,9 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
     protected async Task UpdateRelationshipAsync(RelationshipAttribute relationship, TResource leftResource, object? valueToAssign,
         CancellationToken cancellationToken)
     {
+        ArgumentGuard.NotNull(relationship);
+        ArgumentGuard.NotNull(leftResource);
+
         object? trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType);
 
         if (RequireLoadOfInverseRelationship(relationship, trackedValueToAssign))
@@ -616,7 +625,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         }
 
         IReadOnlyCollection<IIdentifiable> rightResources = _collectionConverter.ExtractResources(rightValue);
-        IIdentifiable[] rightResourcesTracked = rightResources.Select(rightResource => _dbContext.GetTrackedOrAttach(rightResource)).ToArray();
+        IIdentifiable[] rightResourcesTracked = rightResources.Select(_dbContext.GetTrackedOrAttach).ToArray();
 
         return rightValue is IEnumerable
             ? _collectionConverter.CopyToTypedCollection(rightResourcesTracked, relationshipPropertyType)

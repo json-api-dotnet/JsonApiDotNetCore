@@ -32,10 +32,10 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
     public async Task Can_create_OneToOne_relationship_from_principal_side()
     {
         // Arrange
-        WorkItemGroup existingGroup = _fakers.WorkItemGroup.Generate();
-        existingGroup.Color = _fakers.RgbColor.Generate();
+        WorkItemGroup existingGroup = _fakers.WorkItemGroup.GenerateOne();
+        existingGroup.Color = _fakers.RgbColor.GenerateOne();
 
-        string newGroupName = _fakers.WorkItemGroup.Generate().Name;
+        string newGroupName = _fakers.WorkItemGroup.GenerateOne().Name;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -98,11 +98,11 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
     public async Task Can_create_OneToOne_relationship_from_dependent_side()
     {
         // Arrange
-        RgbColor existingColor = _fakers.RgbColor.Generate();
-        existingColor.Group = _fakers.WorkItemGroup.Generate();
+        RgbColor existingColor = _fakers.RgbColor.GenerateOne();
+        existingColor.Group = _fakers.WorkItemGroup.GenerateOne();
 
         const string newColorId = "0A0B0C";
-        string newDisplayName = _fakers.RgbColor.Generate().DisplayName;
+        string newDisplayName = _fakers.RgbColor.GenerateOne().DisplayName;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -163,7 +163,7 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
     public async Task Can_create_relationship_with_include()
     {
         // Arrange
-        UserAccount existingUserAccount = _fakers.UserAccount.Generate();
+        UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -224,8 +224,8 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
     public async Task Can_create_relationship_with_include_and_primary_fieldset()
     {
         // Arrange
-        UserAccount existingUserAccount = _fakers.UserAccount.Generate();
-        WorkItem newWorkItem = _fakers.WorkItem.Generate();
+        UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
+        WorkItem newWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -301,7 +301,7 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
     public async Task Cannot_create_with_null_relationship()
     {
         // Arrange
-        UserAccount existingUserAccount = _fakers.UserAccount.Generate();
+        UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -344,7 +344,7 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
     public async Task Cannot_create_with_missing_data_in_relationship()
     {
         // Arrange
-        UserAccount existingUserAccount = _fakers.UserAccount.Generate();
+        UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -389,7 +389,7 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
     public async Task Cannot_create_with_array_data_in_relationship()
     {
         // Arrange
-        UserAccount existingUserAccount = _fakers.UserAccount.Generate();
+        UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -651,7 +651,7 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
     public async Task Can_create_resource_with_duplicate_relationship()
     {
         // Arrange
-        List<UserAccount> existingUserAccounts = _fakers.UserAccount.Generate(2);
+        List<UserAccount> existingUserAccounts = _fakers.UserAccount.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

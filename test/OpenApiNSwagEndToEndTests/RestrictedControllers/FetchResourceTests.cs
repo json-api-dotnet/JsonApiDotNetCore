@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiNSwagEndToEndTests.RestrictedControllers;
 
-public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext>>
+public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext> _testContext;
     private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
@@ -29,8 +29,8 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Op
     public async Task Can_get_primary_resources()
     {
         // Arrange
-        List<ReadOnlyChannel> channels = _fakers.ReadOnlyChannel.Generate(2);
-        channels.ForEach(channel => channel.VideoStream = _fakers.DataStream.Generate());
+        List<ReadOnlyChannel> channels = _fakers.ReadOnlyChannel.GenerateList(2);
+        channels.ForEach(channel => channel.VideoStream = _fakers.DataStream.GenerateOne());
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -79,8 +79,8 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Op
     public async Task Can_get_primary_resource_by_ID()
     {
         // Arrange
-        ReadOnlyChannel channel = _fakers.ReadOnlyChannel.Generate();
-        channel.VideoStream = _fakers.DataStream.Generate();
+        ReadOnlyChannel channel = _fakers.ReadOnlyChannel.GenerateOne();
+        channel.VideoStream = _fakers.DataStream.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -138,8 +138,8 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Op
     public async Task Can_get_secondary_ToOne_resource()
     {
         // Arrange
-        ReadOnlyChannel channel = _fakers.ReadOnlyChannel.Generate();
-        channel.VideoStream = _fakers.DataStream.Generate();
+        ReadOnlyChannel channel = _fakers.ReadOnlyChannel.GenerateOne();
+        channel.VideoStream = _fakers.DataStream.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -164,8 +164,8 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Op
     public async Task Can_get_unknown_secondary_ToOne_resource()
     {
         // Arrange
-        ReadOnlyChannel channel = _fakers.ReadOnlyChannel.Generate();
-        channel.VideoStream = _fakers.DataStream.Generate();
+        ReadOnlyChannel channel = _fakers.ReadOnlyChannel.GenerateOne();
+        channel.VideoStream = _fakers.DataStream.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -187,9 +187,9 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Op
     public async Task Can_get_secondary_ToMany_resources()
     {
         // Arrange
-        ReadOnlyChannel channel = _fakers.ReadOnlyChannel.Generate();
-        channel.VideoStream = _fakers.DataStream.Generate();
-        channel.AudioStreams = _fakers.DataStream.Generate(2).ToHashSet();
+        ReadOnlyChannel channel = _fakers.ReadOnlyChannel.GenerateOne();
+        channel.VideoStream = _fakers.DataStream.GenerateOne();
+        channel.AudioStreams = _fakers.DataStream.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -219,8 +219,8 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Op
     public async Task Can_get_no_secondary_ToMany_resources()
     {
         // Arrange
-        ReadOnlyChannel channel = _fakers.ReadOnlyChannel.Generate();
-        channel.VideoStream = _fakers.DataStream.Generate();
+        ReadOnlyChannel channel = _fakers.ReadOnlyChannel.GenerateOne();
+        channel.VideoStream = _fakers.DataStream.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -260,5 +260,10 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Op
         error.Status.Should().Be("404");
         error.Title.Should().Be("The requested resource does not exist.");
         error.Detail.Should().Be($"Resource of type 'readOnlyChannels' with ID '{unknownChannelId}' does not exist.");
+    }
+
+    public void Dispose()
+    {
+        _logHttpMessageHandler.Dispose();
     }
 }

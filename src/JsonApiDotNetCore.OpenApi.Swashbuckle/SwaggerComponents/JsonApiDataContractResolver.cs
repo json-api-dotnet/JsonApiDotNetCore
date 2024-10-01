@@ -81,10 +81,10 @@ internal sealed class JsonApiDataContractResolver : ISerializerDataContractResol
         return dataContract;
     }
 
-    private IList<DataProperty> GetDataPropertiesThatExistInResourceClrType(Type resourceClrType, DataContract dataContract)
+    private List<DataProperty> GetDataPropertiesThatExistInResourceClrType(Type resourceClrType, DataContract dataContract)
     {
         ResourceType resourceType = _resourceGraph.GetResourceType(resourceClrType);
-        var dataProperties = new List<DataProperty>();
+        List<DataProperty> dataProperties = [];
 
         foreach (DataProperty property in dataContract.ObjectProperties)
         {

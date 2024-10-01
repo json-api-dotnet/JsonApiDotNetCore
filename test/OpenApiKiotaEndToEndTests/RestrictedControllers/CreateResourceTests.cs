@@ -12,7 +12,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiKiotaEndToEndTests.RestrictedControllers;
 
-public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext>>
+public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext> _testContext;
     private readonly TestableHttpClientRequestAdapterFactory _requestAdapterFactory;
@@ -31,9 +31,9 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
     public async Task Can_create_resource_with_includes_and_fieldsets()
     {
         // Arrange
-        DataStream existingVideoStream = _fakers.DataStream.Generate();
-        DataStream existingAudioStream = _fakers.DataStream.Generate();
-        WriteOnlyChannel newChannel = _fakers.WriteOnlyChannel.Generate();
+        DataStream existingVideoStream = _fakers.DataStream.GenerateOne();
+        DataStream existingAudioStream = _fakers.DataStream.GenerateOne();
+        WriteOnlyChannel newChannel = _fakers.WriteOnlyChannel.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -166,7 +166,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
     public async Task Cannot_create_resource_with_unknown_relationship_ID()
     {
         // Arrange
-        WriteOnlyChannel newChannel = _fakers.WriteOnlyChannel.Generate();
+        WriteOnlyChannel newChannel = _fakers.WriteOnlyChannel.GenerateOne();
 
         string unknownVideoStreamId = Unknown.StringId.For<DataStream, long>();
 
@@ -209,5 +209,10 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
         error.Status.Should().Be("404");
         error.Title.Should().Be("A related resource does not exist.");
         error.Detail.Should().Be($"Related resource of type 'dataStreams' with ID '{unknownVideoStreamId}' in relationship 'videoStream' does not exist.");
+    }
+
+    public void Dispose()
+    {
+        _requestAdapterFactory.Dispose();
     }
 }

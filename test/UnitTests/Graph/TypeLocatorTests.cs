@@ -28,24 +28,6 @@ public sealed class TypeLocatorTests
     }
 
     [Fact]
-    public void GetDerivedTypesForUnboundType_Gets_Implementation()
-    {
-        // Arrange
-        Assembly assembly = GetType().Assembly;
-        Type unboundType = typeof(BaseType<>);
-        Type typeArgument = typeof(int);
-
-        var typeLocator = new TypeLocator();
-
-        // Act
-        IReadOnlyCollection<Type> results = typeLocator.GetDerivedTypesForUnboundType(assembly, unboundType, typeArgument);
-
-        // Assert
-        results.ShouldHaveCount(1);
-        results.ElementAt(0).Should().Be(typeof(DerivedType));
-    }
-
-    [Fact]
     public void GetIdType_Correctly_Identifies_JsonApiResource()
     {
         // Arrange

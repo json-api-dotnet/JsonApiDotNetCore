@@ -19,7 +19,8 @@ public sealed class TodoItemDefinition(
 #else
     TimeProvider timeProvider
 #endif
-) : JsonApiResourceDefinition<TodoItem, long>(resourceGraph)
+)
+    : JsonApiResourceDefinition<TodoItem, long>(resourceGraph)
 {
 #if NET6_0
     private readonly Func<DateTimeOffset> _getUtcNow = () => systemClock.UtcNow;

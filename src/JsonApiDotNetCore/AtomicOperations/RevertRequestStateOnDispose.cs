@@ -11,8 +11,8 @@ internal sealed class RevertRequestStateOnDispose : IDisposable
     private readonly IJsonApiRequest _sourceRequest;
     private readonly ITargetedFields? _sourceTargetedFields;
 
-    private readonly IJsonApiRequest _backupRequest = new JsonApiRequest();
-    private readonly ITargetedFields _backupTargetedFields = new TargetedFields();
+    private readonly JsonApiRequest _backupRequest = new();
+    private readonly TargetedFields _backupTargetedFields = new();
 
     public RevertRequestStateOnDispose(IJsonApiRequest request, ITargetedFields? targetedFields)
     {

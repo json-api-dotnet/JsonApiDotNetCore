@@ -22,15 +22,15 @@ public sealed class UpdateResourceTests : BaseOpenApiNSwagClientTests
         {
             Data = new DataInUpdateResourceRequest
             {
-                Attributes = _fakers.PatchAttributes.Generate(),
+                Attributes = _fakers.PatchAttributes.GenerateOne(),
                 Relationships = new RelationshipsInUpdateResourceRequest
                 {
-                    NonNullableToOne = _fakers.ToOne.Generate(),
-                    RequiredNonNullableToOne = _fakers.ToOne.Generate(),
-                    NullableToOne = _fakers.NullableToOne.Generate(),
-                    RequiredNullableToOne = _fakers.ToOne.Generate(),
-                    ToMany = _fakers.ToMany.Generate(),
-                    RequiredToMany = _fakers.ToMany.Generate()
+                    NonNullableToOne = _fakers.ToOne.GenerateOne(),
+                    RequiredNonNullableToOne = _fakers.ToOne.GenerateOne(),
+                    NullableToOne = _fakers.NullableToOne.GenerateOne(),
+                    RequiredNullableToOne = _fakers.ToOne.GenerateOne(),
+                    ToMany = _fakers.ToMany.GenerateOne(),
+                    RequiredToMany = _fakers.ToMany.GenerateOne()
                 }
             }
         };
@@ -64,15 +64,15 @@ public sealed class UpdateResourceTests : BaseOpenApiNSwagClientTests
             Data = new DataInUpdateResourceRequest
             {
                 Id = Unknown.StringId.Int32,
-                Attributes = _fakers.PatchAttributes.Generate(),
+                Attributes = _fakers.PatchAttributes.GenerateOne(),
                 Relationships = new RelationshipsInUpdateResourceRequest
                 {
-                    NonNullableToOne = _fakers.ToOne.Generate(),
-                    RequiredNonNullableToOne = _fakers.ToOne.Generate(),
-                    NullableToOne = _fakers.NullableToOne.Generate(),
-                    RequiredNullableToOne = _fakers.ToOne.Generate(),
-                    ToMany = _fakers.ToMany.Generate(),
-                    RequiredToMany = _fakers.ToMany.Generate()
+                    NonNullableToOne = _fakers.ToOne.GenerateOne(),
+                    RequiredNonNullableToOne = _fakers.ToOne.GenerateOne(),
+                    NullableToOne = _fakers.NullableToOne.GenerateOne(),
+                    RequiredNullableToOne = _fakers.ToOne.GenerateOne(),
+                    ToMany = _fakers.ToMany.GenerateOne(),
+                    RequiredToMany = _fakers.ToMany.GenerateOne()
                 }
             }
         };
@@ -111,15 +111,15 @@ public sealed class UpdateResourceTests : BaseOpenApiNSwagClientTests
             Data = new DataInUpdateResourceRequest
             {
                 Id = Unknown.StringId.Int32,
-                Attributes = _fakers.PatchAttributes.Generate(),
+                Attributes = _fakers.PatchAttributes.GenerateOne(),
                 Relationships = new RelationshipsInUpdateResourceRequest
                 {
-                    NonNullableToOne = _fakers.ToOne.Generate(),
-                    RequiredNonNullableToOne = _fakers.ToOne.Generate(),
-                    NullableToOne = _fakers.NullableToOne.Generate(),
-                    RequiredNullableToOne = _fakers.ToOne.Generate(),
-                    ToMany = _fakers.ToMany.Generate(),
-                    RequiredToMany = _fakers.ToMany.Generate()
+                    NonNullableToOne = _fakers.ToOne.GenerateOne(),
+                    RequiredNonNullableToOne = _fakers.ToOne.GenerateOne(),
+                    NullableToOne = _fakers.NullableToOne.GenerateOne(),
+                    RequiredNullableToOne = _fakers.ToOne.GenerateOne(),
+                    ToMany = _fakers.ToMany.GenerateOne(),
+                    RequiredToMany = _fakers.ToMany.GenerateOne()
                 }
             }
         };

@@ -47,7 +47,7 @@ internal sealed class FakerFactory
 
         public override void Generate(AutoGenerateOverrideContext context)
         {
-            object idValue = _idContainerFaker.Generate().Value!;
+            object idValue = _idContainerFaker.GenerateOne().Value!;
             idValue = ToPositiveValue(idValue);
 
             ((dynamic)context.Instance).Id = idValue.ToString()!;

@@ -14,12 +14,16 @@ public sealed class SingleOrManyDataConverterFactory : JsonConverterFactory
     /// <inheritdoc />
     public override bool CanConvert(Type typeToConvert)
     {
+        ArgumentGuard.NotNull(typeToConvert);
+
         return typeToConvert.IsGenericType && typeToConvert.GetGenericTypeDefinition() == typeof(SingleOrManyData<>);
     }
 
     /// <inheritdoc />
     public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
     {
+        ArgumentGuard.NotNull(typeToConvert);
+
         Type objectType = typeToConvert.GetGenericArguments()[0];
         Type converterType = typeof(SingleOrManyDataConverter<>).MakeGenericType(objectType);
 
@@ -31,7 +35,7 @@ public sealed class SingleOrManyDataConverterFactory : JsonConverterFactory
     {
         public override SingleOrManyData<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var objects = new List<T?>();
+            List<T?> objects = [];
             bool isManyData = false;
             bool hasCompletedToMany = false;
 

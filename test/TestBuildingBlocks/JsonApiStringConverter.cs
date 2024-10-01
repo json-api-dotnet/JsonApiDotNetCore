@@ -16,7 +16,7 @@ public static class JsonApiStringConverter
         }
         catch (Exception exception)
         {
-            throw new Exception($"Failed to extract Error ID from response body '{responseBody}'.", exception);
+            throw new JsonException($"Failed to extract Error ID from response body '{responseBody}'.", exception);
         }
     }
 }

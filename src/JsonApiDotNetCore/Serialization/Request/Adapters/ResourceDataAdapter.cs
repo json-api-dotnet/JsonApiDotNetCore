@@ -42,6 +42,9 @@ public class ResourceDataAdapter : BaseAdapter, IResourceDataAdapter
     protected virtual (IIdentifiable resource, ResourceType resourceType) ConvertResourceObject(SingleOrManyData<ResourceObject> data,
         ResourceIdentityRequirements requirements, RequestAdapterState state)
     {
+        ArgumentGuard.NotNull(requirements);
+        ArgumentGuard.NotNull(state);
+
         return _resourceObjectAdapter.Convert(data.SingleValue!, requirements, state);
     }
 }

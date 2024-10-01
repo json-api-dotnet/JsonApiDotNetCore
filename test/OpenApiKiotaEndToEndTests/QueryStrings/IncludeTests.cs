@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiKiotaEndToEndTests.QueryStrings;
 
-public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>
+public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
     private readonly TestableHttpClientRequestAdapterFactory _requestAdapterFactory;
@@ -29,8 +29,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
     public async Task Can_include_in_primary_resources()
     {
         // Arrange
-        Node node = _fakers.Node.Generate();
-        node.Values = _fakers.NameValuePair.Generate(2);
+        Node node = _fakers.Node.GenerateOne();
+        node.Values = _fakers.NameValuePair.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -71,9 +71,9 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
     public async Task Can_include_in_primary_resource()
     {
         // Arrange
-        Node node = _fakers.Node.Generate();
-        node.Values = _fakers.NameValuePair.Generate(1);
-        node.Children = _fakers.Node.Generate(2).ToHashSet();
+        Node node = _fakers.Node.GenerateOne();
+        node.Values = _fakers.NameValuePair.GenerateList(1);
+        node.Children = _fakers.Node.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -117,9 +117,9 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
     public async Task Can_include_in_secondary_resources()
     {
         // Arrange
-        Node node = _fakers.Node.Generate();
-        node.Parent = _fakers.Node.Generate();
-        node.Values = _fakers.NameValuePair.Generate(2);
+        Node node = _fakers.Node.GenerateOne();
+        node.Parent = _fakers.Node.GenerateOne();
+        node.Values = _fakers.NameValuePair.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -155,9 +155,9 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
     public async Task Can_include_in_secondary_resource()
     {
         // Arrange
-        Node node = _fakers.Node.Generate();
-        node.Parent = _fakers.Node.Generate();
-        node.Parent.Parent = _fakers.Node.Generate();
+        Node node = _fakers.Node.GenerateOne();
+        node.Parent = _fakers.Node.GenerateOne();
+        node.Parent.Parent = _fakers.Node.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -197,7 +197,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
     public async Task Can_use_empty_include()
     {
         // Arrange
-        Node node = _fakers.Node.Generate();
+        Node node = _fakers.Node.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -225,5 +225,10 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
 
             response.Included.Should().BeEmpty();
         }
+    }
+
+    public void Dispose()
+    {
+        _requestAdapterFactory.Dispose();
     }
 }

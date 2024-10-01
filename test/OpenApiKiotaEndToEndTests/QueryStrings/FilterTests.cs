@@ -11,7 +11,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiKiotaEndToEndTests.QueryStrings;
 
-public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>
+public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
     private readonly TestableHttpClientRequestAdapterFactory _requestAdapterFactory;
@@ -29,7 +29,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
     public async Task Can_filter_in_primary_resources()
     {
         // Arrange
-        List<Node> nodes = _fakers.Node.Generate(2);
+        List<Node> nodes = _fakers.Node.GenerateList(2);
         nodes[0].Name = "John No Quote";
         nodes[1].Name = "Brian O'Quote";
 
@@ -73,8 +73,8 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
     public async Task Can_filter_in_secondary_resources()
     {
         // Arrange
-        Node node = _fakers.Node.Generate();
-        node.Children = _fakers.Node.Generate(2).ToHashSet();
+        Node node = _fakers.Node.GenerateOne();
+        node.Children = _fakers.Node.GenerateSet(2);
         node.Children.ElementAt(0).Comment = "Discount: $10";
         node.Children.ElementAt(1).Comment = "Discount: 5%";
 
@@ -118,10 +118,10 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
     public async Task Can_filter_at_ToMany_relationship_endpoint()
     {
         // Arrange
-        Node node = _fakers.Node.Generate();
-        node.Children = _fakers.Node.Generate(2).ToHashSet();
-        node.Children.ElementAt(0).Children = _fakers.Node.Generate(1).ToHashSet();
-        node.Children.ElementAt(1).Children = _fakers.Node.Generate(2).ToHashSet();
+        Node node = _fakers.Node.GenerateOne();
+        node.Children = _fakers.Node.GenerateSet(2);
+        node.Children.ElementAt(0).Children = _fakers.Node.GenerateSet(1);
+        node.Children.ElementAt(1).Children = _fakers.Node.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -186,5 +186,10 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
             error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("filter");
         }
+    }
+
+    public void Dispose()
+    {
+        _requestAdapterFactory.Dispose();
     }
 }

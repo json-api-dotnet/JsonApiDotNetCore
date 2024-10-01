@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiNSwagEndToEndTests.AtomicOperations;
 
-public sealed class AtomicDeleteResourceTests : IClassFixture<IntegrationTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext>>
+public sealed class AtomicDeleteResourceTests : IClassFixture<IntegrationTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext> _testContext;
     private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
@@ -33,9 +33,9 @@ public sealed class AtomicDeleteResourceTests : IClassFixture<IntegrationTestCon
     public async Task Can_delete_resource()
     {
         // Arrange
-        Enrollment existingEnrollment = _fakers.Enrollment.Generate();
-        existingEnrollment.Student = _fakers.Student.Generate();
-        existingEnrollment.Course = _fakers.Course.Generate();
+        Enrollment existingEnrollment = _fakers.Enrollment.GenerateOne();
+        existingEnrollment.Student = _fakers.Student.GenerateOne();
+        existingEnrollment.Course = _fakers.Course.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -72,5 +72,10 @@ public sealed class AtomicDeleteResourceTests : IClassFixture<IntegrationTestCon
 
             enrollmentInDatabase.Should().BeNull();
         });
+    }
+
+    public void Dispose()
+    {
+        _logHttpMessageHandler.Dispose();
     }
 }

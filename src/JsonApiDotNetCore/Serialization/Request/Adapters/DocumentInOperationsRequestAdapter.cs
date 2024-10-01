@@ -21,9 +21,11 @@ public sealed class DocumentInOperationsRequestAdapter : BaseAdapter, IDocumentI
     }
 
     /// <inheritdoc />
-    public IReadOnlyList<OperationContainer> Convert(Document document, RequestAdapterState state)
+    public IList<OperationContainer> Convert(Document document, RequestAdapterState state)
     {
+        ArgumentGuard.NotNull(document);
         ArgumentGuard.NotNull(state);
+
         AssertHasOperations(document.Operations, state);
 
         using IDisposable _ = state.Position.PushElement("atomic:operations");
@@ -40,7 +42,7 @@ public sealed class DocumentInOperationsRequestAdapter : BaseAdapter, IDocumentI
         }
     }
 
-    private void AssertMaxOperationsNotExceeded(ICollection<AtomicOperationObject?> atomicOperationObjects, RequestAdapterState state)
+    private void AssertMaxOperationsNotExceeded(IList<AtomicOperationObject?> atomicOperationObjects, RequestAdapterState state)
     {
         if (atomicOperationObjects.Count > _options.MaximumOperationsPerRequest)
         {
@@ -50,9 +52,9 @@ public sealed class DocumentInOperationsRequestAdapter : BaseAdapter, IDocumentI
         }
     }
 
-    private IReadOnlyList<OperationContainer> ConvertOperations(IEnumerable<AtomicOperationObject?> atomicOperationObjects, RequestAdapterState state)
+    private List<OperationContainer> ConvertOperations(IEnumerable<AtomicOperationObject?> atomicOperationObjects, RequestAdapterState state)
     {
-        var operations = new List<OperationContainer>();
+        List<OperationContainer> operations = [];
         int operationIndex = 0;
 
         foreach (AtomicOperationObject? atomicOperationObject in atomicOperationObjects)

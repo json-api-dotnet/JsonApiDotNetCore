@@ -7,7 +7,8 @@ namespace OpenApiTests.ResourceFieldValidation.NullableReferenceTypesOn;
 // @formatter:wrap_chained_method_calls chop_always
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class NrtOnDbContext(DbContextOptions<NrtOnDbContext> options) : TestableDbContext(options)
+public sealed class NrtOnDbContext(DbContextOptions<NrtOnDbContext> options)
+    : TestableDbContext(options)
 {
     public DbSet<NrtOnResource> Resources => Set<NrtOnResource>();
     public DbSet<NrtOnEmpty> Empties => Set<NrtOnEmpty>();

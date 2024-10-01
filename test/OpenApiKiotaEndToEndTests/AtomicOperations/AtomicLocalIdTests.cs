@@ -13,7 +13,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiKiotaEndToEndTests.AtomicOperations;
 
-public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext>>
+public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext> _testContext;
     private readonly TestableHttpClientRequestAdapterFactory _requestAdapterFactory;
@@ -35,11 +35,11 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
     public async Task Can_use_local_IDs()
     {
         // Arrange
-        Teacher newTeacher = _fakers.Teacher.Generate();
-        Course newCourse = _fakers.Course.Generate();
+        Teacher newTeacher = _fakers.Teacher.GenerateOne();
+        Course newCourse = _fakers.Course.GenerateOne();
         newCourse.Id = Guid.NewGuid();
-        Student newStudent = _fakers.Student.Generate();
-        DateOnly newEnrolledAt = _fakers.Enrollment.Generate().EnrolledAt;
+        Student newStudent = _fakers.Student.GenerateOne();
+        DateOnly newEnrolledAt = _fakers.Enrollment.GenerateOne().EnrolledAt;
 
         const string teacherLocalId = "teacher-1";
         const string studentLocalId = "student-1";
@@ -233,5 +233,10 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
             enrollmentInDatabase.Course.Id.Should().Be(newCourse.Id);
             enrollmentInDatabase.Student.Id.Should().Be(newStudentId);
         });
+    }
+
+    public void Dispose()
+    {
+        _requestAdapterFactory.Dispose();
     }
 }

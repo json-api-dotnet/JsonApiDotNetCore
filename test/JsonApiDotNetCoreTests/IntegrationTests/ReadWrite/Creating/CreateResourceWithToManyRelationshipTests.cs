@@ -25,7 +25,7 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
     public async Task Can_create_OneToMany_relationship()
     {
         // Arrange
-        List<UserAccount> existingUserAccounts = _fakers.UserAccount.Generate(2);
+        List<UserAccount> existingUserAccounts = _fakers.UserAccount.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -89,7 +89,7 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
     public async Task Can_create_OneToMany_relationship_with_include()
     {
         // Arrange
-        List<UserAccount> existingUserAccounts = _fakers.UserAccount.Generate(2);
+        List<UserAccount> existingUserAccounts = _fakers.UserAccount.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -160,7 +160,7 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
     public async Task Can_create_OneToMany_relationship_with_include_and_secondary_fieldset()
     {
         // Arrange
-        List<UserAccount> existingUserAccounts = _fakers.UserAccount.Generate(2);
+        List<UserAccount> existingUserAccounts = _fakers.UserAccount.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -231,8 +231,8 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
     public async Task Can_create_ManyToMany_relationship_with_include_and_fieldsets()
     {
         // Arrange
-        List<WorkTag> existingTags = _fakers.WorkTag.Generate(3);
-        WorkItem newWorkItem = _fakers.WorkItem.Generate();
+        List<WorkTag> existingTags = _fakers.WorkTag.GenerateList(3);
+        WorkItem newWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -461,7 +461,7 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         string workItemId1 = Unknown.StringId.For<WorkItem, int>();
         string workItemId2 = Unknown.StringId.AltFor<WorkItem, int>();
 
-        UserAccount newUserAccount = _fakers.UserAccount.Generate();
+        UserAccount newUserAccount = _fakers.UserAccount.GenerateOne();
 
         var requestBody = new
         {
@@ -567,7 +567,7 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
     public async Task Can_create_with_duplicates()
     {
         // Arrange
-        UserAccount existingUserAccount = _fakers.UserAccount.Generate();
+        UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

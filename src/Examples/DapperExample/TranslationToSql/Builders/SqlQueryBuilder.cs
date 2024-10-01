@@ -477,7 +477,7 @@ internal sealed class SqlQueryBuilder(DatabaseProvider databaseProvider) : SqlTr
         };
     }
 
-    private IDisposable Indent()
+    private RevertIndentOnDispose Indent()
     {
         _indentDepth++;
         return new RevertIndentOnDispose(this);

@@ -43,7 +43,7 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Get_primary_resources_hides_other_tenants()
     {
         // Arrange
-        List<WebShop> shops = _fakers.WebShop.Generate(2);
+        List<WebShop> shops = _fakers.WebShop.GenerateList(2);
         shops[0].TenantId = OtherTenantId;
         shops[1].TenantId = ThisTenantId;
 
@@ -70,12 +70,12 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Filter_on_primary_resources_hides_other_tenants()
     {
         // Arrange
-        List<WebShop> shops = _fakers.WebShop.Generate(2);
+        List<WebShop> shops = _fakers.WebShop.GenerateList(2);
         shops[0].TenantId = OtherTenantId;
-        shops[0].Products = _fakers.WebProduct.Generate(1);
+        shops[0].Products = _fakers.WebProduct.GenerateList(1);
 
         shops[1].TenantId = ThisTenantId;
-        shops[1].Products = _fakers.WebProduct.Generate(1);
+        shops[1].Products = _fakers.WebProduct.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -100,12 +100,12 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Get_primary_resources_with_include_hides_other_tenants()
     {
         // Arrange
-        List<WebShop> shops = _fakers.WebShop.Generate(2);
+        List<WebShop> shops = _fakers.WebShop.GenerateList(2);
         shops[0].TenantId = OtherTenantId;
-        shops[0].Products = _fakers.WebProduct.Generate(1);
+        shops[0].Products = _fakers.WebProduct.GenerateList(1);
 
         shops[1].TenantId = ThisTenantId;
-        shops[1].Products = _fakers.WebProduct.Generate(1);
+        shops[1].Products = _fakers.WebProduct.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -135,7 +135,7 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_get_primary_resource_by_ID_from_other_tenant()
     {
         // Arrange
-        WebShop shop = _fakers.WebShop.Generate();
+        WebShop shop = _fakers.WebShop.GenerateOne();
         shop.TenantId = OtherTenantId;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -164,9 +164,9 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_get_secondary_resources_from_other_parent_tenant()
     {
         // Arrange
-        WebShop shop = _fakers.WebShop.Generate();
+        WebShop shop = _fakers.WebShop.GenerateOne();
         shop.TenantId = OtherTenantId;
-        shop.Products = _fakers.WebProduct.Generate(1);
+        shop.Products = _fakers.WebProduct.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -194,8 +194,8 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_get_secondary_resource_from_other_parent_tenant()
     {
         // Arrange
-        WebProduct product = _fakers.WebProduct.Generate();
-        product.Shop = _fakers.WebShop.Generate();
+        WebProduct product = _fakers.WebProduct.GenerateOne();
+        product.Shop = _fakers.WebShop.GenerateOne();
         product.Shop.TenantId = OtherTenantId;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -224,9 +224,9 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_get_ToMany_relationship_for_other_parent_tenant()
     {
         // Arrange
-        WebShop shop = _fakers.WebShop.Generate();
+        WebShop shop = _fakers.WebShop.GenerateOne();
         shop.TenantId = OtherTenantId;
-        shop.Products = _fakers.WebProduct.Generate(1);
+        shop.Products = _fakers.WebProduct.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -254,8 +254,8 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_get_ToOne_relationship_for_other_parent_tenant()
     {
         // Arrange
-        WebProduct product = _fakers.WebProduct.Generate();
-        product.Shop = _fakers.WebShop.Generate();
+        WebProduct product = _fakers.WebProduct.GenerateOne();
+        product.Shop = _fakers.WebShop.GenerateOne();
         product.Shop.TenantId = OtherTenantId;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -284,7 +284,7 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_create_resource()
     {
         // Arrange
-        string newShopUrl = _fakers.WebShop.Generate().Url;
+        string newShopUrl = _fakers.WebShop.GenerateOne().Url;
 
         var requestBody = new
         {
@@ -325,11 +325,11 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_create_resource_with_ToMany_relationship_to_other_tenant()
     {
         // Arrange
-        WebProduct existingProduct = _fakers.WebProduct.Generate();
-        existingProduct.Shop = _fakers.WebShop.Generate();
+        WebProduct existingProduct = _fakers.WebProduct.GenerateOne();
+        existingProduct.Shop = _fakers.WebShop.GenerateOne();
         existingProduct.Shop.TenantId = OtherTenantId;
 
-        string newShopUrl = _fakers.WebShop.Generate().Url;
+        string newShopUrl = _fakers.WebShop.GenerateOne().Url;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -383,10 +383,10 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_create_resource_with_ToOne_relationship_to_other_tenant()
     {
         // Arrange
-        WebShop existingShop = _fakers.WebShop.Generate();
+        WebShop existingShop = _fakers.WebShop.GenerateOne();
         existingShop.TenantId = OtherTenantId;
 
-        string newProductName = _fakers.WebProduct.Generate().Name;
+        string newProductName = _fakers.WebProduct.GenerateOne().Name;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -437,11 +437,11 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_update_resource()
     {
         // Arrange
-        WebProduct existingProduct = _fakers.WebProduct.Generate();
-        existingProduct.Shop = _fakers.WebShop.Generate();
+        WebProduct existingProduct = _fakers.WebProduct.GenerateOne();
+        existingProduct.Shop = _fakers.WebShop.GenerateOne();
         existingProduct.Shop.TenantId = ThisTenantId;
 
-        string newProductName = _fakers.WebProduct.Generate().Name;
+        string newProductName = _fakers.WebProduct.GenerateOne().Name;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -485,11 +485,11 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_update_resource_from_other_tenant()
     {
         // Arrange
-        WebProduct existingProduct = _fakers.WebProduct.Generate();
-        existingProduct.Shop = _fakers.WebShop.Generate();
+        WebProduct existingProduct = _fakers.WebProduct.GenerateOne();
+        existingProduct.Shop = _fakers.WebShop.GenerateOne();
         existingProduct.Shop.TenantId = OtherTenantId;
 
-        string newProductName = _fakers.WebProduct.Generate().Name;
+        string newProductName = _fakers.WebProduct.GenerateOne().Name;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -530,11 +530,11 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_update_resource_with_ToMany_relationship_to_other_tenant()
     {
         // Arrange
-        WebShop existingShop = _fakers.WebShop.Generate();
+        WebShop existingShop = _fakers.WebShop.GenerateOne();
         existingShop.TenantId = ThisTenantId;
 
-        WebProduct existingProduct = _fakers.WebProduct.Generate();
-        existingProduct.Shop = _fakers.WebShop.Generate();
+        WebProduct existingProduct = _fakers.WebProduct.GenerateOne();
+        existingProduct.Shop = _fakers.WebShop.GenerateOne();
         existingProduct.Shop.TenantId = OtherTenantId;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -586,11 +586,11 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_update_resource_with_ToOne_relationship_to_other_tenant()
     {
         // Arrange
-        WebProduct existingProduct = _fakers.WebProduct.Generate();
-        existingProduct.Shop = _fakers.WebShop.Generate();
+        WebProduct existingProduct = _fakers.WebProduct.GenerateOne();
+        existingProduct.Shop = _fakers.WebShop.GenerateOne();
         existingProduct.Shop.TenantId = ThisTenantId;
 
-        WebShop existingShop = _fakers.WebShop.Generate();
+        WebShop existingShop = _fakers.WebShop.GenerateOne();
         existingShop.TenantId = OtherTenantId;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -639,9 +639,9 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_update_ToMany_relationship_for_other_parent_tenant()
     {
         // Arrange
-        WebShop existingShop = _fakers.WebShop.Generate();
+        WebShop existingShop = _fakers.WebShop.GenerateOne();
         existingShop.TenantId = OtherTenantId;
-        existingShop.Products = _fakers.WebProduct.Generate(1);
+        existingShop.Products = _fakers.WebProduct.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -674,11 +674,11 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_update_ToMany_relationship_to_other_tenant()
     {
         // Arrange
-        WebShop existingShop = _fakers.WebShop.Generate();
+        WebShop existingShop = _fakers.WebShop.GenerateOne();
         existingShop.TenantId = ThisTenantId;
 
-        WebProduct existingProduct = _fakers.WebProduct.Generate();
-        existingProduct.Shop = _fakers.WebShop.Generate();
+        WebProduct existingProduct = _fakers.WebProduct.GenerateOne();
+        existingProduct.Shop = _fakers.WebShop.GenerateOne();
         existingProduct.Shop.TenantId = OtherTenantId;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -719,8 +719,8 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_update_ToOne_relationship_for_other_parent_tenant()
     {
         // Arrange
-        WebProduct existingProduct = _fakers.WebProduct.Generate();
-        existingProduct.Shop = _fakers.WebShop.Generate();
+        WebProduct existingProduct = _fakers.WebProduct.GenerateOne();
+        existingProduct.Shop = _fakers.WebShop.GenerateOne();
         existingProduct.Shop.TenantId = OtherTenantId;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -754,11 +754,11 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_update_ToOne_relationship_to_other_tenant()
     {
         // Arrange
-        WebProduct existingProduct = _fakers.WebProduct.Generate();
-        existingProduct.Shop = _fakers.WebShop.Generate();
+        WebProduct existingProduct = _fakers.WebProduct.GenerateOne();
+        existingProduct.Shop = _fakers.WebShop.GenerateOne();
         existingProduct.Shop.TenantId = ThisTenantId;
 
-        WebShop existingShop = _fakers.WebShop.Generate();
+        WebShop existingShop = _fakers.WebShop.GenerateOne();
         existingShop.TenantId = OtherTenantId;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -796,11 +796,11 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_add_to_ToMany_relationship_for_other_parent_tenant()
     {
         // Arrange
-        WebShop existingShop = _fakers.WebShop.Generate();
+        WebShop existingShop = _fakers.WebShop.GenerateOne();
         existingShop.TenantId = OtherTenantId;
 
-        WebProduct existingProduct = _fakers.WebProduct.Generate();
-        existingProduct.Shop = _fakers.WebShop.Generate();
+        WebProduct existingProduct = _fakers.WebProduct.GenerateOne();
+        existingProduct.Shop = _fakers.WebShop.GenerateOne();
         existingProduct.Shop.TenantId = ThisTenantId;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -840,11 +840,11 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     [Fact]
     public async Task Cannot_add_to_ToMany_relationship_with_other_tenant()
     {
-        WebShop existingShop = _fakers.WebShop.Generate();
+        WebShop existingShop = _fakers.WebShop.GenerateOne();
         existingShop.TenantId = ThisTenantId;
 
-        WebProduct existingProduct = _fakers.WebProduct.Generate();
-        existingProduct.Shop = _fakers.WebShop.Generate();
+        WebProduct existingProduct = _fakers.WebProduct.GenerateOne();
+        existingProduct.Shop = _fakers.WebShop.GenerateOne();
         existingProduct.Shop.TenantId = OtherTenantId;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -885,9 +885,9 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_remove_from_ToMany_relationship_for_other_parent_tenant()
     {
         // Arrange
-        WebShop existingShop = _fakers.WebShop.Generate();
+        WebShop existingShop = _fakers.WebShop.GenerateOne();
         existingShop.TenantId = OtherTenantId;
-        existingShop.Products = _fakers.WebProduct.Generate(1);
+        existingShop.Products = _fakers.WebProduct.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -927,8 +927,8 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_delete_resource()
     {
         // Arrange
-        WebProduct existingProduct = _fakers.WebProduct.Generate();
-        existingProduct.Shop = _fakers.WebShop.Generate();
+        WebProduct existingProduct = _fakers.WebProduct.GenerateOne();
+        existingProduct.Shop = _fakers.WebShop.GenerateOne();
         existingProduct.Shop.TenantId = ThisTenantId;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -959,8 +959,8 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_delete_resource_from_other_tenant()
     {
         // Arrange
-        WebProduct existingProduct = _fakers.WebProduct.Generate();
-        existingProduct.Shop = _fakers.WebShop.Generate();
+        WebProduct existingProduct = _fakers.WebProduct.GenerateOne();
+        existingProduct.Shop = _fakers.WebShop.GenerateOne();
         existingProduct.Shop.TenantId = OtherTenantId;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -989,9 +989,9 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Renders_links_with_tenant_route_parameter()
     {
         // Arrange
-        WebShop shop = _fakers.WebShop.Generate();
+        WebShop shop = _fakers.WebShop.GenerateOne();
         shop.TenantId = ThisTenantId;
-        shop.Products = _fakers.WebProduct.Generate(1);
+        shop.Products = _fakers.WebProduct.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

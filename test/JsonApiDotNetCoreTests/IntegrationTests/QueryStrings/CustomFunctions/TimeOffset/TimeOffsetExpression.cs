@@ -36,14 +36,14 @@ internal sealed class TimeOffsetExpression : FunctionExpression
     {
         ArgumentGuard.NotNull(timeSpanConstant);
 
-        if (timeSpanConstant.TypedValue.GetType() != typeof(TimeSpan))
+        if (timeSpanConstant.TypedValue is not TimeSpan timeSpan)
         {
             throw new ArgumentException($"Constant must contain a {nameof(TimeSpan)}.", nameof(timeSpanConstant));
         }
 
         _timeSpanConstant = timeSpanConstant;
 
-        Value = (TimeSpan)timeSpanConstant.TypedValue;
+        Value = timeSpan;
     }
 
     public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)

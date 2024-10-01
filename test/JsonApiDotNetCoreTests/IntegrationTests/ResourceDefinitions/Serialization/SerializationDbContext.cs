@@ -7,7 +7,8 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serialization;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class SerializationDbContext(DbContextOptions<SerializationDbContext> options) : TestableDbContext(options)
+public sealed class SerializationDbContext(DbContextOptions<SerializationDbContext> options)
+    : TestableDbContext(options)
 {
     public DbSet<Student> Students => Set<Student>();
     public DbSet<Scholarship> Scholarships => Set<Scholarship>();

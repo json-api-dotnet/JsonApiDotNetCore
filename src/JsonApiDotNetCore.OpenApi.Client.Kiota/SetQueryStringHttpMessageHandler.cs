@@ -13,11 +13,15 @@ public sealed class SetQueryStringHttpMessageHandler : DelegatingHandler
 
     public IDisposable CreateScope(IDictionary<string, string?> queryString)
     {
+        ArgumentNullException.ThrowIfNull(queryString);
+
         return new QueryStringScope(this, queryString);
     }
 
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(request);
+
         if (_queryString is { Count: > 0 } && request.RequestUri != null)
         {
             request.RequestUri = new Uri(QueryHelpers.AddQueryString(request.RequestUri.ToString(), _queryString));

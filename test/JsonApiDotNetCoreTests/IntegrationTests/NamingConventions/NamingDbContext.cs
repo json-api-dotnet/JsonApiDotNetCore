@@ -5,7 +5,8 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class NamingDbContext(DbContextOptions<NamingDbContext> options) : TestableDbContext(options)
+public sealed class NamingDbContext(DbContextOptions<NamingDbContext> options)
+    : TestableDbContext(options)
 {
     public DbSet<SwimmingPool> SwimmingPools => Set<SwimmingPool>();
     public DbSet<WaterSlide> WaterSlides => Set<WaterSlide>();

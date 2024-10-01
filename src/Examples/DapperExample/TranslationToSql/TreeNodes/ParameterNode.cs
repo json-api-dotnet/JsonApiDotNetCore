@@ -16,7 +16,7 @@ internal sealed class ParameterNode : SqlValueNode
 
     public ParameterNode(string name, object? value)
     {
-        ArgumentGuard.NotNull(name);
+        ArgumentGuard.NotNullNorEmpty(name);
 
         if (!name.StartsWith('@') || name.Length < 2)
         {

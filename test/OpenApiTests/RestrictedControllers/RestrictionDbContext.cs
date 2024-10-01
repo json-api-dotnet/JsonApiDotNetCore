@@ -5,7 +5,8 @@ using TestBuildingBlocks;
 namespace OpenApiTests.RestrictedControllers;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class RestrictionDbContext(DbContextOptions<RestrictionDbContext> options) : TestableDbContext(options)
+public sealed class RestrictionDbContext(DbContextOptions<RestrictionDbContext> options)
+    : TestableDbContext(options)
 {
     public DbSet<DataStream> DataStreams => Set<DataStream>();
     public DbSet<ReadOnlyChannel> ReadOnlyChannels => Set<ReadOnlyChannel>();

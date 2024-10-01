@@ -72,7 +72,8 @@ public class ApiResponse(int statusCode, IReadOnlyDictionary<string, IEnumerable
 }
 
 [PublicAPI]
-public class ApiResponse<TResult>(int statusCode, IReadOnlyDictionary<string, IEnumerable<string>> headers, TResult result) : ApiResponse(statusCode, headers)
+public class ApiResponse<TResult>(int statusCode, IReadOnlyDictionary<string, IEnumerable<string>> headers, TResult result)
+    : ApiResponse(statusCode, headers)
 {
     public TResult Result { get; private set; } = result;
 }

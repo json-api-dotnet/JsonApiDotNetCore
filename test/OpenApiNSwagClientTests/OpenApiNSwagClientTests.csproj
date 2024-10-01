@@ -32,7 +32,6 @@
       <Namespace>$(MSBuildProjectName).LegacyOpenApi.GeneratedCode</Namespace>
       <ClassName>LegacyClient</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
-      <NSwagGenerateClientInterfaces>true</NSwagGenerateClientInterfaces>
       <NSwagGenerateNullableReferenceTypes>false</NSwagGenerateNullableReferenceTypes>
       <NSwagGenerateOptionalPropertiesAsNullable>false</NSwagGenerateOptionalPropertiesAsNullable>
       <NSwagGenerateOptionalParameters>false</NSwagGenerateOptionalParameters>

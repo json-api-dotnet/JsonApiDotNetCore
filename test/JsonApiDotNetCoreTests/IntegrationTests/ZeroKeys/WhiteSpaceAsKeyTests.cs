@@ -50,7 +50,7 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
     public async Task Can_filter_by_space_ID_on_primary_resources()
     {
         // Arrange
-        List<Player> players = _fakers.Player.Generate(2);
+        List<Player> players = _fakers.Player.GenerateList(2);
         players[0].Id = SingleSpace;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -82,9 +82,9 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
     public async Task Can_get_primary_resource_by_space_ID_with_include()
     {
         // Arrange
-        Player player = _fakers.Player.Generate();
+        Player player = _fakers.Player.GenerateOne();
         player.Id = SingleSpace;
-        player.ActiveGame = _fakers.Game.Generate();
+        player.ActiveGame = _fakers.Game.GenerateOne();
         player.ActiveGame.Id = 0;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -115,7 +115,7 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
     public async Task Can_create_resource_with_space_ID()
     {
         // Arrange
-        string newEmailAddress = _fakers.Player.Generate().EmailAddress;
+        string newEmailAddress = _fakers.Player.GenerateOne().EmailAddress;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -160,10 +160,10 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
     public async Task Can_update_resource_with_space_ID()
     {
         // Arrange
-        Player existingPlayer = _fakers.Player.Generate();
+        Player existingPlayer = _fakers.Player.GenerateOne();
         existingPlayer.Id = SingleSpace;
 
-        string newEmailAddress = _fakers.Player.Generate().EmailAddress;
+        string newEmailAddress = _fakers.Player.GenerateOne().EmailAddress;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -208,8 +208,8 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
     public async Task Can_clear_ToOne_relationship_with_space_ID()
     {
         // Arrange
-        Game existingGame = _fakers.Game.Generate();
-        existingGame.Host = _fakers.Player.Generate();
+        Game existingGame = _fakers.Game.GenerateOne();
+        existingGame.Host = _fakers.Player.GenerateOne();
         existingGame.Host.Id = string.Empty;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -247,9 +247,9 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
     public async Task Can_assign_ToOne_relationship_with_space_ID()
     {
         // Arrange
-        Game existingGame = _fakers.Game.Generate();
+        Game existingGame = _fakers.Game.GenerateOne();
 
-        Player existingPlayer = _fakers.Player.Generate();
+        Player existingPlayer = _fakers.Player.GenerateOne();
         existingPlayer.Id = SingleSpace;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -292,10 +292,10 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
     public async Task Can_replace_ToOne_relationship_with_space_ID()
     {
         // Arrange
-        Game existingGame = _fakers.Game.Generate();
-        existingGame.Host = _fakers.Player.Generate();
+        Game existingGame = _fakers.Game.GenerateOne();
+        existingGame.Host = _fakers.Player.GenerateOne();
 
-        Player existingPlayer = _fakers.Player.Generate();
+        Player existingPlayer = _fakers.Player.GenerateOne();
         existingPlayer.Id = SingleSpace;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -338,8 +338,8 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
     public async Task Can_clear_ToMany_relationship_with_space_ID()
     {
         // Arrange
-        Game existingGame = _fakers.Game.Generate();
-        existingGame.ActivePlayers = _fakers.Player.Generate(2);
+        Game existingGame = _fakers.Game.GenerateOne();
+        existingGame.ActivePlayers = _fakers.Player.GenerateList(2);
         existingGame.ActivePlayers.ElementAt(0).Id = SingleSpace;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -377,9 +377,9 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
     public async Task Can_assign_ToMany_relationship_with_space_ID()
     {
         // Arrange
-        Game existingGame = _fakers.Game.Generate();
+        Game existingGame = _fakers.Game.GenerateOne();
 
-        Player existingPlayer = _fakers.Player.Generate();
+        Player existingPlayer = _fakers.Player.GenerateOne();
         existingPlayer.Id = SingleSpace;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -425,10 +425,10 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
     public async Task Can_replace_ToMany_relationship_with_space_ID()
     {
         // Arrange
-        Game existingGame = _fakers.Game.Generate();
-        existingGame.ActivePlayers = _fakers.Player.Generate(2);
+        Game existingGame = _fakers.Game.GenerateOne();
+        existingGame.ActivePlayers = _fakers.Player.GenerateList(2);
 
-        Player existingPlayer = _fakers.Player.Generate();
+        Player existingPlayer = _fakers.Player.GenerateOne();
         existingPlayer.Id = SingleSpace;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -474,10 +474,10 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
     public async Task Can_add_to_ToMany_relationship_with_space_ID()
     {
         // Arrange
-        Game existingGame = _fakers.Game.Generate();
-        existingGame.ActivePlayers = _fakers.Player.Generate(1);
+        Game existingGame = _fakers.Game.GenerateOne();
+        existingGame.ActivePlayers = _fakers.Player.GenerateList(1);
 
-        Player existingPlayer = _fakers.Player.Generate();
+        Player existingPlayer = _fakers.Player.GenerateOne();
         existingPlayer.Id = SingleSpace;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -523,8 +523,8 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
     public async Task Can_remove_from_ToMany_relationship_with_space_ID()
     {
         // Arrange
-        Game existingGame = _fakers.Game.Generate();
-        existingGame.ActivePlayers = _fakers.Player.Generate(2);
+        Game existingGame = _fakers.Game.GenerateOne();
+        existingGame.ActivePlayers = _fakers.Player.GenerateList(2);
         existingGame.ActivePlayers.ElementAt(0).Id = SingleSpace;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -570,7 +570,7 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
     public async Task Can_delete_resource_with_space_ID()
     {
         // Arrange
-        Player existingPlayer = _fakers.Player.Generate();
+        Player existingPlayer = _fakers.Player.GenerateOne();
         existingPlayer.Id = SingleSpace;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>

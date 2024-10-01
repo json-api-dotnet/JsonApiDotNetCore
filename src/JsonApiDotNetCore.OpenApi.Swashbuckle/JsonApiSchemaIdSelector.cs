@@ -27,7 +27,7 @@ internal sealed class JsonApiSchemaIdSelector
     private const string RelationshipIdentifierSchemaIdTemplate = "[ResourceName] [RelationshipName] Relationship Identifier";
     private const string RelationshipNameSchemaIdTemplate = "[ResourceName] [RelationshipName] Relationship Name";
 
-    private static readonly IDictionary<Type, string> SchemaTypeToTemplateMap = new Dictionary<Type, string>
+    private static readonly Dictionary<Type, string> SchemaTypeToTemplateMap = new()
     {
         [typeof(CreateResourceRequestDocument<>)] = "Create [ResourceName] Request Document",
         [typeof(UpdateResourceRequestDocument<>)] = "Update [ResourceName] Request Document",
@@ -118,20 +118,20 @@ internal sealed class JsonApiSchemaIdSelector
 
         if (resourceType != null)
         {
-            schemaId = schemaId.Replace("[ResourceName]", resourceType.PublicName.Singularize()).ToPascalCase();
+            schemaId = schemaId.Replace("[ResourceName]", resourceType.PublicName.Singularize()).Pascalize();
         }
 
         if (relationshipName != null)
         {
-            schemaId = schemaId.Replace("[RelationshipName]", relationshipName.ToPascalCase());
+            schemaId = schemaId.Replace("[RelationshipName]", relationshipName.Pascalize());
         }
 
         if (operationCode != null)
         {
-            schemaId = schemaId.Replace("[OperationCode]", operationCode.Value.ToString().ToPascalCase());
+            schemaId = schemaId.Replace("[OperationCode]", operationCode.Value.ToString().Pascalize());
         }
 
-        string pascalCaseSchemaId = schemaId.ToPascalCase();
+        string pascalCaseSchemaId = schemaId.Pascalize();
 
         JsonNamingPolicy? namingPolicy = _options.SerializerOptions.PropertyNamingPolicy;
         return namingPolicy != null ? namingPolicy.ConvertName(pascalCaseSchemaId) : pascalCaseSchemaId;

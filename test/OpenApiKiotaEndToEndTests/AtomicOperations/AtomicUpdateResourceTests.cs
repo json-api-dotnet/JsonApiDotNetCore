@@ -14,7 +14,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiKiotaEndToEndTests.AtomicOperations;
 
-public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext>>
+public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext> _testContext;
     private readonly TestableHttpClientRequestAdapterFactory _requestAdapterFactory;
@@ -41,9 +41,9 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Can_update_resource_with_attributes()
     {
         // Arrange
-        Student existingStudent = _fakers.Student.Generate();
-        string newName = _fakers.Student.Generate().Name;
-        string? newEmailAddress = _fakers.Student.Generate().EmailAddress;
+        Student existingStudent = _fakers.Student.GenerateOne();
+        string newName = _fakers.Student.GenerateOne().Name;
+        string? newEmailAddress = _fakers.Student.GenerateOne().EmailAddress;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -102,8 +102,8 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Can_update_resource_with_attributes_using_ref()
     {
         // Arrange
-        Student existingStudent = _fakers.Student.Generate();
-        string? newEmailAddress = _fakers.Student.Generate().EmailAddress;
+        Student existingStudent = _fakers.Student.GenerateOne();
+        string? newEmailAddress = _fakers.Student.GenerateOne().EmailAddress;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -166,13 +166,13 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Can_update_resource_with_attributes_and_relationships()
     {
         // Arrange
-        Enrollment existingEnrollment = _fakers.Enrollment.Generate();
-        existingEnrollment.Student = _fakers.Student.Generate();
-        existingEnrollment.Course = _fakers.Course.Generate();
+        Enrollment existingEnrollment = _fakers.Enrollment.GenerateOne();
+        existingEnrollment.Student = _fakers.Student.GenerateOne();
+        existingEnrollment.Course = _fakers.Course.GenerateOne();
 
-        Student existingStudent = _fakers.Student.Generate();
-        Course existingCourse = _fakers.Course.Generate();
-        DateOnly newEnrolledAt = _fakers.Enrollment.Generate().EnrolledAt;
+        Student existingStudent = _fakers.Student.GenerateOne();
+        Course existingCourse = _fakers.Course.GenerateOne();
+        DateOnly newEnrolledAt = _fakers.Enrollment.GenerateOne().EnrolledAt;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -260,5 +260,10 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
             enrollmentInDatabase.Course.ShouldNotBeNull();
             enrollmentInDatabase.Course.Id.Should().Be(existingCourse.Id);
         });
+    }
+
+    public void Dispose()
+    {
+        _requestAdapterFactory.Dispose();
     }
 }

@@ -817,8 +817,8 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_filter_on_has_with_nested_condition()
     {
         // Arrange
-        var resources = new List<FilterableResource>
-        {
+        List<FilterableResource> resources =
+        [
             new()
             {
                 Children = new List<FilterableResource>
@@ -839,7 +839,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
                     }
                 }
             }
-        };
+        ];
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

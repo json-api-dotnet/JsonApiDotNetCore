@@ -19,7 +19,7 @@ internal sealed class OpenApiOperationIdSelector
     private const string RelationshipIdTemplate = $"{SecondaryResourceIdTemplate} Relationship";
     private const string AtomicOperationsIdTemplate = "[Method] Operations";
 
-    private static readonly IDictionary<Type, string> SchemaOpenTypeToOpenApiOperationIdTemplateMap = new Dictionary<Type, string>
+    private static readonly Dictionary<Type, string> SchemaOpenTypeToOpenApiOperationIdTemplateMap = new()
     {
         [typeof(ResourceCollectionResponseDocument<>)] = ResourceCollectionIdTemplate,
         [typeof(PrimaryResourceResponseDocument<>)] = ResourceIdTemplate,
@@ -109,7 +109,7 @@ internal sealed class OpenApiOperationIdSelector
             .Replace("[Method]", method)
             .Replace("[PrimaryResourceName]", resourceType?.PublicName.Singularize())
             .Replace("[RelationshipName]", relationshipName)
-            .ToPascalCase();
+            .Pascalize();
 
         // @formatter:wrap_before_first_method_call true restore
         // @formatter:wrap_chained_method_calls restore

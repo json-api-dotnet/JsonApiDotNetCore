@@ -115,9 +115,11 @@ public abstract class ResourceFieldAttribute : Attribute
 
     protected void AssertIsIdentifiable(object? resource)
     {
-        if (resource != null && resource is not IIdentifiable)
+        if (resource is not null and not IIdentifiable)
         {
+#pragma warning disable CA1062 // Validate arguments of public methods
             throw new InvalidOperationException($"Resource of type '{resource.GetType()}' does not implement {nameof(IIdentifiable)}.");
+#pragma warning restore CA1062 // Validate arguments of public methods
         }
     }
 

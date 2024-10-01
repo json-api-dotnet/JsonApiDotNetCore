@@ -17,8 +17,8 @@ public sealed partial class FireForgetTests
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
         var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
 
-        string newLoginName = _fakers.DomainUser.Generate().LoginName;
-        string newDisplayName = _fakers.DomainUser.Generate().DisplayName!;
+        string newLoginName = _fakers.DomainUser.GenerateOne().LoginName;
+        string newDisplayName = _fakers.DomainUser.GenerateOne().DisplayName!;
 
         var requestBody = new
         {
@@ -69,9 +69,9 @@ public sealed partial class FireForgetTests
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
         var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
 
-        DomainGroup existingGroup = _fakers.DomainGroup.Generate();
+        DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 
-        string newLoginName = _fakers.DomainUser.Generate().LoginName;
+        string newLoginName = _fakers.DomainUser.GenerateOne().LoginName;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -143,10 +143,10 @@ public sealed partial class FireForgetTests
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
         var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
 
-        DomainUser existingUser = _fakers.DomainUser.Generate();
+        DomainUser existingUser = _fakers.DomainUser.GenerateOne();
 
-        string newLoginName = _fakers.DomainUser.Generate().LoginName;
-        string newDisplayName = _fakers.DomainUser.Generate().DisplayName!;
+        string newLoginName = _fakers.DomainUser.GenerateOne().LoginName;
+        string newDisplayName = _fakers.DomainUser.GenerateOne().DisplayName!;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -205,10 +205,10 @@ public sealed partial class FireForgetTests
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
         var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
 
-        DomainUser existingUser = _fakers.DomainUser.Generate();
-        existingUser.Group = _fakers.DomainGroup.Generate();
+        DomainUser existingUser = _fakers.DomainUser.GenerateOne();
+        existingUser.Group = _fakers.DomainGroup.GenerateOne();
 
-        string newDisplayName = _fakers.DomainUser.Generate().DisplayName!;
+        string newDisplayName = _fakers.DomainUser.GenerateOne().DisplayName!;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -273,10 +273,10 @@ public sealed partial class FireForgetTests
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
         var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
 
-        DomainUser existingUser = _fakers.DomainUser.Generate();
-        DomainGroup existingGroup = _fakers.DomainGroup.Generate();
+        DomainUser existingUser = _fakers.DomainUser.GenerateOne();
+        DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 
-        string newDisplayName = _fakers.DomainUser.Generate().DisplayName!;
+        string newDisplayName = _fakers.DomainUser.GenerateOne().DisplayName!;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -345,12 +345,12 @@ public sealed partial class FireForgetTests
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
         var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
 
-        DomainUser existingUser = _fakers.DomainUser.Generate();
-        existingUser.Group = _fakers.DomainGroup.Generate();
+        DomainUser existingUser = _fakers.DomainUser.GenerateOne();
+        existingUser.Group = _fakers.DomainGroup.GenerateOne();
 
-        DomainGroup existingGroup = _fakers.DomainGroup.Generate();
+        DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 
-        string newDisplayName = _fakers.DomainUser.Generate().DisplayName!;
+        string newDisplayName = _fakers.DomainUser.GenerateOne().DisplayName!;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -420,7 +420,7 @@ public sealed partial class FireForgetTests
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
         var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
 
-        DomainUser existingUser = _fakers.DomainUser.Generate();
+        DomainUser existingUser = _fakers.DomainUser.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -457,8 +457,8 @@ public sealed partial class FireForgetTests
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
         var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
 
-        DomainUser existingUser = _fakers.DomainUser.Generate();
-        existingUser.Group = _fakers.DomainGroup.Generate();
+        DomainUser existingUser = _fakers.DomainUser.GenerateOne();
+        existingUser.Group = _fakers.DomainGroup.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -499,8 +499,8 @@ public sealed partial class FireForgetTests
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
         var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
 
-        DomainUser existingUser = _fakers.DomainUser.Generate();
-        existingUser.Group = _fakers.DomainGroup.Generate();
+        DomainUser existingUser = _fakers.DomainUser.GenerateOne();
+        existingUser.Group = _fakers.DomainGroup.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -545,8 +545,8 @@ public sealed partial class FireForgetTests
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
         var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
 
-        DomainUser existingUser = _fakers.DomainUser.Generate();
-        DomainGroup existingGroup = _fakers.DomainGroup.Generate();
+        DomainUser existingUser = _fakers.DomainUser.GenerateOne();
+        DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -595,10 +595,10 @@ public sealed partial class FireForgetTests
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
         var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
 
-        DomainUser existingUser = _fakers.DomainUser.Generate();
-        existingUser.Group = _fakers.DomainGroup.Generate();
+        DomainUser existingUser = _fakers.DomainUser.GenerateOne();
+        existingUser.Group = _fakers.DomainGroup.GenerateOne();
 
-        DomainGroup existingGroup = _fakers.DomainGroup.Generate();
+        DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

@@ -24,7 +24,8 @@ public sealed class LegacyFilterParseTests : BaseParseTests
 
         Request.PrimaryResourceType = ResourceGraph.GetResourceType<BlogPost>();
 
-        var resourceFactory = new ResourceFactory(new ServiceContainer());
+        using var serviceProvider = new ServiceContainer();
+        var resourceFactory = new ResourceFactory(serviceProvider);
         var scopeParser = new QueryStringParameterScopeParser();
         var valueParser = new FilterParser(resourceFactory);
         _reader = new FilterQueryStringParameterReader(scopeParser, valueParser, Request, ResourceGraph, Options);

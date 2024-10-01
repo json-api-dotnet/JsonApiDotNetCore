@@ -38,9 +38,9 @@ public sealed class AtomicSerializationTests : IClassFixture<IntegrationTestCont
     public async Task Hides_data_for_void_operation()
     {
         // Arrange
-        Performer existingPerformer = _fakers.Performer.Generate();
+        Performer existingPerformer = _fakers.Performer.GenerateOne();
 
-        TextLanguage newLanguage = _fakers.TextLanguage.Generate();
+        TextLanguage newLanguage = _fakers.TextLanguage.GenerateOne();
         newLanguage.Id = Guid.NewGuid();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
