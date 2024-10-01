@@ -20,11 +20,11 @@ public sealed class NullSafeExpressionRewriterTests
 
         List<TestResource> dataSource =
         [
-            new TestResource
+            new()
             {
                 Id = generator.GetNext()
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -59,11 +59,11 @@ public sealed class NullSafeExpressionRewriterTests
 
         List<TestResource> dataSource =
         [
-            new TestResource
+            new()
             {
                 Id = generator.GetNext()
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -71,7 +71,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Id = generator.GetNext()
                 }
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -86,7 +86,7 @@ public sealed class NullSafeExpressionRewriterTests
                     }
                 }
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -132,11 +132,11 @@ public sealed class NullSafeExpressionRewriterTests
 
         List<TestResource> dataSource =
         [
-            new TestResource
+            new()
             {
                 Id = generator.GetNext()
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -170,11 +170,11 @@ public sealed class NullSafeExpressionRewriterTests
 
         List<TestResource> dataSource =
         [
-            new TestResource
+            new()
             {
                 Id = generator.GetNext()
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -182,7 +182,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Id = generator.GetNext()
                 }
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -230,11 +230,11 @@ public sealed class NullSafeExpressionRewriterTests
 
         List<TestResource> dataSource =
         [
-            new TestResource
+            new()
             {
                 Id = generator.GetNext()
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -242,7 +242,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Id = generator.GetNext()
                 }
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Children =
@@ -289,12 +289,12 @@ public sealed class NullSafeExpressionRewriterTests
 
         List<TestResource> dataSource =
         [
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Children = null!
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Children =
@@ -312,7 +312,7 @@ public sealed class NullSafeExpressionRewriterTests
                     }
                 }
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Children =
@@ -365,11 +365,11 @@ public sealed class NullSafeExpressionRewriterTests
 
         List<TestResource> dataSource =
         [
-            new TestResource
+            new()
             {
                 Id = generator.GetNext()
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -378,7 +378,7 @@ public sealed class NullSafeExpressionRewriterTests
                 },
                 Children = null!
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -437,11 +437,11 @@ public sealed class NullSafeExpressionRewriterTests
 
         List<TestResource> dataSource =
         [
-            new TestResource
+            new()
             {
                 Id = generator.GetNext()
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -449,7 +449,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Id = generator.GetNext()
                 }
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -484,11 +484,11 @@ public sealed class NullSafeExpressionRewriterTests
 
         List<TestResource> dataSource =
         [
-            new TestResource
+            new()
             {
                 Id = generator.GetNext()
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -496,7 +496,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Id = generator.GetNext()
                 }
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -533,11 +533,11 @@ public sealed class NullSafeExpressionRewriterTests
 
         List<TestResource> dataSource =
         [
-            new TestResource
+            new()
             {
                 Id = generator.GetNext()
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -545,7 +545,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Id = generator.GetNext()
                 }
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -581,11 +581,11 @@ public sealed class NullSafeExpressionRewriterTests
 
         List<TestResource> dataSource =
         [
-            new TestResource
+            new()
             {
                 Id = generator.GetNext()
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -593,7 +593,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Id = generator.GetNext()
                 }
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -629,11 +629,11 @@ public sealed class NullSafeExpressionRewriterTests
 
         List<TestResource> dataSource =
         [
-            new TestResource
+            new()
             {
                 Id = generator.GetNext()
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -641,7 +641,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Id = generator.GetNext()
                 }
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -677,11 +677,11 @@ public sealed class NullSafeExpressionRewriterTests
 
         List<TestResource> dataSource =
         [
-            new TestResource
+            new()
             {
                 Id = generator.GetNext()
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -689,7 +689,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Id = generator.GetNext()
                 }
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -698,7 +698,7 @@ public sealed class NullSafeExpressionRewriterTests
                 },
                 Children = null!
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -746,11 +746,11 @@ public sealed class NullSafeExpressionRewriterTests
 
         List<TestResource> dataSource =
         [
-            new TestResource
+            new()
             {
                 Id = generator.GetNext()
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -760,7 +760,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Number = 1
                 }
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -770,7 +770,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Number = 10
                 }
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
@@ -780,7 +780,7 @@ public sealed class NullSafeExpressionRewriterTests
                     Number = 1
                 }
             },
-            new TestResource
+            new()
             {
                 Id = generator.GetNext(),
                 Parent = new TestResource
