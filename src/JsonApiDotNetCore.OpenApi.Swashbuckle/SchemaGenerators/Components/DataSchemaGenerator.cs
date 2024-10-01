@@ -2,6 +2,9 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
+using JsonApiDotNetCore.Serialization.JsonConverters;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -9,6 +12,9 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 
 internal sealed class DataSchemaGenerator
 {
+    private const string AttributesDiscriminatorPropertyName = ResourceObjectConverter.AttributesDiscriminatorPropertyName;
+    private const string RelationshipsDiscriminatorPropertyName = ResourceObjectConverter.RelationshipsDiscriminatorPropertyName;
+
 #if NET6_0
     private static readonly string[] ResourceDataPropertyNamesInOrder =
     [
@@ -75,11 +81,21 @@ internal sealed class DataSchemaGenerator
             return referenceSchemaForResourceData;
         }
 
+        var resourceTypeInfo = ResourceTypeInfo.Create(resourceDataConstructedType, _resourceGraph);
+
+        OpenApiSchema? referenceSchemaForBaseResourceData = null;
+
+        if (resourceTypeInfo.ResourceType.BaseType != null)
+        {
+            Type baseResourceDataConstructedType =
+                resourceDataConstructedType.GetGenericTypeDefinition().MakeGenericType(resourceTypeInfo.ResourceType.BaseType.ClrType);
+
+            referenceSchemaForBaseResourceData = GenerateSchema(baseResourceDataConstructedType, schemaRepository);
+        }
+
         referenceSchemaForResourceData = _defaultSchemaGenerator.GenerateSchema(resourceDataConstructedType, schemaRepository);
         OpenApiSchema fullSchemaForResourceData = schemaRepository.Schemas[referenceSchemaForResourceData.Reference.Id];
         fullSchemaForResourceData.AdditionalPropertiesAllowed = false;
-
-        var resourceTypeInfo = ResourceTypeInfo.Create(resourceDataConstructedType, _resourceGraph);
 
         OpenApiSchema fullSchemaForDerivedType = fullSchemaForResourceData.UnwrapLastExtendedSchema();
         bool isRequestSchema = fullSchemaForDerivedType == fullSchemaForResourceData;
@@ -100,12 +116,19 @@ internal sealed class DataSchemaGenerator
 
         if (fullSchemaForDerivedType.Properties.ContainsKey(JsonApiPropertyName.Attributes))
         {
-            SetResourceAttributes(fullSchemaForDerivedType, isRequestSchema, fieldSchemaBuilder, schemaRepository);
+            SetResourceAttributes(fullSchemaForDerivedType, resourceTypeInfo.ResourceType, isRequestSchema, fieldSchemaBuilder,
+                referenceSchemaForBaseResourceData, schemaRepository);
         }
 
         if (fullSchemaForDerivedType.Properties.ContainsKey(JsonApiPropertyName.Relationships))
         {
-            SetResourceRelationships(fullSchemaForDerivedType, isRequestSchema, fieldSchemaBuilder, schemaRepository);
+            SetResourceRelationships(fullSchemaForDerivedType, resourceTypeInfo.ResourceType, isRequestSchema, fieldSchemaBuilder,
+                referenceSchemaForBaseResourceData, schemaRepository);
+        }
+
+        if (!isRequestSchema && referenceSchemaForBaseResourceData != null)
+        {
+            fullSchemaForResourceData.AllOf[0] = referenceSchemaForBaseResourceData;
         }
 
         _linksVisibilitySchemaGenerator.UpdateSchemaForResource(resourceTypeInfo, fullSchemaForDerivedType, schemaRepository);
@@ -176,15 +199,73 @@ internal sealed class DataSchemaGenerator
         }
     }
 
-    private void SetResourceAttributes(OpenApiSchema fullSchemaForResourceData, bool forRequestSchema, ResourceFieldSchemaBuilder builder,
-        SchemaRepository schemaRepository)
+    private OpenApiSchema SetResourceAttributes(OpenApiSchema fullSchemaForResourceData, ResourceType resourceType, bool forRequestSchema,
+        ResourceFieldSchemaBuilder builder, OpenApiSchema? referenceSchemaForBaseResourceData, SchemaRepository schemaRepository)
     {
-        OpenApiSchema referenceSchemaForAttributes = fullSchemaForResourceData.Properties[JsonApiPropertyName.Attributes].UnwrapLastExtendedSchema();
+        OpenApiSchema referenceSchemaForAttributes =
+            fullSchemaForResourceData.UnwrapLastExtendedSchema().Properties[JsonApiPropertyName.Attributes].UnwrapLastExtendedSchema();
+
         OpenApiSchema fullSchemaForAttributes = schemaRepository.Schemas[referenceSchemaForAttributes.Reference.Id];
+
+        if (fullSchemaForAttributes.UnwrapLastExtendedSchema().Properties.Count > 0)
+        {
+            // already generated
+            return referenceSchemaForAttributes;
+        }
+
+        OpenApiSchema? referenceSchemaForBaseAttributes = null;
+
+        if (!forRequestSchema && resourceType.BaseType != null && referenceSchemaForBaseResourceData != null)
+        {
+            OpenApiSchema? fullSchemaForBaseResourceData = schemaRepository.Schemas[referenceSchemaForBaseResourceData.Reference.Id];
+            Type baseResourceDataConstructedType = typeof(ResourceDataInResponse<>).MakeGenericType(resourceType.BaseType.ClrType);
+
+            var baseResourceTypeInfo = ResourceTypeInfo.Create(baseResourceDataConstructedType, _resourceGraph);
+
+            var baseFieldSchemaBuilder = new ResourceFieldSchemaBuilder(_defaultSchemaGenerator, _resourceIdentifierSchemaGenerator,
+                _linksVisibilitySchemaGenerator, _resourceFieldValidationMetadataProvider, _relationshipTypeFactory, baseResourceTypeInfo);
+
+            referenceSchemaForBaseAttributes = SetResourceAttributes(fullSchemaForBaseResourceData, resourceType.BaseType, forRequestSchema,
+                baseFieldSchemaBuilder, null, schemaRepository);
+
+            if (resourceType.BaseType.BaseType == null)
+            {
+                // generate ultimate base with discriminator and empty mapping
+                OpenApiSchema? fullSchemaForBaseAttributes = schemaRepository.Schemas[referenceSchemaForBaseAttributes.Reference.Id];
+
+                if (fullSchemaForBaseAttributes.Properties.ContainsKey(AttributesDiscriminatorPropertyName))
+                {
+                    // TODO: This should run only once for both attributes and relationships.
+                }
+                else
+                {
+                    fullSchemaForBaseAttributes.Properties.Add(AttributesDiscriminatorPropertyName, new OpenApiSchema
+                    {
+                        Type = "string"
+                    });
+
+                    fullSchemaForBaseAttributes.Required.Add(AttributesDiscriminatorPropertyName);
+
+                    fullSchemaForBaseAttributes.Discriminator = new OpenApiDiscriminator
+                    {
+                        PropertyName = AttributesDiscriminatorPropertyName,
+                        Mapping = new SortedDictionary<string, string>(StringComparer.Ordinal)
+                    };
+
+                    if (resourceType.BaseType.ClrType.IsAbstract)
+                    {
+                        fullSchemaForBaseAttributes.Extensions = new Dictionary<string, IOpenApiExtension>
+                        {
+                            ["x-abstract"] = new OpenApiBoolean(true)
+                        };
+                    }
+                }
+            }
+        }
 
         builder.SetMembersOfAttributes(fullSchemaForAttributes, forRequestSchema, schemaRepository);
 
-        if (fullSchemaForAttributes.Properties.Count == 0)
+        if (fullSchemaForAttributes.Properties.Count == 0 && (!builder.ResourceType.IsPartOfTypeHierarchy() || forRequestSchema))
         {
             fullSchemaForResourceData.Properties.Remove(JsonApiPropertyName.Attributes);
         }
@@ -192,17 +273,115 @@ internal sealed class DataSchemaGenerator
         {
             fullSchemaForAttributes.AdditionalPropertiesAllowed = false;
         }
+
+        if (referenceSchemaForBaseAttributes != null)
+        {
+            var newFullSchemaForAttributes = new OpenApiSchema
+            {
+                AllOf =
+                [
+                    referenceSchemaForBaseAttributes,
+                    fullSchemaForAttributes
+                ],
+                AdditionalPropertiesAllowed = false
+            };
+
+            schemaRepository.Schemas[referenceSchemaForAttributes.Reference.Id] = newFullSchemaForAttributes;
+
+            MapAttributesInDiscriminator(resourceType, referenceSchemaForAttributes, schemaRepository);
+        }
+
+        return referenceSchemaForAttributes;
     }
 
-    private void SetResourceRelationships(OpenApiSchema fullSchemaForResourceData, bool forRequestSchema, ResourceFieldSchemaBuilder builder,
-        SchemaRepository schemaRepository)
+    private void MapAttributesInDiscriminator(ResourceType resourceType, OpenApiSchema referenceSchemaForAttributes, SchemaRepository schemaRepository)
     {
-        OpenApiSchema referenceSchemaForRelationships = fullSchemaForResourceData.Properties[JsonApiPropertyName.Relationships].UnwrapLastExtendedSchema();
+        ResourceType ultimateBaseResourceType = resourceType.BaseType!;
+
+        while (ultimateBaseResourceType.BaseType != null)
+        {
+            ultimateBaseResourceType = ultimateBaseResourceType.BaseType;
+        }
+
+        Type ultimateConstructedBaseType = typeof(AttributesInResponse<>).MakeGenericType(ultimateBaseResourceType.ClrType);
+
+        if (!schemaRepository.TryLookupByType(ultimateConstructedBaseType, out OpenApiSchema? referenceSchemaForUltimateBaseAttributes))
+        {
+            throw new UnreachableCodeException();
+        }
+
+        OpenApiSchema fullSchemaForUltimateBaseAttributes = schemaRepository.Schemas[referenceSchemaForUltimateBaseAttributes.Reference.Id];
+
+        fullSchemaForUltimateBaseAttributes.Discriminator.Mapping[resourceType.PublicName] = referenceSchemaForAttributes.Reference.ReferenceV3;
+    }
+
+    private OpenApiSchema SetResourceRelationships(OpenApiSchema fullSchemaForResourceData, ResourceType resourceType, bool forRequestSchema,
+        ResourceFieldSchemaBuilder builder, OpenApiSchema? referenceSchemaForBaseResourceData, SchemaRepository schemaRepository)
+    {
+        OpenApiSchema referenceSchemaForRelationships =
+            fullSchemaForResourceData.UnwrapLastExtendedSchema().Properties[JsonApiPropertyName.Relationships].UnwrapLastExtendedSchema();
+
         OpenApiSchema fullSchemaForRelationships = schemaRepository.Schemas[referenceSchemaForRelationships.Reference.Id];
+
+        if (fullSchemaForRelationships.UnwrapLastExtendedSchema().Properties.Count > 0)
+        {
+            // already generated
+            return referenceSchemaForRelationships;
+        }
+
+        OpenApiSchema? referenceSchemaForBaseRelationships = null;
+
+        if (!forRequestSchema && resourceType.BaseType != null && referenceSchemaForBaseResourceData != null)
+        {
+            OpenApiSchema? fullSchemaForBaseResourceData = schemaRepository.Schemas[referenceSchemaForBaseResourceData.Reference.Id];
+            Type baseResourceDataConstructedType = typeof(ResourceDataInResponse<>).MakeGenericType(resourceType.BaseType.ClrType);
+
+            var baseResourceTypeInfo = ResourceTypeInfo.Create(baseResourceDataConstructedType, _resourceGraph);
+
+            var baseFieldSchemaBuilder = new ResourceFieldSchemaBuilder(_defaultSchemaGenerator, _resourceIdentifierSchemaGenerator,
+                _linksVisibilitySchemaGenerator, _resourceFieldValidationMetadataProvider, _relationshipTypeFactory, baseResourceTypeInfo);
+
+            referenceSchemaForBaseRelationships = SetResourceRelationships(fullSchemaForBaseResourceData, resourceType.BaseType, forRequestSchema,
+                baseFieldSchemaBuilder, null, schemaRepository);
+
+            if (resourceType.BaseType.BaseType == null)
+            {
+                // generate ultimate base with discriminator and empty mapping
+                OpenApiSchema? fullSchemaForBaseRelationships = schemaRepository.Schemas[referenceSchemaForBaseRelationships.Reference.Id];
+
+                if (fullSchemaForBaseRelationships.Properties.ContainsKey(RelationshipsDiscriminatorPropertyName))
+                {
+                    // TODO: This should run only once for both attributes and relationships.
+                }
+                else
+                {
+                    fullSchemaForBaseRelationships.Properties.Add(RelationshipsDiscriminatorPropertyName, new OpenApiSchema
+                    {
+                        Type = "string"
+                    });
+
+                    fullSchemaForBaseRelationships.Required.Add(RelationshipsDiscriminatorPropertyName);
+
+                    fullSchemaForBaseRelationships.Discriminator = new OpenApiDiscriminator
+                    {
+                        PropertyName = RelationshipsDiscriminatorPropertyName,
+                        Mapping = new SortedDictionary<string, string>(StringComparer.Ordinal)
+                    };
+
+                    if (resourceType.BaseType.ClrType.IsAbstract)
+                    {
+                        fullSchemaForBaseRelationships.Extensions = new Dictionary<string, IOpenApiExtension>
+                        {
+                            ["x-abstract"] = new OpenApiBoolean(true)
+                        };
+                    }
+                }
+            }
+        }
 
         builder.SetMembersOfRelationships(fullSchemaForRelationships, forRequestSchema, schemaRepository);
 
-        if (fullSchemaForRelationships.Properties.Count == 0)
+        if (fullSchemaForRelationships.Properties.Count == 0 && (!builder.ResourceType.IsPartOfTypeHierarchy() || forRequestSchema))
         {
             fullSchemaForResourceData.Properties.Remove(JsonApiPropertyName.Relationships);
         }
@@ -210,5 +389,45 @@ internal sealed class DataSchemaGenerator
         {
             fullSchemaForRelationships.AdditionalPropertiesAllowed = false;
         }
+
+        if (referenceSchemaForBaseRelationships != null)
+        {
+            var newFullSchemaForRelationships = new OpenApiSchema
+            {
+                AllOf =
+                [
+                    referenceSchemaForBaseRelationships,
+                    fullSchemaForRelationships
+                ],
+                AdditionalPropertiesAllowed = false
+            };
+
+            schemaRepository.Schemas[referenceSchemaForRelationships.Reference.Id] = newFullSchemaForRelationships;
+
+            MapRelationshipsInDiscriminator(resourceType, referenceSchemaForRelationships, schemaRepository);
+        }
+
+        return referenceSchemaForRelationships;
+    }
+
+    private void MapRelationshipsInDiscriminator(ResourceType resourceType, OpenApiSchema referenceSchemaForRelationships, SchemaRepository schemaRepository)
+    {
+        ResourceType ultimateBaseResourceType = resourceType.BaseType!;
+
+        while (ultimateBaseResourceType.BaseType != null)
+        {
+            ultimateBaseResourceType = ultimateBaseResourceType.BaseType;
+        }
+
+        Type ultimateConstructedBaseType = typeof(RelationshipsInResponse<>).MakeGenericType(ultimateBaseResourceType.ClrType);
+
+        if (!schemaRepository.TryLookupByType(ultimateConstructedBaseType, out OpenApiSchema? referenceSchemaForUltimateBaseRelationships))
+        {
+            throw new UnreachableCodeException();
+        }
+
+        OpenApiSchema fullSchemaForUltimateBaseRelationships = schemaRepository.Schemas[referenceSchemaForUltimateBaseRelationships.Reference.Id];
+
+        fullSchemaForUltimateBaseRelationships.Discriminator.Mapping[resourceType.PublicName] = referenceSchemaForRelationships.Reference.ReferenceV3;
     }
 }

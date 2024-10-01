@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.JsonConverters;
 using JsonApiDotNetCore.Serialization.Request.Adapters;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Benchmarks.Deserialization;
@@ -22,7 +23,8 @@ public abstract class DeserializationBenchmarkBase : IDisposable
     {
         var options = new JsonApiOptions();
         IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<IncomingResource, int>().Build();
-        options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph));
+        var httpContextAccessor = new HttpContextAccessor();
+        options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph, httpContextAccessor));
         SerializerReadOptions = ((IJsonApiOptions)options).SerializerReadOptions;
 
         var resourceFactory = new ResourceFactory(_serviceProvider);

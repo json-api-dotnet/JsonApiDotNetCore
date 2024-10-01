@@ -5095,7 +5095,7 @@
       },
       "atomicOperation": {
         "required": [
-          "operationDiscriminator"
+          "openapi:operations-discriminator"
         ],
         "type": "object",
         "properties": {
@@ -5109,7 +5109,7 @@
         },
         "additionalProperties": false,
         "discriminator": {
-          "propertyName": "operationDiscriminator",
+          "propertyName": "openapi:operations-discriminator",
           "mapping": {
             "addPerson": "#/components/schemas/createPersonOperation",
             "addTag": "#/components/schemas/createTagOperation",

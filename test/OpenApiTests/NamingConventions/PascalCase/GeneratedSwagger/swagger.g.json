@@ -2709,7 +2709,7 @@
       },
       "AtomicOperation": {
         "required": [
-          "OperationDiscriminator"
+          "openapi:operations-discriminator"
         ],
         "type": "object",
         "properties": {
@@ -2723,7 +2723,7 @@
         },
         "additionalProperties": false,
         "discriminator": {
-          "propertyName": "OperationDiscriminator",
+          "propertyName": "openapi:operations-discriminator",
           "mapping": {
             "AddStaffMember": "#/components/schemas/CreateStaffMemberOperation",
             "AddSupermarket": "#/components/schemas/CreateSupermarketOperation",

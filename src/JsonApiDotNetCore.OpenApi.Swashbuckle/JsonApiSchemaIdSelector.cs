@@ -15,7 +15,6 @@ internal sealed class JsonApiSchemaIdSelector
     private const string ResourceTypeSchemaIdTemplate = "[ResourceName] Resource Type";
     private const string MetaSchemaIdTemplate = "Meta";
 
-    private const string AtomicOperationDiscriminatorNameTemplate = "Operation Discriminator";
     private const string ResourceAtomicOperationDiscriminatorValueTemplate = "[OperationCode] [ResourceName]";
     private const string UpdateRelationshipAtomicOperationDiscriminatorValueTemplate = "Update [ResourceName] [RelationshipName]";
     private const string AddToRelationshipAtomicOperationDiscriminatorValueTemplate = "Add To [ResourceName] [RelationshipName]";
@@ -152,11 +151,6 @@ internal sealed class JsonApiSchemaIdSelector
     public string GetAtomicOperationCodeSchemaId(AtomicOperationCode operationCode)
     {
         return ApplySchemaTemplate("[OperationCode] Operation Code", null, null, operationCode);
-    }
-
-    public string GetAtomicOperationDiscriminatorName()
-    {
-        return ApplySchemaTemplate(AtomicOperationDiscriminatorNameTemplate, null, null, null);
     }
 
     public string GetAtomicOperationDiscriminatorValue(AtomicOperationCode operationCode, ResourceType resourceType)

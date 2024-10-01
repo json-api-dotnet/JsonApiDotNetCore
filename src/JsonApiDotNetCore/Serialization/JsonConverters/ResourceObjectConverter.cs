@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Request;
+using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Serialization.JsonConverters;
 
@@ -15,6 +16,9 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters;
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
 {
+    internal const string AttributesDiscriminatorPropertyName = "openapi:attributes-discriminator";
+    internal const string RelationshipsDiscriminatorPropertyName = "openapi:relationships-discriminator";
+
     private static readonly JsonEncodedText TypeText = JsonEncodedText.Encode("type");
     private static readonly JsonEncodedText IdText = JsonEncodedText.Encode("id");
     private static readonly JsonEncodedText LidText = JsonEncodedText.Encode("lid");
@@ -24,12 +28,19 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
     private static readonly JsonEncodedText LinksText = JsonEncodedText.Encode("links");
 
     private readonly IResourceGraph _resourceGraph;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public ResourceObjectConverter(IResourceGraph resourceGraph)
+    private bool IsUserAgentKiota =>
+        _httpContextAccessor.HttpContext != null &&
+        _httpContextAccessor.HttpContext.Request.Headers.UserAgent.ToString().Contains("kiota", StringComparison.OrdinalIgnoreCase);
+
+    public ResourceObjectConverter(IResourceGraph resourceGraph, IHttpContextAccessor httpContextAccessor)
     {
         ArgumentGuard.NotNull(resourceGraph);
+        ArgumentGuard.NotNull(httpContextAccessor);
 
         _resourceGraph = resourceGraph;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     /// <summary>
@@ -244,13 +255,39 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
         if (!value.Attributes.IsNullOrEmpty())
         {
             writer.WritePropertyName(AttributesText);
-            WriteSubTree(writer, value.Attributes, options);
+            writer.WriteStartObject();
+
+            if (IsUserAgentKiota)
+            {
+                writer.WriteString(AttributesDiscriminatorPropertyName, value.Type);
+            }
+
+            foreach ((string attributeName, object? attributeValue) in value.Attributes)
+            {
+                writer.WritePropertyName(attributeName);
+                WriteSubTree(writer, attributeValue, options);
+            }
+
+            writer.WriteEndObject();
         }
 
         if (!value.Relationships.IsNullOrEmpty())
         {
             writer.WritePropertyName(RelationshipsText);
-            WriteSubTree(writer, value.Relationships, options);
+            writer.WriteStartObject();
+
+            if (IsUserAgentKiota)
+            {
+                writer.WriteString(RelationshipsDiscriminatorPropertyName, value.Type);
+            }
+
+            foreach ((string relationshipName, RelationshipObject? relationshipValue) in value.Relationships)
+            {
+                writer.WritePropertyName(relationshipName);
+                WriteSubTree(writer, relationshipValue, options);
+            }
+
+            writer.WriteEndObject();
         }
 
         if (value.Links != null && value.Links.HasValue())

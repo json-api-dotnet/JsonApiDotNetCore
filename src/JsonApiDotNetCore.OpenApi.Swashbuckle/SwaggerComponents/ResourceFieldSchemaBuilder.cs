@@ -1,4 +1,5 @@
 using System.Reflection;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
@@ -20,6 +21,8 @@ internal sealed class ResourceFieldSchemaBuilder
     private readonly SchemaRepository _resourceSchemaRepository = new();
     private readonly ResourceDocumentationReader _resourceDocumentationReader = new();
     private readonly IDictionary<string, OpenApiSchema> _schemasForResourceFields;
+
+    public ResourceType ResourceType => _resourceTypeInfo.ResourceType;
 
     public ResourceFieldSchemaBuilder(SchemaGenerator defaultSchemaGenerator, ResourceIdentifierSchemaGenerator resourceIdentifierSchemaGenerator,
         LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider,
@@ -49,7 +52,7 @@ internal sealed class ResourceFieldSchemaBuilder
             referenceSchemaForResource = _defaultSchemaGenerator.GenerateSchema(_resourceTypeInfo.ResourceType.ClrType, _resourceSchemaRepository);
         }
 
-        OpenApiSchema fullSchemaForResource = _resourceSchemaRepository.Schemas[referenceSchemaForResource.Reference.Id];
+        OpenApiSchema fullSchemaForResource = _resourceSchemaRepository.Schemas[referenceSchemaForResource.Reference.Id].UnwrapLastExtendedSchema();
         return fullSchemaForResource.Properties;
     }
 
@@ -57,6 +60,11 @@ internal sealed class ResourceFieldSchemaBuilder
     {
         ArgumentGuard.NotNull(fullSchemaForAttributes);
         ArgumentGuard.NotNull(schemaRepository);
+
+        if (fullSchemaForAttributes.Properties.Any())
+        {
+            throw new UnreachableCodeException();
+        }
 
         AttrCapabilities requiredCapability = GetRequiredCapabilityForAttributes(_resourceTypeInfo.ResourceDataOpenType);
 
@@ -150,6 +158,11 @@ internal sealed class ResourceFieldSchemaBuilder
     {
         ArgumentGuard.NotNull(fullSchemaForRelationships);
         ArgumentGuard.NotNull(schemaRepository);
+
+        if (fullSchemaForRelationships.Properties.Any())
+        {
+            throw new UnreachableCodeException();
+        }
 
         foreach (string fieldName in _schemasForResourceFields.Keys)
         {

@@ -6512,7 +6512,7 @@
       },
       "atomicOperation": {
         "required": [
-          "operationDiscriminator"
+          "openapi:operations-discriminator"
         ],
         "type": "object",
         "properties": {
@@ -6526,7 +6526,7 @@
         },
         "additionalProperties": false,
         "discriminator": {
-          "propertyName": "operationDiscriminator",
+          "propertyName": "openapi:operations-discriminator",
           "mapping": {
             "addCourse": "#/components/schemas/createCourseOperation",
             "addEnrollment": "#/components/schemas/createEnrollmentOperation",

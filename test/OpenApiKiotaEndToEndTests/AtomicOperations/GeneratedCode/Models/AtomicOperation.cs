@@ -46,7 +46,7 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
         public static global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AtomicOperation CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            var mappingValue = parseNode.GetChildNode("operationDiscriminator")?.GetStringValue();
+            var mappingValue = parseNode.GetChildNode("openapi:operations-discriminator")?.GetStringValue();
             return mappingValue switch
             {
                 "addCourse" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.CreateCourseOperation(),
