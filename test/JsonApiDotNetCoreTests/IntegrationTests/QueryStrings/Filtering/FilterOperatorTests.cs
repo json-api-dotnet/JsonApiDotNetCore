@@ -819,7 +819,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         // Arrange
         List<FilterableResource> resources =
         [
-            new FilterableResource
+            new()
             {
                 Children = new List<FilterableResource>
                 {
@@ -829,7 +829,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
                     }
                 }
             },
-            new FilterableResource
+            new()
             {
                 Children = new List<FilterableResource>
                 {

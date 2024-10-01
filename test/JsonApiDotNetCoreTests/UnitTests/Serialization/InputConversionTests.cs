@@ -60,11 +60,11 @@ public sealed class InputConversionTests : IDisposable
 
         List<ComplexObject> complexObjectList =
         [
-            new ComplexObject
+            new()
             {
                 Value = "One"
             },
-            new ComplexObject
+            new()
             {
                 Value = "Two"
             }

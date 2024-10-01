@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
+  <xUnit>
+    <ParallelAlgorithm>aggressive</ParallelAlgorithm>
+    <ShowLiveOutput>true</ShowLiveOutput>
+  </xUnit>
   <RunConfiguration>
     <CollectSourceInformation>true</CollectSourceInformation>
   </RunConfiguration>
