@@ -7,7 +7,8 @@ using TestBuildingBlocks;
 namespace OpenApiTests.LegacyOpenApi;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class LegacyIntegrationDbContext(DbContextOptions<LegacyIntegrationDbContext> options) : TestableDbContext(options)
+public sealed class LegacyIntegrationDbContext(DbContextOptions<LegacyIntegrationDbContext> options)
+    : TestableDbContext(options)
 {
     public DbSet<Airplane> Airplanes => Set<Airplane>();
     public DbSet<Flight> Flights => Set<Flight>();

@@ -5,7 +5,8 @@ using TestBuildingBlocks;
 namespace OpenApiTests.AtomicOperations;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class OperationsDbContext(ISystemClock systemClock, DbContextOptions<OperationsDbContext> options) : TestableDbContext(options)
+public sealed class OperationsDbContext(ISystemClock systemClock, DbContextOptions<OperationsDbContext> options)
+    : TestableDbContext(options)
 {
     internal ISystemClock SystemClock { get; } = systemClock;
 

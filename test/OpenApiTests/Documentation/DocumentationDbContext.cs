@@ -7,7 +7,8 @@ using TestBuildingBlocks;
 namespace OpenApiTests.Documentation;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class DocumentationDbContext(DbContextOptions<DocumentationDbContext> options) : TestableDbContext(options)
+public sealed class DocumentationDbContext(DbContextOptions<DocumentationDbContext> options)
+    : TestableDbContext(options)
 {
     public DbSet<Skyscraper> Skyscrapers => Set<Skyscraper>();
     public DbSet<Elevator> Elevators => Set<Elevator>();
