@@ -54,7 +54,7 @@ public class OrderClauseBuilder : QueryClauseBuilder, IOrderClauseBuilder
         return isAscending ? "OrderBy" : "OrderByDescending";
     }
 
-    private static Expression ExtensionMethodCall(Expression source, string operationName, Type keyType, LambdaExpression keySelector,
+    private static MethodCallExpression ExtensionMethodCall(Expression source, string operationName, Type keyType, LambdaExpression keySelector,
         QueryClauseBuilderContext context)
     {
         Type[] typeArguments =

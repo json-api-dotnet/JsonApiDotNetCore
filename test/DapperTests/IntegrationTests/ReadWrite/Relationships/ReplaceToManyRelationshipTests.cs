@@ -27,9 +27,9 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<DapperTestCon
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person existingPerson = _fakers.Person.Generate();
-        existingPerson.AssignedTodoItems = _fakers.TodoItem.Generate(2).ToHashSet();
-        existingPerson.AssignedTodoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.Generate());
+        Person existingPerson = _fakers.Person.GenerateOne();
+        existingPerson.AssignedTodoItems = _fakers.TodoItem.GenerateSet(2);
+        existingPerson.AssignedTodoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.GenerateOne());
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -95,9 +95,9 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<DapperTestCon
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person existingPerson = _fakers.Person.Generate();
-        existingPerson.OwnedTodoItems = _fakers.TodoItem.Generate(2).ToHashSet();
-        existingPerson.OwnedTodoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.Generate());
+        Person existingPerson = _fakers.Person.GenerateOne();
+        existingPerson.OwnedTodoItems = _fakers.TodoItem.GenerateSet(2);
+        existingPerson.OwnedTodoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.GenerateOne());
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -161,10 +161,10 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<DapperTestCon
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person existingPerson = _fakers.Person.Generate();
+        Person existingPerson = _fakers.Person.GenerateOne();
 
-        List<TodoItem> existingTodoItems = _fakers.TodoItem.Generate(2);
-        existingTodoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.Generate());
+        List<TodoItem> existingTodoItems = _fakers.TodoItem.GenerateList(2);
+        existingTodoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.GenerateOne());
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -245,12 +245,12 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<DapperTestCon
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person existingPerson = _fakers.Person.Generate();
-        existingPerson.AssignedTodoItems = _fakers.TodoItem.Generate(1).ToHashSet();
-        existingPerson.AssignedTodoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.Generate());
+        Person existingPerson = _fakers.Person.GenerateOne();
+        existingPerson.AssignedTodoItems = _fakers.TodoItem.GenerateSet(1);
+        existingPerson.AssignedTodoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.GenerateOne());
 
-        TodoItem existingTodoItem = _fakers.TodoItem.Generate();
-        existingTodoItem.Owner = _fakers.Person.Generate();
+        TodoItem existingTodoItem = _fakers.TodoItem.GenerateOne();
+        existingTodoItem.Owner = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -336,12 +336,12 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<DapperTestCon
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person existingPerson = _fakers.Person.Generate();
-        existingPerson.OwnedTodoItems = _fakers.TodoItem.Generate(1).ToHashSet();
-        existingPerson.OwnedTodoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.Generate());
+        Person existingPerson = _fakers.Person.GenerateOne();
+        existingPerson.OwnedTodoItems = _fakers.TodoItem.GenerateSet(1);
+        existingPerson.OwnedTodoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.GenerateOne());
 
-        TodoItem existingTodoItem = _fakers.TodoItem.Generate();
-        existingTodoItem.Owner = _fakers.Person.Generate();
+        TodoItem existingTodoItem = _fakers.TodoItem.GenerateOne();
+        existingTodoItem.Owner = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

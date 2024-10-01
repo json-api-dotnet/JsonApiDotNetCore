@@ -3,6 +3,9 @@ using DapperExample.TranslationToSql.TreeNodes;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
+#if NET6_0
+using JsonApiDotNetCore;
+#endif
 
 namespace DapperExample.Repositories;
 
@@ -124,7 +127,7 @@ internal sealed class ResultSetMapper<TResource, TId>
 
             SetRelationship(leftResource, includeElement.Relationship, rightResource);
 
-            if (rightResource != null && includeElement.Children.Any())
+            if (rightResource != null && includeElement.Children.Count > 0)
             {
                 RecursiveSetRelationships(rightResource, includeElement.Children, joinObjects);
             }
@@ -148,7 +151,7 @@ internal sealed class ResultSetMapper<TResource, TId>
 
     public IReadOnlyCollection<TResource> GetResources()
     {
-        return _primaryResourcesInOrder.DistinctBy(resource => resource.Id).ToList();
+        return _primaryResourcesInOrder.DistinctBy(resource => resource.Id).ToArray().AsReadOnly();
     }
 
     private sealed class IncludeElementWalker(IncludeExpression include)

@@ -81,4 +81,34 @@ public static class FakerExtensions
             return hash1 + hash2 * 1566083941;
         }
     }
+
+    // The methods below exist so that a non-nullable return type is inferred.
+    // The Bogus NuGet package is not annotated for nullable reference types.
+
+    public static T GenerateOne<T>(this Faker<T> faker)
+        where T : class
+    {
+        return faker.Generate();
+    }
+
+#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
+    public static List<T> GenerateList<T>(this Faker<T> faker, int count)
+        where T : class
+    {
+        return faker.Generate(count);
+    }
+
+    public static HashSet<T> GenerateSet<T>(this Faker<T> faker, int count)
+        where T : class
+    {
+        return faker.Generate(count).ToHashSet();
+    }
+
+    public static HashSet<TOut> GenerateSet<TIn, TOut>(this Faker<TIn> faker, int count)
+        where TOut : class
+        where TIn : class, TOut
+    {
+        return faker.Generate(count).Cast<TOut>().ToHashSet();
+    }
+#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
 }

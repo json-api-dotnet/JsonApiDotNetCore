@@ -22,19 +22,18 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
         testContext.UseController<ThrowingArticlesController>();
         testContext.UseController<ConsumerArticlesController>();
 
-        var loggerFactory = new FakeLoggerFactory(LogLevel.Warning);
-
         testContext.ConfigureLogging(options =>
         {
-            options.ClearProviders();
-            options.AddProvider(loggerFactory);
+            var loggerProvider = new CapturingLoggerProvider(LogLevel.Warning);
+            options.AddProvider(loggerProvider);
+
+            options.Services.AddSingleton(loggerProvider);
         });
 
         testContext.ConfigureServices(services =>
         {
             services.AddResourceService<ConsumerArticleService>();
 
-            services.AddSingleton(loggerFactory);
             services.AddScoped<IExceptionHandler, AlternateExceptionHandler>();
         });
     }
@@ -43,8 +42,8 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
     public async Task Logs_and_produces_error_response_for_custom_exception()
     {
         // Arrange
-        var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
-        loggerFactory.Logger.Clear();
+        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        loggerProvider.Clear();
 
         var consumerArticle = new ConsumerArticle
         {
@@ -80,7 +79,7 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
 
         responseDocument.Meta.Should().BeNull();
 
-        IReadOnlyList<FakeLogMessage> logMessages = loggerFactory.Logger.GetMessages();
+        IReadOnlyList<LogMessage> logMessages = loggerProvider.GetMessages();
         logMessages.ShouldHaveCount(1);
 
         logMessages[0].LogLevel.Should().Be(LogLevel.Warning);
@@ -91,8 +90,8 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
     public async Task Logs_and_produces_error_response_on_deserialization_failure()
     {
         // Arrange
-        var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
-        loggerFactory.Logger.Clear();
+        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        loggerProvider.Clear();
 
         const string requestBody = """{ "data": { "type": "" } }""";
 
@@ -125,7 +124,7 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
             stackTraceLines.ShouldNotBeEmpty();
         });
 
-        IReadOnlyList<FakeLogMessage> logMessages = loggerFactory.Logger.GetMessages();
+        IReadOnlyList<LogMessage> logMessages = loggerProvider.GetMessages();
         logMessages.Should().BeEmpty();
     }
 
@@ -133,8 +132,8 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
     public async Task Logs_and_produces_error_response_on_serialization_failure()
     {
         // Arrange
-        var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
-        loggerFactory.Logger.Clear();
+        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        loggerProvider.Clear();
 
         var throwingArticle = new ThrowingArticle();
 
@@ -169,7 +168,7 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
 
         responseDocument.Meta.Should().BeNull();
 
-        IReadOnlyList<FakeLogMessage> logMessages = loggerFactory.Logger.GetMessages();
+        IReadOnlyList<LogMessage> logMessages = loggerProvider.GetMessages();
         logMessages.ShouldHaveCount(1);
 
         logMessages[0].LogLevel.Should().Be(LogLevel.Error);

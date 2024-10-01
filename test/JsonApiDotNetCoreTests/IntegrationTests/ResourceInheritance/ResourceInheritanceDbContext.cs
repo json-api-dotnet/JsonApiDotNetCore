@@ -6,7 +6,8 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public abstract class ResourceInheritanceDbContext(DbContextOptions options) : TestableDbContext(options)
+public abstract class ResourceInheritanceDbContext(DbContextOptions options)
+    : TestableDbContext(options)
 {
     public DbSet<Vehicle> Vehicles => Set<Vehicle>();
     public DbSet<Bike> Bikes => Set<Bike>();

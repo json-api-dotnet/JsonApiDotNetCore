@@ -4,7 +4,8 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.TimeOffset;
 
-internal sealed class TimeOffsetFilterParser(IResourceFactory resourceFactory) : FilterParser(resourceFactory)
+internal sealed class TimeOffsetFilterParser(IResourceFactory resourceFactory)
+    : FilterParser(resourceFactory)
 {
     protected override bool IsFunction(string name)
     {

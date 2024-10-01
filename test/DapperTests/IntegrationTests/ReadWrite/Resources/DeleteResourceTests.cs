@@ -29,10 +29,10 @@ public sealed class DeleteResourceTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        TodoItem existingTodoItem = _fakers.TodoItem.Generate();
-        existingTodoItem.Owner = _fakers.Person.Generate();
-        existingTodoItem.Tags = _fakers.Tag.Generate(1).ToHashSet();
-        existingTodoItem.Tags.ElementAt(0).Color = _fakers.RgbColor.Generate();
+        TodoItem existingTodoItem = _fakers.TodoItem.GenerateOne();
+        existingTodoItem.Owner = _fakers.Person.GenerateOne();
+        existingTodoItem.Tags = _fakers.Tag.GenerateSet(1);
+        existingTodoItem.Tags.ElementAt(0).Color = _fakers.RgbColor.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

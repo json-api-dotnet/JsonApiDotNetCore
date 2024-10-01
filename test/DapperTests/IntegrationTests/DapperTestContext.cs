@@ -52,7 +52,10 @@ public sealed class DapperTestContext : IntegrationTest
 
     private WebApplicationFactory<TodoItem> CreateFactory()
     {
+#pragma warning disable CA2000 // Dispose objects before losing scope
+        // Justification: The child factory returned by WithWebHostBuilder() is owned by the parent factory, which disposes it.
         return new WebApplicationFactory<TodoItem>().WithWebHostBuilder(builder =>
+#pragma warning restore CA2000 // Dispose objects before losing scope
         {
             builder.UseSetting("ConnectionStrings:DapperExamplePostgreSql",
                 $"Host=localhost;Database=DapperExample-{Guid.NewGuid():N};User ID=postgres;Password=postgres;Include Error Detail=true");
@@ -119,10 +122,14 @@ public sealed class DapperTestContext : IntegrationTest
                     _ => throw new NotSupportedException($"Unsupported database provider '{databaseProvider}'.")
                 };
 
+#if !NET6_0
 #pragma warning disable EF1002 // Risk of vulnerability to SQL injection.
+#endif
                 // Justification: Table names cannot be parameterized.
                 await dbContext.Database.ExecuteSqlRawAsync($"DELETE FROM {escapedTableName}");
+#if !NET6_0
 #pragma warning restore EF1002 // Risk of vulnerability to SQL injection.
+#endif
             }
         }
     }

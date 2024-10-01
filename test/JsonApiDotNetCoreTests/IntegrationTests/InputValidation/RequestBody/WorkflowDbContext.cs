@@ -7,7 +7,8 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class WorkflowDbContext(DbContextOptions<WorkflowDbContext> options) : TestableDbContext(options)
+public sealed class WorkflowDbContext(DbContextOptions<WorkflowDbContext> options)
+    : TestableDbContext(options)
 {
     public DbSet<Workflow> Workflows => Set<Workflow>();
 }

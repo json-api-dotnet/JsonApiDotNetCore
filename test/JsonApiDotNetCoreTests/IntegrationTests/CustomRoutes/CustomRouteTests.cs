@@ -25,8 +25,8 @@ public sealed class CustomRouteTests : IClassFixture<IntegrationTestContext<Test
     public async Task Can_get_resource_at_custom_route()
     {
         // Arrange
-        Town town = _fakers.Town.Generate();
-        town.Civilians = _fakers.Civilian.Generate(1).ToHashSet();
+        Town town = _fakers.Town.GenerateOne();
+        town.Civilians = _fakers.Civilian.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -67,7 +67,7 @@ public sealed class CustomRouteTests : IClassFixture<IntegrationTestContext<Test
     public async Task Can_get_resources_at_custom_action_method()
     {
         // Arrange
-        List<Town> towns = _fakers.Town.Generate(7);
+        List<Town> towns = _fakers.Town.GenerateList(7);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -86,7 +86,7 @@ public sealed class CustomRouteTests : IClassFixture<IntegrationTestContext<Test
 
         responseDocument.Data.ManyValue.ShouldHaveCount(5);
         responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Type == "towns");
-        responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Attributes.ShouldNotBeNull().Any());
-        responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.ShouldNotBeNull().Any());
+        responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Attributes.ShouldNotBeNull().Count > 0);
+        responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.ShouldNotBeNull().Count > 0);
     }
 }

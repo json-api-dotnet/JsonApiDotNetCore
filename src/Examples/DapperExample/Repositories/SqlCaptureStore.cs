@@ -11,7 +11,7 @@ public sealed class SqlCaptureStore
 {
     private readonly List<SqlCommand> _sqlCommands = [];
 
-    public IReadOnlyList<SqlCommand> SqlCommands => _sqlCommands;
+    public IReadOnlyList<SqlCommand> SqlCommands => _sqlCommands.AsReadOnly();
 
     public void Clear()
     {

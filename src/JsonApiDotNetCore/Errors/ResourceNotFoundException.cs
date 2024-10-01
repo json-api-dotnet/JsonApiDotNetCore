@@ -8,8 +8,9 @@ namespace JsonApiDotNetCore.Errors;
 /// The error that is thrown when a resource does not exist.
 /// </summary>
 [PublicAPI]
-public sealed class ResourceNotFoundException(string resourceId, string resourceType) : JsonApiException(new ErrorObject(HttpStatusCode.NotFound)
-{
-    Title = "The requested resource does not exist.",
-    Detail = $"Resource of type '{resourceType}' with ID '{resourceId}' does not exist."
-});
+public sealed class ResourceNotFoundException(string resourceId, string resourceType)
+    : JsonApiException(new ErrorObject(HttpStatusCode.NotFound)
+    {
+        Title = "The requested resource does not exist.",
+        Detail = $"Resource of type '{resourceType}' with ID '{resourceId}' does not exist."
+    });

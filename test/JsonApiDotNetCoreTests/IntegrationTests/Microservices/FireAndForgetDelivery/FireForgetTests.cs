@@ -77,7 +77,7 @@ public sealed partial class FireForgetTests : IClassFixture<IntegrationTestConte
         var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
         messageBroker.SimulateFailure = true;
 
-        DomainUser existingUser = _fakers.DomainUser.Generate();
+        DomainUser existingUser = _fakers.DomainUser.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

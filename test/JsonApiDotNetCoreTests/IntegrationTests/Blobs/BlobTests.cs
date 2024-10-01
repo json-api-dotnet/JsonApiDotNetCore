@@ -26,7 +26,7 @@ public sealed class BlobTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Can_get_primary_resource_by_ID()
     {
         // Arrange
-        ImageContainer container = _fakers.ImageContainer.Generate();
+        ImageContainer container = _fakers.ImageContainer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -55,7 +55,7 @@ public sealed class BlobTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Can_create_resource()
     {
         // Arrange
-        ImageContainer newContainer = _fakers.ImageContainer.Generate();
+        ImageContainer newContainer = _fakers.ImageContainer.GenerateOne();
 
         var requestBody = new
         {
@@ -102,10 +102,10 @@ public sealed class BlobTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Can_update_resource()
     {
         // Arrange
-        ImageContainer existingContainer = _fakers.ImageContainer.Generate();
+        ImageContainer existingContainer = _fakers.ImageContainer.GenerateOne();
 
-        byte[] newData = _fakers.ImageContainer.Generate().Data;
-        byte[] newThumbnail = _fakers.ImageContainer.Generate().Thumbnail!;
+        byte[] newData = _fakers.ImageContainer.GenerateOne().Data;
+        byte[] newThumbnail = _fakers.ImageContainer.GenerateOne().Thumbnail!;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -157,7 +157,7 @@ public sealed class BlobTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Can_update_resource_with_empty_blob()
     {
         // Arrange
-        ImageContainer existingContainer = _fakers.ImageContainer.Generate();
+        ImageContainer existingContainer = _fakers.ImageContainer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -206,7 +206,7 @@ public sealed class BlobTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Can_update_resource_with_null_blob()
     {
         // Arrange
-        ImageContainer existingContainer = _fakers.ImageContainer.Generate();
+        ImageContainer existingContainer = _fakers.ImageContainer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

@@ -15,7 +15,7 @@ using Xunit.Abstractions;
 
 namespace JsonApiDotNetCoreTests.UnitTests.FieldChains;
 
-public sealed class FieldChainPatternMatchTests
+public sealed class FieldChainPatternMatchTests : IDisposable
 {
     private const string T = "resources";
     private const string X = "unknown";
@@ -28,8 +28,13 @@ public sealed class FieldChainPatternMatchTests
 
     public FieldChainPatternMatchTests(ITestOutputHelper testOutputHelper)
     {
+#pragma warning disable CA2000 // Dispose objects before losing scope
+        // Justification: LoggerFactory.AddProvider takes ownership (passing the provider as a constructor parameter does not).
         var loggerProvider = new XUnitLoggerProvider(testOutputHelper, null, LogOutputFields.Message);
-        _loggerFactory = new LoggerFactory([loggerProvider]);
+#pragma warning restore CA2000 // Dispose objects before losing scope
+
+        _loggerFactory = new LoggerFactory();
+        _loggerFactory.AddProvider(loggerProvider);
 
         var options = new JsonApiOptions();
         IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<Resource, long>().Build();
@@ -397,6 +402,11 @@ public sealed class FieldChainPatternMatchTests
         result.FailurePosition.Should().Be(fieldChainSource.Position);
         result.FieldChain.Should().BeEmpty();
         result.IsSuccess.Should().BeFalse();
+    }
+
+    public void Dispose()
+    {
+        _loggerFactory.Dispose();
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]

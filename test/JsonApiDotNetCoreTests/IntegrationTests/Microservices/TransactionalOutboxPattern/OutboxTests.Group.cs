@@ -17,7 +17,7 @@ public sealed partial class OutboxTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        string newGroupName = _fakers.DomainGroup.Generate().Name;
+        string newGroupName = _fakers.DomainGroup.GenerateOne().Name;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -73,12 +73,12 @@ public sealed partial class OutboxTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        DomainUser existingUserWithoutGroup = _fakers.DomainUser.Generate();
+        DomainUser existingUserWithoutGroup = _fakers.DomainUser.GenerateOne();
 
-        DomainUser existingUserWithOtherGroup = _fakers.DomainUser.Generate();
-        existingUserWithOtherGroup.Group = _fakers.DomainGroup.Generate();
+        DomainUser existingUserWithOtherGroup = _fakers.DomainUser.GenerateOne();
+        existingUserWithOtherGroup.Group = _fakers.DomainGroup.GenerateOne();
 
-        string newGroupName = _fakers.DomainGroup.Generate().Name;
+        string newGroupName = _fakers.DomainGroup.GenerateOne().Name;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -165,9 +165,9 @@ public sealed partial class OutboxTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        DomainGroup existingGroup = _fakers.DomainGroup.Generate();
+        DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 
-        string newGroupName = _fakers.DomainGroup.Generate().Name;
+        string newGroupName = _fakers.DomainGroup.GenerateOne().Name;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -224,18 +224,18 @@ public sealed partial class OutboxTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        DomainGroup existingGroup = _fakers.DomainGroup.Generate();
+        DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 
-        DomainUser existingUserWithoutGroup = _fakers.DomainUser.Generate();
+        DomainUser existingUserWithoutGroup = _fakers.DomainUser.GenerateOne();
 
-        DomainUser existingUserWithSameGroup1 = _fakers.DomainUser.Generate();
+        DomainUser existingUserWithSameGroup1 = _fakers.DomainUser.GenerateOne();
         existingUserWithSameGroup1.Group = existingGroup;
 
-        DomainUser existingUserWithSameGroup2 = _fakers.DomainUser.Generate();
+        DomainUser existingUserWithSameGroup2 = _fakers.DomainUser.GenerateOne();
         existingUserWithSameGroup2.Group = existingGroup;
 
-        DomainUser existingUserWithOtherGroup = _fakers.DomainUser.Generate();
-        existingUserWithOtherGroup.Group = _fakers.DomainGroup.Generate();
+        DomainUser existingUserWithOtherGroup = _fakers.DomainUser.GenerateOne();
+        existingUserWithOtherGroup.Group = _fakers.DomainGroup.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -321,7 +321,7 @@ public sealed partial class OutboxTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        DomainGroup existingGroup = _fakers.DomainGroup.Generate();
+        DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -362,8 +362,8 @@ public sealed partial class OutboxTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        DomainGroup existingGroup = _fakers.DomainGroup.Generate();
-        existingGroup.Users = _fakers.DomainUser.Generate(1).ToHashSet();
+        DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
+        existingGroup.Users = _fakers.DomainUser.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -408,18 +408,18 @@ public sealed partial class OutboxTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        DomainGroup existingGroup = _fakers.DomainGroup.Generate();
+        DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 
-        DomainUser existingUserWithoutGroup = _fakers.DomainUser.Generate();
+        DomainUser existingUserWithoutGroup = _fakers.DomainUser.GenerateOne();
 
-        DomainUser existingUserWithSameGroup1 = _fakers.DomainUser.Generate();
+        DomainUser existingUserWithSameGroup1 = _fakers.DomainUser.GenerateOne();
         existingUserWithSameGroup1.Group = existingGroup;
 
-        DomainUser existingUserWithSameGroup2 = _fakers.DomainUser.Generate();
+        DomainUser existingUserWithSameGroup2 = _fakers.DomainUser.GenerateOne();
         existingUserWithSameGroup2.Group = existingGroup;
 
-        DomainUser existingUserWithOtherGroup = _fakers.DomainUser.Generate();
-        existingUserWithOtherGroup.Group = _fakers.DomainGroup.Generate();
+        DomainUser existingUserWithOtherGroup = _fakers.DomainUser.GenerateOne();
+        existingUserWithOtherGroup.Group = _fakers.DomainGroup.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -494,15 +494,15 @@ public sealed partial class OutboxTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        DomainGroup existingGroup = _fakers.DomainGroup.Generate();
+        DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 
-        DomainUser existingUserWithoutGroup = _fakers.DomainUser.Generate();
+        DomainUser existingUserWithoutGroup = _fakers.DomainUser.GenerateOne();
 
-        DomainUser existingUserWithSameGroup = _fakers.DomainUser.Generate();
+        DomainUser existingUserWithSameGroup = _fakers.DomainUser.GenerateOne();
         existingUserWithSameGroup.Group = existingGroup;
 
-        DomainUser existingUserWithOtherGroup = _fakers.DomainUser.Generate();
-        existingUserWithOtherGroup.Group = _fakers.DomainGroup.Generate();
+        DomainUser existingUserWithOtherGroup = _fakers.DomainUser.GenerateOne();
+        existingUserWithOtherGroup.Group = _fakers.DomainGroup.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -567,12 +567,12 @@ public sealed partial class OutboxTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        DomainGroup existingGroup = _fakers.DomainGroup.Generate();
+        DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 
-        DomainUser existingUserWithSameGroup1 = _fakers.DomainUser.Generate();
+        DomainUser existingUserWithSameGroup1 = _fakers.DomainUser.GenerateOne();
         existingUserWithSameGroup1.Group = existingGroup;
 
-        DomainUser existingUserWithSameGroup2 = _fakers.DomainUser.Generate();
+        DomainUser existingUserWithSameGroup2 = _fakers.DomainUser.GenerateOne();
         existingUserWithSameGroup2.Group = existingGroup;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>

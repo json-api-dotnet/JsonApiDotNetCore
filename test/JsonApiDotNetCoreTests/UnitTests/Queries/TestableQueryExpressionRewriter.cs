@@ -114,16 +114,16 @@ internal sealed class TestableQueryExpressionRewriter : QueryExpressionRewriter<
         return base.VisitQueryStringParameterScope(expression, argument);
     }
 
-    public override QueryExpression PaginationQueryStringValue(PaginationQueryStringValueExpression expression, object? argument)
+    public override QueryExpression VisitPaginationQueryStringValue(PaginationQueryStringValueExpression expression, object? argument)
     {
         Capture(expression);
-        return base.PaginationQueryStringValue(expression, argument);
+        return base.VisitPaginationQueryStringValue(expression, argument);
     }
 
-    public override QueryExpression PaginationElementQueryStringValue(PaginationElementQueryStringValueExpression expression, object? argument)
+    public override QueryExpression VisitPaginationElementQueryStringValue(PaginationElementQueryStringValueExpression expression, object? argument)
     {
         Capture(expression);
-        return base.PaginationElementQueryStringValue(expression, argument);
+        return base.VisitPaginationElementQueryStringValue(expression, argument);
     }
 
     public override QueryExpression VisitInclude(IncludeExpression expression, object? argument)

@@ -35,7 +35,7 @@ public sealed class NoRelationshipsControllerTests : IClassFixture<IntegrationTe
     public async Task Can_get_resource()
     {
         // Arrange
-        Chair chair = _fakers.Chair.Generate();
+        Chair chair = _fakers.Chair.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -56,7 +56,7 @@ public sealed class NoRelationshipsControllerTests : IClassFixture<IntegrationTe
     public async Task Cannot_get_secondary_resources()
     {
         // Arrange
-        Chair chair = _fakers.Chair.Generate();
+        Chair chair = _fakers.Chair.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -84,7 +84,7 @@ public sealed class NoRelationshipsControllerTests : IClassFixture<IntegrationTe
     public async Task Cannot_get_secondary_resource()
     {
         // Arrange
-        Chair chair = _fakers.Chair.Generate();
+        Chair chair = _fakers.Chair.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -112,7 +112,7 @@ public sealed class NoRelationshipsControllerTests : IClassFixture<IntegrationTe
     public async Task Cannot_get_relationship()
     {
         // Arrange
-        Chair chair = _fakers.Chair.Generate();
+        Chair chair = _fakers.Chair.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -164,7 +164,7 @@ public sealed class NoRelationshipsControllerTests : IClassFixture<IntegrationTe
     public async Task Can_update_resource()
     {
         // Arrange
-        Chair existingChair = _fakers.Chair.Generate();
+        Chair existingChair = _fakers.Chair.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -197,7 +197,7 @@ public sealed class NoRelationshipsControllerTests : IClassFixture<IntegrationTe
     public async Task Can_delete_resource()
     {
         // Arrange
-        Chair existingChair = _fakers.Chair.Generate();
+        Chair existingChair = _fakers.Chair.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -218,7 +218,7 @@ public sealed class NoRelationshipsControllerTests : IClassFixture<IntegrationTe
     public async Task Cannot_update_relationship()
     {
         // Arrange
-        Chair existingChair = _fakers.Chair.Generate();
+        Chair existingChair = _fakers.Chair.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -251,7 +251,7 @@ public sealed class NoRelationshipsControllerTests : IClassFixture<IntegrationTe
     public async Task Cannot_add_to_ToMany_relationship()
     {
         // Arrange
-        Chair existingChair = _fakers.Chair.Generate();
+        Chair existingChair = _fakers.Chair.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -284,7 +284,7 @@ public sealed class NoRelationshipsControllerTests : IClassFixture<IntegrationTe
     public async Task Cannot_remove_from_ToMany_relationship()
     {
         // Arrange
-        Chair existingChair = _fakers.Chair.Generate();
+        Chair existingChair = _fakers.Chair.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

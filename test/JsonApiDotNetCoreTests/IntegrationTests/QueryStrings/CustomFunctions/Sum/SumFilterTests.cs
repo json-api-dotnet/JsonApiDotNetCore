@@ -32,13 +32,13 @@ public sealed class SumFilterTests : IClassFixture<IntegrationTestContext<Testab
     public async Task Can_filter_sum_at_primary_endpoint()
     {
         // Arrange
-        List<BlogPost> posts = _fakers.BlogPost.Generate(2);
+        List<BlogPost> posts = _fakers.BlogPost.GenerateList(2);
 
-        posts[0].Comments = _fakers.Comment.Generate(2).ToHashSet();
+        posts[0].Comments = _fakers.Comment.GenerateSet(2);
         posts[0].Comments.ElementAt(0).NumStars = 0;
         posts[0].Comments.ElementAt(1).NumStars = 1;
 
-        posts[1].Comments = _fakers.Comment.Generate(2).ToHashSet();
+        posts[1].Comments = _fakers.Comment.GenerateSet(2);
         posts[1].Comments.ElementAt(0).NumStars = 2;
         posts[1].Comments.ElementAt(1).NumStars = 3;
 
@@ -66,19 +66,19 @@ public sealed class SumFilterTests : IClassFixture<IntegrationTestContext<Testab
     public async Task Can_filter_sum_on_count_at_secondary_endpoint()
     {
         // Arrange
-        List<BlogPost> posts = _fakers.BlogPost.Generate(2);
+        List<BlogPost> posts = _fakers.BlogPost.GenerateList(2);
 
-        posts[0].Comments = _fakers.Comment.Generate(2).ToHashSet();
+        posts[0].Comments = _fakers.Comment.GenerateSet(2);
         posts[0].Comments.ElementAt(0).NumStars = 1;
         posts[0].Comments.ElementAt(1).NumStars = 1;
-        posts[0].Contributors = _fakers.Woman.Generate(1).OfType<Human>().ToHashSet();
+        posts[0].Contributors = _fakers.Woman.GenerateSet<Woman, Human>(1);
 
-        posts[1].Comments = _fakers.Comment.Generate(2).ToHashSet();
+        posts[1].Comments = _fakers.Comment.GenerateSet(2);
         posts[1].Comments.ElementAt(0).NumStars = 2;
         posts[1].Comments.ElementAt(1).NumStars = 2;
-        posts[1].Contributors = _fakers.Man.Generate(2).OfType<Human>().ToHashSet();
-        posts[1].Contributors.ElementAt(0).Children = _fakers.Woman.Generate(3).OfType<Human>().ToHashSet();
-        posts[1].Contributors.ElementAt(1).Children = _fakers.Man.Generate(3).OfType<Human>().ToHashSet();
+        posts[1].Contributors = _fakers.Man.GenerateSet<Man, Human>(2);
+        posts[1].Contributors.ElementAt(0).Children = _fakers.Woman.GenerateSet<Woman, Human>(3);
+        posts[1].Contributors.ElementAt(1).Children = _fakers.Man.GenerateSet<Man, Human>(3);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -104,14 +104,14 @@ public sealed class SumFilterTests : IClassFixture<IntegrationTestContext<Testab
     public async Task Can_filter_sum_in_included_resources()
     {
         // Arrange
-        Blog blog = _fakers.Blog.Generate();
-        blog.Posts = _fakers.BlogPost.Generate(2);
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Posts = _fakers.BlogPost.GenerateList(2);
 
-        blog.Posts[0].Comments = _fakers.Comment.Generate(2).ToHashSet();
+        blog.Posts[0].Comments = _fakers.Comment.GenerateSet(2);
         blog.Posts[0].Comments.ElementAt(0).NumStars = 1;
         blog.Posts[0].Comments.ElementAt(1).NumStars = 1;
 
-        blog.Posts[1].Comments = _fakers.Comment.Generate(2).ToHashSet();
+        blog.Posts[1].Comments = _fakers.Comment.GenerateSet(2);
         blog.Posts[1].Comments.ElementAt(0).NumStars = 1;
         blog.Posts[1].Comments.ElementAt(1).NumStars = 2;
 

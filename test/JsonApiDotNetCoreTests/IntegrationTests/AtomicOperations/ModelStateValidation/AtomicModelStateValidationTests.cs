@@ -119,8 +119,8 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
     public async Task Can_create_resource_with_annotated_relationship()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        string newPlaylistName = _fakers.Playlist.Generate().Name;
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        string newPlaylistName = _fakers.Playlist.GenerateOne().Name;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -186,7 +186,7 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
     public async Task Cannot_update_resource_with_multiple_violations()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -244,8 +244,8 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
     public async Task Can_update_resource_with_omitted_required_attribute()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        string newTrackGenre = _fakers.MusicTrack.Generate().Genre!;
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        string newTrackGenre = _fakers.MusicTrack.GenerateOne().Genre!;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -296,8 +296,8 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
     public async Task Can_update_resource_with_annotated_relationship()
     {
         // Arrange
-        Playlist existingPlaylist = _fakers.Playlist.Generate();
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        Playlist existingPlaylist = _fakers.Playlist.GenerateOne();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -358,8 +358,8 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
     public async Task Can_update_ManyToOne_relationship()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        RecordCompany existingCompany = _fakers.RecordCompany.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        RecordCompany existingCompany = _fakers.RecordCompany.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -412,8 +412,8 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
     public async Task Can_update_ManyToMany_relationship()
     {
         // Arrange
-        Playlist existingPlaylist = _fakers.Playlist.Generate();
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        Playlist existingPlaylist = _fakers.Playlist.GenerateOne();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

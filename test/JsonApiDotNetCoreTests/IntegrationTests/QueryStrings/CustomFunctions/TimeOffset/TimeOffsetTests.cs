@@ -48,7 +48,7 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         // Arrange
         var clock = _testContext.Factory.Services.GetRequiredService<ISystemClock>();
 
-        List<Reminder> reminders = _fakers.Reminder.Generate(7);
+        List<Reminder> reminders = _fakers.Reminder.GenerateList(7);
         reminders[0].RemindsAt = clock.UtcNow.Add(TimeSpan.FromMinutes(-15)).DateTime.AsUtc();
         reminders[1].RemindsAt = clock.UtcNow.Add(TimeSpan.FromMinutes(-10)).DateTime.AsUtc();
         reminders[2].RemindsAt = clock.UtcNow.Add(TimeSpan.FromMinutes(-5)).DateTime.AsUtc();
@@ -202,13 +202,13 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         // Arrange
         var clock = _testContext.Factory.Services.GetRequiredService<ISystemClock>();
 
-        Calendar calendar = _fakers.Calendar.Generate();
-        calendar.Appointments = _fakers.Appointment.Generate(2).ToHashSet();
+        Calendar calendar = _fakers.Calendar.GenerateOne();
+        calendar.Appointments = _fakers.Appointment.GenerateSet(2);
 
-        calendar.Appointments.ElementAt(0).Reminders = _fakers.Reminder.Generate(1);
+        calendar.Appointments.ElementAt(0).Reminders = _fakers.Reminder.GenerateList(1);
         calendar.Appointments.ElementAt(0).Reminders[0].RemindsAt = clock.UtcNow.DateTime.AsUtc();
 
-        calendar.Appointments.ElementAt(1).Reminders = _fakers.Reminder.Generate(1);
+        calendar.Appointments.ElementAt(1).Reminders = _fakers.Reminder.GenerateList(1);
         calendar.Appointments.ElementAt(1).Reminders[0].RemindsAt = clock.UtcNow.Add(TimeSpan.FromMinutes(30)).DateTime.AsUtc();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>

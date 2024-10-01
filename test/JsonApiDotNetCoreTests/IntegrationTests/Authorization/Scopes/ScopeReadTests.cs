@@ -72,8 +72,8 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
     public async Task Can_get_primary_resources_with_correct_scope()
     {
         // Arrange
-        Movie movie = _fakers.Movie.Generate();
-        movie.Genre = _fakers.Genre.Generate();
+        Movie movie = _fakers.Movie.GenerateOne();
+        movie.Genre = _fakers.Genre.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -103,7 +103,7 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
     public async Task Can_get_primary_resources_with_write_scope()
     {
         // Arrange
-        Genre genre = _fakers.Genre.Generate();
+        Genre genre = _fakers.Genre.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -133,7 +133,7 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
     public async Task Can_get_primary_resources_with_redundant_scopes()
     {
         // Arrange
-        Actor actor = _fakers.Actor.Generate();
+        Actor actor = _fakers.Actor.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

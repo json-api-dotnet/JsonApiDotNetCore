@@ -5,7 +5,8 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.Logging;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class LoggingDbContext(DbContextOptions<LoggingDbContext> options) : TestableDbContext(options)
+public sealed class LoggingDbContext(DbContextOptions<LoggingDbContext> options)
+    : TestableDbContext(options)
 {
     public DbSet<AuditEntry> AuditEntries => Set<AuditEntry>();
     public DbSet<FruitBowl> FruitBowls => Set<FruitBowl>();

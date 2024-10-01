@@ -15,7 +15,8 @@ public sealed class ResourceConstructionExpressionTests
     public void When_resource_has_default_constructor_it_must_succeed()
     {
         // Arrange
-        var factory = new ResourceFactory(new ServiceContainer());
+        using var serviceProvider = new ServiceContainer();
+        var factory = new ResourceFactory(serviceProvider);
 
         // Act
         NewExpression newExpression = factory.CreateNewExpression(typeof(ResourceWithoutConstructor));
@@ -31,7 +32,8 @@ public sealed class ResourceConstructionExpressionTests
     public void When_resource_has_constructor_with_string_parameter_it_must_fail()
     {
         // Arrange
-        var factory = new ResourceFactory(new ServiceContainer());
+        using var serviceProvider = new ServiceContainer();
+        var factory = new ResourceFactory(serviceProvider);
 
         // Act
         Action action = () => factory.CreateNewExpression(typeof(ResourceWithStringConstructor));

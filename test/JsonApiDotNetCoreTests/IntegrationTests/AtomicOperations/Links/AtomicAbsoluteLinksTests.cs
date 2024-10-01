@@ -32,8 +32,8 @@ public sealed class AtomicAbsoluteLinksTests : IClassFixture<IntegrationTestCont
     public async Task Update_resource_with_side_effects_returns_absolute_links()
     {
         // Arrange
-        TextLanguage existingLanguage = _fakers.TextLanguage.Generate();
-        RecordCompany existingCompany = _fakers.RecordCompany.Generate();
+        TextLanguage existingLanguage = _fakers.TextLanguage.GenerateOne();
+        RecordCompany existingCompany = _fakers.RecordCompany.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -121,7 +121,7 @@ public sealed class AtomicAbsoluteLinksTests : IClassFixture<IntegrationTestCont
     public async Task Update_resource_with_side_effects_and_missing_resource_controller_hides_links()
     {
         // Arrange
-        Playlist existingPlaylist = _fakers.Playlist.Generate();
+        Playlist existingPlaylist = _fakers.Playlist.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

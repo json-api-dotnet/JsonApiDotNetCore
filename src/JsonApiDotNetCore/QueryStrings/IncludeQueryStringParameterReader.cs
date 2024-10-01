@@ -39,6 +39,8 @@ public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIn
     /// <inheritdoc />
     public virtual bool CanRead(string parameterName)
     {
+        ArgumentGuard.NotNullNorEmpty(parameterName);
+
         return parameterName == "include";
     }
 

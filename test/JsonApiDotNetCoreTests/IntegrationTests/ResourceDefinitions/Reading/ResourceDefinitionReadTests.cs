@@ -50,7 +50,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
         settingsProvider.BlockIncludePlanetMoons();
 
-        Planet planet = _fakers.Planet.Generate();
+        Planet planet = _fakers.Planet.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -94,9 +94,9 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
         settingsProvider.AutoIncludeStarGivingLightToMoon();
 
-        Moon moon = _fakers.Moon.Generate();
-        moon.OrbitsAround = _fakers.Planet.Generate();
-        moon.IsGivenLightBy = _fakers.Star.Generate();
+        Moon moon = _fakers.Moon.GenerateOne();
+        moon.OrbitsAround = _fakers.Planet.GenerateOne();
+        moon.IsGivenLightBy = _fakers.Star.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -152,9 +152,9 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
         settingsProvider.AutoIncludeStarGivingLightToMoon();
 
-        Planet planet = _fakers.Planet.Generate();
-        planet.Moons = _fakers.Moon.Generate(1).ToHashSet();
-        planet.Moons.ElementAt(0).IsGivenLightBy = _fakers.Star.Generate();
+        Planet planet = _fakers.Planet.GenerateOne();
+        planet.Moons = _fakers.Moon.GenerateSet(1);
+        planet.Moons.ElementAt(0).IsGivenLightBy = _fakers.Star.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -214,7 +214,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
         settingsProvider.HidePlanetsWithPrivateName();
 
-        List<Planet> planets = _fakers.Planet.Generate(4);
+        List<Planet> planets = _fakers.Planet.GenerateList(4);
         planets[0].PrivateName = "A";
         planets[2].PrivateName = "B";
 
@@ -262,7 +262,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
         settingsProvider.HidePlanetsWithPrivateName();
 
-        List<Planet> planets = _fakers.Planet.Generate(4);
+        List<Planet> planets = _fakers.Planet.GenerateList(4);
 
         planets[0].HasRingSystem = true;
         planets[0].PrivateName = "A";
@@ -316,8 +316,8 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
         settingsProvider.HidePlanetsWithPrivateName();
 
-        Star star = _fakers.Star.Generate();
-        star.Planets = _fakers.Planet.Generate(4).ToHashSet();
+        Star star = _fakers.Star.GenerateOne();
+        star.Planets = _fakers.Planet.GenerateSet(4);
         star.Planets.ElementAt(0).PrivateName = "A";
         star.Planets.ElementAt(2).PrivateName = "B";
 
@@ -368,8 +368,8 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
         settingsProvider.HidePlanetsWithPrivateName();
 
-        Star star = _fakers.Star.Generate();
-        star.Planets = _fakers.Planet.Generate(4).ToHashSet();
+        Star star = _fakers.Star.GenerateOne();
+        star.Planets = _fakers.Planet.GenerateSet(4);
         star.Planets.ElementAt(0).PrivateName = "A";
         star.Planets.ElementAt(2).PrivateName = "B";
 
@@ -415,7 +415,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        List<Star> stars = _fakers.Star.Generate(3);
+        List<Star> stars = _fakers.Star.GenerateList(3);
 
         stars[0].SolarMass = 500m;
         stars[0].SolarRadius = 1m;
@@ -467,7 +467,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        List<Star> stars = _fakers.Star.Generate(3);
+        List<Star> stars = _fakers.Star.GenerateList(3);
 
         stars[0].Name = "B";
         stars[0].SolarRadius = 10m;
@@ -519,7 +519,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        List<Star> stars = _fakers.Star.Generate(10);
+        List<Star> stars = _fakers.Star.GenerateList(10);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -561,7 +561,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Star star = _fakers.Star.Generate();
+        Star star = _fakers.Star.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -601,7 +601,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Star star = _fakers.Star.Generate();
+        Star star = _fakers.Star.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -642,7 +642,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Star star = _fakers.Star.Generate();
+        Star star = _fakers.Star.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -682,7 +682,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Star star = _fakers.Star.Generate();
+        Star star = _fakers.Star.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -722,13 +722,13 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        List<Moon> moons = _fakers.Moon.Generate(2);
+        List<Moon> moons = _fakers.Moon.GenerateList(2);
 
         moons[0].SolarRadius = .5m;
-        moons[0].OrbitsAround = _fakers.Planet.Generate();
+        moons[0].OrbitsAround = _fakers.Planet.GenerateOne();
 
         moons[1].SolarRadius = 50m;
-        moons[1].OrbitsAround = _fakers.Planet.Generate();
+        moons[1].OrbitsAround = _fakers.Planet.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -769,23 +769,23 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        List<Moon> moons = _fakers.Moon.Generate(4);
+        List<Moon> moons = _fakers.Moon.GenerateList(4);
 
         moons[0].Name = "Alpha1";
         moons[0].SolarRadius = 1m;
-        moons[0].OrbitsAround = _fakers.Planet.Generate();
+        moons[0].OrbitsAround = _fakers.Planet.GenerateOne();
 
         moons[1].Name = "Alpha2";
         moons[1].SolarRadius = 5m;
-        moons[1].OrbitsAround = _fakers.Planet.Generate();
+        moons[1].OrbitsAround = _fakers.Planet.GenerateOne();
 
         moons[2].Name = "Beta1";
         moons[2].SolarRadius = 1m;
-        moons[2].OrbitsAround = _fakers.Planet.Generate();
+        moons[2].OrbitsAround = _fakers.Planet.GenerateOne();
 
         moons[3].Name = "Beta2";
         moons[3].SolarRadius = 5m;
-        moons[3].OrbitsAround = _fakers.Planet.Generate();
+        moons[3].OrbitsAround = _fakers.Planet.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -826,8 +826,8 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Planet planet = _fakers.Planet.Generate();
-        planet.Moons = _fakers.Moon.Generate(1).ToHashSet();
+        Planet planet = _fakers.Planet.GenerateOne();
+        planet.Moons = _fakers.Moon.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

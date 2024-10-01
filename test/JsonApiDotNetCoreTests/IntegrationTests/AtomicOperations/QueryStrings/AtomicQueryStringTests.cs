@@ -274,7 +274,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
         // Arrange
         var clock = _testContext.Factory.Services.GetRequiredService<ISystemClock>();
 
-        List<MusicTrack> musicTracks = _fakers.MusicTrack.Generate(3);
+        List<MusicTrack> musicTracks = _fakers.MusicTrack.GenerateList(3);
         musicTracks[0].ReleasedAt = clock.UtcNow.AddMonths(5);
         musicTracks[1].ReleasedAt = clock.UtcNow.AddMonths(-5);
         musicTracks[2].ReleasedAt = clock.UtcNow.AddMonths(-1);
@@ -302,7 +302,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
     public async Task Cannot_use_Queryable_handler_at_operations_endpoint()
     {
         // Arrange
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         var requestBody = new
         {

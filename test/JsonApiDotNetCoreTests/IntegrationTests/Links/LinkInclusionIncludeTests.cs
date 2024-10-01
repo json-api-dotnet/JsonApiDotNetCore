@@ -22,9 +22,9 @@ public sealed class LinkInclusionIncludeTests : IClassFixture<IntegrationTestCon
     public async Task Hides_links_for_unregistered_controllers()
     {
         // Arrange
-        PhotoLocation location = _fakers.PhotoLocation.Generate();
-        location.Photo = _fakers.Photo.Generate();
-        location.Album = _fakers.PhotoAlbum.Generate();
+        PhotoLocation location = _fakers.PhotoLocation.GenerateOne();
+        location.Photo = _fakers.Photo.GenerateOne();
+        location.Album = _fakers.PhotoAlbum.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

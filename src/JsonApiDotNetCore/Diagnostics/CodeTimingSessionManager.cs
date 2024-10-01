@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Diagnostics;
 /// </summary>
 public static class CodeTimingSessionManager
 {
-    public static readonly bool IsEnabled;
+    public static readonly bool IsEnabled = GetDefaultIsEnabled();
     private static ICodeTimerSession? _session;
 
     public static ICodeTimer Current
@@ -28,12 +28,12 @@ public static class CodeTimingSessionManager
         }
     }
 
-    static CodeTimingSessionManager()
+    private static bool GetDefaultIsEnabled()
     {
 #if DEBUG
-        IsEnabled = !IsRunningInTest() && !IsRunningInBenchmark() && !IsGeneratingOpenApiDocumentAtBuildTime();
+        return !IsRunningInTest() && !IsRunningInBenchmark() && !IsGeneratingOpenApiDocumentAtBuildTime();
 #else
-        IsEnabled = false;
+        return false;
 #endif
     }
 

@@ -23,7 +23,7 @@ public sealed class AtomicDefaultConstrainedOperationsControllerTests
     public async Task Cannot_delete_resource_for_inaccessible_operation()
     {
         // Arrange
-        TextLanguage existingLanguage = _fakers.TextLanguage.Generate();
+        TextLanguage existingLanguage = _fakers.TextLanguage.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -69,8 +69,8 @@ public sealed class AtomicDefaultConstrainedOperationsControllerTests
     public async Task Cannot_change_ToMany_relationship_for_inaccessible_operations()
     {
         // Arrange
-        TextLanguage existingLanguage = _fakers.TextLanguage.Generate();
-        Lyric existingLyric = _fakers.Lyric.Generate();
+        TextLanguage existingLanguage = _fakers.TextLanguage.GenerateOne();
+        Lyric existingLyric = _fakers.Lyric.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

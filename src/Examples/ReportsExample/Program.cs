@@ -24,4 +24,4 @@ app.UseRouting();
 app.UseJsonApi();
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

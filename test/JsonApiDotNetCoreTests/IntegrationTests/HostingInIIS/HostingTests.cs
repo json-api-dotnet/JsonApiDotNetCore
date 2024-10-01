@@ -25,8 +25,8 @@ public sealed class HostingTests : IClassFixture<IntegrationTestContext<HostingS
     public async Task Get_primary_resources_with_include_returns_links()
     {
         // Arrange
-        ArtGallery gallery = _fakers.ArtGallery.Generate();
-        gallery.Paintings = _fakers.Painting.Generate(1).ToHashSet();
+        ArtGallery gallery = _fakers.ArtGallery.GenerateOne();
+        gallery.Paintings = _fakers.Painting.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -92,8 +92,8 @@ public sealed class HostingTests : IClassFixture<IntegrationTestContext<HostingS
     public async Task Get_primary_resources_with_include_on_custom_route_returns_links()
     {
         // Arrange
-        Painting painting = _fakers.Painting.Generate();
-        painting.ExposedAt = _fakers.ArtGallery.Generate();
+        Painting painting = _fakers.Painting.GenerateOne();
+        painting.ExposedAt = _fakers.ArtGallery.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

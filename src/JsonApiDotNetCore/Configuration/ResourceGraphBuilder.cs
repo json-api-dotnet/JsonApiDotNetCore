@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Reflection;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Errors;
@@ -13,7 +14,7 @@ namespace JsonApiDotNetCore.Configuration;
 /// Builds and configures the <see cref="ResourceGraph" />.
 /// </summary>
 [PublicAPI]
-public class ResourceGraphBuilder
+public partial class ResourceGraphBuilder
 {
     private readonly IJsonApiOptions _options;
     private readonly ILogger<ResourceGraphBuilder> _logger;
@@ -34,11 +35,11 @@ public class ResourceGraphBuilder
     /// </summary>
     public IResourceGraph Build()
     {
-        HashSet<ResourceType> resourceTypes = [.. _resourceTypesByClrType.Values];
+        IReadOnlySet<ResourceType> resourceTypes = _resourceTypesByClrType.Values.ToHashSet().AsReadOnly();
 
-        if (!resourceTypes.Any())
+        if (resourceTypes.Count == 0)
         {
-            _logger.LogWarning("The resource graph is empty.");
+            LogResourceGraphIsEmpty();
         }
 
         var resourceGraph = new ResourceGraph(resourceTypes);
@@ -91,18 +92,22 @@ public class ResourceGraphBuilder
             {
                 resourceType.BaseType = baseType;
 
-                if (!directlyDerivedTypesPerBaseType.ContainsKey(baseType))
+                if (!directlyDerivedTypesPerBaseType.TryGetValue(baseType, out HashSet<ResourceType>? directlyDerivedTypes))
                 {
-                    directlyDerivedTypesPerBaseType[baseType] = [];
+                    directlyDerivedTypes = [];
+                    directlyDerivedTypesPerBaseType[baseType] = directlyDerivedTypes;
                 }
 
-                directlyDerivedTypesPerBaseType[baseType].Add(resourceType);
+                directlyDerivedTypes.Add(resourceType);
             }
         }
 
         foreach ((ResourceType baseType, HashSet<ResourceType> directlyDerivedTypes) in directlyDerivedTypesPerBaseType)
         {
-            baseType.DirectlyDerivedTypes = directlyDerivedTypes;
+            if (directlyDerivedTypes.Count > 0)
+            {
+                baseType.DirectlyDerivedTypes = directlyDerivedTypes.AsReadOnly();
+            }
         }
     }
 
@@ -227,8 +232,7 @@ public class ResourceGraphBuilder
         {
             if (resourceClrType.GetCustomAttribute<NoResourceAttribute>() == null)
             {
-                _logger.LogWarning(
-                    $"Skipping: Type '{resourceClrType}' does not implement '{nameof(IIdentifiable)}'. Add [NoResource] to suppress this warning.");
+                LogResourceTypeDoesNotImplementInterface(resourceClrType, nameof(IIdentifiable));
             }
         }
 
@@ -239,9 +243,9 @@ public class ResourceGraphBuilder
     {
         ClientIdGenerationMode? clientIdGeneration = GetClientIdGeneration(resourceClrType);
 
-        IReadOnlyCollection<AttrAttribute> attributes = GetAttributes(resourceClrType);
-        IReadOnlyCollection<RelationshipAttribute> relationships = GetRelationships(resourceClrType);
-        IReadOnlyCollection<EagerLoadAttribute> eagerLoads = GetEagerLoads(resourceClrType);
+        Dictionary<string, AttrAttribute>.ValueCollection attributes = GetAttributes(resourceClrType);
+        Dictionary<string, RelationshipAttribute>.ValueCollection relationships = GetRelationships(resourceClrType);
+        ReadOnlyCollection<EagerLoadAttribute> eagerLoads = GetEagerLoads(resourceClrType);
 
         AssertNoDuplicatePublicName(attributes, relationships);
 
@@ -259,7 +263,7 @@ public class ResourceGraphBuilder
         return resourceAttribute?.NullableClientIdGeneration;
     }
 
-    private IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceClrType)
+    private Dictionary<string, AttrAttribute>.ValueCollection GetAttributes(Type resourceClrType)
     {
         var attributesByName = new Dictionary<string, AttrAttribute>();
 
@@ -296,13 +300,13 @@ public class ResourceGraphBuilder
 
         if (attributesByName.Count < 2)
         {
-            _logger.LogWarning($"Type '{resourceClrType}' does not contain any attributes.");
+            LogResourceTypeHasNoAttributes(resourceClrType);
         }
 
         return attributesByName.Values;
     }
 
-    private IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type resourceClrType)
+    private Dictionary<string, RelationshipAttribute>.ValueCollection GetRelationships(Type resourceClrType)
     {
         var relationshipsByName = new Dictionary<string, RelationshipAttribute>();
         PropertyInfo[] properties = resourceClrType.GetProperties();
@@ -376,11 +380,11 @@ public class ResourceGraphBuilder
         }
     }
 
-    private IReadOnlyCollection<EagerLoadAttribute> GetEagerLoads(Type resourceClrType, int recursionDepth = 0)
+    private ReadOnlyCollection<EagerLoadAttribute> GetEagerLoads(Type resourceClrType, int recursionDepth = 0)
     {
         AssertNoInfiniteRecursion(recursionDepth);
 
-        var attributes = new List<EagerLoadAttribute>();
+        List<EagerLoadAttribute> eagerLoads = [];
         PropertyInfo[] properties = resourceClrType.GetProperties();
 
         foreach (PropertyInfo property in properties)
@@ -396,10 +400,10 @@ public class ResourceGraphBuilder
             eagerLoad.Children = GetEagerLoads(innerType, recursionDepth + 1);
             eagerLoad.Property = property;
 
-            attributes.Add(eagerLoad);
+            eagerLoads.Add(eagerLoad);
         }
 
-        return attributes;
+        return eagerLoads.AsReadOnly();
     }
 
     private static void IncludeField<TField>(Dictionary<string, TField> fieldsByName, TField field)
@@ -475,4 +479,14 @@ public class ResourceGraphBuilder
             ? resourceProperty.Name
             : _options.SerializerOptions.PropertyNamingPolicy.ConvertName(resourceProperty.Name);
     }
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "The resource graph is empty.")]
+    private partial void LogResourceGraphIsEmpty();
+
+    [LoggerMessage(Level = LogLevel.Warning,
+        Message = "Skipping: Type '{ResourceType}' does not implement '{InterfaceType}'. Add [NoResource] to suppress this warning.")]
+    private partial void LogResourceTypeDoesNotImplementInterface(Type resourceType, string interfaceType);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Type '{ResourceType}' does not contain any attributes.")]
+    private partial void LogResourceTypeHasNoAttributes(Type resourceType);
 }

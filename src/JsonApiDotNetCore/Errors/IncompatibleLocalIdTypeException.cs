@@ -8,8 +8,8 @@ namespace JsonApiDotNetCore.Errors;
 /// The error that is thrown when referencing a local ID that was assigned to a different resource type.
 /// </summary>
 [PublicAPI]
-public sealed class IncompatibleLocalIdTypeException(string localId, string declaredType, string currentType) : JsonApiException(
-    new ErrorObject(HttpStatusCode.BadRequest)
+public sealed class IncompatibleLocalIdTypeException(string localId, string declaredType, string currentType)
+    : JsonApiException(new ErrorObject(HttpStatusCode.BadRequest)
     {
         Title = "Incompatible type in Local ID usage.",
         Detail = $"Local ID '{localId}' belongs to resource type '{declaredType}' instead of '{currentType}'."

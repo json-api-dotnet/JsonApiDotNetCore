@@ -28,9 +28,9 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person existingPerson = _fakers.Person.Generate();
-        existingPerson.Account = _fakers.LoginAccount.Generate();
-        existingPerson.Account.Recovery = _fakers.AccountRecovery.Generate();
+        Person existingPerson = _fakers.Person.GenerateOne();
+        existingPerson.Account = _fakers.LoginAccount.GenerateOne();
+        existingPerson.Account.Recovery = _fakers.AccountRecovery.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -100,9 +100,9 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        LoginAccount existingLoginAccount = _fakers.LoginAccount.Generate();
-        existingLoginAccount.Recovery = _fakers.AccountRecovery.Generate();
-        existingLoginAccount.Person = _fakers.Person.Generate();
+        LoginAccount existingLoginAccount = _fakers.LoginAccount.GenerateOne();
+        existingLoginAccount.Recovery = _fakers.AccountRecovery.GenerateOne();
+        existingLoginAccount.Person = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -172,8 +172,8 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        LoginAccount existingLoginAccount = _fakers.LoginAccount.Generate();
-        existingLoginAccount.Recovery = _fakers.AccountRecovery.Generate();
+        LoginAccount existingLoginAccount = _fakers.LoginAccount.GenerateOne();
+        existingLoginAccount.Recovery = _fakers.AccountRecovery.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -218,8 +218,8 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        LoginAccount existingLoginAccount = _fakers.LoginAccount.Generate();
-        existingLoginAccount.Recovery = _fakers.AccountRecovery.Generate();
+        LoginAccount existingLoginAccount = _fakers.LoginAccount.GenerateOne();
+        existingLoginAccount.Recovery = _fakers.AccountRecovery.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -270,8 +270,8 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        AccountRecovery existingAccountRecovery = _fakers.AccountRecovery.Generate();
-        existingAccountRecovery.Account = _fakers.LoginAccount.Generate();
+        AccountRecovery existingAccountRecovery = _fakers.AccountRecovery.GenerateOne();
+        existingAccountRecovery.Account = _fakers.LoginAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -322,9 +322,9 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        TodoItem existingTodoItem = _fakers.TodoItem.Generate();
-        existingTodoItem.Owner = _fakers.Person.Generate();
-        existingTodoItem.Assignee = _fakers.Person.Generate();
+        TodoItem existingTodoItem = _fakers.TodoItem.GenerateOne();
+        existingTodoItem.Owner = _fakers.Person.GenerateOne();
+        existingTodoItem.Assignee = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -389,8 +389,8 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        TodoItem existingTodoItem = _fakers.TodoItem.Generate();
-        existingTodoItem.Owner = _fakers.Person.Generate();
+        TodoItem existingTodoItem = _fakers.TodoItem.GenerateOne();
+        existingTodoItem.Owner = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -441,10 +441,10 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person existingPerson = _fakers.Person.Generate();
+        Person existingPerson = _fakers.Person.GenerateOne();
 
-        LoginAccount existingLoginAccount = _fakers.LoginAccount.Generate();
-        existingLoginAccount.Recovery = _fakers.AccountRecovery.Generate();
+        LoginAccount existingLoginAccount = _fakers.LoginAccount.GenerateOne();
+        existingLoginAccount.Recovery = _fakers.AccountRecovery.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -527,10 +527,10 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        LoginAccount existingLoginAccount = _fakers.LoginAccount.Generate();
-        existingLoginAccount.Recovery = _fakers.AccountRecovery.Generate();
+        LoginAccount existingLoginAccount = _fakers.LoginAccount.GenerateOne();
+        existingLoginAccount.Recovery = _fakers.AccountRecovery.GenerateOne();
 
-        Person existingPerson = _fakers.Person.Generate();
+        Person existingPerson = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -601,10 +601,10 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        TodoItem existingTodoItem = _fakers.TodoItem.Generate();
-        existingTodoItem.Owner = _fakers.Person.Generate();
+        TodoItem existingTodoItem = _fakers.TodoItem.GenerateOne();
+        existingTodoItem.Owner = _fakers.Person.GenerateOne();
 
-        Person existingPerson = _fakers.Person.Generate();
+        Person existingPerson = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -674,13 +674,13 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person existingPerson1 = _fakers.Person.Generate();
-        existingPerson1.Account = _fakers.LoginAccount.Generate();
-        existingPerson1.Account.Recovery = _fakers.AccountRecovery.Generate();
+        Person existingPerson1 = _fakers.Person.GenerateOne();
+        existingPerson1.Account = _fakers.LoginAccount.GenerateOne();
+        existingPerson1.Account.Recovery = _fakers.AccountRecovery.GenerateOne();
 
-        Person existingPerson2 = _fakers.Person.Generate();
-        existingPerson2.Account = _fakers.LoginAccount.Generate();
-        existingPerson2.Account.Recovery = _fakers.AccountRecovery.Generate();
+        Person existingPerson2 = _fakers.Person.GenerateOne();
+        existingPerson2.Account = _fakers.LoginAccount.GenerateOne();
+        existingPerson2.Account.Recovery = _fakers.AccountRecovery.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -767,13 +767,13 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        LoginAccount existingLoginAccount1 = _fakers.LoginAccount.Generate();
-        existingLoginAccount1.Recovery = _fakers.AccountRecovery.Generate();
-        existingLoginAccount1.Person = _fakers.Person.Generate();
+        LoginAccount existingLoginAccount1 = _fakers.LoginAccount.GenerateOne();
+        existingLoginAccount1.Recovery = _fakers.AccountRecovery.GenerateOne();
+        existingLoginAccount1.Person = _fakers.Person.GenerateOne();
 
-        LoginAccount existingLoginAccount2 = _fakers.LoginAccount.Generate();
-        existingLoginAccount2.Recovery = _fakers.AccountRecovery.Generate();
-        existingLoginAccount2.Person = _fakers.Person.Generate();
+        LoginAccount existingLoginAccount2 = _fakers.LoginAccount.GenerateOne();
+        existingLoginAccount2.Recovery = _fakers.AccountRecovery.GenerateOne();
+        existingLoginAccount2.Person = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -862,11 +862,11 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        LoginAccount existingLoginAccount1 = _fakers.LoginAccount.Generate();
-        existingLoginAccount1.Recovery = _fakers.AccountRecovery.Generate();
+        LoginAccount existingLoginAccount1 = _fakers.LoginAccount.GenerateOne();
+        existingLoginAccount1.Recovery = _fakers.AccountRecovery.GenerateOne();
 
-        LoginAccount existingLoginAccount2 = _fakers.LoginAccount.Generate();
-        existingLoginAccount2.Recovery = _fakers.AccountRecovery.Generate();
+        LoginAccount existingLoginAccount2 = _fakers.LoginAccount.GenerateOne();
+        existingLoginAccount2.Recovery = _fakers.AccountRecovery.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -953,11 +953,11 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        AccountRecovery existingAccountRecovery1 = _fakers.AccountRecovery.Generate();
-        existingAccountRecovery1.Account = _fakers.LoginAccount.Generate();
+        AccountRecovery existingAccountRecovery1 = _fakers.AccountRecovery.GenerateOne();
+        existingAccountRecovery1.Account = _fakers.LoginAccount.GenerateOne();
 
-        AccountRecovery existingAccountRecovery2 = _fakers.AccountRecovery.Generate();
-        existingAccountRecovery2.Account = _fakers.LoginAccount.Generate();
+        AccountRecovery existingAccountRecovery2 = _fakers.AccountRecovery.GenerateOne();
+        existingAccountRecovery2.Account = _fakers.LoginAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1044,13 +1044,13 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        TodoItem existingTodoItem1 = _fakers.TodoItem.Generate();
-        existingTodoItem1.Owner = _fakers.Person.Generate();
-        existingTodoItem1.Assignee = _fakers.Person.Generate();
+        TodoItem existingTodoItem1 = _fakers.TodoItem.GenerateOne();
+        existingTodoItem1.Owner = _fakers.Person.GenerateOne();
+        existingTodoItem1.Assignee = _fakers.Person.GenerateOne();
 
-        TodoItem existingTodoItem2 = _fakers.TodoItem.Generate();
-        existingTodoItem2.Owner = _fakers.Person.Generate();
-        existingTodoItem2.Assignee = _fakers.Person.Generate();
+        TodoItem existingTodoItem2 = _fakers.TodoItem.GenerateOne();
+        existingTodoItem2.Owner = _fakers.Person.GenerateOne();
+        existingTodoItem2.Assignee = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1120,11 +1120,11 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        TodoItem existingTodoItem1 = _fakers.TodoItem.Generate();
-        existingTodoItem1.Owner = _fakers.Person.Generate();
+        TodoItem existingTodoItem1 = _fakers.TodoItem.GenerateOne();
+        existingTodoItem1.Owner = _fakers.Person.GenerateOne();
 
-        TodoItem existingTodoItem2 = _fakers.TodoItem.Generate();
-        existingTodoItem2.Owner = _fakers.Person.Generate();
+        TodoItem existingTodoItem2 = _fakers.TodoItem.GenerateOne();
+        existingTodoItem2.Owner = _fakers.Person.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

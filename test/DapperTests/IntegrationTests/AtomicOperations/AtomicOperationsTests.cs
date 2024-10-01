@@ -29,10 +29,10 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person newOwner = _fakers.Person.Generate();
-        Person newAssignee = _fakers.Person.Generate();
-        Tag newTag = _fakers.Tag.Generate();
-        TodoItem newTodoItem = _fakers.TodoItem.Generate();
+        Person newOwner = _fakers.Person.GenerateOne();
+        Person newAssignee = _fakers.Person.GenerateOne();
+        Tag newTag = _fakers.Tag.GenerateOne();
+        TodoItem newTodoItem = _fakers.TodoItem.GenerateOne();
 
         const string ownerLocalId = "new-owner";
         const string assigneeLocalId = "new-assignee";
@@ -415,16 +415,13 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person newPerson = _fakers.Person.Generate();
+        Person newPerson = _fakers.Person.GenerateOne();
 
         const long unknownTodoItemId = Unknown.TypedId.Int64;
 
         const string personLocalId = "new-person";
 
-        await _testContext.RunOnDatabaseAsync(async dbContext =>
-        {
-            await _testContext.ClearAllTablesAsync(dbContext);
-        });
+        await _testContext.RunOnDatabaseAsync(_testContext.ClearAllTablesAsync);
 
         var requestBody = new
         {

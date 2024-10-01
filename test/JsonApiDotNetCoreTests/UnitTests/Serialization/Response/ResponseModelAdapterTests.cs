@@ -22,13 +22,13 @@ public sealed class ResponseModelAdapterTests
         // Arrange
         var fakers = new ResponseSerializationFakers();
 
-        Article article = fakers.Article.Generate();
-        article.Author = fakers.Person.Generate();
-        article.Author.Blogs = fakers.Blog.Generate(2).ToHashSet();
+        Article article = fakers.Article.GenerateOne();
+        article.Author = fakers.Person.GenerateOne();
+        article.Author.Blogs = fakers.Blog.GenerateSet(2);
         article.Author.Blogs.ElementAt(0).Reviewer = article.Author;
-        article.Author.Blogs.ElementAt(1).Reviewer = fakers.Person.Generate();
-        article.Author.FavoriteFood = fakers.Food.Generate();
-        article.Author.Blogs.ElementAt(1).Reviewer.FavoriteFood = fakers.Food.Generate();
+        article.Author.Blogs.ElementAt(1).Reviewer = fakers.Person.GenerateOne();
+        article.Author.FavoriteFood = fakers.Food.GenerateOne();
+        article.Author.Blogs.ElementAt(1).Reviewer.FavoriteFood = fakers.Food.GenerateOne();
 
         IJsonApiOptions options = new JsonApiOptions
         {
@@ -163,15 +163,15 @@ public sealed class ResponseModelAdapterTests
         // Arrange
         var fakers = new ResponseSerializationFakers();
 
-        Article article1 = fakers.Article.Generate();
-        article1.Author = fakers.Person.Generate();
-        article1.Author.Blogs = fakers.Blog.Generate(2).ToHashSet();
+        Article article1 = fakers.Article.GenerateOne();
+        article1.Author = fakers.Person.GenerateOne();
+        article1.Author.Blogs = fakers.Blog.GenerateSet(2);
         article1.Author.Blogs.ElementAt(0).Reviewer = article1.Author;
-        article1.Author.Blogs.ElementAt(1).Reviewer = fakers.Person.Generate();
-        article1.Author.FavoriteFood = fakers.Food.Generate();
-        article1.Author.Blogs.ElementAt(1).Reviewer.FavoriteFood = fakers.Food.Generate();
+        article1.Author.Blogs.ElementAt(1).Reviewer = fakers.Person.GenerateOne();
+        article1.Author.FavoriteFood = fakers.Food.GenerateOne();
+        article1.Author.Blogs.ElementAt(1).Reviewer.FavoriteFood = fakers.Food.GenerateOne();
 
-        Article article2 = fakers.Article.Generate();
+        Article article2 = fakers.Article.GenerateOne();
         article2.Author = article1.Author;
 
         IJsonApiOptions options = new JsonApiOptions
@@ -328,22 +328,22 @@ public sealed class ResponseModelAdapterTests
         // Arrange
         var fakers = new ResponseSerializationFakers();
 
-        Article article = fakers.Article.Generate();
-        article.Author = fakers.Person.Generate();
-        article.Author.Blogs = fakers.Blog.Generate(2).ToHashSet();
+        Article article = fakers.Article.GenerateOne();
+        article.Author = fakers.Person.GenerateOne();
+        article.Author.Blogs = fakers.Blog.GenerateSet(2);
         article.Author.Blogs.ElementAt(0).Reviewer = article.Author;
-        article.Author.Blogs.ElementAt(1).Reviewer = fakers.Person.Generate();
-        article.Author.FavoriteFood = fakers.Food.Generate();
-        article.Author.Blogs.ElementAt(1).Reviewer.FavoriteFood = fakers.Food.Generate();
+        article.Author.Blogs.ElementAt(1).Reviewer = fakers.Person.GenerateOne();
+        article.Author.FavoriteFood = fakers.Food.GenerateOne();
+        article.Author.Blogs.ElementAt(1).Reviewer.FavoriteFood = fakers.Food.GenerateOne();
 
-        article.Reviewer = fakers.Person.Generate();
-        article.Reviewer.Blogs = fakers.Blog.Generate(1).ToHashSet();
+        article.Reviewer = fakers.Person.GenerateOne();
+        article.Reviewer.Blogs = fakers.Blog.GenerateSet(1);
         article.Reviewer.Blogs.Add(article.Author.Blogs.ElementAt(0));
         article.Reviewer.Blogs.ElementAt(0).Author = article.Reviewer;
 
         article.Reviewer.Blogs.ElementAt(1).Author = article.Author.Blogs.ElementAt(1).Reviewer;
-        article.Author.Blogs.ElementAt(1).Reviewer.FavoriteSong = fakers.Song.Generate();
-        article.Reviewer.FavoriteSong = fakers.Song.Generate();
+        article.Author.Blogs.ElementAt(1).Reviewer.FavoriteSong = fakers.Song.GenerateOne();
+        article.Reviewer.FavoriteSong = fakers.Song.GenerateOne();
 
         IJsonApiOptions options = new JsonApiOptions
         {
@@ -553,8 +553,8 @@ public sealed class ResponseModelAdapterTests
         // Arrange
         var fakers = new ResponseSerializationFakers();
 
-        Person person = fakers.Person.Generate();
-        List<Article> articles = fakers.Article.Generate(5);
+        Person person = fakers.Person.GenerateOne();
+        List<Article> articles = fakers.Article.GenerateList(5);
         articles.ForEach(article => article.Author = person);
         articles.ForEach(article => article.Reviewer = person);
 

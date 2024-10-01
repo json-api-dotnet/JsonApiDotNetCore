@@ -10,36 +10,34 @@ internal sealed class SourceCodeWriter(GeneratorExecutionContext context, Diagno
 {
     private const int SpacesPerIndent = 4;
 
-    private static readonly IDictionary<int, string> IndentTable = new Dictionary<int, string>
+    private static readonly Dictionary<int, string> IndentTable = new()
     {
         [0] = string.Empty,
-        [1] = new(' ', 1 * SpacesPerIndent),
-        [2] = new(' ', 2 * SpacesPerIndent),
-        [3] = new(' ', 3 * SpacesPerIndent)
+        [1] = new string(' ', 1 * SpacesPerIndent),
+        [2] = new string(' ', 2 * SpacesPerIndent),
+        [3] = new string(' ', 3 * SpacesPerIndent)
     };
 
-    private static readonly IDictionary<JsonApiEndpointsCopy, (string ServiceName, string ParameterName)> AggregateEndpointToServiceNameMap =
-        new Dictionary<JsonApiEndpointsCopy, (string, string)>
-        {
-            [JsonApiEndpointsCopy.All] = ("IResourceService", "resourceService"),
-            [JsonApiEndpointsCopy.Query] = ("IResourceQueryService", "queryService"),
-            [JsonApiEndpointsCopy.Command] = ("IResourceCommandService", "commandService")
-        };
+    private static readonly Dictionary<JsonApiEndpointsCopy, (string ServiceName, string ParameterName)> AggregateEndpointToServiceNameMap = new()
+    {
+        [JsonApiEndpointsCopy.All] = ("IResourceService", "resourceService"),
+        [JsonApiEndpointsCopy.Query] = ("IResourceQueryService", "queryService"),
+        [JsonApiEndpointsCopy.Command] = ("IResourceCommandService", "commandService")
+    };
 
-    private static readonly IDictionary<JsonApiEndpointsCopy, (string ServiceName, string ParameterName)> EndpointToServiceNameMap =
-        new Dictionary<JsonApiEndpointsCopy, (string, string)>
-        {
-            [JsonApiEndpointsCopy.GetCollection] = ("IGetAllService", "getAll"),
-            [JsonApiEndpointsCopy.GetSingle] = ("IGetByIdService", "getById"),
-            [JsonApiEndpointsCopy.GetSecondary] = ("IGetSecondaryService", "getSecondary"),
-            [JsonApiEndpointsCopy.GetRelationship] = ("IGetRelationshipService", "getRelationship"),
-            [JsonApiEndpointsCopy.Post] = ("ICreateService", "create"),
-            [JsonApiEndpointsCopy.PostRelationship] = ("IAddToRelationshipService", "addToRelationship"),
-            [JsonApiEndpointsCopy.Patch] = ("IUpdateService", "update"),
-            [JsonApiEndpointsCopy.PatchRelationship] = ("ISetRelationshipService", "setRelationship"),
-            [JsonApiEndpointsCopy.Delete] = ("IDeleteService", "delete"),
-            [JsonApiEndpointsCopy.DeleteRelationship] = ("IRemoveFromRelationshipService", "removeFromRelationship")
-        };
+    private static readonly Dictionary<JsonApiEndpointsCopy, (string ServiceName, string ParameterName)> EndpointToServiceNameMap = new()
+    {
+        [JsonApiEndpointsCopy.GetCollection] = ("IGetAllService", "getAll"),
+        [JsonApiEndpointsCopy.GetSingle] = ("IGetByIdService", "getById"),
+        [JsonApiEndpointsCopy.GetSecondary] = ("IGetSecondaryService", "getSecondary"),
+        [JsonApiEndpointsCopy.GetRelationship] = ("IGetRelationshipService", "getRelationship"),
+        [JsonApiEndpointsCopy.Post] = ("ICreateService", "create"),
+        [JsonApiEndpointsCopy.PostRelationship] = ("IAddToRelationshipService", "addToRelationship"),
+        [JsonApiEndpointsCopy.Patch] = ("IUpdateService", "update"),
+        [JsonApiEndpointsCopy.PatchRelationship] = ("ISetRelationshipService", "setRelationship"),
+        [JsonApiEndpointsCopy.Delete] = ("IDeleteService", "delete"),
+        [JsonApiEndpointsCopy.DeleteRelationship] = ("IRemoveFromRelationshipService", "removeFromRelationship")
+    };
 
     private readonly GeneratorExecutionContext _context = context;
     private readonly DiagnosticDescriptor _missingIndentInTableErrorDescriptor = missingIndentInTableErrorDescriptor;

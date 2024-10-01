@@ -7,7 +7,8 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class ZeroKeyDbContext(DbContextOptions<ZeroKeyDbContext> options) : TestableDbContext(options)
+public sealed class ZeroKeyDbContext(DbContextOptions<ZeroKeyDbContext> options)
+    : TestableDbContext(options)
 {
     public DbSet<Game> Games => Set<Game>();
     public DbSet<Player> Players => Set<Player>();

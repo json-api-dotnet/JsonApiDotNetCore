@@ -179,6 +179,8 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     protected virtual LogicalExpression ParseLogical(string operatorName)
     {
+        ArgumentGuard.NotNullNorEmpty(operatorName);
+
         EatText(operatorName);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
@@ -208,6 +210,8 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     protected virtual ComparisonExpression ParseComparison(string operatorName)
     {
+        ArgumentGuard.NotNullNorEmpty(operatorName);
+
         var comparisonOperator = Enum.Parse<ComparisonOperator>(operatorName.Pascalize());
 
         EatText(operatorName);
@@ -311,6 +315,8 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     protected virtual MatchTextExpression ParseTextMatch(string operatorName)
     {
+        ArgumentGuard.NotNullNorEmpty(operatorName);
+
         EatText(operatorName);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
@@ -516,6 +522,8 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     protected virtual ConstantValueConverter GetConstantValueConverterForType(Type destinationType)
     {
+        ArgumentGuard.NotNull(destinationType);
+
         return (stringValue, position) =>
         {
             try
@@ -558,6 +566,8 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     protected override void ValidateField(ResourceFieldAttribute field, int position)
     {
+        ArgumentGuard.NotNull(field);
+
         if (field.IsFilterBlocked())
         {
             string kind = field is AttrAttribute ? "attribute" : "relationship";

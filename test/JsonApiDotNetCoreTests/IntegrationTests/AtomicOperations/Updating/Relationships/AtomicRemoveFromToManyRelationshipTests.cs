@@ -23,8 +23,8 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
     public async Task Cannot_remove_from_ManyToOne_relationship()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        existingTrack.OwnedBy = _fakers.RecordCompany.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        existingTrack.OwnedBy = _fakers.RecordCompany.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -77,8 +77,8 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
     public async Task Can_remove_from_OneToMany_relationship()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        existingTrack.Performers = _fakers.Performer.Generate(3);
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        existingTrack.Performers = _fakers.Performer.GenerateList(3);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -156,8 +156,8 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
     public async Task Can_remove_from_ManyToMany_relationship()
     {
         // Arrange
-        Playlist existingPlaylist = _fakers.Playlist.Generate();
-        existingPlaylist.Tracks = _fakers.MusicTrack.Generate(3);
+        Playlist existingPlaylist = _fakers.Playlist.GenerateOne();
+        existingPlaylist.Tracks = _fakers.MusicTrack.GenerateList(3);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -389,7 +389,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
     public async Task Cannot_remove_for_unknown_ID_in_ref()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -528,7 +528,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
     public async Task Cannot_remove_for_missing_data()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -576,7 +576,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
     public async Task Cannot_remove_for_null_data()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -625,7 +625,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
     public async Task Cannot_remove_for_object_data()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -867,7 +867,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
     public async Task Cannot_remove_for_unknown_IDs_in_data()
     {
         // Arrange
-        RecordCompany existingCompany = _fakers.RecordCompany.Generate();
+        RecordCompany existingCompany = _fakers.RecordCompany.GenerateOne();
 
         string[] trackIds =
         [
@@ -940,7 +940,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
     public async Task Cannot_remove_for_relationship_mismatch_between_ref_and_data()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -996,8 +996,8 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
     public async Task Can_remove_with_empty_data_array()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        existingTrack.Performers = _fakers.Performer.Generate(1);
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        existingTrack.Performers = _fakers.Performer.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1047,7 +1047,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
     public async Task Cannot_remove_with_blocked_capability()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

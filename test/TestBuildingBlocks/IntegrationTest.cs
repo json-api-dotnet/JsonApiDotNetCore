@@ -12,14 +12,14 @@ namespace TestBuildingBlocks;
 /// </summary>
 public abstract class IntegrationTest : IAsyncLifetime
 {
-    private static readonly SemaphoreSlim ThrottleSemaphore;
+    private static readonly SemaphoreSlim ThrottleSemaphore = GetDefaultThrottleSemaphore();
 
     protected abstract JsonSerializerOptions SerializerOptions { get; }
 
-    static IntegrationTest()
+    private static SemaphoreSlim GetDefaultThrottleSemaphore()
     {
         int maxConcurrentTestRuns = OperatingSystem.IsWindows() && Environment.GetEnvironmentVariable("CI") != null ? 32 : 64;
-        ThrottleSemaphore = new SemaphoreSlim(maxConcurrentTestRuns);
+        return new SemaphoreSlim(maxConcurrentTestRuns);
     }
 
     public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteHeadAsync<TResponseDocument>(string requestUrl,

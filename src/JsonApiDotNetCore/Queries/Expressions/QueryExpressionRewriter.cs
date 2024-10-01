@@ -2,6 +2,8 @@ using System.Collections.Immutable;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 
+#pragma warning disable IDE0019 // Use pattern matching
+
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
@@ -214,7 +216,7 @@ public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgume
         return null;
     }
 
-    public override QueryExpression PaginationQueryStringValue(PaginationQueryStringValueExpression expression, TArgument argument)
+    public override QueryExpression VisitPaginationQueryStringValue(PaginationQueryStringValueExpression expression, TArgument argument)
     {
         IImmutableList<PaginationElementQueryStringValueExpression> newElements = VisitList(expression.Elements, argument);
 
@@ -222,7 +224,7 @@ public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgume
         return newExpression.Equals(expression) ? expression : newExpression;
     }
 
-    public override QueryExpression PaginationElementQueryStringValue(PaginationElementQueryStringValueExpression expression, TArgument argument)
+    public override QueryExpression VisitPaginationElementQueryStringValue(PaginationElementQueryStringValueExpression expression, TArgument argument)
     {
         ResourceFieldChainExpression? newScope = expression.Scope != null ? Visit(expression.Scope, argument) as ResourceFieldChainExpression : null;
 

@@ -9,6 +9,10 @@ namespace JsonApiDotNetCore.Configuration;
 [PublicAPI]
 public sealed class ResourceType
 {
+    private static readonly IReadOnlySet<ResourceType> EmptyResourceTypeSet = new HashSet<ResourceType>().AsReadOnly();
+    private static readonly IReadOnlySet<AttrAttribute> EmptyAttributeSet = new HashSet<AttrAttribute>().AsReadOnly();
+    private static readonly IReadOnlySet<RelationshipAttribute> EmptyRelationshipSet = new HashSet<RelationshipAttribute>().AsReadOnly();
+
     private readonly Dictionary<string, ResourceFieldAttribute> _fieldsByPublicName = [];
     private readonly Dictionary<string, ResourceFieldAttribute> _fieldsByPropertyName = [];
     private readonly Lazy<IReadOnlySet<ResourceType>> _lazyAllConcreteDerivedTypes;
@@ -42,7 +46,7 @@ public sealed class ResourceType
     /// <summary>
     /// The resource types that directly derive from this one.
     /// </summary>
-    public IReadOnlySet<ResourceType> DirectlyDerivedTypes { get; internal set; } = new HashSet<ResourceType>();
+    public IReadOnlySet<ResourceType> DirectlyDerivedTypes { get; internal set; } = EmptyResourceTypeSet;
 
     /// <summary>
     /// Exposed resource attributes and relationships. See https://jsonapi.org/format/#document-resource-object-fields. When using resource inheritance, this
@@ -107,7 +111,7 @@ public sealed class ResourceType
         IReadOnlyCollection<EagerLoadAttribute>? eagerLoads, LinkTypes topLevelLinks = LinkTypes.NotConfigured,
         LinkTypes resourceLinks = LinkTypes.NotConfigured, LinkTypes relationshipLinks = LinkTypes.NotConfigured)
     {
-        ArgumentGuard.NotNullNorEmpty(publicName);
+        ArgumentGuard.NotNullNorWhitespace(publicName);
         ArgumentGuard.NotNull(clrType);
         ArgumentGuard.NotNull(identityClrType);
 
@@ -121,7 +125,7 @@ public sealed class ResourceType
         TopLevelLinks = topLevelLinks;
         ResourceLinks = resourceLinks;
         RelationshipLinks = relationshipLinks;
-        Fields = Attributes.Cast<ResourceFieldAttribute>().Concat(Relationships).ToArray();
+        Fields = Attributes.Cast<ResourceFieldAttribute>().Concat(Relationships).ToArray().AsReadOnly();
 
         foreach (ResourceFieldAttribute field in Fields)
         {
@@ -134,10 +138,10 @@ public sealed class ResourceType
 
     private IReadOnlySet<ResourceType> ResolveAllConcreteDerivedTypes()
     {
-        var allConcreteDerivedTypes = new HashSet<ResourceType>();
+        HashSet<ResourceType> allConcreteDerivedTypes = [];
         AddConcreteDerivedTypes(this, allConcreteDerivedTypes);
 
-        return allConcreteDerivedTypes;
+        return allConcreteDerivedTypes.AsReadOnly();
     }
 
     private static void AddConcreteDerivedTypes(ResourceType resourceType, ISet<ResourceType> allConcreteDerivedTypes)
@@ -259,7 +263,20 @@ public sealed class ResourceType
 
     internal IReadOnlySet<AttrAttribute> GetAttributesInTypeOrDerived(string publicName)
     {
-        return GetAttributesInTypeOrDerived(this, publicName);
+        if (IsPartOfTypeHierarchy())
+        {
+            return GetAttributesInTypeOrDerived(this, publicName);
+        }
+
+        AttrAttribute? attribute = FindAttributeByPublicName(publicName);
+
+        if (attribute == null)
+        {
+            return EmptyAttributeSet;
+        }
+
+        HashSet<AttrAttribute> attributes = [attribute];
+        return attributes.AsReadOnly();
     }
 
     private static IReadOnlySet<AttrAttribute> GetAttributesInTypeOrDerived(ResourceType resourceType, string publicName)
@@ -268,7 +285,8 @@ public sealed class ResourceType
 
         if (attribute != null)
         {
-            return attribute.AsHashSet();
+            HashSet<AttrAttribute> attributes = [attribute];
+            return attributes.AsReadOnly();
         }
 
         // Hiding base members using the 'new' keyword instead of 'override' (effectively breaking inheritance) is currently not supported.
@@ -281,12 +299,25 @@ public sealed class ResourceType
             attributesInDerivedTypes.Add(attributeInDerivedType);
         }
 
-        return attributesInDerivedTypes;
+        return attributesInDerivedTypes.AsReadOnly();
     }
 
     internal IReadOnlySet<RelationshipAttribute> GetRelationshipsInTypeOrDerived(string publicName)
     {
-        return GetRelationshipsInTypeOrDerived(this, publicName);
+        if (IsPartOfTypeHierarchy())
+        {
+            return GetRelationshipsInTypeOrDerived(this, publicName);
+        }
+
+        RelationshipAttribute? relationship = FindRelationshipByPublicName(publicName);
+
+        if (relationship == null)
+        {
+            return EmptyRelationshipSet;
+        }
+
+        HashSet<RelationshipAttribute> relationships = [relationship];
+        return relationships.AsReadOnly();
     }
 
     private static IReadOnlySet<RelationshipAttribute> GetRelationshipsInTypeOrDerived(ResourceType resourceType, string publicName)
@@ -295,7 +326,8 @@ public sealed class ResourceType
 
         if (relationship != null)
         {
-            return relationship.AsHashSet();
+            HashSet<RelationshipAttribute> relationships = [relationship];
+            return relationships.AsReadOnly();
         }
 
         // Hiding base members using the 'new' keyword instead of 'override' (effectively breaking inheritance) is currently not supported.
@@ -309,12 +341,12 @@ public sealed class ResourceType
             relationshipsInDerivedTypes.Add(relationshipInDerivedType);
         }
 
-        return relationshipsInDerivedTypes;
+        return relationshipsInDerivedTypes.AsReadOnly();
     }
 
     internal bool IsPartOfTypeHierarchy()
     {
-        return BaseType != null || DirectlyDerivedTypes.Any();
+        return BaseType != null || DirectlyDerivedTypes.Count > 0;
     }
 
     public override string ToString()

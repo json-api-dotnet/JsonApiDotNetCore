@@ -42,8 +42,8 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Arrange
         const int elementCount = 5;
 
-        List<MusicTrack> existingTracks = _fakers.MusicTrack.Generate(elementCount);
-        string[] newTrackTitles = _fakers.MusicTrack.Generate(elementCount).Select(musicTrack => musicTrack.Title).ToArray();
+        List<MusicTrack> existingTracks = _fakers.MusicTrack.GenerateList(elementCount);
+        string[] newTrackTitles = _fakers.MusicTrack.GenerateList(elementCount).Select(musicTrack => musicTrack.Title).ToArray();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -106,8 +106,8 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Can_update_resource_without_attributes_or_relationships()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        existingTrack.OwnedBy = _fakers.RecordCompany.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        existingTrack.OwnedBy = _fakers.RecordCompany.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -163,8 +163,8 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Cannot_update_resource_with_unknown_attribute()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        string newTitle = _fakers.MusicTrack.Generate().Title;
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        string newTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -219,8 +219,8 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownFieldsInRequestBody = true;
 
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        string newTitle = _fakers.MusicTrack.Generate().Title;
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        string newTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -271,7 +271,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Cannot_update_resource_with_unknown_relationship()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -332,7 +332,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownFieldsInRequestBody = true;
 
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -382,10 +382,10 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Can_partially_update_resource_without_side_effects()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        existingTrack.OwnedBy = _fakers.RecordCompany.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        existingTrack.OwnedBy = _fakers.RecordCompany.GenerateOne();
 
-        string newGenre = _fakers.MusicTrack.Generate().Genre!;
+        string newGenre = _fakers.MusicTrack.GenerateOne().Genre!;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -441,13 +441,13 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Can_completely_update_resource_without_side_effects()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        existingTrack.OwnedBy = _fakers.RecordCompany.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        existingTrack.OwnedBy = _fakers.RecordCompany.GenerateOne();
 
-        string newTitle = _fakers.MusicTrack.Generate().Title;
-        decimal? newLengthInSeconds = _fakers.MusicTrack.Generate().LengthInSeconds;
-        string newGenre = _fakers.MusicTrack.Generate().Genre!;
-        DateTimeOffset newReleasedAt = _fakers.MusicTrack.Generate().ReleasedAt;
+        string newTitle = _fakers.MusicTrack.GenerateOne().Title;
+        decimal? newLengthInSeconds = _fakers.MusicTrack.GenerateOne().LengthInSeconds;
+        string newGenre = _fakers.MusicTrack.GenerateOne().Genre!;
+        DateTimeOffset newReleasedAt = _fakers.MusicTrack.GenerateOne().ReleasedAt;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -506,8 +506,8 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Can_update_resource_with_side_effects()
     {
         // Arrange
-        TextLanguage existingLanguage = _fakers.TextLanguage.Generate();
-        string newIsoCode = _fakers.TextLanguage.Generate().IsoCode!;
+        TextLanguage existingLanguage = _fakers.TextLanguage.GenerateOne();
+        string newIsoCode = _fakers.TextLanguage.GenerateOne().IsoCode!;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -566,8 +566,8 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Update_resource_with_side_effects_hides_relationship_data_in_response()
     {
         // Arrange
-        TextLanguage existingLanguage = _fakers.TextLanguage.Generate();
-        existingLanguage.Lyrics = _fakers.Lyric.Generate(1);
+        TextLanguage existingLanguage = _fakers.TextLanguage.GenerateOne();
+        existingLanguage.Lyrics = _fakers.Lyric.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -647,8 +647,8 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Can_update_resource_for_ref_element()
     {
         // Arrange
-        Performer existingPerformer = _fakers.Performer.Generate();
-        string newArtistName = _fakers.Performer.Generate().ArtistName!;
+        Performer existingPerformer = _fakers.Performer.GenerateOne();
+        string newArtistName = _fakers.Performer.GenerateOne().ArtistName!;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -922,7 +922,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Cannot_update_resource_for_array_data()
     {
         // Arrange
-        Performer existingPerformer = _fakers.Performer.Generate();
+        Performer existingPerformer = _fakers.Performer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1508,7 +1508,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Cannot_update_resource_with_readonly_attribute()
     {
         // Arrange
-        Playlist existingPlaylist = _fakers.Playlist.Generate();
+        Playlist existingPlaylist = _fakers.Playlist.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1559,7 +1559,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Cannot_change_ID_of_existing_resource()
     {
         // Arrange
-        RecordCompany existingCompany = _fakers.RecordCompany.Generate();
+        RecordCompany existingCompany = _fakers.RecordCompany.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1610,7 +1610,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Cannot_update_resource_with_incompatible_attribute_value()
     {
         // Arrange
-        Performer existingPerformer = _fakers.Performer.Generate();
+        Performer existingPerformer = _fakers.Performer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1661,16 +1661,16 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Can_update_resource_with_attributes_and_multiple_relationship_types()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        existingTrack.Lyric = _fakers.Lyric.Generate();
-        existingTrack.OwnedBy = _fakers.RecordCompany.Generate();
-        existingTrack.Performers = _fakers.Performer.Generate(1);
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        existingTrack.Lyric = _fakers.Lyric.GenerateOne();
+        existingTrack.OwnedBy = _fakers.RecordCompany.GenerateOne();
+        existingTrack.Performers = _fakers.Performer.GenerateList(1);
 
-        string newGenre = _fakers.MusicTrack.Generate().Genre!;
+        string newGenre = _fakers.MusicTrack.GenerateOne().Genre!;
 
-        Lyric existingLyric = _fakers.Lyric.Generate();
-        RecordCompany existingCompany = _fakers.RecordCompany.Generate();
-        Performer existingPerformer = _fakers.Performer.Generate();
+        Lyric existingLyric = _fakers.Lyric.GenerateOne();
+        RecordCompany existingCompany = _fakers.RecordCompany.GenerateOne();
+        Performer existingPerformer = _fakers.Performer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1770,7 +1770,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
     public async Task Cannot_assign_attribute_with_blocked_capability()
     {
         // Arrange
-        Lyric existingLyric = _fakers.Lyric.Generate();
+        Lyric existingLyric = _fakers.Lyric.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

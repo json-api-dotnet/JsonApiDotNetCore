@@ -8,7 +8,8 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class ReadWriteDbContext(DbContextOptions<ReadWriteDbContext> options) : TestableDbContext(options)
+public sealed class ReadWriteDbContext(DbContextOptions<ReadWriteDbContext> options)
+    : TestableDbContext(options)
 {
     public DbSet<WorkItem> WorkItems => Set<WorkItem>();
     public DbSet<WorkTag> WorkTags => Set<WorkTag>();

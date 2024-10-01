@@ -10,8 +10,8 @@ public sealed class ResourceTypeCaptureStore<TResource, TId>
 {
     internal Type? LeftDeclaredType { get; set; }
     internal string? LeftReflectedTypeName { get; set; }
-    internal ISet<string> RightTypeNames { get; } = new HashSet<string>();
-    internal IJsonApiRequest? Request { get; set; }
+    internal HashSet<string> RightTypeNames { get; } = [];
+    internal JsonApiRequest? Request { get; set; }
 
     internal void Reset()
     {

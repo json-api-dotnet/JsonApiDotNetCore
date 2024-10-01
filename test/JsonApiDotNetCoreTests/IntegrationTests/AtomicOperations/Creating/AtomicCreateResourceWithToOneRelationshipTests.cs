@@ -29,9 +29,9 @@ public sealed class AtomicCreateResourceWithToOneRelationshipTests
     public async Task Can_create_OneToOne_relationship_from_principal_side()
     {
         // Arrange
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
 
-        string newLyricText = _fakers.Lyric.Generate().Text;
+        string newLyricText = _fakers.Lyric.GenerateOne().Text;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -101,8 +101,8 @@ public sealed class AtomicCreateResourceWithToOneRelationshipTests
     public async Task Can_create_OneToOne_relationship_from_dependent_side()
     {
         // Arrange
-        Lyric existingLyric = _fakers.Lyric.Generate();
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+        Lyric existingLyric = _fakers.Lyric.GenerateOne();
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -174,8 +174,8 @@ public sealed class AtomicCreateResourceWithToOneRelationshipTests
         // Arrange
         const int elementCount = 5;
 
-        RecordCompany existingCompany = _fakers.RecordCompany.Generate();
-        string[] newTrackTitles = _fakers.MusicTrack.Generate(elementCount).Select(musicTrack => musicTrack.Title).ToArray();
+        RecordCompany existingCompany = _fakers.RecordCompany.GenerateOne();
+        string[] newTrackTitles = _fakers.MusicTrack.GenerateList(elementCount).Select(musicTrack => musicTrack.Title).ToArray();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -552,7 +552,7 @@ public sealed class AtomicCreateResourceWithToOneRelationshipTests
     public async Task Cannot_create_with_unknown_relationship_ID()
     {
         // Arrange
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         string lyricId = Unknown.StringId.For<Lyric, long>();
 
@@ -658,8 +658,8 @@ public sealed class AtomicCreateResourceWithToOneRelationshipTests
     public async Task Can_create_resource_with_duplicate_relationship()
     {
         // Arrange
-        RecordCompany existingCompany = _fakers.RecordCompany.Generate();
-        string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+        RecordCompany existingCompany = _fakers.RecordCompany.GenerateOne();
+        string newTrackTitle = _fakers.MusicTrack.GenerateOne().Title;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

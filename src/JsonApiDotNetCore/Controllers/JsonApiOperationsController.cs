@@ -14,8 +14,8 @@ namespace JsonApiDotNetCore.Controllers;
 /// </summary>
 public abstract class JsonApiOperationsController(
     IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IOperationsProcessor processor, IJsonApiRequest request,
-    ITargetedFields targetedFields, IAtomicOperationFilter operationFilter) : BaseJsonApiOperationsController(options, resourceGraph, loggerFactory, processor,
-    request, targetedFields, operationFilter)
+    ITargetedFields targetedFields, IAtomicOperationFilter operationFilter)
+    : BaseJsonApiOperationsController(options, resourceGraph, loggerFactory, processor, request, targetedFields, operationFilter)
 {
     /// <inheritdoc />
     [HttpPost]

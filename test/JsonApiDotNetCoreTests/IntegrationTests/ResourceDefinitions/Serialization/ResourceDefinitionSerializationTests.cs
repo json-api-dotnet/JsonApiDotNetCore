@@ -42,7 +42,7 @@ public sealed class ResourceDefinitionSerializationTests
         var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        List<Student> students = _fakers.Student.Generate(2);
+        List<Student> students = _fakers.Student.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -91,9 +91,9 @@ public sealed class ResourceDefinitionSerializationTests
         var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        List<Scholarship> scholarships = _fakers.Scholarship.Generate(2);
-        scholarships[0].Participants = _fakers.Student.Generate(2);
-        scholarships[1].Participants = _fakers.Student.Generate(2);
+        List<Scholarship> scholarships = _fakers.Scholarship.GenerateList(2);
+        scholarships[0].Participants = _fakers.Student.GenerateList(2);
+        scholarships[1].Participants = _fakers.Student.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -162,7 +162,7 @@ public sealed class ResourceDefinitionSerializationTests
         var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Student student = _fakers.Student.Generate();
+        Student student = _fakers.Student.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -201,8 +201,8 @@ public sealed class ResourceDefinitionSerializationTests
         var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Scholarship scholarship = _fakers.Scholarship.Generate();
-        scholarship.Participants = _fakers.Student.Generate(2);
+        Scholarship scholarship = _fakers.Scholarship.GenerateOne();
+        scholarship.Participants = _fakers.Student.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -250,8 +250,8 @@ public sealed class ResourceDefinitionSerializationTests
         var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Scholarship scholarship = _fakers.Scholarship.Generate();
-        scholarship.PrimaryContact = _fakers.Student.Generate();
+        Scholarship scholarship = _fakers.Scholarship.GenerateOne();
+        scholarship.PrimaryContact = _fakers.Student.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -290,8 +290,8 @@ public sealed class ResourceDefinitionSerializationTests
         var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Scholarship scholarship = _fakers.Scholarship.Generate();
-        scholarship.PrimaryContact = _fakers.Student.Generate();
+        Scholarship scholarship = _fakers.Scholarship.GenerateOne();
+        scholarship.PrimaryContact = _fakers.Student.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -332,8 +332,8 @@ public sealed class ResourceDefinitionSerializationTests
         var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        string newName = _fakers.Student.Generate().Name;
-        string newSocialSecurityNumber = _fakers.Student.Generate().SocialSecurityNumber;
+        string newName = _fakers.Student.GenerateOne().Name;
+        string newSocialSecurityNumber = _fakers.Student.GenerateOne().SocialSecurityNumber;
 
         var requestBody = new
         {
@@ -389,10 +389,10 @@ public sealed class ResourceDefinitionSerializationTests
         var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Student existingStudent = _fakers.Student.Generate();
+        Student existingStudent = _fakers.Student.GenerateOne();
 
-        string newProgramName = _fakers.Scholarship.Generate().ProgramName;
-        decimal newAmount = _fakers.Scholarship.Generate().Amount;
+        string newProgramName = _fakers.Scholarship.GenerateOne().ProgramName;
+        decimal newAmount = _fakers.Scholarship.GenerateOne().Amount;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -457,9 +457,9 @@ public sealed class ResourceDefinitionSerializationTests
         var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Student existingStudent = _fakers.Student.Generate();
+        Student existingStudent = _fakers.Student.GenerateOne();
 
-        string newSocialSecurityNumber = _fakers.Student.Generate().SocialSecurityNumber;
+        string newSocialSecurityNumber = _fakers.Student.GenerateOne().SocialSecurityNumber;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -519,10 +519,10 @@ public sealed class ResourceDefinitionSerializationTests
         var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Scholarship existingScholarship = _fakers.Scholarship.Generate();
-        existingScholarship.Participants = _fakers.Student.Generate(3);
+        Scholarship existingScholarship = _fakers.Scholarship.GenerateOne();
+        existingScholarship.Participants = _fakers.Student.GenerateList(3);
 
-        decimal newAmount = _fakers.Scholarship.Generate().Amount;
+        decimal newAmount = _fakers.Scholarship.GenerateOne().Amount;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -603,8 +603,8 @@ public sealed class ResourceDefinitionSerializationTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Scholarship scholarship = _fakers.Scholarship.Generate();
-        scholarship.PrimaryContact = _fakers.Student.Generate();
+        Scholarship scholarship = _fakers.Scholarship.GenerateOne();
+        scholarship.PrimaryContact = _fakers.Student.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -632,8 +632,8 @@ public sealed class ResourceDefinitionSerializationTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Scholarship scholarship = _fakers.Scholarship.Generate();
-        scholarship.Participants = _fakers.Student.Generate(2);
+        Scholarship scholarship = _fakers.Scholarship.GenerateOne();
+        scholarship.Participants = _fakers.Student.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -662,8 +662,8 @@ public sealed class ResourceDefinitionSerializationTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Scholarship existingScholarship = _fakers.Scholarship.Generate();
-        Student existingStudent = _fakers.Student.Generate();
+        Scholarship existingScholarship = _fakers.Scholarship.GenerateOne();
+        Student existingStudent = _fakers.Student.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -699,8 +699,8 @@ public sealed class ResourceDefinitionSerializationTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Scholarship existingScholarship = _fakers.Scholarship.Generate();
-        List<Student> existingStudents = _fakers.Student.Generate(2);
+        Scholarship existingScholarship = _fakers.Scholarship.GenerateOne();
+        List<Student> existingStudents = _fakers.Student.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -745,8 +745,8 @@ public sealed class ResourceDefinitionSerializationTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Scholarship existingScholarship = _fakers.Scholarship.Generate();
-        List<Student> existingStudents = _fakers.Student.Generate(2);
+        Scholarship existingScholarship = _fakers.Scholarship.GenerateOne();
+        List<Student> existingStudents = _fakers.Student.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -791,8 +791,8 @@ public sealed class ResourceDefinitionSerializationTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Scholarship existingScholarship = _fakers.Scholarship.Generate();
-        existingScholarship.Participants = _fakers.Student.Generate(2);
+        Scholarship existingScholarship = _fakers.Scholarship.GenerateOne();
+        existingScholarship.Participants = _fakers.Student.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

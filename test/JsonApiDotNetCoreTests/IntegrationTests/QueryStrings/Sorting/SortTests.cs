@@ -27,7 +27,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Can_sort_in_primary_resources()
     {
         // Arrange
-        List<BlogPost> posts = _fakers.BlogPost.Generate(3);
+        List<BlogPost> posts = _fakers.BlogPost.GenerateList(3);
         posts[0].Caption = "B";
         posts[1].Caption = "A";
         posts[2].Caption = "C";
@@ -57,7 +57,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Cannot_sort_in_primary_resource()
     {
         // Arrange
-        BlogPost post = _fakers.BlogPost.Generate();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -87,8 +87,8 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Can_sort_in_secondary_resources()
     {
         // Arrange
-        Blog blog = _fakers.Blog.Generate();
-        blog.Posts = _fakers.BlogPost.Generate(3);
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Posts = _fakers.BlogPost.GenerateList(3);
         blog.Posts[0].Caption = "B";
         blog.Posts[1].Caption = "A";
         blog.Posts[2].Caption = "C";
@@ -117,7 +117,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Cannot_sort_in_secondary_resource()
     {
         // Arrange
-        BlogPost post = _fakers.BlogPost.Generate();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -147,9 +147,9 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Can_sort_on_OneToMany_relationship()
     {
         // Arrange
-        List<Blog> blogs = _fakers.Blog.Generate(2);
-        blogs[0].Posts = _fakers.BlogPost.Generate(2);
-        blogs[1].Posts = _fakers.BlogPost.Generate(1);
+        List<Blog> blogs = _fakers.Blog.GenerateList(2);
+        blogs[0].Posts = _fakers.BlogPost.GenerateList(2);
+        blogs[1].Posts = _fakers.BlogPost.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -175,9 +175,9 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Can_sort_on_ManyToMany_relationship()
     {
         // Arrange
-        List<BlogPost> posts = _fakers.BlogPost.Generate(2);
-        posts[0].Labels = _fakers.Label.Generate(1).ToHashSet();
-        posts[1].Labels = _fakers.Label.Generate(2).ToHashSet();
+        List<BlogPost> posts = _fakers.BlogPost.GenerateList(2);
+        posts[0].Labels = _fakers.Label.GenerateSet(1);
+        posts[1].Labels = _fakers.Label.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -203,8 +203,8 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Can_sort_in_scope_of_OneToMany_relationship()
     {
         // Arrange
-        WebAccount account = _fakers.WebAccount.Generate();
-        account.Posts = _fakers.BlogPost.Generate(3);
+        WebAccount account = _fakers.WebAccount.GenerateOne();
+        account.Posts = _fakers.BlogPost.GenerateList(3);
         account.Posts[0].Caption = "B";
         account.Posts[1].Caption = "A";
         account.Posts[2].Caption = "C";
@@ -236,9 +236,9 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Can_sort_in_scope_of_OneToMany_relationship_at_secondary_endpoint()
     {
         // Arrange
-        Blog blog = _fakers.Blog.Generate();
-        blog.Owner = _fakers.WebAccount.Generate();
-        blog.Owner.Posts = _fakers.BlogPost.Generate(3);
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Owner = _fakers.WebAccount.GenerateOne();
+        blog.Owner.Posts = _fakers.BlogPost.GenerateList(3);
         blog.Owner.Posts[0].Caption = "B";
         blog.Owner.Posts[1].Caption = "A";
         blog.Owner.Posts[2].Caption = "C";
@@ -270,8 +270,8 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Can_sort_in_scope_of_ManyToMany_relationship()
     {
         // Arrange
-        BlogPost post = _fakers.BlogPost.Generate();
-        post.Labels = _fakers.Label.Generate(3).ToHashSet();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
+        post.Labels = _fakers.Label.GenerateSet(3);
         post.Labels.ElementAt(0).Name = "B";
         post.Labels.ElementAt(1).Name = "A";
         post.Labels.ElementAt(2).Name = "C";
@@ -303,11 +303,11 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Can_sort_on_multiple_fields_in_multiple_scopes()
     {
         // Arrange
-        List<Blog> blogs = _fakers.Blog.Generate(2);
+        List<Blog> blogs = _fakers.Blog.GenerateList(2);
         blogs[0].Title = "Z";
         blogs[1].Title = "Y";
 
-        blogs[0].Posts = _fakers.BlogPost.Generate(4);
+        blogs[0].Posts = _fakers.BlogPost.GenerateList(4);
         blogs[0].Posts[0].Caption = "B";
         blogs[0].Posts[1].Caption = "A";
         blogs[0].Posts[2].Caption = "A";
@@ -317,7 +317,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         blogs[0].Posts[2].Url = "www.some1.com";
         blogs[0].Posts[3].Url = "";
 
-        blogs[0].Posts[0].Comments = _fakers.Comment.Generate(3).ToHashSet();
+        blogs[0].Posts[0].Comments = _fakers.Comment.GenerateSet(3);
         blogs[0].Posts[0].Comments.ElementAt(0).CreatedAt = 1.January(2015).AsUtc();
         blogs[0].Posts[0].Comments.ElementAt(1).CreatedAt = 1.January(2014).AsUtc();
         blogs[0].Posts[0].Comments.ElementAt(2).CreatedAt = 1.January(2016).AsUtc();
@@ -369,9 +369,9 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Can_sort_on_ManyToOne_relationship()
     {
         // Arrange
-        List<BlogPost> posts = _fakers.BlogPost.Generate(2);
-        posts[0].Author = _fakers.WebAccount.Generate();
-        posts[1].Author = _fakers.WebAccount.Generate();
+        List<BlogPost> posts = _fakers.BlogPost.GenerateList(2);
+        posts[0].Author = _fakers.WebAccount.GenerateOne();
+        posts[1].Author = _fakers.WebAccount.GenerateOne();
 
         posts[0].Author!.DisplayName = "Conner";
         posts[1].Author!.DisplayName = "Smith";
@@ -400,16 +400,16 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Can_sort_in_multiple_scopes()
     {
         // Arrange
-        List<Blog> blogs = _fakers.Blog.Generate(2);
+        List<Blog> blogs = _fakers.Blog.GenerateList(2);
         blogs[0].Title = "Cooking";
         blogs[1].Title = "Technology";
 
-        blogs[1].Owner = _fakers.WebAccount.Generate();
-        blogs[1].Owner!.Posts = _fakers.BlogPost.Generate(2);
+        blogs[1].Owner = _fakers.WebAccount.GenerateOne();
+        blogs[1].Owner!.Posts = _fakers.BlogPost.GenerateList(2);
         blogs[1].Owner!.Posts[0].Caption = "One";
         blogs[1].Owner!.Posts[1].Caption = "Two";
 
-        blogs[1].Owner!.Posts[1].Comments = _fakers.Comment.Generate(2).ToHashSet();
+        blogs[1].Owner!.Posts[1].Comments = _fakers.Comment.GenerateSet(2);
         blogs[1].Owner!.Posts[1].Comments.ElementAt(0).CreatedAt = 1.January(2000).AsUtc();
         blogs[1].Owner!.Posts[1].Comments.ElementAt(0).CreatedAt = 10.January(2010).AsUtc();
 
@@ -523,7 +523,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Can_sort_descending_by_ID()
     {
         // Arrange
-        List<WebAccount> accounts = _fakers.WebAccount.Generate(3);
+        List<WebAccount> accounts = _fakers.WebAccount.GenerateList(3);
         accounts[0].Id = 3000;
         accounts[1].Id = 2000;
         accounts[2].Id = 1000;
@@ -557,7 +557,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Sorts_by_ID_if_none_specified()
     {
         // Arrange
-        List<WebAccount> accounts = _fakers.WebAccount.Generate(4);
+        List<WebAccount> accounts = _fakers.WebAccount.GenerateList(4);
         accounts[0].Id = 300;
         accounts[1].Id = 200;
         accounts[2].Id = 100;

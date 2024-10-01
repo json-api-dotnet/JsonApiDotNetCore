@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters;
 [PublicAPI]
 public sealed class RequestAdapterState : IDisposable
 {
-    private readonly IDisposable? _backupRequestState;
+    private readonly RevertRequestStateOnDispose? _backupRequestState;
 
     public IJsonApiRequest InjectableRequest { get; }
     public ITargetedFields InjectableTargetedFields { get; }

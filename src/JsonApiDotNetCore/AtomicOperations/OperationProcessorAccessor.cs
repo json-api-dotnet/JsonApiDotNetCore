@@ -31,6 +31,8 @@ public class OperationProcessorAccessor : IOperationProcessorAccessor
 
     protected virtual IOperationProcessor ResolveProcessor(OperationContainer operation)
     {
+        ArgumentGuard.NotNull(operation);
+
         Type processorInterface = GetProcessorInterface(operation.Request.WriteOperation!.Value);
         ResourceType resourceType = operation.Request.PrimaryResourceType!;
 

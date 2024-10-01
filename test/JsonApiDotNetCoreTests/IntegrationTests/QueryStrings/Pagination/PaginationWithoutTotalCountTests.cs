@@ -111,7 +111,7 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
     public async Task Renders_pagination_links_when_page_number_is_specified_in_query_string_with_partially_filled_page()
     {
         // Arrange
-        List<BlogPost> posts = _fakers.BlogPost.Generate(12);
+        List<BlogPost> posts = _fakers.BlogPost.GenerateList(12);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -142,7 +142,7 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
     public async Task Renders_pagination_links_when_page_number_is_specified_in_query_string_with_full_page()
     {
         // Arrange
-        List<BlogPost> posts = _fakers.BlogPost.Generate(DefaultPageSize * 3);
+        List<BlogPost> posts = _fakers.BlogPost.GenerateList(DefaultPageSize * 3);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -173,8 +173,8 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
     public async Task Renders_pagination_links_when_page_number_is_specified_in_query_string_with_full_page_at_secondary_endpoint()
     {
         // Arrange
-        WebAccount account = _fakers.WebAccount.Generate();
-        account.Posts = _fakers.BlogPost.Generate(DefaultPageSize * 3);
+        WebAccount account = _fakers.WebAccount.GenerateOne();
+        account.Posts = _fakers.BlogPost.GenerateList(DefaultPageSize * 3);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

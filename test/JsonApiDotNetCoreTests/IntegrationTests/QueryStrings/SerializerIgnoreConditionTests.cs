@@ -30,11 +30,11 @@ public sealed class SerializerIgnoreConditionTests : IntegrationTestContext<Test
         var options = (JsonApiOptions)Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.SerializerOptions.DefaultIgnoreCondition = configurationValue;
 
-        Calendar calendar = _fakers.Calendar.Generate();
+        Calendar calendar = _fakers.Calendar.GenerateOne();
         calendar.TimeZone = null;
         calendar.DefaultAppointmentDurationInMinutes = default;
         calendar.ShowWeekNumbers = true;
-        calendar.MostRecentAppointment = _fakers.Appointment.Generate();
+        calendar.MostRecentAppointment = _fakers.Appointment.GenerateOne();
         calendar.MostRecentAppointment.Description = null;
         calendar.MostRecentAppointment.StartTime = default;
         calendar.MostRecentAppointment.EndTime = 1.January(2001).AsUtc();

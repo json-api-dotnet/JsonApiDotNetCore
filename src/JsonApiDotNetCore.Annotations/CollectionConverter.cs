@@ -5,15 +5,15 @@ namespace JsonApiDotNetCore;
 
 internal sealed class CollectionConverter
 {
-    private static readonly ISet<Type> HashSetCompatibleCollectionTypes = new HashSet<Type>
-    {
+    private static readonly HashSet<Type> HashSetCompatibleCollectionTypes =
+    [
         typeof(HashSet<>),
         typeof(ISet<>),
         typeof(IReadOnlySet<>),
         typeof(ICollection<>),
         typeof(IReadOnlyCollection<>),
         typeof(IEnumerable<>)
-    };
+    ];
 
     /// <summary>
     /// Creates a collection instance based on the specified collection type and copies the specified elements into it.
@@ -70,10 +70,10 @@ internal sealed class CollectionConverter
     {
         return value switch
         {
-            List<IIdentifiable> resourceList => resourceList,
-            HashSet<IIdentifiable> resourceSet => resourceSet,
+            List<IIdentifiable> resourceList => resourceList.AsReadOnly(),
+            HashSet<IIdentifiable> resourceSet => resourceSet.AsReadOnly(),
             IReadOnlyCollection<IIdentifiable> resourceCollection => resourceCollection,
-            IEnumerable<IIdentifiable> resources => resources.ToList(),
+            IEnumerable<IIdentifiable> resources => resources.ToArray().AsReadOnly(),
             IIdentifiable resource => [resource],
             _ => Array.Empty<IIdentifiable>()
         };

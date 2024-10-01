@@ -12,7 +12,8 @@ namespace DapperExample.TranslationToSql.DataModel;
 /// <summary>
 /// Derives foreign keys and connection strings from an existing Entity Framework Core model.
 /// </summary>
-public sealed class FromEntitiesDataModelService(IResourceGraph resourceGraph) : BaseDataModelService(resourceGraph)
+public sealed class FromEntitiesDataModelService(IResourceGraph resourceGraph)
+    : BaseDataModelService(resourceGraph)
 {
     private readonly Dictionary<RelationshipAttribute, RelationshipForeignKey> _foreignKeysByRelationship = [];
     private readonly Dictionary<AttrAttribute, bool> _columnNullabilityPerAttribute = [];

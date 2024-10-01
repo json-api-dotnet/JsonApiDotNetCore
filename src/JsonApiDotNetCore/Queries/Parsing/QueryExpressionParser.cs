@@ -43,6 +43,8 @@ public abstract class QueryExpressionParser
     /// </remarks>
     protected virtual void Tokenize(string source)
     {
+        ArgumentGuard.NotNull(source);
+
         var tokenizer = new QueryTokenizer(source);
         TokenStack = new Stack<Token>(tokenizer.EnumerateTokens().Reverse());
         _endOfSourcePosition = source.Length;
@@ -118,6 +120,8 @@ public abstract class QueryExpressionParser
     /// </summary>
     protected void EatText(string text)
     {
+        ArgumentGuard.NotNull(text);
+
         if (!TokenStack.TryPop(out Token? token) || token.Kind != TokenKind.Text || token.Value != text)
         {
             int position = token?.Position ?? GetNextTokenPositionOrEnd();
@@ -176,7 +180,7 @@ public abstract class QueryExpressionParser
     /// </summary>
     protected void AssertTokenStackIsEmpty()
     {
-        if (TokenStack.Any())
+        if (TokenStack.Count > 0)
         {
             int position = GetNextTokenPositionOrEnd();
             throw new QueryParseException("End of expression expected.", position);

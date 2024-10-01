@@ -24,9 +24,9 @@ public sealed class LinkInclusionTests : IClassFixture<IntegrationTestContext<Te
     public async Task Get_primary_resource_with_include_applies_links_visibility_from_ResourceLinksAttribute()
     {
         // Arrange
-        PhotoLocation location = _fakers.PhotoLocation.Generate();
-        location.Photo = _fakers.Photo.Generate();
-        location.Album = _fakers.PhotoAlbum.Generate();
+        PhotoLocation location = _fakers.PhotoLocation.GenerateOne();
+        location.Photo = _fakers.Photo.GenerateOne();
+        location.Album = _fakers.PhotoAlbum.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -96,8 +96,8 @@ public sealed class LinkInclusionTests : IClassFixture<IntegrationTestContext<Te
     public async Task Get_secondary_resource_applies_links_visibility_from_ResourceLinksAttribute()
     {
         // Arrange
-        Photo photo = _fakers.Photo.Generate();
-        photo.Location = _fakers.PhotoLocation.Generate();
+        Photo photo = _fakers.Photo.GenerateOne();
+        photo.Location = _fakers.PhotoLocation.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
