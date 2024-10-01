@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiNSwagEndToEndTests.QueryStrings;
 
-public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>
+public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
     private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
@@ -196,5 +196,10 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
         // Assert
         response.Data.Id.Should().Be(node.StringId);
         response.Data.Attributes.Should().BeNull();
+    }
+
+    public void Dispose()
+    {
+        _logHttpMessageHandler.Dispose();
     }
 }

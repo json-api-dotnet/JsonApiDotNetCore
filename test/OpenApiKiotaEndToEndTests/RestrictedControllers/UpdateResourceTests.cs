@@ -14,7 +14,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiKiotaEndToEndTests.RestrictedControllers;
 
-public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext>>
+public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext> _testContext;
     private readonly TestableHttpClientRequestAdapterFactory _requestAdapterFactory;
@@ -314,5 +314,10 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         error2.Status.Should().Be("404");
         error2.Title.Should().Be("A related resource does not exist.");
         error2.Detail.Should().Be($"Related resource of type 'dataStreams' with ID '{unknownDataStreamId}' in relationship 'videoStream' does not exist.");
+    }
+
+    public void Dispose()
+    {
+        _requestAdapterFactory.Dispose();
     }
 }

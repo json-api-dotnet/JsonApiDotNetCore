@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiKiotaEndToEndTests.QueryStrings;
 
-public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>
+public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
     private readonly TestableHttpClientRequestAdapterFactory _requestAdapterFactory;
@@ -220,5 +220,10 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
             response.Data.Id.Should().Be(node.StringId);
             response.Data.Attributes.Should().BeNull();
         }
+    }
+
+    public void Dispose()
+    {
+        _requestAdapterFactory.Dispose();
     }
 }

@@ -13,7 +13,7 @@ using Xunit.Abstractions;
 namespace OpenApiKiotaEndToEndTests.ModelStateValidation;
 
 public sealed class ModelStateValidationTests
-    : IClassFixture<IntegrationTestContext<OpenApiStartup<ModelStateValidationDbContext>, ModelStateValidationDbContext>>
+    : IClassFixture<IntegrationTestContext<OpenApiStartup<ModelStateValidationDbContext>, ModelStateValidationDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<ModelStateValidationDbContext>, ModelStateValidationDbContext> _testContext;
     private readonly TestableHttpClientRequestAdapterFactory _requestAdapterFactory;
@@ -593,5 +593,10 @@ public sealed class ModelStateValidationTests
 
         // Assert
         await action.Should().NotThrowAsync();
+    }
+
+    public void Dispose()
+    {
+        _requestAdapterFactory.Dispose();
     }
 }

@@ -11,7 +11,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiNSwagEndToEndTests.Headers;
 
-public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext>>
+public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext> _testContext;
     private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
@@ -200,5 +200,10 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         eTagHeaderValues[0].Should().Match("\"*\"");
 
         response.Result.ShouldNotBeNull();
+    }
+
+    public void Dispose()
+    {
+        _logHttpMessageHandler.Dispose();
     }
 }

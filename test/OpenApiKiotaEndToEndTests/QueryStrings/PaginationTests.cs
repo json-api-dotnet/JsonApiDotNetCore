@@ -11,7 +11,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiKiotaEndToEndTests.QueryStrings;
 
-public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>
+public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
     private readonly TestableHttpClientRequestAdapterFactory _requestAdapterFactory;
@@ -198,5 +198,10 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
             error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("page[number]");
         }
+    }
+
+    public void Dispose()
+    {
+        _requestAdapterFactory.Dispose();
     }
 }

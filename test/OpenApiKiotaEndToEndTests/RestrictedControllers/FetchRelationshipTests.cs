@@ -11,7 +11,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiKiotaEndToEndTests.RestrictedControllers;
 
-public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext>>
+public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext> _testContext;
     private readonly TestableHttpClientRequestAdapterFactory _requestAdapterFactory;
@@ -149,5 +149,10 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         error.Status.Should().Be("404");
         error.Title.Should().Be("The requested resource does not exist.");
         error.Detail.Should().Be($"Resource of type 'readOnlyChannels' with ID '{unknownChannelId}' does not exist.");
+    }
+
+    public void Dispose()
+    {
+        _requestAdapterFactory.Dispose();
     }
 }

@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiKiotaEndToEndTests.QueryStrings;
 
-public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>
+public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
     private readonly TestableHttpClientRequestAdapterFactory _requestAdapterFactory;
@@ -225,5 +225,10 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
 
             response.Included.Should().BeEmpty();
         }
+    }
+
+    public void Dispose()
+    {
+        _requestAdapterFactory.Dispose();
     }
 }

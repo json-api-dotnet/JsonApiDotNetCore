@@ -11,7 +11,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiKiotaEndToEndTests.QueryStrings;
 
-public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>
+public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
     private readonly TestableHttpClientRequestAdapterFactory _requestAdapterFactory;
@@ -165,5 +165,10 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
             error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("sort");
         }
+    }
+
+    public void Dispose()
+    {
+        _requestAdapterFactory.Dispose();
     }
 }

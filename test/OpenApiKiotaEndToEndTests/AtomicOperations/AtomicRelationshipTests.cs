@@ -12,7 +12,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiKiotaEndToEndTests.AtomicOperations;
 
-public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext>>
+public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext> _testContext;
     private readonly TestableHttpClientRequestAdapterFactory _requestAdapterFactory;
@@ -275,5 +275,10 @@ public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestConte
             teacherInDatabase.Teaches.ShouldHaveCount(1);
             teacherInDatabase.Teaches.ElementAt(0).Id.Should().Be(existingTeacher.Teaches.ElementAt(1).Id);
         });
+    }
+
+    public void Dispose()
+    {
+        _requestAdapterFactory.Dispose();
     }
 }

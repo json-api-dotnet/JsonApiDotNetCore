@@ -11,7 +11,7 @@ using CreateTeacherOperation = OpenApiNSwagEndToEndTests.AtomicOperations.Genera
 
 namespace OpenApiNSwagEndToEndTests.AtomicOperations;
 
-public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext>>
+public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext> _testContext;
     private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
@@ -199,5 +199,10 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
             courseInDatabase.Subject.Should().Be(newCourse.Subject);
             courseInDatabase.Description.Should().BeNull();
         });
+    }
+
+    public void Dispose()
+    {
+        _logHttpMessageHandler.Dispose();
     }
 }

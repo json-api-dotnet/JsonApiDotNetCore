@@ -11,7 +11,7 @@ using Xunit.Abstractions;
 namespace OpenApiNSwagEndToEndTests.ClientIdGenerationModes;
 
 public sealed class ClientIdGenerationModesTests
-    : IClassFixture<IntegrationTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext>>
+    : IClassFixture<IntegrationTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext> _testContext;
     private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
@@ -254,5 +254,10 @@ public sealed class ClientIdGenerationModesTests
 
             playerGroupInDatabase.Name.Should().Be(newPlayerGroup.Name);
         });
+    }
+
+    public void Dispose()
+    {
+        _logHttpMessageHandler.Dispose();
     }
 }

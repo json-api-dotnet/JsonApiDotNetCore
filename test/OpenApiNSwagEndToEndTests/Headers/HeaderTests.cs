@@ -11,7 +11,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiNSwagEndToEndTests.Headers;
 
-public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext>>
+public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext> _testContext;
     private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
@@ -164,5 +164,10 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         string[] contentLengthHeaderValues = response.Headers.Should().ContainKey(HeaderNames.ContentLength).WhoseValue.ToArray();
         contentLengthHeaderValues.ShouldHaveCount(1);
         long.Parse(contentLengthHeaderValues[0]).Should().BeGreaterThan(0);
+    }
+
+    public void Dispose()
+    {
+        _logHttpMessageHandler.Dispose();
     }
 }

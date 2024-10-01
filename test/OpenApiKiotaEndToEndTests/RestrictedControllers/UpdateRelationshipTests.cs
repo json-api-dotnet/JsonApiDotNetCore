@@ -12,7 +12,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiKiotaEndToEndTests.RestrictedControllers;
 
-public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext>>
+public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext> _testContext;
     private readonly TestableHttpClientRequestAdapterFactory _requestAdapterFactory;
@@ -397,5 +397,10 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
         error2.Status.Should().Be("404");
         error2.Title.Should().Be("A related resource does not exist.");
         error2.Detail.Should().Be($"Related resource of type 'dataStreams' with ID '{unknownAudioStreamId2}' in relationship 'audioStreams' does not exist.");
+    }
+
+    public void Dispose()
+    {
+        _requestAdapterFactory.Dispose();
     }
 }

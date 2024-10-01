@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiNSwagEndToEndTests.QueryStrings;
 
-public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>
+public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
     private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
@@ -170,5 +170,10 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         error.Detail.Should().Be("Missing value for 'filter' query string parameter.");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("filter");
+    }
+
+    public void Dispose()
+    {
+        _logHttpMessageHandler.Dispose();
     }
 }

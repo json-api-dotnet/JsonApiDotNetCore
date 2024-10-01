@@ -12,7 +12,7 @@ using Xunit.Abstractions;
 namespace OpenApiNSwagEndToEndTests.ModelStateValidation;
 
 public sealed class ModelStateValidationTests
-    : IClassFixture<IntegrationTestContext<OpenApiStartup<ModelStateValidationDbContext>, ModelStateValidationDbContext>>
+    : IClassFixture<IntegrationTestContext<OpenApiStartup<ModelStateValidationDbContext>, ModelStateValidationDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<ModelStateValidationDbContext>, ModelStateValidationDbContext> _testContext;
     private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
@@ -544,5 +544,10 @@ public sealed class ModelStateValidationTests
 
         // Assert
         await action.Should().NotThrowAsync();
+    }
+
+    public void Dispose()
+    {
+        _logHttpMessageHandler.Dispose();
     }
 }

@@ -12,7 +12,7 @@ using Xunit.Abstractions;
 namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes;
 
 public sealed class ClientIdGenerationModesTests
-    : IClassFixture<IntegrationTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext>>
+    : IClassFixture<IntegrationTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext> _testContext;
     private readonly TestableHttpClientRequestAdapterFactory _requestAdapterFactory;
@@ -264,5 +264,10 @@ public sealed class ClientIdGenerationModesTests
 
             playerGroupInDatabase.Name.Should().Be(newPlayerGroup.Name);
         });
+    }
+
+    public void Dispose()
+    {
+        _requestAdapterFactory.Dispose();
     }
 }

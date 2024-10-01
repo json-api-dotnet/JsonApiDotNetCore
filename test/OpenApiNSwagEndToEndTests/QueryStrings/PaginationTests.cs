@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiNSwagEndToEndTests.QueryStrings;
 
-public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>
+public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
     private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
@@ -179,5 +179,10 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
         error.Detail.Should().Be("Missing value for 'page[number]' query string parameter.");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
+    }
+
+    public void Dispose()
+    {
+        _logHttpMessageHandler.Dispose();
     }
 }

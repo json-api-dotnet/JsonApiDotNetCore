@@ -11,7 +11,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiNSwagEndToEndTests.RestrictedControllers;
 
-public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext>>
+public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext> _testContext;
     private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
@@ -394,5 +394,10 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
         error2.Status.Should().Be("404");
         error2.Title.Should().Be("A related resource does not exist.");
         error2.Detail.Should().Be($"Related resource of type 'dataStreams' with ID '{unknownAudioStreamId2}' in relationship 'audioStreams' does not exist.");
+    }
+
+    public void Dispose()
+    {
+        _logHttpMessageHandler.Dispose();
     }
 }

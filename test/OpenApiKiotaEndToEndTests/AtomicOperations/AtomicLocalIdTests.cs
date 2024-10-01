@@ -13,7 +13,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiKiotaEndToEndTests.AtomicOperations;
 
-public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext>>
+public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext> _testContext;
     private readonly TestableHttpClientRequestAdapterFactory _requestAdapterFactory;
@@ -233,5 +233,10 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
             enrollmentInDatabase.Course.Id.Should().Be(newCourse.Id);
             enrollmentInDatabase.Student.Id.Should().Be(newStudentId);
         });
+    }
+
+    public void Dispose()
+    {
+        _requestAdapterFactory.Dispose();
     }
 }

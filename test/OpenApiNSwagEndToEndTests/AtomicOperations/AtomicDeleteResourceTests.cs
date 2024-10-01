@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiNSwagEndToEndTests.AtomicOperations;
 
-public sealed class AtomicDeleteResourceTests : IClassFixture<IntegrationTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext>>
+public sealed class AtomicDeleteResourceTests : IClassFixture<IntegrationTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext> _testContext;
     private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
@@ -72,5 +72,10 @@ public sealed class AtomicDeleteResourceTests : IClassFixture<IntegrationTestCon
 
             enrollmentInDatabase.Should().BeNull();
         });
+    }
+
+    public void Dispose()
+    {
+        _logHttpMessageHandler.Dispose();
     }
 }

@@ -8,7 +8,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiNSwagEndToEndTests.QueryStrings;
 
-public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>
+public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
     private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
@@ -201,5 +201,10 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         response.Data.Id.Should().Be(node.StringId);
 
         response.Included.Should().BeEmpty();
+    }
+
+    public void Dispose()
+    {
+        _logHttpMessageHandler.Dispose();
     }
 }

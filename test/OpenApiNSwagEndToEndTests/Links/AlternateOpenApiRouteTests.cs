@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiNSwagEndToEndTests.Links;
 
-public sealed class AlternateOpenApiRouteTests : IClassFixture<IntegrationTestContext<OpenApiStartup<LinkDbContext>, LinkDbContext>>
+public sealed class AlternateOpenApiRouteTests : IClassFixture<IntegrationTestContext<OpenApiStartup<LinkDbContext>, LinkDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<LinkDbContext>, LinkDbContext> _testContext;
     private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
@@ -47,5 +47,10 @@ public sealed class AlternateOpenApiRouteTests : IClassFixture<IntegrationTestCo
 
         // Assert
         response.Links.Describedby.Should().Be("/api-docs/v1/swagger.yaml");
+    }
+
+    public void Dispose()
+    {
+        _logHttpMessageHandler.Dispose();
     }
 }

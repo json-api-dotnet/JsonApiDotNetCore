@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiKiotaEndToEndTests;
 
-internal sealed class TestableHttpClientRequestAdapterFactory
+internal sealed class TestableHttpClientRequestAdapterFactory : IDisposable
 {
     private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
     private readonly SetQueryStringHttpMessageHandler _queryStringMessageHandler = new();
@@ -35,5 +35,11 @@ internal sealed class TestableHttpClientRequestAdapterFactory
     public IDisposable WithQueryString(IDictionary<string, string?> queryString)
     {
         return _queryStringMessageHandler.CreateScope(queryString);
+    }
+
+    public void Dispose()
+    {
+        _logHttpMessageHandler.Dispose();
+        _queryStringMessageHandler.Dispose();
     }
 }

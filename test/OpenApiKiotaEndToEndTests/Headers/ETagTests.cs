@@ -14,7 +14,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiKiotaEndToEndTests.Headers;
 
-public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext>>
+public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext> _testContext;
     private readonly TestableHttpClientRequestAdapterFactory _requestAdapterFactory;
@@ -235,5 +235,10 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         string[] eTagHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
         eTagHeaderValues.ShouldHaveCount(1);
         eTagHeaderValues[0].Should().Match("\"*\"");
+    }
+
+    public void Dispose()
+    {
+        _requestAdapterFactory.Dispose();
     }
 }

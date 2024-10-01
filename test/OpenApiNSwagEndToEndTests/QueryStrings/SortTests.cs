@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace OpenApiNSwagEndToEndTests.QueryStrings;
 
-public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>
+public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>, IDisposable
 {
     private readonly IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
     private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
@@ -149,5 +149,10 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         error.Detail.Should().Be("Missing value for 'sort' query string parameter.");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("sort");
+    }
+
+    public void Dispose()
+    {
+        _logHttpMessageHandler.Dispose();
     }
 }
