@@ -390,7 +390,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     {
         ArgumentGuard.NotNull(primaryResourceType);
 
-        IImmutableSet<IncludeElementExpression> includeElements = _targetedFields.Relationships
+        ImmutableHashSet<IncludeElementExpression> includeElements = _targetedFields.Relationships
             .Select(relationship => new IncludeElementExpression(relationship)).ToImmutableHashSet();
 
         AttrAttribute primaryIdAttribute = GetIdAttribute(primaryResourceType);

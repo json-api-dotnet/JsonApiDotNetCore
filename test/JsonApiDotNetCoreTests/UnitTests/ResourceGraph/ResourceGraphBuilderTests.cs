@@ -343,7 +343,7 @@ public sealed class ResourceGraphBuilderTests
         ResourceType resourceType = resourceGraph.GetResourceType(proxy.GetType());
 
         // Assert
-        resourceType.ClrType.Should().Be(typeof(ResourceOfInt32));
+        resourceType.ClrType.Should().Be<ResourceOfInt32>();
     }
 
     [Fact]

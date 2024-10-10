@@ -23,8 +23,8 @@ public sealed class TypeLocatorTests
 
         // Assert
         result.ShouldNotBeNull();
-        result.Value.implementationType.Should().Be(typeof(Implementation));
-        result.Value.serviceInterface.Should().Be(typeof(IGenericInterface<int>));
+        result.Value.implementationType.Should().Be<Implementation>();
+        result.Value.serviceInterface.Should().Be<IGenericInterface<int>>();
     }
 
     [Fact]
@@ -39,7 +39,7 @@ public sealed class TypeLocatorTests
         Type? idType = typeLocator.LookupIdType(type);
 
         // Assert
-        idType.Should().Be(typeof(int));
+        idType.Should().Be<int>();
     }
 
     [Fact]
@@ -71,7 +71,7 @@ public sealed class TypeLocatorTests
         // Assert
         descriptor.ShouldNotBeNull();
         descriptor.ResourceClrType.Should().Be(resourceClrType);
-        descriptor.IdClrType.Should().Be(typeof(int));
+        descriptor.IdClrType.Should().Be<int>();
     }
 
     [Fact]

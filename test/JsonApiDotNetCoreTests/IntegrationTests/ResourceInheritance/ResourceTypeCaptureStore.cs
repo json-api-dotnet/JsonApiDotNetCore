@@ -23,13 +23,13 @@ public sealed class ResourceTypeCaptureStore<TResource, TId>
 
     internal void AssertLeftType<TLeft>()
     {
-        LeftDeclaredType.Should().Be(typeof(TLeft));
+        LeftDeclaredType.Should().Be<TLeft>();
         LeftReflectedTypeName.Should().Be(typeof(TLeft).Name);
 
         Request.ShouldNotBeNull();
         Request.PrimaryResourceType.ShouldNotBeNull();
-        Request.PrimaryResourceType.ClrType.Should().Be(typeof(TLeft));
-        Request.Relationship?.LeftType.ClrType.Should().Be(typeof(TLeft));
+        Request.PrimaryResourceType.ClrType.Should().Be<TLeft>();
+        Request.Relationship?.LeftType.ClrType.Should().Be<TLeft>();
     }
 
     internal void AssertRightTypes(params Type[] types)

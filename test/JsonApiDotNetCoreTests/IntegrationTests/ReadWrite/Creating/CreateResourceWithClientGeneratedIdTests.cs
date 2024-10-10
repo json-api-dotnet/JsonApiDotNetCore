@@ -80,7 +80,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
 
         PropertyInfo? property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable<object>.Id));
         property.ShouldNotBeNull();
-        property.PropertyType.Should().Be(typeof(Guid));
+        property.PropertyType.Should().Be<Guid>();
     }
 
     [Theory]
@@ -134,7 +134,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
 
         PropertyInfo? property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable<object>.Id));
         property.ShouldNotBeNull();
-        property.PropertyType.Should().Be(typeof(Guid));
+        property.PropertyType.Should().Be<Guid>();
     }
 
     [Theory]
@@ -185,7 +185,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
 
         PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
         property.ShouldNotBeNull();
-        property.PropertyType.Should().Be(typeof(string));
+        property.PropertyType.Should().Be<string>();
     }
 
     [Theory]
@@ -236,7 +236,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
 
         PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
         property.ShouldNotBeNull();
-        property.PropertyType.Should().Be(typeof(string));
+        property.PropertyType.Should().Be<string>();
     }
 
     [Theory]
@@ -292,7 +292,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
 
         PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
         property.ShouldNotBeNull();
-        property.PropertyType.Should().Be(typeof(string));
+        property.PropertyType.Should().Be<string>();
     }
 
     [Theory]
@@ -475,7 +475,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
 
         PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
         property.ShouldNotBeNull();
-        property.PropertyType.Should().Be(typeof(string));
+        property.PropertyType.Should().Be<string>();
     }
 
     [Theory]

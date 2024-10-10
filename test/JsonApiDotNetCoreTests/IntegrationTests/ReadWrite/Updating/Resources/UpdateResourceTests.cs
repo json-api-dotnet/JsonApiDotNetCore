@@ -327,7 +327,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
 
         PropertyInfo? property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable<object>.Id));
         property.ShouldNotBeNull();
-        property.PropertyType.Should().Be(typeof(Guid));
+        property.PropertyType.Should().Be<Guid>();
     }
 
     [Fact]
@@ -375,7 +375,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
 
         PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
         property.ShouldNotBeNull();
-        property.PropertyType.Should().Be(typeof(string));
+        property.PropertyType.Should().Be<string>();
     }
 
     [Fact]
