@@ -120,7 +120,7 @@ internal abstract class TraceLogWriter
 
 internal sealed partial class TraceLogWriter<T>(ILoggerFactory loggerFactory) : TraceLogWriter
 {
-    private readonly ILogger _logger = loggerFactory.CreateLogger(typeof(T));
+    private readonly ILogger _logger = loggerFactory.CreateLogger<T>();
 
     public void LogMethodStart(object? parameters = null, [CallerMemberName] string memberName = "")
     {
