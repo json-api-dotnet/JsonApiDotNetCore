@@ -20,6 +20,18 @@
     <XunitVisualStudioVersion>2.8.*</XunitVisualStudioVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
+    <!-- Published dependencies (only update on major version change) -->
+    <EntityFrameworkCoreFrozenVersion>9.0.0-rtm.24508.5</EntityFrameworkCoreFrozenVersion>
+
+    <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
+    <AspNetCoreVersion>9.0.*-*</AspNetCoreVersion>
+    <EntityFrameworkCoreVersion>$(EntityFrameworkCoreFrozenVersion)</EntityFrameworkCoreVersion>
+    <EntityFrameworkCorePostgreSQLVersion>9.0.0-rc.2-ci.20240930T080442</EntityFrameworkCorePostgreSQLVersion>
+    <EntityFrameworkCorePomeloVersion>9.0.0-*</EntityFrameworkCorePomeloVersion>
+    <SystemTextJsonVersion>$(AspNetCoreVersion)</SystemTextJsonVersion>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
     <!-- Published dependencies (only update on major version change) -->
     <EntityFrameworkCoreFrozenVersion>8.0.0</EntityFrameworkCoreFrozenVersion>
@@ -27,6 +39,8 @@
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
     <AspNetCoreVersion>8.0.*</AspNetCoreVersion>
     <EntityFrameworkCoreVersion>8.0.*</EntityFrameworkCoreVersion>
+    <EntityFrameworkCorePostgreSQLVersion>$(EntityFrameworkCoreVersion)</EntityFrameworkCorePostgreSQLVersion>
+    <EntityFrameworkCorePomeloVersion>$(EntityFrameworkCoreVersion)</EntityFrameworkCorePomeloVersion>
     <SystemTextJsonVersion>$(AspNetCoreVersion)</SystemTextJsonVersion>
   </PropertyGroup>
 
@@ -38,6 +52,8 @@
     <AspNetCoreVersion>6.0.*</AspNetCoreVersion>
     <DateOnlyTimeOnlyVersion>2.1.*</DateOnlyTimeOnlyVersion>
     <EntityFrameworkCoreVersion>7.0.*</EntityFrameworkCoreVersion>
+    <EntityFrameworkCorePostgreSQLVersion>$(EntityFrameworkCoreVersion)</EntityFrameworkCorePostgreSQLVersion>
+    <EntityFrameworkCorePomeloVersion>$(EntityFrameworkCoreVersion)</EntityFrameworkCorePomeloVersion>
     <SystemTextJsonVersion>8.0.*</SystemTextJsonVersion>
   </PropertyGroup>
 </Project>
