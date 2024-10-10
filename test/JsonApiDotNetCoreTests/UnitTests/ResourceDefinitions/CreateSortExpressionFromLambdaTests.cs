@@ -365,17 +365,17 @@ public sealed class CreateSortExpressionFromLambdaTests
         public FileSystemEntry Parent { get; set; } = null!;
 
         [HasMany]
-        public IList<FileSystemEntry> Children { get; set; } = new List<FileSystemEntry>();
+        public List<FileSystemEntry> Children { get; set; } = [];
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     private sealed class DirectoryEntry : FileSystemEntry
     {
         [HasMany]
-        public IList<DirectoryEntry> Subdirectories { get; set; } = new List<DirectoryEntry>();
+        public List<DirectoryEntry> Subdirectories { get; set; } = [];
 
         [HasMany]
-        public IList<FileEntry> Files { get; set; } = new List<FileEntry>();
+        public List<FileEntry> Files { get; set; } = [];
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]

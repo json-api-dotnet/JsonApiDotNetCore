@@ -365,7 +365,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
         await _resourceDefinitionAccessor.OnWritingAsync(placeholderResource, WriteOperationKind.DeleteResource, cancellationToken);
 
         var deleteBuilder = new DeleteResourceStatementBuilder(_dataModelService);
-        DeleteNode deleteNode = deleteBuilder.Build(ResourceType, placeholderResource.Id!);
+        DeleteNode deleteNode = deleteBuilder.Build(ResourceType, placeholderResource.Id);
         CommandDefinition sqlCommand = _dapperFacade.GetSqlCommand(deleteNode, cancellationToken);
 
         await ExecuteInTransactionAsync(async transaction =>
