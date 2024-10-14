@@ -10,43 +10,19 @@
 
   <Import Project="..\..\package-versions.props" />
 
-  <PropertyGroup>
-    <VersionPrefix>$(JsonApiDotNetCoreVersionPrefix)</VersionPrefix>
-    <PackageTags>jsonapidotnetcore;jsonapi;json:api;dotnet;asp.net;rest;web-api</PackageTags>
-    <Description>Source generators for JsonApiDotNetCore, a framework for building JSON:API compliant REST APIs using ASP.NET and Entity Framework Core.</Description>
-    <Authors>json-api-dotnet</Authors>
-    <PackageProjectUrl>https://www.jsonapi.net/</PackageProjectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>See https://github.com/json-api-dotnet/JsonApiDotNetCore/releases.</PackageReleaseNotes>
-    <PackageIcon>package-icon.png</PackageIcon>
-    <PackageReadmeFile>PackageReadme.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/json-api-dotnet/JsonApiDotNetCore</RepositoryUrl>
-  </PropertyGroup>
-
   <ItemGroup>
-    <None Include="..\..\package-icon.png" Visible="false" Pack="True" PackagePath="" />
     <None Include="..\..\PackageReadme.md" Visible="false" Pack="True" PackagePath="" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    <None Include="$(PkgHumanizer_Core)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
-  <!-- https://github.com/dotnet/roslyn/discussions/47517 -->
-  <PropertyGroup>
-    <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
-  </PropertyGroup>
-
-  <Target Name="GetDependencyTargetPaths">
-    <ItemGroup>
-      <TargetPathWithTargetPlatformMoniker Include="$(PkgHumanizer_Core)\lib\netstandard2.0\*.dll" IncludeRuntimeDependency="false" />
-    </ItemGroup>
-  </Target>
+  <ItemGroup>
+    <None Remove="bin\Debug\netstandard2.0\\JsonApiDotNetCore.SourceGenerators.dll" />
+  </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Humanizer.Core" Version="$(HumanizerFrozenVersion)" PrivateAssets="all" GeneratePathProperty="true" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="$(CodeAnalysisFrozenVersion)" PrivateAssets="all" />
   </ItemGroup>
 </Project>

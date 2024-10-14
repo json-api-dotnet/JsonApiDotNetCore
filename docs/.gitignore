@@ -1,5 +1,0 @@
-_site/
-api/*.yml
-api/.manifest
-request-examples/*.json
-request-examples/*.temp

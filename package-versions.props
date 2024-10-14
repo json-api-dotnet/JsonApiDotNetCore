@@ -2,19 +2,9 @@
   <PropertyGroup>
     <!-- Published dependencies (only update on major version change) -->
     <CodeAnalysisFrozenVersion>4.1.0</CodeAnalysisFrozenVersion>
-    <DemystifierFrozenVersion>0.4.1</DemystifierFrozenVersion>
-    <HumanizerFrozenVersion>2.14.1</HumanizerFrozenVersion>
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
-    <BenchmarkDotNetVersion>0.14.*</BenchmarkDotNetVersion>
-    <BogusVersion>35.6.*</BogusVersion>
     <CodeAnalysisVersion>4.11.*</CodeAnalysisVersion>
-    <CoverletVersion>6.0.*</CoverletVersion>
-    <DapperVersion>2.1.*</DapperVersion>
-    <FluentAssertionsVersion>6.12.*</FluentAssertionsVersion>
-    <GitHubActionsTestLoggerVersion>2.4.*</GitHubActionsTestLoggerVersion>
-    <InheritDocVersion>2.0.*</InheritDocVersion>
-    <SourceLinkVersion>8.0.*</SourceLinkVersion>
     <TestSdkVersion>17.11.*</TestSdkVersion>
     <XunitVersion>2.9.*</XunitVersion>
     <XunitVisualStudioVersion>2.8.*</XunitVisualStudioVersion>
@@ -28,8 +18,6 @@
     <AspNetCoreVersion>9.0.*-*</AspNetCoreVersion>
     <EntityFrameworkCoreVersion>9.0.0-rtm.24508.5</EntityFrameworkCoreVersion>
     <EntityFrameworkCorePostgreSQLVersion>9.0.0-rc.2-ci.20240930T080442</EntityFrameworkCorePostgreSQLVersion>
-    <EntityFrameworkCorePomeloVersion>9.0.0-*</EntityFrameworkCorePomeloVersion>
-    <SystemTextJsonVersion>$(AspNetCoreVersion)</SystemTextJsonVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
@@ -40,8 +28,6 @@
     <AspNetCoreVersion>8.0.*</AspNetCoreVersion>
     <EntityFrameworkCoreVersion>8.0.*</EntityFrameworkCoreVersion>
     <EntityFrameworkCorePostgreSQLVersion>$(EntityFrameworkCoreVersion)</EntityFrameworkCorePostgreSQLVersion>
-    <EntityFrameworkCorePomeloVersion>$(EntityFrameworkCoreVersion)</EntityFrameworkCorePomeloVersion>
-    <SystemTextJsonVersion>$(AspNetCoreVersion)</SystemTextJsonVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
@@ -50,10 +36,7 @@
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
     <AspNetCoreVersion>6.0.*</AspNetCoreVersion>
-    <DateOnlyTimeOnlyVersion>2.1.*</DateOnlyTimeOnlyVersion>
     <EntityFrameworkCoreVersion>7.0.*</EntityFrameworkCoreVersion>
     <EntityFrameworkCorePostgreSQLVersion>$(EntityFrameworkCoreVersion)</EntityFrameworkCorePostgreSQLVersion>
-    <EntityFrameworkCorePomeloVersion>$(EntityFrameworkCoreVersion)</EntityFrameworkCorePomeloVersion>
-    <SystemTextJsonVersion>8.0.*</SystemTextJsonVersion>
   </PropertyGroup>
 </Project>
