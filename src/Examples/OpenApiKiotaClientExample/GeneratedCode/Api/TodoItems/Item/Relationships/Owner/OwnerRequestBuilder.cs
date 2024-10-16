@@ -14,7 +14,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Relationshi
     /// <summary>
     /// Builds and executes requests for operations under \api\todoItems\{id}\relationships\owner
     /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.18.0")]
+    [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     public partial class OwnerRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
@@ -174,7 +174,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Relationshi
         /// <summary>
         /// Retrieves the related person identity of an individual todoItem&apos;s owner relationship.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.18.0")]
+        [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
         public partial class OwnerRequestBuilderGetQueryParameters 
         {
             /// <summary>For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.</summary>
@@ -191,7 +191,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Relationshi
         /// <summary>
         /// Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.18.0")]
+        [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
         public partial class OwnerRequestBuilderHeadQueryParameters 
         {
             /// <summary>For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.</summary>

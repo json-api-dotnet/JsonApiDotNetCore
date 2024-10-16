@@ -14,7 +14,7 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Games
     /// <summary>
     /// Builds and executes requests for operations under \games
     /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.18.0")]
+    [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     public partial class GamesRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
@@ -98,7 +98,7 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Games
         /// <summary>
         /// Creates a new game.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.18.0")]
+        [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
         public partial class GamesRequestBuilderPostQueryParameters 
         {
             /// <summary>For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.</summary>

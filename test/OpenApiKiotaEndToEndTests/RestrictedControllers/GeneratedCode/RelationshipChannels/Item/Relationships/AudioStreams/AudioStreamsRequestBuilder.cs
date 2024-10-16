@@ -14,7 +14,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Relation
     /// <summary>
     /// Builds and executes requests for operations under \relationshipChannels\{id}\relationships\audioStreams
     /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.18.0")]
+    [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     public partial class AudioStreamsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
@@ -274,7 +274,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Relation
         /// <summary>
         /// Retrieves the related dataStream identities of an individual relationshipChannel&apos;s audioStreams relationship.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.18.0")]
+        [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
         public partial class AudioStreamsRequestBuilderGetQueryParameters 
         {
             /// <summary>For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.</summary>
@@ -291,7 +291,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Relation
         /// <summary>
         /// Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.18.0")]
+        [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
         public partial class AudioStreamsRequestBuilderHeadQueryParameters 
         {
             /// <summary>For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.</summary>

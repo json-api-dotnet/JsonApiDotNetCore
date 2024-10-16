@@ -14,7 +14,7 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item.Relations
     /// <summary>
     /// Builds and executes requests for operations under \vacations\{id}\relationships
     /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.18.0")]
+    [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     public partial class RelationshipsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>The accommodation property</summary>

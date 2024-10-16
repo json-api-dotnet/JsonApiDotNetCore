@@ -15,7 +15,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
     /// <summary>
     /// Builds and executes requests for operations under \writeOnlyChannels
     /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.18.0")]
+    [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     public partial class WriteOnlyChannelsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>Gets an item from the OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.writeOnlyChannels.item collection</summary>
@@ -113,7 +113,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
         /// <summary>
         /// Creates a new writeOnlyChannel.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.18.0")]
+        [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
         public partial class WriteOnlyChannelsRequestBuilderPostQueryParameters 
         {
             /// <summary>For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.</summary>
