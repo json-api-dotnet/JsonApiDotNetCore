@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net9.0;net8.0;net6.0</TargetFrameworks>
   </PropertyGroup>
 
   <Import Project="..\..\package-versions.props" />
@@ -16,5 +16,10 @@
     <PackageReference Include="GitHubActionsTestLogger" Version="$(GitHubActionsTestLoggerVersion)" PrivateAssets="All" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="$(CodeAnalysisVersion)" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0' Or '$(BuildingInsideVisualStudio)' == 'true'">
+    <!-- Temporary workaround for version range constraint on Npgsql.EntityFrameworkCore.PostgreSQL pre-release package -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="$(EntityFrameworkCoreVersion)" />
   </ItemGroup>
 </Project>
