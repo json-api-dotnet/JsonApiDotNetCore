@@ -14,7 +14,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Relation
     /// <summary>
     /// Builds and executes requests for operations under \relationshipChannels\{id}\relationships
     /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.18.0")]
+    [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     public partial class RelationshipsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>The audioStreams property</summary>

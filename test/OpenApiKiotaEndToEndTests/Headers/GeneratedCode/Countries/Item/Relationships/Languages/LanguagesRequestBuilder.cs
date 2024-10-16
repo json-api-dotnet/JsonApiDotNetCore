@@ -14,7 +14,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.Relatio
     /// <summary>
     /// Builds and executes requests for operations under \countries\{id}\relationships\languages
     /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.18.0")]
+    [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     public partial class LanguagesRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
@@ -274,7 +274,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.Relatio
         /// <summary>
         /// Retrieves the related language identities of an individual country&apos;s languages relationship.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.18.0")]
+        [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
         public partial class LanguagesRequestBuilderGetQueryParameters 
         {
             /// <summary>For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.</summary>
@@ -291,7 +291,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.Relatio
         /// <summary>
         /// Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.18.0")]
+        [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
         public partial class LanguagesRequestBuilderHeadQueryParameters 
         {
             /// <summary>For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.</summary>

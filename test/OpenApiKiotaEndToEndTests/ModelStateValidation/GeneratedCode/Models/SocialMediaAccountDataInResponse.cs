@@ -7,7 +7,7 @@ using System.IO;
 using System;
 namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models
 {
-    [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.18.0")]
+    [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     #pragma warning disable CS1591
     public partial class SocialMediaAccountDataInResponse : global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.DataInResponse, IParsable
     #pragma warning restore CS1591

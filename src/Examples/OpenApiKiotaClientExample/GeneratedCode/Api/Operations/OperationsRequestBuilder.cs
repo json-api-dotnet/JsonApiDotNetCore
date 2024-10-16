@@ -14,7 +14,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Operations
     /// <summary>
     /// Builds and executes requests for operations under \api\operations
     /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.18.0")]
+    [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     public partial class OperationsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>

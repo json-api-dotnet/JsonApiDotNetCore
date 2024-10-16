@@ -12,7 +12,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.Relatio
     /// <summary>
     /// Builds and executes requests for operations under \countries\{id}\relationships
     /// </summary>
-    [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.18.0")]
+    [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     public partial class RelationshipsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>The languages property</summary>
