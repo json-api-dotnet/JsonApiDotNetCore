@@ -31,7 +31,7 @@ public class QueryStringParserBenchmarks : IDisposable
 
         var request = new JsonApiRequest
         {
-            PrimaryResourceType = resourceGraph.GetResourceType(typeof(QueryableResource)),
+            PrimaryResourceType = resourceGraph.GetResourceType<QueryableResource>(),
             IsCollection = true
         };
 
