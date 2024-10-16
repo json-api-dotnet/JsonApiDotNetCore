@@ -2,10 +2,8 @@
 #pragma warning disable CS0618
 using Microsoft.Kiota.Abstractions.Extensions;
 using Microsoft.Kiota.Abstractions;
-using OpenApiKiotaClientExample.GeneratedCode.Api.Operations;
-using OpenApiKiotaClientExample.GeneratedCode.Api.People;
-using OpenApiKiotaClientExample.GeneratedCode.Api.Tags;
-using OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems;
+using OpenApiKiotaClientExample.GeneratedCode.Api.Buildings;
+using OpenApiKiotaClientExample.GeneratedCode.Api.Residences;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -18,25 +16,15 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     public partial class ApiRequestBuilder : BaseRequestBuilder
     {
-        /// <summary>The operations property</summary>
-        public global::OpenApiKiotaClientExample.GeneratedCode.Api.Operations.OperationsRequestBuilder Operations
+        /// <summary>The buildings property</summary>
+        public global::OpenApiKiotaClientExample.GeneratedCode.Api.Buildings.BuildingsRequestBuilder Buildings
         {
-            get => new global::OpenApiKiotaClientExample.GeneratedCode.Api.Operations.OperationsRequestBuilder(PathParameters, RequestAdapter);
+            get => new global::OpenApiKiotaClientExample.GeneratedCode.Api.Buildings.BuildingsRequestBuilder(PathParameters, RequestAdapter);
         }
-        /// <summary>The people property</summary>
-        public global::OpenApiKiotaClientExample.GeneratedCode.Api.People.PeopleRequestBuilder People
+        /// <summary>The residences property</summary>
+        public global::OpenApiKiotaClientExample.GeneratedCode.Api.Residences.ResidencesRequestBuilder Residences
         {
-            get => new global::OpenApiKiotaClientExample.GeneratedCode.Api.People.PeopleRequestBuilder(PathParameters, RequestAdapter);
-        }
-        /// <summary>The tags property</summary>
-        public global::OpenApiKiotaClientExample.GeneratedCode.Api.Tags.TagsRequestBuilder Tags
-        {
-            get => new global::OpenApiKiotaClientExample.GeneratedCode.Api.Tags.TagsRequestBuilder(PathParameters, RequestAdapter);
-        }
-        /// <summary>The todoItems property</summary>
-        public global::OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.TodoItemsRequestBuilder TodoItems
-        {
-            get => new global::OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.TodoItemsRequestBuilder(PathParameters, RequestAdapter);
+            get => new global::OpenApiKiotaClientExample.GeneratedCode.Api.Residences.ResidencesRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
         /// Instantiates a new <see cref="global::OpenApiKiotaClientExample.GeneratedCode.Api.ApiRequestBuilder"/> and sets the default values.

@@ -1,0 +1,134 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "JsonApiDotNetCoreExample",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://localhost:44340"
+    }
+  ],
+  "paths": {
+    "/api/buildings": {
+      "get": {
+        "tags": [
+          "buildings"
+        ],
+        "operationId": "getBuildingCollection",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dataInRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/residences": {
+      "get": {
+        "tags": [
+          "residences"
+        ],
+        "operationId": "getResidenceCollection",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/residenceDataInRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "dataInRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "id": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "building": "#/components/schemas/buildingDataInRequest",
+            "residence": "#/components/schemas/residenceDataInRequest",
+            "mansion": "#/components/schemas/mansionDataInRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "buildingDataInRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "surfaceInSquareMeters": {
+                "type": "integer"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "residenceDataInRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/buildingDataInRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "numberOfResidents": {
+                "type": "integer"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "mansionDataInRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/residenceDataInRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "ownerName": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -10,6 +10,7 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 
 internal sealed class AbstractResourceDataSchemaGenerator
 {
+    private const string DiscriminatorPropertyName = "type";
     private static readonly Type ResourceDataAbstractType = typeof(ResourceData);
 
     private readonly JsonApiSchemaIdSelector _schemaIdSelector;
@@ -35,23 +36,21 @@ internal sealed class AbstractResourceDataSchemaGenerator
 
         var fullSchema = new OpenApiSchema
         {
-            Required = new HashSet<string>
-            {
-                "type"
-            },
+            Required = new SortedSet<string>([DiscriminatorPropertyName]),
             Type = "object",
             Properties = new Dictionary<string, OpenApiSchema>
             {
-                ["type"] = new()
+                [DiscriminatorPropertyName] = new()
                 {
                     MinLength = 1,
                     Type = "string"
                 }
+                // TODO: Why is meta missing here?
             },
             AdditionalPropertiesAllowed = false,
             Discriminator = new OpenApiDiscriminator
             {
-                PropertyName = "type",
+                PropertyName = DiscriminatorPropertyName,
                 Mapping = new SortedDictionary<string, string>(StringComparer.Ordinal)
             },
             Extensions = new Dictionary<string, IOpenApiExtension>
@@ -78,13 +77,15 @@ internal sealed class AbstractResourceDataSchemaGenerator
 
         if (resourceTypeInfo.ResourceDataOpenType == typeof(ResourceDataInResponse<>))
         {
-            if (schemaRepository.TryLookupByType(ResourceDataAbstractType, out OpenApiSchema? referenceSchemaForAbstractResourceData))
+            if (!schemaRepository.TryLookupByType(ResourceDataAbstractType, out OpenApiSchema? referenceSchemaForAbstractResourceData))
             {
-                OpenApiSchema fullSchemaForAbstractResourceData = schemaRepository.Schemas[referenceSchemaForAbstractResourceData.Reference.Id];
-
-                fullSchemaForAbstractResourceData.Discriminator.Mapping[resourceTypeInfo.ResourceType.PublicName] =
-                    referenceSchemaForResourceData.Reference.ReferenceV3;
+                throw new UnreachableCodeException();
             }
+
+            OpenApiSchema fullSchemaForAbstractResourceData = schemaRepository.Schemas[referenceSchemaForAbstractResourceData.Reference.Id];
+
+            fullSchemaForAbstractResourceData.Discriminator.Mapping[resourceTypeInfo.ResourceType.PublicName] =
+                referenceSchemaForResourceData.Reference.ReferenceV3;
         }
     }
 }

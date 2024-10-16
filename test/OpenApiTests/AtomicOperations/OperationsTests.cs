@@ -160,7 +160,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
             schemasElement.Should().ContainPath("atomicOperation").Should().BeJson("""
                 {
                   "required": [
-                    "operationDiscriminator"
+                    "openapi:operations-discriminator"
                   ],
                   "type": "object",
                   "properties": {
@@ -174,7 +174,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                   },
                   "additionalProperties": false,
                   "discriminator": {
-                    "propertyName": "operationDiscriminator",
+                    "propertyName": "openapi:operations-discriminator",
                     "mapping": {
                       "addCourse": "#/components/schemas/createCourseOperation",
                       "addEnrollment": "#/components/schemas/createEnrollmentOperation",
