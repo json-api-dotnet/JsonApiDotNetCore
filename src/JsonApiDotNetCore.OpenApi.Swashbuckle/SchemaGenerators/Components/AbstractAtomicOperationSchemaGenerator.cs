@@ -6,8 +6,13 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 
+// TODO: Extract duplicate logic with AbstractResourceDataSchemaGenerator into abstract base class.
 internal sealed class AbstractAtomicOperationSchemaGenerator
 {
+    // The discriminator only exists to guide OpenAPI codegen. The property is ignored by JsonApiDotNetCore.
+    // TODO: Apply casing convention?
+    private const string OperationsDiscriminatorPropertyName = "openapi:operations-discriminator";
+
     private static readonly Type AtomicOperationAbstractType = typeof(AtomicOperation);
 
     private readonly MetaSchemaGenerator _metaSchemaGenerator;
@@ -31,24 +36,21 @@ internal sealed class AbstractAtomicOperationSchemaGenerator
             return referenceSchema;
         }
 
-        // The discriminator only exists to guide OpenAPI codegen. The property is ignored by JsonApiDotNetCore.
-        string discriminatorPropertyName = _schemaIdSelector.GetAtomicOperationDiscriminatorName();
-
-        referenceSchema = _metaSchemaGenerator.GenerateSchema(schemaRepository);
-        string metaSchemaId = referenceSchema.Reference.Id;
+        OpenApiSchema metaReferenceSchema = _metaSchemaGenerator.GenerateSchema(schemaRepository);
 
         var fullSchema = new OpenApiSchema
         {
             Type = "object",
-            Required = new SortedSet<string>([discriminatorPropertyName]),
+            Required = new SortedSet<string>([OperationsDiscriminatorPropertyName]),
             Properties = new Dictionary<string, OpenApiSchema>
             {
-                [metaSchemaId] = referenceSchema.WrapInExtendedSchema()
+                // TODO: Emit the discriminator property.
+                [metaReferenceSchema.Reference.Id] = metaReferenceSchema.WrapInExtendedSchema()
             },
             AdditionalPropertiesAllowed = false,
             Discriminator = new OpenApiDiscriminator
             {
-                PropertyName = discriminatorPropertyName,
+                PropertyName = OperationsDiscriminatorPropertyName,
                 Mapping = new SortedDictionary<string, string>(StringComparer.Ordinal)
             },
             Extensions = new Dictionary<string, IOpenApiExtension>
@@ -70,10 +72,12 @@ internal sealed class AbstractAtomicOperationSchemaGenerator
         ArgumentGuard.NotNull(referenceSchemaForOperation);
         ArgumentGuard.NotNull(schemaRepository);
 
-        if (schemaRepository.TryLookupByType(AtomicOperationAbstractType, out OpenApiSchema? referenceSchemaForAbstractOperation))
+        if (!schemaRepository.TryLookupByType(AtomicOperationAbstractType, out OpenApiSchema? referenceSchemaForAbstractOperation))
         {
-            OpenApiSchema fullSchemaForAbstractOperation = schemaRepository.Schemas[referenceSchemaForAbstractOperation.Reference.Id];
-            fullSchemaForAbstractOperation.Discriminator.Mapping[discriminatorValue] = referenceSchemaForOperation.Reference.ReferenceV3;
+            throw new UnreachableCodeException();
         }
+
+        OpenApiSchema fullSchemaForAbstractOperation = schemaRepository.Schemas[referenceSchemaForAbstractOperation.Reference.Id];
+        fullSchemaForAbstractOperation.Discriminator.Mapping[discriminatorValue] = referenceSchemaForOperation.Reference.ReferenceV3;
     }
 }

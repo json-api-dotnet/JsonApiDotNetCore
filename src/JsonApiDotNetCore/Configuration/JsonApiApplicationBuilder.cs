@@ -94,7 +94,8 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder
 
             IResourceGraph resourceGraph = resourceGraphBuilder.Build();
 
-            _options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph));
+            var httpContextAccessor = serviceProvider.GetRequiredService<IHttpContextAccessor>();
+            _options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph, httpContextAccessor));
 
             return resourceGraph;
         });

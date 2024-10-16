@@ -71,5 +71,11 @@
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
     </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\ResourceInheritance\GeneratedSwagger\swagger.g.json">
+      <Name>ResourceInheritance</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
   </ItemGroup>
 </Project>

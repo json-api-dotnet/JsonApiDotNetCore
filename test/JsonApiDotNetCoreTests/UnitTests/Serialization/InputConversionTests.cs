@@ -9,6 +9,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.JsonConverters;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Request.Adapters;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging.Abstractions;
 using TestBuildingBlocks;
 using Xunit;
@@ -248,7 +249,8 @@ public sealed class InputConversionTests : IDisposable
     {
         var options = new JsonApiOptions();
         IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<TResource, int>().Build();
-        options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph));
+        var httpContextAccessor = new HttpContextAccessor();
+        options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph, httpContextAccessor));
 
         var resourceFactory = new ResourceFactory(_serviceProvider);
         var resourceDefinitionAccessor = new ResourceDefinitionAccessor(resourceGraph, _serviceProvider);

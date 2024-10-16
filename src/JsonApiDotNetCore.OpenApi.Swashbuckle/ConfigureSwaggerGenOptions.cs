@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.AtomicOperations;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
+using JsonApiDotNetCore.Resources;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -73,6 +74,16 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
         if (baseType == typeof(AtomicOperation))
         {
             return GetConstructedTypesForAtomicOperation();
+        }
+
+        if (baseType.IsAssignableTo(typeof(IIdentifiable)))
+        {
+            ResourceType? resourceType = _resourceGraph.FindResourceType(baseType);
+
+            if (resourceType != null && resourceType.IsPartOfTypeHierarchy())
+            {
+                return resourceType.GetAllConcreteDerivedTypes().Select(derivedType => derivedType.ClrType).ToList();
+            }
         }
 
         return [];
