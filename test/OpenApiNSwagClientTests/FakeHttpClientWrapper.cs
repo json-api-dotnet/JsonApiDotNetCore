@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.Client.NSwag;
 
 namespace OpenApiNSwagClientTests;
@@ -64,7 +65,7 @@ internal sealed class FakeHttpClientWrapper : IDisposable
         if (!string.IsNullOrEmpty(responseBody))
         {
             response.Content = new StringContent(responseBody, Encoding.UTF8);
-            response.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/vnd.api+json");
+            response.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(JsonApiMediaType.Default.ToString());
         }
 
         return response;
