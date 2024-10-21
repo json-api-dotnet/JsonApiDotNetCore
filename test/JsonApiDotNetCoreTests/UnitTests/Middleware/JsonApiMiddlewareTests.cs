@@ -47,6 +47,8 @@ public sealed class JsonApiMiddlewareTests
     {
         // Arrange
         var options = new JsonApiOptions();
+        options.IncludeExtensions(JsonApiExtension.AtomicOperations);
+
         var request = new JsonApiRequest();
 
         // @formatter:wrap_chained_method_calls chop_always
@@ -69,7 +71,10 @@ public sealed class JsonApiMiddlewareTests
             HttpContext = httpContext
         };
 
-        var middleware = new JsonApiMiddleware(null, httpContextAccessor, controllerResourceMapping, options, NullLogger<JsonApiMiddleware>.Instance);
+        var contentNegotiator = new JsonApiContentNegotiator(options, httpContextAccessor);
+
+        var middleware = new JsonApiMiddleware(null, httpContextAccessor, controllerResourceMapping, options, contentNegotiator,
+            NullLogger<JsonApiMiddleware>.Instance);
 
         // Act
         await middleware.InvokeAsync(httpContext, request);
@@ -145,6 +150,7 @@ public sealed class JsonApiMiddlewareTests
         else if (pathSegments.Contains("operations"))
         {
             feature.RouteValues["action"] = "PostOperations";
+            httpContext.Request.Headers.Accept = JsonApiMediaType.AtomicOperations.ToString();
         }
 
         httpContext.Features.Set<IRouteValuesFeature>(feature);

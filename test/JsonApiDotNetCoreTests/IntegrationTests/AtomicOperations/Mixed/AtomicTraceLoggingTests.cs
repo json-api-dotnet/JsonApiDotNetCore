@@ -200,7 +200,8 @@ public sealed class AtomicTraceLoggingTests : IClassFixture<IntegrationTestConte
                   "PrimaryResourceType": "musicTracks",
                   "IsCollection": false,
                   "IsReadOnly": false,
-                  "WriteOperation": "UpdateResource"
+                  "WriteOperation": "UpdateResource",
+                  "Extensions": []
                 }
               }
             ])

@@ -7,6 +7,8 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 
 internal sealed class JsonApiRequestFormatMetadataProvider : IInputFormatter, IApiRequestFormatMetadataProvider
 {
+    private static readonly string DefaultMediaType = JsonApiMediaType.Default.ToString();
+
     /// <inheritdoc />
     public bool CanRead(InputFormatterContext context)
     {
@@ -25,12 +27,12 @@ internal sealed class JsonApiRequestFormatMetadataProvider : IInputFormatter, IA
         ArgumentGuard.NotNullNorEmpty(contentType);
         ArgumentGuard.NotNull(objectType);
 
-        if (JsonApiSchemaFacts.IsRequestBodySchemaType(objectType) && contentType is HeaderConstants.MediaType or HeaderConstants.AtomicOperationsMediaType or
-            HeaderConstants.RelaxedAtomicOperationsMediaType)
+        if (JsonApiSchemaFacts.IsRequestBodySchemaType(objectType) && MediaTypeHeaderValue.TryParse(contentType, out MediaTypeHeaderValue? headerValue) &&
+            headerValue.MediaType.Equals(DefaultMediaType, StringComparison.OrdinalIgnoreCase))
         {
             return new MediaTypeCollection
             {
-                MediaTypeHeaderValue.Parse(contentType)
+                headerValue
             };
         }
 

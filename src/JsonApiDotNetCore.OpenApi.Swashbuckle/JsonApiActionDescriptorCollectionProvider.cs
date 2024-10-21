@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Net.Http.Headers;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 
@@ -21,6 +22,8 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 /// </summary>
 internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescriptorCollectionProvider
 {
+    private static readonly string DefaultMediaType = JsonApiMediaType.Default.ToString();
+
     private readonly IActionDescriptorCollectionProvider _defaultProvider;
     private readonly JsonApiEndpointMetadataProvider _jsonApiEndpointMetadataProvider;
 
@@ -129,8 +132,21 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
     {
         var produces = endpoint.GetFilterMetadata<ProducesAttribute>();
 
-        return produces != null && produces.ContentTypes.Any(contentType =>
-            contentType is HeaderConstants.MediaType or HeaderConstants.AtomicOperationsMediaType or HeaderConstants.RelaxedAtomicOperationsMediaType);
+        if (produces != null)
+        {
+            foreach (string contentType in produces.ContentTypes)
+            {
+                if (MediaTypeHeaderValue.TryParse(contentType, out MediaTypeHeaderValue? headerValue))
+                {
+                    if (headerValue.MediaType.Equals(DefaultMediaType, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     private static List<ActionDescriptor> Expand(ActionDescriptor genericEndpoint, NonPrimaryEndpointMetadata metadata,

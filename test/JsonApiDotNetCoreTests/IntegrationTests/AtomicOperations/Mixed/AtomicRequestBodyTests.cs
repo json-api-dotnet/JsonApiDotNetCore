@@ -31,7 +31,7 @@ public sealed class AtomicRequestBodyTests : IClassFixture<IntegrationTestContex
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
-        httpResponse.Content.Headers.ContentType.ToString().Should().Be(HeaderConstants.AtomicOperationsMediaType);
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.AtomicOperations.ToString());
 
         responseDocument.Errors.ShouldHaveCount(1);
 

@@ -129,8 +129,8 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
 
     private void SetResponseMetadata(ActionModel action, JsonApiEndpoint endpoint, ResourceType? resourceType)
     {
-        string contentType = endpoint == JsonApiEndpoint.PostOperations ? HeaderConstants.RelaxedAtomicOperationsMediaType : HeaderConstants.MediaType;
-        action.Filters.Add(new ProducesAttribute(contentType));
+        JsonApiMediaType mediaType = GetMediaTypeForEndpoint(endpoint);
+        action.Filters.Add(new ProducesAttribute(mediaType.ToString()));
 
         foreach (HttpStatusCode statusCode in GetSuccessStatusCodesForEndpoint(endpoint))
         {
@@ -142,6 +142,11 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
         {
             action.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResponseDocument), (int)statusCode));
         }
+    }
+
+    private JsonApiMediaType GetMediaTypeForEndpoint(JsonApiEndpoint endpoint)
+    {
+        return endpoint == JsonApiEndpoint.PostOperations ? JsonApiMediaType.RelaxedAtomicOperations : JsonApiMediaType.Default;
     }
 
     private static HttpStatusCode[] GetSuccessStatusCodesForEndpoint(JsonApiEndpoint endpoint)
@@ -230,12 +235,12 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
         };
     }
 
-    private static void SetRequestMetadata(ActionModel action, JsonApiEndpoint endpoint)
+    private void SetRequestMetadata(ActionModel action, JsonApiEndpoint endpoint)
     {
         if (RequiresRequestBody(endpoint))
         {
-            string contentType = endpoint == JsonApiEndpoint.PostOperations ? HeaderConstants.RelaxedAtomicOperationsMediaType : HeaderConstants.MediaType;
-            action.Filters.Add(new ConsumesAttribute(contentType));
+            JsonApiMediaType mediaType = GetMediaTypeForEndpoint(endpoint);
+            action.Filters.Add(new ConsumesAttribute(mediaType.ToString()));
         }
     }
 
