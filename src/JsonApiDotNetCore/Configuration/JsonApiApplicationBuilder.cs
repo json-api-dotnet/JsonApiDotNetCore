@@ -184,6 +184,7 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder
         _services.TryAddSingleton<IJsonApiRoutingConvention, JsonApiRoutingConvention>();
         _services.TryAddSingleton<IControllerResourceMapping>(provider => provider.GetRequiredService<IJsonApiRoutingConvention>());
         _services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        _services.TryAddSingleton<IJsonApiContentNegotiator, JsonApiContentNegotiator>();
         _services.TryAddScoped<IJsonApiRequest, JsonApiRequest>();
         _services.TryAddScoped<IJsonApiWriter, JsonApiWriter>();
         _services.TryAddScoped<IJsonApiReader, JsonApiReader>();

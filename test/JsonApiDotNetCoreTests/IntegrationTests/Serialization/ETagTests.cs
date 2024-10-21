@@ -158,8 +158,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
         Action<HttpRequestHeaders> setRequestHeaders = headers => headers.IfMatch.ParseAdd("\"12345\"");
 
         // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) =
-            await _testContext.ExecutePatchAsync<Document>(route, requestBody, setRequestHeaders: setRequestHeaders);
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody, setRequestHeaders);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.PreconditionFailed);

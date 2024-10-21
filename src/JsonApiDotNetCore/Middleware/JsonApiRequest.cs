@@ -8,6 +8,8 @@ namespace JsonApiDotNetCore.Middleware;
 [PublicAPI]
 public sealed class JsonApiRequest : IJsonApiRequest
 {
+    private static readonly IReadOnlySet<JsonApiExtension> EmptyExtensionSet = new HashSet<JsonApiExtension>().AsReadOnly();
+
     /// <inheritdoc />
     public EndpointKind Kind { get; set; }
 
@@ -36,6 +38,9 @@ public sealed class JsonApiRequest : IJsonApiRequest
     public string? TransactionId { get; set; }
 
     /// <inheritdoc />
+    public IReadOnlySet<JsonApiExtension> Extensions { get; set; } = EmptyExtensionSet;
+
+    /// <inheritdoc />
     public void CopyFrom(IJsonApiRequest other)
     {
         ArgumentGuard.NotNull(other);
@@ -49,5 +54,6 @@ public sealed class JsonApiRequest : IJsonApiRequest
         IsReadOnly = other.IsReadOnly;
         WriteOperation = other.WriteOperation;
         TransactionId = other.TransactionId;
+        Extensions = other.Extensions;
     }
 }

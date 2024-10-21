@@ -2,6 +2,7 @@ using System.Data;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.JsonConverters;
 
@@ -11,6 +12,7 @@ namespace JsonApiDotNetCore.Configuration;
 [PublicAPI]
 public sealed class JsonApiOptions : IJsonApiOptions
 {
+    private static readonly IReadOnlySet<JsonApiExtension> EmptyExtensionSet = new HashSet<JsonApiExtension>().AsReadOnly();
     private readonly Lazy<JsonSerializerOptions> _lazySerializerWriteOptions;
     private readonly Lazy<JsonSerializerOptions> _lazySerializerReadOptions;
 
@@ -98,6 +100,9 @@ public sealed class JsonApiOptions : IJsonApiOptions
     public IsolationLevel? TransactionIsolationLevel { get; set; }
 
     /// <inheritdoc />
+    public IReadOnlySet<JsonApiExtension> Extensions { get; set; } = EmptyExtensionSet;
+
+    /// <inheritdoc />
     public JsonSerializerOptions SerializerOptions { get; } = new()
     {
         // These are the options common to serialization and deserialization.
@@ -129,5 +134,28 @@ public sealed class JsonApiOptions : IJsonApiOptions
                 new WriteOnlyRelationshipObjectConverter()
             }
         }, LazyThreadSafetyMode.ExecutionAndPublication);
+    }
+
+    /// <summary>
+    /// Adds the specified JSON:API extensions to the existing <see cref="Extensions" /> set.
+    /// </summary>
+    /// <param name="extensionsToAdd">
+    /// The JSON:API extensions to add.
+    /// </param>
+    public void IncludeExtensions(params JsonApiExtension[] extensionsToAdd)
+    {
+        ArgumentGuard.NotNull(extensionsToAdd);
+
+        if (!Extensions.IsSupersetOf(extensionsToAdd))
+        {
+            var extensions = new HashSet<JsonApiExtension>(Extensions);
+
+            foreach (JsonApiExtension extension in extensionsToAdd)
+            {
+                extensions.Add(extension);
+            }
+
+            Extensions = extensions.AsReadOnly();
+        }
     }
 }
