@@ -153,11 +153,43 @@ public sealed class JsonApiRequest : IJsonApiRequest</code></pre>
 </h2>
 
 
+  <a id="JsonApiDotNetCore_Middleware_JsonApiRequest_Extensions_" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.Extensions*"></a>
+
+  <h3 id="JsonApiDotNetCore_Middleware_JsonApiRequest_Extensions" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.Extensions">
+  Extensions
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRequest.cs/#L41"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The JSON:API extensions enabled for the current request. This is always a subset of <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_Extensions">Extensions</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IReadOnlySet&lt;JsonApiExtension&gt; Extensions { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlyset-1">IReadOnlySet</a>&lt;<a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiExtension.html">JsonApiExtension</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="JsonApiDotNetCore_Middleware_JsonApiRequest_IsCollection_" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.IsCollection*"></a>
 
   <h3 id="JsonApiDotNetCore_Middleware_JsonApiRequest_IsCollection" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.IsCollection">
   IsCollection
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRequest.cs/#L27"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRequest.cs/#L29"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether this request targets a single resource or a collection of resources.</p>
@@ -189,7 +221,7 @@ public sealed class JsonApiRequest : IJsonApiRequest</code></pre>
 
   <h3 id="JsonApiDotNetCore_Middleware_JsonApiRequest_IsReadOnly" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.IsReadOnly">
   IsReadOnly
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRequest.cs/#L30"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRequest.cs/#L32"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether this request targets only fetching of data (resources and relationships), as opposed to applying changes.</p>
@@ -221,7 +253,7 @@ public sealed class JsonApiRequest : IJsonApiRequest</code></pre>
 
   <h3 id="JsonApiDotNetCore_Middleware_JsonApiRequest_Kind" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.Kind">
   Kind
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRequest.cs/#L12"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRequest.cs/#L14"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Routing information, based on the path of the request URL.</p>
@@ -253,7 +285,7 @@ public sealed class JsonApiRequest : IJsonApiRequest</code></pre>
 
   <h3 id="JsonApiDotNetCore_Middleware_JsonApiRequest_PrimaryId" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.PrimaryId">
   PrimaryId
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRequest.cs/#L15"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRequest.cs/#L17"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The ID of the primary resource for this request. This would be <code>null</code> in &quot;/blogs&quot;, &quot;123&quot; in &quot;/blogs/123&quot; or &quot;/blogs/123/author&quot;. This is
@@ -286,7 +318,7 @@ public sealed class JsonApiRequest : IJsonApiRequest</code></pre>
 
   <h3 id="JsonApiDotNetCore_Middleware_JsonApiRequest_PrimaryResourceType" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.PrimaryResourceType">
   PrimaryResourceType
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRequest.cs/#L18"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRequest.cs/#L20"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The primary resource type for this request. This would be &quot;blogs&quot; in &quot;/blogs&quot;, &quot;/blogs/123&quot; or &quot;/blogs/123/author&quot;. This is <code>null</code> before and
@@ -319,7 +351,7 @@ after processing operations in an atomic:operations request.</p>
 
   <h3 id="JsonApiDotNetCore_Middleware_JsonApiRequest_Relationship" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.Relationship">
   Relationship
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRequest.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRequest.cs/#L26"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The relationship for this request. This would be <code>null</code> in &quot;/blogs&quot;, &quot;/blogs/123&quot; and &quot;/blogs/123/unknownResource&quot; or &quot;author&quot; in
@@ -353,7 +385,7 @@ request.</p>
 
   <h3 id="JsonApiDotNetCore_Middleware_JsonApiRequest_SecondaryResourceType" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.SecondaryResourceType">
   SecondaryResourceType
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRequest.cs/#L21"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRequest.cs/#L23"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The secondary resource type for this request. This would be <code>null</code> in &quot;/blogs&quot;, &quot;/blogs/123&quot; and &quot;/blogs/123/unknownResource&quot; or &quot;people&quot; in
@@ -387,7 +419,7 @@ request.</p>
 
   <h3 id="JsonApiDotNetCore_Middleware_JsonApiRequest_TransactionId" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.TransactionId">
   TransactionId
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRequest.cs/#L36"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRequest.cs/#L38"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>In case of an atomic:operations request, identifies the overarching transaction.</p>
@@ -419,7 +451,7 @@ request.</p>
 
   <h3 id="JsonApiDotNetCore_Middleware_JsonApiRequest_WriteOperation" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.WriteOperation">
   WriteOperation
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRequest.cs/#L33"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRequest.cs/#L35"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>In case of a non-readonly request, this indicates the kind of write operation currently being processed. This is <code>null</code> when processing a
@@ -456,7 +488,7 @@ read-only operation, and before and after processing operations in an atomic:ope
 
   <h3 id="JsonApiDotNetCore_Middleware_JsonApiRequest_CopyFrom_JsonApiDotNetCore_Middleware_IJsonApiRequest_" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.CopyFrom(JsonApiDotNetCore.Middleware.IJsonApiRequest)">
   CopyFrom(IJsonApiRequest)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRequest.cs/#L39"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRequest.cs/#L44"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Performs a shallow copy.</p>

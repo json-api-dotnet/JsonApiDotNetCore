@@ -149,16 +149,16 @@ public sealed class JsonApiMiddleware</code></pre>
 
   <a id="JsonApiDotNetCore_Middleware_JsonApiMiddleware__ctor_" data-uid="JsonApiDotNetCore.Middleware.JsonApiMiddleware.#ctor*"></a>
 
-  <h3 id="JsonApiDotNetCore_Middleware_JsonApiMiddleware__ctor_Microsoft_AspNetCore_Http_RequestDelegate_Microsoft_AspNetCore_Http_IHttpContextAccessor_JsonApiDotNetCore_Middleware_IControllerResourceMapping_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILogger_JsonApiDotNetCore_Middleware_JsonApiMiddleware__" data-uid="JsonApiDotNetCore.Middleware.JsonApiMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.AspNetCore.Http.IHttpContextAccessor,JsonApiDotNetCore.Middleware.IControllerResourceMapping,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILogger{JsonApiDotNetCore.Middleware.JsonApiMiddleware})">
-  JsonApiMiddleware(RequestDelegate?, IHttpContextAccessor, IControllerResourceMapping, IJsonApiOptions, ILogger&lt;JsonApiMiddleware&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMiddleware.cs/#L43"><i class="bi bi-code-slash"></i></a>
+  <h3 id="JsonApiDotNetCore_Middleware_JsonApiMiddleware__ctor_Microsoft_AspNetCore_Http_RequestDelegate_Microsoft_AspNetCore_Http_IHttpContextAccessor_JsonApiDotNetCore_Middleware_IControllerResourceMapping_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Middleware_IJsonApiContentNegotiator_Microsoft_Extensions_Logging_ILogger_JsonApiDotNetCore_Middleware_JsonApiMiddleware__" data-uid="JsonApiDotNetCore.Middleware.JsonApiMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.AspNetCore.Http.IHttpContextAccessor,JsonApiDotNetCore.Middleware.IControllerResourceMapping,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Middleware.IJsonApiContentNegotiator,Microsoft.Extensions.Logging.ILogger{JsonApiDotNetCore.Middleware.JsonApiMiddleware})">
+  JsonApiMiddleware(RequestDelegate?, IHttpContextAccessor, IControllerResourceMapping, IJsonApiOptions, IJsonApiContentNegotiator, ILogger&lt;JsonApiMiddleware&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMiddleware.cs/#L30"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public JsonApiMiddleware(RequestDelegate? next, IHttpContextAccessor httpContextAccessor, IControllerResourceMapping controllerResourceMapping, IJsonApiOptions options, ILogger&lt;JsonApiMiddleware&gt; logger)</code></pre>
+    <pre><code class="lang-csharp hljs">public JsonApiMiddleware(RequestDelegate? next, IHttpContextAccessor httpContextAccessor, IControllerResourceMapping controllerResourceMapping, IJsonApiOptions options, IJsonApiContentNegotiator contentNegotiator, ILogger&lt;JsonApiMiddleware&gt; logger)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -170,6 +170,8 @@ public sealed class JsonApiMiddleware</code></pre>
     <dt><code>controllerResourceMapping</code> <a class="xref" href="JsonApiDotNetCore.Middleware.IControllerResourceMapping.html">IControllerResourceMapping</a></dt>
     <dd></dd>
     <dt><code>options</code> <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html">IJsonApiOptions</a></dt>
+    <dd></dd>
+    <dt><code>contentNegotiator</code> <a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiContentNegotiator.html">IJsonApiContentNegotiator</a></dt>
     <dd></dd>
     <dt><code>logger</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger-1">ILogger</a>&lt;<a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiMiddleware.html">JsonApiMiddleware</a>&gt;</dt>
     <dd></dd>
@@ -194,7 +196,7 @@ public sealed class JsonApiMiddleware</code></pre>
 
   <h3 id="JsonApiDotNetCore_Middleware_JsonApiMiddleware_InvokeAsync_Microsoft_AspNetCore_Http_HttpContext_JsonApiDotNetCore_Middleware_IJsonApiRequest_" data-uid="JsonApiDotNetCore.Middleware.JsonApiMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext,JsonApiDotNetCore.Middleware.IJsonApiRequest)">
   InvokeAsync(HttpContext, IJsonApiRequest)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMiddleware.cs/#L62"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMiddleware.cs/#L51"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>

@@ -117,6 +117,38 @@ Interface IJsonApiRequest  <a class="header-action link-secondary" title="View s
 </h2>
 
 
+  <a id="JsonApiDotNetCore_Middleware_IJsonApiRequest_Extensions_" data-uid="JsonApiDotNetCore.Middleware.IJsonApiRequest.Extensions*"></a>
+
+  <h3 id="JsonApiDotNetCore_Middleware_IJsonApiRequest_Extensions" data-uid="JsonApiDotNetCore.Middleware.IJsonApiRequest.Extensions">
+  Extensions
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/IJsonApiRequest.cs/#L66"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The JSON:API extensions enabled for the current request. This is always a subset of <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_Extensions">Extensions</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IReadOnlySet&lt;JsonApiExtension&gt; Extensions { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlyset-1">IReadOnlySet</a>&lt;<a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiExtension.html">JsonApiExtension</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="JsonApiDotNetCore_Middleware_IJsonApiRequest_IsCollection_" data-uid="JsonApiDotNetCore.Middleware.IJsonApiRequest.IsCollection*"></a>
 
   <h3 id="JsonApiDotNetCore_Middleware_IJsonApiRequest_IsCollection" data-uid="JsonApiDotNetCore.Middleware.IJsonApiRequest.IsCollection">
@@ -420,7 +452,7 @@ read-only operation, and before and after processing operations in an atomic:ope
 
   <h3 id="JsonApiDotNetCore_Middleware_IJsonApiRequest_CopyFrom_JsonApiDotNetCore_Middleware_IJsonApiRequest_" data-uid="JsonApiDotNetCore.Middleware.IJsonApiRequest.CopyFrom(JsonApiDotNetCore.Middleware.IJsonApiRequest)">
   CopyFrom(IJsonApiRequest)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/IJsonApiRequest.cs/#L66"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/IJsonApiRequest.cs/#L71"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Performs a shallow copy.</p>

@@ -152,14 +152,15 @@ public static class HeaderConstants</code></pre>
 
   <h3 id="JsonApiDotNetCore_Middleware_HeaderConstants_AtomicOperationsMediaType" data-uid="JsonApiDotNetCore.Middleware.HeaderConstants.AtomicOperationsMediaType">
   AtomicOperationsMediaType
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/HeaderConstants.cs/#L11"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/HeaderConstants.cs/#L14"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const string AtomicOperationsMediaType = &quot;application/vnd.api+json; ext=\&quot;https://jsonapi.org/ext/atomic\&quot;&quot;</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use JsonApiMediaType.AtomicOperations.ToString() instead.&quot;)]
+public const string AtomicOperationsMediaType = &quot;application/vnd.api+json; ext=\&quot;https://jsonapi.org/ext/atomic\&quot;&quot;</code></pre>
   </div>
 
 
@@ -182,14 +183,15 @@ public static class HeaderConstants</code></pre>
 
   <h3 id="JsonApiDotNetCore_Middleware_HeaderConstants_MediaType" data-uid="JsonApiDotNetCore.Middleware.HeaderConstants.MediaType">
   MediaType
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/HeaderConstants.cs/#L10"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/HeaderConstants.cs/#L11"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const string MediaType = &quot;application/vnd.api+json&quot;</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use JsonApiMediaType.Default.ToString() instead.&quot;)]
+public const string MediaType = &quot;application/vnd.api+json&quot;</code></pre>
   </div>
 
 
@@ -212,14 +214,15 @@ public static class HeaderConstants</code></pre>
 
   <h3 id="JsonApiDotNetCore_Middleware_HeaderConstants_RelaxedAtomicOperationsMediaType" data-uid="JsonApiDotNetCore.Middleware.HeaderConstants.RelaxedAtomicOperationsMediaType">
   RelaxedAtomicOperationsMediaType
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/HeaderConstants.cs/#L12"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/HeaderConstants.cs/#L17"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const string RelaxedAtomicOperationsMediaType = &quot;application/vnd.api+json; ext=atomic-operations&quot;</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use JsonApiMediaType.RelaxedAtomicOperations.ToString() instead.&quot;)]
+public const string RelaxedAtomicOperationsMediaType = &quot;application/vnd.api+json; ext=atomic-operations&quot;</code></pre>
   </div>
 
 

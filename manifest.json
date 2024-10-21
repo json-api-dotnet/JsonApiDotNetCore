@@ -964,6 +964,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Middleware.IJsonApiContentNegotiator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Middleware.IJsonApiContentNegotiator.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Middleware.IJsonApiInputFormatter.yml",
       "output": {
         ".html": {
@@ -1004,10 +1014,40 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiExtension.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiExtension.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiInputFormatter.yml",
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiInputFormatter.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiMediaType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiMediaType.html"
         }
       },
       "version": ""

@@ -1137,6 +1137,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.EnableLegacyFilterNotation
   nameWithType: IJsonApiOptions.EnableLegacyFilterNotation
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.Extensions
+  name: Extensions
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_Extensions
+  commentId: P:JsonApiDotNetCore.Configuration.IJsonApiOptions.Extensions
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.Extensions
+  nameWithType: IJsonApiOptions.Extensions
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.Extensions*
+  name: Extensions
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_Extensions_
+  commentId: Overload:JsonApiDotNetCore.Configuration.IJsonApiOptions.Extensions
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.Extensions
+  nameWithType: IJsonApiOptions.Extensions
 - uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.IncludeExceptionStackTraceInErrors
   name: IncludeExceptionStackTraceInErrors
   href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_IncludeExceptionStackTraceInErrors
@@ -1671,6 +1684,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.EnableLegacyFilterNotation
   nameWithType: JsonApiOptions.EnableLegacyFilterNotation
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.Extensions
+  name: Extensions
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_Extensions
+  commentId: P:JsonApiDotNetCore.Configuration.JsonApiOptions.Extensions
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.Extensions
+  nameWithType: JsonApiOptions.Extensions
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.Extensions*
+  name: Extensions
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_Extensions_
+  commentId: Overload:JsonApiDotNetCore.Configuration.JsonApiOptions.Extensions
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.Extensions
+  nameWithType: JsonApiOptions.Extensions
 - uid: JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeExceptionStackTraceInErrors
   name: IncludeExceptionStackTraceInErrors
   href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_IncludeExceptionStackTraceInErrors
@@ -1684,6 +1710,22 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeExceptionStackTraceInErrors
   nameWithType: JsonApiOptions.IncludeExceptionStackTraceInErrors
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeExtensions(JsonApiDotNetCore.Middleware.JsonApiExtension[])
+  name: IncludeExtensions(params JsonApiExtension[])
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_IncludeExtensions_JsonApiDotNetCore_Middleware_JsonApiExtension___
+  commentId: M:JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeExtensions(JsonApiDotNetCore.Middleware.JsonApiExtension[])
+  name.vb: IncludeExtensions(ParamArray JsonApiExtension())
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeExtensions(params JsonApiDotNetCore.Middleware.JsonApiExtension[])
+  fullName.vb: JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeExtensions(ParamArray JsonApiDotNetCore.Middleware.JsonApiExtension())
+  nameWithType: JsonApiOptions.IncludeExtensions(params JsonApiExtension[])
+  nameWithType.vb: JsonApiOptions.IncludeExtensions(ParamArray JsonApiExtension())
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeExtensions*
+  name: IncludeExtensions
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_IncludeExtensions_
+  commentId: Overload:JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeExtensions
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeExtensions
+  nameWithType: JsonApiOptions.IncludeExtensions
 - uid: JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeJsonApiVersion
   name: IncludeJsonApiVersion
   href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_IncludeJsonApiVersion
@@ -4795,6 +4837,25 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Middleware.IExceptionHandler.HandleException
   nameWithType: IExceptionHandler.HandleException
+- uid: JsonApiDotNetCore.Middleware.IJsonApiContentNegotiator
+  name: IJsonApiContentNegotiator
+  href: api/JsonApiDotNetCore.Middleware.IJsonApiContentNegotiator.html
+  commentId: T:JsonApiDotNetCore.Middleware.IJsonApiContentNegotiator
+  fullName: JsonApiDotNetCore.Middleware.IJsonApiContentNegotiator
+  nameWithType: IJsonApiContentNegotiator
+- uid: JsonApiDotNetCore.Middleware.IJsonApiContentNegotiator.Negotiate
+  name: Negotiate()
+  href: api/JsonApiDotNetCore.Middleware.IJsonApiContentNegotiator.html#JsonApiDotNetCore_Middleware_IJsonApiContentNegotiator_Negotiate
+  commentId: M:JsonApiDotNetCore.Middleware.IJsonApiContentNegotiator.Negotiate
+  fullName: JsonApiDotNetCore.Middleware.IJsonApiContentNegotiator.Negotiate()
+  nameWithType: IJsonApiContentNegotiator.Negotiate()
+- uid: JsonApiDotNetCore.Middleware.IJsonApiContentNegotiator.Negotiate*
+  name: Negotiate
+  href: api/JsonApiDotNetCore.Middleware.IJsonApiContentNegotiator.html#JsonApiDotNetCore_Middleware_IJsonApiContentNegotiator_Negotiate_
+  commentId: Overload:JsonApiDotNetCore.Middleware.IJsonApiContentNegotiator.Negotiate
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.IJsonApiContentNegotiator.Negotiate
+  nameWithType: IJsonApiContentNegotiator.Negotiate
 - uid: JsonApiDotNetCore.Middleware.IJsonApiInputFormatter
   name: IJsonApiInputFormatter
   href: api/JsonApiDotNetCore.Middleware.IJsonApiInputFormatter.html
@@ -4826,6 +4887,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Middleware.IJsonApiRequest.CopyFrom
   nameWithType: IJsonApiRequest.CopyFrom
+- uid: JsonApiDotNetCore.Middleware.IJsonApiRequest.Extensions
+  name: Extensions
+  href: api/JsonApiDotNetCore.Middleware.IJsonApiRequest.html#JsonApiDotNetCore_Middleware_IJsonApiRequest_Extensions
+  commentId: P:JsonApiDotNetCore.Middleware.IJsonApiRequest.Extensions
+  fullName: JsonApiDotNetCore.Middleware.IJsonApiRequest.Extensions
+  nameWithType: IJsonApiRequest.Extensions
+- uid: JsonApiDotNetCore.Middleware.IJsonApiRequest.Extensions*
+  name: Extensions
+  href: api/JsonApiDotNetCore.Middleware.IJsonApiRequest.html#JsonApiDotNetCore_Middleware_IJsonApiRequest_Extensions_
+  commentId: Overload:JsonApiDotNetCore.Middleware.IJsonApiRequest.Extensions
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.IJsonApiRequest.Extensions
+  nameWithType: IJsonApiRequest.Extensions
 - uid: JsonApiDotNetCore.Middleware.IJsonApiRequest.IsCollection
   name: IsCollection
   href: api/JsonApiDotNetCore.Middleware.IJsonApiRequest.html#JsonApiDotNetCore_Middleware_IJsonApiRequest_IsCollection
@@ -4949,6 +5023,171 @@ references:
   commentId: T:JsonApiDotNetCore.Middleware.IJsonApiRoutingConvention
   fullName: JsonApiDotNetCore.Middleware.IJsonApiRoutingConvention
   nameWithType: IJsonApiRoutingConvention
+- uid: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator
+  name: JsonApiContentNegotiator
+  href: api/JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.html
+  commentId: T:JsonApiDotNetCore.Middleware.JsonApiContentNegotiator
+  fullName: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator
+  nameWithType: JsonApiContentNegotiator
+- uid: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.AspNetCore.Http.IHttpContextAccessor)
+  name: JsonApiContentNegotiator(IJsonApiOptions, IHttpContextAccessor)
+  href: api/JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.html#JsonApiDotNetCore_Middleware_JsonApiContentNegotiator__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_AspNetCore_Http_IHttpContextAccessor_
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.AspNetCore.Http.IHttpContextAccessor)
+  name.vb: New(IJsonApiOptions, IHttpContextAccessor)
+  fullName: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.JsonApiContentNegotiator(JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.AspNetCore.Http.IHttpContextAccessor)
+  fullName.vb: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.New(JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.AspNetCore.Http.IHttpContextAccessor)
+  nameWithType: JsonApiContentNegotiator.JsonApiContentNegotiator(IJsonApiOptions, IHttpContextAccessor)
+  nameWithType.vb: JsonApiContentNegotiator.New(IJsonApiOptions, IHttpContextAccessor)
+- uid: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.#ctor*
+  name: JsonApiContentNegotiator
+  href: api/JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.html#JsonApiDotNetCore_Middleware_JsonApiContentNegotiator__ctor_
+  commentId: Overload:JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.JsonApiContentNegotiator
+  fullName.vb: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.New
+  nameWithType: JsonApiContentNegotiator.JsonApiContentNegotiator
+  nameWithType.vb: JsonApiContentNegotiator.New
+- uid: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.GetPossibleMediaTypes
+  name: GetPossibleMediaTypes()
+  href: api/JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.html#JsonApiDotNetCore_Middleware_JsonApiContentNegotiator_GetPossibleMediaTypes
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.GetPossibleMediaTypes
+  fullName: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.GetPossibleMediaTypes()
+  nameWithType: JsonApiContentNegotiator.GetPossibleMediaTypes()
+- uid: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.GetPossibleMediaTypes*
+  name: GetPossibleMediaTypes
+  href: api/JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.html#JsonApiDotNetCore_Middleware_JsonApiContentNegotiator_GetPossibleMediaTypes_
+  commentId: Overload:JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.GetPossibleMediaTypes
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.GetPossibleMediaTypes
+  nameWithType: JsonApiContentNegotiator.GetPossibleMediaTypes
+- uid: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.IsOperationsEndpoint
+  name: IsOperationsEndpoint()
+  href: api/JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.html#JsonApiDotNetCore_Middleware_JsonApiContentNegotiator_IsOperationsEndpoint
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.IsOperationsEndpoint
+  fullName: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.IsOperationsEndpoint()
+  nameWithType: JsonApiContentNegotiator.IsOperationsEndpoint()
+- uid: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.IsOperationsEndpoint*
+  name: IsOperationsEndpoint
+  href: api/JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.html#JsonApiDotNetCore_Middleware_JsonApiContentNegotiator_IsOperationsEndpoint_
+  commentId: Overload:JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.IsOperationsEndpoint
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.IsOperationsEndpoint
+  nameWithType: JsonApiContentNegotiator.IsOperationsEndpoint
+- uid: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.Negotiate
+  name: Negotiate()
+  href: api/JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.html#JsonApiDotNetCore_Middleware_JsonApiContentNegotiator_Negotiate
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.Negotiate
+  fullName: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.Negotiate()
+  nameWithType: JsonApiContentNegotiator.Negotiate()
+- uid: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.Negotiate*
+  name: Negotiate
+  href: api/JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.html#JsonApiDotNetCore_Middleware_JsonApiContentNegotiator_Negotiate_
+  commentId: Overload:JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.Negotiate
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.Negotiate
+  nameWithType: JsonApiContentNegotiator.Negotiate
+- uid: JsonApiDotNetCore.Middleware.JsonApiExtension
+  name: JsonApiExtension
+  href: api/JsonApiDotNetCore.Middleware.JsonApiExtension.html
+  commentId: T:JsonApiDotNetCore.Middleware.JsonApiExtension
+  fullName: JsonApiDotNetCore.Middleware.JsonApiExtension
+  nameWithType: JsonApiExtension
+- uid: JsonApiDotNetCore.Middleware.JsonApiExtension.#ctor(System.String)
+  name: JsonApiExtension(string)
+  href: api/JsonApiDotNetCore.Middleware.JsonApiExtension.html#JsonApiDotNetCore_Middleware_JsonApiExtension__ctor_System_String_
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiExtension.#ctor(System.String)
+  name.vb: New(String)
+  fullName: JsonApiDotNetCore.Middleware.JsonApiExtension.JsonApiExtension(string)
+  fullName.vb: JsonApiDotNetCore.Middleware.JsonApiExtension.New(String)
+  nameWithType: JsonApiExtension.JsonApiExtension(string)
+  nameWithType.vb: JsonApiExtension.New(String)
+- uid: JsonApiDotNetCore.Middleware.JsonApiExtension.#ctor*
+  name: JsonApiExtension
+  href: api/JsonApiDotNetCore.Middleware.JsonApiExtension.html#JsonApiDotNetCore_Middleware_JsonApiExtension__ctor_
+  commentId: Overload:JsonApiDotNetCore.Middleware.JsonApiExtension.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: JsonApiDotNetCore.Middleware.JsonApiExtension.JsonApiExtension
+  fullName.vb: JsonApiDotNetCore.Middleware.JsonApiExtension.New
+  nameWithType: JsonApiExtension.JsonApiExtension
+  nameWithType.vb: JsonApiExtension.New
+- uid: JsonApiDotNetCore.Middleware.JsonApiExtension.AtomicOperations
+  name: AtomicOperations
+  href: api/JsonApiDotNetCore.Middleware.JsonApiExtension.html#JsonApiDotNetCore_Middleware_JsonApiExtension_AtomicOperations
+  commentId: F:JsonApiDotNetCore.Middleware.JsonApiExtension.AtomicOperations
+  fullName: JsonApiDotNetCore.Middleware.JsonApiExtension.AtomicOperations
+  nameWithType: JsonApiExtension.AtomicOperations
+- uid: JsonApiDotNetCore.Middleware.JsonApiExtension.Equals(JsonApiDotNetCore.Middleware.JsonApiExtension)
+  name: Equals(JsonApiExtension?)
+  href: api/JsonApiDotNetCore.Middleware.JsonApiExtension.html#JsonApiDotNetCore_Middleware_JsonApiExtension_Equals_JsonApiDotNetCore_Middleware_JsonApiExtension_
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiExtension.Equals(JsonApiDotNetCore.Middleware.JsonApiExtension)
+  name.vb: Equals(JsonApiExtension)
+  fullName: JsonApiDotNetCore.Middleware.JsonApiExtension.Equals(JsonApiDotNetCore.Middleware.JsonApiExtension?)
+  fullName.vb: JsonApiDotNetCore.Middleware.JsonApiExtension.Equals(JsonApiDotNetCore.Middleware.JsonApiExtension)
+  nameWithType: JsonApiExtension.Equals(JsonApiExtension?)
+  nameWithType.vb: JsonApiExtension.Equals(JsonApiExtension)
+- uid: JsonApiDotNetCore.Middleware.JsonApiExtension.Equals(System.Object)
+  name: Equals(object?)
+  href: api/JsonApiDotNetCore.Middleware.JsonApiExtension.html#JsonApiDotNetCore_Middleware_JsonApiExtension_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiExtension.Equals(System.Object)
+  name.vb: Equals(Object)
+  fullName: JsonApiDotNetCore.Middleware.JsonApiExtension.Equals(object?)
+  fullName.vb: JsonApiDotNetCore.Middleware.JsonApiExtension.Equals(Object)
+  nameWithType: JsonApiExtension.Equals(object?)
+  nameWithType.vb: JsonApiExtension.Equals(Object)
+- uid: JsonApiDotNetCore.Middleware.JsonApiExtension.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Middleware.JsonApiExtension.html#JsonApiDotNetCore_Middleware_JsonApiExtension_Equals_
+  commentId: Overload:JsonApiDotNetCore.Middleware.JsonApiExtension.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.JsonApiExtension.Equals
+  nameWithType: JsonApiExtension.Equals
+- uid: JsonApiDotNetCore.Middleware.JsonApiExtension.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Middleware.JsonApiExtension.html#JsonApiDotNetCore_Middleware_JsonApiExtension_GetHashCode
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiExtension.GetHashCode
+  fullName: JsonApiDotNetCore.Middleware.JsonApiExtension.GetHashCode()
+  nameWithType: JsonApiExtension.GetHashCode()
+- uid: JsonApiDotNetCore.Middleware.JsonApiExtension.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Middleware.JsonApiExtension.html#JsonApiDotNetCore_Middleware_JsonApiExtension_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Middleware.JsonApiExtension.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.JsonApiExtension.GetHashCode
+  nameWithType: JsonApiExtension.GetHashCode
+- uid: JsonApiDotNetCore.Middleware.JsonApiExtension.RelaxedAtomicOperations
+  name: RelaxedAtomicOperations
+  href: api/JsonApiDotNetCore.Middleware.JsonApiExtension.html#JsonApiDotNetCore_Middleware_JsonApiExtension_RelaxedAtomicOperations
+  commentId: F:JsonApiDotNetCore.Middleware.JsonApiExtension.RelaxedAtomicOperations
+  fullName: JsonApiDotNetCore.Middleware.JsonApiExtension.RelaxedAtomicOperations
+  nameWithType: JsonApiExtension.RelaxedAtomicOperations
+- uid: JsonApiDotNetCore.Middleware.JsonApiExtension.ToString
+  name: ToString()
+  href: api/JsonApiDotNetCore.Middleware.JsonApiExtension.html#JsonApiDotNetCore_Middleware_JsonApiExtension_ToString
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiExtension.ToString
+  fullName: JsonApiDotNetCore.Middleware.JsonApiExtension.ToString()
+  nameWithType: JsonApiExtension.ToString()
+- uid: JsonApiDotNetCore.Middleware.JsonApiExtension.ToString*
+  name: ToString
+  href: api/JsonApiDotNetCore.Middleware.JsonApiExtension.html#JsonApiDotNetCore_Middleware_JsonApiExtension_ToString_
+  commentId: Overload:JsonApiDotNetCore.Middleware.JsonApiExtension.ToString
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.JsonApiExtension.ToString
+  nameWithType: JsonApiExtension.ToString
+- uid: JsonApiDotNetCore.Middleware.JsonApiExtension.UnescapedValue
+  name: UnescapedValue
+  href: api/JsonApiDotNetCore.Middleware.JsonApiExtension.html#JsonApiDotNetCore_Middleware_JsonApiExtension_UnescapedValue
+  commentId: P:JsonApiDotNetCore.Middleware.JsonApiExtension.UnescapedValue
+  fullName: JsonApiDotNetCore.Middleware.JsonApiExtension.UnescapedValue
+  nameWithType: JsonApiExtension.UnescapedValue
+- uid: JsonApiDotNetCore.Middleware.JsonApiExtension.UnescapedValue*
+  name: UnescapedValue
+  href: api/JsonApiDotNetCore.Middleware.JsonApiExtension.html#JsonApiDotNetCore_Middleware_JsonApiExtension_UnescapedValue_
+  commentId: Overload:JsonApiDotNetCore.Middleware.JsonApiExtension.UnescapedValue
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.JsonApiExtension.UnescapedValue
+  nameWithType: JsonApiExtension.UnescapedValue
 - uid: JsonApiDotNetCore.Middleware.JsonApiInputFormatter
   name: JsonApiInputFormatter
   href: api/JsonApiDotNetCore.Middleware.JsonApiInputFormatter.html
@@ -4981,21 +5220,137 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Middleware.JsonApiInputFormatter.ReadAsync
   nameWithType: JsonApiInputFormatter.ReadAsync
+- uid: JsonApiDotNetCore.Middleware.JsonApiMediaType
+  name: JsonApiMediaType
+  href: api/JsonApiDotNetCore.Middleware.JsonApiMediaType.html
+  commentId: T:JsonApiDotNetCore.Middleware.JsonApiMediaType
+  fullName: JsonApiDotNetCore.Middleware.JsonApiMediaType
+  nameWithType: JsonApiMediaType
+- uid: JsonApiDotNetCore.Middleware.JsonApiMediaType.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Middleware.JsonApiExtension})
+  name: JsonApiMediaType(IEnumerable<JsonApiExtension>)
+  href: api/JsonApiDotNetCore.Middleware.JsonApiMediaType.html#JsonApiDotNetCore_Middleware_JsonApiMediaType__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Middleware_JsonApiExtension__
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiMediaType.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Middleware.JsonApiExtension})
+  name.vb: New(IEnumerable(Of JsonApiExtension))
+  fullName: JsonApiDotNetCore.Middleware.JsonApiMediaType.JsonApiMediaType(System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Middleware.JsonApiExtension>)
+  fullName.vb: JsonApiDotNetCore.Middleware.JsonApiMediaType.New(System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Middleware.JsonApiExtension))
+  nameWithType: JsonApiMediaType.JsonApiMediaType(IEnumerable<JsonApiExtension>)
+  nameWithType.vb: JsonApiMediaType.New(IEnumerable(Of JsonApiExtension))
+- uid: JsonApiDotNetCore.Middleware.JsonApiMediaType.#ctor(System.Collections.Generic.IReadOnlySet{JsonApiDotNetCore.Middleware.JsonApiExtension})
+  name: JsonApiMediaType(IReadOnlySet<JsonApiExtension>)
+  href: api/JsonApiDotNetCore.Middleware.JsonApiMediaType.html#JsonApiDotNetCore_Middleware_JsonApiMediaType__ctor_System_Collections_Generic_IReadOnlySet_JsonApiDotNetCore_Middleware_JsonApiExtension__
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiMediaType.#ctor(System.Collections.Generic.IReadOnlySet{JsonApiDotNetCore.Middleware.JsonApiExtension})
+  name.vb: New(IReadOnlySet(Of JsonApiExtension))
+  fullName: JsonApiDotNetCore.Middleware.JsonApiMediaType.JsonApiMediaType(System.Collections.Generic.IReadOnlySet<JsonApiDotNetCore.Middleware.JsonApiExtension>)
+  fullName.vb: JsonApiDotNetCore.Middleware.JsonApiMediaType.New(System.Collections.Generic.IReadOnlySet(Of JsonApiDotNetCore.Middleware.JsonApiExtension))
+  nameWithType: JsonApiMediaType.JsonApiMediaType(IReadOnlySet<JsonApiExtension>)
+  nameWithType.vb: JsonApiMediaType.New(IReadOnlySet(Of JsonApiExtension))
+- uid: JsonApiDotNetCore.Middleware.JsonApiMediaType.#ctor*
+  name: JsonApiMediaType
+  href: api/JsonApiDotNetCore.Middleware.JsonApiMediaType.html#JsonApiDotNetCore_Middleware_JsonApiMediaType__ctor_
+  commentId: Overload:JsonApiDotNetCore.Middleware.JsonApiMediaType.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: JsonApiDotNetCore.Middleware.JsonApiMediaType.JsonApiMediaType
+  fullName.vb: JsonApiDotNetCore.Middleware.JsonApiMediaType.New
+  nameWithType: JsonApiMediaType.JsonApiMediaType
+  nameWithType.vb: JsonApiMediaType.New
+- uid: JsonApiDotNetCore.Middleware.JsonApiMediaType.AtomicOperations
+  name: AtomicOperations
+  href: api/JsonApiDotNetCore.Middleware.JsonApiMediaType.html#JsonApiDotNetCore_Middleware_JsonApiMediaType_AtomicOperations
+  commentId: F:JsonApiDotNetCore.Middleware.JsonApiMediaType.AtomicOperations
+  fullName: JsonApiDotNetCore.Middleware.JsonApiMediaType.AtomicOperations
+  nameWithType: JsonApiMediaType.AtomicOperations
+- uid: JsonApiDotNetCore.Middleware.JsonApiMediaType.Default
+  name: Default
+  href: api/JsonApiDotNetCore.Middleware.JsonApiMediaType.html#JsonApiDotNetCore_Middleware_JsonApiMediaType_Default
+  commentId: F:JsonApiDotNetCore.Middleware.JsonApiMediaType.Default
+  fullName: JsonApiDotNetCore.Middleware.JsonApiMediaType.Default
+  nameWithType: JsonApiMediaType.Default
+- uid: JsonApiDotNetCore.Middleware.JsonApiMediaType.Equals(JsonApiDotNetCore.Middleware.JsonApiMediaType)
+  name: Equals(JsonApiMediaType?)
+  href: api/JsonApiDotNetCore.Middleware.JsonApiMediaType.html#JsonApiDotNetCore_Middleware_JsonApiMediaType_Equals_JsonApiDotNetCore_Middleware_JsonApiMediaType_
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiMediaType.Equals(JsonApiDotNetCore.Middleware.JsonApiMediaType)
+  name.vb: Equals(JsonApiMediaType)
+  fullName: JsonApiDotNetCore.Middleware.JsonApiMediaType.Equals(JsonApiDotNetCore.Middleware.JsonApiMediaType?)
+  fullName.vb: JsonApiDotNetCore.Middleware.JsonApiMediaType.Equals(JsonApiDotNetCore.Middleware.JsonApiMediaType)
+  nameWithType: JsonApiMediaType.Equals(JsonApiMediaType?)
+  nameWithType.vb: JsonApiMediaType.Equals(JsonApiMediaType)
+- uid: JsonApiDotNetCore.Middleware.JsonApiMediaType.Equals(System.Object)
+  name: Equals(object?)
+  href: api/JsonApiDotNetCore.Middleware.JsonApiMediaType.html#JsonApiDotNetCore_Middleware_JsonApiMediaType_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiMediaType.Equals(System.Object)
+  name.vb: Equals(Object)
+  fullName: JsonApiDotNetCore.Middleware.JsonApiMediaType.Equals(object?)
+  fullName.vb: JsonApiDotNetCore.Middleware.JsonApiMediaType.Equals(Object)
+  nameWithType: JsonApiMediaType.Equals(object?)
+  nameWithType.vb: JsonApiMediaType.Equals(Object)
+- uid: JsonApiDotNetCore.Middleware.JsonApiMediaType.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Middleware.JsonApiMediaType.html#JsonApiDotNetCore_Middleware_JsonApiMediaType_Equals_
+  commentId: Overload:JsonApiDotNetCore.Middleware.JsonApiMediaType.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.JsonApiMediaType.Equals
+  nameWithType: JsonApiMediaType.Equals
+- uid: JsonApiDotNetCore.Middleware.JsonApiMediaType.Extensions
+  name: Extensions
+  href: api/JsonApiDotNetCore.Middleware.JsonApiMediaType.html#JsonApiDotNetCore_Middleware_JsonApiMediaType_Extensions
+  commentId: P:JsonApiDotNetCore.Middleware.JsonApiMediaType.Extensions
+  fullName: JsonApiDotNetCore.Middleware.JsonApiMediaType.Extensions
+  nameWithType: JsonApiMediaType.Extensions
+- uid: JsonApiDotNetCore.Middleware.JsonApiMediaType.Extensions*
+  name: Extensions
+  href: api/JsonApiDotNetCore.Middleware.JsonApiMediaType.html#JsonApiDotNetCore_Middleware_JsonApiMediaType_Extensions_
+  commentId: Overload:JsonApiDotNetCore.Middleware.JsonApiMediaType.Extensions
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.JsonApiMediaType.Extensions
+  nameWithType: JsonApiMediaType.Extensions
+- uid: JsonApiDotNetCore.Middleware.JsonApiMediaType.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Middleware.JsonApiMediaType.html#JsonApiDotNetCore_Middleware_JsonApiMediaType_GetHashCode
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiMediaType.GetHashCode
+  fullName: JsonApiDotNetCore.Middleware.JsonApiMediaType.GetHashCode()
+  nameWithType: JsonApiMediaType.GetHashCode()
+- uid: JsonApiDotNetCore.Middleware.JsonApiMediaType.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Middleware.JsonApiMediaType.html#JsonApiDotNetCore_Middleware_JsonApiMediaType_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Middleware.JsonApiMediaType.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.JsonApiMediaType.GetHashCode
+  nameWithType: JsonApiMediaType.GetHashCode
+- uid: JsonApiDotNetCore.Middleware.JsonApiMediaType.RelaxedAtomicOperations
+  name: RelaxedAtomicOperations
+  href: api/JsonApiDotNetCore.Middleware.JsonApiMediaType.html#JsonApiDotNetCore_Middleware_JsonApiMediaType_RelaxedAtomicOperations
+  commentId: F:JsonApiDotNetCore.Middleware.JsonApiMediaType.RelaxedAtomicOperations
+  fullName: JsonApiDotNetCore.Middleware.JsonApiMediaType.RelaxedAtomicOperations
+  nameWithType: JsonApiMediaType.RelaxedAtomicOperations
+- uid: JsonApiDotNetCore.Middleware.JsonApiMediaType.ToString
+  name: ToString()
+  href: api/JsonApiDotNetCore.Middleware.JsonApiMediaType.html#JsonApiDotNetCore_Middleware_JsonApiMediaType_ToString
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiMediaType.ToString
+  fullName: JsonApiDotNetCore.Middleware.JsonApiMediaType.ToString()
+  nameWithType: JsonApiMediaType.ToString()
+- uid: JsonApiDotNetCore.Middleware.JsonApiMediaType.ToString*
+  name: ToString
+  href: api/JsonApiDotNetCore.Middleware.JsonApiMediaType.html#JsonApiDotNetCore_Middleware_JsonApiMediaType_ToString_
+  commentId: Overload:JsonApiDotNetCore.Middleware.JsonApiMediaType.ToString
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.JsonApiMediaType.ToString
+  nameWithType: JsonApiMediaType.ToString
 - uid: JsonApiDotNetCore.Middleware.JsonApiMiddleware
   name: JsonApiMiddleware
   href: api/JsonApiDotNetCore.Middleware.JsonApiMiddleware.html
   commentId: T:JsonApiDotNetCore.Middleware.JsonApiMiddleware
   fullName: JsonApiDotNetCore.Middleware.JsonApiMiddleware
   nameWithType: JsonApiMiddleware
-- uid: JsonApiDotNetCore.Middleware.JsonApiMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.AspNetCore.Http.IHttpContextAccessor,JsonApiDotNetCore.Middleware.IControllerResourceMapping,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILogger{JsonApiDotNetCore.Middleware.JsonApiMiddleware})
-  name: JsonApiMiddleware(RequestDelegate?, IHttpContextAccessor, IControllerResourceMapping, IJsonApiOptions, ILogger<JsonApiMiddleware>)
-  href: api/JsonApiDotNetCore.Middleware.JsonApiMiddleware.html#JsonApiDotNetCore_Middleware_JsonApiMiddleware__ctor_Microsoft_AspNetCore_Http_RequestDelegate_Microsoft_AspNetCore_Http_IHttpContextAccessor_JsonApiDotNetCore_Middleware_IControllerResourceMapping_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILogger_JsonApiDotNetCore_Middleware_JsonApiMiddleware__
-  commentId: M:JsonApiDotNetCore.Middleware.JsonApiMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.AspNetCore.Http.IHttpContextAccessor,JsonApiDotNetCore.Middleware.IControllerResourceMapping,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILogger{JsonApiDotNetCore.Middleware.JsonApiMiddleware})
-  name.vb: New(RequestDelegate, IHttpContextAccessor, IControllerResourceMapping, IJsonApiOptions, ILogger(Of JsonApiMiddleware))
-  fullName: JsonApiDotNetCore.Middleware.JsonApiMiddleware.JsonApiMiddleware(Microsoft.AspNetCore.Http.RequestDelegate?, Microsoft.AspNetCore.Http.IHttpContextAccessor, JsonApiDotNetCore.Middleware.IControllerResourceMapping, JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILogger<JsonApiDotNetCore.Middleware.JsonApiMiddleware>)
-  fullName.vb: JsonApiDotNetCore.Middleware.JsonApiMiddleware.New(Microsoft.AspNetCore.Http.RequestDelegate, Microsoft.AspNetCore.Http.IHttpContextAccessor, JsonApiDotNetCore.Middleware.IControllerResourceMapping, JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILogger(Of JsonApiDotNetCore.Middleware.JsonApiMiddleware))
-  nameWithType: JsonApiMiddleware.JsonApiMiddleware(RequestDelegate?, IHttpContextAccessor, IControllerResourceMapping, IJsonApiOptions, ILogger<JsonApiMiddleware>)
-  nameWithType.vb: JsonApiMiddleware.New(RequestDelegate, IHttpContextAccessor, IControllerResourceMapping, IJsonApiOptions, ILogger(Of JsonApiMiddleware))
+- uid: JsonApiDotNetCore.Middleware.JsonApiMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.AspNetCore.Http.IHttpContextAccessor,JsonApiDotNetCore.Middleware.IControllerResourceMapping,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Middleware.IJsonApiContentNegotiator,Microsoft.Extensions.Logging.ILogger{JsonApiDotNetCore.Middleware.JsonApiMiddleware})
+  name: JsonApiMiddleware(RequestDelegate?, IHttpContextAccessor, IControllerResourceMapping, IJsonApiOptions, IJsonApiContentNegotiator, ILogger<JsonApiMiddleware>)
+  href: api/JsonApiDotNetCore.Middleware.JsonApiMiddleware.html#JsonApiDotNetCore_Middleware_JsonApiMiddleware__ctor_Microsoft_AspNetCore_Http_RequestDelegate_Microsoft_AspNetCore_Http_IHttpContextAccessor_JsonApiDotNetCore_Middleware_IControllerResourceMapping_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Middleware_IJsonApiContentNegotiator_Microsoft_Extensions_Logging_ILogger_JsonApiDotNetCore_Middleware_JsonApiMiddleware__
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.AspNetCore.Http.IHttpContextAccessor,JsonApiDotNetCore.Middleware.IControllerResourceMapping,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Middleware.IJsonApiContentNegotiator,Microsoft.Extensions.Logging.ILogger{JsonApiDotNetCore.Middleware.JsonApiMiddleware})
+  name.vb: New(RequestDelegate, IHttpContextAccessor, IControllerResourceMapping, IJsonApiOptions, IJsonApiContentNegotiator, ILogger(Of JsonApiMiddleware))
+  fullName: JsonApiDotNetCore.Middleware.JsonApiMiddleware.JsonApiMiddleware(Microsoft.AspNetCore.Http.RequestDelegate?, Microsoft.AspNetCore.Http.IHttpContextAccessor, JsonApiDotNetCore.Middleware.IControllerResourceMapping, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Middleware.IJsonApiContentNegotiator, Microsoft.Extensions.Logging.ILogger<JsonApiDotNetCore.Middleware.JsonApiMiddleware>)
+  fullName.vb: JsonApiDotNetCore.Middleware.JsonApiMiddleware.New(Microsoft.AspNetCore.Http.RequestDelegate, Microsoft.AspNetCore.Http.IHttpContextAccessor, JsonApiDotNetCore.Middleware.IControllerResourceMapping, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Middleware.IJsonApiContentNegotiator, Microsoft.Extensions.Logging.ILogger(Of JsonApiDotNetCore.Middleware.JsonApiMiddleware))
+  nameWithType: JsonApiMiddleware.JsonApiMiddleware(RequestDelegate?, IHttpContextAccessor, IControllerResourceMapping, IJsonApiOptions, IJsonApiContentNegotiator, ILogger<JsonApiMiddleware>)
+  nameWithType.vb: JsonApiMiddleware.New(RequestDelegate, IHttpContextAccessor, IControllerResourceMapping, IJsonApiOptions, IJsonApiContentNegotiator, ILogger(Of JsonApiMiddleware))
 - uid: JsonApiDotNetCore.Middleware.JsonApiMiddleware.#ctor*
   name: JsonApiMiddleware
   href: api/JsonApiDotNetCore.Middleware.JsonApiMiddleware.html#JsonApiDotNetCore_Middleware_JsonApiMiddleware__ctor_
@@ -5070,6 +5425,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Middleware.JsonApiRequest.CopyFrom
   nameWithType: JsonApiRequest.CopyFrom
+- uid: JsonApiDotNetCore.Middleware.JsonApiRequest.Extensions
+  name: Extensions
+  href: api/JsonApiDotNetCore.Middleware.JsonApiRequest.html#JsonApiDotNetCore_Middleware_JsonApiRequest_Extensions
+  commentId: P:JsonApiDotNetCore.Middleware.JsonApiRequest.Extensions
+  fullName: JsonApiDotNetCore.Middleware.JsonApiRequest.Extensions
+  nameWithType: JsonApiRequest.Extensions
+- uid: JsonApiDotNetCore.Middleware.JsonApiRequest.Extensions*
+  name: Extensions
+  href: api/JsonApiDotNetCore.Middleware.JsonApiRequest.html#JsonApiDotNetCore_Middleware_JsonApiRequest_Extensions_
+  commentId: Overload:JsonApiDotNetCore.Middleware.JsonApiRequest.Extensions
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.JsonApiRequest.Extensions
+  nameWithType: JsonApiRequest.Extensions
 - uid: JsonApiDotNetCore.Middleware.JsonApiRequest.IsCollection
   name: IsCollection
   href: api/JsonApiDotNetCore.Middleware.JsonApiRequest.html#JsonApiDotNetCore_Middleware_JsonApiRequest_IsCollection
