@@ -110,6 +110,11 @@ public sealed partial class JsonApiRoutingConvention : IJsonApiRoutingConvention
                     _controllerPerResourceTypeMap.Add(resourceType, controller);
                 }
             }
+            else
+            {
+                var options = (JsonApiOptions)_options;
+                options.IncludeExtensions(JsonApiExtension.AtomicOperations, JsonApiExtension.RelaxedAtomicOperations);
+            }
 
             if (IsRoutingConventionDisabled(controller))
             {

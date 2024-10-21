@@ -19,15 +19,6 @@ namespace JsonApiDotNetCore.Serialization.Response;
 /// <inheritdoc cref="IJsonApiWriter" />
 public sealed partial class JsonApiWriter : IJsonApiWriter
 {
-    private static readonly MediaTypeHeaderValue OperationsMediaType = MediaTypeHeaderValue.Parse(HeaderConstants.AtomicOperationsMediaType);
-    private static readonly MediaTypeHeaderValue RelaxedOperationsMediaType = MediaTypeHeaderValue.Parse(HeaderConstants.RelaxedAtomicOperationsMediaType);
-
-    private static readonly MediaTypeHeaderValue[] AllowedOperationsMediaTypes =
-    [
-        OperationsMediaType,
-        RelaxedOperationsMediaType
-    ];
-
     private readonly IJsonApiRequest _request;
     private readonly IJsonApiOptions _options;
     private readonly IResponseModelAdapter _responseModelAdapter;
@@ -79,8 +70,8 @@ public sealed partial class JsonApiWriter : IJsonApiWriter
             LogResponse(requestMethod, requestUrl, responseBody, httpContext.Response.StatusCode);
         }
 
-        string responseContentType = GetResponseContentType(httpContext.Request);
-        await SendResponseBodyAsync(httpContext.Response, responseBody, responseContentType);
+        var responseMediaType = new JsonApiMediaType(_request.Extensions);
+        await SendResponseBodyAsync(httpContext.Response, responseBody, responseMediaType.ToString());
     }
 
     private static bool CanWriteBody(HttpStatusCode statusCode)
@@ -175,39 +166,6 @@ public sealed partial class JsonApiWriter : IJsonApiWriter
         }
 
         return false;
-    }
-
-    private string GetResponseContentType(HttpRequest httpRequest)
-    {
-        if (_request.Kind != EndpointKind.AtomicOperations)
-        {
-            return HeaderConstants.MediaType;
-        }
-
-        MediaTypeHeaderValue? bestMatch = null;
-
-        foreach (MediaTypeHeaderValue headerValue in httpRequest.GetTypedHeaders().Accept)
-        {
-            double quality = headerValue.Quality ?? 1.0;
-            headerValue.Quality = null;
-
-            if (AllowedOperationsMediaTypes.Contains(headerValue))
-            {
-                if (bestMatch == null || bestMatch.Quality < quality)
-                {
-                    headerValue.Quality = quality;
-                    bestMatch = headerValue;
-                }
-            }
-        }
-
-        if (bestMatch == null)
-        {
-            return httpRequest.ContentType ?? HeaderConstants.AtomicOperationsMediaType;
-        }
-
-        bestMatch.Quality = null;
-        return RelaxedOperationsMediaType.Equals(bestMatch) ? HeaderConstants.RelaxedAtomicOperationsMediaType : HeaderConstants.AtomicOperationsMediaType;
     }
 
     private async Task SendResponseBodyAsync(HttpResponse httpResponse, string? responseBody, string contentType)

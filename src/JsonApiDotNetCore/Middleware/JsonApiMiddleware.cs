@@ -3,6 +3,7 @@ using System.Text.Json;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
@@ -20,37 +21,25 @@ namespace JsonApiDotNetCore.Middleware;
 [PublicAPI]
 public sealed partial class JsonApiMiddleware
 {
-    private static readonly string[] NonOperationsContentTypes = [HeaderConstants.MediaType];
-    private static readonly MediaTypeHeaderValue[] NonOperationsMediaTypes = [MediaTypeHeaderValue.Parse(HeaderConstants.MediaType)];
-
-    private static readonly string[] OperationsContentTypes =
-    [
-        HeaderConstants.AtomicOperationsMediaType,
-        HeaderConstants.RelaxedAtomicOperationsMediaType
-    ];
-
-    private static readonly MediaTypeHeaderValue[] OperationsMediaTypes =
-    [
-        MediaTypeHeaderValue.Parse(HeaderConstants.AtomicOperationsMediaType),
-        MediaTypeHeaderValue.Parse(HeaderConstants.RelaxedAtomicOperationsMediaType)
-    ];
-
     private readonly RequestDelegate? _next;
     private readonly IControllerResourceMapping _controllerResourceMapping;
     private readonly IJsonApiOptions _options;
+    private readonly IJsonApiContentNegotiator _contentNegotiator;
     private readonly ILogger<JsonApiMiddleware> _logger;
 
     public JsonApiMiddleware(RequestDelegate? next, IHttpContextAccessor httpContextAccessor, IControllerResourceMapping controllerResourceMapping,
-        IJsonApiOptions options, ILogger<JsonApiMiddleware> logger)
+        IJsonApiOptions options, IJsonApiContentNegotiator contentNegotiator, ILogger<JsonApiMiddleware> logger)
     {
         ArgumentGuard.NotNull(httpContextAccessor);
         ArgumentGuard.NotNull(controllerResourceMapping);
         ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(contentNegotiator);
         ArgumentGuard.NotNull(logger);
 
         _next = next;
         _controllerResourceMapping = controllerResourceMapping;
         _options = options;
+        _contentNegotiator = contentNegotiator;
         _logger = logger;
 
 #pragma warning disable CA2000 // Dispose objects before losing scope
@@ -66,37 +55,35 @@ public sealed partial class JsonApiMiddleware
 
         using (CodeTimingSessionManager.Current.Measure("JSON:API middleware"))
         {
-            if (!await ValidateIfMatchHeaderAsync(httpContext, _options.SerializerWriteOptions))
-            {
-                return;
-            }
-
             RouteValueDictionary routeValues = httpContext.GetRouteData().Values;
             ResourceType? primaryResourceType = CreatePrimaryResourceType(httpContext, _controllerResourceMapping);
 
-            if (primaryResourceType != null)
+            bool isResourceRequest = primaryResourceType != null;
+            bool isOperationsRequest = IsRouteForOperations(routeValues);
+
+            if (isResourceRequest || isOperationsRequest)
             {
-                if (!await ValidateContentTypeHeaderAsync(NonOperationsContentTypes, httpContext, _options.SerializerWriteOptions) ||
-                    !await ValidateAcceptHeaderAsync(NonOperationsMediaTypes, httpContext, _options.SerializerWriteOptions))
+                try
                 {
+                    ValidateIfMatchHeader(httpContext.Request);
+                    IReadOnlySet<JsonApiExtension> extensions = _contentNegotiator.Negotiate();
+
+                    if (isResourceRequest)
+                    {
+                        SetupResourceRequest((JsonApiRequest)request, primaryResourceType!, routeValues, httpContext.Request, extensions);
+                    }
+                    else
+                    {
+                        SetupOperationsRequest((JsonApiRequest)request, extensions);
+                    }
+
+                    httpContext.RegisterJsonApiRequest();
+                }
+                catch (JsonApiException exception)
+                {
+                    await FlushResponseAsync(httpContext.Response, _options.SerializerWriteOptions, exception);
                     return;
                 }
-
-                SetupResourceRequest((JsonApiRequest)request, primaryResourceType, routeValues, httpContext.Request);
-
-                httpContext.RegisterJsonApiRequest();
-            }
-            else if (IsRouteForOperations(routeValues))
-            {
-                if (!await ValidateContentTypeHeaderAsync(OperationsContentTypes, httpContext, _options.SerializerWriteOptions) ||
-                    !await ValidateAcceptHeaderAsync(OperationsMediaTypes, httpContext, _options.SerializerWriteOptions))
-                {
-                    return;
-                }
-
-                SetupOperationsRequest((JsonApiRequest)request);
-
-                httpContext.RegisterJsonApiRequest();
             }
 
             if (_next != null)
@@ -117,11 +104,11 @@ public sealed partial class JsonApiMiddleware
         }
     }
 
-    private async Task<bool> ValidateIfMatchHeaderAsync(HttpContext httpContext, JsonSerializerOptions serializerOptions)
+    private void ValidateIfMatchHeader(HttpRequest httpRequest)
     {
-        if (httpContext.Request.Headers.ContainsKey(HeaderNames.IfMatch))
+        if (httpRequest.Headers.ContainsKey(HeaderNames.IfMatch))
         {
-            await FlushResponseAsync(httpContext.Response, serializerOptions, new ErrorObject(HttpStatusCode.PreconditionFailed)
+            throw new JsonApiException(new ErrorObject(HttpStatusCode.PreconditionFailed)
             {
                 Title = "Detection of mid-air edit collisions using ETags is not supported.",
                 Source = new ErrorSource
@@ -129,11 +116,7 @@ public sealed partial class JsonApiMiddleware
                     Header = "If-Match"
                 }
             });
-
-            return false;
         }
-
-        return true;
     }
 
     private static ResourceType? CreatePrimaryResourceType(HttpContext httpContext, IControllerResourceMapping controllerResourceMapping)
@@ -146,100 +129,11 @@ public sealed partial class JsonApiMiddleware
             : null;
     }
 
-    private static async Task<bool> ValidateContentTypeHeaderAsync(string[] allowedContentTypes, HttpContext httpContext,
-        JsonSerializerOptions serializerOptions)
-    {
-        string? contentType = httpContext.Request.ContentType;
-
-        if (contentType != null && !allowedContentTypes.Contains(contentType, StringComparer.OrdinalIgnoreCase))
-        {
-            string allowedValues = string.Join(" or ", allowedContentTypes.Select(value => $"'{value}'"));
-
-            await FlushResponseAsync(httpContext.Response, serializerOptions, new ErrorObject(HttpStatusCode.UnsupportedMediaType)
-            {
-                Title = "The specified Content-Type header value is not supported.",
-                Detail = $"Please specify {allowedValues} instead of '{contentType}' for the Content-Type header value.",
-                Source = new ErrorSource
-                {
-                    Header = "Content-Type"
-                }
-            });
-
-            return false;
-        }
-
-        return true;
-    }
-
-    private static async Task<bool> ValidateAcceptHeaderAsync(MediaTypeHeaderValue[] allowedMediaTypes, HttpContext httpContext,
-        JsonSerializerOptions serializerOptions)
-    {
-        string[] acceptHeaders = httpContext.Request.Headers.GetCommaSeparatedValues("Accept");
-
-        if (acceptHeaders.Length == 0)
-        {
-            return true;
-        }
-
-        bool seenCompatibleMediaType = false;
-
-        foreach (string acceptHeader in acceptHeaders)
-        {
-            if (MediaTypeHeaderValue.TryParse(acceptHeader, out MediaTypeHeaderValue? headerValue))
-            {
-                if (headerValue.MediaType == "*/*" || headerValue.MediaType == "application/*")
-                {
-                    seenCompatibleMediaType = true;
-                    break;
-                }
-
-                headerValue.Quality = null;
-
-                if (allowedMediaTypes.Contains(headerValue))
-                {
-                    seenCompatibleMediaType = true;
-                    break;
-                }
-            }
-        }
-
-        if (!seenCompatibleMediaType)
-        {
-            string allowedValues = string.Join(" or ", allowedMediaTypes.Select(value => $"'{value}'"));
-
-            await FlushResponseAsync(httpContext.Response, serializerOptions, new ErrorObject(HttpStatusCode.NotAcceptable)
-            {
-                Title = "The specified Accept header value does not contain any supported media types.",
-                Detail = $"Please include {allowedValues} in the Accept header values.",
-                Source = new ErrorSource
-                {
-                    Header = "Accept"
-                }
-            });
-
-            return false;
-        }
-
-        return true;
-    }
-
-    private static async Task FlushResponseAsync(HttpResponse httpResponse, JsonSerializerOptions serializerOptions, ErrorObject error)
-    {
-        httpResponse.ContentType = HeaderConstants.MediaType;
-        httpResponse.StatusCode = (int)error.StatusCode;
-
-        var errorDocument = new Document
-        {
-            Errors = [error]
-        };
-
-        await JsonSerializer.SerializeAsync(httpResponse.Body, errorDocument, serializerOptions);
-        await httpResponse.Body.FlushAsync();
-    }
-
     private static void SetupResourceRequest(JsonApiRequest request, ResourceType primaryResourceType, RouteValueDictionary routeValues,
-        HttpRequest httpRequest)
+        HttpRequest httpRequest, IReadOnlySet<JsonApiExtension> extensions)
     {
+        AssertNoAtomicOperationsExtension(extensions);
+
         request.IsReadOnly = httpRequest.Method == HttpMethod.Get.Method || httpRequest.Method == HttpMethod.Head.Method;
         request.PrimaryResourceType = primaryResourceType;
         request.PrimaryId = GetPrimaryRequestId(routeValues);
@@ -287,6 +181,15 @@ public sealed partial class JsonApiMiddleware
 
         bool isGetAll = request.PrimaryId == null && request.IsReadOnly;
         request.IsCollection = isGetAll || request.Relationship is HasManyAttribute;
+        request.Extensions = extensions;
+    }
+
+    private static void AssertNoAtomicOperationsExtension(IReadOnlySet<JsonApiExtension> extensions)
+    {
+        if (extensions.Contains(JsonApiExtension.AtomicOperations) || extensions.Contains(JsonApiExtension.RelaxedAtomicOperations))
+        {
+            throw new InvalidOperationException("Incorrect content negotiation implementation detected: Unexpected atomic:operations extension found.");
+        }
     }
 
     private static string? GetPrimaryRequestId(RouteValueDictionary routeValues)
@@ -305,16 +208,41 @@ public sealed partial class JsonApiMiddleware
         return actionName.EndsWith("Relationship", StringComparison.Ordinal);
     }
 
-    private static bool IsRouteForOperations(RouteValueDictionary routeValues)
+    internal static bool IsRouteForOperations(RouteValueDictionary routeValues)
     {
         string actionName = (string)routeValues["action"]!;
         return actionName == "PostOperations";
     }
 
-    private static void SetupOperationsRequest(JsonApiRequest request)
+    private static void SetupOperationsRequest(JsonApiRequest request, IReadOnlySet<JsonApiExtension> extensions)
     {
+        AssertHasAtomicOperationsExtension(extensions);
+
         request.IsReadOnly = false;
         request.Kind = EndpointKind.AtomicOperations;
+        request.Extensions = extensions;
+    }
+
+    private static void AssertHasAtomicOperationsExtension(IReadOnlySet<JsonApiExtension> extensions)
+    {
+        if (!extensions.Contains(JsonApiExtension.AtomicOperations) && !extensions.Contains(JsonApiExtension.RelaxedAtomicOperations))
+        {
+            throw new InvalidOperationException("Incorrect content negotiation implementation detected: Missing atomic:operations extension.");
+        }
+    }
+
+    private static async Task FlushResponseAsync(HttpResponse httpResponse, JsonSerializerOptions serializerOptions, JsonApiException exception)
+    {
+        httpResponse.ContentType = JsonApiMediaType.Default.ToString();
+        httpResponse.StatusCode = (int)ErrorObject.GetResponseStatusCode(exception.Errors);
+
+        var errorDocument = new Document
+        {
+            Errors = exception.Errors.ToList()
+        };
+
+        await JsonSerializer.SerializeAsync(httpResponse.Body, errorDocument, serializerOptions);
+        await httpResponse.Body.FlushAsync();
     }
 
     [LoggerMessage(Level = LogLevel.Information, SkipEnabledCheck = true,

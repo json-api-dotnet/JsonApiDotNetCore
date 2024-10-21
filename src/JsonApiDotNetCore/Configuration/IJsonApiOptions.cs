@@ -1,6 +1,8 @@
 using System.Data;
 using System.Text.Json;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 
@@ -171,6 +173,18 @@ public interface IJsonApiOptions
     /// <c>null</c>, which leaves this up to Entity Framework Core to choose (and then it varies per database provider).
     /// </summary>
     IsolationLevel? TransactionIsolationLevel { get; }
+
+    /// <summary>
+    /// Lists the JSON:API extensions that are turned on. Empty by default, but if your project contains a controller that derives from
+    /// <see cref="BaseJsonApiOperationsController" />, the <see cref="JsonApiExtension.AtomicOperations" /> and
+    /// <see cref="JsonApiExtension.RelaxedAtomicOperations" /> extensions are automatically added.
+    /// </summary>
+    /// <remarks>
+    /// To implement a custom JSON:API extension, add it here and override <see cref="JsonApiContentNegotiator.GetPossibleMediaTypes" /> to indicate which
+    /// combinations of extensions are available, depending on the current endpoint. Use <see cref="IJsonApiRequest.Extensions" /> to obtain the active
+    /// extensions when implementing extension-specific logic.
+    /// </remarks>
+    IReadOnlySet<JsonApiExtension> Extensions { get; }
 
     /// <summary>
     /// Enables to customize the settings that are used by the <see cref="JsonSerializer" />.

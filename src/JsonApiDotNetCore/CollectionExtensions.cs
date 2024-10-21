@@ -16,6 +16,21 @@ internal static class CollectionExtensions
         return !source.Any();
     }
 
+    public static int FindIndex<T>(this IReadOnlyList<T> source, T item)
+    {
+        ArgumentGuard.NotNull(source);
+
+        for (int index = 0; index < source.Count; index++)
+        {
+            if (EqualityComparer<T>.Default.Equals(source[index], item))
+            {
+                return index;
+            }
+        }
+
+        return -1;
+    }
+
     public static int FindIndex<T>(this IReadOnlyList<T> source, Predicate<T> match)
     {
         ArgumentGuard.NotNull(source);
