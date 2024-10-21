@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using FluentAssertions;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
 using Xunit;
@@ -121,12 +122,17 @@ public sealed class ScopeOperationsTests : IClassFixture<IntegrationTestContext<
         };
 
         const string route = "/operations";
+        string contentType = JsonApiMediaType.AtomicOperations.ToString();
 
-        Action<HttpRequestHeaders> setRequestHeaders = headers => headers.Add(ScopeHeaderName, "read:genres");
+        Action<HttpRequestHeaders> setRequestHeaders = headers =>
+        {
+            headers.Add(ScopeHeaderName, "read:genres");
+            headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(JsonApiMediaType.AtomicOperations.ToString()));
+        };
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) =
-            await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody, setRequestHeaders: setRequestHeaders);
+            await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType, setRequestHeaders);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);

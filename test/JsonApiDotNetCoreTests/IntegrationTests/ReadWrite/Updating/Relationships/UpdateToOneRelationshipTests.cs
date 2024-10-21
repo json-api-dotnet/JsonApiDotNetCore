@@ -263,7 +263,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
-        httpResponse.Content.Headers.ContentType.ToString().Should().Be(HeaderConstants.MediaType);
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
 
         responseDocument.Errors.ShouldHaveCount(1);
 
