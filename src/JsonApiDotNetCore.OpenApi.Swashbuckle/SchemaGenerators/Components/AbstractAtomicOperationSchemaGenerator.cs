@@ -41,7 +41,7 @@ internal sealed class AbstractAtomicOperationSchemaGenerator
         var fullSchema = new OpenApiSchema
         {
             Type = "object",
-            Required = new SortedSet<string>([OperationsDiscriminatorPropertyName]),
+            Required = new HashSet<string>([OperationsDiscriminatorPropertyName]),
             Properties = new Dictionary<string, OpenApiSchema>
             {
                 // TODO: Emit the discriminator property.

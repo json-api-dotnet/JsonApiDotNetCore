@@ -53,7 +53,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/districtCollectionResponseDocument"
                 }
@@ -75,7 +75,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }

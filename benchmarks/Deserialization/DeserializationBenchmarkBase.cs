@@ -23,8 +23,8 @@ public abstract class DeserializationBenchmarkBase : IDisposable
     {
         var options = new JsonApiOptions();
         IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<IncomingResource, int>().Build();
-        var httpContextAccessor = new HttpContextAccessor();
-        options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph, httpContextAccessor));
+        var requestAccessor = new JsonApiRequestAccessor(new HttpContextAccessor());
+        options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph, requestAccessor));
         SerializerReadOptions = ((IJsonApiOptions)options).SerializerReadOptions;
 
         var resourceFactory = new ResourceFactory(_serviceProvider);

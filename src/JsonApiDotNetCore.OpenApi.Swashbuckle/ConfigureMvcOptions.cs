@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,17 +11,20 @@ internal sealed class ConfigureMvcOptions : IConfigureOptions<MvcOptions>
     private readonly IJsonApiRoutingConvention _jsonApiRoutingConvention;
     private readonly OpenApiEndpointConvention _openApiEndpointConvention;
     private readonly JsonApiRequestFormatMetadataProvider _jsonApiRequestFormatMetadataProvider;
+    private readonly IJsonApiOptions _jsonApiOptions;
 
     public ConfigureMvcOptions(IJsonApiRoutingConvention jsonApiRoutingConvention, OpenApiEndpointConvention openApiEndpointConvention,
-        JsonApiRequestFormatMetadataProvider jsonApiRequestFormatMetadataProvider)
+        JsonApiRequestFormatMetadataProvider jsonApiRequestFormatMetadataProvider, IJsonApiOptions jsonApiOptions)
     {
         ArgumentGuard.NotNull(jsonApiRoutingConvention);
         ArgumentGuard.NotNull(openApiEndpointConvention);
         ArgumentGuard.NotNull(jsonApiRequestFormatMetadataProvider);
+        ArgumentGuard.NotNull(jsonApiOptions);
 
         _jsonApiRoutingConvention = jsonApiRoutingConvention;
         _openApiEndpointConvention = openApiEndpointConvention;
         _jsonApiRequestFormatMetadataProvider = jsonApiRequestFormatMetadataProvider;
+        _jsonApiOptions = jsonApiOptions;
     }
 
     public void Configure(MvcOptions options)
@@ -29,6 +33,9 @@ internal sealed class ConfigureMvcOptions : IConfigureOptions<MvcOptions>
 
         options.InputFormatters.Add(_jsonApiRequestFormatMetadataProvider);
         options.Conventions.Add(_openApiEndpointConvention);
+
+        // TODO: Only when resource graph has inheritance?
+        ((JsonApiOptions)_jsonApiOptions).IncludeExtensions(JsonApiExtension.OpenApi, JsonApiExtension.RelaxedOpenApi);
     }
 
     private void AddSwashbuckleCliCompatibility(MvcOptions options)

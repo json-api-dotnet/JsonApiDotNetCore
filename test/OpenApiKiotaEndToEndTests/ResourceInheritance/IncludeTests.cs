@@ -83,7 +83,6 @@ public sealed class IncludeTests
             response.Included.OfType<FamilyHomeDataInResponse>().Should().ContainSingle(familyHomeData => familyHomeData.Id == familyHome.StringId).Subject
                 .With(familyHomeData =>
                 {
-                    // TODO: This only works when the discriminator is sent by the server -- https://github.com/microsoft/kiota/issues/5086
                     FamilyHomeAttributesInResponse attributes = familyHomeData.Attributes.Should().BeOfType<FamilyHomeAttributesInResponse>().Subject;
 
                     attributes.SurfaceInSquareMeters.Should().Be(familyHome.SurfaceInSquareMeters);

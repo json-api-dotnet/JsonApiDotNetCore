@@ -14,6 +14,20 @@ public sealed class JsonApiMediaType : IEquatable<JsonApiMediaType>
     private static readonly StringSegment ExtSegment = new("ext");
     private static readonly StringSegment QualitySegment = new("q");
 
+    // TODO: Expose publicly in OpenAPI project.
+    internal static readonly JsonApiMediaType OpenApi = new([JsonApiExtension.OpenApi]);
+    internal static readonly JsonApiMediaType RelaxedOpenApi = new([JsonApiExtension.RelaxedOpenApi]);
+
+    internal static readonly JsonApiMediaType AtomicOperationsWithOpenApi = new([
+        JsonApiExtension.AtomicOperations,
+        JsonApiExtension.OpenApi
+    ]);
+
+    internal static readonly JsonApiMediaType RelaxedAtomicOperationsWithRelaxedOpenApi = new([
+        JsonApiExtension.RelaxedAtomicOperations,
+        JsonApiExtension.RelaxedOpenApi
+    ]);
+
     /// <summary>
     /// Gets the JSON:API media type without any extensions.
     /// </summary>

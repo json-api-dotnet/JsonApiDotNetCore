@@ -2,11 +2,11 @@ using System.Reflection;
 using System.Text.Json;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Request;
-using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Serialization.JsonConverters;
 
@@ -28,19 +28,29 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
     private static readonly JsonEncodedText LinksText = JsonEncodedText.Encode("links");
 
     private readonly IResourceGraph _resourceGraph;
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IJsonApiRequestAccessor _requestAccessor;
 
-    private bool IsUserAgentKiota =>
-        _httpContextAccessor.HttpContext != null &&
-        _httpContextAccessor.HttpContext.Request.Headers.UserAgent.ToString().Contains("kiota", StringComparison.OrdinalIgnoreCase);
+    private bool HasOpenApiExtension
+    {
+        get
+        {
+            if (_requestAccessor.Current == null)
+            {
+                return false;
+            }
 
-    public ResourceObjectConverter(IResourceGraph resourceGraph, IHttpContextAccessor httpContextAccessor)
+            return _requestAccessor.Current.Extensions.Contains(JsonApiExtension.OpenApi) ||
+                _requestAccessor.Current.Extensions.Contains(JsonApiExtension.RelaxedOpenApi);
+        }
+    }
+
+    public ResourceObjectConverter(IResourceGraph resourceGraph, IJsonApiRequestAccessor requestAccessor)
     {
         ArgumentGuard.NotNull(resourceGraph);
-        ArgumentGuard.NotNull(httpContextAccessor);
+        ArgumentGuard.NotNull(requestAccessor);
 
         _resourceGraph = resourceGraph;
-        _httpContextAccessor = httpContextAccessor;
+        _requestAccessor = requestAccessor;
     }
 
     /// <summary>
@@ -257,7 +267,7 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
             writer.WritePropertyName(AttributesText);
             writer.WriteStartObject();
 
-            if (IsUserAgentKiota)
+            if (HasOpenApiExtension)
             {
                 writer.WriteString(AttributesDiscriminatorPropertyName, value.Type);
             }
@@ -276,7 +286,7 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
             writer.WritePropertyName(RelationshipsText);
             writer.WriteStartObject();
 
-            if (IsUserAgentKiota)
+            if (HasOpenApiExtension)
             {
                 writer.WriteString(RelationshipsDiscriminatorPropertyName, value.Type);
             }

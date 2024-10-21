@@ -249,8 +249,8 @@ public sealed class InputConversionTests : IDisposable
     {
         var options = new JsonApiOptions();
         IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<TResource, int>().Build();
-        var httpContextAccessor = new HttpContextAccessor();
-        options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph, httpContextAccessor));
+        var requestAccessor = new JsonApiRequestAccessor(new HttpContextAccessor());
+        options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph, requestAccessor));
 
         var resourceFactory = new ResourceFactory(_serviceProvider);
         var resourceDefinitionAccessor = new ResourceDefinitionAccessor(resourceGraph, _serviceProvider);

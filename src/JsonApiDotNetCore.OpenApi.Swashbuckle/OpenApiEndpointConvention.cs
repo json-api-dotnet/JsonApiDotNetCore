@@ -18,16 +18,20 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
 {
     private readonly IControllerResourceMapping _controllerResourceMapping;
     private readonly EndpointResolver _endpointResolver;
+    private readonly IResourceGraph _resourceGraph;
     private readonly IJsonApiOptions _options;
 
-    public OpenApiEndpointConvention(IControllerResourceMapping controllerResourceMapping, EndpointResolver endpointResolver, IJsonApiOptions options)
+    public OpenApiEndpointConvention(IControllerResourceMapping controllerResourceMapping, EndpointResolver endpointResolver, IResourceGraph resourceGraph,
+        IJsonApiOptions options)
     {
         ArgumentGuard.NotNull(controllerResourceMapping);
         ArgumentGuard.NotNull(endpointResolver);
+        ArgumentGuard.NotNull(resourceGraph);
         ArgumentGuard.NotNull(options);
 
         _controllerResourceMapping = controllerResourceMapping;
         _endpointResolver = endpointResolver;
+        _resourceGraph = resourceGraph;
         _options = options;
     }
 
@@ -146,6 +150,22 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
 
     private JsonApiMediaType GetMediaTypeForEndpoint(JsonApiEndpoint endpoint)
     {
+        // TODO: Optimize into cached property on resource graph.
+        bool hasResourceInheritance = false;
+
+        foreach (ResourceType resourceType in _resourceGraph.GetResourceTypes())
+        {
+            if (resourceType.IsPartOfTypeHierarchy())
+            {
+                hasResourceInheritance = true;
+            }
+        }
+
+        if (hasResourceInheritance)
+        {
+            return endpoint == JsonApiEndpoint.PostOperations ? JsonApiMediaType.RelaxedAtomicOperationsWithRelaxedOpenApi : JsonApiMediaType.RelaxedOpenApi;
+        }
+
         return endpoint == JsonApiEndpoint.PostOperations ? JsonApiMediaType.RelaxedAtomicOperations : JsonApiMediaType.Default;
     }
 

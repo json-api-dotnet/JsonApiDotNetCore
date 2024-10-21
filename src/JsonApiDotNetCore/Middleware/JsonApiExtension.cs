@@ -8,6 +8,10 @@ namespace JsonApiDotNetCore.Middleware;
 [PublicAPI]
 public sealed class JsonApiExtension : IEquatable<JsonApiExtension>
 {
+    // TODO: Expose publicly in OpenAPI project.
+    internal static readonly JsonApiExtension OpenApi = new("https://www.jsonapi.net/ext/openapi");
+    internal static readonly JsonApiExtension RelaxedOpenApi = new("openapi");
+
     public static readonly JsonApiExtension AtomicOperations = new("https://jsonapi.org/ext/atomic");
     public static readonly JsonApiExtension RelaxedAtomicOperations = new("atomic-operations");
 

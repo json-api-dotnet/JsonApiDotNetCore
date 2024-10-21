@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Bodies;
@@ -30,6 +31,9 @@ public static class ServiceCollectionExtensions
         {
             services.Configure(setupSwaggerGenAction);
         }
+
+        // TODO: Only when resource graph has inheritance?
+        services.AddSingleton<IJsonApiContentNegotiator, OpenApiContentNegotiator>();
     }
 
     private static void AddCustomApiExplorer(IServiceCollection services)

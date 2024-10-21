@@ -36,7 +36,7 @@ internal sealed class AbstractResourceDataSchemaGenerator
 
         var fullSchema = new OpenApiSchema
         {
-            Required = new SortedSet<string>([DiscriminatorPropertyName]),
+            Required = new HashSet<string>([DiscriminatorPropertyName]),
             Type = "object",
             Properties = new Dictionary<string, OpenApiSchema>
             {

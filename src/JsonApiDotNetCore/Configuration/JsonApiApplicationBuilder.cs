@@ -94,8 +94,8 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder
 
             IResourceGraph resourceGraph = resourceGraphBuilder.Build();
 
-            var httpContextAccessor = serviceProvider.GetRequiredService<IHttpContextAccessor>();
-            _options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph, httpContextAccessor));
+            var requestAccessor = serviceProvider.GetRequiredService<IJsonApiRequestAccessor>();
+            _options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph, requestAccessor));
 
             return resourceGraph;
         });
@@ -187,6 +187,7 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder
         _services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         _services.TryAddSingleton<IJsonApiContentNegotiator, JsonApiContentNegotiator>();
         _services.TryAddScoped<IJsonApiRequest, JsonApiRequest>();
+        _services.TryAddSingleton<IJsonApiRequestAccessor, JsonApiRequestAccessor>();
         _services.TryAddScoped<IJsonApiWriter, JsonApiWriter>();
         _services.TryAddScoped<IJsonApiReader, JsonApiReader>();
         _services.TryAddScoped<ITargetedFields, TargetedFields>();
