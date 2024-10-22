@@ -76,6 +76,7 @@ internal sealed class DataSchemaGenerator
         ArgumentGuard.NotNull(resourceDataConstructedType);
         ArgumentGuard.NotNull(schemaRepository);
 
+        // TODO: Rename referenceSchemaForResourceData to referenceSchemaForData?
         if (schemaRepository.TryLookupByType(resourceDataConstructedType, out OpenApiSchema referenceSchemaForResourceData))
         {
             return referenceSchemaForResourceData;
@@ -294,15 +295,9 @@ internal sealed class DataSchemaGenerator
         return referenceSchemaForAttributes;
     }
 
-    private void MapAttributesInDiscriminator(ResourceType resourceType, OpenApiSchema referenceSchemaForAttributes, SchemaRepository schemaRepository)
+    private static void MapAttributesInDiscriminator(ResourceType resourceType, OpenApiSchema referenceSchemaForAttributes, SchemaRepository schemaRepository)
     {
-        ResourceType ultimateBaseResourceType = resourceType.BaseType!;
-
-        while (ultimateBaseResourceType.BaseType != null)
-        {
-            ultimateBaseResourceType = ultimateBaseResourceType.BaseType;
-        }
-
+        ResourceType ultimateBaseResourceType = resourceType.GetUltimateBaseType();
         Type ultimateConstructedBaseType = typeof(AttributesInResponse<>).MakeGenericType(ultimateBaseResourceType.ClrType);
 
         if (!schemaRepository.TryLookupByType(ultimateConstructedBaseType, out OpenApiSchema? referenceSchemaForUltimateBaseAttributes))
@@ -311,7 +306,6 @@ internal sealed class DataSchemaGenerator
         }
 
         OpenApiSchema fullSchemaForUltimateBaseAttributes = schemaRepository.Schemas[referenceSchemaForUltimateBaseAttributes.Reference.Id];
-
         fullSchemaForUltimateBaseAttributes.Discriminator.Mapping[resourceType.PublicName] = referenceSchemaForAttributes.Reference.ReferenceV3;
     }
 
@@ -410,15 +404,10 @@ internal sealed class DataSchemaGenerator
         return referenceSchemaForRelationships;
     }
 
-    private void MapRelationshipsInDiscriminator(ResourceType resourceType, OpenApiSchema referenceSchemaForRelationships, SchemaRepository schemaRepository)
+    private static void MapRelationshipsInDiscriminator(ResourceType resourceType, OpenApiSchema referenceSchemaForRelationships,
+        SchemaRepository schemaRepository)
     {
-        ResourceType ultimateBaseResourceType = resourceType.BaseType!;
-
-        while (ultimateBaseResourceType.BaseType != null)
-        {
-            ultimateBaseResourceType = ultimateBaseResourceType.BaseType;
-        }
-
+        ResourceType ultimateBaseResourceType = resourceType.GetUltimateBaseType();
         Type ultimateConstructedBaseType = typeof(RelationshipsInResponse<>).MakeGenericType(ultimateBaseResourceType.ClrType);
 
         if (!schemaRepository.TryLookupByType(ultimateConstructedBaseType, out OpenApiSchema? referenceSchemaForUltimateBaseRelationships))
@@ -427,7 +416,6 @@ internal sealed class DataSchemaGenerator
         }
 
         OpenApiSchema fullSchemaForUltimateBaseRelationships = schemaRepository.Schemas[referenceSchemaForUltimateBaseRelationships.Reference.Id];
-
         fullSchemaForUltimateBaseRelationships.Discriminator.Mapping[resourceType.PublicName] = referenceSchemaForRelationships.Reference.ReferenceV3;
     }
 }

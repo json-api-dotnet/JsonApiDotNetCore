@@ -37,6 +37,7 @@ internal sealed class ResourceOrRelationshipBodySchemaGenerator : BodySchemaGene
     private readonly DataContainerSchemaGenerator _dataContainerSchemaGenerator;
     private readonly IResourceGraph _resourceGraph;
 
+    // TODO: Ensure consistent order of IResourceGraph/IJsonApiOptions parameters.
     public ResourceOrRelationshipBodySchemaGenerator(SchemaGenerator defaultSchemaGenerator, DataContainerSchemaGenerator dataContainerSchemaGenerator,
         MetaSchemaGenerator metaSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, IResourceGraph resourceGraph,
         IJsonApiOptions options)
@@ -78,6 +79,11 @@ internal sealed class ResourceOrRelationshipBodySchemaGenerator : BodySchemaGene
         if (JsonApiSchemaFacts.HasNullableDataProperty(bodyType))
         {
             fullSchemaForBody.Properties[JsonApiPropertyName.Data].Nullable = true;
+        }
+
+        if (!isRequestSchema)
+        {
+            PostProcessForResourceInheritance(_resourceGraph, schemaRepository);
         }
 
         return referenceSchemaForBody;

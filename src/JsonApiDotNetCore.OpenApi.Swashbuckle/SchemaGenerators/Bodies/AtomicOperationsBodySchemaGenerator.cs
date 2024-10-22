@@ -239,5 +239,7 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
         {
             _ = _dataContainerSchemaGenerator.GenerateSchema(typeof(AtomicResult), resourceType, false, schemaRepository);
         }
+
+        PostProcessForResourceInheritance(_resourceGraph, schemaRepository);
     }
 }

@@ -349,6 +349,18 @@ public sealed class ResourceType
         return BaseType != null || DirectlyDerivedTypes.Count > 0;
     }
 
+    internal ResourceType GetUltimateBaseType()
+    {
+        ResourceType baseType = this;
+
+        while (baseType.BaseType != null)
+        {
+            baseType = baseType.BaseType;
+        }
+
+        return baseType;
+    }
+
     public override string ToString()
     {
         return PublicName;

@@ -79,13 +79,13 @@ public sealed class IncludeTests
         response.Included.OfType<FamilyHomeDataInResponse>().Should().ContainSingle(familyHomeData => familyHomeData.Id == familyHome.StringId).Subject.With(
             familyHomeData =>
             {
-                FamilyHomeAttributesInResponse attributes = familyHomeData.Attributes.ShouldNotBeNull();
+                FamilyHomeAttributesInResponse attributes = familyHomeData.Attributes.Should().BeOfType<FamilyHomeAttributesInResponse>().Subject;
 
                 attributes.SurfaceInSquareMeters.Should().Be(familyHome.SurfaceInSquareMeters);
                 attributes.NumberOfResidents.Should().Be(familyHome.NumberOfResidents);
                 attributes.FloorCount.Should().Be(familyHome.FloorCount);
 
-                FamilyHomeRelationshipsInResponse relationships = familyHomeData.Relationships.ShouldNotBeNull();
+                FamilyHomeRelationshipsInResponse relationships = familyHomeData.Relationships.Should().BeOfType<FamilyHomeRelationshipsInResponse>().Subject;
 
                 relationships.Rooms.ShouldNotBeNull();
                 relationships.Rooms.Data.ShouldHaveCount(2);
@@ -95,13 +95,13 @@ public sealed class IncludeTests
 
         response.Included.OfType<MansionDataInResponse>().Should().ContainSingle(mansionData => mansionData.Id == mansion.StringId).Subject.With(mansionData =>
         {
-            MansionAttributesInResponse attributes = mansionData.Attributes.ShouldNotBeNull();
+            MansionAttributesInResponse attributes = mansionData.Attributes.Should().BeOfType<MansionAttributesInResponse>().Subject;
 
             attributes.SurfaceInSquareMeters.Should().Be(mansion.SurfaceInSquareMeters);
             attributes.NumberOfResidents.Should().Be(mansion.NumberOfResidents);
             attributes.OwnerName.Should().Be(mansion.OwnerName);
 
-            MansionRelationshipsInResponse relationships = mansionData.Relationships.ShouldNotBeNull();
+            MansionRelationshipsInResponse relationships = mansionData.Relationships.Should().BeOfType<MansionRelationshipsInResponse>().Subject;
 
             relationships.Rooms.ShouldNotBeNull();
             relationships.Rooms.Data.ShouldHaveCount(3);
@@ -113,12 +113,12 @@ public sealed class IncludeTests
         response.Included.OfType<ResidenceDataInResponse>().Should().ContainSingle(residenceData => residenceData.Id == residence.StringId).Subject.With(
             residenceData =>
             {
-                ResidenceAttributesInResponse attributes = residenceData.Attributes.ShouldNotBeNull();
+                ResidenceAttributesInResponse attributes = residenceData.Attributes.Should().BeOfType<ResidenceAttributesInResponse>().Subject;
 
                 attributes.SurfaceInSquareMeters.Should().Be(residence.SurfaceInSquareMeters);
                 attributes.NumberOfResidents.Should().Be(residence.NumberOfResidents);
 
-                ResidenceRelationshipsInResponse relationships = residenceData.Relationships.ShouldNotBeNull();
+                ResidenceRelationshipsInResponse relationships = residenceData.Relationships.Should().BeOfType<ResidenceRelationshipsInResponse>().Subject;
 
                 relationships.Rooms.ShouldNotBeNull();
                 relationships.Rooms.Data.ShouldHaveCount(1);

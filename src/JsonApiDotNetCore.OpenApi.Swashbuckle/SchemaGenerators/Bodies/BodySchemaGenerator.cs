@@ -1,4 +1,5 @@
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -57,6 +58,45 @@ internal abstract class BodySchemaGenerator
         if (fullSchema.Properties.ContainsKey(JsonApiPropertyName.Jsonapi) && !_options.IncludeJsonApiVersion)
         {
             fullSchema.Properties.Remove(JsonApiPropertyName.Jsonapi);
+        }
+    }
+
+    protected static void PostProcessForResourceInheritance(IResourceGraph resourceGraph, SchemaRepository schemaRepository)
+    {
+        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentGuard.NotNull(schemaRepository);
+
+        foreach (ResourceType resourceType in resourceGraph.GetResourceTypes().Where(resourceType => resourceType.BaseType != null))
+        {
+            Type dataInResponseType = typeof(ResourceDataInResponse<>).MakeGenericType(resourceType.ClrType);
+
+            if (schemaRepository.TryLookupByType(dataInResponseType, out OpenApiSchema? referenceSchemaForDataInResponse))
+            {
+                OpenApiSchema fullSchemaForDataInResponse = schemaRepository.Schemas[referenceSchemaForDataInResponse.Reference.Id];
+                ResourceType ultimateBaseType = resourceType.GetUltimateBaseType();
+
+                ReplaceDeclaredType(fullSchemaForDataInResponse, typeof(AttributesInResponse<>), JsonApiPropertyName.Attributes, ultimateBaseType,
+                    schemaRepository);
+
+                ReplaceDeclaredType(fullSchemaForDataInResponse, typeof(RelationshipsInResponse<>), JsonApiPropertyName.Relationships, ultimateBaseType,
+                    schemaRepository);
+            }
+        }
+    }
+
+    private static void ReplaceDeclaredType(OpenApiSchema fullSchemaForDataInResponse, Type fieldSchemaOpenType, string propertyName,
+        ResourceType ultimateBaseType, SchemaRepository schemaRepository)
+    {
+        Type ultimateBaseSchemaType = fieldSchemaOpenType.MakeGenericType(ultimateBaseType.ClrType);
+
+        if (schemaRepository.TryLookupByType(ultimateBaseSchemaType, out OpenApiSchema? referenceSchemaForUltimateBaseAttributes))
+        {
+            IDictionary<string, OpenApiSchema> propertiesSchema = fullSchemaForDataInResponse.UnwrapLastExtendedSchema().Properties;
+
+            if (propertiesSchema.ContainsKey(propertyName))
+            {
+                propertiesSchema[propertyName] = referenceSchemaForUltimateBaseAttributes.WrapInExtendedSchema();
+            }
         }
     }
 }

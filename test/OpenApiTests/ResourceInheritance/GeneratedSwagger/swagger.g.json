@@ -192,14 +192,14 @@
               "attributes": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/bathroomAttributesInResponse"
+                    "$ref": "#/components/schemas/roomAttributesInResponse"
                   }
                 ]
               },
               "relationships": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/bathroomRelationshipsInResponse"
+                    "$ref": "#/components/schemas/roomRelationshipsInResponse"
                   }
                 ]
               },
@@ -272,14 +272,14 @@
               "attributes": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/bedroomAttributesInResponse"
+                    "$ref": "#/components/schemas/roomAttributesInResponse"
                   }
                 ]
               },
               "relationships": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/bedroomRelationshipsInResponse"
+                    "$ref": "#/components/schemas/roomRelationshipsInResponse"
                   }
                 ]
               },
@@ -739,14 +739,14 @@
               "attributes": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/familyHomeAttributesInResponse"
+                    "$ref": "#/components/schemas/buildingAttributesInResponse"
                   }
                 ]
               },
               "relationships": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/familyHomeRelationshipsInResponse"
+                    "$ref": "#/components/schemas/buildingRelationshipsInResponse"
                   }
                 ]
               },
@@ -818,14 +818,14 @@
               "attributes": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/kitchenAttributesInResponse"
+                    "$ref": "#/components/schemas/roomAttributesInResponse"
                   }
                 ]
               },
               "relationships": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/kitchenRelationshipsInResponse"
+                    "$ref": "#/components/schemas/roomRelationshipsInResponse"
                   }
                 ]
               },
@@ -897,14 +897,14 @@
               "attributes": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/livingRoomAttributesInResponse"
+                    "$ref": "#/components/schemas/roomAttributesInResponse"
                   }
                 ]
               },
               "relationships": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/livingRoomRelationshipsInResponse"
+                    "$ref": "#/components/schemas/roomRelationshipsInResponse"
                   }
                 ]
               },
@@ -976,14 +976,14 @@
               "attributes": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/mansionAttributesInResponse"
+                    "$ref": "#/components/schemas/buildingAttributesInResponse"
                   }
                 ]
               },
               "relationships": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/mansionRelationshipsInResponse"
+                    "$ref": "#/components/schemas/buildingRelationshipsInResponse"
                   }
                 ]
               },
@@ -1074,14 +1074,14 @@
               "attributes": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/residenceAttributesInResponse"
+                    "$ref": "#/components/schemas/buildingAttributesInResponse"
                   }
                 ]
               },
               "relationships": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/residenceRelationshipsInResponse"
+                    "$ref": "#/components/schemas/buildingRelationshipsInResponse"
                   }
                 ]
               },
@@ -1445,14 +1445,14 @@
               "attributes": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/toiletAttributesInResponse"
+                    "$ref": "#/components/schemas/roomAttributesInResponse"
                   }
                 ]
               },
               "relationships": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/toiletRelationshipsInResponse"
+                    "$ref": "#/components/schemas/roomRelationshipsInResponse"
                   }
                 ]
               },
