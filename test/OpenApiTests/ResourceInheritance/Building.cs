@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace OpenApiTests.ResourceInheritance;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "OpenApiTests.ResourceInheritance", GenerateControllerEndpoints = JsonApiEndpoints.None)]
+[Resource(ControllerNamespace = "OpenApiTests.ResourceInheritance", GenerateControllerEndpoints = JsonApiEndpoints.Post)]
 public abstract class Building : Identifiable<long>
 {
     [Attr]

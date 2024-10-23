@@ -13,7 +13,7 @@ public sealed class ResourceInheritanceTests : IClassFixture<OpenApiTestContext<
 
         testContext.UseController<DistrictsController>();
 
-        //testContext.UseController<BuildingsController>();
+        testContext.UseController<BuildingsController>();
         //testContext.UseController<ResidencesController>();
         //testContext.UseController<FamilyHomesController>();
         //testContext.UseController<MansionsController>();
