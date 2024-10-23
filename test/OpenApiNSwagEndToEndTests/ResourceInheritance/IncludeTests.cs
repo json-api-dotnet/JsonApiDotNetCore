@@ -28,21 +28,21 @@ public sealed class IncludeTests
     public async Task Can_include_in_primary_resource()
     {
         // Arrange
-        District district = _fakers.District.Generate();
+        District district = _fakers.District.GenerateOne();
 
-        FamilyHome familyHome = _fakers.FamilyHome.Generate();
-        familyHome.Rooms.Add(_fakers.LivingRoom.Generate());
-        familyHome.Rooms.Add(_fakers.Bedroom.Generate());
+        FamilyHome familyHome = _fakers.FamilyHome.GenerateOne();
+        familyHome.Rooms.Add(_fakers.LivingRoom.GenerateOne());
+        familyHome.Rooms.Add(_fakers.Bedroom.GenerateOne());
         district.Buildings.Add(familyHome);
 
-        Mansion mansion = _fakers.Mansion.Generate();
+        Mansion mansion = _fakers.Mansion.GenerateOne();
         mansion.Rooms.Add(_fakers.Kitchen);
         mansion.Rooms.Add(_fakers.Bathroom);
         mansion.Rooms.Add(_fakers.Toilet);
         district.Buildings.Add(mansion);
 
-        Residence residence = _fakers.Residence.Generate();
-        residence.Rooms.Add(_fakers.Bedroom.Generate());
+        Residence residence = _fakers.Residence.GenerateOne();
+        residence.Rooms.Add(_fakers.Bedroom.GenerateOne());
         district.Buildings.Add(residence);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
