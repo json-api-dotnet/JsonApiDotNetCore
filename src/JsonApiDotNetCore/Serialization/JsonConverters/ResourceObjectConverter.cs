@@ -16,6 +16,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters;
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
 {
+    // TODO: Rename both to "openapi:discriminator"
     internal const string AttributesDiscriminatorPropertyName = "openapi:attributes-discriminator";
     internal const string RelationshipsDiscriminatorPropertyName = "openapi:relationships-discriminator";
 
@@ -30,6 +31,7 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
     private readonly IResourceGraph _resourceGraph;
     private readonly IJsonApiRequestAccessor _requestAccessor;
 
+    // TODO: Make ResourceObjectConverter injectable, with derived implementation in OpenAPI project.
     private bool HasOpenApiExtension
     {
         get

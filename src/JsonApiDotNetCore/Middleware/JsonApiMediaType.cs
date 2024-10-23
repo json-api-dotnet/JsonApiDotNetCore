@@ -14,7 +14,7 @@ public sealed class JsonApiMediaType : IEquatable<JsonApiMediaType>
     private static readonly StringSegment ExtSegment = new("ext");
     private static readonly StringSegment QualitySegment = new("q");
 
-    // TODO: Expose publicly in OpenAPI project.
+    // TODO: Move publicly into OpenAPI project (requires injectable ResourceObjectConverter first).
     internal static readonly JsonApiMediaType OpenApi = new([JsonApiExtension.OpenApi]);
     internal static readonly JsonApiMediaType RelaxedOpenApi = new([JsonApiExtension.RelaxedOpenApi]);
 

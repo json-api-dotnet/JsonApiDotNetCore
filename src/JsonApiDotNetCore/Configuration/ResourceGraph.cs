@@ -17,6 +17,9 @@ public sealed class ResourceGraph : IResourceGraph
     private readonly Dictionary<Type, ResourceType> _resourceTypesByClrType = [];
     private readonly Dictionary<string, ResourceType> _resourceTypesByPublicName = [];
 
+    /// <inheritdoc />
+    public bool HasResourceInheritance { get; internal set; }
+
     public ResourceGraph(IReadOnlySet<ResourceType> resourceTypeSet)
     {
         ArgumentGuard.NotNull(resourceTypeSet);

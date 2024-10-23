@@ -32,7 +32,6 @@ public static class ServiceCollectionExtensions
             services.Configure(setupSwaggerGenAction);
         }
 
-        // TODO: Only when resource graph has inheritance?
         services.AddSingleton<IJsonApiContentNegotiator, OpenApiContentNegotiator>();
     }
 

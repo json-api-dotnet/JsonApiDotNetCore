@@ -150,18 +150,8 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
 
     private JsonApiMediaType GetMediaTypeForEndpoint(JsonApiEndpoint endpoint)
     {
-        // TODO: Optimize into cached property on resource graph.
-        bool hasResourceInheritance = false;
-
-        foreach (ResourceType resourceType in _resourceGraph.GetResourceTypes())
-        {
-            if (resourceType.IsPartOfTypeHierarchy())
-            {
-                hasResourceInheritance = true;
-            }
-        }
-
-        if (hasResourceInheritance)
+        // TODO: Make this unconditional (changes all existing swagger.json files)
+        if (_resourceGraph.HasResourceInheritance)
         {
             return endpoint == JsonApiEndpoint.PostOperations ? JsonApiMediaType.RelaxedAtomicOperationsWithRelaxedOpenApi : JsonApiMediaType.RelaxedOpenApi;
         }

@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 internal sealed class AbstractAtomicOperationSchemaGenerator
 {
     // The discriminator only exists to guide OpenAPI codegen. The property is ignored by JsonApiDotNetCore.
-    // TODO: Apply casing convention?
+    // TODO: Rename to "openapi:discriminator"
     private const string OperationsDiscriminatorPropertyName = "openapi:operations-discriminator";
 
     private static readonly Type AtomicOperationAbstractType = typeof(AtomicOperation);

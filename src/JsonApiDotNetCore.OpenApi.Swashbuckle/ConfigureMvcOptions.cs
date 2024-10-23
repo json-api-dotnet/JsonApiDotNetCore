@@ -34,7 +34,6 @@ internal sealed class ConfigureMvcOptions : IConfigureOptions<MvcOptions>
         options.InputFormatters.Add(_jsonApiRequestFormatMetadataProvider);
         options.Conventions.Add(_openApiEndpointConvention);
 
-        // TODO: Only when resource graph has inheritance?
         ((JsonApiOptions)_jsonApiOptions).IncludeExtensions(JsonApiExtension.OpenApi, JsonApiExtension.RelaxedOpenApi);
     }
 

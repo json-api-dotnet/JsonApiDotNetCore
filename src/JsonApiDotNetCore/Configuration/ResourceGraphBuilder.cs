@@ -109,6 +109,8 @@ public partial class ResourceGraphBuilder
                 baseType.DirectlyDerivedTypes = directlyDerivedTypes.AsReadOnly();
             }
         }
+
+        resourceGraph.HasResourceInheritance = directlyDerivedTypesPerBaseType.Count > 0;
     }
 
     private void ValidateFieldsInDerivedTypes(ResourceGraph resourceGraph)

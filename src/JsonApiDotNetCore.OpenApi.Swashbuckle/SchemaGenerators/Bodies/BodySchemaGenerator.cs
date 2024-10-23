@@ -66,20 +66,24 @@ internal abstract class BodySchemaGenerator
         ArgumentGuard.NotNull(resourceGraph);
         ArgumentGuard.NotNull(schemaRepository);
 
-        foreach (ResourceType resourceType in resourceGraph.GetResourceTypes().Where(resourceType => resourceType.BaseType != null))
+        // TODO: Make this unconditional (changes all existing swagger.json files)
+        if (resourceGraph.HasResourceInheritance)
         {
-            Type dataInResponseType = typeof(ResourceDataInResponse<>).MakeGenericType(resourceType.ClrType);
-
-            if (schemaRepository.TryLookupByType(dataInResponseType, out OpenApiSchema? referenceSchemaForDataInResponse))
+            foreach (ResourceType resourceType in resourceGraph.GetResourceTypes().Where(resourceType => resourceType.BaseType != null))
             {
-                OpenApiSchema fullSchemaForDataInResponse = schemaRepository.Schemas[referenceSchemaForDataInResponse.Reference.Id];
-                ResourceType ultimateBaseType = resourceType.GetUltimateBaseType();
+                Type dataInResponseType = typeof(ResourceDataInResponse<>).MakeGenericType(resourceType.ClrType);
 
-                ReplaceDeclaredType(fullSchemaForDataInResponse, typeof(AttributesInResponse<>), JsonApiPropertyName.Attributes, ultimateBaseType,
-                    schemaRepository);
+                if (schemaRepository.TryLookupByType(dataInResponseType, out OpenApiSchema? referenceSchemaForDataInResponse))
+                {
+                    OpenApiSchema fullSchemaForDataInResponse = schemaRepository.Schemas[referenceSchemaForDataInResponse.Reference.Id];
+                    ResourceType ultimateBaseType = resourceType.GetUltimateBaseType();
 
-                ReplaceDeclaredType(fullSchemaForDataInResponse, typeof(RelationshipsInResponse<>), JsonApiPropertyName.Relationships, ultimateBaseType,
-                    schemaRepository);
+                    ReplaceDeclaredType(fullSchemaForDataInResponse, typeof(AttributesInResponse<>), JsonApiPropertyName.Attributes, ultimateBaseType,
+                        schemaRepository);
+
+                    ReplaceDeclaredType(fullSchemaForDataInResponse, typeof(RelationshipsInResponse<>), JsonApiPropertyName.Relationships, ultimateBaseType,
+                        schemaRepository);
+                }
             }
         }
     }

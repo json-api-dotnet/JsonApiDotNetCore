@@ -29,7 +29,6 @@ internal sealed class ResourceTypeSchemaGenerator
         var fullSchema = new OpenApiSchema
         {
             Type = "string",
-            // TODO: Exclude abstract?
             Enum = resourceType.ClrType.IsAbstract ? [] : [new OpenApiString(resourceType.PublicName)],
             AdditionalPropertiesAllowed = false
         };
@@ -38,6 +37,8 @@ internal sealed class ResourceTypeSchemaGenerator
         {
             fullSchema.Enum.Add(new OpenApiString(derivedType.PublicName));
         }
+
+        // TODO: Throw if fullSchema.Enum is an empty array? Can we prevent that from happening?
 
         string schemaId = _schemaIdSelector.GetResourceTypeSchemaId(resourceType);
 

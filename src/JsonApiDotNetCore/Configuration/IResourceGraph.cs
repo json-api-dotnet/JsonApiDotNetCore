@@ -13,6 +13,11 @@ namespace JsonApiDotNetCore.Configuration;
 public interface IResourceGraph
 {
     /// <summary>
+    /// Indicates whether resource inheritance appears in this resource graph.
+    /// </summary>
+    bool HasResourceInheritance { get; }
+
+    /// <summary>
     /// Gets the metadata for all registered resources.
     /// </summary>
     IReadOnlySet<ResourceType> GetResourceTypes();
