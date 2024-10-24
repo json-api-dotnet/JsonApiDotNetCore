@@ -52,11 +52,11 @@ internal sealed class DataContainerSchemaGenerator
 
         Type dataConstructedType = GetInnerTypeOfDataProperty(dataContainerConstructedType, resourceType);
 
-        if (!forRequestSchema)
+        if (!forRequestSchema || resourceType.IsPartOfTypeHierarchy())
         {
-            // Ensure all reachable related resource types are available in the discriminator mapping upfront.
-            // This is needed to make includes work when not all endpoints are exposed.
-            EnsureResourceDataInResponseDerivedTypesAreMappedInDiscriminator(dataConstructedType, schemaRepository);
+            // Ensure all reachable related resource types are generated and available in the discriminator mapping upfront.
+            // This is needed to make includes and POST/PATCH work when not all endpoints are exposed.
+            EnsureResourceDataInDerivedTypesAreMappedInDiscriminator(dataConstructedType, schemaRepository);
         }
 
         referenceSchemaForData = _dataSchemaGenerator.GenerateSchema(dataConstructedType, schemaRepository);
@@ -95,7 +95,7 @@ internal sealed class DataContainerSchemaGenerator
         return innerPropertyType;
     }
 
-    private void EnsureResourceDataInResponseDerivedTypesAreMappedInDiscriminator(Type dataConstructedType, SchemaRepository schemaRepository)
+    private void EnsureResourceDataInDerivedTypesAreMappedInDiscriminator(Type dataConstructedType, SchemaRepository schemaRepository)
     {
         Type dataOpenType = dataConstructedType.GetGenericTypeDefinition();
 
@@ -108,6 +108,15 @@ internal sealed class DataContainerSchemaGenerator
                 MapResourceDataInResponseDerivedTypeInDiscriminator(relatedType, schemaRepository);
             }
         }
+        else if (dataOpenType == typeof(DataInCreateResourceRequest<>) || dataOpenType == typeof(DataInUpdateResourceRequest<>))
+        {
+            var resourceTypeInfo = ResourceTypeInfo.Create(dataConstructedType, _resourceGraph);
+
+            foreach (ResourceType relatedType in _includeDependencyScanner.GetReachableRelatedTypes(resourceTypeInfo.ResourceType))
+            {
+                MapResourceDataInRequestDerivedTypeInDiscriminator(relatedType, dataOpenType, schemaRepository);
+            }
+        }
     }
 
     private void MapResourceDataInResponseDerivedTypeInDiscriminator(ResourceType resourceType, SchemaRepository schemaRepository)
@@ -116,5 +125,14 @@ internal sealed class DataContainerSchemaGenerator
         OpenApiSchema referenceSchemaForResourceData = _dataSchemaGenerator.GenerateSchema(resourceDataConstructedType, schemaRepository);
 
         _abstractResourceDataSchemaGenerator.MapDiscriminator(resourceDataConstructedType, referenceSchemaForResourceData, schemaRepository);
+    }
+
+    private void MapResourceDataInRequestDerivedTypeInDiscriminator(ResourceType resourceType, Type dataOpenType, SchemaRepository schemaRepository)
+    {
+        if (resourceType.BaseType != null)
+        {
+            Type resourceDataConstructedType = dataOpenType.MakeGenericType(resourceType.ClrType);
+            _ = _dataSchemaGenerator.GenerateSchema(resourceDataConstructedType, schemaRepository);
+        }
     }
 }
