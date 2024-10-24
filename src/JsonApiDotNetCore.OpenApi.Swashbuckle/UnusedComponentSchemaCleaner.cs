@@ -14,6 +14,15 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
 {
     public void Apply(OpenApiDocument document, DocumentFilterContext context)
     {
+        bool isEnabled = bool.Parse(bool.TrueString);
+        //bool isEnabled = bool.Parse(bool.FalseString);
+
+        if (!isEnabled)
+        {
+            return;
+        }
+
+
         bool hasChanges;
 
         do

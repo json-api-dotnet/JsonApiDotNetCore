@@ -271,32 +271,49 @@
   "components": {
     "schemas": {
       "attributesInCreateBathroomRequest": {
-        "required": [
-          "hasBath"
-        ],
-        "type": "object",
-        "properties": {
-          "hasBath": {
-            "type": "boolean"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRoomRequest"
+          },
+          {
+            "required": [
+              "hasBath"
+            ],
+            "type": "object",
+            "properties": {
+              "hasBath": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "attributesInCreateBedroomRequest": {
-        "required": [
-          "bedCount"
-        ],
-        "type": "object",
-        "properties": {
-          "bedCount": {
-            "type": "integer",
-            "format": "int32"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRoomRequest"
+          },
+          {
+            "required": [
+              "bedCount"
+            ],
+            "type": "object",
+            "properties": {
+              "bedCount": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "attributesInCreateBuildingRequest": {
         "required": [
+          "openapi:attributes-discriminator",
           "surfaceInSquareMeters"
         ],
         "type": "object",
@@ -304,71 +321,124 @@
           "surfaceInSquareMeters": {
             "type": "integer",
             "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "attributesInCreateFamilyHomeRequest": {
-        "type": "object",
-        "properties": {
-          "floorCount": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "attributesInCreateKitchenRequest": {
-        "required": [
-          "hasPantry"
-        ],
-        "type": "object",
-        "properties": {
-          "hasPantry": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
-      "attributesInCreateLivingRoomRequest": {
-        "required": [
-          "hasDiningTable"
-        ],
-        "type": "object",
-        "properties": {
-          "hasDiningTable": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
-      "attributesInCreateMansionRequest": {
-        "required": [
-          "ownerName"
-        ],
-        "type": "object",
-        "properties": {
-          "ownerName": {
+          },
+          "openapi:attributes-discriminator": {
             "type": "string"
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:attributes-discriminator",
+          "mapping": {
+            "familyHomes": "#/components/schemas/attributesInCreateFamilyHomeRequest",
+            "mansions": "#/components/schemas/attributesInCreateMansionRequest",
+            "residences": "#/components/schemas/attributesInCreateResidenceRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInCreateFamilyHomeRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateResidenceRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "floorCount": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInCreateKitchenRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRoomRequest"
+          },
+          {
+            "required": [
+              "hasPantry"
+            ],
+            "type": "object",
+            "properties": {
+              "hasPantry": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInCreateLivingRoomRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRoomRequest"
+          },
+          {
+            "required": [
+              "hasDiningTable"
+            ],
+            "type": "object",
+            "properties": {
+              "hasDiningTable": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInCreateMansionRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateResidenceRequest"
+          },
+          {
+            "required": [
+              "ownerName"
+            ],
+            "type": "object",
+            "properties": {
+              "ownerName": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "attributesInCreateResidenceRequest": {
-        "required": [
-          "numberOfResidents"
-        ],
-        "type": "object",
-        "properties": {
-          "numberOfResidents": {
-            "type": "integer",
-            "format": "int32"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateBuildingRequest"
+          },
+          {
+            "required": [
+              "numberOfResidents"
+            ],
+            "type": "object",
+            "properties": {
+              "numberOfResidents": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "attributesInCreateRoomRequest": {
         "required": [
+          "openapi:attributes-discriminator",
           "surfaceInSquareMeters"
         ],
         "type": "object",
@@ -376,20 +446,42 @@
           "surfaceInSquareMeters": {
             "type": "integer",
             "format": "int32"
+          },
+          "openapi:attributes-discriminator": {
+            "type": "string"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:attributes-discriminator",
+          "mapping": {
+            "bathrooms": "#/components/schemas/attributesInCreateBathroomRequest",
+            "bedrooms": "#/components/schemas/attributesInCreateBedroomRequest",
+            "kitchens": "#/components/schemas/attributesInCreateKitchenRequest",
+            "livingRooms": "#/components/schemas/attributesInCreateLivingRoomRequest",
+            "toilets": "#/components/schemas/attributesInCreateToiletRequest"
+          }
+        },
+        "x-abstract": true
       },
       "attributesInCreateToiletRequest": {
-        "required": [
-          "hasSink"
-        ],
-        "type": "object",
-        "properties": {
-          "hasSink": {
-            "type": "boolean"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRoomRequest"
+          },
+          {
+            "required": [
+              "hasSink"
+            ],
+            "type": "object",
+            "properties": {
+              "hasSink": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "bathroomAttributesInResponse": {
@@ -471,13 +563,6 @@
         ],
         "additionalProperties": false
       },
-      "bathroomResourceType": {
-        "enum": [
-          "bathrooms"
-        ],
-        "type": "string",
-        "additionalProperties": false
-      },
       "bedroomAttributesInResponse": {
         "allOf": [
           {
@@ -556,13 +641,6 @@
             "additionalProperties": false
           }
         ],
-        "additionalProperties": false
-      },
-      "bedroomResourceType": {
-        "enum": [
-          "bedrooms"
-        ],
-        "type": "string",
         "additionalProperties": false
       },
       "buildingAttributesInResponse": {
@@ -756,13 +834,6 @@
             ],
             "type": "object",
             "properties": {
-              "type": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/bathroomResourceType"
-                  }
-                ]
-              },
               "attributes": {
                 "allOf": [
                   {
@@ -787,13 +858,6 @@
             ],
             "type": "object",
             "properties": {
-              "type": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/bedroomResourceType"
-                  }
-                ]
-              },
               "attributes": {
                 "allOf": [
                   {
@@ -849,13 +913,6 @@
             ],
             "type": "object",
             "properties": {
-              "type": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/familyHomeResourceType"
-                  }
-                ]
-              },
               "attributes": {
                 "allOf": [
                   {
@@ -880,13 +937,6 @@
             ],
             "type": "object",
             "properties": {
-              "type": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/kitchenResourceType"
-                  }
-                ]
-              },
               "attributes": {
                 "allOf": [
                   {
@@ -911,13 +961,6 @@
             ],
             "type": "object",
             "properties": {
-              "type": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/livingRoomResourceType"
-                  }
-                ]
-              },
               "attributes": {
                 "allOf": [
                   {
@@ -942,13 +985,6 @@
             ],
             "type": "object",
             "properties": {
-              "type": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/mansionResourceType"
-                  }
-                ]
-              },
               "attributes": {
                 "allOf": [
                   {
@@ -973,13 +1009,6 @@
             ],
             "type": "object",
             "properties": {
-              "type": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/residenceResourceType"
-                  }
-                ]
-              },
               "attributes": {
                 "allOf": [
                   {
@@ -1051,13 +1080,6 @@
             ],
             "type": "object",
             "properties": {
-              "type": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/toiletResourceType"
-                  }
-                ]
-              },
               "attributes": {
                 "allOf": [
                   {
@@ -1411,13 +1433,6 @@
         ],
         "additionalProperties": false
       },
-      "familyHomeResourceType": {
-        "enum": [
-          "familyHomes"
-        ],
-        "type": "string",
-        "additionalProperties": false
-      },
       "kitchenAttributesInResponse": {
         "allOf": [
           {
@@ -1495,13 +1510,6 @@
             "additionalProperties": false
           }
         ],
-        "additionalProperties": false
-      },
-      "kitchenResourceType": {
-        "enum": [
-          "kitchens"
-        ],
-        "type": "string",
         "additionalProperties": false
       },
       "livingRoomAttributesInResponse": {
@@ -1583,13 +1591,6 @@
         ],
         "additionalProperties": false
       },
-      "livingRoomResourceType": {
-        "enum": [
-          "livingRooms"
-        ],
-        "type": "string",
-        "additionalProperties": false
-      },
       "mansionAttributesInResponse": {
         "allOf": [
           {
@@ -1667,13 +1668,6 @@
             "additionalProperties": false
           }
         ],
-        "additionalProperties": false
-      },
-      "mansionResourceType": {
-        "enum": [
-          "mansions"
-        ],
-        "type": "string",
         "additionalProperties": false
       },
       "meta": {
@@ -2259,13 +2253,6 @@
             "additionalProperties": false
           }
         ],
-        "additionalProperties": false
-      },
-      "toiletResourceType": {
-        "enum": [
-          "toilets"
-        ],
-        "type": "string",
         "additionalProperties": false
       }
     }

@@ -47,6 +47,12 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
 
         foreach ((string attributeName, object? attributeValue) in resourceObjectAttributes.EmptyIfNull())
         {
+            if (attributeName.Contains(':'))
+            {
+                // TODO: More reliable way to handle extensions?
+                continue;
+            }
+
             ConvertAttribute(resource, attributeName, attributeValue, resourceType, state);
         }
     }
