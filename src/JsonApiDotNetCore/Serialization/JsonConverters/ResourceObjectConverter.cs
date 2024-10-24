@@ -122,7 +122,7 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
                         }
                         case "relationships":
                         {
-                            resourceObject.Relationships = ReadSubTree<IDictionary<string, RelationshipObject?>>(ref reader, options);
+                            resourceObject.Relationships = ReadRelationships(ref reader, options);
                             break;
                         }
                         case "links":
@@ -197,6 +197,13 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
                     string attributeName = reader.GetString() ?? string.Empty;
                     reader.Read();
 
+                    if (attributeName.Contains(':'))
+                    {
+                        // TODO: More reliable way to handle extensions? Could provide a virtual method.
+                        reader.Skip();
+                        continue;
+                    }
+
                     AttrAttribute? attribute = resourceType.FindAttributeByPublicName(attributeName);
                     PropertyInfo? property = attribute?.Property;
 
@@ -234,6 +241,40 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
                         reader.Skip();
                     }
 
+                    break;
+                }
+            }
+        }
+
+        throw GetEndOfStreamError();
+    }
+
+    private static Dictionary<string, RelationshipObject?> ReadRelationships(ref Utf8JsonReader reader, JsonSerializerOptions options)
+    {
+        var relationships = new Dictionary<string, RelationshipObject?>();
+
+        while (reader.Read())
+        {
+            switch (reader.TokenType)
+            {
+                case JsonTokenType.EndObject:
+                {
+                    return relationships;
+                }
+                case JsonTokenType.PropertyName:
+                {
+                    string relationshipName = reader.GetString() ?? string.Empty;
+                    reader.Read();
+
+                    if (relationshipName.Contains(':'))
+                    {
+                        // TODO: More reliable way to handle extensions? Could provide a virtual method.
+                        reader.Skip();
+                        continue;
+                    }
+
+                    var relationshipObject = ReadSubTree<RelationshipObject?>(ref reader, options);
+                    relationships[relationshipName] = relationshipObject;
                     break;
                 }
             }

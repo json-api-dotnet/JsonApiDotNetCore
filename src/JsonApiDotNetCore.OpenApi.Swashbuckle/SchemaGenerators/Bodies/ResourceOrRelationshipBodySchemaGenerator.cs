@@ -81,10 +81,7 @@ internal sealed class ResourceOrRelationshipBodySchemaGenerator : BodySchemaGene
             fullSchemaForBody.Properties[JsonApiPropertyName.Data].Nullable = true;
         }
 
-        if (!isRequestSchema)
-        {
-            PostProcessForResourceInheritance(_resourceGraph, schemaRepository);
-        }
+        PostProcessForResourceInheritance(_resourceGraph, schemaRepository);
 
         return referenceSchemaForBody;
     }

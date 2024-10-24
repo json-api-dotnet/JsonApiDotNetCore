@@ -71,20 +71,34 @@ internal abstract class BodySchemaGenerator
         {
             foreach (ResourceType resourceType in resourceGraph.GetResourceTypes().Where(resourceType => resourceType.BaseType != null))
             {
-                Type dataInResponseType = typeof(ResourceDataInResponse<>).MakeGenericType(resourceType.ClrType);
+                Type dataInResponseSchemaType = typeof(ResourceDataInResponse<>).MakeGenericType(resourceType.ClrType);
+                ClearDataPropertiesInDerivedType(dataInResponseSchemaType, schemaRepository);
 
-                if (schemaRepository.TryLookupByType(dataInResponseType, out OpenApiSchema? referenceSchemaForDataInResponse))
-                {
-                    OpenApiSchema fullSchemaForDataInResponse = schemaRepository.Schemas[referenceSchemaForDataInResponse.Reference.Id];
-                    ResourceType ultimateBaseType = resourceType.GetUltimateBaseType();
+                Type dataInCreateRequestSchemaType = typeof(DataInCreateResourceRequest<>).MakeGenericType(resourceType.ClrType);
+                ClearDataPropertiesInDerivedType(dataInCreateRequestSchemaType, schemaRepository);
 
-                    ReplaceDeclaredType(fullSchemaForDataInResponse, typeof(AttributesInResponse<>), JsonApiPropertyName.Attributes, ultimateBaseType,
-                        schemaRepository);
-
-                    ReplaceDeclaredType(fullSchemaForDataInResponse, typeof(RelationshipsInResponse<>), JsonApiPropertyName.Relationships, ultimateBaseType,
-                        schemaRepository);
-                }
+                Type dataInUpdateRequestSchemaType = typeof(DataInUpdateResourceRequest<>).MakeGenericType(resourceType.ClrType);
+                ClearDataPropertiesInDerivedType(dataInUpdateRequestSchemaType, schemaRepository);
             }
+        }
+    }
+
+    private static void ClearDataPropertiesInDerivedType(Type dataSchemaType, SchemaRepository schemaRepository)
+    {
+        if (schemaRepository.TryLookupByType(dataSchemaType, out OpenApiSchema? referenceSchemaForData))
+        {
+            OpenApiSchema fullSchemaForData = schemaRepository.Schemas[referenceSchemaForData.Reference.Id];
+            OpenApiSchema fullSchemaForDerivedType = fullSchemaForData.UnwrapLastExtendedSchema();
+
+            // TODO: This shouldn't be needed. Instead, a derived object should be generated that only references base, without adding its own overriding properties.
+            // This still needs to be an allOf[2] though, otherwise NSwag eliminates the derived type entirely.
+            fullSchemaForDerivedType.Properties.Remove(JsonApiPropertyName.Type);
+            fullSchemaForDerivedType.Properties.Remove(JsonApiPropertyName.Id);
+            fullSchemaForDerivedType.Properties.Remove(JsonApiPropertyName.Links);
+            fullSchemaForDerivedType.Properties.Remove(JsonApiPropertyName.Meta);
+            fullSchemaForDerivedType.Properties.Remove(JsonApiPropertyName.Attributes);
+            fullSchemaForDerivedType.Properties.Remove(JsonApiPropertyName.Relationships);
+            fullSchemaForDerivedType.Required.Clear();
         }
     }
 

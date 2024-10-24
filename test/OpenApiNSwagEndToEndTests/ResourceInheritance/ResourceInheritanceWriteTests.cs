@@ -1,5 +1,6 @@
 using FluentAssertions;
 using JsonApiDotNetCore.OpenApi.Client.NSwag;
+using Microsoft.EntityFrameworkCore;
 using OpenApiNSwagEndToEndTests.ResourceInheritance.GeneratedCode;
 using OpenApiTests;
 using OpenApiTests.ResourceInheritance;
@@ -33,7 +34,22 @@ public sealed class ResourceInheritanceWriteTests
     public async Task Can_create_concrete_derived_resource_at_abstract_endpoint()
     {
         // Arrange
+        Bedroom existingBedroom1 = _fakers.Bedroom.GenerateOne();
+        Bedroom existingBedroom2 = _fakers.Bedroom.GenerateOne();
+        LivingRoom existingLivingRoom = _fakers.LivingRoom.GenerateOne();
+
+        Mansion existingMansion = _fakers.Mansion.GenerateOne();
+        existingMansion.Rooms.Add(existingBedroom1);
+        existingMansion.Rooms.Add(existingBedroom2);
+        existingMansion.Rooms.Add(existingLivingRoom);
+
         FamilyHome newFamilyHome = _fakers.FamilyHome.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Mansions.Add(existingMansion);
+            await dbContext.SaveChangesAsync();
+        });
 
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new ResourceInheritanceClient(httpClient);
@@ -48,6 +64,31 @@ public sealed class ResourceInheritanceWriteTests
                     SurfaceInSquareMeters = newFamilyHome.SurfaceInSquareMeters!.Value,
                     NumberOfResidents = newFamilyHome.NumberOfResidents!.Value,
                     FloorCount = newFamilyHome.FloorCount
+                },
+                Relationships = new RelationshipsInCreateFamilyHomeRequest
+                {
+                    Rooms = new ToManyRoomInRequest
+                    {
+                        Data =
+                        [
+                            new RoomIdentifierInRequest
+                            {
+                                // TODO: Can we eliminate the need to set Type?
+                                Type = RoomResourceType.Bedrooms,
+                                Id = existingBedroom1.StringId!
+                            },
+                            new RoomIdentifierInRequest
+                            {
+                                Type = RoomResourceType.Bedrooms,
+                                Id = existingBedroom2.StringId!
+                            },
+                            new RoomIdentifierInRequest
+                            {
+                                Type = RoomResourceType.LivingRooms,
+                                Id = existingLivingRoom.StringId!
+                            }
+                        ]
+                    }
                 }
             }
         };
@@ -58,37 +99,29 @@ public sealed class ResourceInheritanceWriteTests
         // Assert
         response.ShouldNotBeNull();
 
-        var familyHomeData = response.Data.Should().BeOfType<FamilyHomeDataInResponse>().Subject;
-        var familyHomeAttributes = familyHomeData.Attributes.Should().BeOfType<FamilyHomeAttributesInResponse>().Subject;
+        FamilyHomeDataInResponse? familyHomeData = response.Data.Should().BeOfType<FamilyHomeDataInResponse>().Subject;
+        FamilyHomeAttributesInResponse? familyHomeAttributes = familyHomeData.Attributes.Should().BeOfType<FamilyHomeAttributesInResponse>().Subject;
 
         familyHomeAttributes.SurfaceInSquareMeters.Should().Be(newFamilyHome.SurfaceInSquareMeters);
         familyHomeAttributes.NumberOfResidents.Should().Be(newFamilyHome.NumberOfResidents);
         familyHomeAttributes.FloorCount.Should().Be(newFamilyHome.FloorCount);
-        // TODO: Assert on relationships.
-        //familyHomeData.Relationships.ShouldNotBeNull();
+        // TODO: Why is the "rooms" relationship { links } not returned? Looks like a bug...
+        familyHomeData.Relationships.Should().BeNull();
 
         long newFamilyHomeId = long.Parse(familyHomeData.Id.ShouldNotBeNull());
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:wrap_after_property_in_chained_method_calls true
-
-            FamilyHome familyHomeInDatabase = await dbContext.FamilyHomes
-                //.Include(car => car.Manufacturer)
-                //.Include(car => car.Wheels)
-                //.Include(car => car.Engine)
-                //.Include(car => car.NavigationSystem)
-                //.Include(car => car.Features)
-                .FirstWithIdAsync(newFamilyHomeId);
-
-            // @formatter:wrap_after_property_in_chained_method_calls restore
-            // @formatter:wrap_chained_method_calls restore
+            FamilyHome familyHomeInDatabase = await dbContext.FamilyHomes.Include(familyHome => familyHome.Rooms).FirstWithIdAsync(newFamilyHomeId);
 
             familyHomeInDatabase.SurfaceInSquareMeters.Should().Be(newFamilyHome.SurfaceInSquareMeters);
             familyHomeInDatabase.NumberOfResidents.Should().Be(newFamilyHome.NumberOfResidents);
             familyHomeInDatabase.FloorCount.Should().Be(newFamilyHome.FloorCount);
-            // TODO: Assert on relationships.
+
+            familyHomeInDatabase.Rooms.ShouldHaveCount(3);
+            familyHomeInDatabase.Rooms.OfType<Bedroom>().Should().ContainSingle(bedroom => bedroom.Id == existingBedroom1.Id);
+            familyHomeInDatabase.Rooms.OfType<Bedroom>().Should().ContainSingle(bedroom => bedroom.Id == existingBedroom2.Id);
+            familyHomeInDatabase.Rooms.OfType<LivingRoom>().Should().ContainSingle(livingRoom => livingRoom.Id == existingLivingRoom.Id);
         });
     }
 

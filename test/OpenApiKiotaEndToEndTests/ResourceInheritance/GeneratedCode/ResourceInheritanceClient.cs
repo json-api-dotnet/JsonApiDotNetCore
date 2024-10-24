@@ -7,6 +7,7 @@ using Microsoft.Kiota.Serialization.Form;
 using Microsoft.Kiota.Serialization.Json;
 using Microsoft.Kiota.Serialization.Multipart;
 using Microsoft.Kiota.Serialization.Text;
+using OpenApiKiotaEndToEndTests.ResourceInheritance.GeneratedCode.Buildings;
 using OpenApiKiotaEndToEndTests.ResourceInheritance.GeneratedCode.Districts;
 using System.Collections.Generic;
 using System.IO;
@@ -20,6 +21,11 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.GeneratedCode
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     public partial class ResourceInheritanceClient : BaseRequestBuilder
     {
+        /// <summary>The buildings property</summary>
+        public global::OpenApiKiotaEndToEndTests.ResourceInheritance.GeneratedCode.Buildings.BuildingsRequestBuilder Buildings
+        {
+            get => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.GeneratedCode.Buildings.BuildingsRequestBuilder(PathParameters, RequestAdapter);
+        }
         /// <summary>The districts property</summary>
         public global::OpenApiKiotaEndToEndTests.ResourceInheritance.GeneratedCode.Districts.DistrictsRequestBuilder Districts
         {

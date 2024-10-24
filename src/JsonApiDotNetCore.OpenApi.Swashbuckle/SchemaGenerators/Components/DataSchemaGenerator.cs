@@ -114,13 +114,6 @@ internal sealed class DataSchemaGenerator
             {
                 SetResourceType(fullSchemaForResourceData, resourceTypeInfo.ResourceType, schemaRepository);
             }
-            else
-            {
-                // TODO: Should also remove attributes and relationships.
-                fullSchemaForResourceData.Properties.Remove(JsonApiPropertyName.Type);
-                //fullSchemaForResourceData.Properties.Remove(JsonApiPropertyName.Attributes);
-                //fullSchemaForResourceData.Properties.Remove(JsonApiPropertyName.Relationships);
-            }
         }
 
         SetResourceId(fullSchemaForDerivedType, resourceTypeInfo.ResourceType, schemaRepository);
@@ -138,8 +131,8 @@ internal sealed class DataSchemaGenerator
 
         if (fullSchemaForDerivedType.Properties.ContainsKey(JsonApiPropertyName.Relationships))
         {
-            SetResourceRelationships(fullSchemaForDerivedType, resourceTypeInfo.ResourceType, isRequestSchema, fieldSchemaBuilder,
-                referenceSchemaForBaseResourceData, schemaRepository);
+            SetResourceRelationships(fullSchemaForDerivedType, resourceTypeInfo, isRequestSchema, fieldSchemaBuilder, referenceSchemaForBaseResourceData,
+                schemaRepository);
         }
 
         if (!isRequestSchema && referenceSchemaForBaseResourceData != null)
@@ -378,7 +371,7 @@ internal sealed class DataSchemaGenerator
             referenceSchemaForAttributes.Reference.ReferenceV3;
     }
 
-    private OpenApiSchema SetResourceRelationships(OpenApiSchema fullSchemaForResourceData, ResourceType resourceType, bool forRequestSchema,
+    private OpenApiSchema SetResourceRelationships(OpenApiSchema fullSchemaForResourceData, ResourceTypeInfo resourceTypeInfo, bool forRequestSchema,
         ResourceFieldSchemaBuilder builder, OpenApiSchema? referenceSchemaForBaseResourceData, SchemaRepository schemaRepository)
     {
         OpenApiSchema referenceSchemaForRelationships =
@@ -393,19 +386,19 @@ internal sealed class DataSchemaGenerator
         }
 
         OpenApiSchema? referenceSchemaForBaseRelationships = null;
+        ResourceType resourceType = resourceTypeInfo.ResourceType;
 
-        // TODO: Handle DataInCreateResourceRequest<>
-        if (!forRequestSchema && resourceType.BaseType != null && referenceSchemaForBaseResourceData != null)
+        if (resourceType.BaseType != null && referenceSchemaForBaseResourceData != null)
         {
             OpenApiSchema fullSchemaForBaseResourceData = schemaRepository.Schemas[referenceSchemaForBaseResourceData.Reference.Id];
-            Type baseResourceDataConstructedType = typeof(ResourceDataInResponse<>).MakeGenericType(resourceType.BaseType.ClrType);
+            Type baseResourceDataConstructedType = resourceTypeInfo.ResourceDataOpenType.MakeGenericType(resourceType.BaseType.ClrType);
 
             var baseResourceTypeInfo = ResourceTypeInfo.Create(baseResourceDataConstructedType, _resourceGraph);
 
             var baseFieldSchemaBuilder = new ResourceFieldSchemaBuilder(_defaultSchemaGenerator, _resourceIdentifierSchemaGenerator,
                 _linksVisibilitySchemaGenerator, _resourceFieldValidationMetadataProvider, _relationshipTypeFactory, baseResourceTypeInfo);
 
-            referenceSchemaForBaseRelationships = SetResourceRelationships(fullSchemaForBaseResourceData, resourceType.BaseType, forRequestSchema,
+            referenceSchemaForBaseRelationships = SetResourceRelationships(fullSchemaForBaseResourceData, baseResourceTypeInfo, forRequestSchema,
                 baseFieldSchemaBuilder, null, schemaRepository);
 
             if (resourceType.BaseType.BaseType == null)
@@ -445,7 +438,7 @@ internal sealed class DataSchemaGenerator
 
         builder.SetMembersOfRelationships(fullSchemaForRelationships, forRequestSchema, schemaRepository);
 
-        if (fullSchemaForRelationships.Properties.Count == 0 && (!builder.ResourceType.IsPartOfTypeHierarchy() || forRequestSchema))
+        if (fullSchemaForRelationships.Properties.Count == 0 && !builder.ResourceType.IsPartOfTypeHierarchy())
         {
             fullSchemaForResourceData.Properties.Remove(JsonApiPropertyName.Relationships);
         }
@@ -468,17 +461,24 @@ internal sealed class DataSchemaGenerator
 
             schemaRepository.Schemas[referenceSchemaForRelationships.Reference.Id] = newFullSchemaForRelationships;
 
-            MapRelationshipsInDiscriminator(resourceType, referenceSchemaForRelationships, schemaRepository);
+            MapRelationshipsInDiscriminator(resourceTypeInfo, referenceSchemaForRelationships, schemaRepository);
         }
 
         return referenceSchemaForRelationships;
     }
 
-    private static void MapRelationshipsInDiscriminator(ResourceType resourceType, OpenApiSchema referenceSchemaForRelationships,
+    private static void MapRelationshipsInDiscriminator(ResourceTypeInfo resourceTypeInfo, OpenApiSchema referenceSchemaForRelationships,
         SchemaRepository schemaRepository)
     {
-        ResourceType ultimateBaseResourceType = resourceType.GetUltimateBaseType();
-        Type ultimateConstructedBaseType = typeof(RelationshipsInResponse<>).MakeGenericType(ultimateBaseResourceType.ClrType);
+        Type? relationshipsOpenClrType = resourceTypeInfo.ResourceDataOpenType.GetProperty("Relationships")?.PropertyType.ConstructedToOpenType();
+
+        if (relationshipsOpenClrType == null)
+        {
+            throw new UnreachableCodeException();
+        }
+
+        ResourceType ultimateBaseResourceType = resourceTypeInfo.ResourceType.GetUltimateBaseType();
+        Type ultimateConstructedBaseType = relationshipsOpenClrType.MakeGenericType(ultimateBaseResourceType.ClrType);
 
         if (!schemaRepository.TryLookupByType(ultimateConstructedBaseType, out OpenApiSchema? referenceSchemaForUltimateBaseRelationships))
         {
@@ -486,6 +486,8 @@ internal sealed class DataSchemaGenerator
         }
 
         OpenApiSchema fullSchemaForUltimateBaseRelationships = schemaRepository.Schemas[referenceSchemaForUltimateBaseRelationships.Reference.Id];
-        fullSchemaForUltimateBaseRelationships.Discriminator.Mapping[resourceType.PublicName] = referenceSchemaForRelationships.Reference.ReferenceV3;
+
+        fullSchemaForUltimateBaseRelationships.Discriminator.Mapping[resourceTypeInfo.ResourceType.PublicName] =
+            referenceSchemaForRelationships.Reference.ReferenceV3;
     }
 }
