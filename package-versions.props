@@ -22,7 +22,7 @@
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
     <!-- Published dependencies (only update on major version change) -->
-    <EntityFrameworkCoreFrozenVersion>N/A</EntityFrameworkCoreFrozenVersion>
+    <EntityFrameworkCoreFrozenVersion>9.0.0</EntityFrameworkCoreFrozenVersion>
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
     <AspNetCoreVersion>9.0.*</AspNetCoreVersion>

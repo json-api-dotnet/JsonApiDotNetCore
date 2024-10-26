@@ -27,7 +27,7 @@
   <!-- Specific to .NET 9 -->
   <PropertyGroup>
     <NuGetAuditMode>direct</NuGetAuditMode>
-    <NoWarn>$(NoWarn);NU1608;NETSDK1215</NoWarn>
+    <NoWarn>$(NoWarn);NU5104;NU1608</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
