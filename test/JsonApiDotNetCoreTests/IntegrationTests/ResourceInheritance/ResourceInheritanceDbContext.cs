@@ -12,6 +12,7 @@ public abstract class ResourceInheritanceDbContext(DbContextOptions options)
     public DbSet<Vehicle> Vehicles => Set<Vehicle>();
     public DbSet<Bike> Bikes => Set<Bike>();
     public DbSet<Tandem> Tandems => Set<Tandem>();
+    public DbSet<AlwaysMovingTandem> AlwaysMovingTandems => Set<AlwaysMovingTandem>();
     public DbSet<MotorVehicle> MotorVehicles => Set<MotorVehicle>();
     public DbSet<Car> Cars => Set<Car>();
     public DbSet<Truck> Trucks => Set<Truck>();
