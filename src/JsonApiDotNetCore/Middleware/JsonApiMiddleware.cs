@@ -66,7 +66,7 @@ public sealed partial class JsonApiMiddleware
                 try
                 {
                     ValidateIfMatchHeader(httpContext.Request);
-                    IReadOnlySet<JsonApiExtension> extensions = _contentNegotiator.Negotiate();
+                    IReadOnlySet<JsonApiMediaTypeExtension> extensions = _contentNegotiator.Negotiate();
 
                     if (isResourceRequest)
                     {
@@ -130,7 +130,7 @@ public sealed partial class JsonApiMiddleware
     }
 
     private static void SetupResourceRequest(JsonApiRequest request, ResourceType primaryResourceType, RouteValueDictionary routeValues,
-        HttpRequest httpRequest, IReadOnlySet<JsonApiExtension> extensions)
+        HttpRequest httpRequest, IReadOnlySet<JsonApiMediaTypeExtension> extensions)
     {
         AssertNoAtomicOperationsExtension(extensions);
 
@@ -184,9 +184,9 @@ public sealed partial class JsonApiMiddleware
         request.Extensions = extensions;
     }
 
-    private static void AssertNoAtomicOperationsExtension(IReadOnlySet<JsonApiExtension> extensions)
+    private static void AssertNoAtomicOperationsExtension(IReadOnlySet<JsonApiMediaTypeExtension> extensions)
     {
-        if (extensions.Contains(JsonApiExtension.AtomicOperations) || extensions.Contains(JsonApiExtension.RelaxedAtomicOperations))
+        if (extensions.Contains(JsonApiMediaTypeExtension.AtomicOperations) || extensions.Contains(JsonApiMediaTypeExtension.RelaxedAtomicOperations))
         {
             throw new InvalidOperationException("Incorrect content negotiation implementation detected: Unexpected atomic:operations extension found.");
         }
@@ -214,7 +214,7 @@ public sealed partial class JsonApiMiddleware
         return actionName == "PostOperations";
     }
 
-    private static void SetupOperationsRequest(JsonApiRequest request, IReadOnlySet<JsonApiExtension> extensions)
+    private static void SetupOperationsRequest(JsonApiRequest request, IReadOnlySet<JsonApiMediaTypeExtension> extensions)
     {
         AssertHasAtomicOperationsExtension(extensions);
 
@@ -223,9 +223,9 @@ public sealed partial class JsonApiMiddleware
         request.Extensions = extensions;
     }
 
-    private static void AssertHasAtomicOperationsExtension(IReadOnlySet<JsonApiExtension> extensions)
+    private static void AssertHasAtomicOperationsExtension(IReadOnlySet<JsonApiMediaTypeExtension> extensions)
     {
-        if (!extensions.Contains(JsonApiExtension.AtomicOperations) && !extensions.Contains(JsonApiExtension.RelaxedAtomicOperations))
+        if (!extensions.Contains(JsonApiMediaTypeExtension.AtomicOperations) && !extensions.Contains(JsonApiMediaTypeExtension.RelaxedAtomicOperations))
         {
             throw new InvalidOperationException("Incorrect content negotiation implementation detected: Missing atomic:operations extension.");
         }

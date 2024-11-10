@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Configuration;
 [PublicAPI]
 public sealed class JsonApiOptions : IJsonApiOptions
 {
-    private static readonly IReadOnlySet<JsonApiExtension> EmptyExtensionSet = new HashSet<JsonApiExtension>().AsReadOnly();
+    private static readonly IReadOnlySet<JsonApiMediaTypeExtension> EmptyExtensionSet = new HashSet<JsonApiMediaTypeExtension>().AsReadOnly();
     private readonly Lazy<JsonSerializerOptions> _lazySerializerWriteOptions;
     private readonly Lazy<JsonSerializerOptions> _lazySerializerReadOptions;
 
@@ -100,7 +100,7 @@ public sealed class JsonApiOptions : IJsonApiOptions
     public IsolationLevel? TransactionIsolationLevel { get; set; }
 
     /// <inheritdoc />
-    public IReadOnlySet<JsonApiExtension> Extensions { get; set; } = EmptyExtensionSet;
+    public IReadOnlySet<JsonApiMediaTypeExtension> Extensions { get; set; } = EmptyExtensionSet;
 
     /// <inheritdoc />
     public JsonSerializerOptions SerializerOptions { get; } = new()
@@ -142,15 +142,15 @@ public sealed class JsonApiOptions : IJsonApiOptions
     /// <param name="extensionsToAdd">
     /// The JSON:API extensions to add.
     /// </param>
-    public void IncludeExtensions(params JsonApiExtension[] extensionsToAdd)
+    public void IncludeExtensions(params JsonApiMediaTypeExtension[] extensionsToAdd)
     {
         ArgumentGuard.NotNull(extensionsToAdd);
 
         if (!Extensions.IsSupersetOf(extensionsToAdd))
         {
-            var extensions = new HashSet<JsonApiExtension>(Extensions);
+            var extensions = new HashSet<JsonApiMediaTypeExtension>(Extensions);
 
-            foreach (JsonApiExtension extension in extensionsToAdd)
+            foreach (JsonApiMediaTypeExtension extension in extensionsToAdd)
             {
                 extensions.Add(extension);
             }

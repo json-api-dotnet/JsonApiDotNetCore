@@ -6,16 +6,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation.CustomExten
 
 internal static class ServerTimeMediaTypes
 {
-    public static readonly JsonApiMediaType ServerTime = new([ServerTimeExtensions.ServerTime]);
-    public static readonly JsonApiMediaType RelaxedServerTime = new([ServerTimeExtensions.RelaxedServerTime]);
+    public static readonly JsonApiMediaType ServerTime = new([ServerTimeMediaTypeExtension.ServerTime]);
+    public static readonly JsonApiMediaType RelaxedServerTime = new([ServerTimeMediaTypeExtension.RelaxedServerTime]);
 
     public static readonly JsonApiMediaType AtomicOperationsWithServerTime = new([
-        JsonApiExtension.AtomicOperations,
-        ServerTimeExtensions.ServerTime
+        JsonApiMediaTypeExtension.AtomicOperations,
+        ServerTimeMediaTypeExtension.ServerTime
     ]);
 
     public static readonly JsonApiMediaType RelaxedAtomicOperationsWithRelaxedServerTime = new([
-        JsonApiExtension.RelaxedAtomicOperations,
-        ServerTimeExtensions.RelaxedServerTime
+        JsonApiMediaTypeExtension.RelaxedAtomicOperations,
+        ServerTimeMediaTypeExtension.RelaxedServerTime
     ]);
 }

@@ -30,7 +30,7 @@ public sealed class CustomExtensionsAcceptHeaderTests : IClassFixture<Integratio
         });
 
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.IncludeExtensions(ServerTimeExtensions.ServerTime, ServerTimeExtensions.RelaxedServerTime);
+        options.IncludeExtensions(ServerTimeMediaTypeExtension.ServerTime, ServerTimeMediaTypeExtension.RelaxedServerTime);
     }
 
     [Fact]
