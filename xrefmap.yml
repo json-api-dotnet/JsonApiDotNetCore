@@ -7,6 +7,38 @@ references:
   commentId: N:JsonApiDotNetCore.AtomicOperations
   fullName: JsonApiDotNetCore.AtomicOperations
   nameWithType: JsonApiDotNetCore.AtomicOperations
+- uid: JsonApiDotNetCore.AtomicOperations.DefaultOperationFilter
+  name: DefaultOperationFilter
+  href: api/JsonApiDotNetCore.AtomicOperations.DefaultOperationFilter.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.DefaultOperationFilter
+  fullName: JsonApiDotNetCore.AtomicOperations.DefaultOperationFilter
+  nameWithType: DefaultOperationFilter
+- uid: JsonApiDotNetCore.AtomicOperations.DefaultOperationFilter.GetJsonApiEndpoints(JsonApiDotNetCore.Configuration.ResourceType)
+  name: GetJsonApiEndpoints(ResourceType)
+  href: api/JsonApiDotNetCore.AtomicOperations.DefaultOperationFilter.html#JsonApiDotNetCore_AtomicOperations_DefaultOperationFilter_GetJsonApiEndpoints_JsonApiDotNetCore_Configuration_ResourceType_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.DefaultOperationFilter.GetJsonApiEndpoints(JsonApiDotNetCore.Configuration.ResourceType)
+  fullName: JsonApiDotNetCore.AtomicOperations.DefaultOperationFilter.GetJsonApiEndpoints(JsonApiDotNetCore.Configuration.ResourceType)
+  nameWithType: DefaultOperationFilter.GetJsonApiEndpoints(ResourceType)
+- uid: JsonApiDotNetCore.AtomicOperations.DefaultOperationFilter.GetJsonApiEndpoints*
+  name: GetJsonApiEndpoints
+  href: api/JsonApiDotNetCore.AtomicOperations.DefaultOperationFilter.html#JsonApiDotNetCore_AtomicOperations_DefaultOperationFilter_GetJsonApiEndpoints_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.DefaultOperationFilter.GetJsonApiEndpoints
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.DefaultOperationFilter.GetJsonApiEndpoints
+  nameWithType: DefaultOperationFilter.GetJsonApiEndpoints
+- uid: JsonApiDotNetCore.AtomicOperations.DefaultOperationFilter.IsEnabled(JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.Middleware.WriteOperationKind)
+  name: IsEnabled(ResourceType, WriteOperationKind)
+  href: api/JsonApiDotNetCore.AtomicOperations.DefaultOperationFilter.html#JsonApiDotNetCore_AtomicOperations_DefaultOperationFilter_IsEnabled_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_Middleware_WriteOperationKind_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.DefaultOperationFilter.IsEnabled(JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.Middleware.WriteOperationKind)
+  fullName: JsonApiDotNetCore.AtomicOperations.DefaultOperationFilter.IsEnabled(JsonApiDotNetCore.Configuration.ResourceType, JsonApiDotNetCore.Middleware.WriteOperationKind)
+  nameWithType: DefaultOperationFilter.IsEnabled(ResourceType, WriteOperationKind)
+- uid: JsonApiDotNetCore.AtomicOperations.DefaultOperationFilter.IsEnabled*
+  name: IsEnabled
+  href: api/JsonApiDotNetCore.AtomicOperations.DefaultOperationFilter.html#JsonApiDotNetCore_AtomicOperations_DefaultOperationFilter_IsEnabled_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.DefaultOperationFilter.IsEnabled
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.DefaultOperationFilter.IsEnabled
+  nameWithType: DefaultOperationFilter.IsEnabled
 - uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction
   name: EntityFrameworkCoreTransaction
   href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.html

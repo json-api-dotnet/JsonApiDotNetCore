@@ -4,6 +4,16 @@
   "files": [
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.AtomicOperations.DefaultOperationFilter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.AtomicOperations.DefaultOperationFilter.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.yml",
       "output": {
         ".html": {
