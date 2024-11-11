@@ -113,7 +113,7 @@ public sealed partial class JsonApiRoutingConvention : IJsonApiRoutingConvention
             else
             {
                 var options = (JsonApiOptions)_options;
-                options.IncludeExtensions(JsonApiExtension.AtomicOperations, JsonApiExtension.RelaxedAtomicOperations);
+                options.IncludeExtensions(JsonApiMediaTypeExtension.AtomicOperations, JsonApiMediaTypeExtension.RelaxedAtomicOperations);
             }
 
             if (IsRoutingConventionDisabled(controller))

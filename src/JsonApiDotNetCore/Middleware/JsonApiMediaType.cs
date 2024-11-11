@@ -22,23 +22,23 @@ public sealed class JsonApiMediaType : IEquatable<JsonApiMediaType>
     /// <summary>
     /// Gets the JSON:API media type with the "https://jsonapi.org/ext/atomic" extension.
     /// </summary>
-    public static readonly JsonApiMediaType AtomicOperations = new([JsonApiExtension.AtomicOperations]);
+    public static readonly JsonApiMediaType AtomicOperations = new([JsonApiMediaTypeExtension.AtomicOperations]);
 
     /// <summary>
     /// Gets the JSON:API media type with the "atomic-operations" extension.
     /// </summary>
-    public static readonly JsonApiMediaType RelaxedAtomicOperations = new([JsonApiExtension.RelaxedAtomicOperations]);
+    public static readonly JsonApiMediaType RelaxedAtomicOperations = new([JsonApiMediaTypeExtension.RelaxedAtomicOperations]);
 
-    public IReadOnlySet<JsonApiExtension> Extensions { get; }
+    public IReadOnlySet<JsonApiMediaTypeExtension> Extensions { get; }
 
-    public JsonApiMediaType(IReadOnlySet<JsonApiExtension> extensions)
+    public JsonApiMediaType(IReadOnlySet<JsonApiMediaTypeExtension> extensions)
     {
         ArgumentGuard.NotNull(extensions);
 
         Extensions = extensions;
     }
 
-    public JsonApiMediaType(IEnumerable<JsonApiExtension> extensions)
+    public JsonApiMediaType(IEnumerable<JsonApiMediaTypeExtension> extensions)
     {
         ArgumentGuard.NotNull(extensions);
 
@@ -69,7 +69,7 @@ public sealed class JsonApiMediaType : IEquatable<JsonApiMediaType>
 
             if (isBaseMatch)
             {
-                HashSet<JsonApiExtension> extensions = [];
+                HashSet<JsonApiMediaTypeExtension> extensions = [];
 
                 decimal qualityFactor = 1.0m;
 
@@ -97,13 +97,13 @@ public sealed class JsonApiMediaType : IEquatable<JsonApiMediaType>
         return null;
     }
 
-    private static void ParseExtensions(NameValueHeaderValue parameter, HashSet<JsonApiExtension> extensions)
+    private static void ParseExtensions(NameValueHeaderValue parameter, HashSet<JsonApiMediaTypeExtension> extensions)
     {
         string parameterValue = parameter.GetUnescapedValue().ToString();
 
         foreach (string extValue in parameterValue.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
         {
-            var extension = new JsonApiExtension(extValue);
+            var extension = new JsonApiMediaTypeExtension(extValue);
             extensions.Add(extension);
         }
     }
@@ -114,7 +114,7 @@ public sealed class JsonApiMediaType : IEquatable<JsonApiMediaType>
         List<NameValueHeaderValue> parameters = [];
         bool requiresEscape = false;
 
-        foreach (JsonApiExtension extension in Extensions)
+        foreach (JsonApiMediaTypeExtension extension in Extensions)
         {
             var extHeaderValue = new NameValueHeaderValue(ExtSegment);
             extHeaderValue.SetAndEscapeValue(extension.UnescapedValue);
@@ -178,7 +178,7 @@ public sealed class JsonApiMediaType : IEquatable<JsonApiMediaType>
     {
         int hashCode = 0;
 
-        foreach (JsonApiExtension extension in Extensions)
+        foreach (JsonApiMediaTypeExtension extension in Extensions)
         {
             hashCode = HashCode.Combine(hashCode, extension);
         }

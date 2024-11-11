@@ -7,7 +7,6 @@ using JsonApiDotNetCore.Queries.QueryableBuilding;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Serialization.JsonConverters;
 using JsonApiDotNetCore.Serialization.Request;
 using JsonApiDotNetCore.Serialization.Request.Adapters;
 using JsonApiDotNetCore.Serialization.Response;
@@ -74,6 +73,8 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder
         _services.TryAddSingleton(serviceProvider =>
         {
             var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+            var events = serviceProvider.GetRequiredService<IJsonApiApplicationBuilderEvents>();
+
             var resourceGraphBuilder = new ResourceGraphBuilder(_options, loggerFactory);
 
             var scanner = new ResourcesAssemblyScanner(_assemblyCache, resourceGraphBuilder);
@@ -93,8 +94,7 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder
             configureResourceGraph?.Invoke(resourceGraphBuilder);
 
             IResourceGraph resourceGraph = resourceGraphBuilder.Build();
-
-            _options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph));
+            events.ResourceGraphBuilt(resourceGraph);
 
             return resourceGraph;
         });
@@ -169,6 +169,7 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder
         _services.TryAddScoped<IQueryLayerComposer, QueryLayerComposer>();
         _services.TryAddScoped<IInverseNavigationResolver, InverseNavigationResolver>();
         _services.TryAddSingleton<IDocumentDescriptionLinkProvider, NoDocumentDescriptionLinkProvider>();
+        _services.TryAddSingleton<IJsonApiApplicationBuilderEvents, DefaultJsonApiApplicationBuilderEvents>();
     }
 
     private void AddMiddlewareLayer()
