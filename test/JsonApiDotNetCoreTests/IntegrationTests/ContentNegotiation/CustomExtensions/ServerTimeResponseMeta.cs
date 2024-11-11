@@ -9,7 +9,7 @@ internal sealed class ServerTimeResponseMeta(IJsonApiRequest request, RequestDoc
 
     public IDictionary<string, object?>? GetMeta()
     {
-        if (request.Extensions.Contains(ServerTimeExtensions.ServerTime) || request.Extensions.Contains(ServerTimeExtensions.RelaxedServerTime))
+        if (request.Extensions.Contains(ServerTimeMediaTypeExtension.ServerTime) || request.Extensions.Contains(ServerTimeMediaTypeExtension.RelaxedServerTime))
         {
             if (_documentStore.Document is not { Meta: not null } || !_documentStore.Document.Meta.TryGetValue("useLocalTime", out object? useLocalTimeValue) ||
                 useLocalTimeValue == null || !bool.TryParse(useLocalTimeValue.ToString(), out bool useLocalTime))

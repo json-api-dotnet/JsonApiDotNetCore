@@ -7,13 +7,37 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.AtomicOperations;
 
 /// <inheritdoc />
-internal sealed class DefaultOperationFilter : IAtomicOperationFilter
+public class DefaultOperationFilter : IAtomicOperationFilter
 {
     /// <inheritdoc />
-    public bool IsEnabled(ResourceType resourceType, WriteOperationKind writeOperation)
+    public virtual bool IsEnabled(ResourceType resourceType, WriteOperationKind writeOperation)
     {
+        ArgumentGuard.NotNull(resourceType);
+
+        // To match the behavior of non-operations controllers:
+        // If an operation is enabled on a base type, it is implicitly enabled on all derived types.
+        ResourceType currentResourceType = resourceType;
+
+        while (true)
+        {
+            JsonApiEndpoints? endpoints = GetJsonApiEndpoints(currentResourceType);
+            bool isEnabled = endpoints != null && Contains(endpoints.Value, writeOperation);
+
+            if (isEnabled || currentResourceType.BaseType == null)
+            {
+                return isEnabled;
+            }
+
+            currentResourceType = currentResourceType.BaseType;
+        }
+    }
+
+    protected virtual JsonApiEndpoints? GetJsonApiEndpoints(ResourceType resourceType)
+    {
+        ArgumentGuard.NotNull(resourceType);
+
         var resourceAttribute = resourceType.ClrType.GetCustomAttribute<ResourceAttribute>();
-        return resourceAttribute != null && Contains(resourceAttribute.GenerateControllerEndpoints, writeOperation);
+        return resourceAttribute?.GenerateControllerEndpoints;
     }
 
     private static bool Contains(JsonApiEndpoints endpoints, WriteOperationKind writeOperation)

@@ -6,14 +6,14 @@ namespace JsonApiDotNetCore.Middleware;
 /// Represents a JSON:API extension (in unescaped format), which occurs as an "ext" parameter inside an HTTP Accept or Content-Type header.
 /// </summary>
 [PublicAPI]
-public sealed class JsonApiExtension : IEquatable<JsonApiExtension>
+public sealed class JsonApiMediaTypeExtension : IEquatable<JsonApiMediaTypeExtension>
 {
-    public static readonly JsonApiExtension AtomicOperations = new("https://jsonapi.org/ext/atomic");
-    public static readonly JsonApiExtension RelaxedAtomicOperations = new("atomic-operations");
+    public static readonly JsonApiMediaTypeExtension AtomicOperations = new("https://jsonapi.org/ext/atomic");
+    public static readonly JsonApiMediaTypeExtension RelaxedAtomicOperations = new("atomic-operations");
 
     public string UnescapedValue { get; }
 
-    public JsonApiExtension(string unescapedValue)
+    public JsonApiMediaTypeExtension(string unescapedValue)
     {
         ArgumentGuard.NotNullNorEmpty(unescapedValue);
 
@@ -25,7 +25,7 @@ public sealed class JsonApiExtension : IEquatable<JsonApiExtension>
         return UnescapedValue;
     }
 
-    public bool Equals(JsonApiExtension? other)
+    public bool Equals(JsonApiMediaTypeExtension? other)
     {
         if (other is null)
         {
@@ -42,7 +42,7 @@ public sealed class JsonApiExtension : IEquatable<JsonApiExtension>
 
     public override bool Equals(object? other)
     {
-        return Equals(other as JsonApiExtension);
+        return Equals(other as JsonApiMediaTypeExtension);
     }
 
     public override int GetHashCode()
