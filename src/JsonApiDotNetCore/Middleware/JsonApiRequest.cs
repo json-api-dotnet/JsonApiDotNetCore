@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Middleware;
 [PublicAPI]
 public sealed class JsonApiRequest : IJsonApiRequest
 {
-    private static readonly IReadOnlySet<JsonApiExtension> EmptyExtensionSet = new HashSet<JsonApiExtension>().AsReadOnly();
+    private static readonly IReadOnlySet<JsonApiMediaTypeExtension> EmptyExtensionSet = new HashSet<JsonApiMediaTypeExtension>().AsReadOnly();
 
     /// <inheritdoc />
     public EndpointKind Kind { get; set; }
@@ -38,7 +38,7 @@ public sealed class JsonApiRequest : IJsonApiRequest
     public string? TransactionId { get; set; }
 
     /// <inheritdoc />
-    public IReadOnlySet<JsonApiExtension> Extensions { get; set; } = EmptyExtensionSet;
+    public IReadOnlySet<JsonApiMediaTypeExtension> Extensions { get; set; } = EmptyExtensionSet;
 
     /// <inheritdoc />
     public void CopyFrom(IJsonApiRequest other)

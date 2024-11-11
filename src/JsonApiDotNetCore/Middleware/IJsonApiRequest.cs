@@ -63,7 +63,7 @@ public interface IJsonApiRequest
     /// <summary>
     /// The JSON:API extensions enabled for the current request. This is always a subset of <see cref="IJsonApiOptions.Extensions" />.
     /// </summary>
-    IReadOnlySet<JsonApiExtension> Extensions { get; }
+    IReadOnlySet<JsonApiMediaTypeExtension> Extensions { get; }
 
     /// <summary>
     /// Performs a shallow copy.

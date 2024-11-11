@@ -47,7 +47,7 @@ public sealed class JsonApiMiddlewareTests
     {
         // Arrange
         var options = new JsonApiOptions();
-        options.IncludeExtensions(JsonApiExtension.AtomicOperations);
+        options.IncludeExtensions(JsonApiMediaTypeExtension.AtomicOperations);
 
         var request = new JsonApiRequest();
 

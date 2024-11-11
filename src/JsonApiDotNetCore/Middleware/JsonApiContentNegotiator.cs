@@ -36,7 +36,7 @@ public class JsonApiContentNegotiator : IJsonApiContentNegotiator
     }
 
     /// <inheritdoc />
-    public IReadOnlySet<JsonApiExtension> Negotiate()
+    public IReadOnlySet<JsonApiMediaTypeExtension> Negotiate()
     {
         IReadOnlyList<JsonApiMediaType> possibleMediaTypes = GetPossibleMediaTypes();
 
@@ -66,7 +66,7 @@ public class JsonApiContentNegotiator : IJsonApiContentNegotiator
         return mediaType;
     }
 
-    private IReadOnlySet<JsonApiExtension> ValidateAcceptHeader(IReadOnlyList<JsonApiMediaType> possibleMediaTypes, JsonApiMediaType? requestMediaType)
+    private IReadOnlySet<JsonApiMediaTypeExtension> ValidateAcceptHeader(IReadOnlyList<JsonApiMediaType> possibleMediaTypes, JsonApiMediaType? requestMediaType)
     {
         string[] acceptHeaderValues = HttpContext.Request.Headers.GetCommaSeparatedValues("Accept");
         JsonApiMediaType? bestMatch = null;
@@ -166,12 +166,12 @@ public class JsonApiContentNegotiator : IJsonApiContentNegotiator
 
         if (IsOperationsEndpoint())
         {
-            if (_options.Extensions.Contains(JsonApiExtension.AtomicOperations))
+            if (_options.Extensions.Contains(JsonApiMediaTypeExtension.AtomicOperations))
             {
                 mediaTypes.Add(JsonApiMediaType.AtomicOperations);
             }
 
-            if (_options.Extensions.Contains(JsonApiExtension.RelaxedAtomicOperations))
+            if (_options.Extensions.Contains(JsonApiMediaTypeExtension.RelaxedAtomicOperations))
             {
                 mediaTypes.Add(JsonApiMediaType.RelaxedAtomicOperations);
             }

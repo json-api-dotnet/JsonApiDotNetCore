@@ -17,22 +17,24 @@ internal sealed class ServerTimeContentNegotiator(IJsonApiOptions options, IHttp
 
         if (IsOperationsEndpoint())
         {
-            if (_options.Extensions.Contains(JsonApiExtension.AtomicOperations))
+            if (_options.Extensions.Contains(JsonApiMediaTypeExtension.AtomicOperations))
             {
                 mediaTypes.Add(JsonApiMediaType.AtomicOperations);
             }
 
-            if (_options.Extensions.Contains(JsonApiExtension.AtomicOperations) && _options.Extensions.Contains(ServerTimeExtensions.ServerTime))
+            if (_options.Extensions.Contains(JsonApiMediaTypeExtension.AtomicOperations) &&
+                _options.Extensions.Contains(ServerTimeMediaTypeExtension.ServerTime))
             {
                 mediaTypes.Add(ServerTimeMediaTypes.AtomicOperationsWithServerTime);
             }
 
-            if (_options.Extensions.Contains(JsonApiExtension.RelaxedAtomicOperations))
+            if (_options.Extensions.Contains(JsonApiMediaTypeExtension.RelaxedAtomicOperations))
             {
                 mediaTypes.Add(JsonApiMediaType.RelaxedAtomicOperations);
             }
 
-            if (_options.Extensions.Contains(JsonApiExtension.RelaxedAtomicOperations) && _options.Extensions.Contains(ServerTimeExtensions.RelaxedServerTime))
+            if (_options.Extensions.Contains(JsonApiMediaTypeExtension.RelaxedAtomicOperations) &&
+                _options.Extensions.Contains(ServerTimeMediaTypeExtension.RelaxedServerTime))
             {
                 mediaTypes.Add(ServerTimeMediaTypes.RelaxedAtomicOperationsWithRelaxedServerTime);
             }
@@ -41,12 +43,12 @@ internal sealed class ServerTimeContentNegotiator(IJsonApiOptions options, IHttp
         {
             mediaTypes.Add(JsonApiMediaType.Default);
 
-            if (_options.Extensions.Contains(ServerTimeExtensions.ServerTime))
+            if (_options.Extensions.Contains(ServerTimeMediaTypeExtension.ServerTime))
             {
                 mediaTypes.Add(ServerTimeMediaTypes.ServerTime);
             }
 
-            if (_options.Extensions.Contains(ServerTimeExtensions.RelaxedServerTime))
+            if (_options.Extensions.Contains(ServerTimeMediaTypeExtension.RelaxedServerTime))
             {
                 mediaTypes.Add(ServerTimeMediaTypes.RelaxedServerTime);
             }
