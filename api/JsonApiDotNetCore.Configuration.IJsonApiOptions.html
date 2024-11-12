@@ -424,13 +424,13 @@ can be overruled per relationship using <a class="xref" href="JsonApiDotNetCore.
   </h3>
 
   <div class="markdown level1 summary"><p>Lists the JSON:API extensions that are turned on. Empty by default, but if your project contains a controller that derives from
-<a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.html">BaseJsonApiOperationsController</a>, the <a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiExtension.html#JsonApiDotNetCore_Middleware_JsonApiExtension_AtomicOperations">AtomicOperations</a> and
-<a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiExtension.html#JsonApiDotNetCore_Middleware_JsonApiExtension_RelaxedAtomicOperations">RelaxedAtomicOperations</a> extensions are automatically added.</p>
+<a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.html">BaseJsonApiOperationsController</a>, the <a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiMediaTypeExtension.html#JsonApiDotNetCore_Middleware_JsonApiMediaTypeExtension_AtomicOperations">AtomicOperations</a> and
+<a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiMediaTypeExtension.html#JsonApiDotNetCore_Middleware_JsonApiMediaTypeExtension_RelaxedAtomicOperations">RelaxedAtomicOperations</a> extensions are automatically added.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IReadOnlySet&lt;JsonApiExtension&gt; Extensions { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">IReadOnlySet&lt;JsonApiMediaTypeExtension&gt; Extensions { get; }</code></pre>
   </div>
 
 
@@ -439,7 +439,7 @@ can be overruled per relationship using <a class="xref" href="JsonApiDotNetCore.
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlyset-1">IReadOnlySet</a>&lt;<a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiExtension.html">JsonApiExtension</a>&gt;</dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlyset-1">IReadOnlySet</a>&lt;<a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiMediaTypeExtension.html">JsonApiMediaTypeExtension</a>&gt;</dt>
     <dd></dd>
   </dl>
 

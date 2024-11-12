@@ -146,8 +146,8 @@ public sealed class JsonApiMediaType : IEquatable&lt;JsonApiMediaType&gt;</code>
 
   <a id="JsonApiDotNetCore_Middleware_JsonApiMediaType__ctor_" data-uid="JsonApiDotNetCore.Middleware.JsonApiMediaType.#ctor*"></a>
 
-  <h3 id="JsonApiDotNetCore_Middleware_JsonApiMediaType__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Middleware_JsonApiExtension__" data-uid="JsonApiDotNetCore.Middleware.JsonApiMediaType.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Middleware.JsonApiExtension})">
-  JsonApiMediaType(IEnumerable&lt;JsonApiExtension&gt;)
+  <h3 id="JsonApiDotNetCore_Middleware_JsonApiMediaType__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Middleware_JsonApiMediaTypeExtension__" data-uid="JsonApiDotNetCore.Middleware.JsonApiMediaType.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Middleware.JsonApiMediaTypeExtension})">
+  JsonApiMediaType(IEnumerable&lt;JsonApiMediaTypeExtension&gt;)
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMediaType.cs/#L41"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -155,12 +155,12 @@ public sealed class JsonApiMediaType : IEquatable&lt;JsonApiMediaType&gt;</code>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public JsonApiMediaType(IEnumerable&lt;JsonApiExtension&gt; extensions)</code></pre>
+    <pre><code class="lang-csharp hljs">public JsonApiMediaType(IEnumerable&lt;JsonApiMediaTypeExtension&gt; extensions)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>extensions</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiExtension.html">JsonApiExtension</a>&gt;</dt>
+    <dt><code>extensions</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiMediaTypeExtension.html">JsonApiMediaTypeExtension</a>&gt;</dt>
     <dd></dd>
   </dl>
 
@@ -177,8 +177,8 @@ public sealed class JsonApiMediaType : IEquatable&lt;JsonApiMediaType&gt;</code>
 
   <a id="JsonApiDotNetCore_Middleware_JsonApiMediaType__ctor_" data-uid="JsonApiDotNetCore.Middleware.JsonApiMediaType.#ctor*"></a>
 
-  <h3 id="JsonApiDotNetCore_Middleware_JsonApiMediaType__ctor_System_Collections_Generic_IReadOnlySet_JsonApiDotNetCore_Middleware_JsonApiExtension__" data-uid="JsonApiDotNetCore.Middleware.JsonApiMediaType.#ctor(System.Collections.Generic.IReadOnlySet{JsonApiDotNetCore.Middleware.JsonApiExtension})">
-  JsonApiMediaType(IReadOnlySet&lt;JsonApiExtension&gt;)
+  <h3 id="JsonApiDotNetCore_Middleware_JsonApiMediaType__ctor_System_Collections_Generic_IReadOnlySet_JsonApiDotNetCore_Middleware_JsonApiMediaTypeExtension__" data-uid="JsonApiDotNetCore.Middleware.JsonApiMediaType.#ctor(System.Collections.Generic.IReadOnlySet{JsonApiDotNetCore.Middleware.JsonApiMediaTypeExtension})">
+  JsonApiMediaType(IReadOnlySet&lt;JsonApiMediaTypeExtension&gt;)
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiMediaType.cs/#L34"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -186,12 +186,12 @@ public sealed class JsonApiMediaType : IEquatable&lt;JsonApiMediaType&gt;</code>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public JsonApiMediaType(IReadOnlySet&lt;JsonApiExtension&gt; extensions)</code></pre>
+    <pre><code class="lang-csharp hljs">public JsonApiMediaType(IReadOnlySet&lt;JsonApiMediaTypeExtension&gt; extensions)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>extensions</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlyset-1">IReadOnlySet</a>&lt;<a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiExtension.html">JsonApiExtension</a>&gt;</dt>
+    <dt><code>extensions</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlyset-1">IReadOnlySet</a>&lt;<a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiMediaTypeExtension.html">JsonApiMediaTypeExtension</a>&gt;</dt>
     <dd></dd>
   </dl>
 
@@ -318,7 +318,7 @@ public sealed class JsonApiMediaType : IEquatable&lt;JsonApiMediaType&gt;</code>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IReadOnlySet&lt;JsonApiExtension&gt; Extensions { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IReadOnlySet&lt;JsonApiMediaTypeExtension&gt; Extensions { get; }</code></pre>
   </div>
 
 
@@ -327,7 +327,7 @@ public sealed class JsonApiMediaType : IEquatable&lt;JsonApiMediaType&gt;</code>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlyset-1">IReadOnlySet</a>&lt;<a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiExtension.html">JsonApiExtension</a>&gt;</dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlyset-1">IReadOnlySet</a>&lt;<a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiMediaTypeExtension.html">JsonApiMediaTypeExtension</a>&gt;</dt>
     <dd></dd>
   </dl>
 

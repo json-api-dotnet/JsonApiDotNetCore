@@ -1034,16 +1034,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiExtension.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiExtension.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiInputFormatter.yml",
       "output": {
         ".html": {
@@ -1058,6 +1048,16 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiMediaType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiMediaTypeExtension.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiMediaTypeExtension.html"
         }
       },
       "version": ""
