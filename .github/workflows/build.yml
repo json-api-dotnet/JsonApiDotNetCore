@@ -110,7 +110,7 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
       with:
         fail_ci_if_error: true
         verbose: true
