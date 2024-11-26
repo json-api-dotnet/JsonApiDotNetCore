@@ -122,7 +122,7 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
         {
             // Depending on the left side of the include chain, we may match relationships anywhere in the resource type hierarchy.
             // This is compensated for when rendering the response, which substitutes relationships on base types with the derived ones.
-            IReadOnlySet<RelationshipAttribute> relationships = parent.Relationship.RightType.GetRelationshipsInTypeOrDerived(relationshipName);
+            HashSet<RelationshipAttribute> relationships = GetRelationshipsInConcreteTypes(parent.Relationship.RightType, relationshipName);
 
             if (relationships.Count > 0)
             {
@@ -138,6 +138,32 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
         AssertAtLeastOneCanBeIncluded(relationshipsFound, relationshipName, source, position);
 
         return children.AsReadOnly();
+    }
+
+    private static HashSet<RelationshipAttribute> GetRelationshipsInConcreteTypes(ResourceType resourceType, string relationshipName)
+    {
+        HashSet<RelationshipAttribute> relationshipsToInclude = [];
+
+        foreach (RelationshipAttribute relationship in resourceType.GetRelationshipsInTypeOrDerived(relationshipName))
+        {
+            if (!relationship.LeftType.ClrType.IsAbstract)
+            {
+                relationshipsToInclude.Add(relationship);
+            }
+
+            IncludeRelationshipsFromConcreteDerivedTypes(relationship, relationshipsToInclude);
+        }
+
+        return relationshipsToInclude;
+    }
+
+    private static void IncludeRelationshipsFromConcreteDerivedTypes(RelationshipAttribute relationship, HashSet<RelationshipAttribute> relationshipsToInclude)
+    {
+        foreach (ResourceType derivedType in relationship.LeftType.GetAllConcreteDerivedTypes())
+        {
+            RelationshipAttribute relationshipInDerived = derivedType.GetRelationshipByPublicName(relationship.PublicName);
+            relationshipsToInclude.Add(relationshipInDerived);
+        }
     }
 
     private static void AssertRelationshipsFound(HashSet<RelationshipAttribute> relationshipsFound, string relationshipName,

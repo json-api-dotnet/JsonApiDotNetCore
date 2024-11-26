@@ -20,6 +20,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     {
         _testContext = testContext;
 
+        testContext.UseController<VehicleManufacturersController>();
+
         testContext.UseController<VehiclesController>();
         testContext.UseController<BikesController>();
         testContext.UseController<TandemsController>();
@@ -378,6 +380,53 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         responseDocument.Data.SingleValue.Id.Should().Be(tandem.StringId);
         responseDocument.Data.SingleValue.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
         responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
+    }
+
+    [Fact]
+    public async Task Can_get_primary_resource_with_derived_includes()
+    {
+        // Arrange
+        VehicleManufacturer manufacturer = _fakers.VehicleManufacturer.GenerateOne();
+
+        Bike bike = _fakers.Bike.GenerateOne();
+        bike.Lights = _fakers.BicycleLight.GenerateSet(15);
+        manufacturer.Vehicles.Add(bike);
+
+        Tandem tandem = _fakers.Tandem.GenerateOne();
+        tandem.Features = _fakers.GenericFeature.GenerateSet(15);
+        manufacturer.Vehicles.Add(tandem);
+
+        Car car = _fakers.Car.GenerateOne();
+        car.Engine = _fakers.GasolineEngine.GenerateOne();
+        car.Features = _fakers.GenericFeature.GenerateSet(15);
+        manufacturer.Vehicles.Add(car);
+
+        Truck truck = _fakers.Truck.GenerateOne();
+        truck.Engine = _fakers.GasolineEngine.GenerateOne();
+        truck.Features = _fakers.GenericFeature.GenerateSet(15);
+        manufacturer.Vehicles.Add(truck);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.VehicleManufacturers.Add(manufacturer);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/vehicleManufacturers/{manufacturer.StringId}?include=vehicles.lights,vehicles.features";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Type.Should().Be("vehicleManufacturers");
+        responseDocument.Data.SingleValue.Id.Should().Be(manufacturer.StringId);
+
+        responseDocument.Included.ShouldNotBeNull();
+        responseDocument.Included.Where(include => include.Type == "bicycleLights").Should().HaveCount(10);
+        responseDocument.Included.Where(include => include.Type == "genericFeatures").Should().HaveCount(10 * 3);
     }
 
     [Fact]
@@ -1716,6 +1765,17 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
                   "id": "{{bike.Manufacturer.StringId}}",
                   "attributes": {
                     "name": "{{bike.Manufacturer.Name}}"
+                  },
+                  "relationships": {
+                    "vehicles": {
+                      "links": {
+                        "self": "/vehicleManufacturers/{{bike.Manufacturer.StringId}}/relationships/vehicles",
+                        "related": "/vehicleManufacturers/{{bike.Manufacturer.StringId}}/vehicles"
+                      }
+                    }
+                  },
+                  "links": {
+                    "self": "/vehicleManufacturers/{{bike.Manufacturer.StringId}}"
                   }
                 },
                 {
@@ -1822,6 +1882,17 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
                   "id": "{{car.Manufacturer.StringId}}",
                   "attributes": {
                     "name": "{{car.Manufacturer.Name}}"
+                  },
+                  "relationships": {
+                    "vehicles": {
+                      "links": {
+                        "self": "/vehicleManufacturers/{{car.Manufacturer.StringId}}/relationships/vehicles",
+                        "related": "/vehicleManufacturers/{{car.Manufacturer.StringId}}/vehicles"
+                      }
+                    }
+                  },
+                  "links": {
+                    "self": "/vehicleManufacturers/{{car.Manufacturer.StringId}}"
                   }
                 },
                 {
@@ -1903,6 +1974,17 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
                   "id": "{{tandem.Manufacturer.StringId}}",
                   "attributes": {
                     "name": "{{tandem.Manufacturer.Name}}"
+                  },
+                  "relationships": {
+                    "vehicles": {
+                      "links": {
+                        "self": "/vehicleManufacturers/{{tandem.Manufacturer.StringId}}/relationships/vehicles",
+                        "related": "/vehicleManufacturers/{{tandem.Manufacturer.StringId}}/vehicles"
+                      }
+                    }
+                  },
+                  "links": {
+                    "self": "/vehicleManufacturers/{{tandem.Manufacturer.StringId}}"
                   }
                 },
                 {
@@ -1997,6 +2079,17 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
                   "id": "{{truck.Manufacturer.StringId}}",
                   "attributes": {
                     "name": "{{truck.Manufacturer.Name}}"
+                  },
+                  "relationships": {
+                    "vehicles": {
+                      "links": {
+                        "self": "/vehicleManufacturers/{{truck.Manufacturer.StringId}}/relationships/vehicles",
+                        "related": "/vehicleManufacturers/{{truck.Manufacturer.StringId}}/vehicles"
+                      }
+                    }
+                  },
+                  "links": {
+                    "self": "/vehicleManufacturers/{{truck.Manufacturer.StringId}}"
                   }
                 },
                 {

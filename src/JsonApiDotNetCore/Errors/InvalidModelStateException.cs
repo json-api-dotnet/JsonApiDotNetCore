@@ -319,8 +319,6 @@ public sealed class InvalidModelStateException(
         Func<Type, int, Type?>? getCollectionElementTypeCallback)
         : ModelStateKeySegment(modelType, isInComplexType, nextKey, sourcePointer, parent, getCollectionElementTypeCallback)
     {
-        private static readonly CollectionConverter CollectionConverter = new();
-
         public int ArrayIndex { get; } = arrayIndex;
 
         public Type GetCollectionElementType()
@@ -333,7 +331,7 @@ public sealed class InvalidModelStateException(
         {
             if (ModelType != typeof(string))
             {
-                Type? elementType = CollectionConverter.FindCollectionElementType(ModelType);
+                Type? elementType = CollectionConverter.Instance.FindCollectionElementType(ModelType);
 
                 if (elementType != null)
                 {
