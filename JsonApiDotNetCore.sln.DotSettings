@@ -668,6 +668,7 @@ $left$ = $right$;</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D29C3A091CD9E74BBFDF1B8974F5A977/SearchPattern/@EntryValue">if ($argument$ is null) throw new ArgumentNullException(nameof($argument$));</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D29C3A091CD9E74BBFDF1B8974F5A977/Severity/@EntryValue">WARNING</s:String>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Accurize/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=accurized/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=appsettings/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Assignee/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Contoso/@EntryIndexedValue">True</s:Boolean>

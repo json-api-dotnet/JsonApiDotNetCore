@@ -29,36 +29,47 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
     {
         ArgumentGuard.NotNull(selection);
 
-        Expression bodyInitializer = CreateLambdaBodyInitializer(selection, context.ResourceType, context.LambdaScope, false, context);
+        Expression bodyInitializer = CreateLambdaBodyInitializer(selection, context.ResourceType, false, context);
 
         LambdaExpression lambda = Expression.Lambda(bodyInitializer, context.LambdaScope.Parameter);
 
         return SelectExtensionMethodCall(context.ExtensionType, context.Source, context.LambdaScope.Parameter.Type, lambda);
     }
 
-    private Expression CreateLambdaBodyInitializer(FieldSelection selection, ResourceType resourceType, LambdaScope lambdaScope,
-        bool lambdaAccessorRequiresTestForNull, QueryClauseBuilderContext context)
+    private Expression CreateLambdaBodyInitializer(FieldSelection selection, ResourceType resourceType, bool lambdaAccessorRequiresTestForNull,
+        QueryClauseBuilderContext context)
     {
+        AssertSameType(context.LambdaScope.Accessor.Type, resourceType);
+
         IReadOnlyEntityType entityType = context.EntityModel.FindEntityType(resourceType.ClrType)!;
         IReadOnlyEntityType[] concreteEntityTypes = entityType.GetConcreteDerivedTypesInclusive().ToArray();
 
         Expression bodyInitializer = concreteEntityTypes.Length > 1
-            ? CreateLambdaBodyInitializerForTypeHierarchy(selection, resourceType, concreteEntityTypes, lambdaScope, context)
-            : CreateLambdaBodyInitializerForSingleType(selection, resourceType, lambdaScope, context);
+            ? CreateLambdaBodyInitializerForTypeHierarchy(selection, resourceType, concreteEntityTypes, context)
+            : CreateLambdaBodyInitializerForSingleType(selection, resourceType, context);
 
         if (!lambdaAccessorRequiresTestForNull)
         {
             return bodyInitializer;
         }
 
-        return TestForNull(lambdaScope.Accessor, bodyInitializer);
+        return TestForNull(context.LambdaScope.Accessor, bodyInitializer);
+    }
+
+    private static void AssertSameType(Type lambdaAccessorType, ResourceType resourceType)
+    {
+        if (lambdaAccessorType != resourceType.ClrType)
+        {
+            throw new InvalidOperationException(
+                $"Internal error: Mismatch between lambda accessor type '{lambdaAccessorType.Name}' and resource type '{resourceType.ClrType.Name}'.");
+        }
     }
 
     private Expression CreateLambdaBodyInitializerForTypeHierarchy(FieldSelection selection, ResourceType baseResourceType,
-        IEnumerable<IReadOnlyEntityType> concreteEntityTypes, LambdaScope lambdaScope, QueryClauseBuilderContext context)
+        IEnumerable<IReadOnlyEntityType> concreteEntityTypes, QueryClauseBuilderContext context)
     {
         IReadOnlySet<ResourceType> resourceTypes = selection.GetResourceTypes();
-        Expression rootCondition = lambdaScope.Accessor;
+        Expression rootCondition = context.LambdaScope.Accessor;
 
         foreach (IReadOnlyEntityType entityType in concreteEntityTypes)
         {
@@ -73,14 +84,14 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
                     Dictionary<PropertyInfo, PropertySelector>.ValueCollection propertySelectors =
                         ToPropertySelectors(fieldSelectors, resourceType, entityType.ClrType, context.EntityModel);
 
-                    MemberBinding[] propertyAssignments = propertySelectors.Select(selector => CreatePropertyAssignment(selector, lambdaScope, context))
+                    MemberBinding[] propertyAssignments = propertySelectors.Select(selector => CreatePropertyAssignment(selector, context))
                         .Cast<MemberBinding>().ToArray();
 
                     NewExpression createInstance = _resourceFactory.CreateNewExpression(entityType.ClrType);
                     MemberInitExpression memberInit = Expression.MemberInit(createInstance, propertyAssignments);
                     UnaryExpression castToBaseType = Expression.Convert(memberInit, baseResourceType.ClrType);
 
-                    BinaryExpression typeCheck = CreateRuntimeTypeCheck(lambdaScope, entityType.ClrType);
+                    BinaryExpression typeCheck = CreateRuntimeTypeCheck(context.LambdaScope, entityType.ClrType);
                     rootCondition = Expression.Condition(typeCheck, castToBaseType, rootCondition);
                 }
             }
@@ -100,18 +111,16 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
         return Expression.MakeBinary(ExpressionType.Equal, getTypeCall, concreteTypeConstant, false, TypeOpEqualityMethod);
     }
 
-    private MemberInitExpression CreateLambdaBodyInitializerForSingleType(FieldSelection selection, ResourceType resourceType, LambdaScope lambdaScope,
+    private MemberInitExpression CreateLambdaBodyInitializerForSingleType(FieldSelection selection, ResourceType resourceType,
         QueryClauseBuilderContext context)
     {
         FieldSelectors fieldSelectors = selection.GetOrCreateSelectors(resourceType);
 
         Dictionary<PropertyInfo, PropertySelector>.ValueCollection propertySelectors =
-            ToPropertySelectors(fieldSelectors, resourceType, lambdaScope.Accessor.Type, context.EntityModel);
+            ToPropertySelectors(fieldSelectors, resourceType, context.LambdaScope.Accessor.Type, context.EntityModel);
 
-        MemberBinding[] propertyAssignments = propertySelectors.Select(selector => CreatePropertyAssignment(selector, lambdaScope, context))
-            .Cast<MemberBinding>().ToArray();
-
-        NewExpression createInstance = _resourceFactory.CreateNewExpression(lambdaScope.Accessor.Type);
+        MemberBinding[] propertyAssignments = propertySelectors.Select(selector => CreatePropertyAssignment(selector, context)).Cast<MemberBinding>().ToArray();
+        NewExpression createInstance = _resourceFactory.CreateNewExpression(context.LambdaScope.Accessor.Type);
         return Expression.MemberInit(createInstance, propertyAssignments);
     }
 
@@ -182,35 +191,40 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
         }
     }
 
-    private MemberAssignment CreatePropertyAssignment(PropertySelector propertySelector, LambdaScope lambdaScope, QueryClauseBuilderContext context)
+    private MemberAssignment CreatePropertyAssignment(PropertySelector propertySelector, QueryClauseBuilderContext context)
     {
-        bool requiresUpCast = lambdaScope.Accessor.Type != propertySelector.Property.DeclaringType &&
-            lambdaScope.Accessor.Type.IsAssignableFrom(propertySelector.Property.DeclaringType);
+        bool requiresUpCast = context.LambdaScope.Accessor.Type != propertySelector.Property.DeclaringType &&
+            context.LambdaScope.Accessor.Type.IsAssignableFrom(propertySelector.Property.DeclaringType);
 
-        MemberExpression propertyAccess = requiresUpCast
-            ? Expression.MakeMemberAccess(Expression.Convert(lambdaScope.Accessor, propertySelector.Property.DeclaringType!), propertySelector.Property)
-            : Expression.Property(lambdaScope.Accessor, propertySelector.Property);
+        UnaryExpression? derivedAccessor = requiresUpCast ? Expression.Convert(context.LambdaScope.Accessor, propertySelector.Property.DeclaringType!) : null;
+
+        MemberExpression propertyAccess = derivedAccessor != null
+            ? Expression.MakeMemberAccess(derivedAccessor, propertySelector.Property)
+            : Expression.Property(context.LambdaScope.Accessor, propertySelector.Property);
 
         Expression assignmentRightHandSide = propertyAccess;
 
         if (propertySelector.NextLayer != null)
         {
-            assignmentRightHandSide =
-                CreateAssignmentRightHandSideForLayer(propertySelector.NextLayer, lambdaScope, propertyAccess, propertySelector.Property, context);
+            QueryClauseBuilderContext rightHandSideContext =
+                derivedAccessor != null ? context.WithLambdaScope(context.LambdaScope.WithAccessor(derivedAccessor)) : context;
+
+            assignmentRightHandSide = CreateAssignmentRightHandSideForLayer(propertySelector.NextLayer, propertyAccess,
+                propertySelector.Property, rightHandSideContext);
         }
 
         return Expression.Bind(propertySelector.Property, assignmentRightHandSide);
     }
 
-    private Expression CreateAssignmentRightHandSideForLayer(QueryLayer layer, LambdaScope outerLambdaScope, MemberExpression propertyAccess,
-        PropertyInfo selectorPropertyInfo, QueryClauseBuilderContext context)
+    private Expression CreateAssignmentRightHandSideForLayer(QueryLayer layer, MemberExpression propertyAccess, PropertyInfo selectorPropertyInfo,
+        QueryClauseBuilderContext context)
     {
         Type? collectionElementType = CollectionConverter.Instance.FindCollectionElementType(selectorPropertyInfo.PropertyType);
         Type bodyElementType = collectionElementType ?? selectorPropertyInfo.PropertyType;
 
         if (collectionElementType != null)
         {
-            return CreateCollectionInitializer(outerLambdaScope, selectorPropertyInfo, bodyElementType, layer, context);
+            return CreateCollectionInitializer(selectorPropertyInfo, bodyElementType, layer, context);
         }
 
         if (layer.Selection == null || layer.Selection.IsEmpty)
@@ -218,14 +232,15 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
             return propertyAccess;
         }
 
-        using LambdaScope scope = context.LambdaScopeFactory.CreateScope(bodyElementType, propertyAccess);
-        return CreateLambdaBodyInitializer(layer.Selection, layer.ResourceType, scope, true, context);
+        using LambdaScope initializerScope = context.LambdaScopeFactory.CreateScope(bodyElementType, propertyAccess);
+        QueryClauseBuilderContext initializerContext = context.WithLambdaScope(initializerScope);
+        return CreateLambdaBodyInitializer(layer.Selection, layer.ResourceType, true, initializerContext);
     }
 
-    private static MethodCallExpression CreateCollectionInitializer(LambdaScope lambdaScope, PropertyInfo collectionProperty, Type elementType,
-        QueryLayer layer, QueryClauseBuilderContext context)
+    private static MethodCallExpression CreateCollectionInitializer(PropertyInfo collectionProperty, Type elementType, QueryLayer layer,
+        QueryClauseBuilderContext context)
     {
-        MemberExpression propertyExpression = Expression.Property(lambdaScope.Accessor, collectionProperty);
+        MemberExpression propertyExpression = Expression.Property(context.LambdaScope.Accessor, collectionProperty);
 
         var nestedContext = new QueryableBuilderContext(propertyExpression, elementType, typeof(Enumerable), context.EntityModel, context.LambdaScopeFactory,
             context.State);

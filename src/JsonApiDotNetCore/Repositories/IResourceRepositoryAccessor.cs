@@ -12,6 +12,11 @@ namespace JsonApiDotNetCore.Repositories;
 public interface IResourceRepositoryAccessor
 {
     /// <summary>
+    /// Uses the <see cref="IResourceGraph" /> to lookup the corresponding <see cref="ResourceType" /> for the specified CLR type.
+    /// </summary>
+    ResourceType LookupResourceType(Type resourceClrType);
+
+    /// <summary>
     /// Invokes <see cref="IResourceReadRepository{TResource,TId}.GetAsync" /> for the specified resource type.
     /// </summary>
     Task<IReadOnlyCollection<TResource>> GetAsync<TResource>(QueryLayer queryLayer, CancellationToken cancellationToken)

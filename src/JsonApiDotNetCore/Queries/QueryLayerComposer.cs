@@ -212,7 +212,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         foreach (IncludeElementExpression includeElement in includeElementsEvaluated)
         {
             parentLayer.Selection ??= new FieldSelection();
-            FieldSelectors selectors = parentLayer.Selection.GetOrCreateSelectors(parentLayer.ResourceType);
+            FieldSelectors selectors = parentLayer.Selection.GetOrCreateSelectors(includeElement.Relationship.LeftType);
 
             if (!selectors.ContainsField(includeElement.Relationship))
             {
