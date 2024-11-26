@@ -14,7 +14,6 @@ namespace JsonApiDotNetCore.Queries;
 [PublicAPI]
 public class QueryLayerComposer : IQueryLayerComposer
 {
-    private readonly CollectionConverter _collectionConverter = new();
     private readonly IQueryConstraintProvider[] _constraintProviders;
     private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
     private readonly IJsonApiOptions _options;
@@ -413,7 +412,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         foreach (RelationshipAttribute relationship in _targetedFields.Relationships)
         {
             object? rightValue = relationship.GetValue(primaryResource);
-            HashSet<IIdentifiable> rightResourceIds = _collectionConverter.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
+            HashSet<IIdentifiable> rightResourceIds = CollectionConverter.Instance.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
 
             if (rightResourceIds.Count > 0)
             {

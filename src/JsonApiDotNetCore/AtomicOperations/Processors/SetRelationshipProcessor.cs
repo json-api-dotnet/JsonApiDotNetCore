@@ -10,7 +10,6 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors;
 public class SetRelationshipProcessor<TResource, TId> : ISetRelationshipProcessor<TResource, TId>
     where TResource : class, IIdentifiable<TId>
 {
-    private readonly CollectionConverter _collectionConverter = new();
     private readonly ISetRelationshipService<TResource, TId> _service;
 
     public SetRelationshipProcessor(ISetRelationshipService<TResource, TId> service)
@@ -40,7 +39,7 @@ public class SetRelationshipProcessor<TResource, TId> : ISetRelationshipProcesso
 
         if (relationship is HasManyAttribute)
         {
-            IReadOnlyCollection<IIdentifiable> rightResources = _collectionConverter.ExtractResources(rightValue);
+            IReadOnlyCollection<IIdentifiable> rightResources = CollectionConverter.Instance.ExtractResources(rightValue);
             return rightResources.ToHashSet(IdentifiableComparer.Instance);
         }
 

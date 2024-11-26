@@ -12,7 +12,6 @@ namespace DapperExample.Repositories;
 /// </summary>
 internal sealed class ResourceChangeDetector
 {
-    private readonly CollectionConverter _collectionConverter = new();
     private readonly IDataModelService _dataModelService;
 
     private Dictionary<string, object?> _currentColumnValues = [];
@@ -69,7 +68,7 @@ internal sealed class ResourceChangeDetector
         foreach (RelationshipAttribute relationship in ResourceType.Relationships)
         {
             object? rightValue = relationship.GetValue(resource);
-            HashSet<IIdentifiable> rightResources = _collectionConverter.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
+            HashSet<IIdentifiable> rightResources = CollectionConverter.Instance.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
 
             relationshipValues[relationship] = rightResources;
         }

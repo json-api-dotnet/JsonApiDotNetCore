@@ -21,7 +21,6 @@ namespace JsonApiDotNetCore.Services;
 public class JsonApiResourceService<TResource, TId> : IResourceService<TResource, TId>
     where TResource : class, IIdentifiable<TId>
 {
-    private readonly CollectionConverter _collectionConverter = new();
     private readonly IResourceRepositoryAccessor _repositoryAccessor;
     private readonly IQueryLayerComposer _queryLayerComposer;
     private readonly IPaginationContext _paginationContext;
@@ -280,7 +279,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             if (!onlyIfTypeHierarchy || relationship.RightType.IsPartOfTypeHierarchy())
             {
                 object? rightValue = relationship.GetValue(primaryResource);
-                HashSet<IIdentifiable> rightResourceIds = _collectionConverter.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
+                HashSet<IIdentifiable> rightResourceIds = CollectionConverter.Instance.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
 
                 if (rightResourceIds.Count > 0)
                 {
@@ -293,7 +292,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
                     // Now that we've fetched them, update the request types so that resource definitions observe the actually stored types.
                     object? newRightValue = relationship is HasOneAttribute
                         ? rightResourceIds.FirstOrDefault()
-                        : _collectionConverter.CopyToTypedCollection(rightResourceIds, relationship.Property.PropertyType);
+                        : CollectionConverter.Instance.CopyToTypedCollection(rightResourceIds, relationship.Property.PropertyType);
 
                     relationship.SetValue(primaryResource, newRightValue);
                 }
@@ -401,7 +400,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         TResource leftResource = await GetForHasManyUpdateAsync(hasManyRelationship, leftId, rightResourceIds, cancellationToken);
 
         object? rightValue = hasManyRelationship.GetValue(leftResource);
-        IReadOnlyCollection<IIdentifiable> existingRightResourceIds = _collectionConverter.ExtractResources(rightValue);
+        IReadOnlyCollection<IIdentifiable> existingRightResourceIds = CollectionConverter.Instance.ExtractResources(rightValue);
 
         rightResourceIds.ExceptWith(existingRightResourceIds);
 
@@ -422,7 +421,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
     {
         AssertRelationshipInJsonApiRequestIsNotNull(_request.Relationship);
 
-        HashSet<IIdentifiable> rightResourceIds = _collectionConverter.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
+        HashSet<IIdentifiable> rightResourceIds = CollectionConverter.Instance.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
         object? newRightValue = rightValue;
 
         if (rightResourceIds.Count > 0)
@@ -436,7 +435,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             // Now that we've fetched them, update the request types so that resource definitions observe the actually stored types.
             newRightValue = _request.Relationship is HasOneAttribute
                 ? rightResourceIds.FirstOrDefault()
-                : _collectionConverter.CopyToTypedCollection(rightResourceIds, _request.Relationship.Property.PropertyType);
+                : CollectionConverter.Instance.CopyToTypedCollection(rightResourceIds, _request.Relationship.Property.PropertyType);
 
             if (missingResources.Count > 0)
             {

@@ -9,8 +9,6 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters;
 /// <inheritdoc cref="IRelationshipDataAdapter" />
 public sealed class RelationshipDataAdapter : BaseAdapter, IRelationshipDataAdapter
 {
-    private static readonly CollectionConverter CollectionConverter = new();
-
     private readonly IResourceIdentifierObjectAdapter _resourceIdentifierObjectAdapter;
 
     public RelationshipDataAdapter(IResourceIdentifierObjectAdapter resourceIdentifierObjectAdapter)
@@ -109,7 +107,7 @@ public sealed class RelationshipDataAdapter : BaseAdapter, IRelationshipDataAdap
 
         if (useToManyElementType)
         {
-            return CollectionConverter.CopyToTypedCollection(rightResources, relationship.Property.PropertyType);
+            return CollectionConverter.Instance.CopyToTypedCollection(rightResources, relationship.Property.PropertyType);
         }
 
         var resourceSet = new HashSet<IIdentifiable>(IdentifiableComparer.Instance);

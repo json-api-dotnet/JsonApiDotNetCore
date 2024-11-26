@@ -31,7 +31,6 @@ namespace JsonApiDotNetCore.Repositories;
 public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository<TResource, TId>, IRepositorySupportsTransaction
     where TResource : class, IIdentifiable<TId>
 {
-    private readonly CollectionConverter _collectionConverter = new();
     private readonly ITargetedFields _targetedFields;
     private readonly DbContext _dbContext;
     private readonly IResourceGraph _resourceGraph;
@@ -250,7 +249,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
         if (relationship is HasManyAttribute hasManyRelationship)
         {
-            HashSet<IIdentifiable> rightResourceIds = _collectionConverter.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
+            HashSet<IIdentifiable> rightResourceIds = CollectionConverter.Instance.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
 
             await _resourceDefinitionAccessor.OnSetToManyRelationshipAsync(leftResource, hasManyRelationship, rightResourceIds, writeOperation,
                 cancellationToken);
@@ -482,14 +481,14 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         object? rightValueStored = relationship.GetValue(leftResource);
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:wrap_before_first_method_call true
+        // @formatter:wrap_after_property_in_chained_method_calls true
 
-        HashSet<IIdentifiable> rightResourceIdsStored = _collectionConverter
+        HashSet<IIdentifiable> rightResourceIdsStored = CollectionConverter.Instance
             .ExtractResources(rightValueStored)
             .Select(_dbContext.GetTrackedOrAttach)
             .ToHashSet(IdentifiableComparer.Instance);
 
-        // @formatter:wrap_before_first_method_call restore
+        // @formatter:wrap_after_property_in_chained_method_calls restore
         // @formatter:wrap_chained_method_calls restore
 
         if (rightResourceIdsStored.Count > 0)
@@ -531,18 +530,18 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             object? rightValueStored = relationship.GetValue(leftResourceTracked);
 
             // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:wrap_before_first_method_call true
+            // @formatter:wrap_after_property_in_chained_method_calls true
 
-            IIdentifiable[] rightResourceIdsStored = _collectionConverter
+            IIdentifiable[] rightResourceIdsStored = CollectionConverter.Instance
                 .ExtractResources(rightValueStored)
                 .Concat(extraResourceIdsToRemove)
                 .Select(_dbContext.GetTrackedOrAttach)
                 .ToArray();
 
-            // @formatter:wrap_before_first_method_call restore
+            // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
-            rightValueStored = _collectionConverter.CopyToTypedCollection(rightResourceIdsStored, relationship.Property.PropertyType);
+            rightValueStored = CollectionConverter.Instance.CopyToTypedCollection(rightResourceIdsStored, relationship.Property.PropertyType);
             relationship.SetValue(leftResourceTracked, rightValueStored);
 
             MarkRelationshipAsLoaded(leftResourceTracked, relationship);
@@ -624,11 +623,11 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             return null;
         }
 
-        IReadOnlyCollection<IIdentifiable> rightResources = _collectionConverter.ExtractResources(rightValue);
+        IReadOnlyCollection<IIdentifiable> rightResources = CollectionConverter.Instance.ExtractResources(rightValue);
         IIdentifiable[] rightResourcesTracked = rightResources.Select(_dbContext.GetTrackedOrAttach).ToArray();
 
         return rightValue is IEnumerable
-            ? _collectionConverter.CopyToTypedCollection(rightResourcesTracked, relationshipPropertyType)
+            ? CollectionConverter.Instance.CopyToTypedCollection(rightResourcesTracked, relationshipPropertyType)
             : rightResourcesTracked.Single();
     }
 

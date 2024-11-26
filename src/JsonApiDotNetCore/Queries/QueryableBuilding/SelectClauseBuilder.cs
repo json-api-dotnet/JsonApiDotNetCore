@@ -14,7 +14,6 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
 {
     private static readonly MethodInfo TypeGetTypeMethod = typeof(object).GetMethod("GetType")!;
     private static readonly MethodInfo TypeOpEqualityMethod = typeof(Type).GetMethod("op_Equality")!;
-    private static readonly CollectionConverter CollectionConverter = new();
     private static readonly ConstantExpression NullConstant = Expression.Constant(null);
 
     private readonly IResourceFactory _resourceFactory;
@@ -206,7 +205,7 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
     private Expression CreateAssignmentRightHandSideForLayer(QueryLayer layer, LambdaScope outerLambdaScope, MemberExpression propertyAccess,
         PropertyInfo selectorPropertyInfo, QueryClauseBuilderContext context)
     {
-        Type? collectionElementType = CollectionConverter.FindCollectionElementType(selectorPropertyInfo.PropertyType);
+        Type? collectionElementType = CollectionConverter.Instance.FindCollectionElementType(selectorPropertyInfo.PropertyType);
         Type bodyElementType = collectionElementType ?? selectorPropertyInfo.PropertyType;
 
         if (collectionElementType != null)
@@ -233,7 +232,7 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
 
         Expression layerExpression = context.QueryableBuilder.ApplyQuery(layer, nestedContext);
 
-        string operationName = CollectionConverter.TypeCanContainHashSet(collectionProperty.PropertyType) ? "ToHashSet" : "ToList";
+        string operationName = CollectionConverter.Instance.TypeCanContainHashSet(collectionProperty.PropertyType) ? "ToHashSet" : "ToList";
         return CopyCollectionExtensionMethodCall(layerExpression, operationName, elementType);
     }
 

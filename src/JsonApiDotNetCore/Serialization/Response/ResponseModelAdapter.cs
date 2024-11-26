@@ -18,8 +18,6 @@ namespace JsonApiDotNetCore.Serialization.Response;
 [PublicAPI]
 public class ResponseModelAdapter : IResponseModelAdapter
 {
-    private static readonly CollectionConverter CollectionConverter = new();
-
     private readonly IJsonApiRequest _request;
     private readonly IJsonApiOptions _options;
     private readonly ILinkBuilder _linkBuilder;
@@ -304,7 +302,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
         }
 
         object? rightValue = effectiveRelationship.GetValue(leftResource);
-        IReadOnlyCollection<IIdentifiable> rightResources = CollectionConverter.ExtractResources(rightValue);
+        IReadOnlyCollection<IIdentifiable> rightResources = CollectionConverter.Instance.ExtractResources(rightValue);
 
         leftTreeNode.EnsureHasRelationship(effectiveRelationship);
 

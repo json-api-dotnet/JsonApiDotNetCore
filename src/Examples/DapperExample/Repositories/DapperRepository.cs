@@ -103,7 +103,6 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
     private readonly SqlCaptureStore _captureStore;
     private readonly ILoggerFactory _loggerFactory;
     private readonly ILogger<DapperRepository<TResource, TId>> _logger;
-    private readonly CollectionConverter _collectionConverter = new();
     private readonly ParameterFormatter _parameterFormatter = new();
     private readonly DapperFacade _dapperFacade;
 
@@ -270,12 +269,12 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
 
         if (relationship is HasManyAttribute hasManyRelationship)
         {
-            HashSet<IIdentifiable> rightResourceIds = _collectionConverter.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
+            HashSet<IIdentifiable> rightResourceIds = CollectionConverter.Instance.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
 
             await _resourceDefinitionAccessor.OnSetToManyRelationshipAsync(leftResource, hasManyRelationship, rightResourceIds, writeOperation,
                 cancellationToken);
 
-            return _collectionConverter.CopyToTypedCollection(rightResourceIds, relationship.Property.PropertyType);
+            return CollectionConverter.Instance.CopyToTypedCollection(rightResourceIds, relationship.Property.PropertyType);
         }
 
         return rightValue;
@@ -464,7 +463,9 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
         leftPlaceholderResource.Id = leftId;
 
         await _resourceDefinitionAccessor.OnAddToRelationshipAsync(leftPlaceholderResource, relationship, rightResourceIds, cancellationToken);
-        relationship.SetValue(leftPlaceholderResource, _collectionConverter.CopyToTypedCollection(rightResourceIds, relationship.Property.PropertyType));
+
+        relationship.SetValue(leftPlaceholderResource,
+            CollectionConverter.Instance.CopyToTypedCollection(rightResourceIds, relationship.Property.PropertyType));
 
         await _resourceDefinitionAccessor.OnWritingAsync(leftPlaceholderResource, WriteOperationKind.AddToRelationship, cancellationToken);
 
@@ -500,7 +501,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
         var relationship = (HasManyAttribute)_targetedFields.Relationships.Single();
 
         await _resourceDefinitionAccessor.OnRemoveFromRelationshipAsync(leftResource, relationship, rightResourceIds, cancellationToken);
-        relationship.SetValue(leftResource, _collectionConverter.CopyToTypedCollection(rightResourceIds, relationship.Property.PropertyType));
+        relationship.SetValue(leftResource, CollectionConverter.Instance.CopyToTypedCollection(rightResourceIds, relationship.Property.PropertyType));
 
         await _resourceDefinitionAccessor.OnWritingAsync(leftResource, WriteOperationKind.RemoveFromRelationship, cancellationToken);
 

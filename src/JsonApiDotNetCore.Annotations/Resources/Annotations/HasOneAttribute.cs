@@ -57,7 +57,7 @@ public sealed class HasOneAttribute : RelationshipAttribute
     {
         if (InverseNavigationProperty != null)
         {
-            Type? elementType = CollectionConverter.FindCollectionElementType(InverseNavigationProperty.PropertyType);
+            Type? elementType = CollectionConverter.Instance.FindCollectionElementType(InverseNavigationProperty.PropertyType);
             return elementType == null;
         }
 

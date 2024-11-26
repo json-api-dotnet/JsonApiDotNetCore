@@ -12,8 +12,6 @@ namespace JsonApiDotNetCore.Resources.Annotations;
 [PublicAPI]
 public abstract class RelationshipAttribute : ResourceFieldAttribute
 {
-    private protected static readonly CollectionConverter CollectionConverter = new();
-
     // This field is definitely assigned after building the resource graph, which is why its public equivalent is declared as non-nullable.
     private ResourceType? _rightType;
 
