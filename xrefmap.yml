@@ -14591,6 +14591,19 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.GetForUpdateAsync(Of TResource)(JsonApiDotNetCore.Queries.QueryLayer, System.Threading.CancellationToken)
   nameWithType: IResourceRepositoryAccessor.GetForUpdateAsync<TResource>(QueryLayer, CancellationToken)
   nameWithType.vb: IResourceRepositoryAccessor.GetForUpdateAsync(Of TResource)(QueryLayer, CancellationToken)
+- uid: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.LookupResourceType(System.Type)
+  name: LookupResourceType(Type)
+  href: api/JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_IResourceRepositoryAccessor_LookupResourceType_System_Type_
+  commentId: M:JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.LookupResourceType(System.Type)
+  fullName: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.LookupResourceType(System.Type)
+  nameWithType: IResourceRepositoryAccessor.LookupResourceType(Type)
+- uid: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.LookupResourceType*
+  name: LookupResourceType
+  href: api/JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_IResourceRepositoryAccessor_LookupResourceType_
+  commentId: Overload:JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.LookupResourceType
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.LookupResourceType
+  nameWithType: IResourceRepositoryAccessor.LookupResourceType
 - uid: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.RemoveFromToManyRelationshipAsync*
   name: RemoveFromToManyRelationshipAsync
   href: api/JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_IResourceRepositoryAccessor_RemoveFromToManyRelationshipAsync_
@@ -14940,6 +14953,19 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetForUpdateAsync(Of TResource)(JsonApiDotNetCore.Queries.QueryLayer, System.Threading.CancellationToken)
   nameWithType: ResourceRepositoryAccessor.GetForUpdateAsync<TResource>(QueryLayer, CancellationToken)
   nameWithType.vb: ResourceRepositoryAccessor.GetForUpdateAsync(Of TResource)(QueryLayer, CancellationToken)
+- uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.LookupResourceType(System.Type)
+  name: LookupResourceType(Type)
+  href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_LookupResourceType_System_Type_
+  commentId: M:JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.LookupResourceType(System.Type)
+  fullName: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.LookupResourceType(System.Type)
+  nameWithType: ResourceRepositoryAccessor.LookupResourceType(Type)
+- uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.LookupResourceType*
+  name: LookupResourceType
+  href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_LookupResourceType_
+  commentId: Overload:JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.LookupResourceType
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.LookupResourceType
+  nameWithType: ResourceRepositoryAccessor.LookupResourceType
 - uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.RemoveFromToManyRelationshipAsync*
   name: RemoveFromToManyRelationshipAsync
   href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_RemoveFromToManyRelationshipAsync_
