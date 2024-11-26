@@ -13,7 +13,6 @@ namespace JsonApiDotNetCore.Queries.QueryableBuilding;
 [PublicAPI]
 public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
 {
-    private static readonly CollectionConverter CollectionConverter = new();
     private static readonly ConstantExpression NullConstant = Expression.Constant(null);
 
     public virtual Expression ApplyWhere(FilterExpression filter, QueryClauseBuilderContext context)
@@ -40,7 +39,7 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
     {
         Expression property = Visit(expression.TargetCollection, context);
 
-        Type? elementType = CollectionConverter.FindCollectionElementType(property.Type);
+        Type? elementType = CollectionConverter.Instance.FindCollectionElementType(property.Type);
 
         if (elementType == null)
         {
