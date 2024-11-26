@@ -1,4 +1,5 @@
 using System.Net;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Routing;
 namespace JsonApiDotNetCore.Middleware;
 
 /// <inheritdoc />
+[PublicAPI]
 public class JsonApiContentNegotiator : IJsonApiContentNegotiator
 {
     private readonly IJsonApiOptions _options;
@@ -71,9 +73,9 @@ public class JsonApiContentNegotiator : IJsonApiContentNegotiator
         string[] acceptHeaderValues = HttpContext.Request.Headers.GetCommaSeparatedValues("Accept");
         JsonApiMediaType? bestMatch = null;
 
-        if (acceptHeaderValues.Length == 0 && possibleMediaTypes.Contains(JsonApiMediaType.Default))
+        if (acceptHeaderValues.Length == 0)
         {
-            bestMatch = JsonApiMediaType.Default;
+            bestMatch = GetDefaultMediaType(possibleMediaTypes, requestMediaType);
         }
         else
         {
@@ -147,6 +149,23 @@ public class JsonApiContentNegotiator : IJsonApiContentNegotiator
         }
 
         return bestMatch.Extensions;
+    }
+
+    /// <summary>
+    /// Returns the JSON:API media type (possibly including extensions) to use when no Accept header was sent.
+    /// </summary>
+    /// <param name="possibleMediaTypes">
+    /// The media types returned from <see cref="GetPossibleMediaTypes" />.
+    /// </param>
+    /// <param name="requestMediaType">
+    /// The media type from in the Content-Type header.
+    /// </param>
+    /// <returns>
+    /// The default media type to use, or <c>null</c> if not available.
+    /// </returns>
+    protected virtual JsonApiMediaType? GetDefaultMediaType(IReadOnlyList<JsonApiMediaType> possibleMediaTypes, JsonApiMediaType? requestMediaType)
+    {
+        return possibleMediaTypes.Contains(JsonApiMediaType.Default) ? JsonApiMediaType.Default : null;
     }
 
     /// <summary>
