@@ -163,7 +163,7 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
 
             ActionDescriptor expandedEndpoint = Clone(genericEndpoint);
 
-            RemovePathParameter(expandedEndpoint.Parameters, JsonApiPathParameter.RelationshipName);
+            RemovePathParameter(expandedEndpoint.Parameters, "relationshipName");
 
             ExpandTemplate(expandedEndpoint.AttributeRouteInfo!, relationshipName);
 
@@ -212,12 +212,12 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
 
     private static void RemovePathParameter(ICollection<ParameterDescriptor> parameters, string parameterName)
     {
-        ParameterDescriptor relationshipName = parameters.Single(parameterDescriptor => parameterDescriptor.Name == parameterName);
-        parameters.Remove(relationshipName);
+        ParameterDescriptor descriptor = parameters.Single(parameterDescriptor => parameterDescriptor.Name == parameterName);
+        parameters.Remove(descriptor);
     }
 
     private static void ExpandTemplate(AttributeRouteInfo route, string expansionParameter)
     {
-        route.Template = route.Template!.Replace(JsonApiRoutingTemplate.RelationshipNameRoutePlaceholder, expansionParameter);
+        route.Template = route.Template!.Replace("{relationshipName}", expansionParameter);
     }
 }
