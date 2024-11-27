@@ -136,11 +136,11 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
         for (int operationIndex = 0; operationIndex < operations.Count; operationIndex++)
         {
             IJsonApiRequest operationRequest = operations[operationIndex].Request;
-            WriteOperationKind operationKind = operationRequest.WriteOperation!.Value;
+            WriteOperationKind writeOperation = operationRequest.WriteOperation!.Value;
 
-            if (operationRequest.Relationship != null && !_operationFilter.IsEnabled(operationRequest.Relationship.LeftType, operationKind))
+            if (operationRequest.Relationship != null && !_operationFilter.IsEnabled(operationRequest.Relationship.LeftType, writeOperation))
             {
-                string operationCode = GetOperationCodeText(operationKind);
+                string operationCode = GetOperationCodeText(writeOperation);
 
                 errors.Add(new ErrorObject(HttpStatusCode.Forbidden)
                 {
@@ -153,9 +153,9 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
                     }
                 });
             }
-            else if (operationRequest.PrimaryResourceType != null && !_operationFilter.IsEnabled(operationRequest.PrimaryResourceType, operationKind))
+            else if (operationRequest.PrimaryResourceType != null && !_operationFilter.IsEnabled(operationRequest.PrimaryResourceType, writeOperation))
             {
-                string operationCode = GetOperationCodeText(operationKind);
+                string operationCode = GetOperationCodeText(writeOperation);
 
                 errors.Add(new ErrorObject(HttpStatusCode.Forbidden)
                 {
@@ -175,9 +175,9 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
         }
     }
 
-    private static string GetOperationCodeText(WriteOperationKind operationKind)
+    private static string GetOperationCodeText(WriteOperationKind writeOperation)
     {
-        AtomicOperationCode operationCode = operationKind switch
+        AtomicOperationCode operationCode = writeOperation switch
         {
             WriteOperationKind.CreateResource => AtomicOperationCode.Add,
             WriteOperationKind.UpdateResource => AtomicOperationCode.Update,
@@ -185,7 +185,7 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
             WriteOperationKind.AddToRelationship => AtomicOperationCode.Add,
             WriteOperationKind.SetRelationship => AtomicOperationCode.Update,
             WriteOperationKind.RemoveFromRelationship => AtomicOperationCode.Remove,
-            _ => throw new NotSupportedException($"Unknown operation kind '{operationKind}'.")
+            _ => throw new NotSupportedException($"Unknown operation kind '{writeOperation}'.")
         };
 
         return operationCode.ToString().ToLowerInvariant();

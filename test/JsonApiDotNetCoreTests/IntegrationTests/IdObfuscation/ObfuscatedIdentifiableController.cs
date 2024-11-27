@@ -18,12 +18,14 @@ public abstract class ObfuscatedIdentifiableController<TResource>(
     private readonly HexadecimalCodec _codec = new();
 
     [HttpGet]
+    [HttpHead]
     public override Task<IActionResult> GetAsync(CancellationToken cancellationToken)
     {
         return base.GetAsync(cancellationToken);
     }
 
     [HttpGet("{id}")]
+    [HttpHead("{id}")]
     public Task<IActionResult> GetAsync([Required] string id, CancellationToken cancellationToken)
     {
         int idValue = _codec.Decode(id);
@@ -31,6 +33,7 @@ public abstract class ObfuscatedIdentifiableController<TResource>(
     }
 
     [HttpGet("{id}/{relationshipName}")]
+    [HttpHead("{id}/{relationshipName}")]
     public Task<IActionResult> GetSecondaryAsync([Required] string id, [Required] [PreserveEmptyString] string relationshipName,
         CancellationToken cancellationToken)
     {
@@ -39,6 +42,7 @@ public abstract class ObfuscatedIdentifiableController<TResource>(
     }
 
     [HttpGet("{id}/relationships/{relationshipName}")]
+    [HttpHead("{id}/relationships/{relationshipName}")]
     public Task<IActionResult> GetRelationshipAsync([Required] string id, [Required] [PreserveEmptyString] string relationshipName,
         CancellationToken cancellationToken)
     {
