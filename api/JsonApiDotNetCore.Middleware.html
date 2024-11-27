@@ -159,9 +159,9 @@ This ensures our formatter is invoked, where we'll build a JSON:API compliant re
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.html">JsonApiRoutingConvention</a></dt>
-      <dd><p>The default routing convention registers the name of the resource as the route using the serializer naming convention. The default for this is a
-camel case formatter. If the controller directly inherits from <a class="xref" href="JsonApiDotNetCore.Controllers.CoreJsonApiController.html">CoreJsonApiController</a> and there is no resource directly associated, it
-uses the name of the controller instead of the name of the type.</p>
+      <dd><p>Registers routes based on the JSON:API resource name, which defaults to camel-case pluralized form of the resource CLR type name. If unavailable (for
+example, when a controller directly inherits from <a class="xref" href="JsonApiDotNetCore.Controllers.CoreJsonApiController.html">CoreJsonApiController</a>), the serializer naming convention is applied on the
+controller type name (camel-case by default).</p>
 </dd>
     </dl>
     <h3 id="interfaces">
@@ -199,6 +199,11 @@ This ensures our formatter is invoked, where we'll build a JSON:API compliant re
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiContentNegotiator.html">IJsonApiContentNegotiator</a></dt>
       <dd><p>Performs content negotiation for JSON:API requests.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiEndpointFilter.html">IJsonApiEndpointFilter</a></dt>
+      <dd><p>Enables to remove JSON:API controller action methods at startup. For atomic:operation requests, see <a class="xref" href="JsonApiDotNetCore.AtomicOperations.IAtomicOperationFilter.html">IAtomicOperationFilter</a>.</p>
 </dd>
     </dl>
     <dl class="jumplist">
