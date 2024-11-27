@@ -3960,8 +3960,7 @@
         "enum": [
           "StaffMembers"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "StaffMemberSecondaryResponseDocument": {
         "required": [
@@ -4060,8 +4059,7 @@
         "enum": [
           "BackupStoreManager"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "SupermarketCashiersRelationshipIdentifier": {
         "required": [
@@ -4100,8 +4098,7 @@
         "enum": [
           "Cashiers"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "SupermarketCollectionResponseDocument": {
         "required": [
@@ -4296,8 +4293,7 @@
         "enum": [
           "Supermarkets"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "SupermarketStoreManagerRelationshipIdentifier": {
         "required": [
@@ -4336,8 +4332,7 @@
         "enum": [
           "StoreManager"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "SupermarketType": {
         "enum": [

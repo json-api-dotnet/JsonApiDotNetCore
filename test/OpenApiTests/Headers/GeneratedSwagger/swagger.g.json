@@ -1332,8 +1332,7 @@
         "enum": [
           "countries"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "createCountryRequestDocument": {
         "required": [
@@ -1729,8 +1728,7 @@
         "enum": [
           "languages"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "meta": {
         "type": "object",

@@ -3737,8 +3737,7 @@
         "enum": [
           "nameValuePairs"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "nodeAttributesInResponse": {
         "type": "object",
@@ -4012,8 +4011,7 @@
         "enum": [
           "nodes"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "nodeSecondaryResponseDocument": {
         "required": [

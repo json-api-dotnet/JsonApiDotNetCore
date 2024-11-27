@@ -6072,8 +6072,7 @@
         "enum": [
           "airplanes"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "attributes-in-create-airplane-request": {
         "required": [
@@ -6981,8 +6980,7 @@
         "enum": [
           "flight-attendants"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "flight-attendant-secondary-response-document": {
         "required": [
@@ -7316,8 +7314,7 @@
         "enum": [
           "flights"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "jsonapi": {
         "type": "object",
@@ -7708,8 +7705,7 @@
         "enum": [
           "passengers"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "relationship-links": {
         "type": "object",

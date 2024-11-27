@@ -4448,8 +4448,7 @@
         "enum": [
           "dataStreams"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "dataStreamSecondaryResponseDocument": {
         "required": [
@@ -5459,8 +5458,7 @@
         "enum": [
           "writeOnlyChannels"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       }
     }
   }

@@ -802,8 +802,7 @@
         "enum": [
           "games"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "meta": {
         "type": "object",
@@ -1027,8 +1026,7 @@
         "enum": [
           "playerGroups"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "playerIdentifierInRequest": {
         "required": [
@@ -1135,8 +1133,7 @@
         "enum": [
           "players"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "relationshipLinks": {
         "type": "object",

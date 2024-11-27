@@ -6838,8 +6838,7 @@
         "enum": [
           "enrollments"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "courseIdentifierCollectionResponseDocument": {
         "required": [
@@ -7031,8 +7030,7 @@
         "enum": [
           "courses"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "courseSecondaryResponseDocument": {
         "required": [
@@ -7115,8 +7113,7 @@
         "enum": [
           "taughtBy"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "createCourseOperation": {
         "allOf": [
@@ -7822,8 +7819,7 @@
         "enum": [
           "course"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "enrollmentDataInResponse": {
         "allOf": [
@@ -8027,8 +8023,7 @@
         "enum": [
           "enrollments"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "enrollmentStudentRelationshipIdentifier": {
         "required": [
@@ -8067,8 +8062,7 @@
         "enum": [
           "student"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "errorLinks": {
         "type": "object",
@@ -8952,8 +8946,7 @@
         "enum": [
           "enrollments"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "studentIdentifierCollectionResponseDocument": {
         "required": [
@@ -9114,8 +9107,7 @@
         "enum": [
           "mentor"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "studentPrimaryResponseDocument": {
         "required": [
@@ -9185,8 +9177,7 @@
         "enum": [
           "students"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "studentSecondaryResponseDocument": {
         "required": [
@@ -9459,8 +9450,7 @@
         "enum": [
           "mentors"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "teacherPrimaryResponseDocument": {
         "required": [
@@ -9530,8 +9520,7 @@
         "enum": [
           "teachers"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "teacherTeachesRelationshipIdentifier": {
         "required": [
@@ -9570,8 +9559,7 @@
         "enum": [
           "teaches"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "toManyCourseInRequest": {
         "required": [

@@ -6071,8 +6071,7 @@
         "enum": [
           "assignedTodoItems"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "personAttributesInResponse": {
         "type": "object",
@@ -6292,8 +6291,7 @@
         "enum": [
           "ownedTodoItems"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "personPrimaryResponseDocument": {
         "required": [
@@ -6356,8 +6354,7 @@
         "enum": [
           "people"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "personSecondaryResponseDocument": {
         "required": [
@@ -7007,8 +7004,7 @@
         "enum": [
           "tags"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "tagTodoItemsRelationshipIdentifier": {
         "required": [
@@ -7047,8 +7043,7 @@
         "enum": [
           "todoItems"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "toManyTagInRequest": {
         "required": [
@@ -7212,8 +7207,7 @@
         "enum": [
           "assignee"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "todoItemAttributesInResponse": {
         "type": "object",
@@ -7445,8 +7439,7 @@
         "enum": [
           "owner"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "todoItemPrimaryResponseDocument": {
         "required": [
@@ -7524,8 +7517,7 @@
         "enum": [
           "todoItems"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "todoItemTagsRelationshipIdentifier": {
         "required": [
@@ -7564,8 +7556,7 @@
         "enum": [
           "tags"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "updateOperationCode": {
         "enum": [

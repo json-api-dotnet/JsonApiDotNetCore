@@ -3960,8 +3960,7 @@
         "enum": [
           "staff-members"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "staff-member-secondary-response-document": {
         "required": [
@@ -4060,8 +4059,7 @@
         "enum": [
           "backup-store-manager"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "supermarket-cashiers-relationship-identifier": {
         "required": [
@@ -4100,8 +4098,7 @@
         "enum": [
           "cashiers"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "supermarket-collection-response-document": {
         "required": [
@@ -4296,8 +4293,7 @@
         "enum": [
           "supermarkets"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "supermarket-store-manager-relationship-identifier": {
         "required": [
@@ -4336,8 +4332,7 @@
         "enum": [
           "store-manager"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "supermarket-type": {
         "enum": [

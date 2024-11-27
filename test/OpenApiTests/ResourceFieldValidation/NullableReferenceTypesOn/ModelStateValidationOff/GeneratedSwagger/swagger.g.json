@@ -3790,8 +3790,7 @@
         "enum": [
           "empties"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "emptySecondaryResponseDocument": {
         "required": [
@@ -4476,8 +4475,7 @@
         "enum": [
           "resources"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "resourceTopLevelLinks": {
         "type": "object",

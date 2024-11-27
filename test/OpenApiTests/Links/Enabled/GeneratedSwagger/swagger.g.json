@@ -3919,8 +3919,7 @@
         "enum": [
           "accommodations"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "accommodationSecondaryResponseDocument": {
         "required": [
@@ -4718,8 +4717,7 @@
         "enum": [
           "excursions"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "meta": {
         "type": "object",
@@ -5263,8 +5261,7 @@
         "enum": [
           "transports"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "transportType": {
         "enum": [
@@ -5508,8 +5505,7 @@
         "enum": [
           "vacations"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       }
     }
   }

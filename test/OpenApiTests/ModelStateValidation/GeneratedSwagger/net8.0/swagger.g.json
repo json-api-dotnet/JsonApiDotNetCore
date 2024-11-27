@@ -871,8 +871,7 @@
         "enum": [
           "socialMediaAccounts"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "updateSocialMediaAccountRequestDocument": {
         "required": [

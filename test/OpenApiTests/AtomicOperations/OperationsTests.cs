@@ -751,8 +751,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                   "enum": [
                     "enrollments"
                   ],
-                  "type": "string",
-                  "additionalProperties": false
+                  "type": "string"
                 }
                 """);
         });
@@ -1246,8 +1245,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                   "enum": [
                     "mentor"
                   ],
-                  "type": "string",
-                  "additionalProperties": false
+                  "type": "string"
                 }
                 """);
 
@@ -1292,8 +1290,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                   "enum": [
                     "enrollments"
                   ],
-                  "type": "string",
-                  "additionalProperties": false
+                  "type": "string"
                 }
                 """);
         });
@@ -1776,8 +1773,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                   "enum": [
                     "mentors"
                   ],
-                  "type": "string",
-                  "additionalProperties": false
+                  "type": "string"
                 }
                 """);
         });
@@ -2182,8 +2178,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                   "enum": [
                     "course"
                   ],
-                  "type": "string",
-                  "additionalProperties": false
+                  "type": "string"
                 }
                 """);
         });
