@@ -61,6 +61,7 @@ public sealed class QueryClauseBuilderContext
         ArgumentGuard.NotNull(lambdaScopeFactory);
         ArgumentGuard.NotNull(lambdaScope);
         ArgumentGuard.NotNull(queryableBuilder);
+        AssertSameType(source.Type, resourceType);
 
         Source = source;
         ResourceType = resourceType;
@@ -70,6 +71,17 @@ public sealed class QueryClauseBuilderContext
         LambdaScopeFactory = lambdaScopeFactory;
         QueryableBuilder = queryableBuilder;
         State = state;
+    }
+
+    private static void AssertSameType(Type sourceType, ResourceType resourceType)
+    {
+        Type? sourceElementType = CollectionConverter.Instance.FindCollectionElementType(sourceType);
+
+        if (sourceElementType != resourceType.ClrType)
+        {
+            throw new InvalidOperationException(
+                $"Internal error: Mismatch between expression type '{sourceElementType?.Name}' and resource type '{resourceType.ClrType.Name}'.");
+        }
     }
 
     public QueryClauseBuilderContext WithSource(Expression source)

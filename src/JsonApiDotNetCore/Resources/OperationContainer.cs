@@ -10,8 +10,6 @@ namespace JsonApiDotNetCore.Resources;
 [PublicAPI]
 public sealed class OperationContainer
 {
-    private static readonly CollectionConverter CollectionConverter = new();
-
     public IIdentifiable Resource { get; }
     public ITargetedFields TargetedFields { get; }
     public IJsonApiRequest Request { get; }
@@ -56,7 +54,7 @@ public sealed class OperationContainer
     private void AddSecondaryResources(RelationshipAttribute relationship, HashSet<IIdentifiable> secondaryResources)
     {
         object? rightValue = relationship.GetValue(Resource);
-        IReadOnlyCollection<IIdentifiable> rightResources = CollectionConverter.ExtractResources(rightValue);
+        IReadOnlyCollection<IIdentifiable> rightResources = CollectionConverter.Instance.ExtractResources(rightValue);
 
         secondaryResources.UnionWith(rightResources);
     }

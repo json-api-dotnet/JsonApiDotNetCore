@@ -108,7 +108,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     }
 
     [Fact]
-    public async Task Can_create_concrete_base_resource_at_abstract_endpoint_with_relationships()
+    public async Task Can_create_concrete_base_resource_at_abstract_endpoint_with_relationships_and_includes()
     {
         // Arrange
         var bikeStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Bike, long>>();
@@ -184,7 +184,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             }
         };
 
-        const string route = "/vehicles";
+        const string route = "/vehicles?include=manufacturer,wheels,engine,navigationSystem,features,sleepingArea,cargoBox,lights,foldingDimensions";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -238,7 +238,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     }
 
     [Fact]
-    public async Task Can_create_concrete_derived_resource_at_abstract_endpoint_with_relationships()
+    public async Task Can_create_concrete_derived_resource_at_abstract_endpoint_with_relationships_and_includes()
     {
         // Arrange
         var carStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Car, long>>();
@@ -325,7 +325,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             }
         };
 
-        const string route = "/vehicles";
+        const string route = "/vehicles?include=manufacturer,wheels,engine,navigationSystem,features,sleepingArea,cargoBox,lights,foldingDimensions";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -385,7 +385,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     }
 
     [Fact]
-    public async Task Can_create_concrete_derived_resource_at_concrete_base_endpoint_with_relationships()
+    public async Task Can_create_concrete_derived_resource_at_concrete_base_endpoint_with_relationships_and_includes()
     {
         // Arrange
         var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
@@ -475,7 +475,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             }
         };
 
-        const string route = "/bikes";
+        const string route = "/bikes?include=manufacturer,wheels,cargoBox,lights,foldingDimensions,features";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -980,7 +980,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     }
 
     [Fact]
-    public async Task Can_update_concrete_base_resource_at_abstract_endpoint_with_relationships()
+    public async Task Can_update_concrete_base_resource_at_abstract_endpoint_with_relationships_and_includes()
     {
         // Arrange
         var bikeStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Bike, long>>();
@@ -1059,7 +1059,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             }
         };
 
-        string route = $"/vehicles/{existingBike.StringId}";
+        string route =
+            $"/vehicles/{existingBike.StringId}?include=manufacturer,wheels,engine,navigationSystem,features,sleepingArea,cargoBox,lights,foldingDimensions";
 
         // Act
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -1108,7 +1109,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     }
 
     [Fact]
-    public async Task Can_update_concrete_base_resource_stored_as_concrete_derived_at_abstract_endpoint_with_relationships()
+    public async Task Can_update_concrete_base_resource_stored_as_concrete_derived_at_abstract_endpoint_with_relationships_and_includes()
     {
         // Arrange
         var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
@@ -1187,7 +1188,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             }
         };
 
-        string route = $"/vehicles/{existingTandem.StringId}";
+        string route =
+            $"/vehicles/{existingTandem.StringId}?include=manufacturer,wheels,engine,navigationSystem,features,sleepingArea,cargoBox,lights,foldingDimensions";
 
         // Act
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);

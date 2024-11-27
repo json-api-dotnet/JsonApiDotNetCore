@@ -30,6 +30,14 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
     }
 
     /// <inheritdoc />
+    public ResourceType LookupResourceType(Type resourceClrType)
+    {
+        ArgumentGuard.NotNull(resourceClrType);
+
+        return _resourceGraph.GetResourceType(resourceClrType);
+    }
+
+    /// <inheritdoc />
     public async Task<IReadOnlyCollection<TResource>> GetAsync<TResource>(QueryLayer queryLayer, CancellationToken cancellationToken)
         where TResource : class, IIdentifiable
     {
