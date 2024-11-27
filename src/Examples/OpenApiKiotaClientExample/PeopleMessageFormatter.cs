@@ -34,28 +34,27 @@ internal sealed class PeopleMessageFormatter
         return builder.ToString();
     }
 
-    private static void WritePerson(PersonDataInResponse person, ICollection<DataInResponse> includes, StringBuilder builder)
+    private static void WritePerson(PersonDataInResponse person, List<DataInResponse> includes, StringBuilder builder)
     {
-        ICollection<TodoItemIdentifierInResponse> assignedTodoItems = person.Relationships?.AssignedTodoItems?.Data ?? [];
+        List<TodoItemIdentifierInResponse> assignedTodoItems = person.Relationships?.AssignedTodoItems?.Data ?? [];
 
         builder.AppendLine($"  Person {person.Id}: {person.Attributes?.DisplayName} with {assignedTodoItems.Count} assigned todo-items:");
         WriteRelatedTodoItems(assignedTodoItems, includes, builder);
     }
 
-    private static void WriteRelatedTodoItems(IEnumerable<TodoItemIdentifierInResponse> todoItemIdentifiers, ICollection<DataInResponse> includes,
-        StringBuilder builder)
+    private static void WriteRelatedTodoItems(List<TodoItemIdentifierInResponse> todoItemIdentifiers, List<DataInResponse> includes, StringBuilder builder)
     {
         foreach (TodoItemIdentifierInResponse todoItemIdentifier in todoItemIdentifiers)
         {
             TodoItemDataInResponse includedTodoItem = includes.OfType<TodoItemDataInResponse>().Single(include => include.Id == todoItemIdentifier.Id);
-            ICollection<TagIdentifierInResponse> tags = includedTodoItem.Relationships?.Tags?.Data ?? [];
+            List<TagIdentifierInResponse> tags = includedTodoItem.Relationships?.Tags?.Data ?? [];
 
             builder.AppendLine($"    TodoItem {includedTodoItem.Id}: {includedTodoItem.Attributes?.Description} with {tags.Count} tags:");
             WriteRelatedTags(tags, includes, builder);
         }
     }
 
-    private static void WriteRelatedTags(IEnumerable<TagIdentifierInResponse> tagIdentifiers, ICollection<DataInResponse> includes, StringBuilder builder)
+    private static void WriteRelatedTags(List<TagIdentifierInResponse> tagIdentifiers, List<DataInResponse> includes, StringBuilder builder)
     {
         foreach (TagIdentifierInResponse tagIdentifier in tagIdentifiers)
         {
