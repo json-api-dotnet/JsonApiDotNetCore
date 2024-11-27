@@ -14,6 +14,9 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
 {
     public void Apply(OpenApiDocument document, DocumentFilterContext context)
     {
+        ArgumentGuard.NotNull(document);
+        ArgumentGuard.NotNull(context);
+
         bool hasChanges;
 
         do

@@ -117,7 +117,7 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
     private void GenerateSchemaForResourceOperation(Type operationOpenType, ResourceType resourceType, AtomicOperationCode operationCode,
         SchemaRepository schemaRepository)
     {
-        WriteOperationKind operationKind = operationCode switch
+        WriteOperationKind writeOperation = operationCode switch
         {
             AtomicOperationCode.Add => WriteOperationKind.CreateResource,
             AtomicOperationCode.Update => WriteOperationKind.UpdateResource,
@@ -125,7 +125,7 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
             _ => throw new UnreachableCodeException()
         };
 
-        if (!_atomicOperationFilter.IsEnabled(resourceType, operationKind))
+        if (!_atomicOperationFilter.IsEnabled(resourceType, writeOperation))
         {
             return;
         }
@@ -154,7 +154,7 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
     private void GenerateSchemaForRelationshipOperation(Type operationOpenType, RelationshipAttribute relationship, AtomicOperationCode operationCode,
         SchemaRepository schemaRepository)
     {
-        WriteOperationKind operationKind = operationCode switch
+        WriteOperationKind writeOperation = operationCode switch
         {
             AtomicOperationCode.Add => WriteOperationKind.AddToRelationship,
             AtomicOperationCode.Update => WriteOperationKind.SetRelationship,
@@ -162,17 +162,17 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
             _ => throw new UnreachableCodeException()
         };
 
-        if (!_atomicOperationFilter.IsEnabled(relationship.LeftType, operationKind))
+        if (!_atomicOperationFilter.IsEnabled(relationship.LeftType, writeOperation))
         {
             return;
         }
 
-        if (relationship is HasOneAttribute hasOneRelationship && !IsToOneRelationshipEnabled(hasOneRelationship, operationKind))
+        if (relationship is HasOneAttribute hasOneRelationship && !IsToOneRelationshipEnabled(hasOneRelationship, writeOperation))
         {
             return;
         }
 
-        if (relationship is HasManyAttribute hasManyRelationship && !IsToManyRelationshipEnabled(hasManyRelationship, operationKind))
+        if (relationship is HasManyAttribute hasManyRelationship && !IsToManyRelationshipEnabled(hasManyRelationship, writeOperation))
         {
             return;
         }

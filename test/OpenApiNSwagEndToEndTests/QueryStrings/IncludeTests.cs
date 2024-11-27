@@ -168,7 +168,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
 
         response.Included.ShouldHaveCount(1);
 
-        NodeDataInResponse? include = response.Included.ElementAt(0).Should().BeOfType<NodeDataInResponse>().Subject;
+        NodeDataInResponse include = response.Included.ElementAt(0).Should().BeOfType<NodeDataInResponse>().Subject;
         include.Id.Should().Be(node.Parent.Parent.StringId);
         include.Attributes.ShouldNotBeNull();
         include.Attributes.Name.Should().Be(node.Parent.Parent.Name);

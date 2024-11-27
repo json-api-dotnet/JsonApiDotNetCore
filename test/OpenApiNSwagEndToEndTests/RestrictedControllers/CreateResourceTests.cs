@@ -112,7 +112,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
         audioStream.Attributes.ShouldNotBeNull();
         audioStream.Attributes.BytesTransmitted.Should().Be((long?)existingAudioStream.BytesTransmitted);
 
-        long newChannelId = int.Parse(response.Data.Id.ShouldNotBeNull());
+        long newChannelId = long.Parse(response.Data.Id.ShouldNotBeNull());
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
