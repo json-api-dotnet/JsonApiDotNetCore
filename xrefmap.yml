@@ -5080,6 +5080,22 @@ references:
   fullName.vb: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.New
   nameWithType: JsonApiContentNegotiator.JsonApiContentNegotiator
   nameWithType.vb: JsonApiContentNegotiator.New
+- uid: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.GetDefaultMediaType(System.Collections.Generic.IReadOnlyList{JsonApiDotNetCore.Middleware.JsonApiMediaType},JsonApiDotNetCore.Middleware.JsonApiMediaType)
+  name: GetDefaultMediaType(IReadOnlyList<JsonApiMediaType>, JsonApiMediaType?)
+  href: api/JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.html#JsonApiDotNetCore_Middleware_JsonApiContentNegotiator_GetDefaultMediaType_System_Collections_Generic_IReadOnlyList_JsonApiDotNetCore_Middleware_JsonApiMediaType__JsonApiDotNetCore_Middleware_JsonApiMediaType_
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.GetDefaultMediaType(System.Collections.Generic.IReadOnlyList{JsonApiDotNetCore.Middleware.JsonApiMediaType},JsonApiDotNetCore.Middleware.JsonApiMediaType)
+  name.vb: GetDefaultMediaType(IReadOnlyList(Of JsonApiMediaType), JsonApiMediaType)
+  fullName: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.GetDefaultMediaType(System.Collections.Generic.IReadOnlyList<JsonApiDotNetCore.Middleware.JsonApiMediaType>, JsonApiDotNetCore.Middleware.JsonApiMediaType?)
+  fullName.vb: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.GetDefaultMediaType(System.Collections.Generic.IReadOnlyList(Of JsonApiDotNetCore.Middleware.JsonApiMediaType), JsonApiDotNetCore.Middleware.JsonApiMediaType)
+  nameWithType: JsonApiContentNegotiator.GetDefaultMediaType(IReadOnlyList<JsonApiMediaType>, JsonApiMediaType?)
+  nameWithType.vb: JsonApiContentNegotiator.GetDefaultMediaType(IReadOnlyList(Of JsonApiMediaType), JsonApiMediaType)
+- uid: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.GetDefaultMediaType*
+  name: GetDefaultMediaType
+  href: api/JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.html#JsonApiDotNetCore_Middleware_JsonApiContentNegotiator_GetDefaultMediaType_
+  commentId: Overload:JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.GetDefaultMediaType
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.GetDefaultMediaType
+  nameWithType: JsonApiContentNegotiator.GetDefaultMediaType
 - uid: JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.GetPossibleMediaTypes
   name: GetPossibleMediaTypes()
   href: api/JsonApiDotNetCore.Middleware.JsonApiContentNegotiator.html#JsonApiDotNetCore_Middleware_JsonApiContentNegotiator_GetPossibleMediaTypes
