@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.AtomicOperations;
 
 /// <summary>
-/// Determines whether an operation in an atomic:operations request can be used.
+/// Determines whether an operation in an atomic:operations request can be used. For non-operations requests, see <see cref="IJsonApiEndpointFilter" />.
 /// </summary>
 /// <remarks>
 /// The default implementation relies on the usage of <see cref="ResourceAttribute.GenerateControllerEndpoints" />. If you're using explicit
