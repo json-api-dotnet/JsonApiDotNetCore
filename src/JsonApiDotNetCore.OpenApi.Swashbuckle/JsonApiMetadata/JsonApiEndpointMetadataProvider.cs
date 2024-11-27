@@ -1,5 +1,6 @@
 using System.Reflection;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Documents;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -12,18 +13,14 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata;
 /// </summary>
 internal sealed class JsonApiEndpointMetadataProvider
 {
-    private readonly EndpointResolver _endpointResolver;
     private readonly IControllerResourceMapping _controllerResourceMapping;
     private readonly NonPrimaryDocumentTypeFactory _nonPrimaryDocumentTypeFactory;
 
-    public JsonApiEndpointMetadataProvider(EndpointResolver endpointResolver, IControllerResourceMapping controllerResourceMapping,
-        NonPrimaryDocumentTypeFactory nonPrimaryDocumentTypeFactory)
+    public JsonApiEndpointMetadataProvider(IControllerResourceMapping controllerResourceMapping, NonPrimaryDocumentTypeFactory nonPrimaryDocumentTypeFactory)
     {
-        ArgumentGuard.NotNull(endpointResolver);
         ArgumentGuard.NotNull(controllerResourceMapping);
         ArgumentGuard.NotNull(nonPrimaryDocumentTypeFactory);
 
-        _endpointResolver = endpointResolver;
         _controllerResourceMapping = controllerResourceMapping;
         _nonPrimaryDocumentTypeFactory = nonPrimaryDocumentTypeFactory;
     }
@@ -32,16 +29,16 @@ internal sealed class JsonApiEndpointMetadataProvider
     {
         ArgumentGuard.NotNull(controllerAction);
 
-        JsonApiEndpoint? endpoint = _endpointResolver.Get(controllerAction);
-
-        if (endpoint == null)
-        {
-            throw new NotSupportedException($"Unable to provide metadata for non-JSON:API endpoint '{controllerAction.ReflectedType!.FullName}'.");
-        }
-
-        if (endpoint == JsonApiEndpoint.PostOperations)
+        if (EndpointResolver.Instance.IsAtomicOperationsController(controllerAction))
         {
             return new JsonApiEndpointMetadataContainer(AtomicOperationsRequestMetadata.Instance, AtomicOperationsResponseMetadata.Instance);
+        }
+
+        JsonApiEndpoints endpoint = EndpointResolver.Instance.GetEndpoint(controllerAction);
+
+        if (endpoint == JsonApiEndpoints.None)
+        {
+            throw new NotSupportedException($"Unable to provide metadata for non-JSON:API endpoint '{controllerAction.ReflectedType!.FullName}'.");
         }
 
         ResourceType? primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(controllerAction.ReflectedType);
@@ -51,19 +48,19 @@ internal sealed class JsonApiEndpointMetadataProvider
             throw new UnreachableCodeException();
         }
 
-        IJsonApiRequestMetadata? requestMetadata = GetRequestMetadata(endpoint.Value, primaryResourceType);
-        IJsonApiResponseMetadata? responseMetadata = GetResponseMetadata(endpoint.Value, primaryResourceType);
+        IJsonApiRequestMetadata? requestMetadata = GetRequestMetadata(endpoint, primaryResourceType);
+        IJsonApiResponseMetadata? responseMetadata = GetResponseMetadata(endpoint, primaryResourceType);
         return new JsonApiEndpointMetadataContainer(requestMetadata, responseMetadata);
     }
 
-    private IJsonApiRequestMetadata? GetRequestMetadata(JsonApiEndpoint endpoint, ResourceType primaryResourceType)
+    private IJsonApiRequestMetadata? GetRequestMetadata(JsonApiEndpoints endpoint, ResourceType primaryResourceType)
     {
         return endpoint switch
         {
-            JsonApiEndpoint.PostResource => GetPostResourceRequestMetadata(primaryResourceType.ClrType),
-            JsonApiEndpoint.PatchResource => GetPatchResourceRequestMetadata(primaryResourceType.ClrType),
-            JsonApiEndpoint.PostRelationship or JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship => GetRelationshipRequestMetadata(
-                primaryResourceType.Relationships, endpoint != JsonApiEndpoint.PatchRelationship),
+            JsonApiEndpoints.Post => GetPostResourceRequestMetadata(primaryResourceType.ClrType),
+            JsonApiEndpoints.Patch => GetPatchResourceRequestMetadata(primaryResourceType.ClrType),
+            JsonApiEndpoints.PostRelationship or JsonApiEndpoints.PatchRelationship or JsonApiEndpoints.DeleteRelationship => GetRelationshipRequestMetadata(
+                primaryResourceType.Relationships, endpoint != JsonApiEndpoints.PatchRelationship),
             _ => null
         };
     }
@@ -92,14 +89,14 @@ internal sealed class JsonApiEndpointMetadataProvider
         return new RelationshipRequestMetadata(requestDocumentTypesByRelationshipName);
     }
 
-    private IJsonApiResponseMetadata? GetResponseMetadata(JsonApiEndpoint endpoint, ResourceType primaryResourceType)
+    private IJsonApiResponseMetadata? GetResponseMetadata(JsonApiEndpoints endpoint, ResourceType primaryResourceType)
     {
         return endpoint switch
         {
-            JsonApiEndpoint.GetCollection or JsonApiEndpoint.GetSingle or JsonApiEndpoint.PostResource or JsonApiEndpoint.PatchResource =>
-                GetPrimaryResponseMetadata(primaryResourceType.ClrType, endpoint == JsonApiEndpoint.GetCollection),
-            JsonApiEndpoint.GetSecondary => GetSecondaryResponseMetadata(primaryResourceType.Relationships),
-            JsonApiEndpoint.GetRelationship => GetRelationshipResponseMetadata(primaryResourceType.Relationships),
+            JsonApiEndpoints.GetCollection or JsonApiEndpoints.GetSingle or JsonApiEndpoints.Post or JsonApiEndpoints.Patch => GetPrimaryResponseMetadata(
+                primaryResourceType.ClrType, endpoint == JsonApiEndpoints.GetCollection),
+            JsonApiEndpoints.GetSecondary => GetSecondaryResponseMetadata(primaryResourceType.Relationships),
+            JsonApiEndpoints.GetRelationship => GetRelationshipResponseMetadata(primaryResourceType.Relationships),
             _ => null
         };
     }

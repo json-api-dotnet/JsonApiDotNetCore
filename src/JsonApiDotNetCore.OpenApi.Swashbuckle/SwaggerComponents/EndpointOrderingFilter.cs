@@ -12,7 +12,7 @@ internal sealed class EndpointOrderingFilter : IDocumentFilter
 internal sealed partial class EndpointOrderingFilter : IDocumentFilter
 #endif
 {
-    private const string PatternText = $@".*{JsonApiRoutingTemplate.PrimaryEndpoint}/(?>{JsonApiRoutingTemplate.RelationshipsPart}\/)?(?<RelationshipName>\w+)";
+    private const string PatternText = @".*{id}/(?>relationships\/)?(?<RelationshipName>\w+)";
 
 #if NET6_0
     private const RegexOptions RegexOptionsNet60 = RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture;
@@ -42,7 +42,7 @@ internal sealed partial class EndpointOrderingFilter : IDocumentFilter
 
     private static bool IsSecondaryEndpoint(KeyValuePair<string, OpenApiPathItem> entry)
     {
-        return entry.Key.Contains($"/{JsonApiRoutingTemplate.RelationshipsPart}");
+        return entry.Key.Contains("/relationships");
     }
 
     private static string GetRelationshipName(KeyValuePair<string, OpenApiPathItem> entry)

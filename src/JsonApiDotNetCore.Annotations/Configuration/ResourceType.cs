@@ -217,7 +217,7 @@ public sealed class ResourceType
     }
 
     /// <summary>
-    /// Returns all directly and indirectly non-abstract resource types that derive from this resource type.
+    /// Returns all non-abstract resource types that directly or indirectly derive from this resource type.
     /// </summary>
     public IReadOnlySet<ResourceType> GetAllConcreteDerivedTypes()
     {

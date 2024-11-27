@@ -36,7 +36,6 @@ public static class ServiceCollectionExtensions
     {
         services.TryAddSingleton<OpenApiEndpointConvention>();
         services.TryAddSingleton<JsonApiRequestFormatMetadataProvider>();
-        services.TryAddSingleton<EndpointResolver>();
         services.TryAddSingleton<JsonApiEndpointMetadataProvider>();
         services.TryAddSingleton<JsonApiActionDescriptorCollectionProvider>();
         services.TryAddSingleton<NonPrimaryDocumentTypeFactory>();
