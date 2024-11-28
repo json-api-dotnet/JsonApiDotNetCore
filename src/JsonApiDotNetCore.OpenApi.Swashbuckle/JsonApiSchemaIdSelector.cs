@@ -115,10 +115,9 @@ internal sealed class JsonApiSchemaIdSelector
     {
         string schemaId = schemaTemplate;
 
-        if (resourceType != null)
-        {
-            schemaId = schemaId.Replace("[ResourceName]", resourceType.PublicName.Singularize()).Pascalize();
-        }
+        schemaId = resourceType != null
+            ? schemaId.Replace("[ResourceName]", resourceType.PublicName.Singularize()).Pascalize()
+            : schemaId.Replace("[ResourceName]", "$$$").Pascalize().Replace("$$$", string.Empty);
 
         if (relationshipName != null)
         {
@@ -136,10 +135,8 @@ internal sealed class JsonApiSchemaIdSelector
         return namingPolicy != null ? namingPolicy.ConvertName(pascalCaseSchemaId) : pascalCaseSchemaId;
     }
 
-    public string GetResourceTypeSchemaId(ResourceType resourceType)
+    public string GetResourceTypeSchemaId(ResourceType? resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
-
         return ApplySchemaTemplate(ResourceTypeSchemaIdTemplate, resourceType, null, null);
     }
 

@@ -4175,8 +4175,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
           },
           "meta": {
             "allOf": [
@@ -5249,6 +5252,15 @@
           }
         },
         "additionalProperties": false
+      },
+      "resourceType": {
+        "enum": [
+          "dataStreams",
+          "readOnlyChannels",
+          "readOnlyResourceChannels",
+          "writeOnlyChannels"
+        ],
+        "type": "string"
       },
       "toManyDataStreamInRequest": {
         "required": [

@@ -155,6 +155,8 @@ public sealed class GeneratedTypesTests
     {
         _ = nameof(SupermarketResourceType.Supermarkets);
         _ = nameof(StaffMemberResourceType.StaffMembers);
+        _ = nameof(ResourceType.Supermarkets);
+        _ = nameof(ResourceType.StaffMembers);
     }
 
     [Fact]

@@ -35,6 +35,7 @@ internal sealed class AbstractResourceDataSchemaGenerator
             return referenceSchema;
         }
 
+        OpenApiSchema referenceSchemaForResourceType = GenerateEmptyResourceTypeSchema(schemaRepository);
         OpenApiSchema referenceSchemaForMeta = _metaSchemaGenerator.GenerateSchema(schemaRepository);
 
         var fullSchema = new OpenApiSchema
@@ -45,8 +46,7 @@ internal sealed class AbstractResourceDataSchemaGenerator
             {
                 [JsonApiPropertyName.Type] = new()
                 {
-                    MinLength = 1,
-                    Type = "string"
+                    AllOf = [referenceSchemaForResourceType]
                 },
                 [referenceSchemaForMeta.Reference.Id] = referenceSchemaForMeta.WrapInExtendedSchema()
             },
@@ -70,6 +70,21 @@ internal sealed class AbstractResourceDataSchemaGenerator
         return referenceSchema;
     }
 
+    private OpenApiSchema GenerateEmptyResourceTypeSchema(SchemaRepository schemaRepository)
+    {
+        var fullSchema = new OpenApiSchema
+        {
+            Type = "string",
+            Extensions =
+            {
+                [StringEnumOrderingFilter.RequiresSortKey] = new OpenApiBoolean(true)
+            }
+        };
+
+        string resourceTypeSchemaId = _schemaIdSelector.GetResourceTypeSchemaId(null);
+        return schemaRepository.AddDefinition(resourceTypeSchemaId, fullSchema);
+    }
+
     public void MapDiscriminator(Type resourceDataConstructedType, OpenApiSchema referenceSchemaForResourceData, SchemaRepository schemaRepository)
     {
         ArgumentGuard.NotNull(resourceDataConstructedType);
@@ -86,9 +101,20 @@ internal sealed class AbstractResourceDataSchemaGenerator
             }
 
             OpenApiSchema fullSchemaForAbstractResourceData = schemaRepository.Schemas[referenceSchemaForAbstractResourceData.Reference.Id];
+            string dataSchemaId = referenceSchemaForResourceData.Reference.ReferenceV3;
+            string publicName = resourceTypeInfo.ResourceType.PublicName;
 
-            fullSchemaForAbstractResourceData.Discriminator.Mapping[resourceTypeInfo.ResourceType.PublicName] =
-                referenceSchemaForResourceData.Reference.ReferenceV3;
+            if (fullSchemaForAbstractResourceData.Discriminator.Mapping.TryAdd(publicName, dataSchemaId))
+            {
+                MapResourceType(publicName, schemaRepository);
+            }
         }
+    }
+
+    private void MapResourceType(string publicName, SchemaRepository schemaRepository)
+    {
+        string schemaId = _schemaIdSelector.GetResourceTypeSchemaId(null);
+        OpenApiSchema fullSchema = schemaRepository.Schemas[schemaId];
+        fullSchema.Enum.Add(new OpenApiString(publicName));
     }
 }

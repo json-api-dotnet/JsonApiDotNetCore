@@ -3019,8 +3019,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resource-type"
+              }
+            ]
           },
           "meta": {
             "allOf": [
@@ -3749,6 +3752,13 @@
           }
         },
         "additionalProperties": false
+      },
+      "resource-type": {
+        "enum": [
+          "staff-members",
+          "supermarkets"
+        ],
+        "type": "string"
       },
       "staff-member-attributes-in-response": {
         "type": "object",

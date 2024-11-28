@@ -505,8 +505,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
           },
           "meta": {
             "allOf": [
@@ -709,6 +712,12 @@
           }
         },
         "additionalProperties": false
+      },
+      "resourceType": {
+        "enum": [
+          "socialMediaAccounts"
+        ],
+        "type": "string"
       },
       "socialMediaAccountAttributesInResponse": {
         "type": "object",

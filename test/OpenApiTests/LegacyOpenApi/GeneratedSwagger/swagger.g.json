@@ -6456,8 +6456,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resource-type"
+              }
+            ]
           },
           "meta": {
             "allOf": [
@@ -8054,6 +8057,15 @@
           }
         },
         "additionalProperties": false
+      },
+      "resource-type": {
+        "enum": [
+          "airplanes",
+          "flight-attendants",
+          "flights",
+          "passengers"
+        ],
+        "type": "string"
       },
       "to-many-flight-attendant-in-request": {
         "required": [

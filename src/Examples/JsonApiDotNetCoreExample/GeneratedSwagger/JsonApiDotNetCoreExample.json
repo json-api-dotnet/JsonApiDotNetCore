@@ -5554,8 +5554,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
           },
           "meta": {
             "allOf": [
@@ -6863,6 +6866,14 @@
           }
         },
         "additionalProperties": false
+      },
+      "resourceType": {
+        "enum": [
+          "people",
+          "tags",
+          "todoItems"
+        ],
+        "type": "string"
       },
       "tagAttributesInResponse": {
         "type": "object",

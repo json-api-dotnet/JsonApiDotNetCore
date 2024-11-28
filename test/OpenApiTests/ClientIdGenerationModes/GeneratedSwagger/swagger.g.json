@@ -566,8 +566,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
           },
           "meta": {
             "allOf": [
@@ -1270,6 +1273,14 @@
           }
         },
         "additionalProperties": false
+      },
+      "resourceType": {
+        "enum": [
+          "games",
+          "playerGroups",
+          "players"
+        ],
+        "type": "string"
       },
       "toManyGameInRequest": {
         "required": [

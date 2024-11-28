@@ -59,6 +59,7 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
 
         options.DocumentFilter<ServerDocumentFilter>();
         options.DocumentFilter<EndpointOrderingFilter>();
+        options.DocumentFilter<StringEnumOrderingFilter>();
         options.OperationFilter<DocumentationOpenApiOperationFilter>();
         options.DocumentFilter<UnusedComponentSchemaCleaner>();
     }
