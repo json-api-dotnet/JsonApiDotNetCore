@@ -50,22 +50,6 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models
             set { BackingStore?.Set("links", value); }
         }
 #endif
-        /// <summary>The meta property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.Meta? Meta
-        {
-            get { return BackingStore?.Get<global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.Meta?>("meta"); }
-            set { BackingStore?.Set("meta", value); }
-        }
-#nullable restore
-#else
-        public global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.Meta Meta
-        {
-            get { return BackingStore?.Get<global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.Meta>("meta"); }
-            set { BackingStore?.Set("meta", value); }
-        }
-#endif
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
@@ -87,7 +71,6 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models
                 { "attributes", n => { Attributes = n.GetObjectValue<global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountAttributesInResponse>(global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountAttributesInResponse.CreateFromDiscriminatorValue); } },
                 { "id", n => { Id = n.GetGuidValue(); } },
                 { "links", n => { Links = n.GetObjectValue<global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ResourceLinks>(global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ResourceLinks.CreateFromDiscriminatorValue); } },
-                { "meta", n => { Meta = n.GetObjectValue<global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.Meta>(global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -101,7 +84,6 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models
             writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountAttributesInResponse>("attributes", Attributes);
             writer.WriteGuidValue("id", Id);
             writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ResourceLinks>("links", Links);
-            writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.Meta>("meta", Meta);
         }
     }
 }

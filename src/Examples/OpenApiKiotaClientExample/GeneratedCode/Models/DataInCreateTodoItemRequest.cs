@@ -47,6 +47,22 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
             set { BackingStore?.Set("lid", value); }
         }
 #endif
+        /// <summary>The meta property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta? Meta
+        {
+            get { return BackingStore?.Get<global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta?>("meta"); }
+            set { BackingStore?.Set("meta", value); }
+        }
+#nullable restore
+#else
+        public global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta Meta
+        {
+            get { return BackingStore?.Get<global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta"); }
+            set { BackingStore?.Set("meta", value); }
+        }
+#endif
         /// <summary>The relationships property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -96,6 +112,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
             {
                 { "attributes", n => { Attributes = n.GetObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInCreateTodoItemRequest>(global::OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInCreateTodoItemRequest.CreateFromDiscriminatorValue); } },
                 { "lid", n => { Lid = n.GetStringValue(); } },
+                { "meta", n => { Meta = n.GetObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta>(global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
                 { "relationships", n => { Relationships = n.GetObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInCreateTodoItemRequest>(global::OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInCreateTodoItemRequest.CreateFromDiscriminatorValue); } },
                 { "type", n => { Type = n.GetEnumValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemResourceType>(); } },
             };
@@ -109,6 +126,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.AttributesInCreateTodoItemRequest>("attributes", Attributes);
             writer.WriteStringValue("lid", Lid);
+            writer.WriteObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta", Meta);
             writer.WriteObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.RelationshipsInCreateTodoItemRequest>("relationships", Relationships);
             writer.WriteEnumValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.TodoItemResourceType>("type", Type);
         }

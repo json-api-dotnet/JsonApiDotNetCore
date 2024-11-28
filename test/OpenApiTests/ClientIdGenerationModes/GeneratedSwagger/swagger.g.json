@@ -447,6 +447,13 @@
                 "$ref": "#/components/schemas/attributesInCreateGameRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -475,6 +482,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/relationshipsInCreatePlayerGroupRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -513,6 +527,13 @@
                 "$ref": "#/components/schemas/relationshipsInCreatePlayerRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -526,6 +547,13 @@
           "type": {
             "minLength": 1,
             "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false,
@@ -703,13 +731,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -735,6 +756,13 @@
             "minLength": 1,
             "type": "string",
             "format": "uuid"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -757,6 +785,13 @@
             "minLength": 1,
             "type": "string",
             "format": "uuid"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -855,13 +890,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -914,13 +942,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -946,6 +967,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -968,6 +996,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1046,6 +1081,13 @@
             "minLength": 1,
             "type": "string",
             "format": "uuid"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1068,6 +1110,13 @@
             "minLength": 1,
             "type": "string",
             "format": "uuid"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false

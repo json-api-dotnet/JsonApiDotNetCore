@@ -7,4 +7,5 @@ internal interface IResourceIdentity
 {
     string Type { get; set; }
     string Id { get; set; }
+    Meta Meta { get; set; }
 }

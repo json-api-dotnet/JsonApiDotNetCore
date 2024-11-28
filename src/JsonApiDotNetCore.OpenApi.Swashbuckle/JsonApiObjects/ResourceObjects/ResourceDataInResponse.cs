@@ -23,7 +23,4 @@ internal sealed class ResourceDataInResponse<TResource> : ResourceData
     // Non-required because the related controller may be unavailable when used in an include.
     [JsonPropertyName("links")]
     public ResourceLinks Links { get; set; } = null!;
-
-    [JsonPropertyName("meta")]
-    public Meta Meta { get; set; } = null!;
 }

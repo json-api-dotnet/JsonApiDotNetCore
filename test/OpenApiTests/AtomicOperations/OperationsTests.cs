@@ -389,6 +389,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                           "$ref": "#/components/schemas/relationshipsInCreateCourseRequest"
                         }
                       ]
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
+                        }
+                      ]
                     }
                   },
                   "additionalProperties": false
@@ -513,6 +520,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                       "allOf": [
                         {
                           "$ref": "#/components/schemas/relationshipsInUpdateCourseRequest"
+                        }
+                      ]
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
                         }
                       ]
                     }
@@ -707,6 +721,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     "lid": {
                       "minLength": 1,
                       "type": "string"
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
+                        }
+                      ]
                     }
                   },
                   "additionalProperties": false
@@ -834,6 +855,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                           "$ref": "#/components/schemas/relationshipsInCreateStudentRequest"
                         }
                       ]
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
+                        }
+                      ]
                     }
                   },
                   "additionalProperties": false
@@ -958,6 +986,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                       "allOf": [
                         {
                           "$ref": "#/components/schemas/relationshipsInUpdateStudentRequest"
+                        }
+                      ]
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
                         }
                       ]
                     }
@@ -1201,6 +1236,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     "lid": {
                       "minLength": 1,
                       "type": "string"
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
+                        }
+                      ]
                     }
                   },
                   "additionalProperties": false
@@ -1373,6 +1415,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                           "$ref": "#/components/schemas/relationshipsInCreateTeacherRequest"
                         }
                       ]
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
+                        }
+                      ]
                     }
                   },
                   "additionalProperties": false
@@ -1497,6 +1546,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                       "allOf": [
                         {
                           "$ref": "#/components/schemas/relationshipsInUpdateTeacherRequest"
+                        }
+                      ]
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
                         }
                       ]
                     }
@@ -1729,6 +1785,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     "lid": {
                       "minLength": 1,
                       "type": "string"
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
+                        }
+                      ]
                     }
                   },
                   "additionalProperties": false
@@ -1854,6 +1917,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                       "allOf": [
                         {
                           "$ref": "#/components/schemas/relationshipsInCreateEnrollmentRequest"
+                        }
+                      ]
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
                         }
                       ]
                     }
@@ -1983,6 +2053,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                       "allOf": [
                         {
                           "$ref": "#/components/schemas/relationshipsInUpdateEnrollmentRequest"
+                        }
+                      ]
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
                         }
                       ]
                     }
@@ -2134,6 +2211,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     "lid": {
                       "minLength": 1,
                       "type": "string"
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
+                        }
+                      ]
                     }
                   },
                   "additionalProperties": false

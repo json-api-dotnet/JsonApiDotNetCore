@@ -60,22 +60,6 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
             set { BackingStore?.Set("links", value); }
         }
 #endif
-        /// <summary>The meta property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta? Meta
-        {
-            get { return BackingStore?.Get<global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta?>("meta"); }
-            set { BackingStore?.Set("meta", value); }
-        }
-#nullable restore
-#else
-        public global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta Meta
-        {
-            get { return BackingStore?.Get<global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta"); }
-            set { BackingStore?.Set("meta", value); }
-        }
-#endif
         /// <summary>The relationships property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -113,7 +97,6 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
                 { "attributes", n => { Attributes = n.GetObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.PersonAttributesInResponse>(global::OpenApiKiotaClientExample.GeneratedCode.Models.PersonAttributesInResponse.CreateFromDiscriminatorValue); } },
                 { "id", n => { Id = n.GetStringValue(); } },
                 { "links", n => { Links = n.GetObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.ResourceLinks>(global::OpenApiKiotaClientExample.GeneratedCode.Models.ResourceLinks.CreateFromDiscriminatorValue); } },
-                { "meta", n => { Meta = n.GetObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta>(global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
                 { "relationships", n => { Relationships = n.GetObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.PersonRelationshipsInResponse>(global::OpenApiKiotaClientExample.GeneratedCode.Models.PersonRelationshipsInResponse.CreateFromDiscriminatorValue); } },
             };
         }
@@ -128,7 +111,6 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
             writer.WriteObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.PersonAttributesInResponse>("attributes", Attributes);
             writer.WriteStringValue("id", Id);
             writer.WriteObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.ResourceLinks>("links", Links);
-            writer.WriteObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta", Meta);
             writer.WriteObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.PersonRelationshipsInResponse>("relationships", Relationships);
         }
     }

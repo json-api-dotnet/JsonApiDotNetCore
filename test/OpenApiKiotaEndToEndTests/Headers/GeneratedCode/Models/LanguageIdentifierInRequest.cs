@@ -21,6 +21,22 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
             get { return BackingStore?.Get<Guid?>("id"); }
             set { BackingStore?.Set("id", value); }
         }
+        /// <summary>The meta property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta? Meta
+        {
+            get { return BackingStore?.Get<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta?>("meta"); }
+            set { BackingStore?.Set("meta", value); }
+        }
+#nullable restore
+#else
+        public global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta Meta
+        {
+            get { return BackingStore?.Get<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta>("meta"); }
+            set { BackingStore?.Set("meta", value); }
+        }
+#endif
         /// <summary>The type property</summary>
         public global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageResourceType? Type
         {
@@ -53,6 +69,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
             return new Dictionary<string, Action<IParseNode>>
             {
                 { "id", n => { Id = n.GetGuidValue(); } },
+                { "meta", n => { Meta = n.GetObjectValue<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta>(global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
                 { "type", n => { Type = n.GetEnumValue<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageResourceType>(); } },
             };
         }
@@ -64,6 +81,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteGuidValue("id", Id);
+            writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta>("meta", Meta);
             writer.WriteEnumValue<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageResourceType>("type", Type);
         }
     }

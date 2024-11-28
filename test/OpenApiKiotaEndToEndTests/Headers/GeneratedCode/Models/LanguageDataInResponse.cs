@@ -50,22 +50,6 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
             set { BackingStore?.Set("links", value); }
         }
 #endif
-        /// <summary>The meta property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta? Meta
-        {
-            get { return BackingStore?.Get<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta?>("meta"); }
-            set { BackingStore?.Set("meta", value); }
-        }
-#nullable restore
-#else
-        public global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta Meta
-        {
-            get { return BackingStore?.Get<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta>("meta"); }
-            set { BackingStore?.Set("meta", value); }
-        }
-#endif
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
@@ -87,7 +71,6 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
                 { "attributes", n => { Attributes = n.GetObjectValue<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageAttributesInResponse>(global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageAttributesInResponse.CreateFromDiscriminatorValue); } },
                 { "id", n => { Id = n.GetGuidValue(); } },
                 { "links", n => { Links = n.GetObjectValue<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ResourceLinks>(global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ResourceLinks.CreateFromDiscriminatorValue); } },
-                { "meta", n => { Meta = n.GetObjectValue<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta>(global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -101,7 +84,6 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
             writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.LanguageAttributesInResponse>("attributes", Attributes);
             writer.WriteGuidValue("id", Id);
             writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ResourceLinks>("links", Links);
-            writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.Meta>("meta", Meta);
         }
     }
 }

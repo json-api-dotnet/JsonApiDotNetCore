@@ -70,6 +70,8 @@ internal sealed class RelationshipIdentifierSchemaGenerator
         OpenApiSchema referenceSchemaForIdentifier = _defaultSchemaGenerator.GenerateSchema(relationshipIdentifierConstructedType, schemaRepository);
         OpenApiSchema fullSchemaForIdentifier = schemaRepository.Schemas[referenceSchemaForIdentifier.Reference.Id];
 
+        fullSchemaForIdentifier.Properties.Remove(JsonApiPropertyName.Meta);
+
         SetResourceType(fullSchemaForIdentifier, relationship.LeftType, schemaRepository);
         SetResourceId(fullSchemaForIdentifier, relationship.LeftType, schemaRepository);
         SetRelationship(fullSchemaForIdentifier, relationship, schemaRepository);

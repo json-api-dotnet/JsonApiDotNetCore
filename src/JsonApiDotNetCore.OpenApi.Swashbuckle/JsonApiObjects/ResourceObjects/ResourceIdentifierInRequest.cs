@@ -21,4 +21,7 @@ internal class ResourceIdentifierInRequest<TResource> : IResourceIdentity
     [MinLength(1)]
     [JsonPropertyName("lid")]
     public string Lid { get; set; } = null!;
+
+    [JsonPropertyName("meta")]
+    public Meta Meta { get; set; } = null!;
 }

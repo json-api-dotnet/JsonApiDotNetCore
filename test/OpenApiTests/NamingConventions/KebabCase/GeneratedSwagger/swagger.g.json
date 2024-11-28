@@ -2946,6 +2946,13 @@
                 "$ref": "#/components/schemas/attributes-in-create-staff-member-request"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2980,6 +2987,13 @@
                 "$ref": "#/components/schemas/relationships-in-create-supermarket-request"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2993,6 +3007,13 @@
           "type": {
             "minLength": 1,
             "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false,
@@ -3033,6 +3054,13 @@
                 "$ref": "#/components/schemas/attributes-in-update-staff-member-request"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3070,6 +3098,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/relationships-in-update-supermarket-request"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -3779,13 +3814,6 @@
                     "$ref": "#/components/schemas/resource-links"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -3851,6 +3879,13 @@
           "lid": {
             "minLength": 1,
             "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3873,6 +3908,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int32"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4182,13 +4224,6 @@
                     "$ref": "#/components/schemas/resource-links"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -4217,6 +4252,13 @@
           "lid": {
             "minLength": 1,
             "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false

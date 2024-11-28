@@ -3789,13 +3789,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -3821,6 +3814,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3843,6 +3843,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4162,6 +4169,13 @@
                 "$ref": "#/components/schemas/attributesInCreateAccommodationRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4185,6 +4199,13 @@
                 "$ref": "#/components/schemas/attributesInCreateExcursionRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4206,6 +4227,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/attributesInCreateTransportRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -4238,6 +4266,13 @@
                 "$ref": "#/components/schemas/relationshipsInCreateVacationRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4251,6 +4286,13 @@
           "type": {
             "minLength": 1,
             "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false,
@@ -4290,6 +4332,13 @@
                 "$ref": "#/components/schemas/attributesInUpdateAccommodationRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4319,6 +4368,13 @@
                 "$ref": "#/components/schemas/attributesInUpdateExcursionRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4346,6 +4402,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/attributesInUpdateTransportRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -4382,6 +4445,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/relationshipsInUpdateVacationRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -4588,13 +4658,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -4650,6 +4713,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4672,6 +4742,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5162,13 +5239,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -5194,6 +5264,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5216,6 +5293,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5421,13 +5505,6 @@
                 "allOf": [
                   {
                     "$ref": "#/components/schemas/resourceLinks"
-                  }
-                ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
                   }
                 ]
               }

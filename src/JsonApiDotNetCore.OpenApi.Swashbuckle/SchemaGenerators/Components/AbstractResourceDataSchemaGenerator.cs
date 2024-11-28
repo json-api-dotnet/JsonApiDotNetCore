@@ -11,14 +11,17 @@ internal sealed class AbstractResourceDataSchemaGenerator
 {
     private static readonly Type ResourceDataAbstractType = typeof(ResourceData);
 
+    private readonly MetaSchemaGenerator _metaSchemaGenerator;
     private readonly JsonApiSchemaIdSelector _schemaIdSelector;
     private readonly IResourceGraph _resourceGraph;
 
-    public AbstractResourceDataSchemaGenerator(JsonApiSchemaIdSelector schemaIdSelector, IResourceGraph resourceGraph)
+    public AbstractResourceDataSchemaGenerator(MetaSchemaGenerator metaSchemaGenerator, JsonApiSchemaIdSelector schemaIdSelector, IResourceGraph resourceGraph)
     {
+        ArgumentGuard.NotNull(metaSchemaGenerator);
         ArgumentGuard.NotNull(schemaIdSelector);
         ArgumentGuard.NotNull(resourceGraph);
 
+        _metaSchemaGenerator = metaSchemaGenerator;
         _schemaIdSelector = schemaIdSelector;
         _resourceGraph = resourceGraph;
     }
@@ -32,6 +35,8 @@ internal sealed class AbstractResourceDataSchemaGenerator
             return referenceSchema;
         }
 
+        OpenApiSchema referenceSchemaForMeta = _metaSchemaGenerator.GenerateSchema(schemaRepository);
+
         var fullSchema = new OpenApiSchema
         {
             Required = new SortedSet<string>([JsonApiPropertyName.Type]),
@@ -42,7 +47,8 @@ internal sealed class AbstractResourceDataSchemaGenerator
                 {
                     MinLength = 1,
                     Type = "string"
-                }
+                },
+                [referenceSchemaForMeta.Reference.Id] = referenceSchemaForMeta.WrapInExtendedSchema()
             },
             AdditionalPropertiesAllowed = false,
             Discriminator = new OpenApiDiscriminator

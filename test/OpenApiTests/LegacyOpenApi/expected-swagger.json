@@ -5997,13 +5997,6 @@
                     "$ref": "#/components/schemas/resource-links"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -6320,6 +6313,13 @@
                 "$ref": "#/components/schemas/relationships-in-create-airplane-request"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -6350,6 +6350,13 @@
                 "$ref": "#/components/schemas/relationships-in-create-flight-attendant-request"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -6371,6 +6378,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/relationships-in-create-flight-request"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -6396,6 +6410,13 @@
                 "$ref": "#/components/schemas/attributes-in-create-passenger-request"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -6409,6 +6430,13 @@
           "type": {
             "minLength": 1,
             "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false,
@@ -6453,6 +6481,13 @@
                 "$ref": "#/components/schemas/relationships-in-update-airplane-request"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -6485,6 +6520,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/relationships-in-update-flight-attendant-request"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -6521,6 +6563,13 @@
                 "$ref": "#/components/schemas/relationships-in-update-flight-request"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -6546,6 +6595,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/attributes-in-update-passenger-request"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -6783,13 +6839,6 @@
                     "$ref": "#/components/schemas/resource-links"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -6850,6 +6899,13 @@
           },
           "id": {
             "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -6870,6 +6926,13 @@
           },
           "id": {
             "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7141,13 +7204,6 @@
                     "$ref": "#/components/schemas/resource-links"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -7208,6 +7264,13 @@
           },
           "id": {
             "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7228,6 +7291,13 @@
           },
           "id": {
             "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7566,13 +7636,6 @@
                     "$ref": "#/components/schemas/resource-links"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -7633,6 +7696,13 @@
           },
           "id": {
             "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7653,6 +7723,13 @@
           },
           "id": {
             "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false

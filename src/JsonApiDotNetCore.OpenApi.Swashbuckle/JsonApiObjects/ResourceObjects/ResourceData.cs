@@ -12,4 +12,7 @@ internal abstract class ResourceData : IResourceIdentity
     public string Type { get; set; } = null!;
 
     public abstract string Id { get; set; }
+
+    [JsonPropertyName("meta")]
+    public Meta Meta { get; set; } = null!;
 }
