@@ -26,6 +26,12 @@
     <NoWarn>$(NoWarn);$(UseCollectionExpressionRules)</NoWarn>
   </PropertyGroup>
 
+  <!-- Specific to .NET 9 -->
+  <PropertyGroup>
+    <NuGetAuditMode>direct</NuGetAuditMode>
+    <NoWarn>$(NoWarn);NU5104;NU1608</NoWarn>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <NoWarn>$(NoWarn);AV2210</NoWarn>
   </PropertyGroup>

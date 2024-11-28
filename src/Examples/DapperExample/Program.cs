@@ -31,8 +31,13 @@ switch (databaseProvider)
     }
     case DatabaseProvider.MySql:
     {
-        builder.Services.AddMySql<AppDbContext>(connectionString, ServerVersion.AutoDetect(connectionString),
-            optionsAction: options => SetDbContextDebugOptions(options));
+#if NET9_0_OR_GREATER
+        ServerVersion serverVersion = await ServerVersion.AutoDetectAsync(connectionString);
+#else
+        ServerVersion serverVersion = ServerVersion.AutoDetect(connectionString);
+#endif
+
+        builder.Services.AddMySql<AppDbContext>(connectionString, serverVersion, optionsAction: options => SetDbContextDebugOptions(options));
 
         break;
     }
