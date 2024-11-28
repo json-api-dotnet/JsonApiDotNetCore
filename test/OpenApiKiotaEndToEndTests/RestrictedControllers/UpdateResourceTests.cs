@@ -114,9 +114,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
             response.Data.Relationships.AudioStreams.Data.Should().BeEmpty();
 
             response.Included.ShouldHaveCount(1);
-
-            DataStreamDataInResponse? videoStream = response.Included.ElementAt(0).Should().BeOfType<DataStreamDataInResponse>().Which;
-            videoStream.Id.Should().Be(existingVideoStream.StringId);
+            response.Included.OfType<DataStreamDataInResponse>().Should().ContainSingle(streamData => streamData.Id == existingVideoStream.StringId);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

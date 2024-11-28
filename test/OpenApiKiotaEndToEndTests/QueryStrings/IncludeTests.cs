@@ -58,12 +58,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
             response.Data.ElementAt(0).Id.Should().Be(node.StringId);
 
             response.Included.ShouldHaveCount(2);
-
-            response.Included.Should().ContainSingle(include =>
-                include is NameValuePairDataInResponse && ((NameValuePairDataInResponse)include).Id == node.Values.ElementAt(0).StringId);
-
-            response.Included.Should().ContainSingle(include =>
-                include is NameValuePairDataInResponse && ((NameValuePairDataInResponse)include).Id == node.Values.ElementAt(1).StringId);
+            response.Included.OfType<NameValuePairDataInResponse>().Should().ContainSingle(include => include.Id == node.Values.ElementAt(0).StringId);
+            response.Included.OfType<NameValuePairDataInResponse>().Should().ContainSingle(include => include.Id == node.Values.ElementAt(1).StringId);
         }
     }
 
@@ -101,15 +97,9 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
             response.Data.Id.Should().Be(node.StringId);
 
             response.Included.ShouldHaveCount(3);
-
-            response.Included.Should().ContainSingle(include =>
-                include is NodeDataInResponse && ((NodeDataInResponse)include).Id == node.Children.ElementAt(0).StringId);
-
-            response.Included.Should().ContainSingle(include =>
-                include is NodeDataInResponse && ((NodeDataInResponse)include).Id == node.Children.ElementAt(1).StringId);
-
-            response.Included.Should().ContainSingle(include =>
-                include is NameValuePairDataInResponse && ((NameValuePairDataInResponse)include).Id == node.Values[0].StringId);
+            response.Included.OfType<NodeDataInResponse>().Should().ContainSingle(include => include.Id == node.Children.ElementAt(0).StringId);
+            response.Included.OfType<NodeDataInResponse>().Should().ContainSingle(include => include.Id == node.Children.ElementAt(1).StringId);
+            response.Included.OfType<NameValuePairDataInResponse>().Should().ContainSingle(include => include.Id == node.Values[0].StringId);
         }
     }
 
@@ -146,8 +136,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
             response.Data.ShouldHaveCount(2);
 
             response.Included.ShouldHaveCount(2);
-            response.Included.Should().ContainSingle(include => include is NodeDataInResponse && ((NodeDataInResponse)include).Id == node.StringId);
-            response.Included.Should().ContainSingle(include => include is NodeDataInResponse && ((NodeDataInResponse)include).Id == node.Parent.StringId);
+            response.Included.OfType<NodeDataInResponse>().Should().ContainSingle(include => include.Id == node.StringId);
+            response.Included.OfType<NodeDataInResponse>().Should().ContainSingle(include => include.Id == node.Parent.StringId);
         }
     }
 
@@ -186,10 +176,12 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
 
             response.Included.ShouldHaveCount(1);
 
-            NodeDataInResponse include = response.Included.ElementAt(0).Should().BeOfType<NodeDataInResponse>().Subject;
-            include.Id.Should().Be(node.Parent.Parent.StringId);
-            include.Attributes.ShouldNotBeNull();
-            include.Attributes.Name.Should().Be(node.Parent.Parent.Name);
+            response.Included.OfType<NodeDataInResponse>().Should().ContainSingle(nodeData => nodeData.Id == node.Parent.Parent.StringId).Subject.With(
+                nodeData =>
+                {
+                    nodeData.Attributes.ShouldNotBeNull();
+                    nodeData.Attributes.Name.Should().Be(node.Parent.Parent.Name);
+                });
         }
     }
 
