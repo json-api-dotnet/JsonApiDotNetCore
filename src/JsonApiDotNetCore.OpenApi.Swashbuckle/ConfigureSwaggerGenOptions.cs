@@ -49,7 +49,7 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
         options.UseAllOfToExtendReferenceSchemas();
 
         options.UseAllOfForInheritance();
-        options.SelectDiscriminatorNameUsing(_ => "type");
+        options.SelectDiscriminatorNameUsing(_ => JsonApiPropertyName.Type);
         options.SelectDiscriminatorValueUsing(clrType => _resourceGraph.GetResourceType(clrType).PublicName);
         options.SelectSubTypesUsing(SelectDerivedTypes);
 

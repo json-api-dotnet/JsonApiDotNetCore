@@ -2,7 +2,6 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -35,14 +34,11 @@ internal sealed class AbstractResourceDataSchemaGenerator
 
         var fullSchema = new OpenApiSchema
         {
-            Required = new HashSet<string>
-            {
-                "type"
-            },
+            Required = new SortedSet<string>([JsonApiPropertyName.Type]),
             Type = "object",
             Properties = new Dictionary<string, OpenApiSchema>
             {
-                ["type"] = new()
+                [JsonApiPropertyName.Type] = new()
                 {
                     MinLength = 1,
                     Type = "string"
@@ -51,10 +47,10 @@ internal sealed class AbstractResourceDataSchemaGenerator
             AdditionalPropertiesAllowed = false,
             Discriminator = new OpenApiDiscriminator
             {
-                PropertyName = "type",
+                PropertyName = JsonApiPropertyName.Type,
                 Mapping = new SortedDictionary<string, string>(StringComparer.Ordinal)
             },
-            Extensions = new Dictionary<string, IOpenApiExtension>
+            Extensions =
             {
                 ["x-abstract"] = new OpenApiBoolean(true)
             }
@@ -78,13 +74,15 @@ internal sealed class AbstractResourceDataSchemaGenerator
 
         if (resourceTypeInfo.ResourceDataOpenType == typeof(ResourceDataInResponse<>))
         {
-            if (schemaRepository.TryLookupByType(ResourceDataAbstractType, out OpenApiSchema? referenceSchemaForAbstractResourceData))
+            if (!schemaRepository.TryLookupByType(ResourceDataAbstractType, out OpenApiSchema? referenceSchemaForAbstractResourceData))
             {
-                OpenApiSchema fullSchemaForAbstractResourceData = schemaRepository.Schemas[referenceSchemaForAbstractResourceData.Reference.Id];
-
-                fullSchemaForAbstractResourceData.Discriminator.Mapping[resourceTypeInfo.ResourceType.PublicName] =
-                    referenceSchemaForResourceData.Reference.ReferenceV3;
+                throw new UnreachableCodeException();
             }
+
+            OpenApiSchema fullSchemaForAbstractResourceData = schemaRepository.Schemas[referenceSchemaForAbstractResourceData.Reference.Id];
+
+            fullSchemaForAbstractResourceData.Discriminator.Mapping[resourceTypeInfo.ResourceType.PublicName] =
+                referenceSchemaForResourceData.Reference.ReferenceV3;
         }
     }
 }

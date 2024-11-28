@@ -5095,10 +5095,13 @@
       },
       "atomicOperation": {
         "required": [
-          "operationDiscriminator"
+          "openapi:discriminator"
         ],
         "type": "object",
         "properties": {
+          "openapi:discriminator": {
+            "type": "string"
+          },
           "meta": {
             "allOf": [
               {
@@ -5109,7 +5112,7 @@
         },
         "additionalProperties": false,
         "discriminator": {
-          "propertyName": "operationDiscriminator",
+          "propertyName": "openapi:discriminator",
           "mapping": {
             "addPerson": "#/components/schemas/createPersonOperation",
             "addTag": "#/components/schemas/createTagOperation",

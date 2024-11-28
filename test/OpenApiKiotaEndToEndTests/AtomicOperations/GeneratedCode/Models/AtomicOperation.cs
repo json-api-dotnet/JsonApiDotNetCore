@@ -31,6 +31,22 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
             set { BackingStore?.Set("meta", value); }
         }
 #endif
+        /// <summary>The openapiDiscriminator property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? OpenapiDiscriminator
+        {
+            get { return BackingStore?.Get<string?>("openapi:discriminator"); }
+            set { BackingStore?.Set("openapi:discriminator", value); }
+        }
+#nullable restore
+#else
+        public string OpenapiDiscriminator
+        {
+            get { return BackingStore?.Get<string>("openapi:discriminator"); }
+            set { BackingStore?.Set("openapi:discriminator", value); }
+        }
+#endif
         /// <summary>
         /// Instantiates a new <see cref="global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AtomicOperation"/> and sets the default values.
         /// </summary>
@@ -46,7 +62,7 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
         public static global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AtomicOperation CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            var mappingValue = parseNode.GetChildNode("operationDiscriminator")?.GetStringValue();
+            var mappingValue = parseNode.GetChildNode("openapi:discriminator")?.GetStringValue();
             return mappingValue switch
             {
                 "addCourse" => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.CreateCourseOperation(),
@@ -87,6 +103,7 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
             return new Dictionary<string, Action<IParseNode>>
             {
                 { "meta", n => { Meta = n.GetObjectValue<global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.Meta>(global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
+                { "openapi:discriminator", n => { OpenapiDiscriminator = n.GetStringValue(); } },
             };
         }
         /// <summary>
@@ -97,6 +114,7 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.Meta>("meta", Meta);
+            writer.WriteStringValue("openapi:discriminator", OpenapiDiscriminator);
         }
     }
 }

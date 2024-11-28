@@ -6512,10 +6512,13 @@
       },
       "atomicOperation": {
         "required": [
-          "operationDiscriminator"
+          "openapi:discriminator"
         ],
         "type": "object",
         "properties": {
+          "openapi:discriminator": {
+            "type": "string"
+          },
           "meta": {
             "allOf": [
               {
@@ -6526,7 +6529,7 @@
         },
         "additionalProperties": false,
         "discriminator": {
-          "propertyName": "operationDiscriminator",
+          "propertyName": "openapi:discriminator",
           "mapping": {
             "addCourse": "#/components/schemas/createCourseOperation",
             "addEnrollment": "#/components/schemas/createEnrollmentOperation",
