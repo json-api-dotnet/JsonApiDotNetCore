@@ -48,25 +48,25 @@ public sealed class GeneratedTypesTests
     [Fact]
     public void Generated_top_level_document_types_are_named_as_expected()
     {
-        _ = nameof(SupermarketCollectionResponseDocument);
-        _ = nameof(CreateSupermarketRequestDocument);
-        _ = nameof(SupermarketPrimaryResponseDocument);
-        _ = nameof(UpdateSupermarketRequestDocument);
+        _ = nameof(SupermarketCollectionResponseDocument.Meta);
+        _ = nameof(CreateSupermarketRequestDocument.Meta);
+        _ = nameof(SupermarketPrimaryResponseDocument.Meta);
+        _ = nameof(UpdateSupermarketRequestDocument.Meta);
 
-        _ = nameof(StaffMemberCollectionResponseDocument);
-        _ = nameof(CreateStaffMemberRequestDocument);
-        _ = nameof(StaffMemberPrimaryResponseDocument);
-        _ = nameof(UpdateStaffMemberRequestDocument);
-        _ = nameof(StaffMemberIdentifierCollectionResponseDocument);
-        _ = nameof(StaffMemberIdentifierResponseDocument);
-        _ = nameof(StaffMemberSecondaryResponseDocument);
-        _ = nameof(NullableStaffMemberSecondaryResponseDocument);
-        _ = nameof(NullableStaffMemberIdentifierResponseDocument);
+        _ = nameof(StaffMemberCollectionResponseDocument.Meta);
+        _ = nameof(CreateStaffMemberRequestDocument.Meta);
+        _ = nameof(StaffMemberPrimaryResponseDocument.Meta);
+        _ = nameof(UpdateStaffMemberRequestDocument.Meta);
+        _ = nameof(StaffMemberIdentifierCollectionResponseDocument.Meta);
+        _ = nameof(StaffMemberIdentifierResponseDocument.Meta);
+        _ = nameof(StaffMemberSecondaryResponseDocument.Meta);
+        _ = nameof(NullableStaffMemberSecondaryResponseDocument.Meta);
+        _ = nameof(NullableStaffMemberIdentifierResponseDocument.Meta);
 
-        _ = nameof(ErrorResponseDocument);
+        _ = nameof(ErrorResponseDocument.Meta);
 
-        _ = nameof(OperationsRequestDocument);
-        _ = nameof(OperationsResponseDocument);
+        _ = nameof(OperationsRequestDocument.Meta);
+        _ = nameof(OperationsResponseDocument.Meta);
     }
 
     [Fact]
@@ -85,18 +85,18 @@ public sealed class GeneratedTypesTests
     [Fact]
     public void Generated_operation_types_are_named_as_expected()
     {
-        _ = nameof(CreateSupermarketOperation);
-        _ = nameof(UpdateSupermarketOperation);
-        _ = nameof(DeleteSupermarketOperation);
-        _ = nameof(UpdateSupermarketBackupStoreManagerRelationshipOperation);
-        _ = nameof(UpdateSupermarketCashiersRelationshipOperation);
-        _ = nameof(AddToSupermarketCashiersRelationshipOperation);
-        _ = nameof(RemoveFromSupermarketCashiersRelationshipOperation);
-        _ = nameof(UpdateSupermarketStoreManagerRelationshipOperation);
+        _ = nameof(CreateSupermarketOperation.Meta);
+        _ = nameof(UpdateSupermarketOperation.Meta);
+        _ = nameof(DeleteSupermarketOperation.Meta);
+        _ = nameof(UpdateSupermarketBackupStoreManagerRelationshipOperation.Meta);
+        _ = nameof(UpdateSupermarketCashiersRelationshipOperation.Meta);
+        _ = nameof(AddToSupermarketCashiersRelationshipOperation.Meta);
+        _ = nameof(RemoveFromSupermarketCashiersRelationshipOperation.Meta);
+        _ = nameof(UpdateSupermarketStoreManagerRelationshipOperation.Meta);
 
-        _ = nameof(CreateStaffMemberOperation);
-        _ = nameof(UpdateStaffMemberOperation);
-        _ = nameof(DeleteStaffMemberOperation);
+        _ = nameof(CreateStaffMemberOperation.Meta);
+        _ = nameof(UpdateStaffMemberOperation.Meta);
+        _ = nameof(DeleteStaffMemberOperation.Meta);
     }
 
     [Fact]
@@ -130,12 +130,12 @@ public sealed class GeneratedTypesTests
     [Fact]
     public void Generated_relationship_container_types_are_named_as_expected()
     {
-        _ = nameof(ToOneStaffMemberInRequest);
-        _ = nameof(ToOneStaffMemberInResponse);
-        _ = nameof(NullableToOneStaffMemberInRequest);
-        _ = nameof(NullableToOneStaffMemberInResponse);
-        _ = nameof(ToManyStaffMemberInRequest);
-        _ = nameof(ToManyStaffMemberInResponse);
+        _ = nameof(ToOneStaffMemberInRequest.Meta);
+        _ = nameof(ToOneStaffMemberInResponse.Meta);
+        _ = nameof(NullableToOneStaffMemberInRequest.Meta);
+        _ = nameof(NullableToOneStaffMemberInResponse.Meta);
+        _ = nameof(ToManyStaffMemberInRequest.Meta);
+        _ = nameof(ToManyStaffMemberInResponse.Meta);
 
         _ = nameof(SupermarketBackupStoreManagerRelationshipIdentifier);
         _ = nameof(SupermarketCashiersRelationshipIdentifier);
@@ -168,31 +168,31 @@ public sealed class GeneratedTypesTests
     [Fact]
     public void Generated_data_types_are_named_as_expected()
     {
-        _ = nameof(DataInResponse);
+        _ = nameof(DataInResponse.Meta);
 
-        _ = nameof(DataInCreateSupermarketRequest);
-        _ = nameof(DataInUpdateSupermarketRequest);
-        _ = nameof(SupermarketDataInResponse);
+        _ = nameof(DataInCreateSupermarketRequest.Meta);
+        _ = nameof(DataInUpdateSupermarketRequest.Meta);
+        _ = nameof(SupermarketDataInResponse.Meta);
 
-        _ = nameof(SupermarketIdentifierInRequest);
+        _ = nameof(SupermarketIdentifierInRequest.Meta);
 
-        _ = nameof(DataInCreateStaffMemberRequest);
-        _ = nameof(DataInUpdateStaffMemberRequest);
-        _ = nameof(StaffMemberDataInResponse);
+        _ = nameof(DataInCreateStaffMemberRequest.Meta);
+        _ = nameof(DataInUpdateStaffMemberRequest.Meta);
+        _ = nameof(StaffMemberDataInResponse.Meta);
 
-        _ = nameof(StaffMemberIdentifierInRequest);
-        _ = nameof(StaffMemberIdentifierInResponse);
+        _ = nameof(StaffMemberIdentifierInRequest.Meta);
+        _ = nameof(StaffMemberIdentifierInResponse.Meta);
     }
 
     [Fact]
     public void Generated_predefined_types_are_named_as_expected()
     {
-        _ = nameof(Jsonapi);
-        _ = nameof(ErrorObject);
+        _ = nameof(Jsonapi.Meta);
+        _ = nameof(ErrorObject.Meta);
         _ = nameof(ErrorSource);
         _ = nameof(Meta);
 
-        _ = nameof(AtomicOperation);
-        _ = nameof(AtomicResult);
+        _ = nameof(AtomicOperation.Meta);
+        _ = nameof(AtomicResult.Meta);
     }
 }

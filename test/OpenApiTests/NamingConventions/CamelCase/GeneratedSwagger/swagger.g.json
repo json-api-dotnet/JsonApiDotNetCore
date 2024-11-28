@@ -2871,6 +2871,13 @@
                 "$ref": "#/components/schemas/dataInCreateStaffMemberRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2917,6 +2924,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInCreateSupermarketRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -3435,6 +3449,13 @@
               }
             ],
             "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4398,6 +4419,13 @@
             "items": {
               "$ref": "#/components/schemas/staffMemberIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4438,6 +4466,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/staffMemberIdentifierInRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -4526,6 +4561,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateStaffMemberRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -4661,6 +4703,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateSupermarketRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }

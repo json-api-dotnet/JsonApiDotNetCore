@@ -3514,6 +3514,13 @@
                 "$ref": "#/components/schemas/dataInCreateResourceRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4064,6 +4071,13 @@
               }
             ],
             "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4515,6 +4529,13 @@
             "items": {
               "$ref": "#/components/schemas/emptyIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4555,6 +4576,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/emptyIdentifierInRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -4598,6 +4626,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateResourceRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }

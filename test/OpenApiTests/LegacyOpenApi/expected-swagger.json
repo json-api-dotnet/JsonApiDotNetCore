@@ -6235,6 +6235,13 @@
                 "$ref": "#/components/schemas/data-in-create-airplane-request"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -6249,6 +6256,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/data-in-create-flight-attendant-request"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -6267,6 +6281,13 @@
                 "$ref": "#/components/schemas/data-in-create-flight-request"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -6281,6 +6302,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/data-in-create-passenger-request"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -7517,6 +7545,13 @@
               }
             ],
             "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -8031,6 +8066,13 @@
             "items": {
               "$ref": "#/components/schemas/flight-attendant-identifier-in-request"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -8072,6 +8114,13 @@
             "items": {
               "$ref": "#/components/schemas/flight-identifier-in-request"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -8113,6 +8162,13 @@
             "items": {
               "$ref": "#/components/schemas/passenger-identifier-in-request"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -8153,6 +8209,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/flight-attendant-identifier-in-request"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -8198,6 +8261,13 @@
                 "$ref": "#/components/schemas/data-in-update-airplane-request"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -8212,6 +8282,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/data-in-update-flight-attendant-request"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -8230,6 +8307,13 @@
                 "$ref": "#/components/schemas/data-in-update-flight-request"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -8244,6 +8328,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/data-in-update-passenger-request"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }

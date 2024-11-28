@@ -3,9 +3,8 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-internal interface IResourceIdentity
+internal interface IResourceIdentity : IHasMeta
 {
     string Type { get; set; }
     string Id { get; set; }
-    Meta Meta { get; set; }
 }

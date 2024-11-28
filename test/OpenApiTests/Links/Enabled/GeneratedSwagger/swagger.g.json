@@ -4098,6 +4098,13 @@
                 "$ref": "#/components/schemas/dataInCreateAccommodationRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4112,6 +4119,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInCreateExcursionRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -4130,6 +4144,13 @@
                 "$ref": "#/components/schemas/dataInCreateTransportRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4144,6 +4165,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInCreateVacationRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -4815,6 +4843,13 @@
               }
             ],
             "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5084,6 +5119,13 @@
             "items": {
               "$ref": "#/components/schemas/excursionIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5124,6 +5166,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/accommodationIdentifierInRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -5369,6 +5418,13 @@
                 "$ref": "#/components/schemas/dataInUpdateAccommodationRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5383,6 +5439,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateExcursionRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -5401,6 +5464,13 @@
                 "$ref": "#/components/schemas/dataInUpdateTransportRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5415,6 +5485,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateVacationRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }

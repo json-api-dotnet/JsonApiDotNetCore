@@ -387,6 +387,13 @@
                 "$ref": "#/components/schemas/dataInCreateGameRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -403,6 +410,13 @@
                 "$ref": "#/components/schemas/dataInCreatePlayerGroupRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -417,6 +431,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInCreatePlayerRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -1261,6 +1282,13 @@
             "items": {
               "$ref": "#/components/schemas/gameIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1302,6 +1330,13 @@
             "items": {
               "$ref": "#/components/schemas/playerGroupIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1343,6 +1378,13 @@
             "items": {
               "$ref": "#/components/schemas/playerIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false

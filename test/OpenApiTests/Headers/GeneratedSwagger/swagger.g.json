@@ -1339,6 +1339,13 @@
                 "$ref": "#/components/schemas/dataInCreateCountryRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1878,6 +1885,13 @@
             "items": {
               "$ref": "#/components/schemas/languageIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1918,6 +1932,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateCountryRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }

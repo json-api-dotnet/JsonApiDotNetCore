@@ -31,6 +31,22 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
             set { BackingStore?.Set("data", value); }
         }
 #endif
+        /// <summary>The meta property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta? Meta
+        {
+            get { return BackingStore?.Get<global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta?>("meta"); }
+            set { BackingStore?.Set("meta", value); }
+        }
+#nullable restore
+#else
+        public global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta Meta
+        {
+            get { return BackingStore?.Get<global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta"); }
+            set { BackingStore?.Set("meta", value); }
+        }
+#endif
         /// <summary>
         /// Instantiates a new <see cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.ToManyTagInRequest"/> and sets the default values.
         /// </summary>
@@ -57,6 +73,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
             return new Dictionary<string, Action<IParseNode>>
             {
                 { "data", n => { Data = n.GetCollectionOfObjectValues<global::OpenApiKiotaClientExample.GeneratedCode.Models.TagIdentifierInRequest>(global::OpenApiKiotaClientExample.GeneratedCode.Models.TagIdentifierInRequest.CreateFromDiscriminatorValue)?.AsList(); } },
+                { "meta", n => { Meta = n.GetObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta>(global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -67,6 +84,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteCollectionOfObjectValues<global::OpenApiKiotaClientExample.GeneratedCode.Models.TagIdentifierInRequest>("data", Data);
+            writer.WriteObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta", Meta);
         }
     }
 }

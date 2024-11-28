@@ -457,6 +457,13 @@
                 "$ref": "#/components/schemas/dataInCreateSocialMediaAccountRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -897,6 +904,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateSocialMediaAccountRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }

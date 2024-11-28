@@ -4120,6 +4120,13 @@
                 "$ref": "#/components/schemas/dataInCreateWriteOnlyChannelRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4726,6 +4733,13 @@
               }
             ],
             "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5247,6 +5261,13 @@
             "items": {
               "$ref": "#/components/schemas/dataStreamIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5287,6 +5308,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataStreamIdentifierInRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -5330,6 +5358,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateWriteOnlyChannelRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }

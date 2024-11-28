@@ -3209,6 +3209,13 @@
                 "$ref": "#/components/schemas/dataInCreateNameValuePairRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3223,6 +3230,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInCreateNodeRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -4182,6 +4196,13 @@
               }
             ],
             "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4407,6 +4428,13 @@
             "items": {
               "$ref": "#/components/schemas/nameValuePairIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4448,6 +4476,13 @@
             "items": {
               "$ref": "#/components/schemas/nodeIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4488,6 +4523,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/nodeIdentifierInRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -4533,6 +4575,13 @@
                 "$ref": "#/components/schemas/dataInUpdateNameValuePairRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4547,6 +4596,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateNodeRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }

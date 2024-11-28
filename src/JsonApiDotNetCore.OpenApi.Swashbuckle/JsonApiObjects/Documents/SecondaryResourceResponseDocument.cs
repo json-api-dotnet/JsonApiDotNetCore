@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Documents;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-internal sealed class SecondaryResourceResponseDocument<TResource>
+internal sealed class SecondaryResourceResponseDocument<TResource> : IHasMeta
     where TResource : IIdentifiable
 {
     [JsonPropertyName("jsonapi")]

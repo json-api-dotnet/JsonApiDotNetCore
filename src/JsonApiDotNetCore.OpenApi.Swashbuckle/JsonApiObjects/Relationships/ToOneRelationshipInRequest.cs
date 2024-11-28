@@ -7,10 +7,13 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Relationships;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-internal sealed class ToOneRelationshipInRequest<TResource>
+internal sealed class ToOneRelationshipInRequest<TResource> : IHasMeta
     where TResource : IIdentifiable
 {
     [Required]
     [JsonPropertyName("data")]
     public ResourceIdentifierInRequest<TResource> Data { get; set; } = null!;
+
+    [JsonPropertyName("meta")]
+    public Meta Meta { get; set; } = null!;
 }

@@ -5303,6 +5303,13 @@
                 "$ref": "#/components/schemas/dataInCreatePersonRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5351,6 +5358,13 @@
                 "$ref": "#/components/schemas/dataInCreateTagRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5397,6 +5411,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInCreateTodoItemRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -6000,6 +6021,13 @@
               }
             ],
             "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7122,6 +7150,13 @@
             "items": {
               "$ref": "#/components/schemas/tagIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7163,6 +7198,13 @@
             "items": {
               "$ref": "#/components/schemas/todoItemIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7203,6 +7245,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/personIdentifierInRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -7766,6 +7815,13 @@
                 "$ref": "#/components/schemas/dataInUpdatePersonRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7819,6 +7875,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateTagRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -7994,6 +8057,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateTodoItemRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
