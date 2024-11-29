@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Documents;
 // Types in the JsonApiObjects namespace are never touched by ASP.NET ModelState validation, therefore using a non-nullable reference type for a property does not
 // imply this property is required. Instead, we use [Required] explicitly, because this is how Swashbuckle is instructed to mark properties as required.
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-internal sealed class NullableResourceIdentifierResponseDocument<TResource>
+internal sealed class NullableResourceIdentifierResponseDocument<TResource> : IHasMeta
     where TResource : IIdentifiable
 {
     [JsonPropertyName("jsonapi")]

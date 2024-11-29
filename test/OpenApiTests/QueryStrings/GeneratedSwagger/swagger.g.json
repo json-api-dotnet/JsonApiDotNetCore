@@ -3209,6 +3209,13 @@
                 "$ref": "#/components/schemas/dataInCreateNameValuePairRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3223,6 +3230,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInCreateNodeRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -3255,6 +3269,13 @@
                 "$ref": "#/components/schemas/relationshipsInCreateNameValuePairRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3285,6 +3306,13 @@
                 "$ref": "#/components/schemas/relationshipsInCreateNodeRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3296,8 +3324,18 @@
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false,
@@ -3342,6 +3380,13 @@
                 "$ref": "#/components/schemas/relationshipsInUpdateNameValuePairRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3376,6 +3421,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/relationshipsInUpdateNodeRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -3595,13 +3647,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -3657,6 +3702,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3679,6 +3731,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3737,8 +3796,7 @@
         "enum": [
           "nameValuePairs"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "nodeAttributesInResponse": {
         "type": "object",
@@ -3825,13 +3883,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -3887,6 +3938,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3909,6 +3967,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4012,8 +4077,7 @@
         "enum": [
           "nodes"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "nodeSecondaryResponseDocument": {
         "required": [
@@ -4135,6 +4199,13 @@
               }
             ],
             "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4349,6 +4420,13 @@
         },
         "additionalProperties": false
       },
+      "resourceType": {
+        "enum": [
+          "nameValuePairs",
+          "nodes"
+        ],
+        "type": "string"
+      },
       "toManyNameValuePairInRequest": {
         "required": [
           "data"
@@ -4360,6 +4438,13 @@
             "items": {
               "$ref": "#/components/schemas/nameValuePairIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4401,6 +4486,13 @@
             "items": {
               "$ref": "#/components/schemas/nodeIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4441,6 +4533,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/nodeIdentifierInRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -4486,6 +4585,13 @@
                 "$ref": "#/components/schemas/dataInUpdateNameValuePairRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4500,6 +4606,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateNodeRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }

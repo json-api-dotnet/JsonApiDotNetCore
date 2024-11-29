@@ -37,6 +37,11 @@ internal sealed class DataContainerSchemaGenerator
         ArgumentGuard.NotNull(resourceType);
         ArgumentGuard.NotNull(schemaRepository);
 
+        if (schemaRepository.TryLookupByType(dataContainerConstructedType, out OpenApiSchema referenceSchemaForData))
+        {
+            return referenceSchemaForData;
+        }
+
         if (!forRequestSchema)
         {
             // There's no way to intercept in the Swashbuckle recursive component schema generation when using schema inheritance, which we need
@@ -45,7 +50,7 @@ internal sealed class DataContainerSchemaGenerator
             _ = _abstractResourceDataSchemaGenerator.GenerateSchema(schemaRepository);
         }
 
-        Type dataConstructedType = GetInnerTypeOfDataProperty(dataContainerConstructedType, resourceType);
+        Type dataConstructedType = GetElementTypeOfDataProperty(dataContainerConstructedType, resourceType);
 
         if (!forRequestSchema)
         {
@@ -54,7 +59,7 @@ internal sealed class DataContainerSchemaGenerator
             EnsureResourceDataInResponseDerivedTypesAreMappedInDiscriminator(dataConstructedType, schemaRepository);
         }
 
-        OpenApiSchema referenceSchemaForData = _dataSchemaGenerator.GenerateSchema(dataConstructedType, schemaRepository);
+        referenceSchemaForData = _dataSchemaGenerator.GenerateSchema(dataConstructedType, schemaRepository);
 
         if (!forRequestSchema)
         {
@@ -64,7 +69,7 @@ internal sealed class DataContainerSchemaGenerator
         return referenceSchemaForData;
     }
 
-    private static Type GetInnerTypeOfDataProperty(Type dataContainerConstructedType, ResourceType resourceType)
+    private static Type GetElementTypeOfDataProperty(Type dataContainerConstructedType, ResourceType resourceType)
     {
         PropertyInfo? dataProperty = dataContainerConstructedType.GetProperty("Data");
 
@@ -96,11 +101,11 @@ internal sealed class DataContainerSchemaGenerator
 
         if (dataOpenType == typeof(ResourceDataInResponse<>))
         {
-            var resourceTypeInfo = ResourceTypeInfo.Create(dataConstructedType, _resourceGraph);
+            var resourceSchemaType = ResourceSchemaType.Create(dataConstructedType, _resourceGraph);
 
-            foreach (ResourceType resourceType in _includeDependencyScanner.GetReachableRelatedTypes(resourceTypeInfo.ResourceType))
+            foreach (ResourceType relatedType in _includeDependencyScanner.GetReachableRelatedTypes(resourceSchemaType.ResourceType))
             {
-                MapResourceDataInResponseDerivedTypeInDiscriminator(resourceType, schemaRepository);
+                MapResourceDataInResponseDerivedTypeInDiscriminator(relatedType, schemaRepository);
             }
         }
     }

@@ -6,7 +6,7 @@ using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.AtomicOperations;
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Documents;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-internal sealed class OperationsRequestDocument
+internal sealed class OperationsRequestDocument : IHasMeta
 {
     [Required]
     [MinLength(1)]

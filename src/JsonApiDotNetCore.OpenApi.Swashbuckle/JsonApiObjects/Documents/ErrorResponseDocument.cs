@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Documents;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-internal sealed class ErrorResponseDocument
+internal sealed class ErrorResponseDocument : IHasMeta
 {
     [JsonPropertyName("jsonapi")]
     public Jsonapi Jsonapi { get; set; } = null!;

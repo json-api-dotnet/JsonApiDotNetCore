@@ -108,17 +108,22 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
             response.Data.Relationships.AudioStreams.Data.ElementAt(0).Id.Should().Be(existingAudioStream.StringId);
 
             response.Included.ShouldHaveCount(2);
-            DataStreamDataInResponse[] dataStreamIncludes = response.Included.OfType<DataStreamDataInResponse>().ToArray();
 
-            DataStreamDataInResponse videoStream = dataStreamIncludes.Single(include => include.Id == existingVideoStream.StringId);
-            videoStream.Attributes.ShouldNotBeNull();
-            videoStream.Attributes.BytesTransmitted.Should().Be((long?)existingVideoStream.BytesTransmitted);
+            response.Included.OfType<DataStreamDataInResponse>().Should().ContainSingle(streamData => streamData.Id == existingVideoStream.StringId).Subject
+                .With(streamData =>
+                {
+                    streamData.Attributes.ShouldNotBeNull();
+                    streamData.Attributes.BytesTransmitted.Should().Be((long?)existingVideoStream.BytesTransmitted);
+                });
 
-            DataStreamDataInResponse audioStream = dataStreamIncludes.Single(include => include.Id == existingAudioStream.StringId);
-            audioStream.Attributes.ShouldNotBeNull();
-            audioStream.Attributes.BytesTransmitted.Should().Be((long?)existingAudioStream.BytesTransmitted);
+            response.Included.OfType<DataStreamDataInResponse>().Should().ContainSingle(streamData => streamData.Id == existingAudioStream.StringId).Subject
+                .With(streamData =>
+                {
+                    streamData.Attributes.ShouldNotBeNull();
+                    streamData.Attributes.BytesTransmitted.Should().Be((long?)existingAudioStream.BytesTransmitted);
+                });
 
-            long newChannelId = int.Parse(response.Data.Id.ShouldNotBeNull());
+            long newChannelId = long.Parse(response.Data.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

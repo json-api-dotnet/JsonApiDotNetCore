@@ -3514,6 +3514,13 @@
                 "$ref": "#/components/schemas/dataInCreateResourceRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3544,6 +3551,13 @@
                 "$ref": "#/components/schemas/relationshipsInCreateResourceRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3555,8 +3569,18 @@
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false,
@@ -3599,6 +3623,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/relationshipsInUpdateResourceRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -3663,13 +3694,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -3725,6 +3749,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int32"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3747,6 +3778,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int32"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3786,8 +3824,7 @@
         "enum": [
           "empties"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "emptySecondaryResponseDocument": {
         "required": [
@@ -4037,6 +4074,13 @@
               }
             ],
             "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4316,13 +4360,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -4470,8 +4507,7 @@
         "enum": [
           "resources"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "resourceTopLevelLinks": {
         "type": "object",
@@ -4485,6 +4521,13 @@
         },
         "additionalProperties": false
       },
+      "resourceType": {
+        "enum": [
+          "empties",
+          "resources"
+        ],
+        "type": "string"
+      },
       "toManyEmptyInRequest": {
         "required": [
           "data"
@@ -4496,6 +4539,13 @@
             "items": {
               "$ref": "#/components/schemas/emptyIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4536,6 +4586,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/emptyIdentifierInRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -4579,6 +4636,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateResourceRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }

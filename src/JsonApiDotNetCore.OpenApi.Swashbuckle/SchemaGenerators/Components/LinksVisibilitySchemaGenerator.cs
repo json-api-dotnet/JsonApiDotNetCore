@@ -62,12 +62,12 @@ internal sealed class LinksVisibilitySchemaGenerator
 
     private readonly Lazy<LinksVisibility> _lazyLinksVisibility;
 
-    public LinksVisibilitySchemaGenerator(IResourceGraph resourceGraph, IJsonApiOptions options)
+    public LinksVisibilitySchemaGenerator(IJsonApiOptions options, IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(resourceGraph);
         ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(resourceGraph);
 
-        _lazyLinksVisibility = new Lazy<LinksVisibility>(() => new LinksVisibility(resourceGraph, options), LazyThreadSafetyMode.ExecutionAndPublication);
+        _lazyLinksVisibility = new Lazy<LinksVisibility>(() => new LinksVisibility(options, resourceGraph), LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
     public void UpdateSchemaForTopLevel(Type modelType, OpenApiSchema fullSchemaForLinksContainer, SchemaRepository schemaRepository)
@@ -83,12 +83,12 @@ internal sealed class LinksVisibilitySchemaGenerator
         }
     }
 
-    public void UpdateSchemaForResource(ResourceTypeInfo resourceTypeInfo, OpenApiSchema fullSchemaForResourceData, SchemaRepository schemaRepository)
+    public void UpdateSchemaForResource(ResourceSchemaType resourceSchemaType, OpenApiSchema fullSchemaForResourceData, SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(resourceTypeInfo);
+        ArgumentGuard.NotNull(resourceSchemaType);
         ArgumentGuard.NotNull(fullSchemaForResourceData);
 
-        if (LinksInJsonApiSchemaTypes.TryGetValue(resourceTypeInfo.ResourceDataOpenType, out LinkTypes possibleLinkTypes))
+        if (LinksInJsonApiSchemaTypes.TryGetValue(resourceSchemaType.SchemaOpenType, out LinkTypes possibleLinkTypes))
         {
             UpdateLinksProperty(fullSchemaForResourceData, _lazyLinksVisibility.Value.ResourceLinks, possibleLinkTypes, schemaRepository);
         }
@@ -142,10 +142,10 @@ internal sealed class LinksVisibilitySchemaGenerator
         public LinkTypes ResourceLinks { get; }
         public LinkTypes RelationshipLinks { get; }
 
-        public LinksVisibility(IResourceGraph resourceGraph, IJsonApiOptions options)
+        public LinksVisibility(IJsonApiOptions options, IResourceGraph resourceGraph)
         {
-            ArgumentGuard.NotNull(resourceGraph);
             ArgumentGuard.NotNull(options);
+            ArgumentGuard.NotNull(resourceGraph);
 
             var unionTopLevelLinks = LinkTypes.None;
             var unionResourceLinks = LinkTypes.None;

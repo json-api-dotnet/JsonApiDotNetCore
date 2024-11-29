@@ -5095,10 +5095,13 @@
       },
       "atomicOperation": {
         "required": [
-          "operationDiscriminator"
+          "openapi:discriminator"
         ],
         "type": "object",
         "properties": {
+          "openapi:discriminator": {
+            "type": "string"
+          },
           "meta": {
             "allOf": [
               {
@@ -5109,7 +5112,7 @@
         },
         "additionalProperties": false,
         "discriminator": {
-          "propertyName": "operationDiscriminator",
+          "propertyName": "openapi:discriminator",
           "mapping": {
             "addPerson": "#/components/schemas/createPersonOperation",
             "addTag": "#/components/schemas/createTagOperation",
@@ -5300,6 +5303,13 @@
                 "$ref": "#/components/schemas/dataInCreatePersonRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5346,6 +5356,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInCreateTagRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -5396,6 +5413,13 @@
                 "$ref": "#/components/schemas/dataInCreateTodoItemRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5428,6 +5452,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/relationshipsInCreatePersonRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -5464,6 +5495,13 @@
                 "$ref": "#/components/schemas/relationshipsInCreateTagRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5498,6 +5536,13 @@
                 "$ref": "#/components/schemas/relationshipsInCreateTodoItemRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5509,8 +5554,18 @@
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false,
@@ -5559,6 +5614,13 @@
                 "$ref": "#/components/schemas/relationshipsInUpdatePersonRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5598,6 +5660,13 @@
                 "$ref": "#/components/schemas/relationshipsInUpdateTagRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5635,6 +5704,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/relationshipsInUpdateTodoItemRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -5948,6 +6024,13 @@
               }
             ],
             "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -6071,8 +6154,7 @@
         "enum": [
           "assignedTodoItems"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "personAttributesInResponse": {
         "type": "object",
@@ -6163,13 +6245,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -6198,6 +6273,13 @@
           "lid": {
             "minLength": 1,
             "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -6220,6 +6302,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -6292,8 +6381,7 @@
         "enum": [
           "ownedTodoItems"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "personPrimaryResponseDocument": {
         "required": [
@@ -6356,8 +6444,7 @@
         "enum": [
           "people"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "personSecondaryResponseDocument": {
         "required": [
@@ -6780,6 +6867,14 @@
         },
         "additionalProperties": false
       },
+      "resourceType": {
+        "enum": [
+          "people",
+          "tags",
+          "todoItems"
+        ],
+        "type": "string"
+      },
       "tagAttributesInResponse": {
         "type": "object",
         "properties": {
@@ -6862,13 +6957,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -6927,6 +7015,13 @@
           "lid": {
             "minLength": 1,
             "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -6949,6 +7044,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7007,8 +7109,7 @@
         "enum": [
           "tags"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "tagTodoItemsRelationshipIdentifier": {
         "required": [
@@ -7047,8 +7148,7 @@
         "enum": [
           "todoItems"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "toManyTagInRequest": {
         "required": [
@@ -7061,6 +7161,13 @@
             "items": {
               "$ref": "#/components/schemas/tagIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7102,6 +7209,13 @@
             "items": {
               "$ref": "#/components/schemas/todoItemIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7142,6 +7256,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/personIdentifierInRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -7212,8 +7333,7 @@
         "enum": [
           "assignee"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "todoItemAttributesInResponse": {
         "type": "object",
@@ -7317,13 +7437,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -7382,6 +7495,13 @@
           "lid": {
             "minLength": 1,
             "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7404,6 +7524,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7445,8 +7572,7 @@
         "enum": [
           "owner"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "todoItemPrimaryResponseDocument": {
         "required": [
@@ -7524,8 +7650,7 @@
         "enum": [
           "todoItems"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "todoItemTagsRelationshipIdentifier": {
         "required": [
@@ -7564,8 +7689,7 @@
         "enum": [
           "tags"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "updateOperationCode": {
         "enum": [
@@ -7702,6 +7826,13 @@
                 "$ref": "#/components/schemas/dataInUpdatePersonRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7755,6 +7886,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateTagRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -7930,6 +8068,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateTodoItemRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }

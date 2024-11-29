@@ -4120,6 +4120,13 @@
                 "$ref": "#/components/schemas/dataInCreateWriteOnlyChannelRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4150,6 +4157,13 @@
                 "$ref": "#/components/schemas/relationshipsInCreateWriteOnlyChannelRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4161,8 +4175,18 @@
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false,
@@ -4207,6 +4231,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/relationshipsInUpdateWriteOnlyChannelRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -4288,13 +4319,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -4350,6 +4374,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4372,6 +4403,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4448,8 +4486,7 @@
         "enum": [
           "dataStreams"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "dataStreamSecondaryResponseDocument": {
         "required": [
@@ -4699,6 +4736,13 @@
               }
             ],
             "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4819,13 +4863,6 @@
                 "allOf": [
                   {
                     "$ref": "#/components/schemas/resourceLinks"
-                  }
-                ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
                   }
                 ]
               }
@@ -4987,13 +5024,6 @@
                 "allOf": [
                   {
                     "$ref": "#/components/schemas/resourceLinks"
-                  }
-                ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
                   }
                 ]
               }
@@ -5223,6 +5253,15 @@
         },
         "additionalProperties": false
       },
+      "resourceType": {
+        "enum": [
+          "dataStreams",
+          "readOnlyChannels",
+          "readOnlyResourceChannels",
+          "writeOnlyChannels"
+        ],
+        "type": "string"
+      },
       "toManyDataStreamInRequest": {
         "required": [
           "data"
@@ -5234,6 +5273,13 @@
             "items": {
               "$ref": "#/components/schemas/dataStreamIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5274,6 +5320,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataStreamIdentifierInRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -5317,6 +5370,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateWriteOnlyChannelRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -5375,13 +5435,6 @@
                 "allOf": [
                   {
                     "$ref": "#/components/schemas/resourceLinks"
-                  }
-                ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
                   }
                 ]
               }
@@ -5459,8 +5512,7 @@
         "enum": [
           "writeOnlyChannels"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       }
     }
   }

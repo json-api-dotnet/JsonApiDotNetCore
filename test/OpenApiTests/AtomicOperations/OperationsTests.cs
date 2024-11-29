@@ -160,10 +160,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
             schemasElement.Should().ContainPath("atomicOperation").Should().BeJson("""
                 {
                   "required": [
-                    "operationDiscriminator"
+                    "openapi:discriminator"
                   ],
                   "type": "object",
                   "properties": {
+                    "openapi:discriminator": {
+                      "type": "string"
+                    },
                     "meta": {
                       "allOf": [
                         {
@@ -174,7 +177,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                   },
                   "additionalProperties": false,
                   "discriminator": {
-                    "propertyName": "operationDiscriminator",
+                    "propertyName": "openapi:discriminator",
                     "mapping": {
                       "addCourse": "#/components/schemas/createCourseOperation",
                       "addEnrollment": "#/components/schemas/createEnrollmentOperation",
@@ -386,6 +389,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                           "$ref": "#/components/schemas/relationshipsInCreateCourseRequest"
                         }
                       ]
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
+                        }
+                      ]
                     }
                   },
                   "additionalProperties": false
@@ -510,6 +520,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                       "allOf": [
                         {
                           "$ref": "#/components/schemas/relationshipsInUpdateCourseRequest"
+                        }
+                      ]
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
                         }
                       ]
                     }
@@ -704,6 +721,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     "lid": {
                       "minLength": 1,
                       "type": "string"
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
+                        }
+                      ]
                     }
                   },
                   "additionalProperties": false
@@ -751,8 +775,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                   "enum": [
                     "enrollments"
                   ],
-                  "type": "string",
-                  "additionalProperties": false
+                  "type": "string"
                 }
                 """);
         });
@@ -830,6 +853,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                       "allOf": [
                         {
                           "$ref": "#/components/schemas/relationshipsInCreateStudentRequest"
+                        }
+                      ]
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
                         }
                       ]
                     }
@@ -956,6 +986,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                       "allOf": [
                         {
                           "$ref": "#/components/schemas/relationshipsInUpdateStudentRequest"
+                        }
+                      ]
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
                         }
                       ]
                     }
@@ -1199,6 +1236,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     "lid": {
                       "minLength": 1,
                       "type": "string"
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
+                        }
+                      ]
                     }
                   },
                   "additionalProperties": false
@@ -1246,8 +1290,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                   "enum": [
                     "mentor"
                   ],
-                  "type": "string",
-                  "additionalProperties": false
+                  "type": "string"
                 }
                 """);
 
@@ -1292,8 +1335,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                   "enum": [
                     "enrollments"
                   ],
-                  "type": "string",
-                  "additionalProperties": false
+                  "type": "string"
                 }
                 """);
         });
@@ -1371,6 +1413,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                       "allOf": [
                         {
                           "$ref": "#/components/schemas/relationshipsInCreateTeacherRequest"
+                        }
+                      ]
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
                         }
                       ]
                     }
@@ -1497,6 +1546,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                       "allOf": [
                         {
                           "$ref": "#/components/schemas/relationshipsInUpdateTeacherRequest"
+                        }
+                      ]
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
                         }
                       ]
                     }
@@ -1729,6 +1785,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     "lid": {
                       "minLength": 1,
                       "type": "string"
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
+                        }
+                      ]
                     }
                   },
                   "additionalProperties": false
@@ -1776,8 +1839,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                   "enum": [
                     "mentors"
                   ],
-                  "type": "string",
-                  "additionalProperties": false
+                  "type": "string"
                 }
                 """);
         });
@@ -1855,6 +1917,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                       "allOf": [
                         {
                           "$ref": "#/components/schemas/relationshipsInCreateEnrollmentRequest"
+                        }
+                      ]
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
                         }
                       ]
                     }
@@ -1984,6 +2053,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                       "allOf": [
                         {
                           "$ref": "#/components/schemas/relationshipsInUpdateEnrollmentRequest"
+                        }
+                      ]
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
                         }
                       ]
                     }
@@ -2135,6 +2211,13 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     "lid": {
                       "minLength": 1,
                       "type": "string"
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
+                        }
+                      ]
                     }
                   },
                   "additionalProperties": false
@@ -2182,8 +2265,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                   "enum": [
                     "course"
                   ],
-                  "type": "string",
-                  "additionalProperties": false
+                  "type": "string"
                 }
                 """);
         });

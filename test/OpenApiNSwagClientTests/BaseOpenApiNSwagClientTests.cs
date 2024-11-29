@@ -15,9 +15,9 @@ public abstract class BaseOpenApiNSwagClientTests
 
         ParameterExpression parameter = Expression.Parameter(attributesObjectType, AttributesObjectParameterName);
         MemberExpression property = Expression.Property(parameter, propertyName);
-        UnaryExpression toObjectConversion = Expression.Convert(property, typeof(object));
+        UnaryExpression castToObject = Expression.Convert(property, typeof(object));
 
-        return Expression.Lambda<Func<TAttributesObject, object?>>(toObjectConversion, parameter);
+        return Expression.Lambda<Func<TAttributesObject, object?>>(castToObject, parameter);
     }
 
     /// <summary>

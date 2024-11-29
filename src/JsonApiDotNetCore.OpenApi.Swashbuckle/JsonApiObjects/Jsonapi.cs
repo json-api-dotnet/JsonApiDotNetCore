@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-internal sealed class Jsonapi
+internal sealed class Jsonapi : IHasMeta
 {
     [JsonPropertyName("version")]
     public string Version { get; set; } = null!;

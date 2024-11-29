@@ -6512,10 +6512,13 @@
       },
       "atomicOperation": {
         "required": [
-          "operationDiscriminator"
+          "openapi:discriminator"
         ],
         "type": "object",
         "properties": {
+          "openapi:discriminator": {
+            "type": "string"
+          },
           "meta": {
             "allOf": [
               {
@@ -6526,7 +6529,7 @@
         },
         "additionalProperties": false,
         "discriminator": {
-          "propertyName": "operationDiscriminator",
+          "propertyName": "openapi:discriminator",
           "mapping": {
             "addCourse": "#/components/schemas/createCourseOperation",
             "addEnrollment": "#/components/schemas/createEnrollmentOperation",
@@ -6787,13 +6790,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -6838,8 +6834,7 @@
         "enum": [
           "enrollments"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "courseIdentifierCollectionResponseDocument": {
         "required": [
@@ -6899,6 +6894,13 @@
           "lid": {
             "minLength": 1,
             "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -6921,6 +6923,13 @@
             "minLength": 1,
             "type": "string",
             "format": "uuid"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7031,8 +7040,7 @@
         "enum": [
           "courses"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "courseSecondaryResponseDocument": {
         "required": [
@@ -7115,8 +7123,7 @@
         "enum": [
           "taughtBy"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "createCourseOperation": {
         "allOf": [
@@ -7160,6 +7167,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInCreateCourseRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -7210,6 +7224,13 @@
                 "$ref": "#/components/schemas/dataInCreateEnrollmentRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7256,6 +7277,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInCreateStudentRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -7306,6 +7334,13 @@
                 "$ref": "#/components/schemas/dataInCreateTeacherRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7342,6 +7377,13 @@
                 "$ref": "#/components/schemas/relationshipsInCreateCourseRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7374,6 +7416,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/relationshipsInCreateEnrollmentRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -7410,6 +7459,13 @@
                 "$ref": "#/components/schemas/relationshipsInCreateStudentRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7444,6 +7500,13 @@
                 "$ref": "#/components/schemas/relationshipsInCreateTeacherRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7455,8 +7518,18 @@
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false,
@@ -7506,6 +7579,13 @@
                 "$ref": "#/components/schemas/relationshipsInUpdateCourseRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7543,6 +7623,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/relationshipsInUpdateEnrollmentRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -7584,6 +7671,13 @@
                 "$ref": "#/components/schemas/relationshipsInUpdateStudentRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7621,6 +7715,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/relationshipsInUpdateTeacherRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -7822,8 +7923,7 @@
         "enum": [
           "course"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "enrollmentDataInResponse": {
         "allOf": [
@@ -7859,13 +7959,6 @@
                 "allOf": [
                   {
                     "$ref": "#/components/schemas/resourceLinks"
-                  }
-                ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
                   }
                 ]
               }
@@ -7933,6 +8026,13 @@
           "lid": {
             "minLength": 1,
             "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7955,6 +8055,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -8027,8 +8134,7 @@
         "enum": [
           "enrollments"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "enrollmentStudentRelationshipIdentifier": {
         "required": [
@@ -8067,8 +8173,7 @@
         "enum": [
           "student"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "errorLinks": {
         "type": "object",
@@ -8330,6 +8435,13 @@
               }
             ],
             "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -8809,6 +8921,15 @@
         },
         "additionalProperties": false
       },
+      "resourceType": {
+        "enum": [
+          "courses",
+          "enrollments",
+          "students",
+          "teachers"
+        ],
+        "type": "string"
+      },
       "studentAttributesInResponse": {
         "type": "object",
         "properties": {
@@ -8901,13 +9022,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -8952,8 +9066,7 @@
         "enum": [
           "enrollments"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "studentIdentifierCollectionResponseDocument": {
         "required": [
@@ -9013,6 +9126,13 @@
           "lid": {
             "minLength": 1,
             "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -9035,6 +9155,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -9114,8 +9241,7 @@
         "enum": [
           "mentor"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "studentPrimaryResponseDocument": {
         "required": [
@@ -9185,8 +9311,7 @@
         "enum": [
           "students"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "studentSecondaryResponseDocument": {
         "required": [
@@ -9324,13 +9449,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -9396,6 +9514,13 @@
           "lid": {
             "minLength": 1,
             "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -9418,6 +9543,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -9459,8 +9591,7 @@
         "enum": [
           "mentors"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "teacherPrimaryResponseDocument": {
         "required": [
@@ -9530,8 +9661,7 @@
         "enum": [
           "teachers"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "teacherTeachesRelationshipIdentifier": {
         "required": [
@@ -9570,8 +9700,7 @@
         "enum": [
           "teaches"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "toManyCourseInRequest": {
         "required": [
@@ -9584,6 +9713,13 @@
             "items": {
               "$ref": "#/components/schemas/courseIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -9625,6 +9761,13 @@
             "items": {
               "$ref": "#/components/schemas/enrollmentIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -9666,6 +9809,13 @@
             "items": {
               "$ref": "#/components/schemas/studentIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -9707,6 +9857,13 @@
             "items": {
               "$ref": "#/components/schemas/teacherIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -9747,6 +9904,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/courseIdentifierInRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -9790,6 +9954,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/studentIdentifierInRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -9913,6 +10084,13 @@
                 "$ref": "#/components/schemas/dataInUpdateCourseRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -10006,6 +10184,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateEnrollmentRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -10189,6 +10374,13 @@
                 "$ref": "#/components/schemas/dataInUpdateStudentRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -10281,6 +10473,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateTeacherRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }

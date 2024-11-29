@@ -38,8 +38,7 @@ internal sealed class RelationshipNameSchemaGenerator
         var fullSchema = new OpenApiSchema
         {
             Type = "string",
-            Enum = [new OpenApiString(relationship.PublicName)],
-            AdditionalPropertiesAllowed = false
+            Enum = [new OpenApiString(relationship.PublicName)]
         };
 
         return schemaRepository.AddDefinition(schemaId, fullSchema);

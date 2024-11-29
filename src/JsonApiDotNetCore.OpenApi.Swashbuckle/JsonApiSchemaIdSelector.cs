@@ -15,7 +15,6 @@ internal sealed class JsonApiSchemaIdSelector
     private const string ResourceTypeSchemaIdTemplate = "[ResourceName] Resource Type";
     private const string MetaSchemaIdTemplate = "Meta";
 
-    private const string AtomicOperationDiscriminatorNameTemplate = "Operation Discriminator";
     private const string ResourceAtomicOperationDiscriminatorValueTemplate = "[OperationCode] [ResourceName]";
     private const string UpdateRelationshipAtomicOperationDiscriminatorValueTemplate = "Update [ResourceName] [RelationshipName]";
     private const string AddToRelationshipAtomicOperationDiscriminatorValueTemplate = "Add To [ResourceName] [RelationshipName]";
@@ -65,16 +64,16 @@ internal sealed class JsonApiSchemaIdSelector
         [typeof(RemoveFromRelationshipOperation<>)] = "Temporary Remove From [ResourceName] To Many Relationship Operation"
     };
 
-    private readonly IResourceGraph _resourceGraph;
     private readonly IJsonApiOptions _options;
+    private readonly IResourceGraph _resourceGraph;
 
-    public JsonApiSchemaIdSelector(IResourceGraph resourceGraph, IJsonApiOptions options)
+    public JsonApiSchemaIdSelector(IJsonApiOptions options, IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(resourceGraph);
         ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(resourceGraph);
 
-        _resourceGraph = resourceGraph;
         _options = options;
+        _resourceGraph = resourceGraph;
     }
 
     public string GetSchemaId(Type type)
@@ -116,10 +115,9 @@ internal sealed class JsonApiSchemaIdSelector
     {
         string schemaId = schemaTemplate;
 
-        if (resourceType != null)
-        {
-            schemaId = schemaId.Replace("[ResourceName]", resourceType.PublicName.Singularize()).Pascalize();
-        }
+        schemaId = resourceType != null
+            ? schemaId.Replace("[ResourceName]", resourceType.PublicName.Singularize()).Pascalize()
+            : schemaId.Replace("[ResourceName]", "$$$").Pascalize().Replace("$$$", string.Empty);
 
         if (relationshipName != null)
         {
@@ -137,10 +135,8 @@ internal sealed class JsonApiSchemaIdSelector
         return namingPolicy != null ? namingPolicy.ConvertName(pascalCaseSchemaId) : pascalCaseSchemaId;
     }
 
-    public string GetResourceTypeSchemaId(ResourceType resourceType)
+    public string GetResourceTypeSchemaId(ResourceType? resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
-
         return ApplySchemaTemplate(ResourceTypeSchemaIdTemplate, resourceType, null, null);
     }
 
@@ -152,11 +148,6 @@ internal sealed class JsonApiSchemaIdSelector
     public string GetAtomicOperationCodeSchemaId(AtomicOperationCode operationCode)
     {
         return ApplySchemaTemplate("[OperationCode] Operation Code", null, null, operationCode);
-    }
-
-    public string GetAtomicOperationDiscriminatorName()
-    {
-        return ApplySchemaTemplate(AtomicOperationDiscriminatorNameTemplate, null, null, null);
     }
 
     public string GetAtomicOperationDiscriminatorValue(AtomicOperationCode operationCode, ResourceType resourceType)

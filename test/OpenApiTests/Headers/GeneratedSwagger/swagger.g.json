@@ -1264,13 +1264,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -1332,8 +1325,7 @@
         "enum": [
           "countries"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "createCountryRequestDocument": {
         "required": [
@@ -1345,6 +1337,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInCreateCountryRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -1377,6 +1376,13 @@
                 "$ref": "#/components/schemas/relationshipsInCreateCountryRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1388,8 +1394,18 @@
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false,
@@ -1432,6 +1448,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/relationshipsInUpdateCountryRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -1637,13 +1660,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -1699,6 +1715,13 @@
             "minLength": 1,
             "type": "string",
             "format": "uuid"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1721,6 +1744,13 @@
             "minLength": 1,
             "type": "string",
             "format": "uuid"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1729,8 +1759,7 @@
         "enum": [
           "languages"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "meta": {
         "type": "object",
@@ -1848,6 +1877,13 @@
         },
         "additionalProperties": false
       },
+      "resourceType": {
+        "enum": [
+          "countries",
+          "languages"
+        ],
+        "type": "string"
+      },
       "toManyLanguageInRequest": {
         "required": [
           "data"
@@ -1859,6 +1895,13 @@
             "items": {
               "$ref": "#/components/schemas/languageIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1899,6 +1942,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateCountryRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }

@@ -11,13 +11,13 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 /// </summary>
 internal sealed class JsonApiDataContractResolver : ISerializerDataContractResolver
 {
-    private readonly JsonSerializerDataContractResolver _dataContractResolver;
     private readonly IResourceGraph _resourceGraph;
+    private readonly JsonSerializerDataContractResolver _dataContractResolver;
 
-    public JsonApiDataContractResolver(IResourceGraph resourceGraph, IJsonApiOptions options)
+    public JsonApiDataContractResolver(IJsonApiOptions options, IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(resourceGraph);
         ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(resourceGraph);
 
         _resourceGraph = resourceGraph;
         _dataContractResolver = new JsonSerializerDataContractResolver(options.SerializerOptions);

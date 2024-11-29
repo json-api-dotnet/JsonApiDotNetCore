@@ -439,6 +439,13 @@
                 "$ref": "#/components/schemas/dataInCreateSocialMediaAccountRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -462,6 +469,13 @@
                 "$ref": "#/components/schemas/attributesInCreateSocialMediaAccountRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -473,8 +487,18 @@
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false,
@@ -509,6 +533,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/attributesInUpdateSocialMediaAccountRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -664,6 +695,12 @@
         },
         "additionalProperties": false
       },
+      "resourceType": {
+        "enum": [
+          "socialMediaAccounts"
+        ],
+        "type": "string"
+      },
       "socialMediaAccountAttributesInResponse": {
         "type": "object",
         "properties": {
@@ -789,13 +826,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -844,8 +874,7 @@
         "enum": [
           "socialMediaAccounts"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "updateSocialMediaAccountRequestDocument": {
         "required": [
@@ -857,6 +886,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateSocialMediaAccountRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }

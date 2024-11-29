@@ -3789,13 +3789,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -3821,6 +3814,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3843,6 +3843,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3919,8 +3926,7 @@
         "enum": [
           "accommodations"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "accommodationSecondaryResponseDocument": {
         "required": [
@@ -4092,6 +4098,13 @@
                 "$ref": "#/components/schemas/dataInCreateAccommodationRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4106,6 +4119,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInCreateExcursionRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -4124,6 +4144,13 @@
                 "$ref": "#/components/schemas/dataInCreateTransportRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4138,6 +4165,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInCreateVacationRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -4163,6 +4197,13 @@
                 "$ref": "#/components/schemas/attributesInCreateAccommodationRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4186,6 +4227,13 @@
                 "$ref": "#/components/schemas/attributesInCreateExcursionRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4207,6 +4255,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/attributesInCreateTransportRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -4239,6 +4294,13 @@
                 "$ref": "#/components/schemas/relationshipsInCreateVacationRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4250,8 +4312,18 @@
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false,
@@ -4291,6 +4363,13 @@
                 "$ref": "#/components/schemas/attributesInUpdateAccommodationRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4320,6 +4399,13 @@
                 "$ref": "#/components/schemas/attributesInUpdateExcursionRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4347,6 +4433,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/attributesInUpdateTransportRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -4383,6 +4476,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/relationshipsInUpdateVacationRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -4589,13 +4689,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -4651,6 +4744,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4673,6 +4773,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4718,8 +4825,7 @@
         "enum": [
           "excursions"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "meta": {
         "type": "object",
@@ -4740,6 +4846,13 @@
               }
             ],
             "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4998,6 +5111,15 @@
         },
         "additionalProperties": false
       },
+      "resourceType": {
+        "enum": [
+          "accommodations",
+          "excursions",
+          "transports",
+          "vacations"
+        ],
+        "type": "string"
+      },
       "toManyExcursionInRequest": {
         "required": [
           "data"
@@ -5009,6 +5131,13 @@
             "items": {
               "$ref": "#/components/schemas/excursionIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5049,6 +5178,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/accommodationIdentifierInRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -5164,13 +5300,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -5196,6 +5325,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5218,6 +5354,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5263,8 +5406,7 @@
         "enum": [
           "transports"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "transportType": {
         "enum": [
@@ -5288,6 +5430,13 @@
                 "$ref": "#/components/schemas/dataInUpdateAccommodationRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5302,6 +5451,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateExcursionRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -5320,6 +5476,13 @@
                 "$ref": "#/components/schemas/dataInUpdateTransportRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -5334,6 +5497,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateVacationRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -5426,13 +5596,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -5508,8 +5671,7 @@
         "enum": [
           "vacations"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       }
     }
   }

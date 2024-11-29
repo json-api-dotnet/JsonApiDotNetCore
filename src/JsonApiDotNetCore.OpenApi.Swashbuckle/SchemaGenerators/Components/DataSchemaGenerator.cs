@@ -2,6 +2,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -9,7 +10,6 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 
 internal sealed class DataSchemaGenerator
 {
-#if NET6_0
     private static readonly string[] ResourceDataPropertyNamesInOrder =
     [
         JsonApiPropertyName.Type,
@@ -20,7 +20,6 @@ internal sealed class DataSchemaGenerator
         JsonApiPropertyName.Links,
         JsonApiPropertyName.Meta
     ];
-#endif
 
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly GenerationCacheSchemaGenerator _generationCacheSchemaGenerator;
@@ -28,8 +27,8 @@ internal sealed class DataSchemaGenerator
     private readonly ResourceIdSchemaGenerator _resourceIdSchemaGenerator;
     private readonly ResourceIdentifierSchemaGenerator _resourceIdentifierSchemaGenerator;
     private readonly LinksVisibilitySchemaGenerator _linksVisibilitySchemaGenerator;
-    private readonly IResourceGraph _resourceGraph;
     private readonly IJsonApiOptions _options;
+    private readonly IResourceGraph _resourceGraph;
     private readonly ResourceFieldValidationMetadataProvider _resourceFieldValidationMetadataProvider;
     private readonly RelationshipTypeFactory _relationshipTypeFactory;
     private readonly ResourceDocumentationReader _resourceDocumentationReader;
@@ -37,7 +36,7 @@ internal sealed class DataSchemaGenerator
     public DataSchemaGenerator(SchemaGenerator defaultSchemaGenerator, GenerationCacheSchemaGenerator generationCacheSchemaGenerator,
         ResourceTypeSchemaGenerator resourceTypeSchemaGenerator, ResourceIdSchemaGenerator resourceIdSchemaGenerator,
         ResourceIdentifierSchemaGenerator resourceIdentifierSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator,
-        IResourceGraph resourceGraph, IJsonApiOptions options, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider,
+        IJsonApiOptions options, IResourceGraph resourceGraph, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider,
         RelationshipTypeFactory relationshipTypeFactory, ResourceDocumentationReader resourceDocumentationReader)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);
@@ -46,8 +45,8 @@ internal sealed class DataSchemaGenerator
         ArgumentGuard.NotNull(resourceIdSchemaGenerator);
         ArgumentGuard.NotNull(resourceIdentifierSchemaGenerator);
         ArgumentGuard.NotNull(linksVisibilitySchemaGenerator);
-        ArgumentGuard.NotNull(resourceGraph);
         ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(resourceGraph);
         ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
         ArgumentGuard.NotNull(relationshipTypeFactory);
         ArgumentGuard.NotNull(resourceDocumentationReader);
@@ -58,97 +57,103 @@ internal sealed class DataSchemaGenerator
         _resourceIdSchemaGenerator = resourceIdSchemaGenerator;
         _resourceIdentifierSchemaGenerator = resourceIdentifierSchemaGenerator;
         _linksVisibilitySchemaGenerator = linksVisibilitySchemaGenerator;
-        _resourceGraph = resourceGraph;
         _options = options;
+        _resourceGraph = resourceGraph;
         _resourceFieldValidationMetadataProvider = resourceFieldValidationMetadataProvider;
         _relationshipTypeFactory = relationshipTypeFactory;
         _resourceDocumentationReader = resourceDocumentationReader;
     }
 
-    public OpenApiSchema GenerateSchema(Type resourceDataConstructedType, SchemaRepository schemaRepository)
+    public OpenApiSchema GenerateSchema(Type dataSchemaType, SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(resourceDataConstructedType);
+        ArgumentGuard.NotNull(dataSchemaType);
         ArgumentGuard.NotNull(schemaRepository);
 
-        if (schemaRepository.TryLookupByType(resourceDataConstructedType, out OpenApiSchema referenceSchemaForResourceData))
+        if (schemaRepository.TryLookupByType(dataSchemaType, out OpenApiSchema referenceSchemaForData))
         {
-            return referenceSchemaForResourceData;
+            return referenceSchemaForData;
         }
 
-        referenceSchemaForResourceData = _defaultSchemaGenerator.GenerateSchema(resourceDataConstructedType, schemaRepository);
-        OpenApiSchema fullSchemaForResourceData = schemaRepository.Schemas[referenceSchemaForResourceData.Reference.Id];
+        var resourceSchemaType = ResourceSchemaType.Create(dataSchemaType, _resourceGraph);
+        ResourceType resourceType = resourceSchemaType.ResourceType;
+
+        referenceSchemaForData = _defaultSchemaGenerator.GenerateSchema(dataSchemaType, schemaRepository);
+        OpenApiSchema fullSchemaForResourceData = schemaRepository.Schemas[referenceSchemaForData.Reference.Id];
         fullSchemaForResourceData.AdditionalPropertiesAllowed = false;
 
-        var resourceTypeInfo = ResourceTypeInfo.Create(resourceDataConstructedType, _resourceGraph);
+        OpenApiSchema inlineSchemaForResourceData = fullSchemaForResourceData.UnwrapLastExtendedSchema();
+        bool isRequestSchema = inlineSchemaForResourceData == fullSchemaForResourceData;
 
-        OpenApiSchema fullSchemaForDerivedType = fullSchemaForResourceData.UnwrapLastExtendedSchema();
-        bool isRequestSchema = fullSchemaForDerivedType == fullSchemaForResourceData;
+        SetAbstract(inlineSchemaForResourceData, resourceType);
+        SetResourceType(inlineSchemaForResourceData, resourceType, schemaRepository);
+        AdaptResourceIdentity(inlineSchemaForResourceData, resourceSchemaType, isRequestSchema, schemaRepository);
+        SetResourceId(inlineSchemaForResourceData, resourceType, schemaRepository);
+        SetResourceFields(inlineSchemaForResourceData, resourceSchemaType, isRequestSchema, schemaRepository);
+        SetDocumentation(fullSchemaForResourceData, resourceType);
+        SetLinksVisibility(inlineSchemaForResourceData, resourceSchemaType, schemaRepository);
 
-        if (isRequestSchema)
-        {
-            bool hasAtomicOperationsEndpoint = _generationCacheSchemaGenerator.HasAtomicOperationsEndpoint(schemaRepository);
-            AdaptResourceIdentity(resourceTypeInfo, fullSchemaForResourceData, hasAtomicOperationsEndpoint);
-            SetResourceType(fullSchemaForResourceData, resourceTypeInfo.ResourceType, schemaRepository);
-        }
+        inlineSchemaForResourceData.ReorderProperties(ResourceDataPropertyNamesInOrder);
 
-        SetResourceId(fullSchemaForDerivedType, resourceTypeInfo.ResourceType, schemaRepository);
-
-        fullSchemaForResourceData.Description = _resourceDocumentationReader.GetDocumentationForType(resourceTypeInfo.ResourceType);
-
-        var fieldSchemaBuilder = new ResourceFieldSchemaBuilder(_defaultSchemaGenerator, _resourceIdentifierSchemaGenerator, _linksVisibilitySchemaGenerator,
-            _resourceFieldValidationMetadataProvider, _relationshipTypeFactory, resourceTypeInfo);
-
-        if (fullSchemaForDerivedType.Properties.ContainsKey(JsonApiPropertyName.Attributes))
-        {
-            SetResourceAttributes(fullSchemaForDerivedType, isRequestSchema, fieldSchemaBuilder, schemaRepository);
-        }
-
-        if (fullSchemaForDerivedType.Properties.ContainsKey(JsonApiPropertyName.Relationships))
-        {
-            SetResourceRelationships(fullSchemaForDerivedType, isRequestSchema, fieldSchemaBuilder, schemaRepository);
-        }
-
-        _linksVisibilitySchemaGenerator.UpdateSchemaForResource(resourceTypeInfo, fullSchemaForDerivedType, schemaRepository);
-
-#if NET6_0
-        fullSchemaForDerivedType.ReorderProperties(ResourceDataPropertyNamesInOrder);
-#endif
-
-        return referenceSchemaForResourceData;
+        return referenceSchemaForData;
     }
 
-    private void AdaptResourceIdentity(ResourceTypeInfo resourceTypeInfo, OpenApiSchema fullSchemaForResourceData, bool hasAtomicOperationsEndpoint)
+    private static void SetAbstract(OpenApiSchema fullSchema, ResourceType resourceType)
     {
-        if (!hasAtomicOperationsEndpoint)
+        if (resourceType.ClrType.IsAbstract)
         {
-            fullSchemaForResourceData.Properties.Remove(JsonApiPropertyName.Lid);
+            fullSchema.Extensions["x-abstract"] = new OpenApiBoolean(true);
+        }
+    }
+
+    private void SetResourceType(OpenApiSchema fullSchema, ResourceType resourceType, SchemaRepository schemaRepository)
+    {
+        if (fullSchema.Properties.ContainsKey(JsonApiPropertyName.Type))
+        {
+            OpenApiSchema referenceSchema = _resourceTypeSchemaGenerator.GenerateSchema(resourceType, schemaRepository);
+            fullSchema.Properties[JsonApiPropertyName.Type] = referenceSchema.WrapInExtendedSchema();
+        }
+    }
+
+    private void AdaptResourceIdentity(OpenApiSchema fullSchema, ResourceSchemaType resourceSchemaType, bool forRequestSchema,
+        SchemaRepository schemaRepository)
+    {
+        if (!forRequestSchema)
+        {
+            return;
         }
 
-        if (resourceTypeInfo.ResourceDataOpenType == typeof(DataInCreateResourceRequest<>))
+        bool hasAtomicOperationsEndpoint = _generationCacheSchemaGenerator.HasAtomicOperationsEndpoint(schemaRepository);
+
+        if (!hasAtomicOperationsEndpoint)
         {
-            ClientIdGenerationMode clientIdGeneration = resourceTypeInfo.ResourceType.ClientIdGeneration ?? _options.ClientIdGeneration;
+            fullSchema.Properties.Remove(JsonApiPropertyName.Lid);
+        }
+
+        if (resourceSchemaType.SchemaOpenType == typeof(DataInCreateResourceRequest<>))
+        {
+            ClientIdGenerationMode clientIdGeneration = resourceSchemaType.ResourceType.ClientIdGeneration ?? _options.ClientIdGeneration;
 
             if (hasAtomicOperationsEndpoint)
             {
                 if (clientIdGeneration == ClientIdGenerationMode.Forbidden)
                 {
-                    fullSchemaForResourceData.Properties.Remove(JsonApiPropertyName.Id);
+                    fullSchema.Properties.Remove(JsonApiPropertyName.Id);
                 }
                 else if (clientIdGeneration == ClientIdGenerationMode.Required)
                 {
-                    fullSchemaForResourceData.Properties.Remove(JsonApiPropertyName.Lid);
-                    fullSchemaForResourceData.Required.Add(JsonApiPropertyName.Id);
+                    fullSchema.Properties.Remove(JsonApiPropertyName.Lid);
+                    fullSchema.Required.Add(JsonApiPropertyName.Id);
                 }
             }
             else
             {
                 if (clientIdGeneration == ClientIdGenerationMode.Forbidden)
                 {
-                    fullSchemaForResourceData.Properties.Remove(JsonApiPropertyName.Id);
+                    fullSchema.Properties.Remove(JsonApiPropertyName.Id);
                 }
                 else if (clientIdGeneration == ClientIdGenerationMode.Required)
                 {
-                    fullSchemaForResourceData.Required.Add(JsonApiPropertyName.Id);
+                    fullSchema.Required.Add(JsonApiPropertyName.Id);
                 }
             }
         }
@@ -156,59 +161,71 @@ internal sealed class DataSchemaGenerator
         {
             if (!hasAtomicOperationsEndpoint)
             {
-                fullSchemaForResourceData.Required.Add(JsonApiPropertyName.Id);
+                fullSchema.Required.Add(JsonApiPropertyName.Id);
             }
         }
     }
 
-    private void SetResourceType(OpenApiSchema fullSchemaForResourceData, ResourceType resourceType, SchemaRepository schemaRepository)
+    private void SetResourceId(OpenApiSchema fullSchema, ResourceType resourceType, SchemaRepository schemaRepository)
     {
-        OpenApiSchema referenceSchema = _resourceTypeSchemaGenerator.GenerateSchema(resourceType, schemaRepository);
-        fullSchemaForResourceData.Properties[JsonApiPropertyName.Type] = referenceSchema.WrapInExtendedSchema();
-    }
-
-    private void SetResourceId(OpenApiSchema fullSchemaForResourceData, ResourceType resourceType, SchemaRepository schemaRepository)
-    {
-        if (fullSchemaForResourceData.Properties.ContainsKey(JsonApiPropertyName.Id))
+        if (fullSchema.Properties.ContainsKey(JsonApiPropertyName.Id))
         {
             OpenApiSchema idSchema = _resourceIdSchemaGenerator.GenerateSchema(resourceType, schemaRepository);
-            fullSchemaForResourceData.Properties[JsonApiPropertyName.Id] = idSchema;
+            fullSchema.Properties[JsonApiPropertyName.Id] = idSchema;
         }
     }
 
-    private void SetResourceAttributes(OpenApiSchema fullSchemaForResourceData, bool forRequestSchema, ResourceFieldSchemaBuilder builder,
+    private void SetResourceFields(OpenApiSchema fullSchemaForData, ResourceSchemaType resourceSchemaType, bool forRequestSchema,
         SchemaRepository schemaRepository)
     {
-        OpenApiSchema referenceSchemaForAttributes = fullSchemaForResourceData.Properties[JsonApiPropertyName.Attributes].UnwrapLastExtendedSchema();
-        OpenApiSchema fullSchemaForAttributes = schemaRepository.Schemas[referenceSchemaForAttributes.Reference.Id];
+        bool schemaHasFields = fullSchemaForData.Properties.ContainsKey(JsonApiPropertyName.Attributes) &&
+            fullSchemaForData.Properties.ContainsKey(JsonApiPropertyName.Relationships);
 
-        builder.SetMembersOfAttributes(fullSchemaForAttributes, forRequestSchema, schemaRepository);
+        if (schemaHasFields)
+        {
+            var fieldSchemaBuilder = new ResourceFieldSchemaBuilder(_defaultSchemaGenerator, _resourceIdentifierSchemaGenerator,
+                _linksVisibilitySchemaGenerator, _resourceFieldValidationMetadataProvider, _relationshipTypeFactory, resourceSchemaType);
 
-        if (fullSchemaForAttributes.Properties.Count == 0)
-        {
-            fullSchemaForResourceData.Properties.Remove(JsonApiPropertyName.Attributes);
-        }
-        else
-        {
-            fullSchemaForAttributes.AdditionalPropertiesAllowed = false;
+            ResourceType resourceType = resourceSchemaType.ResourceType;
+
+            SetFieldSchemaMembers(fullSchemaForData, resourceType, forRequestSchema, true, fieldSchemaBuilder, schemaRepository);
+            SetFieldSchemaMembers(fullSchemaForData, resourceType, forRequestSchema, false, fieldSchemaBuilder, schemaRepository);
         }
     }
 
-    private void SetResourceRelationships(OpenApiSchema fullSchemaForResourceData, bool forRequestSchema, ResourceFieldSchemaBuilder builder,
-        SchemaRepository schemaRepository)
+    private void SetFieldSchemaMembers(OpenApiSchema fullSchemaForData, ResourceType resourceType, bool forRequestSchema, bool forAttributes,
+        ResourceFieldSchemaBuilder fieldSchemaBuilder, SchemaRepository schemaRepository)
     {
-        OpenApiSchema referenceSchemaForRelationships = fullSchemaForResourceData.Properties[JsonApiPropertyName.Relationships].UnwrapLastExtendedSchema();
-        OpenApiSchema fullSchemaForRelationships = schemaRepository.Schemas[referenceSchemaForRelationships.Reference.Id];
+        string propertyNameInSchema = forAttributes ? JsonApiPropertyName.Attributes : JsonApiPropertyName.Relationships;
 
-        builder.SetMembersOfRelationships(fullSchemaForRelationships, forRequestSchema, schemaRepository);
+        OpenApiSchema referenceSchemaForFields = fullSchemaForData.Properties[propertyNameInSchema].UnwrapLastExtendedSchema();
+        OpenApiSchema fullSchemaForFields = schemaRepository.Schemas[referenceSchemaForFields.Reference.Id];
+        fullSchemaForFields.AdditionalPropertiesAllowed = false;
 
-        if (fullSchemaForRelationships.Properties.Count == 0)
+        SetAbstract(fullSchemaForFields, resourceType);
+
+        if (forAttributes)
         {
-            fullSchemaForResourceData.Properties.Remove(JsonApiPropertyName.Relationships);
+            fieldSchemaBuilder.SetMembersOfAttributes(fullSchemaForFields, forRequestSchema, schemaRepository);
         }
         else
         {
-            fullSchemaForRelationships.AdditionalPropertiesAllowed = false;
+            fieldSchemaBuilder.SetMembersOfRelationships(fullSchemaForFields, forRequestSchema, schemaRepository);
         }
+
+        if (fullSchemaForFields.Properties.Count == 0)
+        {
+            fullSchemaForData.Properties.Remove(propertyNameInSchema);
+        }
+    }
+
+    private void SetDocumentation(OpenApiSchema fullSchema, ResourceType resourceType)
+    {
+        fullSchema.Description = _resourceDocumentationReader.GetDocumentationForType(resourceType);
+    }
+
+    private void SetLinksVisibility(OpenApiSchema fullSchema, ResourceSchemaType resourceSchemaType, SchemaRepository schemaRepository)
+    {
+        _linksVisibilitySchemaGenerator.UpdateSchemaForResource(resourceSchemaType, fullSchema, schemaRepository);
     }
 }

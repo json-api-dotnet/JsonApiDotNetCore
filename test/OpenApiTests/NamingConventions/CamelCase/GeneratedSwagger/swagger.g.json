@@ -2709,10 +2709,13 @@
       },
       "atomicOperation": {
         "required": [
-          "operationDiscriminator"
+          "openapi:discriminator"
         ],
         "type": "object",
         "properties": {
+          "openapi:discriminator": {
+            "type": "string"
+          },
           "meta": {
             "allOf": [
               {
@@ -2723,7 +2726,7 @@
         },
         "additionalProperties": false,
         "discriminator": {
-          "propertyName": "operationDiscriminator",
+          "propertyName": "openapi:discriminator",
           "mapping": {
             "addStaffMember": "#/components/schemas/createStaffMemberOperation",
             "addSupermarket": "#/components/schemas/createSupermarketOperation",
@@ -2868,6 +2871,13 @@
                 "$ref": "#/components/schemas/dataInCreateStaffMemberRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2916,6 +2926,13 @@
                 "$ref": "#/components/schemas/dataInCreateSupermarketRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2941,6 +2958,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/attributesInCreateStaffMemberRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -2977,6 +3001,13 @@
                 "$ref": "#/components/schemas/relationshipsInCreateSupermarketRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2988,8 +3019,18 @@
         "type": "object",
         "properties": {
           "type": {
-            "minLength": 1,
-            "type": "string"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false,
@@ -3030,6 +3071,13 @@
                 "$ref": "#/components/schemas/attributesInUpdateStaffMemberRequest"
               }
             ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3067,6 +3115,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/relationshipsInUpdateSupermarketRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -3397,6 +3452,13 @@
               }
             ],
             "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3691,6 +3753,13 @@
         },
         "additionalProperties": false
       },
+      "resourceType": {
+        "enum": [
+          "staffMembers",
+          "supermarkets"
+        ],
+        "type": "string"
+      },
       "staffMemberAttributesInResponse": {
         "type": "object",
         "properties": {
@@ -3776,13 +3845,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -3848,6 +3910,13 @@
           "lid": {
             "minLength": 1,
             "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3870,6 +3939,13 @@
             "minLength": 1,
             "type": "string",
             "format": "int32"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3960,8 +4036,7 @@
         "enum": [
           "staffMembers"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "staffMemberSecondaryResponseDocument": {
         "required": [
@@ -4060,8 +4135,7 @@
         "enum": [
           "backupStoreManager"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "supermarketCashiersRelationshipIdentifier": {
         "required": [
@@ -4100,8 +4174,7 @@
         "enum": [
           "cashiers"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "supermarketCollectionResponseDocument": {
         "required": [
@@ -4182,13 +4255,6 @@
                     "$ref": "#/components/schemas/resourceLinks"
                   }
                 ]
-              },
-              "meta": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/meta"
-                  }
-                ]
               }
             },
             "additionalProperties": false
@@ -4217,6 +4283,13 @@
           "lid": {
             "minLength": 1,
             "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4296,8 +4369,7 @@
         "enum": [
           "supermarkets"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "supermarketStoreManagerRelationshipIdentifier": {
         "required": [
@@ -4336,8 +4408,7 @@
         "enum": [
           "storeManager"
         ],
-        "type": "string",
-        "additionalProperties": false
+        "type": "string"
       },
       "supermarketType": {
         "enum": [
@@ -4358,6 +4429,13 @@
             "items": {
               "$ref": "#/components/schemas/staffMemberIdentifierInRequest"
             }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4398,6 +4476,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/staffMemberIdentifierInRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -4486,6 +4571,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateStaffMemberRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }
@@ -4621,6 +4713,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/dataInUpdateSupermarketRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
               }
             ]
           }

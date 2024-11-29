@@ -220,13 +220,13 @@ Our [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/
 which seems to work. If you're an MSBuild expert, please help out!
 
 ```xml
-<Target Name="RemoveKiotaGeneratedCode" BeforeTargets="BeforeCompile;CoreCompile" Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
+<Target Name="ExcludeKiotaGeneratedCode" BeforeTargets="BeforeCompile;CoreCompile" Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
   <ItemGroup>
     <Compile Remove="**\GeneratedCode\**\*.cs" />
   </ItemGroup>
 </Target>
 
-<Target Name="KiotaRunTool" BeforeTargets="BeforeCompile;CoreCompile" AfterTargets="RemoveKiotaGeneratedCode"
+<Target Name="KiotaRunTool" BeforeTargets="BeforeCompile;CoreCompile" AfterTargets="ExcludeKiotaGeneratedCode"
   Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
   <Exec
     Command="dotnet kiota generate --language CSharp --class-name ExampleApiClient --namespace-name OpenApiKiotaClientExample.GeneratedCode --output ./GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../JsonApiDotNetCoreExample/GeneratedSwagger/JsonApiDotNetCoreExample.json" />

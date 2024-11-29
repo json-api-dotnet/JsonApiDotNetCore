@@ -20,21 +20,14 @@
     <PackageReference Include="Microsoft.Kiota.Serialization.Text" Version="$(KiotaVersion)" />
   </ItemGroup>
 
-  <Target Name="RemoveKiotaGeneratedCode" BeforeTargets="BeforeCompile;CoreCompile" Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
+  <Target Name="ExcludeKiotaGeneratedCode" BeforeTargets="BeforeCompile;CoreCompile" Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
     <ItemGroup>
       <Compile Remove="**\GeneratedCode\**\*.cs" />
     </ItemGroup>
   </Target>
 
-  <Target Name="KiotaRunTool" BeforeTargets="BeforeCompile;CoreCompile" AfterTargets="RemoveKiotaGeneratedCode"
+  <Target Name="KiotaRunTool" BeforeTargets="BeforeCompile;CoreCompile" AfterTargets="ExcludeKiotaGeneratedCode"
     Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
-    <!--
-      Created from sources:
-      - https://github.com/microsoft/kiota/issues/3005#issuecomment-1657806848
-      - https://github.com/dotnet/project-system/blob/main/docs/design-time-builds.md#determining-whether-a-target-is-running-in-a-design-time-build
-      - https://learn.microsoft.com/en-us/visualstudio/msbuild/tutorial-custom-task-code-generation?view=vs-2022
-      - https://gist.github.com/KirillOsenkov/f20cb84d37a89b01db63f8aafe03f19b
-    -->
     <Exec
       Command="dotnet kiota generate --language CSharp --class-name ExampleApiClient --namespace-name OpenApiKiotaClientExample.GeneratedCode --output ./GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../JsonApiDotNetCoreExample/GeneratedSwagger/JsonApiDotNetCoreExample.json" />
   </Target>
