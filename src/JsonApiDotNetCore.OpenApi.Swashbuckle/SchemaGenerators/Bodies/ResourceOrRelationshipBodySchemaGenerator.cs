@@ -38,8 +38,8 @@ internal sealed class ResourceOrRelationshipBodySchemaGenerator : BodySchemaGene
     private readonly IResourceGraph _resourceGraph;
 
     public ResourceOrRelationshipBodySchemaGenerator(SchemaGenerator defaultSchemaGenerator, DataContainerSchemaGenerator dataContainerSchemaGenerator,
-        MetaSchemaGenerator metaSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, IResourceGraph resourceGraph,
-        IJsonApiOptions options)
+        MetaSchemaGenerator metaSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, IJsonApiOptions options,
+        IResourceGraph resourceGraph)
         : base(metaSchemaGenerator, linksVisibilitySchemaGenerator, options)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);

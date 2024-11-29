@@ -22,23 +22,23 @@ internal sealed class RelationshipIdentifierSchemaGenerator
     private readonly ResourceTypeSchemaGenerator _resourceTypeSchemaGenerator;
     private readonly ResourceIdSchemaGenerator _resourceIdSchemaGenerator;
     private readonly RelationshipNameSchemaGenerator _relationshipNameSchemaGenerator;
-    private readonly JsonApiSchemaIdSelector _jsonApiSchemaIdSelector;
+    private readonly JsonApiSchemaIdSelector _schemaIdSelector;
 
     public RelationshipIdentifierSchemaGenerator(SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator,
         ResourceIdSchemaGenerator resourceIdSchemaGenerator, RelationshipNameSchemaGenerator relationshipNameSchemaGenerator,
-        JsonApiSchemaIdSelector jsonApiSchemaIdSelector)
+        JsonApiSchemaIdSelector schemaIdSelector)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);
         ArgumentGuard.NotNull(resourceTypeSchemaGenerator);
         ArgumentGuard.NotNull(resourceIdSchemaGenerator);
         ArgumentGuard.NotNull(relationshipNameSchemaGenerator);
-        ArgumentGuard.NotNull(jsonApiSchemaIdSelector);
+        ArgumentGuard.NotNull(schemaIdSelector);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _resourceTypeSchemaGenerator = resourceTypeSchemaGenerator;
         _resourceIdSchemaGenerator = resourceIdSchemaGenerator;
         _relationshipNameSchemaGenerator = relationshipNameSchemaGenerator;
-        _jsonApiSchemaIdSelector = jsonApiSchemaIdSelector;
+        _schemaIdSelector = schemaIdSelector;
     }
 
     public OpenApiSchema GenerateSchema(RelationshipAttribute relationship, SchemaRepository schemaRepository)
@@ -46,7 +46,7 @@ internal sealed class RelationshipIdentifierSchemaGenerator
         ArgumentGuard.NotNull(relationship);
         ArgumentGuard.NotNull(schemaRepository);
 
-        string schemaId = _jsonApiSchemaIdSelector.GetRelationshipIdentifierSchemaId(relationship);
+        string schemaId = _schemaIdSelector.GetRelationshipIdentifierSchemaId(relationship);
 
         if (schemaRepository.Schemas.ContainsKey(schemaId))
         {

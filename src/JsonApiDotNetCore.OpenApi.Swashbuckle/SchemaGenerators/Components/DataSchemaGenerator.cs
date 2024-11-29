@@ -27,8 +27,8 @@ internal sealed class DataSchemaGenerator
     private readonly ResourceIdSchemaGenerator _resourceIdSchemaGenerator;
     private readonly ResourceIdentifierSchemaGenerator _resourceIdentifierSchemaGenerator;
     private readonly LinksVisibilitySchemaGenerator _linksVisibilitySchemaGenerator;
-    private readonly IResourceGraph _resourceGraph;
     private readonly IJsonApiOptions _options;
+    private readonly IResourceGraph _resourceGraph;
     private readonly ResourceFieldValidationMetadataProvider _resourceFieldValidationMetadataProvider;
     private readonly RelationshipTypeFactory _relationshipTypeFactory;
     private readonly ResourceDocumentationReader _resourceDocumentationReader;
@@ -36,7 +36,7 @@ internal sealed class DataSchemaGenerator
     public DataSchemaGenerator(SchemaGenerator defaultSchemaGenerator, GenerationCacheSchemaGenerator generationCacheSchemaGenerator,
         ResourceTypeSchemaGenerator resourceTypeSchemaGenerator, ResourceIdSchemaGenerator resourceIdSchemaGenerator,
         ResourceIdentifierSchemaGenerator resourceIdentifierSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator,
-        IResourceGraph resourceGraph, IJsonApiOptions options, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider,
+        IJsonApiOptions options, IResourceGraph resourceGraph, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider,
         RelationshipTypeFactory relationshipTypeFactory, ResourceDocumentationReader resourceDocumentationReader)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);
@@ -45,8 +45,8 @@ internal sealed class DataSchemaGenerator
         ArgumentGuard.NotNull(resourceIdSchemaGenerator);
         ArgumentGuard.NotNull(resourceIdentifierSchemaGenerator);
         ArgumentGuard.NotNull(linksVisibilitySchemaGenerator);
-        ArgumentGuard.NotNull(resourceGraph);
         ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(resourceGraph);
         ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
         ArgumentGuard.NotNull(relationshipTypeFactory);
         ArgumentGuard.NotNull(resourceDocumentationReader);
@@ -57,8 +57,8 @@ internal sealed class DataSchemaGenerator
         _resourceIdSchemaGenerator = resourceIdSchemaGenerator;
         _resourceIdentifierSchemaGenerator = resourceIdentifierSchemaGenerator;
         _linksVisibilitySchemaGenerator = linksVisibilitySchemaGenerator;
-        _resourceGraph = resourceGraph;
         _options = options;
+        _resourceGraph = resourceGraph;
         _resourceFieldValidationMetadataProvider = resourceFieldValidationMetadataProvider;
         _relationshipTypeFactory = relationshipTypeFactory;
         _resourceDocumentationReader = resourceDocumentationReader;

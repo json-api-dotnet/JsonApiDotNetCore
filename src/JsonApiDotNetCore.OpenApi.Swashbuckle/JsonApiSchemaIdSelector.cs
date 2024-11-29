@@ -64,16 +64,16 @@ internal sealed class JsonApiSchemaIdSelector
         [typeof(RemoveFromRelationshipOperation<>)] = "Temporary Remove From [ResourceName] To Many Relationship Operation"
     };
 
-    private readonly IResourceGraph _resourceGraph;
     private readonly IJsonApiOptions _options;
+    private readonly IResourceGraph _resourceGraph;
 
-    public JsonApiSchemaIdSelector(IResourceGraph resourceGraph, IJsonApiOptions options)
+    public JsonApiSchemaIdSelector(IJsonApiOptions options, IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(resourceGraph);
         ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(resourceGraph);
 
-        _resourceGraph = resourceGraph;
         _options = options;
+        _resourceGraph = resourceGraph;
     }
 
     public string GetSchemaId(Type type)

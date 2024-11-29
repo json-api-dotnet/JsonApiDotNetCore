@@ -23,7 +23,7 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
     private readonly AbstractAtomicOperationSchemaGenerator _abstractAtomicOperationSchemaGenerator;
     private readonly DataContainerSchemaGenerator _dataContainerSchemaGenerator;
     private readonly IAtomicOperationFilter _atomicOperationFilter;
-    private readonly JsonApiSchemaIdSelector _jsonApiSchemaIdSelector;
+    private readonly JsonApiSchemaIdSelector _schemaIdSelector;
     private readonly ResourceFieldValidationMetadataProvider _resourceFieldValidationMetadataProvider;
     private readonly IResourceGraph _resourceGraph;
 
@@ -31,8 +31,8 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
         ResourceIdentifierSchemaGenerator resourceIdentifierSchemaGenerator, RelationshipIdentifierSchemaGenerator relationshipIdentifierSchemaGenerator,
         AbstractAtomicOperationSchemaGenerator abstractAtomicOperationSchemaGenerator, DataContainerSchemaGenerator dataContainerSchemaGenerator,
         MetaSchemaGenerator metaSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, IAtomicOperationFilter atomicOperationFilter,
-        JsonApiSchemaIdSelector jsonApiSchemaIdSelector, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider,
-        IResourceGraph resourceGraph, IJsonApiOptions options)
+        JsonApiSchemaIdSelector schemaIdSelector, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider, IJsonApiOptions options,
+        IResourceGraph resourceGraph)
         : base(metaSchemaGenerator, linksVisibilitySchemaGenerator, options)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);
@@ -42,10 +42,9 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
         ArgumentGuard.NotNull(abstractAtomicOperationSchemaGenerator);
         ArgumentGuard.NotNull(dataContainerSchemaGenerator);
         ArgumentGuard.NotNull(atomicOperationFilter);
-        ArgumentGuard.NotNull(jsonApiSchemaIdSelector);
+        ArgumentGuard.NotNull(schemaIdSelector);
         ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
         ArgumentGuard.NotNull(resourceGraph);
-        ArgumentGuard.NotNull(options);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _atomicOperationCodeSchemaGenerator = atomicOperationCodeSchemaGenerator;
@@ -54,7 +53,7 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
         _abstractAtomicOperationSchemaGenerator = abstractAtomicOperationSchemaGenerator;
         _dataContainerSchemaGenerator = dataContainerSchemaGenerator;
         _atomicOperationFilter = atomicOperationFilter;
-        _jsonApiSchemaIdSelector = jsonApiSchemaIdSelector;
+        _schemaIdSelector = schemaIdSelector;
         _resourceFieldValidationMetadataProvider = resourceFieldValidationMetadataProvider;
         _resourceGraph = resourceGraph;
     }
@@ -147,7 +146,7 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
         OpenApiSchema fullSchemaForDerivedType = fullSchemaForOperation.UnwrapLastExtendedSchema();
         SetOperationCode(fullSchemaForDerivedType, operationCode, schemaRepository);
 
-        string discriminatorValue = _jsonApiSchemaIdSelector.GetAtomicOperationDiscriminatorValue(operationCode, resourceType);
+        string discriminatorValue = _schemaIdSelector.GetAtomicOperationDiscriminatorValue(operationCode, resourceType);
         _abstractAtomicOperationSchemaGenerator.MapDiscriminator(referenceSchemaForOperation, discriminatorValue, schemaRepository);
     }
 
@@ -188,7 +187,7 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
         // This complicated implementation that generates a temporary schema stems from the fact that GetSchemaId takes a Type.
         // We could feed it a constructed type with TLeftResource and TRightResource, but there's no way to include
         // the relationship name because there's no runtime Type available for it.
-        string schemaId = _jsonApiSchemaIdSelector.GetRelationshipAtomicOperationSchemaId(relationship, operationCode);
+        string schemaId = _schemaIdSelector.GetRelationshipAtomicOperationSchemaId(relationship, operationCode);
 
         OpenApiSchema referenceSchemaForOperation = _defaultSchemaGenerator.GenerateSchema(operationConstructedType, schemaRepository);
         OpenApiSchema fullSchemaForOperation = schemaRepository.Schemas[referenceSchemaForOperation.Reference.Id];
@@ -203,7 +202,7 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
         schemaRepository.ReplaceSchemaId(operationConstructedType, schemaId);
         referenceSchemaForOperation.Reference.Id = schemaId;
 
-        string discriminatorValue = _jsonApiSchemaIdSelector.GetAtomicOperationDiscriminatorValue(operationCode, relationship);
+        string discriminatorValue = _schemaIdSelector.GetAtomicOperationDiscriminatorValue(operationCode, relationship);
         _abstractAtomicOperationSchemaGenerator.MapDiscriminator(referenceSchemaForOperation, discriminatorValue, schemaRepository);
     }
 

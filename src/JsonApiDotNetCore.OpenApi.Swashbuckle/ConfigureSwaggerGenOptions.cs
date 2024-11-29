@@ -24,22 +24,22 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
         typeof(RemoveFromRelationshipOperation<>)
     ];
 
-    private readonly IControllerResourceMapping _controllerResourceMapping;
-    private readonly OpenApiOperationIdSelector _openApiOperationIdSelector;
+    private readonly OpenApiOperationIdSelector _operationIdSelector;
     private readonly JsonApiSchemaIdSelector _schemaIdSelector;
+    private readonly IControllerResourceMapping _controllerResourceMapping;
     private readonly IResourceGraph _resourceGraph;
 
-    public ConfigureSwaggerGenOptions(IControllerResourceMapping controllerResourceMapping, OpenApiOperationIdSelector openApiOperationIdSelector,
-        JsonApiSchemaIdSelector schemaIdSelector, IResourceGraph resourceGraph)
+    public ConfigureSwaggerGenOptions(OpenApiOperationIdSelector operationIdSelector, JsonApiSchemaIdSelector schemaIdSelector,
+        IControllerResourceMapping controllerResourceMapping, IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(controllerResourceMapping);
-        ArgumentGuard.NotNull(openApiOperationIdSelector);
+        ArgumentGuard.NotNull(operationIdSelector);
         ArgumentGuard.NotNull(schemaIdSelector);
+        ArgumentGuard.NotNull(controllerResourceMapping);
         ArgumentGuard.NotNull(resourceGraph);
 
-        _controllerResourceMapping = controllerResourceMapping;
-        _openApiOperationIdSelector = openApiOperationIdSelector;
+        _operationIdSelector = operationIdSelector;
         _schemaIdSelector = schemaIdSelector;
+        _controllerResourceMapping = controllerResourceMapping;
         _resourceGraph = resourceGraph;
     }
 
@@ -54,7 +54,7 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
         options.SelectSubTypesUsing(SelectDerivedTypes);
 
         options.TagActionsBy(description => GetOpenApiOperationTags(description, _controllerResourceMapping));
-        options.CustomOperationIds(_openApiOperationIdSelector.GetOpenApiOperationId);
+        options.CustomOperationIds(_operationIdSelector.GetOpenApiOperationId);
         options.CustomSchemaIds(_schemaIdSelector.GetSchemaId);
 
         options.DocumentFilter<ServerDocumentFilter>();
