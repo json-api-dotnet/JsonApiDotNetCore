@@ -74,8 +74,8 @@ internal sealed class DataSchemaGenerator
             return referenceSchemaForData;
         }
 
-        var resourceTypeInfo = ResourceTypeInfo.Create(dataSchemaType, _resourceGraph);
-        ResourceType resourceType = resourceTypeInfo.ResourceType;
+        var resourceSchemaType = ResourceSchemaType.Create(dataSchemaType, _resourceGraph);
+        ResourceType resourceType = resourceSchemaType.ResourceType;
 
         referenceSchemaForData = _defaultSchemaGenerator.GenerateSchema(dataSchemaType, schemaRepository);
         OpenApiSchema fullSchemaForResourceData = schemaRepository.Schemas[referenceSchemaForData.Reference.Id];
@@ -86,11 +86,11 @@ internal sealed class DataSchemaGenerator
 
         SetAbstract(inlineSchemaForResourceData, resourceType);
         SetResourceType(inlineSchemaForResourceData, resourceType, schemaRepository);
-        AdaptResourceIdentity(inlineSchemaForResourceData, resourceTypeInfo, isRequestSchema, schemaRepository);
+        AdaptResourceIdentity(inlineSchemaForResourceData, resourceSchemaType, isRequestSchema, schemaRepository);
         SetResourceId(inlineSchemaForResourceData, resourceType, schemaRepository);
-        SetResourceFields(inlineSchemaForResourceData, resourceTypeInfo, isRequestSchema, schemaRepository);
+        SetResourceFields(inlineSchemaForResourceData, resourceSchemaType, isRequestSchema, schemaRepository);
         SetDocumentation(fullSchemaForResourceData, resourceType);
-        SetLinksVisibility(inlineSchemaForResourceData, resourceTypeInfo, schemaRepository);
+        SetLinksVisibility(inlineSchemaForResourceData, resourceSchemaType, schemaRepository);
 
         inlineSchemaForResourceData.ReorderProperties(ResourceDataPropertyNamesInOrder);
 
@@ -114,7 +114,8 @@ internal sealed class DataSchemaGenerator
         }
     }
 
-    private void AdaptResourceIdentity(OpenApiSchema fullSchema, ResourceTypeInfo resourceTypeInfo, bool forRequestSchema, SchemaRepository schemaRepository)
+    private void AdaptResourceIdentity(OpenApiSchema fullSchema, ResourceSchemaType resourceSchemaType, bool forRequestSchema,
+        SchemaRepository schemaRepository)
     {
         if (!forRequestSchema)
         {
@@ -128,9 +129,9 @@ internal sealed class DataSchemaGenerator
             fullSchema.Properties.Remove(JsonApiPropertyName.Lid);
         }
 
-        if (resourceTypeInfo.ResourceDataOpenType == typeof(DataInCreateResourceRequest<>))
+        if (resourceSchemaType.SchemaOpenType == typeof(DataInCreateResourceRequest<>))
         {
-            ClientIdGenerationMode clientIdGeneration = resourceTypeInfo.ResourceType.ClientIdGeneration ?? _options.ClientIdGeneration;
+            ClientIdGenerationMode clientIdGeneration = resourceSchemaType.ResourceType.ClientIdGeneration ?? _options.ClientIdGeneration;
 
             if (hasAtomicOperationsEndpoint)
             {
@@ -174,7 +175,8 @@ internal sealed class DataSchemaGenerator
         }
     }
 
-    private void SetResourceFields(OpenApiSchema fullSchemaForData, ResourceTypeInfo resourceTypeInfo, bool forRequestSchema, SchemaRepository schemaRepository)
+    private void SetResourceFields(OpenApiSchema fullSchemaForData, ResourceSchemaType resourceSchemaType, bool forRequestSchema,
+        SchemaRepository schemaRepository)
     {
         bool schemaHasFields = fullSchemaForData.Properties.ContainsKey(JsonApiPropertyName.Attributes) &&
             fullSchemaForData.Properties.ContainsKey(JsonApiPropertyName.Relationships);
@@ -182,9 +184,9 @@ internal sealed class DataSchemaGenerator
         if (schemaHasFields)
         {
             var fieldSchemaBuilder = new ResourceFieldSchemaBuilder(_defaultSchemaGenerator, _resourceIdentifierSchemaGenerator,
-                _linksVisibilitySchemaGenerator, _resourceFieldValidationMetadataProvider, _relationshipTypeFactory, resourceTypeInfo);
+                _linksVisibilitySchemaGenerator, _resourceFieldValidationMetadataProvider, _relationshipTypeFactory, resourceSchemaType);
 
-            ResourceType resourceType = resourceTypeInfo.ResourceType;
+            ResourceType resourceType = resourceSchemaType.ResourceType;
 
             SetFieldSchemaMembers(fullSchemaForData, resourceType, forRequestSchema, true, fieldSchemaBuilder, schemaRepository);
             SetFieldSchemaMembers(fullSchemaForData, resourceType, forRequestSchema, false, fieldSchemaBuilder, schemaRepository);
@@ -222,8 +224,8 @@ internal sealed class DataSchemaGenerator
         fullSchema.Description = _resourceDocumentationReader.GetDocumentationForType(resourceType);
     }
 
-    private void SetLinksVisibility(OpenApiSchema fullSchema, ResourceTypeInfo resourceTypeInfo, SchemaRepository schemaRepository)
+    private void SetLinksVisibility(OpenApiSchema fullSchema, ResourceSchemaType resourceSchemaType, SchemaRepository schemaRepository)
     {
-        _linksVisibilitySchemaGenerator.UpdateSchemaForResource(resourceTypeInfo, fullSchema, schemaRepository);
+        _linksVisibilitySchemaGenerator.UpdateSchemaForResource(resourceSchemaType, fullSchema, schemaRepository);
     }
 }

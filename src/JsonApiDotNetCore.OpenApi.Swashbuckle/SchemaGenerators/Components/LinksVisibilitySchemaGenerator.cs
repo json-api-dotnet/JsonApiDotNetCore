@@ -83,12 +83,12 @@ internal sealed class LinksVisibilitySchemaGenerator
         }
     }
 
-    public void UpdateSchemaForResource(ResourceTypeInfo resourceTypeInfo, OpenApiSchema fullSchemaForResourceData, SchemaRepository schemaRepository)
+    public void UpdateSchemaForResource(ResourceSchemaType resourceSchemaType, OpenApiSchema fullSchemaForResourceData, SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(resourceTypeInfo);
+        ArgumentGuard.NotNull(resourceSchemaType);
         ArgumentGuard.NotNull(fullSchemaForResourceData);
 
-        if (LinksInJsonApiSchemaTypes.TryGetValue(resourceTypeInfo.ResourceDataOpenType, out LinkTypes possibleLinkTypes))
+        if (LinksInJsonApiSchemaTypes.TryGetValue(resourceSchemaType.SchemaOpenType, out LinkTypes possibleLinkTypes))
         {
             UpdateLinksProperty(fullSchemaForResourceData, _lazyLinksVisibility.Value.ResourceLinks, possibleLinkTypes, schemaRepository);
         }

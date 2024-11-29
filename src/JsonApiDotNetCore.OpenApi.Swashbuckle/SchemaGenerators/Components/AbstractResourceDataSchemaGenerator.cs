@@ -91,9 +91,9 @@ internal sealed class AbstractResourceDataSchemaGenerator
         ArgumentGuard.NotNull(referenceSchemaForResourceData);
         ArgumentGuard.NotNull(schemaRepository);
 
-        var resourceTypeInfo = ResourceTypeInfo.Create(resourceDataConstructedType, _resourceGraph);
+        var resourceSchemaType = ResourceSchemaType.Create(resourceDataConstructedType, _resourceGraph);
 
-        if (resourceTypeInfo.ResourceDataOpenType == typeof(ResourceDataInResponse<>))
+        if (resourceSchemaType.SchemaOpenType == typeof(ResourceDataInResponse<>))
         {
             if (!schemaRepository.TryLookupByType(ResourceDataAbstractType, out OpenApiSchema? referenceSchemaForAbstractResourceData))
             {
@@ -102,7 +102,7 @@ internal sealed class AbstractResourceDataSchemaGenerator
 
             OpenApiSchema fullSchemaForAbstractResourceData = schemaRepository.Schemas[referenceSchemaForAbstractResourceData.Reference.Id];
             string dataSchemaId = referenceSchemaForResourceData.Reference.ReferenceV3;
-            string publicName = resourceTypeInfo.ResourceType.PublicName;
+            string publicName = resourceSchemaType.ResourceType.PublicName;
 
             if (fullSchemaForAbstractResourceData.Discriminator.Mapping.TryAdd(publicName, dataSchemaId))
             {

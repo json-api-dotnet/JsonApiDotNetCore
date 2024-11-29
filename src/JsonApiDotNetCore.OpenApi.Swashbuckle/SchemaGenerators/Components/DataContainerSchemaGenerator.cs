@@ -101,9 +101,9 @@ internal sealed class DataContainerSchemaGenerator
 
         if (dataOpenType == typeof(ResourceDataInResponse<>))
         {
-            var resourceTypeInfo = ResourceTypeInfo.Create(dataConstructedType, _resourceGraph);
+            var resourceSchemaType = ResourceSchemaType.Create(dataConstructedType, _resourceGraph);
 
-            foreach (ResourceType relatedType in _includeDependencyScanner.GetReachableRelatedTypes(resourceTypeInfo.ResourceType))
+            foreach (ResourceType relatedType in _includeDependencyScanner.GetReachableRelatedTypes(resourceSchemaType.ResourceType))
             {
                 MapResourceDataInResponseDerivedTypeInDiscriminator(relatedType, schemaRepository);
             }

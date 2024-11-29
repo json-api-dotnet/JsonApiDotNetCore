@@ -67,15 +67,15 @@ internal sealed class ResourceOrRelationshipBodySchemaGenerator : BodySchemaGene
             return referenceSchemaForBody;
         }
 
-        var resourceTypeInfo = ResourceTypeInfo.Create(bodyType, _resourceGraph);
-        bool isRequestSchema = RequestBodySchemaTypes.Contains(bodyType.ConstructedToOpenType());
+        var resourceSchemaType = ResourceSchemaType.Create(bodyType, _resourceGraph);
+        bool isRequestSchema = RequestBodySchemaTypes.Contains(resourceSchemaType.SchemaOpenType);
 
-        _ = _dataContainerSchemaGenerator.GenerateSchema(bodyType, resourceTypeInfo.ResourceType, isRequestSchema, schemaRepository);
+        _ = _dataContainerSchemaGenerator.GenerateSchema(bodyType, resourceSchemaType.ResourceType, isRequestSchema, schemaRepository);
 
         referenceSchemaForBody = _defaultSchemaGenerator.GenerateSchema(bodyType, schemaRepository);
         OpenApiSchema fullSchemaForBody = schemaRepository.Schemas[referenceSchemaForBody.Reference.Id].UnwrapLastExtendedSchema();
 
-        if (JsonApiSchemaFacts.HasNullableDataProperty(bodyType))
+        if (JsonApiSchemaFacts.HasNullableDataProperty(resourceSchemaType.SchemaOpenType))
         {
             fullSchemaForBody.Properties[JsonApiPropertyName.Data].Nullable = true;
         }
