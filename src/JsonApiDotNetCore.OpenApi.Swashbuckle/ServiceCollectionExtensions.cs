@@ -1,3 +1,5 @@
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Bodies;
@@ -30,6 +32,10 @@ public static class ServiceCollectionExtensions
         {
             services.Configure(setupSwaggerGenAction);
         }
+
+        services.AddSingleton<IJsonApiContentNegotiator, OpenApiContentNegotiator>();
+        services.TryAddSingleton<IJsonApiRequestAccessor, JsonApiRequestAccessor>();
+        services.Replace(ServiceDescriptor.Singleton<IJsonApiApplicationBuilderEvents, OpenApiApplicationBuilderEvents>());
     }
 
     private static void AddCustomApiExplorer(IServiceCollection services)
@@ -69,7 +75,6 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<ResourceDocumentationReader>();
         services.TryAddSingleton<OpenApiOperationIdSelector>();
         services.TryAddSingleton<JsonApiSchemaIdSelector>();
-        services.TryAddSingleton<IncludeDependencyScanner>();
     }
 
     private static void AddSwaggerGenerator(IServiceCollection services)
@@ -96,11 +101,8 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<ResourceTypeSchemaGenerator>();
         services.TryAddSingleton<ResourceIdSchemaGenerator>();
         services.TryAddSingleton<MetaSchemaGenerator>();
-        services.TryAddSingleton<ResourceIdentifierSchemaGenerator>();
         services.TryAddSingleton<RelationshipIdentifierSchemaGenerator>();
         services.TryAddSingleton<RelationshipNameSchemaGenerator>();
-        services.TryAddSingleton<AbstractResourceDataSchemaGenerator>();
-        services.TryAddSingleton<AbstractAtomicOperationSchemaGenerator>();
         services.TryAddSingleton<DataSchemaGenerator>();
         services.TryAddSingleton<DataContainerSchemaGenerator>();
         services.TryAddSingleton<LinksVisibilitySchemaGenerator>();

@@ -47,6 +47,12 @@
       Command="dotnet kiota generate --language CSharp --class-name LinksClient --namespace-name OpenApiKiotaEndToEndTests.Links.GeneratedCode --output ./Links/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/Links/Enabled/GeneratedSwagger/swagger.g.json" />
     <Exec
       Command="dotnet kiota generate --language CSharp --class-name AtomicOperationsClient --namespace-name OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode --output ./AtomicOperations/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/AtomicOperations/GeneratedSwagger/swagger.g.json" />
+    <Exec
+      Command="dotnet kiota generate --language CSharp --class-name OnlyRelationshipsInheritanceClient --namespace-name OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode --output ./ResourceInheritance/OnlyRelationships/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/ResourceInheritance/OnlyRelationships/GeneratedSwagger/swagger.g.json" />
+    <Exec
+      Command="dotnet kiota generate --language CSharp --class-name MixedInheritanceClient --namespace-name OpenApiKiotaEndToEndTests.ResourceInheritance.Mixed.GeneratedCode --output ./ResourceInheritance/Mixed/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/ResourceInheritance/Mixed/GeneratedSwagger/swagger.g.json" />
+    <Exec
+      Command="dotnet kiota generate --language CSharp --class-name OnlyOperationsInheritanceClient --namespace-name OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyOperations.GeneratedCode --output ./ResourceInheritance/OnlyOperations/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/ResourceInheritance/OnlyOperations/GeneratedSwagger/swagger.g.json" />
   </Target>
 
   <Target Name="IncludeKiotaGeneratedCode" BeforeTargets="BeforeCompile;CoreCompile" AfterTargets="KiotaRunTool"

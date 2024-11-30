@@ -110,14 +110,17 @@ internal sealed class LinksVisibilitySchemaGenerator
     private void UpdateLinksProperty(OpenApiSchema fullSchemaForLinksContainer, LinkTypes visibleLinkTypes, LinkTypes possibleLinkTypes,
         SchemaRepository schemaRepository)
     {
+        OpenApiSchema referenceSchemaForLinks = fullSchemaForLinksContainer.Properties[JsonApiPropertyName.Links].UnwrapLastExtendedSchema();
+
         if ((visibleLinkTypes & possibleLinkTypes) == 0)
         {
             fullSchemaForLinksContainer.Required.Remove(JsonApiPropertyName.Links);
             fullSchemaForLinksContainer.Properties.Remove(JsonApiPropertyName.Links);
+
+            schemaRepository.Schemas.Remove(referenceSchemaForLinks.Reference.Id);
         }
         else if (visibleLinkTypes != possibleLinkTypes)
         {
-            OpenApiSchema referenceSchemaForLinks = fullSchemaForLinksContainer.Properties[JsonApiPropertyName.Links].UnwrapLastExtendedSchema();
             string linksSchemaId = referenceSchemaForLinks.Reference.Id;
 
             if (schemaRepository.Schemas.TryGetValue(linksSchemaId, out OpenApiSchema? fullSchemaForLinks))

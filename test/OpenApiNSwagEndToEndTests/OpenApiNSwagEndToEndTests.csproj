@@ -71,5 +71,23 @@
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
     </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\ResourceInheritance\OnlyRelationships\GeneratedSwagger\swagger.g.json">
+      <Name>OnlyRelationshipsInheritance</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\ResourceInheritance\Mixed\GeneratedSwagger\swagger.g.json">
+      <Name>MixedInheritance</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\ResourceInheritance\OnlyOperations\GeneratedSwagger\swagger.g.json">
+      <Name>OnlyOperationsInheritance</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
   </ItemGroup>
 </Project>

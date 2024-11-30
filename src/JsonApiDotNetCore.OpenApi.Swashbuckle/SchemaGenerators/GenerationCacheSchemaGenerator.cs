@@ -13,8 +13,8 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators;
 /// </summary>
 internal sealed class GenerationCacheSchemaGenerator
 {
-    private const string SchemaId = "__JsonApiSchemaGenerationCache__";
     private const string HasAtomicOperationsEndpointPropertyName = "HasAtomicOperationsEndpoint";
+    public const string SchemaId = "__JsonApiSchemaGenerationCache__";
 
     private readonly IActionDescriptorCollectionProvider _defaultProvider;
     private readonly JsonApiEndpointMetadataProvider _jsonApiEndpointMetadataProvider;

@@ -1,4 +1,6 @@
+using System.Diagnostics;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
@@ -12,10 +14,14 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
 {
+    private static readonly bool ThrowOnUnusedSchemaDetected = bool.Parse(bool.TrueString);
+
     public void Apply(OpenApiDocument document, DocumentFilterContext context)
     {
         ArgumentGuard.NotNull(document);
         ArgumentGuard.NotNull(context);
+
+        document.Components.Schemas.Remove(GenerationCacheSchemaGenerator.SchemaId);
 
         bool hasChanges;
 
@@ -39,12 +45,29 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
             unusedSchemaNames.Add(schemaId);
         }
 
+        AssertNoUnknownSchemasFound(unusedSchemaNames);
+
         foreach (string schemaId in unusedSchemaNames)
         {
             document.Components.Schemas.Remove(schemaId);
         }
 
         return unusedSchemaNames.Count > 0;
+    }
+
+    [Conditional("DEBUG")]
+    private static void AssertNoUnknownSchemasFound(HashSet<string> unusedSchemaNames)
+    {
+        if (ThrowOnUnusedSchemaDetected && unusedSchemaNames.Count > 0)
+        {
+            var remainingSchemaNames = new HashSet<string>(unusedSchemaNames);
+            remainingSchemaNames.Remove(JsonApiPropertyName.Jsonapi);
+
+            if (remainingSchemaNames.Count > 0)
+            {
+                throw new InvalidOperationException($"Detected unused component schemas: {string.Join(", ", remainingSchemaNames)}");
+            }
+        }
     }
 
     private sealed class OpenApiReferenceVisitor : OpenApiVisitorBase

@@ -73,11 +73,11 @@ internal sealed class ResourceOrRelationshipBodySchemaGenerator : BodySchemaGene
         _ = _dataContainerSchemaGenerator.GenerateSchema(bodyType, resourceSchemaType.ResourceType, isRequestSchema, schemaRepository);
 
         referenceSchemaForBody = _defaultSchemaGenerator.GenerateSchema(bodyType, schemaRepository);
-        OpenApiSchema fullSchemaForBody = schemaRepository.Schemas[referenceSchemaForBody.Reference.Id].UnwrapLastExtendedSchema();
+        OpenApiSchema inlineSchemaForBody = schemaRepository.Schemas[referenceSchemaForBody.Reference.Id].UnwrapLastExtendedSchema();
 
         if (JsonApiSchemaFacts.HasNullableDataProperty(resourceSchemaType.SchemaOpenType))
         {
-            fullSchemaForBody.Properties[JsonApiPropertyName.Data].Nullable = true;
+            inlineSchemaForBody.Properties[JsonApiPropertyName.Data].Nullable = true;
         }
 
         return referenceSchemaForBody;

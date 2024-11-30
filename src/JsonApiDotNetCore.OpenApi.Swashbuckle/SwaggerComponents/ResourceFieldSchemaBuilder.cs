@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 internal sealed class ResourceFieldSchemaBuilder
 {
     private readonly SchemaGenerator _defaultSchemaGenerator;
-    private readonly ResourceIdentifierSchemaGenerator _resourceIdentifierSchemaGenerator;
+    private readonly DataSchemaGenerator _dataSchemaGenerator;
     private readonly LinksVisibilitySchemaGenerator _linksVisibilitySchemaGenerator;
     private readonly ResourceSchemaType _resourceSchemaType;
     private readonly ResourceFieldValidationMetadataProvider _resourceFieldValidationMetadataProvider;
@@ -21,19 +21,19 @@ internal sealed class ResourceFieldSchemaBuilder
     private readonly ResourceDocumentationReader _resourceDocumentationReader = new();
     private readonly IDictionary<string, OpenApiSchema> _schemasForResourceFields;
 
-    public ResourceFieldSchemaBuilder(SchemaGenerator defaultSchemaGenerator, ResourceIdentifierSchemaGenerator resourceIdentifierSchemaGenerator,
+    public ResourceFieldSchemaBuilder(SchemaGenerator defaultSchemaGenerator, DataSchemaGenerator dataSchemaGenerator,
         LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider,
         RelationshipTypeFactory relationshipTypeFactory, ResourceSchemaType resourceSchemaType)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);
-        ArgumentGuard.NotNull(resourceIdentifierSchemaGenerator);
+        ArgumentGuard.NotNull(dataSchemaGenerator);
         ArgumentGuard.NotNull(linksVisibilitySchemaGenerator);
         ArgumentGuard.NotNull(resourceSchemaType);
         ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
         ArgumentGuard.NotNull(relationshipTypeFactory);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
-        _resourceIdentifierSchemaGenerator = resourceIdentifierSchemaGenerator;
+        _dataSchemaGenerator = dataSchemaGenerator;
         _linksVisibilitySchemaGenerator = linksVisibilitySchemaGenerator;
         _resourceSchemaType = resourceSchemaType;
         _resourceFieldValidationMetadataProvider = resourceFieldValidationMetadataProvider;
@@ -49,8 +49,8 @@ internal sealed class ResourceFieldSchemaBuilder
             referenceSchemaForResource = _defaultSchemaGenerator.GenerateSchema(_resourceSchemaType.ResourceType.ClrType, _resourceSchemaRepository);
         }
 
-        OpenApiSchema fullSchemaForResource = _resourceSchemaRepository.Schemas[referenceSchemaForResource.Reference.Id];
-        return fullSchemaForResource.Properties;
+        OpenApiSchema inlineSchemaForResource = _resourceSchemaRepository.Schemas[referenceSchemaForResource.Reference.Id].UnwrapLastExtendedSchema();
+        return inlineSchemaForResource.Properties;
     }
 
     public void SetMembersOfAttributes(OpenApiSchema fullSchemaForAttributes, bool forRequestSchema, SchemaRepository schemaRepository)
@@ -160,7 +160,10 @@ internal sealed class ResourceFieldSchemaBuilder
 
             if (matchingRelationship != null)
             {
-                _ = _resourceIdentifierSchemaGenerator.GenerateSchema(matchingRelationship.RightType, forRequestSchema, schemaRepository);
+                Type identifierSchemaOpenType = forRequestSchema ? typeof(ResourceIdentifierInRequest<>) : typeof(ResourceIdentifierInResponse<>);
+                Type identifierSchemaConstructedType = identifierSchemaOpenType.MakeGenericType(matchingRelationship.RightType.ClrType);
+
+                _ = _dataSchemaGenerator.GenerateSchema(identifierSchemaConstructedType, forRequestSchema, schemaRepository);
                 AddRelationshipSchemaToResourceData(matchingRelationship, fullSchemaForRelationships, schemaRepository);
             }
         }

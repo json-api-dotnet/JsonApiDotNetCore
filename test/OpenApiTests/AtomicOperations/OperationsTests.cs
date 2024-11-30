@@ -43,7 +43,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
               "requestBody": {
                 "description": "An array of mutation operations. For syntax, see the [Atomic Operations documentation](https://jsonapi.org/ext/atomic/).",
                 "content": {
-                  "application/vnd.api+json; ext=atomic-operations": {
+                  "application/vnd.api+json; ext=atomic-operations; ext=openapi": {
                     "schema": {
                       "allOf": [
                         {
@@ -59,7 +59,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                 "200": {
                   "description": "All operations were successfully applied, which resulted in additional changes.",
                   "content": {
-                    "application/vnd.api+json; ext=atomic-operations": {
+                    "application/vnd.api+json; ext=atomic-operations; ext=openapi": {
                       "schema": {
                         "$ref": "#/components/schemas/operationsResponseDocument"
                       }
@@ -72,7 +72,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                 "400": {
                   "description": "The request body is missing or malformed.",
                   "content": {
-                    "application/vnd.api+json; ext=atomic-operations": {
+                    "application/vnd.api+json; ext=atomic-operations; ext=openapi": {
                       "schema": {
                         "$ref": "#/components/schemas/errorResponseDocument"
                       }
@@ -82,7 +82,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                 "403": {
                   "description": "An operation is not accessible or a client-generated ID is used.",
                   "content": {
-                    "application/vnd.api+json; ext=atomic-operations": {
+                    "application/vnd.api+json; ext=atomic-operations; ext=openapi": {
                       "schema": {
                         "$ref": "#/components/schemas/errorResponseDocument"
                       }
@@ -92,7 +92,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                 "404": {
                   "description": "A resource or a related resource does not exist.",
                   "content": {
-                    "application/vnd.api+json; ext=atomic-operations": {
+                    "application/vnd.api+json; ext=atomic-operations; ext=openapi": {
                       "schema": {
                         "$ref": "#/components/schemas/errorResponseDocument"
                       }
@@ -102,7 +102,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                 "409": {
                   "description": "The request body contains conflicting information or another resource with the same ID already exists.",
                   "content": {
-                    "application/vnd.api+json; ext=atomic-operations": {
+                    "application/vnd.api+json; ext=atomic-operations; ext=openapi": {
                       "schema": {
                         "$ref": "#/components/schemas/errorResponseDocument"
                       }
@@ -112,7 +112,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                 "422": {
                   "description": "Validation of the request body failed.",
                   "content": {
-                    "application/vnd.api+json; ext=atomic-operations": {
+                    "application/vnd.api+json; ext=atomic-operations; ext=openapi": {
                       "schema": {
                         "$ref": "#/components/schemas/errorResponseDocument"
                       }

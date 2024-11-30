@@ -3,9 +3,11 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.AtomicOperations;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Documents;
+using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -16,30 +18,30 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Bodies;
 /// </summary>
 internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
 {
+    private static readonly Type AtomicOperationAbstractType = typeof(AtomicOperation);
+
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly AtomicOperationCodeSchemaGenerator _atomicOperationCodeSchemaGenerator;
-    private readonly ResourceIdentifierSchemaGenerator _resourceIdentifierSchemaGenerator;
+    private readonly DataSchemaGenerator _dataSchemaGenerator;
     private readonly RelationshipIdentifierSchemaGenerator _relationshipIdentifierSchemaGenerator;
-    private readonly AbstractAtomicOperationSchemaGenerator _abstractAtomicOperationSchemaGenerator;
     private readonly DataContainerSchemaGenerator _dataContainerSchemaGenerator;
+    private readonly MetaSchemaGenerator _metaSchemaGenerator;
     private readonly IAtomicOperationFilter _atomicOperationFilter;
     private readonly JsonApiSchemaIdSelector _schemaIdSelector;
     private readonly ResourceFieldValidationMetadataProvider _resourceFieldValidationMetadataProvider;
     private readonly IResourceGraph _resourceGraph;
 
     public AtomicOperationsBodySchemaGenerator(SchemaGenerator defaultSchemaGenerator, AtomicOperationCodeSchemaGenerator atomicOperationCodeSchemaGenerator,
-        ResourceIdentifierSchemaGenerator resourceIdentifierSchemaGenerator, RelationshipIdentifierSchemaGenerator relationshipIdentifierSchemaGenerator,
-        AbstractAtomicOperationSchemaGenerator abstractAtomicOperationSchemaGenerator, DataContainerSchemaGenerator dataContainerSchemaGenerator,
-        MetaSchemaGenerator metaSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, IAtomicOperationFilter atomicOperationFilter,
-        JsonApiSchemaIdSelector schemaIdSelector, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider, IJsonApiOptions options,
-        IResourceGraph resourceGraph)
+        DataSchemaGenerator dataSchemaGenerator, RelationshipIdentifierSchemaGenerator relationshipIdentifierSchemaGenerator,
+        DataContainerSchemaGenerator dataContainerSchemaGenerator, MetaSchemaGenerator metaSchemaGenerator,
+        LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, IAtomicOperationFilter atomicOperationFilter, JsonApiSchemaIdSelector schemaIdSelector,
+        ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider, IJsonApiOptions options, IResourceGraph resourceGraph)
         : base(metaSchemaGenerator, linksVisibilitySchemaGenerator, options)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);
         ArgumentGuard.NotNull(atomicOperationCodeSchemaGenerator);
-        ArgumentGuard.NotNull(resourceIdentifierSchemaGenerator);
+        ArgumentGuard.NotNull(dataSchemaGenerator);
         ArgumentGuard.NotNull(relationshipIdentifierSchemaGenerator);
-        ArgumentGuard.NotNull(abstractAtomicOperationSchemaGenerator);
         ArgumentGuard.NotNull(dataContainerSchemaGenerator);
         ArgumentGuard.NotNull(atomicOperationFilter);
         ArgumentGuard.NotNull(schemaIdSelector);
@@ -48,10 +50,10 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _atomicOperationCodeSchemaGenerator = atomicOperationCodeSchemaGenerator;
-        _resourceIdentifierSchemaGenerator = resourceIdentifierSchemaGenerator;
+        _dataSchemaGenerator = dataSchemaGenerator;
         _relationshipIdentifierSchemaGenerator = relationshipIdentifierSchemaGenerator;
-        _abstractAtomicOperationSchemaGenerator = abstractAtomicOperationSchemaGenerator;
         _dataContainerSchemaGenerator = dataContainerSchemaGenerator;
+        _metaSchemaGenerator = metaSchemaGenerator;
         _atomicOperationFilter = atomicOperationFilter;
         _schemaIdSelector = schemaIdSelector;
         _resourceFieldValidationMetadataProvider = resourceFieldValidationMetadataProvider;
@@ -81,15 +83,53 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
 
     private void GenerateSchemasForRequestBody(SchemaRepository schemaRepository)
     {
-        // There's no way to intercept in the Swashbuckle recursive component schema generation when using schema inheritance, which we need
-        // to perform generic type expansions. As a workaround, we generate an empty base schema upfront. And each time the schema
-        // for a derived type is generated, we'll add it to the discriminator mapping.
-        _ = _abstractAtomicOperationSchemaGenerator.GenerateSchema(schemaRepository);
+        _ = GenerateSchemaForAbstractOperation(schemaRepository);
 
-        foreach (ResourceType resourceType in _resourceGraph.GetResourceTypes())
+        foreach (ResourceType resourceType in _resourceGraph.GetResourceTypes().Where(resourceType => resourceType.BaseType == null))
         {
             GenerateSchemaForOperation(resourceType, schemaRepository);
         }
+    }
+
+    private OpenApiSchema GenerateSchemaForAbstractOperation(SchemaRepository schemaRepository)
+    {
+        if (schemaRepository.TryLookupByType(AtomicOperationAbstractType, out OpenApiSchema? referenceSchema))
+        {
+            return referenceSchema;
+        }
+
+        OpenApiSchema referenceSchemaForMeta = _metaSchemaGenerator.GenerateSchema(schemaRepository);
+
+        var fullSchema = new OpenApiSchema
+        {
+            Type = "object",
+            Required = new SortedSet<string>([OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName]),
+            Properties = new Dictionary<string, OpenApiSchema>
+            {
+                [OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName] = new()
+                {
+                    Type = "string"
+                },
+                [referenceSchemaForMeta.Reference.Id] = referenceSchemaForMeta.WrapInExtendedSchema()
+            },
+            AdditionalPropertiesAllowed = false,
+            Discriminator = new OpenApiDiscriminator
+            {
+                PropertyName = OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName,
+                Mapping = new SortedDictionary<string, string>(StringComparer.Ordinal)
+            },
+            Extensions =
+            {
+                ["x-abstract"] = new OpenApiBoolean(true)
+            }
+        };
+
+        string schemaId = _schemaIdSelector.GetSchemaId(AtomicOperationAbstractType);
+
+        referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
+        schemaRepository.RegisterType(AtomicOperationAbstractType, schemaId);
+
+        return referenceSchema;
     }
 
     private void GenerateSchemaForOperation(ResourceType resourceType, SchemaRepository schemaRepository)
@@ -98,7 +138,7 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
         GenerateSchemaForResourceOperation(typeof(UpdateResourceOperation<>), resourceType, AtomicOperationCode.Update, schemaRepository);
         GenerateSchemaForResourceOperation(typeof(DeleteResourceOperation<>), resourceType, AtomicOperationCode.Remove, schemaRepository);
 
-        foreach (RelationshipAttribute relationship in resourceType.Relationships)
+        foreach (RelationshipAttribute relationship in GetRelationshipsInTypeHierarchy(resourceType))
         {
             if (relationship is HasOneAttribute)
             {
@@ -124,30 +164,107 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
             _ => throw new UnreachableCodeException()
         };
 
-        if (!_atomicOperationFilter.IsEnabled(resourceType, writeOperation))
+        if (_atomicOperationFilter.IsEnabled(resourceType, writeOperation))
         {
-            return;
+            Type operationConstructedType = ChangeResourceTypeInSchemaType(operationOpenType, resourceType);
+            bool needsEmptyDerivedSchema = resourceType.BaseType != null && _atomicOperationFilter.IsEnabled(resourceType.BaseType, writeOperation);
+
+            if (!needsEmptyDerivedSchema)
+            {
+                Type identifierSchemaType = typeof(ResourceIdentifierInRequest<>).MakeGenericType(resourceType.ClrType);
+                _ = _dataSchemaGenerator.GenerateSchema(identifierSchemaType, true, schemaRepository);
+
+                bool hasDataProperty = operationOpenType != typeof(DeleteResourceOperation<>);
+
+                if (hasDataProperty)
+                {
+                    _ = _dataContainerSchemaGenerator.GenerateSchema(operationConstructedType, resourceType, true, schemaRepository);
+                }
+            }
+
+            OpenApiSchema referenceSchemaForOperation = _defaultSchemaGenerator.GenerateSchema(operationConstructedType, schemaRepository);
+            OpenApiSchema fullSchemaForOperation = schemaRepository.Schemas[referenceSchemaForOperation.Reference.Id];
+            fullSchemaForOperation.AdditionalPropertiesAllowed = false;
+            OpenApiSchema inlineSchemaForOperation = fullSchemaForOperation.UnwrapLastExtendedSchema();
+
+            if (needsEmptyDerivedSchema)
+            {
+                Type baseOperationSchemaType = ChangeResourceTypeInSchemaType(operationOpenType, resourceType.BaseType!);
+                OpenApiSchema referenceSchemaForBaseOperation = schemaRepository.LookupByType(baseOperationSchemaType);
+
+                RemoveProperties(inlineSchemaForOperation);
+                fullSchemaForOperation.AllOf[0] = referenceSchemaForBaseOperation;
+            }
+            else
+            {
+                SetOperationCode(inlineSchemaForOperation, operationCode, schemaRepository);
+            }
+
+            string discriminatorValue = _schemaIdSelector.GetAtomicOperationDiscriminatorValue(operationCode, resourceType);
+            MapInDiscriminator(referenceSchemaForOperation, discriminatorValue, schemaRepository);
         }
 
-        _ = _resourceIdentifierSchemaGenerator.GenerateSchema(resourceType, true, schemaRepository);
-
-        Type operationConstructedType = operationOpenType.MakeGenericType(resourceType.ClrType);
-        bool hasDataProperty = operationOpenType != typeof(DeleteResourceOperation<>);
-
-        if (hasDataProperty)
+        foreach (ResourceType derivedType in resourceType.DirectlyDerivedTypes)
         {
-            _ = _dataContainerSchemaGenerator.GenerateSchema(operationConstructedType, resourceType, true, schemaRepository);
+            GenerateSchemaForResourceOperation(operationOpenType, derivedType, operationCode, schemaRepository);
+        }
+    }
+
+    private static Type ChangeResourceTypeInSchemaType(Type schemaOpenType, ResourceType resourceType)
+    {
+        return schemaOpenType.MakeGenericType(resourceType.ClrType);
+    }
+
+    private static void RemoveProperties(OpenApiSchema fullSchema)
+    {
+        foreach (string propertyName in fullSchema.Properties.Keys)
+        {
+            fullSchema.Properties.Remove(propertyName);
+            fullSchema.Required.Remove(propertyName);
+        }
+    }
+
+    private void SetOperationCode(OpenApiSchema fullSchema, AtomicOperationCode operationCode, SchemaRepository schemaRepository)
+    {
+        OpenApiSchema referenceSchema = _atomicOperationCodeSchemaGenerator.GenerateSchema(operationCode, schemaRepository);
+        fullSchema.Properties[JsonApiPropertyName.Op] = referenceSchema.WrapInExtendedSchema();
+    }
+
+    private static void MapInDiscriminator(OpenApiSchema referenceSchemaForOperation, string discriminatorValue, SchemaRepository schemaRepository)
+    {
+        OpenApiSchema referenceSchemaForAbstractOperation = schemaRepository.LookupByType(AtomicOperationAbstractType);
+        OpenApiSchema fullSchemaForAbstractOperation = schemaRepository.Schemas[referenceSchemaForAbstractOperation.Reference.Id];
+        fullSchemaForAbstractOperation.Discriminator.Mapping.Add(discriminatorValue, referenceSchemaForOperation.Reference.ReferenceV3);
+    }
+
+    private static HashSet<RelationshipAttribute> GetRelationshipsInTypeHierarchy(ResourceType baseType)
+    {
+        HashSet<RelationshipAttribute> relationships = baseType.Relationships.ToHashSet();
+
+        if (baseType.IsPartOfTypeHierarchy())
+        {
+            IncludeRelationshipsInDirectlyDerivedTypes(baseType, relationships);
         }
 
-        OpenApiSchema referenceSchemaForOperation = _defaultSchemaGenerator.GenerateSchema(operationConstructedType, schemaRepository);
-        OpenApiSchema fullSchemaForOperation = schemaRepository.Schemas[referenceSchemaForOperation.Reference.Id];
-        fullSchemaForOperation.AdditionalPropertiesAllowed = false;
+        return relationships;
+    }
 
-        OpenApiSchema fullSchemaForDerivedType = fullSchemaForOperation.UnwrapLastExtendedSchema();
-        SetOperationCode(fullSchemaForDerivedType, operationCode, schemaRepository);
+    private static void IncludeRelationshipsInDirectlyDerivedTypes(ResourceType baseType, HashSet<RelationshipAttribute> relationships)
+    {
+        foreach (ResourceType derivedType in baseType.DirectlyDerivedTypes)
+        {
+            IncludeRelationshipsInDerivedType(derivedType, relationships);
+        }
+    }
 
-        string discriminatorValue = _schemaIdSelector.GetAtomicOperationDiscriminatorValue(operationCode, resourceType);
-        _abstractAtomicOperationSchemaGenerator.MapDiscriminator(referenceSchemaForOperation, discriminatorValue, schemaRepository);
+    private static void IncludeRelationshipsInDerivedType(ResourceType derivedType, HashSet<RelationshipAttribute> relationships)
+    {
+        foreach (RelationshipAttribute relationshipInDerivedType in derivedType.Relationships)
+        {
+            relationships.Add(relationshipInDerivedType);
+        }
+
+        IncludeRelationshipsInDirectlyDerivedTypes(derivedType, relationships);
     }
 
     private void GenerateSchemaForRelationshipOperation(Type operationOpenType, RelationshipAttribute relationship, AtomicOperationCode operationCode,
@@ -161,27 +278,24 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
             _ => throw new UnreachableCodeException()
         };
 
-        if (!_atomicOperationFilter.IsEnabled(relationship.LeftType, writeOperation))
+        if (!IsRelationshipEnabled(relationship, writeOperation))
         {
             return;
         }
 
-        if (relationship is HasOneAttribute hasOneRelationship && !IsToOneRelationshipEnabled(hasOneRelationship, writeOperation))
-        {
-            return;
-        }
+        Type leftSchemaType = typeof(ResourceIdentifierInRequest<>).MakeGenericType(relationship.LeftType.ClrType);
+        Type rightSchemaType = typeof(ResourceIdentifierInRequest<>).MakeGenericType(relationship.RightType.ClrType);
 
-        if (relationship is HasManyAttribute hasManyRelationship && !IsToManyRelationshipEnabled(hasManyRelationship, writeOperation))
-        {
-            return;
-        }
+        _ = _dataSchemaGenerator.GenerateSchema(leftSchemaType, true, schemaRepository);
+        _ = _dataSchemaGenerator.GenerateSchema(rightSchemaType, true, schemaRepository);
 
-        _ = _resourceIdentifierSchemaGenerator.GenerateSchema(relationship.LeftType, true, schemaRepository);
-        _ = _resourceIdentifierSchemaGenerator.GenerateSchema(relationship.RightType, true, schemaRepository);
+        RelationshipAttribute? relationshipInAnyBaseResourceType = GetRelationshipEnabledInAnyBase(relationship, writeOperation);
 
-        OpenApiSchema referenceSchemaForRelationshipIdentifier = _relationshipIdentifierSchemaGenerator.GenerateSchema(relationship, schemaRepository);
+        OpenApiSchema? referenceSchemaForRelationshipIdentifier = relationshipInAnyBaseResourceType == null
+            ? _relationshipIdentifierSchemaGenerator.GenerateSchema(relationship, schemaRepository)
+            : null;
 
-        Type operationConstructedType = operationOpenType.MakeGenericType(relationship.RightType.ClrType);
+        Type operationConstructedType = ChangeResourceTypeInSchemaType(operationOpenType, relationship.RightType);
         _ = _dataContainerSchemaGenerator.GenerateSchema(operationConstructedType, relationship.RightType, true, schemaRepository);
 
         // This complicated implementation that generates a temporary schema stems from the fact that GetSchemaId takes a Type.
@@ -193,17 +307,62 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
         OpenApiSchema fullSchemaForOperation = schemaRepository.Schemas[referenceSchemaForOperation.Reference.Id];
         fullSchemaForOperation.AdditionalPropertiesAllowed = false;
 
-        OpenApiSchema fullSchemaForDerivedType = fullSchemaForOperation.UnwrapLastExtendedSchema();
-        SetOperationCode(fullSchemaForDerivedType, operationCode, schemaRepository);
+        OpenApiSchema inlineSchemaForOperation = fullSchemaForOperation.UnwrapLastExtendedSchema();
+        SetOperationCode(inlineSchemaForOperation, operationCode, schemaRepository);
 
-        fullSchemaForDerivedType.Properties[JsonApiPropertyName.Ref] = referenceSchemaForRelationshipIdentifier.WrapInExtendedSchema();
-        fullSchemaForDerivedType.Properties[JsonApiPropertyName.Data].Nullable = _resourceFieldValidationMetadataProvider.IsNullable(relationship);
+        if (referenceSchemaForRelationshipIdentifier != null)
+        {
+            inlineSchemaForOperation.Properties[JsonApiPropertyName.Ref] = referenceSchemaForRelationshipIdentifier.WrapInExtendedSchema();
+        }
+
+        inlineSchemaForOperation.Properties[JsonApiPropertyName.Data].Nullable = _resourceFieldValidationMetadataProvider.IsNullable(relationship);
 
         schemaRepository.ReplaceSchemaId(operationConstructedType, schemaId);
         referenceSchemaForOperation.Reference.Id = schemaId;
 
+        if (relationshipInAnyBaseResourceType != null)
+        {
+            RemoveProperties(inlineSchemaForOperation);
+
+            string baseRelationshipSchemaId = _schemaIdSelector.GetRelationshipAtomicOperationSchemaId(relationshipInAnyBaseResourceType, operationCode);
+
+            if (!schemaRepository.Schemas.ContainsKey(baseRelationshipSchemaId))
+            {
+                throw new UnreachableCodeException();
+            }
+
+            fullSchemaForOperation.AllOf[0] = new OpenApiSchema
+            {
+                Reference = new OpenApiReference
+                {
+                    Id = baseRelationshipSchemaId,
+                    Type = ReferenceType.Schema
+                }
+            };
+        }
+
         string discriminatorValue = _schemaIdSelector.GetAtomicOperationDiscriminatorValue(operationCode, relationship);
-        _abstractAtomicOperationSchemaGenerator.MapDiscriminator(referenceSchemaForOperation, discriminatorValue, schemaRepository);
+        MapInDiscriminator(referenceSchemaForOperation, discriminatorValue, schemaRepository);
+    }
+
+    private bool IsRelationshipEnabled(RelationshipAttribute relationship, WriteOperationKind writeOperation)
+    {
+        if (!_atomicOperationFilter.IsEnabled(relationship.LeftType, writeOperation))
+        {
+            return false;
+        }
+
+        if (relationship is HasOneAttribute hasOneRelationship && !IsToOneRelationshipEnabled(hasOneRelationship, writeOperation))
+        {
+            return false;
+        }
+
+        if (relationship is HasManyAttribute hasManyRelationship && !IsToManyRelationshipEnabled(hasManyRelationship, writeOperation))
+        {
+            return false;
+        }
+
+        return true;
     }
 
     private static bool IsToOneRelationshipEnabled(HasOneAttribute relationship, WriteOperationKind writeOperation)
@@ -226,10 +385,21 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
         };
     }
 
-    private void SetOperationCode(OpenApiSchema fullSchema, AtomicOperationCode operationCode, SchemaRepository schemaRepository)
+    private RelationshipAttribute? GetRelationshipEnabledInAnyBase(RelationshipAttribute relationship, WriteOperationKind writeOperation)
     {
-        OpenApiSchema referenceSchema = _atomicOperationCodeSchemaGenerator.GenerateSchema(operationCode, schemaRepository);
-        fullSchema.Properties[JsonApiPropertyName.Op] = referenceSchema.WrapInExtendedSchema();
+        RelationshipAttribute? relationshipInBaseResourceType = relationship.LeftType.BaseType?.FindRelationshipByPublicName(relationship.PublicName);
+
+        while (relationshipInBaseResourceType != null)
+        {
+            if (IsRelationshipEnabled(relationshipInBaseResourceType, writeOperation))
+            {
+                return relationshipInBaseResourceType;
+            }
+
+            relationshipInBaseResourceType = relationshipInBaseResourceType.LeftType.BaseType?.FindRelationshipByPublicName(relationship.PublicName);
+        }
+
+        return null;
     }
 
     private void GenerateSchemasForResponseBody(SchemaRepository schemaRepository)
