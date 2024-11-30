@@ -6,6 +6,9 @@ namespace OpenApiTests.NamingConventions.KebabCase;
 
 public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext>>
 {
+    private const string EscapedJsonApiMediaType = "['application/vnd.api+json; ext=openapi']";
+    private const string EscapedOperationsMediaType = "['application/vnd.api+json; ext=atomic-operations; ext=openapi']";
+
     private readonly OpenApiTestContext<KebabCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> _testContext;
 
     public KebabCaseTests(OpenApiTestContext<KebabCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> testContext)
@@ -35,7 +38,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
                 operationElement.Should().Be("get-supermarket-collection");
             });
 
-            documentSchemaRefId = getElement.Should().ContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
+            documentSchemaRefId = getElement.Should().ContainPath($"responses.200.content{EscapedJsonApiMediaType}.schema.$ref")
                 .ShouldBeSchemaReferenceId("supermarket-collection-response-document").SchemaReferenceId;
         });
 
@@ -166,7 +169,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
                 operationElement.Should().Be("get-supermarket");
             });
 
-            documentSchemaRefId = getElement.Should().ContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
+            documentSchemaRefId = getElement.Should().ContainPath($"responses.200.content{EscapedJsonApiMediaType}.schema.$ref")
                 .ShouldBeSchemaReferenceId("supermarket-primary-response-document").SchemaReferenceId;
         });
 
@@ -204,7 +207,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
                 operationElement.Should().Be("get-supermarket-store-manager");
             });
 
-            documentSchemaRefId = getElement.Should().ContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
+            documentSchemaRefId = getElement.Should().ContainPath($"responses.200.content{EscapedJsonApiMediaType}.schema.$ref")
                 .ShouldBeSchemaReferenceId("staff-member-secondary-response-document").SchemaReferenceId;
         });
 
@@ -239,7 +242,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
                 operationElement.Should().Be("get-supermarket-backup-store-manager");
             });
 
-            getElement.Should().ContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
+            getElement.Should().ContainPath($"responses.200.content{EscapedJsonApiMediaType}.schema.$ref")
                 .ShouldBeSchemaReferenceId("nullable-staff-member-secondary-response-document");
         });
     }
@@ -258,7 +261,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
                 operationElement.Should().Be("get-supermarket-cashiers");
             });
 
-            getElement.Should().ContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
+            getElement.Should().ContainPath($"responses.200.content{EscapedJsonApiMediaType}.schema.$ref")
                 .ShouldBeSchemaReferenceId("staff-member-collection-response-document");
         });
     }
@@ -279,7 +282,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
                 operationElement.Should().Be("get-supermarket-store-manager-relationship");
             });
 
-            documentSchemaRefId = getElement.Should().ContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
+            documentSchemaRefId = getElement.Should().ContainPath($"responses.200.content{EscapedJsonApiMediaType}.schema.$ref")
                 .ShouldBeSchemaReferenceId("staff-member-identifier-response-document").SchemaReferenceId;
         });
 
@@ -316,7 +319,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
                 operationElement.Should().Be("get-supermarket-backup-store-manager-relationship");
             });
 
-            getElement.Should().ContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
+            getElement.Should().ContainPath($"responses.200.content{EscapedJsonApiMediaType}.schema.$ref")
                 .ShouldBeSchemaReferenceId("nullable-staff-member-identifier-response-document");
         });
     }
@@ -337,7 +340,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
                 operationElement.Should().Be("get-supermarket-cashiers-relationship");
             });
 
-            documentSchemaRefId = getElement.Should().ContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
+            documentSchemaRefId = getElement.Should().ContainPath($"responses.200.content{EscapedJsonApiMediaType}.schema.$ref")
                 .ShouldBeSchemaReferenceId("staff-member-identifier-collection-response-document").SchemaReferenceId;
         });
 
@@ -380,7 +383,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
                 operationElement.Should().Be("post-supermarket");
             });
 
-            documentSchemaRefId = getElement.Should().ContainPath("requestBody.content['application/vnd.api+json'].schema.allOf[0].$ref")
+            documentSchemaRefId = getElement.Should().ContainPath($"requestBody.content{EscapedJsonApiMediaType}.schema.allOf[0].$ref")
                 .ShouldBeSchemaReferenceId("create-supermarket-request-document").SchemaReferenceId;
         });
 
@@ -396,7 +399,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
 
             string? resourceRelationshipInPostRequestSchemaRefId = null;
 
-            schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
+            schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.allOf[1].properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainPath("attributes.allOf[0].$ref").ShouldBeSchemaReferenceId("attributes-in-create-supermarket-request");
 
@@ -452,7 +455,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
                 operationElement.Should().Be("patch-supermarket");
             });
 
-            documentSchemaRefId = getElement.Should().ContainPath("requestBody.content['application/vnd.api+json'].schema.allOf[0].$ref")
+            documentSchemaRefId = getElement.Should().ContainPath($"requestBody.content{EscapedJsonApiMediaType}.schema.allOf[0].$ref")
                 .ShouldBeSchemaReferenceId("update-supermarket-request-document").SchemaReferenceId;
         });
 
@@ -466,7 +469,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
                     .ShouldBeSchemaReferenceId("data-in-update-supermarket-request").SchemaReferenceId;
             });
 
-            schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
+            schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.allOf[1].properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainPath("attributes.allOf[0].$ref").ShouldBeSchemaReferenceId("attributes-in-update-supermarket-request");
                 propertiesElement.Should().ContainPath("relationships.allOf[0].$ref").ShouldBeSchemaReferenceId("relationships-in-update-supermarket-request");
@@ -568,10 +571,10 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
                 operationElement.Should().Be("post-operations");
             });
 
-            getElement.Should().ContainPath("requestBody.content['application/vnd.api+json; ext=atomic-operations'].schema.allOf[0].$ref")
+            getElement.Should().ContainPath($"requestBody.content{EscapedOperationsMediaType}.schema.allOf[0].$ref")
                 .ShouldBeSchemaReferenceId("operations-request-document");
 
-            getElement.Should().ContainPath("responses.200.content['application/vnd.api+json; ext=atomic-operations'].schema.$ref")
+            getElement.Should().ContainPath($"responses.200.content{EscapedOperationsMediaType}.schema.$ref")
                 .ShouldBeSchemaReferenceId("operations-response-document");
         });
 

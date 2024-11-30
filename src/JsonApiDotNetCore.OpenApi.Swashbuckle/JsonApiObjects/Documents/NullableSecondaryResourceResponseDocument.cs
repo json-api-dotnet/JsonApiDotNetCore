@@ -23,7 +23,7 @@ internal sealed class NullableSecondaryResourceResponseDocument<TResource> : IHa
     public ResourceDataInResponse<TResource>? Data { get; set; }
 
     [JsonPropertyName("included")]
-    public IList<ResourceData> Included { get; set; } = null!;
+    public IList<ResourceDataInResponse> Included { get; set; } = null!;
 
     [JsonPropertyName("meta")]
     public Meta Meta { get; set; } = null!;

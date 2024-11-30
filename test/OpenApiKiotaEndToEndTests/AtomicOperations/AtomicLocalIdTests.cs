@@ -54,7 +54,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                     Op = AddOperationCode.Add,
                     Data = new DataInCreateTeacherRequest
                     {
-                        Type = TeacherResourceType.Teachers,
+                        Type = ResourceType.Teachers,
                         Lid = teacherLocalId,
                         Attributes = new AttributesInCreateTeacherRequest
                         {
@@ -68,7 +68,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                     Op = AddOperationCode.Add,
                     Data = new DataInCreateCourseRequest
                     {
-                        Type = CourseResourceType.Courses,
+                        Type = ResourceType.Courses,
                         Id = newCourse.Id,
                         Attributes = new AttributesInCreateCourseRequest
                         {
@@ -90,7 +90,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                     [
                         new CourseIdentifierInRequest
                         {
-                            Type = CourseResourceType.Courses,
+                            Type = ResourceType.Courses,
                             Id = newCourse.Id
                         }
                     ]
@@ -100,7 +100,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                     Op = AddOperationCode.Add,
                     Data = new DataInCreateStudentRequest
                     {
-                        Type = StudentResourceType.Students,
+                        Type = ResourceType.Students,
                         Lid = studentLocalId,
                         Attributes = new AttributesInCreateStudentRequest
                         {
@@ -114,7 +114,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                     Op = AddOperationCode.Add,
                     Data = new DataInCreateEnrollmentRequest
                     {
-                        Type = EnrollmentResourceType.Enrollments,
+                        Type = ResourceType.Enrollments,
                         Lid = enrollmentLocalId,
                         Attributes = new AttributesInCreateEnrollmentRequest
                         {
@@ -126,7 +126,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                             {
                                 Data = new CourseIdentifierInRequest
                                 {
-                                    Type = CourseResourceType.Courses,
+                                    Type = ResourceType.Courses,
                                     Id = newCourse.Id
                                 }
                             },
@@ -134,7 +134,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                             {
                                 Data = new StudentIdentifierInRequest
                                 {
-                                    Type = StudentResourceType.Students,
+                                    Type = ResourceType.Students,
                                     Lid = studentLocalId
                                 }
                             }
@@ -152,7 +152,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                     },
                     Data = new TeacherIdentifierInRequest
                     {
-                        Type = TeacherResourceType.Teachers,
+                        Type = ResourceType.Teachers,
                         Lid = teacherLocalId
                     }
                 },
@@ -161,7 +161,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                     Op = RemoveOperationCode.Remove,
                     Ref = new TeacherIdentifierInRequest
                     {
-                        Type = TeacherResourceType.Teachers,
+                        Type = ResourceType.Teachers,
                         Lid = teacherLocalId
                     }
                 }

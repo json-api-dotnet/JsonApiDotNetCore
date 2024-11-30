@@ -187,10 +187,10 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
         Func<Task> action = async () => await apiClient.PostResourceAsync(null, requestDocument);
 
         // Assert
-        ExceptionAssertions<InvalidOperationException> assertion = await action.Should().ThrowExactlyAsync<InvalidOperationException>();
+        ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
 
-        assertion.Which.Message.Should().Be(
-            $"Required property '{attributePropertyName}' at JSON path 'data.attributes.{jsonPropertyName}' is not set. If sending its default value is intended, include it explicitly.");
+        assertion.Which.Message.Should().StartWith($"Cannot write a default value for property '{jsonPropertyName}'.");
+        assertion.Which.Message.Should().EndWith("Path 'data.attributes'.");
     }
 
     [Theory]

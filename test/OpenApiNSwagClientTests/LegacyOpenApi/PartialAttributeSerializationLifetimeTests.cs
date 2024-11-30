@@ -23,7 +23,6 @@ public sealed class PartialAttributeSerializationLifetimeTests
             Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId,
-                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AttributesInUpdateAirplaneRequest()
             }
         };
@@ -67,7 +66,6 @@ public sealed class PartialAttributeSerializationLifetimeTests
             Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId,
-                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AttributesInUpdateAirplaneRequest
                 {
                     AirtimeInHours = 100
@@ -116,7 +114,6 @@ public sealed class PartialAttributeSerializationLifetimeTests
             Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId1,
-                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AttributesInUpdateAirplaneRequest()
             }
         };
@@ -128,7 +125,6 @@ public sealed class PartialAttributeSerializationLifetimeTests
             Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId2,
-                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AttributesInUpdateAirplaneRequest()
             }
         };
@@ -173,7 +169,6 @@ public sealed class PartialAttributeSerializationLifetimeTests
             Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId,
-                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AttributesInUpdateAirplaneRequest
                 {
                     IsInMaintenance = true
@@ -218,7 +213,6 @@ public sealed class PartialAttributeSerializationLifetimeTests
             Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId1,
-                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AttributesInUpdateAirplaneRequest()
             }
         };
@@ -227,7 +221,6 @@ public sealed class PartialAttributeSerializationLifetimeTests
         {
             Data = new DataInCreateAirplaneRequest
             {
-                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AttributesInCreateAirplaneRequest()
             }
         };
@@ -271,7 +264,6 @@ public sealed class PartialAttributeSerializationLifetimeTests
             Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId1,
-                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AttributesInUpdateAirplaneRequest()
             }
         };
@@ -289,7 +281,6 @@ public sealed class PartialAttributeSerializationLifetimeTests
             Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId2,
-                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AttributesInUpdateAirplaneRequest
                 {
                     ManufacturedInCity = "Everett"
@@ -332,7 +323,6 @@ public sealed class PartialAttributeSerializationLifetimeTests
         {
             Data = new DataInCreateAirplaneRequest
             {
-                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AttributesInCreateAirplaneRequest
                 {
                     Name = "Jay Jay the Jet Plane"
@@ -353,7 +343,6 @@ public sealed class PartialAttributeSerializationLifetimeTests
             Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId,
-                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AttributesInUpdateAirplaneRequest
                 {
                     ManufacturedInCity = "Everett"
@@ -399,7 +388,6 @@ public sealed class PartialAttributeSerializationLifetimeTests
             Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId1,
-                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AttributesInUpdateAirplaneRequest()
             }
         };
@@ -411,7 +399,6 @@ public sealed class PartialAttributeSerializationLifetimeTests
             Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId2,
-                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AttributesInUpdateAirplaneRequest()
             }
         };

@@ -5,15 +5,21 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 
-// ReSharper disable once UnusedTypeParameter
-[UsedImplicitly(ImplicitUseTargetFlags.Members)]
-internal class ResourceIdentifierInRequest<TResource> : IResourceIdentity
-    where TResource : IIdentifiable
+internal class ResourceIdentifierInRequest : IHasMeta
 {
     [Required]
     [JsonPropertyName("type")]
     public string Type { get; set; } = null!;
 
+    [JsonPropertyName("meta")]
+    public Meta Meta { get; set; } = null!;
+}
+
+// ReSharper disable once UnusedTypeParameter
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
+internal class ResourceIdentifierInRequest<TResource> : ResourceIdentifierInRequest, IResourceIdentity
+    where TResource : IIdentifiable
+{
     [MinLength(1)]
     [JsonPropertyName("id")]
     public string Id { get; set; } = null!;
@@ -21,7 +27,4 @@ internal class ResourceIdentifierInRequest<TResource> : IResourceIdentity
     [MinLength(1)]
     [JsonPropertyName("lid")]
     public string Lid { get; set; } = null!;
-
-    [JsonPropertyName("meta")]
-    public Meta Meta { get; set; } = null!;
 }

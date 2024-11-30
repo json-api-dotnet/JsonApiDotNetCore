@@ -58,7 +58,7 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
 
             if (replacementDescriptorsForEndpoint.Count > 0)
             {
-                newDescriptors.InsertRange(newDescriptors.IndexOf(endpoint) - 1, replacementDescriptorsForEndpoint);
+                newDescriptors.InsertRange(newDescriptors.IndexOf(endpoint), replacementDescriptorsForEndpoint);
                 newDescriptors.Remove(endpoint);
             }
         }

@@ -28,6 +28,19 @@ internal static class SchemaRepositoryExtensions
         return field;
     }
 
+    public static OpenApiSchema LookupByType(this SchemaRepository schemaRepository, Type schemaType)
+    {
+        ArgumentNullException.ThrowIfNull(schemaRepository);
+        ArgumentNullException.ThrowIfNull(schemaType);
+
+        if (!schemaRepository.TryLookupByType(schemaType, out OpenApiSchema? referenceSchema))
+        {
+            throw new InvalidOperationException($"Reference schema for '{schemaType.Name}' does not exist.");
+        }
+
+        return referenceSchema;
+    }
+
     public static void ReplaceSchemaId(this SchemaRepository schemaRepository, Type oldSchemaType, string newSchemaId)
     {
         ArgumentNullException.ThrowIfNull(schemaRepository);

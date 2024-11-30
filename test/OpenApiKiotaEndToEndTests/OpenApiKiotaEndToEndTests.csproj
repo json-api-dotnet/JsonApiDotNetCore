@@ -51,6 +51,14 @@
       Command="dotnet kiota generate --language CSharp --class-name LinksClient --namespace-name OpenApiKiotaEndToEndTests.Links.GeneratedCode --output ./Links/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/Links/Enabled/GeneratedSwagger/swagger.g.json" />
     <Exec
       Command="dotnet kiota generate --language CSharp --class-name AtomicOperationsClient --namespace-name OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode --output ./AtomicOperations/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/AtomicOperations/GeneratedSwagger/swagger.g.json" />
+    <Exec
+      Command="dotnet kiota generate --language CSharp --class-name OnlyRelationshipsInheritanceClient --namespace-name OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode --output ./ResourceInheritance/OnlyRelationships/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/ResourceInheritance/OnlyRelationships/GeneratedSwagger/swagger.g.json" />
+    <Exec
+      Command="dotnet kiota generate --language CSharp --class-name SubsetOfVariousInheritanceClient --namespace-name OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfVarious.GeneratedCode --output ./ResourceInheritance/SubsetOfVarious/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/ResourceInheritance/SubsetOfVarious/GeneratedSwagger/swagger.g.json" />
+    <Exec
+      Command="dotnet kiota generate --language CSharp --class-name SubsetOfOperationsInheritanceClient --namespace-name OpenApiKiotaEndToEndTests.ResourceInheritance.SubsetOfOperations.GeneratedCode --output ./ResourceInheritance/SubsetOfOperations/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/ResourceInheritance/SubsetOfOperations/GeneratedSwagger/swagger.g.json" />
+    <Exec
+      Command="dotnet kiota generate --language CSharp --class-name NoOperationsInheritanceClient --namespace-name OpenApiKiotaEndToEndTests.ResourceInheritance.NoOperations.GeneratedCode --output ./ResourceInheritance/NoOperations/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/ResourceInheritance/NoOperations/GeneratedSwagger/swagger.g.json" />
   </Target>
 
   <Target Name="IncludeKiotaGeneratedCode" BeforeTargets="BeforeCompile;CoreCompile" AfterTargets="KiotaRunTool"

@@ -299,15 +299,13 @@ public sealed class ResponseTests
         {
             Data = new DataInCreateFlightRequest
             {
-                Type = FlightResourceType.Flights,
                 Relationships = new RelationshipsInCreateFlightRequest
                 {
                     Purser = new ToOneFlightAttendantInRequest
                     {
                         Data = new FlightAttendantIdentifierInRequest
                         {
-                            Id = flightAttendantId,
-                            Type = FlightAttendantResourceType.FlightAttendants
+                            Id = flightAttendantId
                         }
                     }
                 }
@@ -355,8 +353,7 @@ public sealed class ResponseTests
         {
             Data = new DataInUpdateFlightRequest
             {
-                Id = flightId,
-                Type = FlightResourceType.Flights
+                Id = flightId
             }
         };
 
@@ -382,8 +379,7 @@ public sealed class ResponseTests
             {
                 Data = new DataInUpdateFlightRequest
                 {
-                    Id = flightId,
-                    Type = FlightResourceType.Flights
+                    Id = flightId
                 }
             }));
 
@@ -590,8 +586,7 @@ public sealed class ResponseTests
         {
             Data = new FlightAttendantIdentifierInRequest
             {
-                Id = "Adk2a",
-                Type = FlightAttendantResourceType.FlightAttendants
+                Id = "Adk2a"
             }
         };
 
@@ -652,13 +647,11 @@ public sealed class ResponseTests
             [
                 new FlightAttendantIdentifierInRequest
                 {
-                    Id = "Adk2a",
-                    Type = FlightAttendantResourceType.FlightAttendants
+                    Id = "Adk2a"
                 },
                 new FlightAttendantIdentifierInRequest
                 {
-                    Id = "Un37k",
-                    Type = FlightAttendantResourceType.FlightAttendants
+                    Id = "Un37k"
                 }
             ]
         };
@@ -683,13 +676,11 @@ public sealed class ResponseTests
             [
                 new FlightAttendantIdentifierInRequest
                 {
-                    Id = "Adk2a",
-                    Type = FlightAttendantResourceType.FlightAttendants
+                    Id = "Adk2a"
                 },
                 new FlightAttendantIdentifierInRequest
                 {
-                    Id = "Un37k",
-                    Type = FlightAttendantResourceType.FlightAttendants
+                    Id = "Un37k"
                 }
             ]
         };
@@ -714,13 +705,11 @@ public sealed class ResponseTests
             [
                 new FlightAttendantIdentifierInRequest
                 {
-                    Id = "Adk2a",
-                    Type = FlightAttendantResourceType.FlightAttendants
+                    Id = "Adk2a"
                 },
                 new FlightAttendantIdentifierInRequest
                 {
-                    Id = "Un37k",
-                    Type = FlightAttendantResourceType.FlightAttendants
+                    Id = "Un37k"
                 }
             ]
         };

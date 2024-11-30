@@ -20,6 +20,7 @@ public abstract class JsonApiClient : IJsonApiClient
     {
         ArgumentNullException.ThrowIfNull(settings);
 
+        settings.ReferenceLoopHandling = ReferenceLoopHandling.Serialize;
         settings.Converters.Add(_documentJsonConverter);
     }
 
@@ -289,8 +290,9 @@ public abstract class JsonApiClient : IJsonApiClient
 
                 if (propertyHasDefaultValue)
                 {
-                    throw new InvalidOperationException(
-                        $"Required property '{propertyInfo.Name}' at JSON path '{jsonPath}.{jsonProperty.PropertyName}' is not set. If sending its default value is intended, include it explicitly.");
+                    throw new JsonSerializationException(
+                        $"Cannot write a default value for property '{jsonProperty.PropertyName}'. Property requires a non-default value. Path '{jsonPath}'.",
+                        jsonPath, 0, 0, null);
                 }
             }
         }

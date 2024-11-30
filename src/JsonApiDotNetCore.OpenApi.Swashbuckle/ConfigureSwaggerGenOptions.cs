@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.AtomicOperations;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
+using JsonApiDotNetCore.Resources;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -45,6 +46,8 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
 
     public void Configure(SwaggerGenOptions options)
     {
+        ArgumentNullException.ThrowIfNull(options);
+
         options.SupportNonNullableReferenceTypes();
         options.UseAllOfToExtendReferenceSchemas();
 
@@ -57,18 +60,34 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
         options.CustomOperationIds(_operationIdSelector.GetOpenApiOperationId);
         options.CustomSchemaIds(_schemaIdSelector.GetSchemaId);
 
+        options.OperationFilter<DocumentationOpenApiOperationFilter>();
         options.DocumentFilter<ServerDocumentFilter>();
         options.DocumentFilter<EndpointOrderingFilter>();
         options.DocumentFilter<StringEnumOrderingFilter>();
-        options.OperationFilter<DocumentationOpenApiOperationFilter>();
+        options.DocumentFilter<SetSchemaTypeToObjectDocumentFilter>();
         options.DocumentFilter<UnusedComponentSchemaCleaner>();
     }
 
     private List<Type> SelectDerivedTypes(Type baseType)
     {
-        if (baseType == typeof(ResourceData))
+        if (baseType == typeof(ResourceIdentifierInRequest))
         {
-            return GetConstructedTypesForResourceData();
+            return GetConstructedTypesFromResourceGraph(typeof(ResourceIdentifierInRequest<>));
+        }
+
+        if (baseType == typeof(DataInCreateResourceRequest))
+        {
+            return GetConstructedTypesFromResourceGraph(typeof(DataInCreateResourceRequest<>));
+        }
+
+        if (baseType == typeof(DataInUpdateResourceRequest))
+        {
+            return GetConstructedTypesFromResourceGraph(typeof(DataInUpdateResourceRequest<>));
+        }
+
+        if (baseType == typeof(ResourceDataInResponse))
+        {
+            return GetConstructedTypesFromResourceGraph(typeof(ResourceDataInResponse<>));
         }
 
         if (baseType == typeof(AtomicOperation))
@@ -76,20 +95,30 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
             return GetConstructedTypesForAtomicOperation();
         }
 
+        if (baseType.IsAssignableTo(typeof(IIdentifiable)))
+        {
+            ResourceType? resourceType = _resourceGraph.FindResourceType(baseType);
+
+            if (resourceType != null && resourceType.IsPartOfTypeHierarchy())
+            {
+                return GetResourceDerivedTypes(resourceType);
+            }
+        }
+
         return [];
     }
 
-    private List<Type> GetConstructedTypesForResourceData()
+    private List<Type> GetConstructedTypesFromResourceGraph(Type schemaOpenType)
     {
-        List<Type> derivedTypes = [];
+        List<Type> constructedTypes = [];
 
         foreach (ResourceType resourceType in _resourceGraph.GetResourceTypes())
         {
-            Type constructedType = typeof(ResourceDataInResponse<>).MakeGenericType(resourceType.ClrType);
-            derivedTypes.Add(constructedType);
+            Type constructedType = schemaOpenType.MakeGenericType(resourceType.ClrType);
+            constructedTypes.Add(constructedType);
         }
 
-        return derivedTypes;
+        return constructedTypes;
     }
 
     private List<Type> GetConstructedTypesForAtomicOperation()
@@ -102,6 +131,22 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
         }
 
         return derivedTypes;
+    }
+
+    private static List<Type> GetResourceDerivedTypes(ResourceType baseType)
+    {
+        List<Type> clrTypes = [];
+        IncludeDerivedTypes(baseType, clrTypes);
+        return clrTypes;
+    }
+
+    private static void IncludeDerivedTypes(ResourceType baseType, List<Type> clrTypes)
+    {
+        foreach (ResourceType derivedType in baseType.DirectlyDerivedTypes)
+        {
+            clrTypes.Add(derivedType.ClrType);
+            IncludeDerivedTypes(derivedType, clrTypes);
+        }
     }
 
     private static List<string> GetOpenApiOperationTags(ApiDescription description, IControllerResourceMapping controllerResourceMapping)

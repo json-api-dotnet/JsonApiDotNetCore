@@ -6,6 +6,9 @@ namespace OpenApiTests.NamingConventions.PascalCase;
 
 public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext>>
 {
+    private const string EscapedJsonApiMediaType = "['application/vnd.api+json; ext=openapi']";
+    private const string EscapedOperationsMediaType = "['application/vnd.api+json; ext=atomic-operations; ext=openapi']";
+
     private readonly OpenApiTestContext<PascalCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> _testContext;
 
     public PascalCaseTests(OpenApiTestContext<PascalCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> testContext)
@@ -35,7 +38,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
                 operationElement.Should().Be("GetSupermarketCollection");
             });
 
-            documentSchemaRefId = getElement.Should().ContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
+            documentSchemaRefId = getElement.Should().ContainPath($"responses.200.content{EscapedJsonApiMediaType}.schema.$ref")
                 .ShouldBeSchemaReferenceId("SupermarketCollectionResponseDocument").SchemaReferenceId;
         });
 
@@ -166,7 +169,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
                 operationElement.Should().Be("GetSupermarket");
             });
 
-            documentSchemaRefId = getElement.Should().ContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
+            documentSchemaRefId = getElement.Should().ContainPath($"responses.200.content{EscapedJsonApiMediaType}.schema.$ref")
                 .ShouldBeSchemaReferenceId("SupermarketPrimaryResponseDocument").SchemaReferenceId;
         });
 
@@ -204,7 +207,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
                 operationElement.Should().Be("GetSupermarketStoreManager");
             });
 
-            documentSchemaRefId = getElement.Should().ContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
+            documentSchemaRefId = getElement.Should().ContainPath($"responses.200.content{EscapedJsonApiMediaType}.schema.$ref")
                 .ShouldBeSchemaReferenceId("StaffMemberSecondaryResponseDocument").SchemaReferenceId;
         });
 
@@ -239,7 +242,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
                 operationElement.Should().Be("GetSupermarketBackupStoreManager");
             });
 
-            getElement.Should().ContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
+            getElement.Should().ContainPath($"responses.200.content{EscapedJsonApiMediaType}.schema.$ref")
                 .ShouldBeSchemaReferenceId("NullableStaffMemberSecondaryResponseDocument");
         });
     }
@@ -258,7 +261,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
                 operationElement.Should().Be("GetSupermarketCashiers");
             });
 
-            getElement.Should().ContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
+            getElement.Should().ContainPath($"responses.200.content{EscapedJsonApiMediaType}.schema.$ref")
                 .ShouldBeSchemaReferenceId("StaffMemberCollectionResponseDocument");
         });
     }
@@ -279,7 +282,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
                 operationElement.Should().Be("GetSupermarketStoreManagerRelationship");
             });
 
-            documentSchemaRefId = getElement.Should().ContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
+            documentSchemaRefId = getElement.Should().ContainPath($"responses.200.content{EscapedJsonApiMediaType}.schema.$ref")
                 .ShouldBeSchemaReferenceId("StaffMemberIdentifierResponseDocument").SchemaReferenceId;
         });
 
@@ -316,7 +319,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
                 operationElement.Should().Be("GetSupermarketBackupStoreManagerRelationship");
             });
 
-            getElement.Should().ContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
+            getElement.Should().ContainPath($"responses.200.content{EscapedJsonApiMediaType}.schema.$ref")
                 .ShouldBeSchemaReferenceId("NullableStaffMemberIdentifierResponseDocument");
         });
     }
@@ -337,7 +340,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
                 operationElement.Should().Be("GetSupermarketCashiersRelationship");
             });
 
-            documentSchemaRefId = getElement.Should().ContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
+            documentSchemaRefId = getElement.Should().ContainPath($"responses.200.content{EscapedJsonApiMediaType}.schema.$ref")
                 .ShouldBeSchemaReferenceId("StaffMemberIdentifierCollectionResponseDocument").SchemaReferenceId;
         });
 
@@ -380,7 +383,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
                 operationElement.Should().Be("PostSupermarket");
             });
 
-            documentSchemaRefId = getElement.Should().ContainPath("requestBody.content['application/vnd.api+json'].schema.allOf[0].$ref")
+            documentSchemaRefId = getElement.Should().ContainPath($"requestBody.content{EscapedJsonApiMediaType}.schema.allOf[0].$ref")
                 .ShouldBeSchemaReferenceId("CreateSupermarketRequestDocument").SchemaReferenceId;
         });
 
@@ -396,7 +399,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
 
             string? resourceRelationshipInPostRequestSchemaRefId = null;
 
-            schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
+            schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.allOf[1].properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainPath("attributes.allOf[0].$ref").ShouldBeSchemaReferenceId("AttributesInCreateSupermarketRequest");
 
@@ -450,7 +453,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
                 operationElement.Should().Be("PatchSupermarket");
             });
 
-            documentSchemaRefId = getElement.Should().ContainPath("requestBody.content['application/vnd.api+json'].schema.allOf[0].$ref")
+            documentSchemaRefId = getElement.Should().ContainPath($"requestBody.content{EscapedJsonApiMediaType}.schema.allOf[0].$ref")
                 .ShouldBeSchemaReferenceId("UpdateSupermarketRequestDocument").SchemaReferenceId;
         });
 
@@ -464,7 +467,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
                     .ShouldBeSchemaReferenceId("DataInUpdateSupermarketRequest").SchemaReferenceId;
             });
 
-            schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
+            schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.allOf[1].properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainPath("attributes.allOf[0].$ref").ShouldBeSchemaReferenceId("AttributesInUpdateSupermarketRequest");
                 propertiesElement.Should().ContainPath("relationships.allOf[0].$ref").ShouldBeSchemaReferenceId("RelationshipsInUpdateSupermarketRequest");
@@ -566,10 +569,10 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
                 operationElement.Should().Be("PostOperations");
             });
 
-            getElement.Should().ContainPath("requestBody.content['application/vnd.api+json; ext=atomic-operations'].schema.allOf[0].$ref")
+            getElement.Should().ContainPath($"requestBody.content{EscapedOperationsMediaType}.schema.allOf[0].$ref")
                 .ShouldBeSchemaReferenceId("OperationsRequestDocument");
 
-            getElement.Should().ContainPath("responses.200.content['application/vnd.api+json; ext=atomic-operations'].schema.$ref")
+            getElement.Should().ContainPath($"responses.200.content{EscapedOperationsMediaType}.schema.$ref")
                 .ShouldBeSchemaReferenceId("OperationsResponseDocument");
         });
 

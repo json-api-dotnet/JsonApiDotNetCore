@@ -39,6 +39,7 @@ public sealed class QueryStringTests : IClassFixture<OpenApiTestContext<OpenApiS
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
+        // Assert
         document.Should().ContainPath($"paths.{endpointPath}").With(verbElement =>
         {
             verbElement.Should().ContainPath("parameters").With(parametersElement =>
@@ -76,6 +77,7 @@ public sealed class QueryStringTests : IClassFixture<OpenApiTestContext<OpenApiS
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
+        // Assert
         document.Should().ContainPath($"paths.{endpointPath}").With(verbElement =>
         {
             verbElement.Should().ContainPath("parameters").With(parametersElement =>

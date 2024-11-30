@@ -29,8 +29,10 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
     [Fact]
     public async Task Operations_endpoint_is_exposed()
     {
+        // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
+        // Assert
         document.Should().ContainPath("paths./operations.post").Should().BeJson("""
             {
               "tags": [
@@ -41,7 +43,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
               "requestBody": {
                 "description": "An array of mutation operations. For syntax, see the [Atomic Operations documentation](https://jsonapi.org/ext/atomic/).",
                 "content": {
-                  "application/vnd.api+json; ext=atomic-operations": {
+                  "application/vnd.api+json; ext=atomic-operations; ext=openapi": {
                     "schema": {
                       "allOf": [
                         {
@@ -57,7 +59,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                 "200": {
                   "description": "All operations were successfully applied, which resulted in additional changes.",
                   "content": {
-                    "application/vnd.api+json; ext=atomic-operations": {
+                    "application/vnd.api+json; ext=atomic-operations; ext=openapi": {
                       "schema": {
                         "$ref": "#/components/schemas/operationsResponseDocument"
                       }
@@ -70,7 +72,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                 "400": {
                   "description": "The request body is missing or malformed.",
                   "content": {
-                    "application/vnd.api+json; ext=atomic-operations": {
+                    "application/vnd.api+json; ext=atomic-operations; ext=openapi": {
                       "schema": {
                         "$ref": "#/components/schemas/errorResponseDocument"
                       }
@@ -80,7 +82,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                 "403": {
                   "description": "An operation is not accessible or a client-generated ID is used.",
                   "content": {
-                    "application/vnd.api+json; ext=atomic-operations": {
+                    "application/vnd.api+json; ext=atomic-operations; ext=openapi": {
                       "schema": {
                         "$ref": "#/components/schemas/errorResponseDocument"
                       }
@@ -90,7 +92,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                 "404": {
                   "description": "A resource or a related resource does not exist.",
                   "content": {
-                    "application/vnd.api+json; ext=atomic-operations": {
+                    "application/vnd.api+json; ext=atomic-operations; ext=openapi": {
                       "schema": {
                         "$ref": "#/components/schemas/errorResponseDocument"
                       }
@@ -100,7 +102,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                 "409": {
                   "description": "The request body contains conflicting information or another resource with the same ID already exists.",
                   "content": {
-                    "application/vnd.api+json; ext=atomic-operations": {
+                    "application/vnd.api+json; ext=atomic-operations; ext=openapi": {
                       "schema": {
                         "$ref": "#/components/schemas/errorResponseDocument"
                       }
@@ -110,7 +112,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                 "422": {
                   "description": "Validation of the request body failed.",
                   "content": {
-                    "application/vnd.api+json; ext=atomic-operations": {
+                    "application/vnd.api+json; ext=atomic-operations; ext=openapi": {
                       "schema": {
                         "$ref": "#/components/schemas/errorResponseDocument"
                       }
@@ -125,8 +127,10 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
     [Fact]
     public async Task Operations_request_component_schemas_are_exposed()
     {
+        // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
+        // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>
         {
             schemasElement.Should().ContainPath("operationsRequestDocument").Should().BeJson("""
@@ -235,14 +239,136 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                   "type": "string"
                 }
                 """);
+
+            schemasElement.Should().ContainPath("dataInCreateRequest").Should().BeJson("""
+                {
+                  "required": [
+                    "type"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/resourceType"
+                        }
+                      ]
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
+                        }
+                      ]
+                    }
+                  },
+                  "additionalProperties": false,
+                  "discriminator": {
+                    "propertyName": "type",
+                    "mapping": {
+                      "courses": "#/components/schemas/dataInCreateCourseRequest",
+                      "enrollments": "#/components/schemas/dataInCreateEnrollmentRequest",
+                      "students": "#/components/schemas/dataInCreateStudentRequest",
+                      "teachers": "#/components/schemas/dataInCreateTeacherRequest"
+                    }
+                  },
+                  "x-abstract": true
+                }
+                """);
+
+            schemasElement.Should().ContainPath("dataInUpdateRequest").Should().BeJson("""
+                {
+                  "required": [
+                    "type"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/resourceType"
+                        }
+                      ]
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
+                        }
+                      ]
+                    }
+                  },
+                  "additionalProperties": false,
+                  "discriminator": {
+                    "propertyName": "type",
+                    "mapping": {
+                      "courses": "#/components/schemas/dataInUpdateCourseRequest",
+                      "enrollments": "#/components/schemas/dataInUpdateEnrollmentRequest",
+                      "students": "#/components/schemas/dataInUpdateStudentRequest",
+                      "teachers": "#/components/schemas/dataInUpdateTeacherRequest"
+                    }
+                  },
+                  "x-abstract": true
+                }
+                """);
+
+            schemasElement.Should().ContainPath("identifierInRequest").Should().BeJson("""
+                {
+                  "required": [
+                    "type"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/resourceType"
+                        }
+                      ]
+                    },
+                    "meta": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/meta"
+                        }
+                      ]
+                    }
+                  },
+                  "additionalProperties": false,
+                  "discriminator": {
+                    "propertyName": "type",
+                    "mapping": {
+                      "courses": "#/components/schemas/courseIdentifierInRequest",
+                      "enrollments": "#/components/schemas/enrollmentIdentifierInRequest",
+                      "students": "#/components/schemas/studentIdentifierInRequest",
+                      "teachers": "#/components/schemas/teacherIdentifierInRequest"
+                    }
+                  },
+                  "x-abstract": true
+                }
+                """);
+
+            schemasElement.Should().ContainPath("resourceType").Should().BeJson("""
+                {
+                  "enum": [
+                    "courses",
+                    "enrollments",
+                    "students",
+                    "teachers"
+                  ],
+                  "type": "string"
+                }
+                """);
         });
     }
 
     [Fact]
     public async Task Operations_response_component_schemas_are_exposed()
     {
+        // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
+        // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>
         {
             schemasElement.Should().ContainPath("operationsResponseDocument").Should().BeJson("""
@@ -314,8 +440,10 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
     [Fact]
     public async Task Course_operation_component_schemas_are_exposed()
     {
+        // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
+        // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>
         {
             // resource operations
@@ -356,46 +484,40 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
 
             schemasElement.Should().ContainPath("dataInCreateCourseRequest").Should().BeJson("""
                 {
-                  "required": [
-                    "id",
-                    "type"
-                  ],
                   "type": "object",
-                  "properties": {
-                    "type": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/courseResourceType"
-                        }
-                      ]
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/dataInCreateRequest"
                     },
-                    "id": {
-                      "minLength": 1,
-                      "type": "string",
-                      "format": "uuid"
-                    },
-                    "attributes": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/attributesInCreateCourseRequest"
+                    {
+                      "required": [
+                        "id"
+                      ],
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "minLength": 1,
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "attributes": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/attributesInCreateCourseRequest"
+                            }
+                          ]
+                        },
+                        "relationships": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/relationshipsInCreateCourseRequest"
+                            }
+                          ]
                         }
-                      ]
-                    },
-                    "relationships": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/relationshipsInCreateCourseRequest"
-                        }
-                      ]
-                    },
-                    "meta": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/meta"
-                        }
-                      ]
+                      },
+                      "additionalProperties": false
                     }
-                  },
+                  ],
                   "additionalProperties": false
                 }
                 """);
@@ -486,49 +608,41 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
 
             schemasElement.Should().ContainPath("dataInUpdateCourseRequest").Should().BeJson("""
                 {
-                  "required": [
-                    "type"
-                  ],
                   "type": "object",
-                  "properties": {
-                    "type": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/courseResourceType"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/dataInUpdateRequest"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "minLength": 1,
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "lid": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "attributes": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/attributesInUpdateCourseRequest"
+                            }
+                          ]
+                        },
+                        "relationships": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/relationshipsInUpdateCourseRequest"
+                            }
+                          ]
                         }
-                      ]
-                    },
-                    "id": {
-                      "minLength": 1,
-                      "type": "string",
-                      "format": "uuid"
-                    },
-                    "lid": {
-                      "minLength": 1,
-                      "type": "string"
-                    },
-                    "attributes": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/attributesInUpdateCourseRequest"
-                        }
-                      ]
-                    },
-                    "relationships": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/relationshipsInUpdateCourseRequest"
-                        }
-                      ]
-                    },
-                    "meta": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/meta"
-                        }
-                      ]
+                      },
+                      "additionalProperties": false
                     }
-                  },
+                  ],
                   "additionalProperties": false
                 }
                 """);
@@ -699,35 +813,27 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
             // shared types
             schemasElement.Should().ContainPath("courseIdentifierInRequest").Should().BeJson("""
                 {
-                  "required": [
-                    "type"
-                  ],
                   "type": "object",
-                  "properties": {
-                    "type": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/courseResourceType"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/identifierInRequest"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "minLength": 1,
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "lid": {
+                          "minLength": 1,
+                          "type": "string"
                         }
-                      ]
-                    },
-                    "id": {
-                      "minLength": 1,
-                      "type": "string",
-                      "format": "uuid"
-                    },
-                    "lid": {
-                      "minLength": 1,
-                      "type": "string"
-                    },
-                    "meta": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/meta"
-                        }
-                      ]
+                      },
+                      "additionalProperties": false
                     }
-                  },
+                  ],
                   "additionalProperties": false
                 }
                 """);
@@ -782,8 +888,10 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
     [Fact]
     public async Task Student_operation_component_schemas_are_exposed()
     {
+        // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
+        // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>
         {
             // resource operations
@@ -824,44 +932,36 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
 
             schemasElement.Should().ContainPath("dataInCreateStudentRequest").Should().BeJson("""
                 {
-                  "required": [
-                    "type"
-                  ],
                   "type": "object",
-                  "properties": {
-                    "type": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/studentResourceType"
-                        }
-                      ]
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/dataInCreateRequest"
                     },
-                    "lid": {
-                      "minLength": 1,
-                      "type": "string"
-                    },
-                    "attributes": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/attributesInCreateStudentRequest"
+                    {
+                      "type": "object",
+                      "properties": {
+                        "lid": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "attributes": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/attributesInCreateStudentRequest"
+                            }
+                          ]
+                        },
+                        "relationships": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/relationshipsInCreateStudentRequest"
+                            }
+                          ]
                         }
-                      ]
-                    },
-                    "relationships": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/relationshipsInCreateStudentRequest"
-                        }
-                      ]
-                    },
-                    "meta": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/meta"
-                        }
-                      ]
+                      },
+                      "additionalProperties": false
                     }
-                  },
+                  ],
                   "additionalProperties": false
                 }
                 """);
@@ -952,49 +1052,41 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
 
             schemasElement.Should().ContainPath("dataInUpdateStudentRequest").Should().BeJson("""
                 {
-                  "required": [
-                    "type"
-                  ],
                   "type": "object",
-                  "properties": {
-                    "type": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/studentResourceType"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/dataInUpdateRequest"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "minLength": 1,
+                          "type": "string",
+                          "format": "int64"
+                        },
+                        "lid": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "attributes": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/attributesInUpdateStudentRequest"
+                            }
+                          ]
+                        },
+                        "relationships": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/relationshipsInUpdateStudentRequest"
+                            }
+                          ]
                         }
-                      ]
-                    },
-                    "id": {
-                      "minLength": 1,
-                      "type": "string",
-                      "format": "int64"
-                    },
-                    "lid": {
-                      "minLength": 1,
-                      "type": "string"
-                    },
-                    "attributes": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/attributesInUpdateStudentRequest"
-                        }
-                      ]
-                    },
-                    "relationships": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/relationshipsInUpdateStudentRequest"
-                        }
-                      ]
-                    },
-                    "meta": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/meta"
-                        }
-                      ]
+                      },
+                      "additionalProperties": false
                     }
-                  },
+                  ],
                   "additionalProperties": false
                 }
                 """);
@@ -1214,35 +1306,27 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
             // shared types
             schemasElement.Should().ContainPath("studentIdentifierInRequest").Should().BeJson("""
                 {
-                  "required": [
-                    "type"
-                  ],
                   "type": "object",
-                  "properties": {
-                    "type": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/studentResourceType"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/identifierInRequest"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "minLength": 1,
+                          "type": "string",
+                          "format": "int64"
+                        },
+                        "lid": {
+                          "minLength": 1,
+                          "type": "string"
                         }
-                      ]
-                    },
-                    "id": {
-                      "minLength": 1,
-                      "type": "string",
-                      "format": "int64"
-                    },
-                    "lid": {
-                      "minLength": 1,
-                      "type": "string"
-                    },
-                    "meta": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/meta"
-                        }
-                      ]
+                      },
+                      "additionalProperties": false
                     }
-                  },
+                  ],
                   "additionalProperties": false
                 }
                 """);
@@ -1342,8 +1426,10 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
     [Fact]
     public async Task Teacher_operation_component_schemas_are_exposed()
     {
+        // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
+        // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>
         {
             // resource operations
@@ -1384,44 +1470,36 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
 
             schemasElement.Should().ContainPath("dataInCreateTeacherRequest").Should().BeJson("""
                 {
-                  "required": [
-                    "type"
-                  ],
                   "type": "object",
-                  "properties": {
-                    "type": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/teacherResourceType"
-                        }
-                      ]
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/dataInCreateRequest"
                     },
-                    "lid": {
-                      "minLength": 1,
-                      "type": "string"
-                    },
-                    "attributes": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/attributesInCreateTeacherRequest"
+                    {
+                      "type": "object",
+                      "properties": {
+                        "lid": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "attributes": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/attributesInCreateTeacherRequest"
+                            }
+                          ]
+                        },
+                        "relationships": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/relationshipsInCreateTeacherRequest"
+                            }
+                          ]
                         }
-                      ]
-                    },
-                    "relationships": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/relationshipsInCreateTeacherRequest"
-                        }
-                      ]
-                    },
-                    "meta": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/meta"
-                        }
-                      ]
+                      },
+                      "additionalProperties": false
                     }
-                  },
+                  ],
                   "additionalProperties": false
                 }
                 """);
@@ -1512,49 +1590,41 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
 
             schemasElement.Should().ContainPath("dataInUpdateTeacherRequest").Should().BeJson("""
                 {
-                  "required": [
-                    "type"
-                  ],
                   "type": "object",
-                  "properties": {
-                    "type": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/teacherResourceType"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/dataInUpdateRequest"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "minLength": 1,
+                          "type": "string",
+                          "format": "int64"
+                        },
+                        "lid": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "attributes": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/attributesInUpdateTeacherRequest"
+                            }
+                          ]
+                        },
+                        "relationships": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/relationshipsInUpdateTeacherRequest"
+                            }
+                          ]
                         }
-                      ]
-                    },
-                    "id": {
-                      "minLength": 1,
-                      "type": "string",
-                      "format": "int64"
-                    },
-                    "lid": {
-                      "minLength": 1,
-                      "type": "string"
-                    },
-                    "attributes": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/attributesInUpdateTeacherRequest"
-                        }
-                      ]
-                    },
-                    "relationships": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/relationshipsInUpdateTeacherRequest"
-                        }
-                      ]
-                    },
-                    "meta": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/meta"
-                        }
-                      ]
+                      },
+                      "additionalProperties": false
                     }
-                  },
+                  ],
                   "additionalProperties": false
                 }
                 """);
@@ -1763,35 +1833,27 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
             // shared types
             schemasElement.Should().ContainPath("teacherIdentifierInRequest").Should().BeJson("""
                 {
-                  "required": [
-                    "type"
-                  ],
                   "type": "object",
-                  "properties": {
-                    "type": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/teacherResourceType"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/identifierInRequest"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "minLength": 1,
+                          "type": "string",
+                          "format": "int64"
+                        },
+                        "lid": {
+                          "minLength": 1,
+                          "type": "string"
                         }
-                      ]
-                    },
-                    "id": {
-                      "minLength": 1,
-                      "type": "string",
-                      "format": "int64"
-                    },
-                    "lid": {
-                      "minLength": 1,
-                      "type": "string"
-                    },
-                    "meta": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/meta"
-                        }
-                      ]
+                      },
+                      "additionalProperties": false
                     }
-                  },
+                  ],
                   "additionalProperties": false
                 }
                 """);
@@ -1846,8 +1908,10 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
     [Fact]
     public async Task Enrollment_operation_component_schemas_are_exposed()
     {
+        // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
+        // Assert
         document.Should().ContainPath("components.schemas").With(schemasElement =>
         {
             // resource operations
@@ -1888,44 +1952,36 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
 
             schemasElement.Should().ContainPath("dataInCreateEnrollmentRequest").Should().BeJson("""
                 {
-                  "required": [
-                    "type"
-                  ],
                   "type": "object",
-                  "properties": {
-                    "type": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/enrollmentResourceType"
-                        }
-                      ]
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/dataInCreateRequest"
                     },
-                    "lid": {
-                      "minLength": 1,
-                      "type": "string"
-                    },
-                    "attributes": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/attributesInCreateEnrollmentRequest"
+                    {
+                      "type": "object",
+                      "properties": {
+                        "lid": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "attributes": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/attributesInCreateEnrollmentRequest"
+                            }
+                          ]
+                        },
+                        "relationships": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/relationshipsInCreateEnrollmentRequest"
+                            }
+                          ]
                         }
-                      ]
-                    },
-                    "relationships": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/relationshipsInCreateEnrollmentRequest"
-                        }
-                      ]
-                    },
-                    "meta": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/meta"
-                        }
-                      ]
+                      },
+                      "additionalProperties": false
                     }
-                  },
+                  ],
                   "additionalProperties": false
                 }
                 """);
@@ -2019,49 +2075,41 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
 
             schemasElement.Should().ContainPath("dataInUpdateEnrollmentRequest").Should().BeJson("""
                 {
-                  "required": [
-                    "type"
-                  ],
                   "type": "object",
-                  "properties": {
-                    "type": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/enrollmentResourceType"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/dataInUpdateRequest"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "minLength": 1,
+                          "type": "string",
+                          "format": "int64"
+                        },
+                        "lid": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "attributes": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/attributesInUpdateEnrollmentRequest"
+                            }
+                          ]
+                        },
+                        "relationships": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/relationshipsInUpdateEnrollmentRequest"
+                            }
+                          ]
                         }
-                      ]
-                    },
-                    "id": {
-                      "minLength": 1,
-                      "type": "string",
-                      "format": "int64"
-                    },
-                    "lid": {
-                      "minLength": 1,
-                      "type": "string"
-                    },
-                    "attributes": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/attributesInUpdateEnrollmentRequest"
-                        }
-                      ]
-                    },
-                    "relationships": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/relationshipsInUpdateEnrollmentRequest"
-                        }
-                      ]
-                    },
-                    "meta": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/meta"
-                        }
-                      ]
+                      },
+                      "additionalProperties": false
                     }
-                  },
+                  ],
                   "additionalProperties": false
                 }
                 """);
@@ -2189,35 +2237,27 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
             // shared types
             schemasElement.Should().ContainPath("enrollmentIdentifierInRequest").Should().BeJson("""
                 {
-                  "required": [
-                    "type"
-                  ],
                   "type": "object",
-                  "properties": {
-                    "type": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/enrollmentResourceType"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/identifierInRequest"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "minLength": 1,
+                          "type": "string",
+                          "format": "int64"
+                        },
+                        "lid": {
+                          "minLength": 1,
+                          "type": "string"
                         }
-                      ]
-                    },
-                    "id": {
-                      "minLength": 1,
-                      "type": "string",
-                      "format": "int64"
-                    },
-                    "lid": {
-                      "minLength": 1,
-                      "type": "string"
-                    },
-                    "meta": {
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/meta"
-                        }
-                      ]
+                      },
+                      "additionalProperties": false
                     }
-                  },
+                  ],
                   "additionalProperties": false
                 }
                 """);
