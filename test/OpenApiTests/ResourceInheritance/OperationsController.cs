@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Logging;
 
-namespace OpenApiTests.ResourceInheritance.OnlyOperations;
+namespace OpenApiTests.ResourceInheritance;
 
 public sealed class OperationsController(
     IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IOperationsProcessor processor, IJsonApiRequest request,
