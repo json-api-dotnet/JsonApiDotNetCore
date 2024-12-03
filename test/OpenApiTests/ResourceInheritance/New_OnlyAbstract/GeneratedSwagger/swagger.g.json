@@ -1,0 +1,5870 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenApiTests",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost"
+    }
+  ],
+  "paths": {
+    "/buildings": {
+      "get": {
+        "tags": [
+          "buildings"
+        ],
+        "summary": "Retrieves a collection of buildings.",
+        "operationId": "getBuildingCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found buildings, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/buildingCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "buildings"
+        ],
+        "summary": "Retrieves a collection of buildings without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headBuildingCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "buildings"
+        ],
+        "summary": "Creates a new building.",
+        "operationId": "postBuilding",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the building to create.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/createBuildingRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The building was successfully created, which resulted in additional changes. The newly created building is returned.",
+            "headers": {
+              "Location": {
+                "description": "The URL at which the newly created building can be retrieved.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/buildingPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The building was successfully created, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/buildings/{id}": {
+      "get": {
+        "tags": [
+          "buildings"
+        ],
+        "summary": "Retrieves an individual building by its identifier.",
+        "operationId": "getBuilding",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the building to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found building.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/buildingPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The building does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "buildings"
+        ],
+        "summary": "Retrieves an individual building by its identifier without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headBuilding",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the building to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The building does not exist."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "buildings"
+        ],
+        "summary": "Updates an existing building.",
+        "operationId": "patchBuilding",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the building to update.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the building to update. Omitted fields are left unchanged.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateBuildingRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The building was successfully updated, which resulted in additional changes. The updated building is returned.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/buildingPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The building was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The building or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "buildings"
+        ],
+        "summary": "Deletes an existing building by its identifier.",
+        "operationId": "deleteBuilding",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the building to delete.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The building was successfully deleted."
+          },
+          "404": {
+            "description": "The building does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/operations": {
+      "post": {
+        "tags": [
+          "operations"
+        ],
+        "summary": "Performs multiple mutations in a linear and atomic manner.",
+        "operationId": "postOperations",
+        "requestBody": {
+          "description": "An array of mutation operations. For syntax, see the [Atomic Operations documentation](https://jsonapi.org/ext/atomic/).",
+          "content": {
+            "application/vnd.api+json; ext=atomic-operations; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/operationsRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "All operations were successfully applied, which resulted in additional changes.",
+            "content": {
+              "application/vnd.api+json; ext=atomic-operations; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/operationsResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "All operations were successfully applied, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=atomic-operations; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "An operation is not accessible or a client-generated ID is used.",
+            "content": {
+              "application/vnd.api+json; ext=atomic-operations; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A resource or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=atomic-operations; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=atomic-operations; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=atomic-operations; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rooms": {
+      "get": {
+        "tags": [
+          "rooms"
+        ],
+        "summary": "Retrieves a collection of rooms.",
+        "operationId": "getRoomCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found rooms, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/roomCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "rooms"
+        ],
+        "summary": "Retrieves a collection of rooms without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headRoomCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "rooms"
+        ],
+        "summary": "Creates a new room.",
+        "operationId": "postRoom",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the room to create.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/createRoomRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The room was successfully created, which resulted in additional changes. The newly created room is returned.",
+            "headers": {
+              "Location": {
+                "description": "The URL at which the newly created room can be retrieved.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/roomPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The room was successfully created, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rooms/{id}": {
+      "get": {
+        "tags": [
+          "rooms"
+        ],
+        "summary": "Retrieves an individual room by its identifier.",
+        "operationId": "getRoom",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the room to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found room.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/roomPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The room does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "rooms"
+        ],
+        "summary": "Retrieves an individual room by its identifier without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headRoom",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the room to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The room does not exist."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "rooms"
+        ],
+        "summary": "Updates an existing room.",
+        "operationId": "patchRoom",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the room to update.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the room to update. Omitted fields are left unchanged.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateRoomRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The room was successfully updated, which resulted in additional changes. The updated room is returned.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/roomPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The room was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The room or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "rooms"
+        ],
+        "summary": "Deletes an existing room by its identifier.",
+        "operationId": "deleteRoom",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the room to delete.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The room was successfully deleted."
+          },
+          "404": {
+            "description": "The room does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rooms/{id}/residence": {
+      "get": {
+        "tags": [
+          "rooms"
+        ],
+        "summary": "Retrieves the related residence of an individual room's residence relationship.",
+        "operationId": "getRoomResidence",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the room whose related residence to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found residence, or `null` if it was not found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/residenceSecondaryResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The room does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "rooms"
+        ],
+        "summary": "Retrieves the related residence of an individual room's residence relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headRoomResidence",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the room whose related residence to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The room does not exist."
+          }
+        }
+      }
+    },
+    "/rooms/{id}/relationships/residence": {
+      "get": {
+        "tags": [
+          "rooms"
+        ],
+        "summary": "Retrieves the related residence identity of an individual room's residence relationship.",
+        "operationId": "getRoomResidenceRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the room whose related residence identity to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found residence identity, or `null` if it was not found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/residenceIdentifierResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The room does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "rooms"
+        ],
+        "summary": "Retrieves the related residence identity of an individual room's residence relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headRoomResidenceRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the room whose related residence identity to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The room does not exist."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "rooms"
+        ],
+        "summary": "Assigns an existing residence to the residence relationship of an individual room.",
+        "operationId": "patchRoomResidenceRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the room whose residence relationship to assign.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identity of the residence to assign to the residence relationship.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneResidenceInRequest"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "The residence relationship was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The room or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "addOperationCode": {
+        "enum": [
+          "add"
+        ],
+        "type": "string"
+      },
+      "addToFamilyHomeRoomsRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/addToResidenceRoomsRelationshipOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "addToMansionRoomsRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/addToResidenceRoomsRelationshipOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "addToMansionStaffRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/addOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/mansionStaffRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/staffMemberIdentifierInRequest"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "addToResidenceRoomsRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/addOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/residenceRoomsRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/roomIdentifierInRequest"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "atomicOperation": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "addBathroom": "#/components/schemas/createBathroomOperation",
+            "addBedroom": "#/components/schemas/createBedroomOperation",
+            "addBuilding": "#/components/schemas/createBuildingOperation",
+            "addFamilyHome": "#/components/schemas/createFamilyHomeOperation",
+            "addKitchen": "#/components/schemas/createKitchenOperation",
+            "addLivingRoom": "#/components/schemas/createLivingRoomOperation",
+            "addMansion": "#/components/schemas/createMansionOperation",
+            "addResidence": "#/components/schemas/createResidenceOperation",
+            "addRoom": "#/components/schemas/createRoomOperation",
+            "addToFamilyHomeRooms": "#/components/schemas/addToFamilyHomeRoomsRelationshipOperation",
+            "addToMansionRooms": "#/components/schemas/addToMansionRoomsRelationshipOperation",
+            "addToMansionStaff": "#/components/schemas/addToMansionStaffRelationshipOperation",
+            "addToResidenceRooms": "#/components/schemas/addToResidenceRoomsRelationshipOperation",
+            "addToilet": "#/components/schemas/createToiletOperation",
+            "removeBathroom": "#/components/schemas/deleteBathroomOperation",
+            "removeBedroom": "#/components/schemas/deleteBedroomOperation",
+            "removeBuilding": "#/components/schemas/deleteBuildingOperation",
+            "removeFamilyHome": "#/components/schemas/deleteFamilyHomeOperation",
+            "removeFromFamilyHomeRooms": "#/components/schemas/removeFromFamilyHomeRoomsRelationshipOperation",
+            "removeFromMansionRooms": "#/components/schemas/removeFromMansionRoomsRelationshipOperation",
+            "removeFromMansionStaff": "#/components/schemas/removeFromMansionStaffRelationshipOperation",
+            "removeFromResidenceRooms": "#/components/schemas/removeFromResidenceRoomsRelationshipOperation",
+            "removeKitchen": "#/components/schemas/deleteKitchenOperation",
+            "removeLivingRoom": "#/components/schemas/deleteLivingRoomOperation",
+            "removeMansion": "#/components/schemas/deleteMansionOperation",
+            "removeResidence": "#/components/schemas/deleteResidenceOperation",
+            "removeRoom": "#/components/schemas/deleteRoomOperation",
+            "removeToilet": "#/components/schemas/deleteToiletOperation",
+            "updateBathroom": "#/components/schemas/updateBathroomOperation",
+            "updateBathroomResidence": "#/components/schemas/updateBathroomResidenceRelationshipOperation",
+            "updateBedroom": "#/components/schemas/updateBedroomOperation",
+            "updateBedroomResidence": "#/components/schemas/updateBedroomResidenceRelationshipOperation",
+            "updateBuilding": "#/components/schemas/updateBuildingOperation",
+            "updateFamilyHome": "#/components/schemas/updateFamilyHomeOperation",
+            "updateFamilyHomeRooms": "#/components/schemas/updateFamilyHomeRoomsRelationshipOperation",
+            "updateKitchen": "#/components/schemas/updateKitchenOperation",
+            "updateKitchenResidence": "#/components/schemas/updateKitchenResidenceRelationshipOperation",
+            "updateLivingRoom": "#/components/schemas/updateLivingRoomOperation",
+            "updateLivingRoomResidence": "#/components/schemas/updateLivingRoomResidenceRelationshipOperation",
+            "updateMansion": "#/components/schemas/updateMansionOperation",
+            "updateMansionRooms": "#/components/schemas/updateMansionRoomsRelationshipOperation",
+            "updateMansionStaff": "#/components/schemas/updateMansionStaffRelationshipOperation",
+            "updateResidence": "#/components/schemas/updateResidenceOperation",
+            "updateResidenceRooms": "#/components/schemas/updateResidenceRoomsRelationshipOperation",
+            "updateRoom": "#/components/schemas/updateRoomOperation",
+            "updateRoomResidence": "#/components/schemas/updateRoomResidenceRelationshipOperation",
+            "updateToilet": "#/components/schemas/updateToiletOperation",
+            "updateToiletResidence": "#/components/schemas/updateToiletResidenceRelationshipOperation"
+          }
+        },
+        "x-abstract": true
+      },
+      "atomicResult": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInResponse"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "attributesInCreateBathroomRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRoomRequest"
+          },
+          {
+            "required": [
+              "hasBath"
+            ],
+            "type": "object",
+            "properties": {
+              "hasBath": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInCreateBedroomRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRoomRequest"
+          },
+          {
+            "required": [
+              "bedCount"
+            ],
+            "type": "object",
+            "properties": {
+              "bedCount": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInCreateBuildingRequest": {
+        "required": [
+          "openapi:discriminator",
+          "surfaceInSquareMeters"
+        ],
+        "type": "object",
+        "properties": {
+          "surfaceInSquareMeters": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "openapi:discriminator": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "familyHomes": "#/components/schemas/attributesInCreateFamilyHomeRequest",
+            "mansions": "#/components/schemas/attributesInCreateMansionRequest",
+            "residences": "#/components/schemas/attributesInCreateResidenceRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInCreateFamilyHomeRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateResidenceRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "floorCount": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInCreateKitchenRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRoomRequest"
+          },
+          {
+            "required": [
+              "hasPantry"
+            ],
+            "type": "object",
+            "properties": {
+              "hasPantry": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInCreateLivingRoomRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRoomRequest"
+          },
+          {
+            "required": [
+              "hasDiningTable"
+            ],
+            "type": "object",
+            "properties": {
+              "hasDiningTable": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInCreateMansionRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateResidenceRequest"
+          },
+          {
+            "required": [
+              "ownerName"
+            ],
+            "type": "object",
+            "properties": {
+              "ownerName": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInCreateResidenceRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateBuildingRequest"
+          },
+          {
+            "required": [
+              "numberOfResidents"
+            ],
+            "type": "object",
+            "properties": {
+              "numberOfResidents": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInCreateRoomRequest": {
+        "required": [
+          "openapi:discriminator",
+          "surfaceInSquareMeters"
+        ],
+        "type": "object",
+        "properties": {
+          "surfaceInSquareMeters": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "openapi:discriminator": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "bathrooms": "#/components/schemas/attributesInCreateBathroomRequest",
+            "bedrooms": "#/components/schemas/attributesInCreateBedroomRequest",
+            "kitchens": "#/components/schemas/attributesInCreateKitchenRequest",
+            "livingRooms": "#/components/schemas/attributesInCreateLivingRoomRequest",
+            "toilets": "#/components/schemas/attributesInCreateToiletRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInCreateToiletRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRoomRequest"
+          },
+          {
+            "required": [
+              "hasSink"
+            ],
+            "type": "object",
+            "properties": {
+              "hasSink": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInUpdateBathroomRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateRoomRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "hasBath": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInUpdateBedroomRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateRoomRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "bedCount": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInUpdateBuildingRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "surfaceInSquareMeters": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "openapi:discriminator": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "familyHomes": "#/components/schemas/attributesInUpdateFamilyHomeRequest",
+            "mansions": "#/components/schemas/attributesInUpdateMansionRequest",
+            "residences": "#/components/schemas/attributesInUpdateResidenceRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInUpdateFamilyHomeRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateResidenceRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "floorCount": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInUpdateKitchenRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateRoomRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "hasPantry": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInUpdateLivingRoomRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateRoomRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "hasDiningTable": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInUpdateMansionRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateResidenceRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "ownerName": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInUpdateResidenceRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateBuildingRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "numberOfResidents": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInUpdateRoomRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "surfaceInSquareMeters": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "openapi:discriminator": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "bathrooms": "#/components/schemas/attributesInUpdateBathroomRequest",
+            "bedrooms": "#/components/schemas/attributesInUpdateBedroomRequest",
+            "kitchens": "#/components/schemas/attributesInUpdateKitchenRequest",
+            "livingRooms": "#/components/schemas/attributesInUpdateLivingRoomRequest",
+            "toilets": "#/components/schemas/attributesInUpdateToiletRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInUpdateToiletRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateRoomRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "hasSink": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "bathroomAttributesInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomAttributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "hasBath": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "bathroomDataInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomDataInResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "bathroomIdentifierInRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomIdentifierInRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "bathroomIdentifierInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomIdentifierInResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "bathroomRelationshipsInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomRelationshipsInResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "bedroomAttributesInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomAttributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "bedCount": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "bedroomDataInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomDataInResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "bedroomIdentifierInRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomIdentifierInRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "bedroomIdentifierInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomIdentifierInResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "bedroomRelationshipsInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomRelationshipsInResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "buildingAttributesInResponse": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "surfaceInSquareMeters": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "openapi:discriminator": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "familyHomes": "#/components/schemas/familyHomeAttributesInResponse",
+            "mansions": "#/components/schemas/mansionAttributesInResponse",
+            "residences": "#/components/schemas/residenceAttributesInResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "buildingCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/buildingDataInResponse"
+            }
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "buildingDataInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/buildingAttributesInResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/buildingRelationshipsInResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "discriminator": {
+              "propertyName": "type",
+              "mapping": {
+                "familyHomes": "#/components/schemas/familyHomeDataInResponse",
+                "mansions": "#/components/schemas/mansionDataInResponse",
+                "residences": "#/components/schemas/residenceDataInResponse"
+              }
+            },
+            "x-abstract": true
+          }
+        ],
+        "additionalProperties": false
+      },
+      "buildingIdentifierInRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/buildingResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int64"
+          },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "familyHomes": "#/components/schemas/familyHomeIdentifierInRequest",
+            "mansions": "#/components/schemas/mansionIdentifierInRequest",
+            "residences": "#/components/schemas/residenceIdentifierInRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "buildingIdentifierInResponse": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/buildingResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "familyHomes": "#/components/schemas/familyHomeIdentifierInResponse",
+            "mansions": "#/components/schemas/mansionIdentifierInResponse",
+            "residences": "#/components/schemas/residenceIdentifierInResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "buildingPrimaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/buildingDataInResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "buildingRelationshipsInResponse": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "familyHomes": "#/components/schemas/familyHomeRelationshipsInResponse",
+            "mansions": "#/components/schemas/mansionRelationshipsInResponse",
+            "residences": "#/components/schemas/residenceRelationshipsInResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "buildingResourceType": {
+        "enum": [
+          "familyHomes",
+          "mansions",
+          "residences"
+        ],
+        "type": "string"
+      },
+      "createBathroomOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/createRoomOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "createBedroomOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/createRoomOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "createBuildingOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/addOperationCode"
+                  }
+                ]
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/dataInCreateBuildingRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "createBuildingRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreateBuildingRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "createFamilyHomeOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/createResidenceOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "createKitchenOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/createRoomOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "createLivingRoomOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/createRoomOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "createMansionOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/createResidenceOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "createResidenceOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/createBuildingOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "createRoomOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/addOperationCode"
+                  }
+                ]
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/dataInCreateRoomRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "createRoomRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreateRoomRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "createToiletOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/createRoomOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInCreateBathroomRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInCreateRoomRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInCreateBedroomRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInCreateRoomRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInCreateBuildingRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/buildingResourceType"
+              }
+            ]
+          },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInCreateBuildingRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipsInCreateBuildingRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "familyHomes": "#/components/schemas/dataInCreateFamilyHomeRequest",
+            "mansions": "#/components/schemas/dataInCreateMansionRequest",
+            "residences": "#/components/schemas/dataInCreateResidenceRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "dataInCreateFamilyHomeRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInCreateResidenceRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInCreateKitchenRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInCreateRoomRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInCreateLivingRoomRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInCreateRoomRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInCreateMansionRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInCreateResidenceRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInCreateResidenceRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInCreateBuildingRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInCreateRoomRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/roomResourceType"
+              }
+            ]
+          },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInCreateRoomRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipsInCreateRoomRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "bathrooms": "#/components/schemas/dataInCreateBathroomRequest",
+            "bedrooms": "#/components/schemas/dataInCreateBedroomRequest",
+            "kitchens": "#/components/schemas/dataInCreateKitchenRequest",
+            "livingRooms": "#/components/schemas/dataInCreateLivingRoomRequest",
+            "toilets": "#/components/schemas/dataInCreateToiletRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "dataInCreateToiletRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInCreateRoomRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInResponse": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "bathrooms": "#/components/schemas/bathroomDataInResponse",
+            "bedrooms": "#/components/schemas/bedroomDataInResponse",
+            "buildings": "#/components/schemas/buildingDataInResponse",
+            "districts": "#/components/schemas/districtDataInResponse",
+            "familyHomes": "#/components/schemas/familyHomeDataInResponse",
+            "kitchens": "#/components/schemas/kitchenDataInResponse",
+            "livingRooms": "#/components/schemas/livingRoomDataInResponse",
+            "mansions": "#/components/schemas/mansionDataInResponse",
+            "residences": "#/components/schemas/residenceDataInResponse",
+            "rooms": "#/components/schemas/roomDataInResponse",
+            "staffMembers": "#/components/schemas/staffMemberDataInResponse",
+            "toilets": "#/components/schemas/toiletDataInResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "dataInUpdateBathroomRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInUpdateRoomRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInUpdateBedroomRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInUpdateRoomRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInUpdateBuildingRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/buildingResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int64"
+          },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInUpdateBuildingRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipsInUpdateBuildingRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "familyHomes": "#/components/schemas/dataInUpdateFamilyHomeRequest",
+            "mansions": "#/components/schemas/dataInUpdateMansionRequest",
+            "residences": "#/components/schemas/dataInUpdateResidenceRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "dataInUpdateFamilyHomeRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInUpdateResidenceRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInUpdateKitchenRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInUpdateRoomRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInUpdateLivingRoomRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInUpdateRoomRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInUpdateMansionRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInUpdateResidenceRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInUpdateResidenceRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInUpdateBuildingRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInUpdateRoomRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/roomResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int64"
+          },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/attributesInUpdateRoomRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipsInUpdateRoomRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "bathrooms": "#/components/schemas/dataInUpdateBathroomRequest",
+            "bedrooms": "#/components/schemas/dataInUpdateBedroomRequest",
+            "kitchens": "#/components/schemas/dataInUpdateKitchenRequest",
+            "livingRooms": "#/components/schemas/dataInUpdateLivingRoomRequest",
+            "toilets": "#/components/schemas/dataInUpdateToiletRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "dataInUpdateToiletRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInUpdateRoomRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "deleteBathroomOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/deleteRoomOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "deleteBedroomOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/deleteRoomOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "deleteBuildingOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/removeOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/buildingIdentifierInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "deleteFamilyHomeOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/deleteResidenceOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "deleteKitchenOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/deleteRoomOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "deleteLivingRoomOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/deleteRoomOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "deleteMansionOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/deleteResidenceOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "deleteResidenceOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/deleteBuildingOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "deleteRoomOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/removeOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/roomIdentifierInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "deleteToiletOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/deleteRoomOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "districtAttributesInResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "districtDataInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "uuid"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/districtAttributesInResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/districtRelationshipsInResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "districtRelationshipsInResponse": {
+        "type": "object",
+        "properties": {
+          "buildings": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyBuildingInResponse"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorLinks": {
+        "type": "object",
+        "properties": {
+          "about": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/errorLinks"
+              }
+            ],
+            "nullable": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "source": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/errorSource"
+              }
+            ],
+            "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorResponseDocument": {
+        "required": [
+          "errors",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/errorTopLevelLinks"
+              }
+            ]
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/errorObject"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorSource": {
+        "type": "object",
+        "properties": {
+          "pointer": {
+            "type": "string",
+            "nullable": true
+          },
+          "parameter": {
+            "type": "string",
+            "nullable": true
+          },
+          "header": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "familyHomeAttributesInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/residenceAttributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "floorCount": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "familyHomeDataInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/residenceDataInResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "familyHomeIdentifierInRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/residenceIdentifierInRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "familyHomeIdentifierInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/residenceIdentifierInResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "familyHomeRelationshipsInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/residenceRelationshipsInResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "kitchenAttributesInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomAttributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "hasPantry": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "kitchenDataInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomDataInResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "kitchenIdentifierInRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomIdentifierInRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "kitchenIdentifierInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomIdentifierInResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "kitchenRelationshipsInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomRelationshipsInResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "livingRoomAttributesInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomAttributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "hasDiningTable": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "livingRoomDataInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomDataInResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "livingRoomIdentifierInRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomIdentifierInRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "livingRoomIdentifierInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomIdentifierInResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "livingRoomRelationshipsInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomRelationshipsInResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "mansionAttributesInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/residenceAttributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "ownerName": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "mansionDataInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/residenceDataInResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "mansionIdentifierInRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/residenceIdentifierInRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "mansionIdentifierInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/residenceIdentifierInResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "mansionRelationshipsInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/residenceRelationshipsInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "staff": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyStaffMemberInResponse"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "mansionResourceType": {
+        "enum": [
+          "mansions"
+        ],
+        "type": "string"
+      },
+      "mansionStaffRelationshipIdentifier": {
+        "required": [
+          "relationship",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/mansionResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int64"
+          },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "relationship": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/mansionStaffRelationshipName"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "mansionStaffRelationshipName": {
+        "enum": [
+          "staff"
+        ],
+        "type": "string"
+      },
+      "meta": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        }
+      },
+      "operationsRequestDocument": {
+        "required": [
+          "atomic:operations"
+        ],
+        "type": "object",
+        "properties": {
+          "atomic:operations": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/atomicOperation"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "operationsResponseDocument": {
+        "required": [
+          "atomic:results",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "atomic:results": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/atomicResult"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "relationshipLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "related": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "relationshipsInCreateBathroomRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInCreateRoomRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInCreateBedroomRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInCreateRoomRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInCreateBuildingRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "familyHomes": "#/components/schemas/relationshipsInCreateFamilyHomeRequest",
+            "mansions": "#/components/schemas/relationshipsInCreateMansionRequest",
+            "residences": "#/components/schemas/relationshipsInCreateResidenceRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInCreateFamilyHomeRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInCreateResidenceRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInCreateKitchenRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInCreateRoomRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInCreateLivingRoomRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInCreateRoomRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInCreateMansionRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInCreateResidenceRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "staff": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyStaffMemberInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInCreateResidenceRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInCreateBuildingRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "rooms": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyRoomInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInCreateRoomRequest": {
+        "required": [
+          "openapi:discriminator",
+          "residence"
+        ],
+        "type": "object",
+        "properties": {
+          "residence": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneResidenceInRequest"
+              }
+            ]
+          },
+          "openapi:discriminator": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "bathrooms": "#/components/schemas/relationshipsInCreateBathroomRequest",
+            "bedrooms": "#/components/schemas/relationshipsInCreateBedroomRequest",
+            "kitchens": "#/components/schemas/relationshipsInCreateKitchenRequest",
+            "livingRooms": "#/components/schemas/relationshipsInCreateLivingRoomRequest",
+            "toilets": "#/components/schemas/relationshipsInCreateToiletRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInCreateToiletRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInCreateRoomRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInUpdateBathroomRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInUpdateRoomRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInUpdateBedroomRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInUpdateRoomRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInUpdateBuildingRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "familyHomes": "#/components/schemas/relationshipsInUpdateFamilyHomeRequest",
+            "mansions": "#/components/schemas/relationshipsInUpdateMansionRequest",
+            "residences": "#/components/schemas/relationshipsInUpdateResidenceRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInUpdateFamilyHomeRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInUpdateResidenceRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInUpdateKitchenRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInUpdateRoomRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInUpdateLivingRoomRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInUpdateRoomRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInUpdateMansionRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInUpdateResidenceRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "staff": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyStaffMemberInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInUpdateResidenceRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInUpdateBuildingRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "rooms": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyRoomInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInUpdateRoomRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "residence": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneResidenceInRequest"
+              }
+            ]
+          },
+          "openapi:discriminator": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "bathrooms": "#/components/schemas/relationshipsInUpdateBathroomRequest",
+            "bedrooms": "#/components/schemas/relationshipsInUpdateBedroomRequest",
+            "kitchens": "#/components/schemas/relationshipsInUpdateKitchenRequest",
+            "livingRooms": "#/components/schemas/relationshipsInUpdateLivingRoomRequest",
+            "toilets": "#/components/schemas/relationshipsInUpdateToiletRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInUpdateToiletRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInUpdateRoomRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "removeFromFamilyHomeRoomsRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/removeFromResidenceRoomsRelationshipOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "removeFromMansionRoomsRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/removeFromResidenceRoomsRelationshipOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "removeFromMansionStaffRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/removeOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/mansionStaffRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/staffMemberIdentifierInRequest"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "removeFromResidenceRoomsRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/removeOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/residenceRoomsRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/roomIdentifierInRequest"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "removeOperationCode": {
+        "enum": [
+          "remove"
+        ],
+        "type": "string"
+      },
+      "residenceAttributesInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/buildingAttributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "numberOfResidents": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "residenceDataInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/buildingDataInResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "discriminator": {
+              "propertyName": "type",
+              "mapping": {
+                "familyHomes": "#/components/schemas/familyHomeDataInResponse",
+                "mansions": "#/components/schemas/mansionDataInResponse"
+              }
+            }
+          }
+        ],
+        "additionalProperties": false
+      },
+      "residenceIdentifierInRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/buildingIdentifierInRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "residenceIdentifierInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/buildingIdentifierInResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "discriminator": {
+              "propertyName": "type",
+              "mapping": {
+                "familyHomes": "#/components/schemas/familyHomeIdentifierInResponse",
+                "mansions": "#/components/schemas/mansionIdentifierInResponse"
+              }
+            }
+          }
+        ],
+        "additionalProperties": false
+      },
+      "residenceIdentifierResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceIdentifierTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/residenceIdentifierInResponse"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "residenceRelationshipsInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/buildingRelationshipsInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "rooms": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyRoomInResponse"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "residenceResourceType": {
+        "enum": [
+          "familyHomes",
+          "mansions",
+          "residences"
+        ],
+        "type": "string"
+      },
+      "residenceRoomsRelationshipIdentifier": {
+        "required": [
+          "relationship",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/residenceResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int64"
+          },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "relationship": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/residenceRoomsRelationshipName"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "residenceRoomsRelationshipName": {
+        "enum": [
+          "rooms"
+        ],
+        "type": "string"
+      },
+      "residenceSecondaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/residenceDataInResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceCollectionTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "first": {
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          },
+          "prev": {
+            "type": "string"
+          },
+          "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceIdentifierTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "related": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceType": {
+        "enum": [
+          "bathrooms",
+          "bedrooms",
+          "buildings",
+          "districts",
+          "familyHomes",
+          "kitchens",
+          "livingRooms",
+          "mansions",
+          "residences",
+          "rooms",
+          "staffMembers",
+          "toilets"
+        ],
+        "type": "string"
+      },
+      "roomAttributesInResponse": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "surfaceInSquareMeters": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "openapi:discriminator": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "bathrooms": "#/components/schemas/bathroomAttributesInResponse",
+            "bedrooms": "#/components/schemas/bedroomAttributesInResponse",
+            "kitchens": "#/components/schemas/kitchenAttributesInResponse",
+            "livingRooms": "#/components/schemas/livingRoomAttributesInResponse",
+            "toilets": "#/components/schemas/toiletAttributesInResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "roomCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/roomDataInResponse"
+            }
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "roomDataInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/roomAttributesInResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/roomRelationshipsInResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "discriminator": {
+              "propertyName": "type",
+              "mapping": {
+                "bathrooms": "#/components/schemas/bathroomDataInResponse",
+                "bedrooms": "#/components/schemas/bedroomDataInResponse",
+                "kitchens": "#/components/schemas/kitchenDataInResponse",
+                "livingRooms": "#/components/schemas/livingRoomDataInResponse",
+                "toilets": "#/components/schemas/toiletDataInResponse"
+              }
+            },
+            "x-abstract": true
+          }
+        ],
+        "additionalProperties": false
+      },
+      "roomIdentifierInRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/roomResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int64"
+          },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "bathrooms": "#/components/schemas/bathroomIdentifierInRequest",
+            "bedrooms": "#/components/schemas/bedroomIdentifierInRequest",
+            "kitchens": "#/components/schemas/kitchenIdentifierInRequest",
+            "livingRooms": "#/components/schemas/livingRoomIdentifierInRequest",
+            "toilets": "#/components/schemas/toiletIdentifierInRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "roomIdentifierInResponse": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/roomResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "bathrooms": "#/components/schemas/bathroomIdentifierInResponse",
+            "bedrooms": "#/components/schemas/bedroomIdentifierInResponse",
+            "kitchens": "#/components/schemas/kitchenIdentifierInResponse",
+            "livingRooms": "#/components/schemas/livingRoomIdentifierInResponse",
+            "toilets": "#/components/schemas/toiletIdentifierInResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "roomPrimaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/roomDataInResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "roomRelationshipsInResponse": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "residence": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneResidenceInResponse"
+              }
+            ]
+          },
+          "openapi:discriminator": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "bathrooms": "#/components/schemas/bathroomRelationshipsInResponse",
+            "bedrooms": "#/components/schemas/bedroomRelationshipsInResponse",
+            "kitchens": "#/components/schemas/kitchenRelationshipsInResponse",
+            "livingRooms": "#/components/schemas/livingRoomRelationshipsInResponse",
+            "toilets": "#/components/schemas/toiletRelationshipsInResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "roomResidenceRelationshipIdentifier": {
+        "required": [
+          "relationship",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/roomResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int64"
+          },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "relationship": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/roomResidenceRelationshipName"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "roomResidenceRelationshipName": {
+        "enum": [
+          "residence"
+        ],
+        "type": "string"
+      },
+      "roomResourceType": {
+        "enum": [
+          "bathrooms",
+          "bedrooms",
+          "kitchens",
+          "livingRooms",
+          "toilets"
+        ],
+        "type": "string"
+      },
+      "staffMemberAttributesInResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "staffMemberDataInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/staffMemberAttributesInResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "staffMemberIdentifierInRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/staffMemberResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int64"
+          },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "staffMemberIdentifierInResponse": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/staffMemberResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "staffMemberResourceType": {
+        "enum": [
+          "staffMembers"
+        ],
+        "type": "string"
+      },
+      "toManyBuildingInResponse": {
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/buildingIdentifierInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "toManyRoomInRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/roomIdentifierInRequest"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "toManyRoomInResponse": {
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/roomIdentifierInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "toManyStaffMemberInRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/staffMemberIdentifierInRequest"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "toManyStaffMemberInResponse": {
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/staffMemberIdentifierInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "toOneResidenceInRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/residenceIdentifierInRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "toOneResidenceInResponse": {
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/residenceIdentifierInResponse"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "toiletAttributesInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomAttributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "hasSink": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "toiletDataInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomDataInResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "toiletIdentifierInRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomIdentifierInRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "toiletIdentifierInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomIdentifierInResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "toiletRelationshipsInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/roomRelationshipsInResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateBathroomOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/updateRoomOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateBathroomResidenceRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/updateRoomResidenceRelationshipOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateBedroomOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/updateRoomOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateBedroomResidenceRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/updateRoomResidenceRelationshipOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateBuildingOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/buildingIdentifierInRequest"
+                  }
+                ]
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/dataInUpdateBuildingRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateBuildingRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInUpdateBuildingRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "updateFamilyHomeOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/updateResidenceOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateFamilyHomeRoomsRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/updateResidenceRoomsRelationshipOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateKitchenOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/updateRoomOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateKitchenResidenceRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/updateRoomResidenceRelationshipOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateLivingRoomOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/updateRoomOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateLivingRoomResidenceRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/updateRoomResidenceRelationshipOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateMansionOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/updateResidenceOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateMansionRoomsRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/updateResidenceRoomsRelationshipOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateMansionStaffRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/mansionStaffRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/staffMemberIdentifierInRequest"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateOperationCode": {
+        "enum": [
+          "update"
+        ],
+        "type": "string"
+      },
+      "updateResidenceOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/updateBuildingOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateResidenceRoomsRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/residenceRoomsRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/roomIdentifierInRequest"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateRoomOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/roomIdentifierInRequest"
+                  }
+                ]
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/dataInUpdateRoomRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateRoomRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInUpdateRoomRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "updateRoomResidenceRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/roomResidenceRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/residenceIdentifierInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateToiletOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/updateRoomOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateToiletResidenceRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/updateRoomResidenceRelationshipOperation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+}
