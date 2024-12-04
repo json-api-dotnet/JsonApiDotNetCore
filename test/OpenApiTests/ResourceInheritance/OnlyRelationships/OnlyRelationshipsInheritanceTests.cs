@@ -1,52 +1,25 @@
-using System.Collections.ObjectModel;
-using System.Text.Json;
 using JsonApiDotNetCore.AtomicOperations;
-using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.Extensions.DependencyInjection;
 using OpenApiTests.ResourceInheritance.Models;
-using TestBuildingBlocks;
 using Xunit;
 
 namespace OpenApiTests.ResourceInheritance.OnlyRelationships;
 
-public sealed class OnlyRelationshipsInheritanceTests
-    : IClassFixture<OpenApiTestContext<OpenApiStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext>>
+public sealed class OnlyRelationshipsInheritanceTests : ResourceInheritanceTests
 {
     private const JsonApiEndpoints OnlyRelationshipEndpoints = JsonApiEndpoints.GetRelationship | JsonApiEndpoints.PostRelationship |
         JsonApiEndpoints.PatchRelationship | JsonApiEndpoints.DeleteRelationship;
 
-    private readonly OpenApiTestContext<OpenApiStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext> _testContext;
-
     public OnlyRelationshipsInheritanceTests(OpenApiTestContext<OpenApiStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext> testContext)
+        : base(testContext)
     {
-        _testContext = testContext;
-
-        testContext.UseController<DistrictsController>();
-        testContext.UseController<StaffMembersController>();
-
-        testContext.UseController<BuildingsController>();
-        testContext.UseController<ResidencesController>();
-        testContext.UseController<FamilyHomesController>();
-        testContext.UseController<MansionsController>();
-
-        testContext.UseController<RoomsController>();
-        testContext.UseController<KitchensController>();
-        testContext.UseController<BedroomsController>();
-        testContext.UseController<BathroomsController>();
-        testContext.UseController<LivingRoomsController>();
-        testContext.UseController<ToiletsController>();
-
-        testContext.UseController<OperationsController>();
-
         testContext.ConfigureServices(services =>
         {
             services.AddSingleton<IJsonApiEndpointFilter, OnlyRelationshipsEndpointFilter>();
             services.AddSingleton<IAtomicOperationFilter, OnlyRelationshipsOperationFilter>();
         });
-
-        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
     [Theory]
@@ -62,41 +35,16 @@ public sealed class OnlyRelationshipsInheritanceTests
     [InlineData(typeof(Bathroom), OnlyRelationshipEndpoints)]
     [InlineData(typeof(LivingRoom), OnlyRelationshipEndpoints)]
     [InlineData(typeof(Toilet), OnlyRelationshipEndpoints)]
-    public async Task Only_expected_endpoints_are_exposed(Type resourceClrType, JsonApiEndpoints expected)
+    public override async Task Only_expected_endpoints_are_exposed(Type resourceClrType, JsonApiEndpoints expected)
     {
-        // Arrange
-        var resourceGraph = _testContext.Factory.Services.GetRequiredService<IResourceGraph>();
-        ResourceType resourceType = resourceGraph.GetResourceType(resourceClrType);
-        IReadOnlyDictionary<JsonApiEndpoints, ReadOnlyCollection<string>> endpointToPathMap = JsonPathBuilder.GetEndpointPaths(resourceType);
-
-        // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
-
-        // Assert
-        string[] pathsExpected = JsonPathBuilder.KnownEndpoints.Where(endpoint => expected.HasFlag(endpoint))
-            .SelectMany(endpoint => endpointToPathMap[endpoint]).ToArray();
-
-        string[] pathsNotExpected = endpointToPathMap.Values.SelectMany(paths => paths).Except(pathsExpected).ToArray();
-
-        foreach (string path in pathsExpected)
-        {
-            document.Should().ContainPath(path);
-        }
-
-        foreach (string path in pathsNotExpected)
-        {
-            document.Should().NotContainPath(path);
-        }
+        await base.Only_expected_endpoints_are_exposed(resourceClrType, expected);
     }
 
-    [Fact]
-    public async Task Operations_endpoint_is_exposed()
+    [Theory]
+    [InlineData(true)]
+    public override async Task Operations_endpoint_is_exposed(bool enabled)
     {
-        // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
-
-        // Assert
-        document.Should().ContainPath("paths./operations.post");
+        await base.Operations_endpoint_is_exposed(enabled);
     }
 
     [Theory]
@@ -113,46 +61,9 @@ public sealed class OnlyRelationshipsInheritanceTests
     [InlineData("roomIdentifierInRequest", false, "bathrooms|bedrooms|kitchens|livingRooms|toilets")]
     [InlineData("roomIdentifierInResponse", false, "bathrooms|bedrooms|kitchens|livingRooms|toilets")]
     [InlineData("dataInResponse", false, "")]
-    public async Task Expected_names_appear_in_type_discriminator_mapping(string schemaName, bool isWrapped, string? discriminatorValues)
+    public override async Task Expected_names_appear_in_type_discriminator_mapping(string schemaName, bool isWrapped, string? discriminatorValues)
     {
-        // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
-
-        // Assert
-        if (discriminatorValues == null)
-        {
-            document.Should().NotContainPath($"components.schemas.{schemaName}");
-        }
-        else
-        {
-            string schemaPath = isWrapped ? $"components.schemas.{schemaName}.allOf[1]" : $"components.schemas.{schemaName}";
-
-            document.Should().ContainPath(schemaPath).With(schemaElement =>
-            {
-                schemaElement.Should().ContainPath("discriminator").With(discriminatorElement =>
-                {
-                    discriminatorElement.Should().HaveProperty("propertyName", "type");
-
-                    if (discriminatorValues.Length > 0)
-                    {
-                        discriminatorElement.Should().ContainPath("mapping").With(mappingElement =>
-                        {
-                            string[] valueArray = discriminatorValues.Split('|');
-                            mappingElement.EnumerateObject().ShouldHaveCount(valueArray.Length);
-
-                            foreach (string value in valueArray)
-                            {
-                                mappingElement.Should().ContainProperty(value);
-                            }
-                        });
-                    }
-                    else
-                    {
-                        discriminatorElement.Should().NotContainPath("mapping");
-                    }
-                });
-            });
-        }
+        await base.Expected_names_appear_in_type_discriminator_mapping(schemaName, isWrapped, discriminatorValues);
     }
 
     [Theory]
@@ -182,37 +93,9 @@ public sealed class OnlyRelationshipsInheritanceTests
         "addToDistrictBuildings|updateDistrictBuildings|removeFromDistrictBuildings"
         // @formatter:keep_existing_linebreaks restore
     )]
-    public async Task Expected_names_appear_in_openapi_discriminator_mapping(string schemaName, string? discriminatorValues)
+    public override async Task Expected_names_appear_in_openapi_discriminator_mapping(string schemaName, string? discriminatorValues)
     {
-        // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
-
-        // Assert
-        if (discriminatorValues == null)
-        {
-            document.Should().NotContainPath($"components.schemas.{schemaName}");
-        }
-        else
-        {
-            document.Should().ContainPath($"components.schemas.{schemaName}").With(schemaElement =>
-            {
-                schemaElement.Should().ContainPath("discriminator").With(discriminatorElement =>
-                {
-                    discriminatorElement.Should().HaveProperty("propertyName", "openapi:discriminator");
-
-                    discriminatorElement.Should().ContainPath("mapping").With(mappingElement =>
-                    {
-                        string[] valueArray = discriminatorValues.Split('|');
-                        mappingElement.EnumerateObject().ShouldHaveCount(valueArray.Length);
-
-                        foreach (string value in valueArray)
-                        {
-                            mappingElement.Should().ContainProperty(value);
-                        }
-                    });
-                });
-            });
-        }
+        await base.Expected_names_appear_in_openapi_discriminator_mapping(schemaName, discriminatorValues);
     }
 
     [Theory]
@@ -229,40 +112,9 @@ public sealed class OnlyRelationshipsInheritanceTests
     [InlineData("districtResourceType", "districts")]
     [InlineData("staffMemberResourceType", "staffMembers")]
     [InlineData("resourceType", "")] // Incorrect because omitted enum allows any string, but it's an extreme corner case.
-    // TODO: Extract these test methods into abstract base class.
-    public async Task Expected_names_appear_in_resource_type_enum(string schemaName, string? enumValues)
+    public override async Task Expected_names_appear_in_resource_type_enum(string schemaName, string? enumValues)
     {
-        // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
-
-        // Assert
-        if (enumValues == null)
-        {
-            document.Should().NotContainPath($"components.schemas.{schemaName}");
-        }
-        else
-        {
-            document.Should().ContainPath($"components.schemas.{schemaName}").With(schemaElement =>
-            {
-                if (enumValues.Length > 0)
-                {
-                    schemaElement.Should().ContainPath("enum").With(enumElement =>
-                    {
-                        string[] valueArray = enumValues.Split('|');
-                        enumElement.EnumerateArray().ShouldHaveCount(valueArray.Length);
-
-                        foreach (string value in valueArray)
-                        {
-                            enumElement.Should().ContainArrayElement(value);
-                        }
-                    });
-                }
-                else
-                {
-                    schemaElement.Should().NotContainPath("enum");
-                }
-            });
-        }
+        await base.Expected_names_appear_in_resource_type_enum(schemaName, enumValues);
     }
 
     [Theory]
@@ -418,50 +270,8 @@ public sealed class OnlyRelationshipsInheritanceTests
     [InlineData("updateKitchenResidenceRelationshipOperation", "updateRoomResidenceRelationshipOperation", null)]
     [InlineData("updateLivingRoomResidenceRelationshipOperation", "updateRoomResidenceRelationshipOperation", null)]
     [InlineData("updateToiletResidenceRelationshipOperation", "updateRoomResidenceRelationshipOperation", null)]
-    public async Task Component_schemas_have_expected_base_type(string schemaName, string? baseType, string? properties)
+    public override async Task Component_schemas_have_expected_base_type(string schemaName, string? baseType, string? properties)
     {
-        // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
-
-        // Assert
-        if (baseType == null && properties == null)
-        {
-            document.Should().NotContainPath($"components.schemas.{schemaName}");
-        }
-        else
-        {
-            document.Should().ContainPath($"components.schemas.{schemaName}").With(schemaElement =>
-            {
-                if (baseType != null)
-                {
-                    schemaElement.Should().HaveProperty("allOf[0].$ref", $"#/components/schemas/{baseType}");
-                }
-                else
-                {
-                    schemaElement.Should().NotContainPath("allOf[0]");
-                }
-
-                string propertiesPath = baseType != null ? "allOf[1].properties" : "properties";
-
-                if (properties != null)
-                {
-                    string[] propertyArray = properties.Split('|');
-
-                    schemaElement.Should().ContainPath(propertiesPath).With(propertiesElement =>
-                    {
-                        propertiesElement.EnumerateObject().ShouldHaveCount(propertyArray.Length);
-
-                        foreach (string value in propertyArray)
-                        {
-                            propertiesElement.Should().ContainProperty(value);
-                        }
-                    });
-                }
-                else
-                {
-                    schemaElement.Should().NotContainPath(propertiesPath);
-                }
-            });
-        }
+        await base.Component_schemas_have_expected_base_type(schemaName, baseType, properties);
     }
 }
