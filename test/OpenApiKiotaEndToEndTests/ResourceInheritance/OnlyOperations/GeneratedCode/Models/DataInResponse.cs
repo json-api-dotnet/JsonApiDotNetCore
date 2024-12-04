@@ -58,7 +58,6 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyOperations.Generated
                 "bathrooms" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyOperations.GeneratedCode.Models.BathroomDataInResponse(),
                 "bedrooms" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyOperations.GeneratedCode.Models.BedroomDataInResponse(),
                 "buildings" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyOperations.GeneratedCode.Models.BuildingDataInResponse(),
-                "districts" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyOperations.GeneratedCode.Models.DistrictDataInResponse(),
                 "familyHomes" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyOperations.GeneratedCode.Models.FamilyHomeDataInResponse(),
                 "kitchens" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyOperations.GeneratedCode.Models.KitchenDataInResponse(),
                 "livingRooms" => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyOperations.GeneratedCode.Models.LivingRoomDataInResponse(),

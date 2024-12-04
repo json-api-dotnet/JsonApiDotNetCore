@@ -1,11 +1,22 @@
+using System.Collections.ObjectModel;
+using System.Text.Json;
+using JsonApiDotNetCore.AtomicOperations;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.Extensions.DependencyInjection;
+using OpenApiTests.ResourceInheritance.Models;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace OpenApiTests.ResourceInheritance.OnlyRelationships;
 
-public sealed class OnlyRelationshipsInheritanceTests : IClassFixture<OpenApiTestContext<OpenApiStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext>>
+public sealed class OnlyRelationshipsInheritanceTests
+    : IClassFixture<OpenApiTestContext<OpenApiStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext>>
 {
+    private const JsonApiEndpoints OnlyRelationshipEndpoints = JsonApiEndpoints.GetRelationship | JsonApiEndpoints.PostRelationship |
+        JsonApiEndpoints.PatchRelationship | JsonApiEndpoints.DeleteRelationship;
+
     private readonly OpenApiTestContext<OpenApiStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext> _testContext;
 
     public OnlyRelationshipsInheritanceTests(OpenApiTestContext<OpenApiStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext> testContext)
@@ -13,6 +24,7 @@ public sealed class OnlyRelationshipsInheritanceTests : IClassFixture<OpenApiTes
         _testContext = testContext;
 
         testContext.UseController<DistrictsController>();
+        testContext.UseController<StaffMembersController>();
 
         testContext.UseController<BuildingsController>();
         testContext.UseController<ResidencesController>();
@@ -26,15 +38,430 @@ public sealed class OnlyRelationshipsInheritanceTests : IClassFixture<OpenApiTes
         testContext.UseController<LivingRoomsController>();
         testContext.UseController<ToiletsController>();
 
-        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
+        testContext.UseController<OperationsController>();
 
-        testContext.ConfigureServices(services => services.AddSingleton<IJsonApiEndpointFilter, OnlyRelationshipsEndpointFilter>());
+        testContext.ConfigureServices(services =>
+        {
+            services.AddSingleton<IJsonApiEndpointFilter, OnlyRelationshipsEndpointFilter>();
+            services.AddSingleton<IAtomicOperationFilter, OnlyRelationshipsOperationFilter>();
+        });
+
+        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
+    }
+
+    [Theory]
+    [InlineData(typeof(District), OnlyRelationshipEndpoints)]
+    [InlineData(typeof(StaffMember), OnlyRelationshipEndpoints)]
+    [InlineData(typeof(Building), OnlyRelationshipEndpoints)]
+    [InlineData(typeof(Residence), OnlyRelationshipEndpoints)]
+    [InlineData(typeof(FamilyHome), OnlyRelationshipEndpoints)]
+    [InlineData(typeof(Mansion), OnlyRelationshipEndpoints)]
+    [InlineData(typeof(Room), OnlyRelationshipEndpoints)]
+    [InlineData(typeof(Kitchen), OnlyRelationshipEndpoints)]
+    [InlineData(typeof(Bedroom), OnlyRelationshipEndpoints)]
+    [InlineData(typeof(Bathroom), OnlyRelationshipEndpoints)]
+    [InlineData(typeof(LivingRoom), OnlyRelationshipEndpoints)]
+    [InlineData(typeof(Toilet), OnlyRelationshipEndpoints)]
+    public async Task Only_expected_endpoints_are_exposed(Type resourceClrType, JsonApiEndpoints expected)
+    {
+        // Arrange
+        var resourceGraph = _testContext.Factory.Services.GetRequiredService<IResourceGraph>();
+        ResourceType resourceType = resourceGraph.GetResourceType(resourceClrType);
+        IReadOnlyDictionary<JsonApiEndpoints, ReadOnlyCollection<string>> endpointToPathMap = JsonPathBuilder.GetEndpointPaths(resourceType);
+
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        string[] pathsExpected = JsonPathBuilder.KnownEndpoints.Where(endpoint => expected.HasFlag(endpoint))
+            .SelectMany(endpoint => endpointToPathMap[endpoint]).ToArray();
+
+        string[] pathsNotExpected = endpointToPathMap.Values.SelectMany(paths => paths).Except(pathsExpected).ToArray();
+
+        foreach (string path in pathsExpected)
+        {
+            document.Should().ContainPath(path);
+        }
+
+        foreach (string path in pathsNotExpected)
+        {
+            document.Should().NotContainPath(path);
+        }
     }
 
     [Fact]
-    public async Task Test3()
+    public async Task Operations_endpoint_is_exposed()
     {
         // Act
-        _ = await _testContext.GetSwaggerDocumentAsync();
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        document.Should().ContainPath("paths./operations.post");
+    }
+
+    [Theory]
+    [InlineData("dataInCreateBuildingRequest", false, null)]
+    [InlineData("dataInUpdateBuildingRequest", false, null)]
+    [InlineData("buildingDataInResponse", true, null)]
+    [InlineData("buildingIdentifierInRequest", false, "familyHomes|mansions|residences")]
+    [InlineData("buildingIdentifierInResponse", false, "familyHomes|mansions|residences")]
+    [InlineData("residenceDataInResponse", true, null)]
+    [InlineData("residenceIdentifierInResponse", true, "familyHomes|mansions")]
+    [InlineData("dataInCreateRoomRequest", false, null)]
+    [InlineData("dataInUpdateRoomRequest", false, null)]
+    [InlineData("roomDataInResponse", true, null)]
+    [InlineData("roomIdentifierInRequest", false, "bathrooms|bedrooms|kitchens|livingRooms|toilets")]
+    [InlineData("roomIdentifierInResponse", false, "bathrooms|bedrooms|kitchens|livingRooms|toilets")]
+    [InlineData("dataInResponse", false, "")]
+    public async Task Expected_names_appear_in_type_discriminator_mapping(string schemaName, bool isWrapped, string? discriminatorValues)
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        if (discriminatorValues == null)
+        {
+            document.Should().NotContainPath($"components.schemas.{schemaName}");
+        }
+        else
+        {
+            string schemaPath = isWrapped ? $"components.schemas.{schemaName}.allOf[1]" : $"components.schemas.{schemaName}";
+
+            document.Should().ContainPath(schemaPath).With(schemaElement =>
+            {
+                schemaElement.Should().ContainPath("discriminator").With(discriminatorElement =>
+                {
+                    discriminatorElement.Should().HaveProperty("propertyName", "type");
+
+                    if (discriminatorValues.Length > 0)
+                    {
+                        discriminatorElement.Should().ContainPath("mapping").With(mappingElement =>
+                        {
+                            string[] valueArray = discriminatorValues.Split('|');
+                            mappingElement.EnumerateObject().ShouldHaveCount(valueArray.Length);
+
+                            foreach (string value in valueArray)
+                            {
+                                mappingElement.Should().ContainProperty(value);
+                            }
+                        });
+                    }
+                    else
+                    {
+                        discriminatorElement.Should().NotContainPath("mapping");
+                    }
+                });
+            });
+        }
+    }
+
+    [Theory]
+    [InlineData("attributesInCreateBuildingRequest", null)]
+    [InlineData("attributesInUpdateBuildingRequest", null)]
+    [InlineData("buildingAttributesInResponse", null)]
+    [InlineData("relationshipsInCreateBuildingRequest", null)]
+    [InlineData("relationshipsInUpdateBuildingRequest", null)]
+    [InlineData("buildingRelationshipsInResponse", null)]
+    [InlineData("attributesInCreateRoomRequest", null)]
+    [InlineData("attributesInUpdateRoomRequest", null)]
+    [InlineData("relationshipsInCreateRoomRequest", null)]
+    [InlineData("relationshipsInUpdateRoomRequest", null)]
+    [InlineData("roomAttributesInResponse", null)]
+    [InlineData("roomRelationshipsInResponse", null)]
+    [InlineData("atomicOperation",
+        // @formatter:keep_existing_linebreaks true
+        "addToResidenceRooms|updateResidenceRooms|removeFromResidenceRooms|" +
+        "addToFamilyHomeRooms|updateFamilyHomeRooms|removeFromFamilyHomeRooms|" +
+        "addToMansionRooms|updateMansionRooms|removeFromMansionRooms|addToMansionStaff|updateMansionStaff|removeFromMansionStaff|" +
+        "updateRoomResidence|" +
+        "updateBathroomResidence|" +
+        "updateBedroomResidence|" +
+        "updateKitchenResidence|" +
+        "updateLivingRoomResidence|" +
+        "updateToiletResidence|" +
+        "addToDistrictBuildings|updateDistrictBuildings|removeFromDistrictBuildings"
+        // @formatter:keep_existing_linebreaks restore
+    )]
+    public async Task Expected_names_appear_in_openapi_discriminator_mapping(string schemaName, string? discriminatorValues)
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        if (discriminatorValues == null)
+        {
+            document.Should().NotContainPath($"components.schemas.{schemaName}");
+        }
+        else
+        {
+            document.Should().ContainPath($"components.schemas.{schemaName}").With(schemaElement =>
+            {
+                schemaElement.Should().ContainPath("discriminator").With(discriminatorElement =>
+                {
+                    discriminatorElement.Should().HaveProperty("propertyName", "openapi:discriminator");
+
+                    discriminatorElement.Should().ContainPath("mapping").With(mappingElement =>
+                    {
+                        string[] valueArray = discriminatorValues.Split('|');
+                        mappingElement.EnumerateObject().ShouldHaveCount(valueArray.Length);
+
+                        foreach (string value in valueArray)
+                        {
+                            mappingElement.Should().ContainProperty(value);
+                        }
+                    });
+                });
+            });
+        }
+    }
+
+    [Theory]
+    [InlineData("buildingResourceType", "familyHomes|mansions|residences")]
+    [InlineData("residenceResourceType", "familyHomes|mansions|residences")]
+    [InlineData("familyHomeResourceType", null)]
+    [InlineData("mansionResourceType", "mansions")]
+    [InlineData("roomResourceType", "bathrooms|bedrooms|kitchens|livingRooms|toilets")]
+    [InlineData("bathroomResourceType", null)]
+    [InlineData("bedroomResourceType", null)]
+    [InlineData("kitchenResourceType", null)]
+    [InlineData("livingRoomResourceType", null)]
+    [InlineData("toiletResourceType", null)]
+    [InlineData("districtResourceType", "districts")]
+    [InlineData("staffMemberResourceType", "staffMembers")]
+    [InlineData("resourceType", "")] // Incorrect because omitted enum allows any string, but it's an extreme corner case.
+    // TODO: Extract these test methods into abstract base class.
+    public async Task Expected_names_appear_in_resource_type_enum(string schemaName, string? enumValues)
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        if (enumValues == null)
+        {
+            document.Should().NotContainPath($"components.schemas.{schemaName}");
+        }
+        else
+        {
+            document.Should().ContainPath($"components.schemas.{schemaName}").With(schemaElement =>
+            {
+                if (enumValues.Length > 0)
+                {
+                    schemaElement.Should().ContainPath("enum").With(enumElement =>
+                    {
+                        string[] valueArray = enumValues.Split('|');
+                        enumElement.EnumerateArray().ShouldHaveCount(valueArray.Length);
+
+                        foreach (string value in valueArray)
+                        {
+                            enumElement.Should().ContainArrayElement(value);
+                        }
+                    });
+                }
+                else
+                {
+                    schemaElement.Should().NotContainPath("enum");
+                }
+            });
+        }
+    }
+
+    [Theory]
+    [InlineData("dataInResponse", null, "type|meta")]
+    // Building hierarchy: Resource Data
+    [InlineData("dataInCreateBuildingRequest", null, null)]
+    [InlineData("dataInCreateResidenceRequest", null, null)]
+    [InlineData("dataInCreateFamilyHomeRequest", null, null)]
+    [InlineData("dataInCreateMansionRequest", null, null)]
+    [InlineData("dataInUpdateBuildingRequest", null, null)]
+    [InlineData("dataInUpdateResidenceRequest", null, null)]
+    [InlineData("dataInUpdateFamilyHomeRequest", null, null)]
+    [InlineData("dataInUpdateMansionRequest", null, null)]
+    [InlineData("buildingDataInResponse", null, null)]
+    [InlineData("residenceDataInResponse", null, null)]
+    [InlineData("familyHomeDataInResponse", null, null)]
+    [InlineData("mansionDataInResponse", null, null)]
+    // Building hierarchy: Attributes
+    [InlineData("attributesInCreateBuildingRequest", null, null)]
+    [InlineData("attributesInCreateResidenceRequest", null, null)]
+    [InlineData("attributesInCreateFamilyHomeRequest", null, null)]
+    [InlineData("attributesInCreateMansionRequest", null, null)]
+    // Building hierarchy: Relationships
+    [InlineData("relationshipsInCreateBuildingRequest", null, null)]
+    [InlineData("relationshipsInCreateResidenceRequest", null, null)]
+    [InlineData("relationshipsInCreateFamilyHomeRequest", null, null)]
+    [InlineData("relationshipsInCreateMansionRequest", null, null)]
+    // Building hierarchy: Resource Identifiers
+    [InlineData("buildingIdentifierInRequest", null, "type|id|lid|meta")]
+    [InlineData("residenceIdentifierInRequest", "buildingIdentifierInRequest", null)]
+    [InlineData("familyHomeIdentifierInRequest", "residenceIdentifierInRequest", null)]
+    [InlineData("mansionIdentifierInRequest", "residenceIdentifierInRequest", null)]
+    [InlineData("buildingIdentifierInResponse", null, "type|id|meta")]
+    [InlineData("residenceIdentifierInResponse", "buildingIdentifierInResponse", null)]
+    [InlineData("familyHomeIdentifierInResponse", "residenceIdentifierInResponse", null)]
+    [InlineData("mansionIdentifierInResponse", "residenceIdentifierInResponse", null)]
+    // Building hierarchy: Atomic Operations
+    [InlineData("createBuildingOperation", null, null)]
+    [InlineData("createResidenceOperation", null, null)]
+    [InlineData("createFamilyHomeOperation", null, null)]
+    [InlineData("createMansionOperation", null, null)]
+    [InlineData("updateBuildingOperation", null, null)]
+    [InlineData("updateResidenceOperation", null, null)]
+    [InlineData("updateFamilyHomeOperation", null, null)]
+    [InlineData("updateMansionOperation", null, null)]
+    [InlineData("deleteBuildingOperation", null, null)]
+    [InlineData("deleteResidenceOperation", null, null)]
+    [InlineData("deleteFamilyHomeOperation", null, null)]
+    [InlineData("deleteMansionOperation", null, null)]
+    [InlineData("updateResidenceRoomsRelationshipOperation", "atomicOperation", "op|ref|data")]
+    [InlineData("updateFamilyHomeRoomsRelationshipOperation", "updateResidenceRoomsRelationshipOperation", null)]
+    [InlineData("updateMansionRoomsRelationshipOperation", "updateResidenceRoomsRelationshipOperation", null)]
+    [InlineData("updateMansionStaffRelationshipOperation", "atomicOperation", "op|ref|data")]
+    [InlineData("addToResidenceRoomsRelationshipOperation", "atomicOperation", "op|ref|data")]
+    [InlineData("addToFamilyHomeRoomsRelationshipOperation", "addToResidenceRoomsRelationshipOperation", null)]
+    [InlineData("addToMansionRoomsRelationshipOperation", "addToResidenceRoomsRelationshipOperation", null)]
+    [InlineData("addToMansionStaffRelationshipOperation", "atomicOperation", "op|ref|data")]
+    [InlineData("removeFromResidenceRoomsRelationshipOperation", "atomicOperation", "op|ref|data")]
+    [InlineData("removeFromFamilyHomeRoomsRelationshipOperation", "removeFromResidenceRoomsRelationshipOperation", null)]
+    [InlineData("removeFromMansionRoomsRelationshipOperation", "removeFromResidenceRoomsRelationshipOperation", null)]
+    [InlineData("removeFromMansionStaffRelationshipOperation", "atomicOperation", "op|ref|data")]
+    // Room hierarchy: Resource Data
+    [InlineData("dataInCreateRoomRequest", null, null)]
+    [InlineData("dataInCreateBathroomRequest", null, null)]
+    [InlineData("dataInCreateBedroomRequest", null, null)]
+    [InlineData("dataInCreateKitchenRequest", null, null)]
+    [InlineData("dataInCreateLivingRoomRequest", null, null)]
+    [InlineData("dataInCreateToiletRequest", null, null)]
+    [InlineData("dataInUpdateRoomRequest", null, null)]
+    [InlineData("dataInUpdateBathroomRequest", null, null)]
+    [InlineData("dataInUpdateBedroomRequest", null, null)]
+    [InlineData("dataInUpdateKitchenRequest", null, null)]
+    [InlineData("dataInUpdateLivingRoomRequest", null, null)]
+    [InlineData("dataInUpdateToiletRequest", null, null)]
+    [InlineData("roomDataInResponse", null, null)]
+    [InlineData("bathroomDataInResponse", null, null)]
+    [InlineData("bedroomDataInResponse", null, null)]
+    [InlineData("kitchenDataInResponse", null, null)]
+    [InlineData("livingRoomDataInResponse", null, null)]
+    [InlineData("toiletDataInResponse", null, null)]
+    // Room hierarchy: Attributes
+    [InlineData("attributesInCreateRoomRequest", null, null)]
+    [InlineData("attributesInCreateBathroomRequest", null, null)]
+    [InlineData("attributesInCreateBedroomRequest", null, null)]
+    [InlineData("attributesInCreateKitchenRequest", null, null)]
+    [InlineData("attributesInCreateLivingRoomRequest", null, null)]
+    [InlineData("attributesInCreateToiletRequest", null, null)]
+    [InlineData("attributesInUpdateBathroomRequest", null, null)]
+    [InlineData("attributesInUpdateBedroomRequest", null, null)]
+    [InlineData("attributesInUpdateKitchenRequest", null, null)]
+    [InlineData("attributesInUpdateLivingRoomRequest", null, null)]
+    [InlineData("attributesInUpdateToiletRequest", null, null)]
+    [InlineData("roomAttributesInResponse", null, null)]
+    [InlineData("bathroomAttributesInResponse", null, null)]
+    [InlineData("bedroomAttributesInResponse", null, null)]
+    [InlineData("kitchenAttributesInResponse", null, null)]
+    [InlineData("livingRoomAttributesInResponse", null, null)]
+    [InlineData("toiletAttributesInResponse", null, null)]
+    // Room hierarchy: Relationships
+    [InlineData("relationshipsInCreateRoomRequest", null, null)]
+    [InlineData("relationshipsInCreateBathroomRequest", null, null)]
+    [InlineData("relationshipsInCreateBedroomRequest", null, null)]
+    [InlineData("relationshipsInCreateKitchenRequest", null, null)]
+    [InlineData("relationshipsInCreateLivingRoomRequest", null, null)]
+    [InlineData("relationshipsInCreateToiletRequest", null, null)]
+    [InlineData("relationshipsInUpdateRoomRequest", null, null)]
+    [InlineData("relationshipsInUpdateBathroomRequest", null, null)]
+    [InlineData("relationshipsInUpdateBedroomRequest", null, null)]
+    [InlineData("relationshipsInUpdateKitchenRequest", null, null)]
+    [InlineData("relationshipsInUpdateLivingRoomRequest", null, null)]
+    [InlineData("relationshipsInUpdateToiletRequest", null, null)]
+    [InlineData("roomRelationshipsInResponse", null, null)]
+    [InlineData("bathroomRelationshipsInResponse", null, null)]
+    [InlineData("bedroomRelationshipsInResponse", null, null)]
+    [InlineData("kitchenRelationshipsInResponse", null, null)]
+    [InlineData("livingRoomRelationshipsInResponse", null, null)]
+    [InlineData("toiletRelationshipsInResponse", null, null)]
+    // Room hierarchy: Resource Identifiers
+    [InlineData("roomIdentifierInRequest", null, "type|id|lid|meta")]
+    [InlineData("bathroomIdentifierInRequest", "roomIdentifierInRequest", null)]
+    [InlineData("bedroomIdentifierInRequest", "roomIdentifierInRequest", null)]
+    [InlineData("kitchenIdentifierInRequest", "roomIdentifierInRequest", null)]
+    [InlineData("livingRoomIdentifierInRequest", "roomIdentifierInRequest", null)]
+    [InlineData("toiletIdentifierInRequest", "roomIdentifierInRequest", null)]
+    [InlineData("roomIdentifierInResponse", null, "type|id|meta")]
+    [InlineData("bathroomIdentifierInResponse", "roomIdentifierInResponse", null)]
+    [InlineData("bedroomIdentifierInResponse", "roomIdentifierInResponse", null)]
+    [InlineData("kitchenIdentifierInResponse", "roomIdentifierInResponse", null)]
+    [InlineData("livingRoomIdentifierInResponse", "roomIdentifierInResponse", null)]
+    [InlineData("toiletIdentifierInResponse", "roomIdentifierInResponse", null)]
+    // Room hierarchy: Atomic Operations
+    [InlineData("createRoomOperation", null, null)]
+    [InlineData("createBathroomOperation", null, null)]
+    [InlineData("createBedroomOperation", null, null)]
+    [InlineData("createKitchenOperation", null, null)]
+    [InlineData("createLivingRoomOperation", null, null)]
+    [InlineData("createToiletOperation", null, null)]
+    [InlineData("updateRoomOperation", null, null)]
+    [InlineData("updateBathroomOperation", null, null)]
+    [InlineData("updateBedroomOperation", null, null)]
+    [InlineData("updateKitchenOperation", null, null)]
+    [InlineData("updateLivingRoomOperation", null, null)]
+    [InlineData("updateToiletOperation", null, null)]
+    [InlineData("deleteRoomOperation", null, null)]
+    [InlineData("deleteBathroomOperation", null, null)]
+    [InlineData("deleteBedroomOperation", null, null)]
+    [InlineData("deleteKitchenOperation", null, null)]
+    [InlineData("deleteLivingRoomOperation", null, null)]
+    [InlineData("deleteToiletOperation", null, null)]
+    [InlineData("updateRoomResidenceRelationshipOperation", "atomicOperation", "op|ref|data")]
+    [InlineData("updateBathroomResidenceRelationshipOperation", "updateRoomResidenceRelationshipOperation", null)]
+    [InlineData("updateBedroomResidenceRelationshipOperation", "updateRoomResidenceRelationshipOperation", null)]
+    [InlineData("updateKitchenResidenceRelationshipOperation", "updateRoomResidenceRelationshipOperation", null)]
+    [InlineData("updateLivingRoomResidenceRelationshipOperation", "updateRoomResidenceRelationshipOperation", null)]
+    [InlineData("updateToiletResidenceRelationshipOperation", "updateRoomResidenceRelationshipOperation", null)]
+    public async Task Component_schemas_have_expected_base_type(string schemaName, string? baseType, string? properties)
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        if (baseType == null && properties == null)
+        {
+            document.Should().NotContainPath($"components.schemas.{schemaName}");
+        }
+        else
+        {
+            document.Should().ContainPath($"components.schemas.{schemaName}").With(schemaElement =>
+            {
+                if (baseType != null)
+                {
+                    schemaElement.Should().HaveProperty("allOf[0].$ref", $"#/components/schemas/{baseType}");
+                }
+                else
+                {
+                    schemaElement.Should().NotContainPath("allOf[0]");
+                }
+
+                string propertiesPath = baseType != null ? "allOf[1].properties" : "properties";
+
+                if (properties != null)
+                {
+                    string[] propertyArray = properties.Split('|');
+
+                    schemaElement.Should().ContainPath(propertiesPath).With(propertiesElement =>
+                    {
+                        propertiesElement.EnumerateObject().ShouldHaveCount(propertyArray.Length);
+
+                        foreach (string value in propertyArray)
+                        {
+                            propertiesElement.Should().ContainProperty(value);
+                        }
+                    });
+                }
+                else
+                {
+                    schemaElement.Should().NotContainPath(propertiesPath);
+                }
+            });
+        }
     }
 }

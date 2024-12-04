@@ -1195,7 +1195,6 @@
             "bathrooms": "#/components/schemas/bathroomDataInResponse",
             "bedrooms": "#/components/schemas/bedroomDataInResponse",
             "buildings": "#/components/schemas/buildingDataInResponse",
-            "districts": "#/components/schemas/districtDataInResponse",
             "familyHomes": "#/components/schemas/familyHomeDataInResponse",
             "kitchens": "#/components/schemas/kitchenDataInResponse",
             "livingRooms": "#/components/schemas/livingRoomDataInResponse",
@@ -1297,71 +1296,6 @@
             "additionalProperties": false
           }
         ],
-        "additionalProperties": false
-      },
-      "districtAttributesInResponse": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "districtDataInResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/dataInResponse"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "minLength": 1,
-                "type": "string",
-                "format": "uuid"
-              },
-              "attributes": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/districtAttributesInResponse"
-                  }
-                ]
-              },
-              "relationships": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/districtRelationshipsInResponse"
-                  }
-                ]
-              },
-              "links": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/resourceLinks"
-                  }
-                ]
-              }
-            },
-            "additionalProperties": false
-          }
-        ],
-        "additionalProperties": false
-      },
-      "districtRelationshipsInResponse": {
-        "type": "object",
-        "properties": {
-          "buildings": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyBuildingInResponse"
-              }
-            ]
-          }
-        },
         "additionalProperties": false
       },
       "errorLinks": {
@@ -2397,7 +2331,6 @@
           "bathrooms",
           "bedrooms",
           "buildings",
-          "districts",
           "familyHomes",
           "kitchens",
           "livingRooms",
@@ -2763,32 +2696,6 @@
           "staffMembers"
         ],
         "type": "string"
-      },
-      "toManyBuildingInResponse": {
-        "type": "object",
-        "properties": {
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationshipLinks"
-              }
-            ]
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/buildingIdentifierInResponse"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
       },
       "toManyRoomInRequest": {
         "required": [

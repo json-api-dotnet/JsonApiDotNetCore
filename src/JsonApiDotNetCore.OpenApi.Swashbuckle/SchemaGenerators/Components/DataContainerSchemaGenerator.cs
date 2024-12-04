@@ -24,6 +24,13 @@ internal sealed class DataContainerSchemaGenerator
         _resourceGraph = resourceGraph;
     }
 
+    public OpenApiSchema GenerateSchemaForCommonResourceData(SchemaRepository schemaRepository)
+    {
+        ArgumentGuard.NotNull(schemaRepository);
+
+        return _dataSchemaGenerator.GenerateSchemaForCommonResourceData(schemaRepository);
+    }
+
     public OpenApiSchema GenerateSchema(Type dataContainerConstructedType, ResourceType resourceType, bool forRequestSchema, SchemaRepository schemaRepository)
     {
         ArgumentGuard.NotNull(dataContainerConstructedType);

@@ -156,8 +156,10 @@ internal sealed class DataSchemaGenerator
         return resourceSchemaType.SchemaOpenType == typeof(ResourceDataInResponse<>);
     }
 
-    private OpenApiSchema GenerateSchemaForCommonResourceData(SchemaRepository schemaRepository)
+    public OpenApiSchema GenerateSchemaForCommonResourceData(SchemaRepository schemaRepository)
     {
+        ArgumentGuard.NotNull(schemaRepository);
+
         if (schemaRepository.TryLookupByType(CommonResourceDataSchemaType, out OpenApiSchema? referenceSchema))
         {
             return referenceSchema;
@@ -176,6 +178,11 @@ internal sealed class DataSchemaGenerator
                 [referenceSchemaForMeta.Reference.Id] = referenceSchemaForMeta.WrapInExtendedSchema()
             },
             AdditionalPropertiesAllowed = false,
+            Discriminator = new OpenApiDiscriminator
+            {
+                PropertyName = JsonApiPropertyName.Type,
+                Mapping = new SortedDictionary<string, string>(StringComparer.Ordinal)
+            },
             Extensions =
             {
                 ["x-abstract"] = new OpenApiBoolean(true)

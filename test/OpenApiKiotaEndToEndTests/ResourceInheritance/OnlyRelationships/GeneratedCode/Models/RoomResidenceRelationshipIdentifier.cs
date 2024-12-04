@@ -10,7 +10,7 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.Genera
 {
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     #pragma warning disable CS1591
-    public partial class StaffMemberIdentifierInRequest : IBackedModel, IParsable
+    public partial class RoomResidenceRelationshipIdentifier : IBackedModel, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores model information.</summary>
@@ -47,44 +47,34 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.Genera
             set { BackingStore?.Set("lid", value); }
         }
 #endif
-        /// <summary>The meta property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.Meta? Meta
+        /// <summary>The relationship property</summary>
+        public global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RoomResidenceRelationshipName? Relationship
         {
-            get { return BackingStore?.Get<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.Meta?>("meta"); }
-            set { BackingStore?.Set("meta", value); }
+            get { return BackingStore?.Get<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RoomResidenceRelationshipName?>("relationship"); }
+            set { BackingStore?.Set("relationship", value); }
         }
-#nullable restore
-#else
-        public global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.Meta Meta
-        {
-            get { return BackingStore?.Get<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.Meta>("meta"); }
-            set { BackingStore?.Set("meta", value); }
-        }
-#endif
         /// <summary>The type property</summary>
-        public global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.StaffMemberResourceType? Type
+        public global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RoomResourceType? Type
         {
-            get { return BackingStore?.Get<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.StaffMemberResourceType?>("type"); }
+            get { return BackingStore?.Get<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RoomResourceType?>("type"); }
             set { BackingStore?.Set("type", value); }
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.StaffMemberIdentifierInRequest"/> and sets the default values.
+        /// Instantiates a new <see cref="global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RoomResidenceRelationshipIdentifier"/> and sets the default values.
         /// </summary>
-        public StaffMemberIdentifierInRequest()
+        public RoomResidenceRelationshipIdentifier()
         {
             BackingStore = BackingStoreFactorySingleton.Instance.CreateBackingStore();
         }
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.StaffMemberIdentifierInRequest"/></returns>
+        /// <returns>A <see cref="global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RoomResidenceRelationshipIdentifier"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.StaffMemberIdentifierInRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RoomResidenceRelationshipIdentifier CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.StaffMemberIdentifierInRequest();
+            return new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RoomResidenceRelationshipIdentifier();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -96,8 +86,8 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.Genera
             {
                 { "id", n => { Id = n.GetStringValue(); } },
                 { "lid", n => { Lid = n.GetStringValue(); } },
-                { "meta", n => { Meta = n.GetObjectValue<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.Meta>(global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
-                { "type", n => { Type = n.GetEnumValue<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.StaffMemberResourceType>(); } },
+                { "relationship", n => { Relationship = n.GetEnumValue<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RoomResidenceRelationshipName>(); } },
+                { "type", n => { Type = n.GetEnumValue<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RoomResourceType>(); } },
             };
         }
         /// <summary>
@@ -109,8 +99,8 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.Genera
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteStringValue("id", Id);
             writer.WriteStringValue("lid", Lid);
-            writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.Meta>("meta", Meta);
-            writer.WriteEnumValue<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.StaffMemberResourceType>("type", Type);
+            writer.WriteEnumValue<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RoomResidenceRelationshipName>("relationship", Relationship);
+            writer.WriteEnumValue<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RoomResourceType>("type", Type);
         }
     }
 }

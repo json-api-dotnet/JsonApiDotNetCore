@@ -14,6 +14,7 @@ using OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedC
 using OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Kitchens;
 using OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.LivingRooms;
 using OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Mansions;
+using OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Operations;
 using OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Residences;
 using OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Rooms;
 using OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Toilets;
@@ -63,6 +64,11 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.Genera
         public global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Mansions.MansionsRequestBuilder Mansions
         {
             get => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Mansions.MansionsRequestBuilder(PathParameters, RequestAdapter);
+        }
+        /// <summary>The operations property</summary>
+        public global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Operations.OperationsRequestBuilder Operations
+        {
+            get => new global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Operations.OperationsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The residences property</summary>
         public global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Residences.ResidencesRequestBuilder Residences

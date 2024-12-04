@@ -31,6 +31,22 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.Genera
             set { BackingStore?.Set("id", value); }
         }
 #endif
+        /// <summary>The lid property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? Lid
+        {
+            get { return BackingStore?.Get<string?>("lid"); }
+            set { BackingStore?.Set("lid", value); }
+        }
+#nullable restore
+#else
+        public string Lid
+        {
+            get { return BackingStore?.Get<string>("lid"); }
+            set { BackingStore?.Set("lid", value); }
+        }
+#endif
         /// <summary>The meta property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -88,6 +104,7 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.Genera
             return new Dictionary<string, Action<IParseNode>>
             {
                 { "id", n => { Id = n.GetStringValue(); } },
+                { "lid", n => { Lid = n.GetStringValue(); } },
                 { "meta", n => { Meta = n.GetObjectValue<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.Meta>(global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
                 { "type", n => { Type = n.GetEnumValue<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RoomResourceType>(); } },
             };
@@ -100,6 +117,7 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.Genera
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteStringValue("id", Id);
+            writer.WriteStringValue("lid", Lid);
             writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.Meta>("meta", Meta);
             writer.WriteEnumValue<global::OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyRelationships.GeneratedCode.Models.RoomResourceType>("type", Type);
         }

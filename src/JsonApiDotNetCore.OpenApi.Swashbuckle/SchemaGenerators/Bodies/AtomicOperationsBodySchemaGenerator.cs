@@ -164,7 +164,7 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
             _ => throw new UnreachableCodeException()
         };
 
-        if (_atomicOperationFilter.IsEnabled(resourceType, writeOperation))
+        if (IsResourceTypeEnabled(resourceType, writeOperation))
         {
             Type operationConstructedType = ChangeResourceTypeInSchemaType(operationOpenType, resourceType);
             bool needsEmptyDerivedSchema = resourceType.BaseType != null && _atomicOperationFilter.IsEnabled(resourceType.BaseType, writeOperation);
@@ -208,6 +208,11 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
         {
             GenerateSchemaForResourceOperation(operationOpenType, derivedType, operationCode, schemaRepository);
         }
+    }
+
+    private bool IsResourceTypeEnabled(ResourceType resourceType, WriteOperationKind writeOperation)
+    {
+        return _atomicOperationFilter.IsEnabled(resourceType, writeOperation);
     }
 
     private static Type ChangeResourceTypeInSchemaType(Type schemaOpenType, ResourceType resourceType)
@@ -283,17 +288,21 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
             return;
         }
 
-        Type leftSchemaType = typeof(ResourceIdentifierInRequest<>).MakeGenericType(relationship.LeftType.ClrType);
-        Type rightSchemaType = typeof(ResourceIdentifierInRequest<>).MakeGenericType(relationship.RightType.ClrType);
-
-        _ = _dataSchemaGenerator.GenerateSchema(leftSchemaType, true, schemaRepository);
-        _ = _dataSchemaGenerator.GenerateSchema(rightSchemaType, true, schemaRepository);
-
         RelationshipAttribute? relationshipInAnyBaseResourceType = GetRelationshipEnabledInAnyBase(relationship, writeOperation);
 
-        OpenApiSchema? referenceSchemaForRelationshipIdentifier = relationshipInAnyBaseResourceType == null
-            ? _relationshipIdentifierSchemaGenerator.GenerateSchema(relationship, schemaRepository)
-            : null;
+        OpenApiSchema? referenceSchemaForRelationshipIdentifier;
+
+        if (relationshipInAnyBaseResourceType == null)
+        {
+            Type rightSchemaType = typeof(ResourceIdentifierInRequest<>).MakeGenericType(relationship.RightType.ClrType);
+            _ = _dataSchemaGenerator.GenerateSchema(rightSchemaType, true, schemaRepository);
+
+            referenceSchemaForRelationshipIdentifier = _relationshipIdentifierSchemaGenerator.GenerateSchema(relationship, schemaRepository);
+        }
+        else
+        {
+            referenceSchemaForRelationshipIdentifier = null;
+        }
 
         Type operationConstructedType = ChangeResourceTypeInSchemaType(operationOpenType, relationship.RightType);
         _ = _dataContainerSchemaGenerator.GenerateSchema(operationConstructedType, relationship.RightType, true, schemaRepository);
@@ -404,9 +413,15 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
 
     private void GenerateSchemasForResponseBody(SchemaRepository schemaRepository)
     {
+        _ = _dataContainerSchemaGenerator.GenerateSchemaForCommonResourceData(schemaRepository);
+
         foreach (ResourceType resourceType in _resourceGraph.GetResourceTypes())
         {
-            _ = _dataContainerSchemaGenerator.GenerateSchema(typeof(AtomicResult), resourceType, false, schemaRepository);
+            if (IsResourceTypeEnabled(resourceType, WriteOperationKind.CreateResource) ||
+                IsResourceTypeEnabled(resourceType, WriteOperationKind.UpdateResource))
+            {
+                _ = _dataContainerSchemaGenerator.GenerateSchema(typeof(AtomicResult), resourceType, false, schemaRepository);
+            }
         }
     }
 }

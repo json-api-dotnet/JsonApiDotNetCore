@@ -20,10 +20,6 @@ namespace OpenApiKiotaEndToEndTests.ResourceInheritance.OnlyOperations.Generated
         #pragma warning disable CS1591
         Buildings,
         #pragma warning restore CS1591
-        [EnumMember(Value = "districts")]
-        #pragma warning disable CS1591
-        Districts,
-        #pragma warning restore CS1591
         [EnumMember(Value = "familyHomes")]
         #pragma warning disable CS1591
         FamilyHomes,

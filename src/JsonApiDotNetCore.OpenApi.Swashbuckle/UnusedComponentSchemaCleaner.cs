@@ -16,6 +16,7 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
 {
     private static readonly bool ThrowOnUnusedSchemaDetected = bool.Parse(bool.TrueString);
 
+    // TODO: Should run a reachable-from-root analysis to detect unused schemas pointing only to each other.
     public void Apply(OpenApiDocument document, DocumentFilterContext context)
     {
         ArgumentGuard.NotNull(document);

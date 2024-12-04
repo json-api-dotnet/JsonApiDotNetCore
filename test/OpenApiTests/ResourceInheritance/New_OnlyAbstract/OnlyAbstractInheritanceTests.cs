@@ -108,15 +108,14 @@ public sealed class OnlyAbstractInheritanceTests : IClassFixture<OpenApiTestCont
     [InlineData("roomDataInResponse", true, "bathrooms|bedrooms|kitchens|livingRooms|toilets")]
     [InlineData("roomIdentifierInRequest", false, "bathrooms|bedrooms|kitchens|livingRooms|toilets")]
     [InlineData("roomIdentifierInResponse", false, "bathrooms|bedrooms|kitchens|livingRooms|toilets")]
-    [InlineData("dataInResponse", false,
-        "bathrooms|bedrooms|kitchens|livingRooms|toilets|rooms|familyHomes|mansions|residences|buildings|districts|staffMembers")]
-    public async Task Expected_names_appear_in_type_discriminator_mapping(string? schemaName, bool isWrapped, string discriminatorValues)
+    [InlineData("dataInResponse", false, "bathrooms|bedrooms|kitchens|livingRooms|toilets|rooms|familyHomes|mansions|residences|buildings|staffMembers")]
+    public async Task Expected_names_appear_in_type_discriminator_mapping(string schemaName, bool isWrapped, string? discriminatorValues)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        if (schemaName == null)
+        if (discriminatorValues == null)
         {
             document.Should().NotContainPath($"components.schemas.{schemaName}");
         }
@@ -130,16 +129,23 @@ public sealed class OnlyAbstractInheritanceTests : IClassFixture<OpenApiTestCont
                 {
                     discriminatorElement.Should().HaveProperty("propertyName", "type");
 
-                    discriminatorElement.Should().ContainPath("mapping").With(mappingElement =>
+                    if (discriminatorValues.Length > 0)
                     {
-                        string[] valueArray = discriminatorValues.Split('|');
-                        mappingElement.EnumerateObject().ShouldHaveCount(valueArray.Length);
-
-                        foreach (string value in valueArray)
+                        discriminatorElement.Should().ContainPath("mapping").With(mappingElement =>
                         {
-                            mappingElement.Should().ContainProperty(value);
-                        }
-                    });
+                            string[] valueArray = discriminatorValues.Split('|');
+                            mappingElement.EnumerateObject().ShouldHaveCount(valueArray.Length);
+
+                            foreach (string value in valueArray)
+                            {
+                                mappingElement.Should().ContainProperty(value);
+                            }
+                        });
+                    }
+                    else
+                    {
+                        discriminatorElement.Should().NotContainPath("mapping");
+                    }
                 });
             });
         }
@@ -172,13 +178,13 @@ public sealed class OnlyAbstractInheritanceTests : IClassFixture<OpenApiTestCont
         "addToilet|updateToilet|removeToilet|updateToiletResidence"
         // @formatter:keep_existing_linebreaks restore
     )]
-    public async Task Expected_names_appear_in_openapi_discriminator_mapping(string? schemaName, string discriminatorValues)
+    public async Task Expected_names_appear_in_openapi_discriminator_mapping(string schemaName, string? discriminatorValues)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        if (schemaName == null)
+        if (discriminatorValues == null)
         {
             document.Should().NotContainPath($"components.schemas.{schemaName}");
         }
@@ -218,7 +224,7 @@ public sealed class OnlyAbstractInheritanceTests : IClassFixture<OpenApiTestCont
     [InlineData("toiletResourceType", null)]
     [InlineData("districtResourceType", null)]
     [InlineData("staffMemberResourceType", "staffMembers")]
-    [InlineData("resourceType", "bathrooms|bedrooms|kitchens|livingRooms|toilets|rooms|familyHomes|mansions|residences|buildings|districts|staffMembers")]
+    [InlineData("resourceType", "bathrooms|bedrooms|kitchens|livingRooms|toilets|rooms|familyHomes|mansions|residences|buildings|staffMembers")]
     public async Task Expected_names_appear_in_resource_type_enum(string schemaName, string? enumValues)
     {
         // Act
@@ -231,14 +237,24 @@ public sealed class OnlyAbstractInheritanceTests : IClassFixture<OpenApiTestCont
         }
         else
         {
-            document.Should().ContainPath($"components.schemas.{schemaName}.enum").With(enumElement =>
+            document.Should().ContainPath($"components.schemas.{schemaName}").With(schemaElement =>
             {
-                string[] valueArray = enumValues.Split('|');
-                enumElement.EnumerateArray().ShouldHaveCount(valueArray.Length);
-
-                foreach (string value in valueArray)
+                if (enumValues.Length > 0)
                 {
-                    enumElement.Should().ContainArrayElement(value);
+                    schemaElement.Should().ContainPath("enum").With(enumElement =>
+                    {
+                        string[] valueArray = enumValues.Split('|');
+                        enumElement.EnumerateArray().ShouldHaveCount(valueArray.Length);
+
+                        foreach (string value in valueArray)
+                        {
+                            enumElement.Should().ContainArrayElement(value);
+                        }
+                    });
+                }
+                else
+                {
+                    schemaElement.Should().NotContainPath("enum");
                 }
             });
         }
