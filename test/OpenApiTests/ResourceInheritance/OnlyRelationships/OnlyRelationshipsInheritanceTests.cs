@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using OpenApiTests.ResourceInheritance.Models;
 using Xunit;
 
+#pragma warning disable format
+
 namespace OpenApiTests.ResourceInheritance.OnlyRelationships;
 
 public sealed class OnlyRelationshipsInheritanceTests : ResourceInheritanceTests

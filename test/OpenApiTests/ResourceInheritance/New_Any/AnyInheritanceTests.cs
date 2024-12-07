@@ -2,6 +2,8 @@ using JsonApiDotNetCore.Controllers;
 using OpenApiTests.ResourceInheritance.Models;
 using Xunit;
 
+#pragma warning disable format
+
 namespace OpenApiTests.ResourceInheritance.New_Any;
 
 public sealed class AnyInheritanceTests(OpenApiTestContext<OpenApiStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext> testContext)
