@@ -24,6 +24,9 @@
      -->
     <UseCollectionExpressionRules>IDE0028;IDE0300;IDE0301;IDE0302;IDE0303;IDE0304;IDE0305</UseCollectionExpressionRules>
     <NoWarn>$(NoWarn);$(UseCollectionExpressionRules)</NoWarn>
+
+    <!-- Suppress warning that targeting .NET Standard 1.0 is not recommended, because it requires a breaking change. -->
+    <NoWarn>$(NoWarn);NETSDK1215</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
