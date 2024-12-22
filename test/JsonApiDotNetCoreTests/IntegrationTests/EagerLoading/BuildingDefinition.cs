@@ -1,5 +1,4 @@
 using JetBrains.Annotations;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
@@ -14,7 +13,7 @@ public sealed class BuildingDefinition : JsonApiResourceDefinition<Building, int
     public BuildingDefinition(IResourceGraph resourceGraph, IJsonApiRequest request)
         : base(resourceGraph)
     {
-        ArgumentGuard.NotNull(request);
+        ArgumentNullException.ThrowIfNull(request);
 
         _request = request;
     }

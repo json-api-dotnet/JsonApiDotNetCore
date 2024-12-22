@@ -18,11 +18,11 @@ public class QueryableBuilder : IQueryableBuilder
     public QueryableBuilder(IIncludeClauseBuilder includeClauseBuilder, IWhereClauseBuilder whereClauseBuilder, IOrderClauseBuilder orderClauseBuilder,
         ISkipTakeClauseBuilder skipTakeClauseBuilder, ISelectClauseBuilder selectClauseBuilder)
     {
-        ArgumentGuard.NotNull(includeClauseBuilder);
-        ArgumentGuard.NotNull(whereClauseBuilder);
-        ArgumentGuard.NotNull(orderClauseBuilder);
-        ArgumentGuard.NotNull(skipTakeClauseBuilder);
-        ArgumentGuard.NotNull(selectClauseBuilder);
+        ArgumentNullException.ThrowIfNull(includeClauseBuilder);
+        ArgumentNullException.ThrowIfNull(whereClauseBuilder);
+        ArgumentNullException.ThrowIfNull(orderClauseBuilder);
+        ArgumentNullException.ThrowIfNull(skipTakeClauseBuilder);
+        ArgumentNullException.ThrowIfNull(selectClauseBuilder);
 
         _includeClauseBuilder = includeClauseBuilder;
         _whereClauseBuilder = whereClauseBuilder;
@@ -33,8 +33,8 @@ public class QueryableBuilder : IQueryableBuilder
 
     public virtual Expression ApplyQuery(QueryLayer layer, QueryableBuilderContext context)
     {
-        ArgumentGuard.NotNull(layer);
-        ArgumentGuard.NotNull(context);
+        ArgumentNullException.ThrowIfNull(layer);
+        ArgumentNullException.ThrowIfNull(context);
         AssertSameType(layer.ResourceType, context.ElementType);
 
         Expression expression = context.Source;
@@ -78,10 +78,10 @@ public class QueryableBuilder : IQueryableBuilder
 
     protected virtual Expression ApplyInclude(Expression source, IncludeExpression include, ResourceType resourceType, QueryableBuilderContext context)
     {
-        ArgumentGuard.NotNull(source);
-        ArgumentGuard.NotNull(include);
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(context);
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(include);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(context);
 
         using LambdaScope lambdaScope = context.LambdaScopeFactory.CreateScope(context.ElementType);
         QueryClauseBuilderContext clauseContext = context.CreateClauseContext(this, source, resourceType, lambdaScope);
@@ -91,10 +91,10 @@ public class QueryableBuilder : IQueryableBuilder
 
     protected virtual Expression ApplyFilter(Expression source, FilterExpression filter, ResourceType resourceType, QueryableBuilderContext context)
     {
-        ArgumentGuard.NotNull(source);
-        ArgumentGuard.NotNull(filter);
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(context);
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(filter);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(context);
 
         using LambdaScope lambdaScope = context.LambdaScopeFactory.CreateScope(context.ElementType);
         QueryClauseBuilderContext clauseContext = context.CreateClauseContext(this, source, resourceType, lambdaScope);
@@ -104,10 +104,10 @@ public class QueryableBuilder : IQueryableBuilder
 
     protected virtual Expression ApplySort(Expression source, SortExpression sort, ResourceType resourceType, QueryableBuilderContext context)
     {
-        ArgumentGuard.NotNull(source);
-        ArgumentGuard.NotNull(sort);
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(context);
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(sort);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(context);
 
         using LambdaScope lambdaScope = context.LambdaScopeFactory.CreateScope(context.ElementType);
         QueryClauseBuilderContext clauseContext = context.CreateClauseContext(this, source, resourceType, lambdaScope);
@@ -117,10 +117,10 @@ public class QueryableBuilder : IQueryableBuilder
 
     protected virtual Expression ApplyPagination(Expression source, PaginationExpression pagination, ResourceType resourceType, QueryableBuilderContext context)
     {
-        ArgumentGuard.NotNull(source);
-        ArgumentGuard.NotNull(pagination);
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(context);
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(pagination);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(context);
 
         using LambdaScope lambdaScope = context.LambdaScopeFactory.CreateScope(context.ElementType);
         QueryClauseBuilderContext clauseContext = context.CreateClauseContext(this, source, resourceType, lambdaScope);
@@ -130,10 +130,10 @@ public class QueryableBuilder : IQueryableBuilder
 
     protected virtual Expression ApplySelection(Expression source, FieldSelection selection, ResourceType resourceType, QueryableBuilderContext context)
     {
-        ArgumentGuard.NotNull(source);
-        ArgumentGuard.NotNull(selection);
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(context);
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(selection);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(context);
 
         using LambdaScope lambdaScope = context.LambdaScopeFactory.CreateScope(context.ElementType);
         QueryClauseBuilderContext clauseContext = context.CreateClauseContext(this, source, resourceType, lambdaScope);

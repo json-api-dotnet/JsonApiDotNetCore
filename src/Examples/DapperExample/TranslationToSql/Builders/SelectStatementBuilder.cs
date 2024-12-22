@@ -4,7 +4,6 @@ using DapperExample.TranslationToSql.DataModel;
 using DapperExample.TranslationToSql.Generators;
 using DapperExample.TranslationToSql.Transformations;
 using DapperExample.TranslationToSql.TreeNodes;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries;
@@ -50,7 +49,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
 
     public SelectNode Build(QueryLayer queryLayer, SelectShape selectShape)
     {
-        ArgumentGuard.NotNull(queryLayer);
+        ArgumentNullException.ThrowIfNull(queryLayer);
 
         // Convert queryLayer.Include into multiple levels of queryLayer.Selection.
         var includeConverter = new QueryLayerIncludeConverter(queryLayer);
@@ -701,7 +700,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
 
         public NullableAttributeFinder(IDataModelService dataModelService)
         {
-            ArgumentGuard.NotNull(dataModelService);
+            ArgumentNullException.ThrowIfNull(dataModelService);
 
             _dataModelService = dataModelService;
         }
@@ -758,10 +757,10 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
         public QueryState(IDataModelService dataModelService, TableAliasGenerator tableAliasGenerator, ParameterGenerator parameterGenerator,
             ILoggerFactory loggerFactory)
         {
-            ArgumentGuard.NotNull(dataModelService);
-            ArgumentGuard.NotNull(tableAliasGenerator);
-            ArgumentGuard.NotNull(parameterGenerator);
-            ArgumentGuard.NotNull(loggerFactory);
+            ArgumentNullException.ThrowIfNull(dataModelService);
+            ArgumentNullException.ThrowIfNull(tableAliasGenerator);
+            ArgumentNullException.ThrowIfNull(parameterGenerator);
+            ArgumentNullException.ThrowIfNull(loggerFactory);
 
             DataModelService = dataModelService;
             TableAliasGenerator = tableAliasGenerator;

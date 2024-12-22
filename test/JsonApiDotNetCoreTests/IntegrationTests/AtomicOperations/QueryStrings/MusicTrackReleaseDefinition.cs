@@ -1,5 +1,4 @@
 using JetBrains.Annotations;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Primitives;
@@ -15,7 +14,7 @@ public sealed class MusicTrackReleaseDefinition : JsonApiResourceDefinition<Musi
     public MusicTrackReleaseDefinition(IResourceGraph resourceGraph, ISystemClock systemClock)
         : base(resourceGraph)
     {
-        ArgumentGuard.NotNull(systemClock);
+        ArgumentNullException.ThrowIfNull(systemClock);
 
         _systemClock = systemClock;
     }

@@ -10,7 +10,7 @@ public class OrderClauseBuilder : QueryClauseBuilder, IOrderClauseBuilder
 {
     public virtual Expression ApplyOrderBy(SortExpression expression, QueryClauseBuilderContext context)
     {
-        ArgumentGuard.NotNull(expression);
+        ArgumentNullException.ThrowIfNull(expression);
 
         return Visit(expression, context);
     }

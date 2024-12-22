@@ -43,7 +43,7 @@ public abstract class QueryExpressionParser
     /// </remarks>
     protected virtual void Tokenize(string source)
     {
-        ArgumentGuard.NotNull(source);
+        ArgumentNullException.ThrowIfNull(source);
 
         var tokenizer = new QueryTokenizer(source);
         TokenStack = new Stack<Token>(tokenizer.EnumerateTokens().Reverse());
@@ -56,8 +56,8 @@ public abstract class QueryExpressionParser
     protected ResourceFieldChainExpression ParseFieldChain(FieldChainPattern pattern, FieldChainPatternMatchOptions options, ResourceType resourceType,
         string? alternativeErrorMessage)
     {
-        ArgumentGuard.NotNull(pattern);
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(pattern);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         int startPosition = GetNextTokenPositionOrEnd();
 
@@ -120,7 +120,7 @@ public abstract class QueryExpressionParser
     /// </summary>
     protected void EatText(string text)
     {
-        ArgumentGuard.NotNull(text);
+        ArgumentNullException.ThrowIfNull(text);
 
         if (!TokenStack.TryPop(out Token? token) || token.Kind != TokenKind.Text || token.Value != text)
         {
@@ -162,7 +162,7 @@ public abstract class QueryExpressionParser
     /// </summary>
     protected int GetRelativePositionOfLastFieldInChain(ResourceFieldChainExpression fieldChain)
     {
-        ArgumentGuard.NotNull(fieldChain);
+        ArgumentNullException.ThrowIfNull(fieldChain);
 
         int position = 0;
 

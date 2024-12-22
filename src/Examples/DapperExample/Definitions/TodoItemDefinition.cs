@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using DapperExample.Models;
 using JetBrains.Annotations;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -17,7 +16,7 @@ public sealed class TodoItemDefinition : JsonApiResourceDefinition<TodoItem, lon
     public TodoItemDefinition(IResourceGraph resourceGraph, IClock clock)
         : base(resourceGraph)
     {
-        ArgumentGuard.NotNull(clock);
+        ArgumentNullException.ThrowIfNull(clock);
 
         _clock = clock;
     }

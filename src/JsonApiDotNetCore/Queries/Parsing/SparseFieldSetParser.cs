@@ -14,7 +14,7 @@ public class SparseFieldSetParser : QueryExpressionParser, ISparseFieldSetParser
     /// <inheritdoc />
     public SparseFieldSetExpression? Parse(string source, ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         Tokenize(source);
 
@@ -27,7 +27,7 @@ public class SparseFieldSetParser : QueryExpressionParser, ISparseFieldSetParser
 
     protected virtual SparseFieldSetExpression? ParseSparseFieldSet(ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         ImmutableHashSet<ResourceFieldAttribute>.Builder fieldSetBuilder = ImmutableHashSet.CreateBuilder<ResourceFieldAttribute>();
 
@@ -50,7 +50,7 @@ public class SparseFieldSetParser : QueryExpressionParser, ISparseFieldSetParser
 
     protected override void ValidateField(ResourceFieldAttribute field, int position)
     {
-        ArgumentGuard.NotNull(field);
+        ArgumentNullException.ThrowIfNull(field);
 
         if (field.IsViewBlocked())
         {

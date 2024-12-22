@@ -16,7 +16,7 @@ internal sealed class JsonApiValidationFilter : IPropertyValidationFilter
 
     public JsonApiValidationFilter(IHttpContextAccessor httpContextAccessor)
     {
-        ArgumentGuard.NotNull(httpContextAccessor);
+        ArgumentNullException.ThrowIfNull(httpContextAccessor);
 
         _httpContextAccessor = httpContextAccessor;
     }

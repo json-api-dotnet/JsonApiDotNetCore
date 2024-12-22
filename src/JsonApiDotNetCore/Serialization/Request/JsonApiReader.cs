@@ -24,9 +24,9 @@ public sealed partial class JsonApiReader : IJsonApiReader
 
     public JsonApiReader(IJsonApiOptions options, IDocumentAdapter documentAdapter, ILogger<JsonApiReader> logger)
     {
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(documentAdapter);
-        ArgumentGuard.NotNull(logger);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(documentAdapter);
+        ArgumentNullException.ThrowIfNull(logger);
 
         _options = options;
         _documentAdapter = documentAdapter;
@@ -36,7 +36,7 @@ public sealed partial class JsonApiReader : IJsonApiReader
     /// <inheritdoc />
     public async Task<object?> ReadAsync(HttpRequest httpRequest)
     {
-        ArgumentGuard.NotNull(httpRequest);
+        ArgumentNullException.ThrowIfNull(httpRequest);
 
         string requestBody = await ReceiveRequestBodyAsync(httpRequest);
 

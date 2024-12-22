@@ -1,5 +1,4 @@
 using JetBrains.Annotations;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
@@ -20,8 +19,8 @@ public sealed class ResourceTypeCapturingDefinition<TResource, TId> : JsonApiRes
     public ResourceTypeCapturingDefinition(IResourceGraph resourceGraph, IJsonApiRequest request, ResourceTypeCaptureStore<TResource, TId> captureStore)
         : base(resourceGraph)
     {
-        ArgumentGuard.NotNull(request);
-        ArgumentGuard.NotNull(captureStore);
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(captureStore);
 
         _request = request;
         _captureStore = captureStore;

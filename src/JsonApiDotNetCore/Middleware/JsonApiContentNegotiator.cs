@@ -30,8 +30,8 @@ public class JsonApiContentNegotiator : IJsonApiContentNegotiator
 
     public JsonApiContentNegotiator(IJsonApiOptions options, IHttpContextAccessor httpContextAccessor)
     {
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(httpContextAccessor);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(httpContextAccessor);
 
         _options = options;
         _httpContextAccessor = httpContextAccessor;

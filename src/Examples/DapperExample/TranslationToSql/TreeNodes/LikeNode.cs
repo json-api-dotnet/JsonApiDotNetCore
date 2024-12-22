@@ -1,4 +1,3 @@
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Queries.Expressions;
 
 namespace DapperExample.TranslationToSql.TreeNodes;
@@ -16,8 +15,8 @@ internal sealed class LikeNode : FilterNode
 
     public LikeNode(ColumnNode column, TextMatchKind matchKind, string text)
     {
-        ArgumentGuard.NotNull(column);
-        ArgumentGuard.NotNull(text);
+        ArgumentNullException.ThrowIfNull(column);
+        ArgumentNullException.ThrowIfNull(text);
 
         Column = column;
         MatchKind = matchKind;

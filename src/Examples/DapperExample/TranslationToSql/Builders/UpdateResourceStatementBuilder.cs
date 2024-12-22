@@ -12,7 +12,7 @@ internal sealed class UpdateResourceStatementBuilder(IDataModelService dataModel
 {
     public UpdateNode Build(ResourceType resourceType, IReadOnlyDictionary<string, object?> columnsToUpdate, params object[] idValues)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
         ArgumentGuard.NotNullNorEmpty(columnsToUpdate);
         ArgumentGuard.NotNullNorEmpty(idValues);
 

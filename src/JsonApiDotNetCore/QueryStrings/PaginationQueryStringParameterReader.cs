@@ -31,8 +31,8 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
         IJsonApiOptions options)
         : base(request, resourceGraph)
     {
-        ArgumentGuard.NotNull(paginationParser);
-        ArgumentGuard.NotNull(options);
+        ArgumentNullException.ThrowIfNull(paginationParser);
+        ArgumentNullException.ThrowIfNull(options);
 
         _options = options;
         _paginationParser = paginationParser;
@@ -41,7 +41,7 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
     /// <inheritdoc />
     public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
     {
-        ArgumentGuard.NotNull(disableQueryStringAttribute);
+        ArgumentNullException.ThrowIfNull(disableQueryStringAttribute);
 
         return !IsAtomicOperationsRequest && !disableQueryStringAttribute.ContainsParameter(JsonApiQueryStringParameters.Page);
     }
@@ -49,7 +49,7 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
     /// <inheritdoc />
     public virtual bool CanRead(string parameterName)
     {
-        ArgumentGuard.NotNullNorEmpty(parameterName);
+        ArgumentException.ThrowIfNullOrEmpty(parameterName);
 
         return parameterName is PageSizeParameterName or PageNumberParameterName;
     }
@@ -95,7 +95,7 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
 
     protected virtual void ValidatePageSize(PaginationQueryStringValueExpression constraint)
     {
-        ArgumentGuard.NotNull(constraint);
+        ArgumentNullException.ThrowIfNull(constraint);
 
         foreach (PaginationElementQueryStringValueExpression element in constraint.Elements)
         {
@@ -121,7 +121,7 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
 
     protected virtual void ValidatePageNumber(PaginationQueryStringValueExpression constraint)
     {
-        ArgumentGuard.NotNull(constraint);
+        ArgumentNullException.ThrowIfNull(constraint);
 
         foreach (PaginationElementQueryStringValueExpression element in constraint.Elements)
         {

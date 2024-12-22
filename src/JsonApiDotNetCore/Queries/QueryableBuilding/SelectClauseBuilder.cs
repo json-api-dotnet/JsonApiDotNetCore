@@ -20,14 +20,14 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
 
     public SelectClauseBuilder(IResourceFactory resourceFactory)
     {
-        ArgumentGuard.NotNull(resourceFactory);
+        ArgumentNullException.ThrowIfNull(resourceFactory);
 
         _resourceFactory = resourceFactory;
     }
 
     public virtual Expression ApplySelect(FieldSelection selection, QueryClauseBuilderContext context)
     {
-        ArgumentGuard.NotNull(selection);
+        ArgumentNullException.ThrowIfNull(selection);
 
         Expression bodyInitializer = CreateLambdaBodyInitializer(selection, context.ResourceType, false, context);
 
@@ -280,7 +280,7 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
 
         public PropertySelector(PropertyInfo property, QueryLayer? nextLayer = null)
         {
-            ArgumentGuard.NotNull(property);
+            ArgumentNullException.ThrowIfNull(property);
 
             Property = property;
             NextLayer = nextLayer;

@@ -20,7 +20,7 @@ public class NotExpression : FilterExpression
 
     public NotExpression(FilterExpression child)
     {
-        ArgumentGuard.NotNull(child);
+        ArgumentNullException.ThrowIfNull(child);
 
         Child = child;
     }

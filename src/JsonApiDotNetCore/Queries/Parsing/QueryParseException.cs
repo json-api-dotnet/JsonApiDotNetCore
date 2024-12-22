@@ -28,7 +28,7 @@ public sealed class QueryParseException : Exception
 
     public string GetMessageWithPosition(string sourceText)
     {
-        ArgumentGuard.NotNull(sourceText);
+        ArgumentNullException.ThrowIfNull(sourceText);
 
         if (Position < 0)
         {

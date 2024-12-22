@@ -1,5 +1,3 @@
-using JsonApiDotNetCore;
-
 namespace DapperExample.TranslationToSql.Generators;
 
 internal abstract class UniqueNameGenerator
@@ -9,7 +7,7 @@ internal abstract class UniqueNameGenerator
 
     protected UniqueNameGenerator(string prefix)
     {
-        ArgumentGuard.NotNullNorEmpty(prefix);
+        ArgumentException.ThrowIfNullOrEmpty(prefix);
 
         _prefix = prefix;
     }

@@ -34,14 +34,14 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker,
         IResourceDefinitionAccessor resourceDefinitionAccessor)
     {
-        ArgumentGuard.NotNull(repositoryAccessor);
-        ArgumentGuard.NotNull(queryLayerComposer);
-        ArgumentGuard.NotNull(paginationContext);
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(loggerFactory);
-        ArgumentGuard.NotNull(request);
-        ArgumentGuard.NotNull(resourceChangeTracker);
-        ArgumentGuard.NotNull(resourceDefinitionAccessor);
+        ArgumentNullException.ThrowIfNull(repositoryAccessor);
+        ArgumentNullException.ThrowIfNull(queryLayerComposer);
+        ArgumentNullException.ThrowIfNull(paginationContext);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(resourceChangeTracker);
+        ArgumentNullException.ThrowIfNull(resourceDefinitionAccessor);
 
         _repositoryAccessor = repositoryAccessor;
         _queryLayerComposer = queryLayerComposer;
@@ -106,7 +106,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             relationshipName
         });
 
-        ArgumentGuard.NotNull(relationshipName);
+        ArgumentNullException.ThrowIfNull(relationshipName);
         AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
         AssertHasRelationship(_request.Relationship, relationshipName);
 
@@ -146,7 +146,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             relationshipName
         });
 
-        ArgumentGuard.NotNull(relationshipName);
+        ArgumentNullException.ThrowIfNull(relationshipName);
         AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
         AssertHasRelationship(_request.Relationship, relationshipName);
 
@@ -196,7 +196,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             resource
         });
 
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Create resource");
 
@@ -237,7 +237,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
 
     protected async Task AssertPrimaryResourceDoesNotExistAsync(TResource resource, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
 
         if (!Equals(resource.Id, default(TId)))
         {
@@ -252,7 +252,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
 
     protected virtual async Task InitializeResourceAsync(TResource resourceForDatabase, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(resourceForDatabase);
+        ArgumentNullException.ThrowIfNull(resourceForDatabase);
 
         await _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceForDatabase, WriteOperationKind.CreateResource, cancellationToken);
     }
@@ -264,7 +264,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
 
     protected async Task AssertResourcesToAssignInRelationshipsExistAsync(TResource primaryResource, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(primaryResource);
+        ArgumentNullException.ThrowIfNull(primaryResource);
 
         await ValidateResourcesToAssignInRelationshipsExistWithRefreshAsync(primaryResource, false, cancellationToken);
     }
@@ -349,8 +349,8 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             rightResourceIds
         });
 
-        ArgumentGuard.NotNull(relationshipName);
-        ArgumentGuard.NotNull(rightResourceIds);
+        ArgumentNullException.ThrowIfNull(relationshipName);
+        ArgumentNullException.ThrowIfNull(rightResourceIds);
         AssertHasRelationship(_request.Relationship, relationshipName);
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Add to to-many relationship");
@@ -455,7 +455,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             resource
         });
 
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Update resource");
 
@@ -499,7 +499,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             rightValue
         });
 
-        ArgumentGuard.NotNull(relationshipName);
+        ArgumentNullException.ThrowIfNull(relationshipName);
         AssertHasRelationship(_request.Relationship, relationshipName);
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Set relationship");
@@ -570,8 +570,8 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             rightResourceIds
         });
 
-        ArgumentGuard.NotNull(relationshipName);
-        ArgumentGuard.NotNull(rightResourceIds);
+        ArgumentNullException.ThrowIfNull(relationshipName);
+        ArgumentNullException.ThrowIfNull(rightResourceIds);
         AssertHasRelationship(_request.Relationship, relationshipName);
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Remove from to-many relationship");

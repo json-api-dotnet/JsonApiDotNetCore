@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using DapperExample.TranslationToSql.TreeNodes;
-using JsonApiDotNetCore;
 
 namespace DapperExample.TranslationToSql.Transformations;
 
@@ -36,7 +35,7 @@ internal sealed partial class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<
 
     public UnusedSelectorsRewriter(ILoggerFactory loggerFactory)
     {
-        ArgumentGuard.NotNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(loggerFactory);
 
         _usageCollector = new ColumnSelectorUsageCollector(loggerFactory);
         _logger = loggerFactory.CreateLogger<UnusedSelectorsRewriter>();
@@ -44,7 +43,7 @@ internal sealed partial class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<
 
     public SelectNode RemoveUnusedSelectorsInSubQueries(SelectNode select)
     {
-        ArgumentGuard.NotNull(select);
+        ArgumentNullException.ThrowIfNull(select);
 
         _rootSelect = select;
 

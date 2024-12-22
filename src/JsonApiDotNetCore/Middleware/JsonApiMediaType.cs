@@ -33,14 +33,14 @@ public sealed class JsonApiMediaType : IEquatable<JsonApiMediaType>
 
     public JsonApiMediaType(IReadOnlySet<JsonApiMediaTypeExtension> extensions)
     {
-        ArgumentGuard.NotNull(extensions);
+        ArgumentNullException.ThrowIfNull(extensions);
 
         Extensions = extensions;
     }
 
     public JsonApiMediaType(IEnumerable<JsonApiMediaTypeExtension> extensions)
     {
-        ArgumentGuard.NotNull(extensions);
+        ArgumentNullException.ThrowIfNull(extensions);
 
         Extensions = extensions.ToHashSet().AsReadOnly();
     }

@@ -23,8 +23,8 @@ internal sealed partial class MatchTraceScope : IDisposable
 
     public static MatchTraceScope CreateRoot(MatchState startState, ILogger logger)
     {
-        ArgumentGuard.NotNull(startState);
-        ArgumentGuard.NotNull(logger);
+        ArgumentNullException.ThrowIfNull(startState);
+        ArgumentNullException.ThrowIfNull(logger);
 
         bool isEnabled = logger.IsEnabled(LogLevel.Trace);
         var scope = new MatchTraceScope(startState.Pattern, isEnabled, logger, 0);
@@ -40,7 +40,7 @@ internal sealed partial class MatchTraceScope : IDisposable
 
     public MatchTraceScope CreateChild(MatchState startState)
     {
-        ArgumentGuard.NotNull(startState);
+        ArgumentNullException.ThrowIfNull(startState);
 
         int indentDepth = _indentDepth + 1;
         FieldChainPattern? patternSegment = startState.Pattern?.WithoutNext();
@@ -57,7 +57,7 @@ internal sealed partial class MatchTraceScope : IDisposable
 
     public void LogMatchResult(MatchState resultState)
     {
-        ArgumentGuard.NotNull(resultState);
+        ArgumentNullException.ThrowIfNull(resultState);
 
         if (_isEnabled)
         {
@@ -85,7 +85,7 @@ internal sealed partial class MatchTraceScope : IDisposable
 
     public void LogBacktrackTo(MatchState backtrackState)
     {
-        ArgumentGuard.NotNull(backtrackState);
+        ArgumentNullException.ThrowIfNull(backtrackState);
 
         if (_isEnabled)
         {
@@ -97,7 +97,7 @@ internal sealed partial class MatchTraceScope : IDisposable
 
     public void SetResult(MatchState endState)
     {
-        ArgumentGuard.NotNull(endState);
+        ArgumentNullException.ThrowIfNull(endState);
 
         _endState = endState;
     }

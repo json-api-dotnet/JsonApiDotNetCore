@@ -11,7 +11,7 @@ public abstract class CoreJsonApiController : ControllerBase
 {
     protected IActionResult Error(ErrorObject error)
     {
-        ArgumentGuard.NotNull(error);
+        ArgumentNullException.ThrowIfNull(error);
 
         return new ObjectResult(error)
         {

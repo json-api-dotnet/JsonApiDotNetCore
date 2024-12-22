@@ -15,14 +15,14 @@ internal sealed class SortExpressionLambdaConverter
 
     public SortExpressionLambdaConverter(IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
 
         _resourceGraph = resourceGraph;
     }
 
     public SortElementExpression FromLambda<TResource>(Expression<Func<TResource, object?>> keySelector, ListSortDirection sortDirection)
     {
-        ArgumentGuard.NotNull(keySelector);
+        ArgumentNullException.ThrowIfNull(keySelector);
 
         _fields.Clear();
 

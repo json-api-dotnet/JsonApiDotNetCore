@@ -10,7 +10,7 @@ public class SkipTakeClauseBuilder : QueryClauseBuilder, ISkipTakeClauseBuilder
 {
     public virtual Expression ApplySkipTake(PaginationExpression expression, QueryClauseBuilderContext context)
     {
-        ArgumentGuard.NotNull(expression);
+        ArgumentNullException.ThrowIfNull(expression);
 
         return Visit(expression, context);
     }

@@ -24,8 +24,8 @@ public class LiteralConstantExpression : IdentifierExpression
 
     public LiteralConstantExpression(object typedValue, string stringValue)
     {
-        ArgumentGuard.NotNull(typedValue);
-        ArgumentGuard.NotNull(stringValue);
+        ArgumentNullException.ThrowIfNull(typedValue);
+        ArgumentNullException.ThrowIfNull(stringValue);
 
         TypedValue = typedValue;
         _stringValue = stringValue;
@@ -33,7 +33,7 @@ public class LiteralConstantExpression : IdentifierExpression
 
     private static string? GetStringValue(object typedValue)
     {
-        ArgumentGuard.NotNull(typedValue);
+        ArgumentNullException.ThrowIfNull(typedValue);
 
         return typedValue is IFormattable cultureAwareValue ? cultureAwareValue.ToString(null, CultureInfo.InvariantCulture) : typedValue.ToString();
     }

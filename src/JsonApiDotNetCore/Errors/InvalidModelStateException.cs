@@ -23,9 +23,9 @@ public sealed class InvalidModelStateException(
     private static List<ErrorObject> FromModelStateDictionary(IReadOnlyDictionary<string, ModelStateEntry?> modelState, Type modelType,
         IResourceGraph resourceGraph, bool includeExceptionStackTraceInErrors, Func<Type, int, Type?>? getCollectionElementTypeCallback)
     {
-        ArgumentGuard.NotNull(modelState);
-        ArgumentGuard.NotNull(modelType);
-        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(modelState);
+        ArgumentNullException.ThrowIfNull(modelType);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
 
         List<ErrorObject> errorObjects = [];
 
@@ -231,8 +231,8 @@ public sealed class InvalidModelStateException(
         protected ModelStateKeySegment(Type modelType, bool isInComplexType, string nextKey, string? sourcePointer, ModelStateKeySegment? parent,
             Func<Type, int, Type?>? getCollectionElementTypeCallback)
         {
-            ArgumentGuard.NotNull(modelType);
-            ArgumentGuard.NotNull(nextKey);
+            ArgumentNullException.ThrowIfNull(modelType);
+            ArgumentNullException.ThrowIfNull(nextKey);
 
             ModelType = modelType;
             IsInComplexType = isInComplexType;
@@ -244,15 +244,15 @@ public sealed class InvalidModelStateException(
 
         public ModelStateKeySegment? GetNextSegment(Type modelType, bool isInComplexType, string? sourcePointer)
         {
-            ArgumentGuard.NotNull(modelType);
+            ArgumentNullException.ThrowIfNull(modelType);
 
             return _nextKey.Length == 0 ? null : CreateSegment(modelType, _nextKey, isInComplexType, this, sourcePointer, GetCollectionElementTypeCallback);
         }
 
         public static ModelStateKeySegment Create(Type modelType, string key, Func<Type, int, Type?>? getCollectionElementTypeCallback)
         {
-            ArgumentGuard.NotNull(modelType);
-            ArgumentGuard.NotNull(key);
+            ArgumentNullException.ThrowIfNull(modelType);
+            ArgumentNullException.ThrowIfNull(key);
 
             return CreateSegment(modelType, key, false, null, null, getCollectionElementTypeCallback);
         }
@@ -355,14 +355,14 @@ public sealed class InvalidModelStateException(
             Func<Type, int, Type?>? getCollectionElementTypeCallback)
             : base(modelType, isInComplexType, nextKey, sourcePointer, parent, getCollectionElementTypeCallback)
         {
-            ArgumentGuard.NotNull(propertyName);
+            ArgumentNullException.ThrowIfNull(propertyName);
 
             PropertyName = propertyName;
         }
 
         public static string GetPublicNameForProperty(PropertyInfo property)
         {
-            ArgumentGuard.NotNull(property);
+            ArgumentNullException.ThrowIfNull(property);
 
             var jsonNameAttribute = property.GetCustomAttribute<JsonPropertyNameAttribute>(true);
             return jsonNameAttribute?.Name ?? property.Name;

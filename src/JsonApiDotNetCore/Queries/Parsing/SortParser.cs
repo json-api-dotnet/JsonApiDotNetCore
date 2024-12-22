@@ -14,7 +14,7 @@ public class SortParser : QueryExpressionParser, ISortParser
     /// <inheritdoc />
     public SortExpression Parse(string source, ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         Tokenize(source);
 
@@ -27,7 +27,7 @@ public class SortParser : QueryExpressionParser, ISortParser
 
     protected virtual SortExpression ParseSort(ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         SortElementExpression firstElement = ParseSortElement(resourceType);
 
@@ -47,7 +47,7 @@ public class SortParser : QueryExpressionParser, ISortParser
 
     protected virtual SortElementExpression ParseSortElement(ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         bool isAscending = true;
 
@@ -99,14 +99,14 @@ public class SortParser : QueryExpressionParser, ISortParser
 
     protected virtual bool IsFunction(string name)
     {
-        ArgumentGuard.NotNullNorEmpty(name);
+        ArgumentException.ThrowIfNullOrEmpty(name);
 
         return name == Keywords.Count;
     }
 
     protected virtual FunctionExpression ParseFunction(ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Text)
         {
@@ -138,7 +138,7 @@ public class SortParser : QueryExpressionParser, ISortParser
 
     protected override void ValidateField(ResourceFieldAttribute field, int position)
     {
-        ArgumentGuard.NotNull(field);
+        ArgumentNullException.ThrowIfNull(field);
 
         if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowSort))
         {

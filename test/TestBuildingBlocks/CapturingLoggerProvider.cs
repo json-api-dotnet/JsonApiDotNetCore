@@ -1,5 +1,4 @@
 using JetBrains.Annotations;
-using JsonApiDotNetCore;
 using Microsoft.Extensions.Logging;
 
 namespace TestBuildingBlocks;
@@ -29,14 +28,14 @@ public sealed class CapturingLoggerProvider : ILoggerProvider
 
     public CapturingLoggerProvider(Func<string, LogLevel, bool> filter)
     {
-        ArgumentGuard.NotNull(filter);
+        ArgumentNullException.ThrowIfNull(filter);
 
         _filter = filter;
     }
 
     public ILogger CreateLogger(string categoryName)
     {
-        ArgumentGuard.NotNullNorEmpty(categoryName);
+        ArgumentException.ThrowIfNullOrEmpty(categoryName);
 
         return new CapturingLogger(this, categoryName, _filter);
     }

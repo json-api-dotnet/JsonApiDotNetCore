@@ -1,4 +1,3 @@
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Request.Adapters;
 
@@ -11,8 +10,8 @@ internal sealed class CapturingDocumentAdapter : IDocumentAdapter
 
     public CapturingDocumentAdapter(IDocumentAdapter innerAdapter, RequestDocumentStore requestDocumentStore)
     {
-        ArgumentGuard.NotNull(innerAdapter);
-        ArgumentGuard.NotNull(requestDocumentStore);
+        ArgumentNullException.ThrowIfNull(innerAdapter);
+        ArgumentNullException.ThrowIfNull(requestDocumentStore);
 
         _innerAdapter = innerAdapter;
         _requestDocumentStore = requestDocumentStore;

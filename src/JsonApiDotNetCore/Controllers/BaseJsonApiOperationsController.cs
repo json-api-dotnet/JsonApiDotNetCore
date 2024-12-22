@@ -30,13 +30,13 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
     protected BaseJsonApiOperationsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
         IOperationsProcessor processor, IJsonApiRequest request, ITargetedFields targetedFields, IAtomicOperationFilter operationFilter)
     {
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(resourceGraph);
-        ArgumentGuard.NotNull(loggerFactory);
-        ArgumentGuard.NotNull(processor);
-        ArgumentGuard.NotNull(request);
-        ArgumentGuard.NotNull(targetedFields);
-        ArgumentGuard.NotNull(operationFilter);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(processor);
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(targetedFields);
+        ArgumentNullException.ThrowIfNull(operationFilter);
 
         _options = options;
         _resourceGraph = resourceGraph;
@@ -114,7 +114,7 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
             operations
         });
 
-        ArgumentGuard.NotNull(operations);
+        ArgumentNullException.ThrowIfNull(operations);
 
         ValidateEnabledOperations(operations);
 
@@ -129,7 +129,7 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
 
     protected virtual void ValidateEnabledOperations(IList<OperationContainer> operations)
     {
-        ArgumentGuard.NotNull(operations);
+        ArgumentNullException.ThrowIfNull(operations);
 
         List<ErrorObject> errors = [];
 
@@ -193,7 +193,7 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
 
     protected virtual void ValidateModelState(IList<OperationContainer> operations)
     {
-        ArgumentGuard.NotNull(operations);
+        ArgumentNullException.ThrowIfNull(operations);
 
         // We must validate the resource inside each operation manually, because they are typed as IIdentifiable.
         // Instead of validating IIdentifiable we need to validate the resource runtime-type.

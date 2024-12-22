@@ -37,7 +37,7 @@ public class LogicalExpression : FilterExpression
 
     public LogicalExpression(LogicalOperator @operator, IImmutableList<FilterExpression> terms)
     {
-        ArgumentGuard.NotNull(terms);
+        ArgumentNullException.ThrowIfNull(terms);
 
         if (terms.Count < 2)
         {
@@ -50,7 +50,7 @@ public class LogicalExpression : FilterExpression
 
     public static FilterExpression? Compose(LogicalOperator @operator, params FilterExpression?[] filters)
     {
-        ArgumentGuard.NotNull(filters);
+        ArgumentNullException.ThrowIfNull(filters);
 
         // Workaround for https://youtrack.jetbrains.com/issue/RSRP-496512/Invalid-Use-collection-expression-suggestion.
         // ReSharper disable once UseCollectionExpression

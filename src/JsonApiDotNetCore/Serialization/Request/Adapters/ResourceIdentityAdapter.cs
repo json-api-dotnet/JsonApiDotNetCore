@@ -18,8 +18,8 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
 
     protected ResourceIdentityAdapter(IResourceGraph resourceGraph, IResourceFactory resourceFactory)
     {
-        ArgumentGuard.NotNull(resourceGraph);
-        ArgumentGuard.NotNull(resourceFactory);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(resourceFactory);
 
         _resourceGraph = resourceGraph;
         _resourceFactory = resourceFactory;
@@ -28,9 +28,9 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
     protected (IIdentifiable resource, ResourceType resourceType) ConvertResourceIdentity(ResourceIdentity identity, ResourceIdentityRequirements requirements,
         RequestAdapterState state)
     {
-        ArgumentGuard.NotNull(identity);
-        ArgumentGuard.NotNull(requirements);
-        ArgumentGuard.NotNull(state);
+        ArgumentNullException.ThrowIfNull(identity);
+        ArgumentNullException.ThrowIfNull(requirements);
+        ArgumentNullException.ThrowIfNull(state);
 
         ResourceType resourceType = ResolveType(identity, requirements, state);
         IIdentifiable resource = CreateResource(identity, requirements, resourceType, state);
@@ -238,9 +238,9 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
     protected static void AssertIsKnownRelationship([NotNull] RelationshipAttribute? relationship, string relationshipName, ResourceType resourceType,
         RequestAdapterState state)
     {
-        ArgumentGuard.NotNull(relationshipName);
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(state);
+        ArgumentNullException.ThrowIfNull(relationshipName);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(state);
 
         if (relationship == null)
         {
@@ -251,8 +251,8 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
 
     protected internal static void AssertToManyInAddOrRemoveRelationship(RelationshipAttribute relationship, RequestAdapterState state)
     {
-        ArgumentGuard.NotNull(relationship);
-        ArgumentGuard.NotNull(state);
+        ArgumentNullException.ThrowIfNull(relationship);
+        ArgumentNullException.ThrowIfNull(state);
 
         bool requireToManyRelationship = state.Request.WriteOperation is WriteOperationKind.AddToRelationship or WriteOperationKind.RemoveFromRelationship;
 

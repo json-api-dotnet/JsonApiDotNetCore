@@ -43,7 +43,7 @@ public abstract class ResourceFieldAttribute : Attribute
         get => _property!;
         internal set
         {
-            ArgumentGuard.NotNull(value);
+            ArgumentNullException.ThrowIfNull(value);
             _property = value;
         }
     }
@@ -56,7 +56,7 @@ public abstract class ResourceFieldAttribute : Attribute
         get => _type!;
         internal set
         {
-            ArgumentGuard.NotNull(value);
+            ArgumentNullException.ThrowIfNull(value);
             _type = value;
         }
     }
@@ -67,7 +67,7 @@ public abstract class ResourceFieldAttribute : Attribute
     /// </summary>
     public object? GetValue(object resource)
     {
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
         AssertIsIdentifiable(resource);
 
         if (Property.GetMethod == null)
@@ -93,7 +93,7 @@ public abstract class ResourceFieldAttribute : Attribute
     /// </summary>
     public virtual void SetValue(object resource, object? newValue)
     {
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
         AssertIsIdentifiable(resource);
 
         if (Property.SetMethod == null)

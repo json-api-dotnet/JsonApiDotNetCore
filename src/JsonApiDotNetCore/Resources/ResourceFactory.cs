@@ -15,7 +15,7 @@ internal sealed class ResourceFactory : IResourceFactory
 
     public ResourceFactory(IServiceProvider serviceProvider)
     {
-        ArgumentGuard.NotNull(serviceProvider);
+        ArgumentNullException.ThrowIfNull(serviceProvider);
 
         _serviceProvider = serviceProvider;
     }
@@ -23,7 +23,7 @@ internal sealed class ResourceFactory : IResourceFactory
     /// <inheritdoc />
     public IIdentifiable CreateInstance(Type resourceClrType)
     {
-        ArgumentGuard.NotNull(resourceClrType);
+        ArgumentNullException.ThrowIfNull(resourceClrType);
 
         if (!resourceClrType.IsAssignableTo(typeof(IIdentifiable)))
         {
@@ -85,7 +85,7 @@ internal sealed class ResourceFactory : IResourceFactory
     /// <inheritdoc />
     public NewExpression CreateNewExpression(Type resourceClrType)
     {
-        ArgumentGuard.NotNull(resourceClrType);
+        ArgumentNullException.ThrowIfNull(resourceClrType);
 
         if (HasSingleConstructorWithoutParameters(resourceClrType))
         {

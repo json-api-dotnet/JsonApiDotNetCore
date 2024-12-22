@@ -1,5 +1,4 @@
 using Bogus;
-using JsonApiDotNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 
@@ -20,7 +19,7 @@ internal sealed class InjectionFakers
 
     public InjectionFakers(IServiceProvider serviceProvider)
     {
-        ArgumentGuard.NotNull(serviceProvider);
+        ArgumentNullException.ThrowIfNull(serviceProvider);
 
         _serviceProvider = serviceProvider;
 

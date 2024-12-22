@@ -1,5 +1,3 @@
-using JsonApiDotNetCore;
-
 namespace DapperExample.TranslationToSql.TreeNodes;
 
 /// <summary>
@@ -16,7 +14,7 @@ internal sealed class CountNode : SqlValueNode
 
     public CountNode(SelectNode subSelect)
     {
-        ArgumentGuard.NotNull(subSelect);
+        ArgumentNullException.ThrowIfNull(subSelect);
 
         SubSelect = subSelect;
     }

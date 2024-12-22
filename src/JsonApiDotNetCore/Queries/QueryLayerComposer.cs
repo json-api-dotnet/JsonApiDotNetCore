@@ -26,13 +26,13 @@ public class QueryLayerComposer : IQueryLayerComposer
         IJsonApiOptions options, IPaginationContext paginationContext, ITargetedFields targetedFields, IEvaluatedIncludeCache evaluatedIncludeCache,
         ISparseFieldSetCache sparseFieldSetCache)
     {
-        ArgumentGuard.NotNull(constraintProviders);
-        ArgumentGuard.NotNull(resourceDefinitionAccessor);
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(paginationContext);
-        ArgumentGuard.NotNull(targetedFields);
-        ArgumentGuard.NotNull(evaluatedIncludeCache);
-        ArgumentGuard.NotNull(sparseFieldSetCache);
+        ArgumentNullException.ThrowIfNull(constraintProviders);
+        ArgumentNullException.ThrowIfNull(resourceDefinitionAccessor);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(paginationContext);
+        ArgumentNullException.ThrowIfNull(targetedFields);
+        ArgumentNullException.ThrowIfNull(evaluatedIncludeCache);
+        ArgumentNullException.ThrowIfNull(sparseFieldSetCache);
 
         _constraintProviders = constraintProviders as IQueryConstraintProvider[] ?? constraintProviders.ToArray();
         _resourceDefinitionAccessor = resourceDefinitionAccessor;
@@ -66,7 +66,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     /// <inheritdoc />
     public FilterExpression? GetSecondaryFilterFromConstraints<TId>([DisallowNull] TId primaryId, HasManyAttribute hasManyRelationship)
     {
-        ArgumentGuard.NotNull(hasManyRelationship);
+        ArgumentNullException.ThrowIfNull(hasManyRelationship);
 
         if (hasManyRelationship.InverseNavigationProperty == null)
         {
@@ -133,7 +133,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     /// <inheritdoc />
     public QueryLayer ComposeFromConstraints(ResourceType requestResourceType)
     {
-        ArgumentGuard.NotNull(requestResourceType);
+        ArgumentNullException.ThrowIfNull(requestResourceType);
 
         ImmutableArray<ExpressionInScope> constraints = [.. _constraintProviders.SelectMany(provider => provider.GetConstraints())];
 
@@ -269,7 +269,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     /// <inheritdoc />
     public QueryLayer ComposeForGetById<TId>([DisallowNull] TId id, ResourceType primaryResourceType, TopFieldSelection fieldSelection)
     {
-        ArgumentGuard.NotNull(primaryResourceType);
+        ArgumentNullException.ThrowIfNull(primaryResourceType);
 
         AttrAttribute idAttribute = GetIdAttribute(primaryResourceType);
 
@@ -297,7 +297,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     /// <inheritdoc />
     public QueryLayer ComposeSecondaryLayerForRelationship(ResourceType secondaryResourceType)
     {
-        ArgumentGuard.NotNull(secondaryResourceType);
+        ArgumentNullException.ThrowIfNull(secondaryResourceType);
 
         QueryLayer secondaryLayer = ComposeFromConstraints(secondaryResourceType);
         secondaryLayer.Selection = GetSelectionForRelationship(secondaryResourceType);
@@ -321,9 +321,9 @@ public class QueryLayerComposer : IQueryLayerComposer
     public QueryLayer WrapLayerForSecondaryEndpoint<TId>(QueryLayer secondaryLayer, ResourceType primaryResourceType, [DisallowNull] TId primaryId,
         RelationshipAttribute relationship)
     {
-        ArgumentGuard.NotNull(secondaryLayer);
-        ArgumentGuard.NotNull(primaryResourceType);
-        ArgumentGuard.NotNull(relationship);
+        ArgumentNullException.ThrowIfNull(secondaryLayer);
+        ArgumentNullException.ThrowIfNull(primaryResourceType);
+        ArgumentNullException.ThrowIfNull(relationship);
 
         IncludeExpression? innerInclude = secondaryLayer.Include;
         secondaryLayer.Include = null;
@@ -383,7 +383,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     /// <inheritdoc />
     public QueryLayer ComposeForUpdate<TId>([DisallowNull] TId id, ResourceType primaryResourceType)
     {
-        ArgumentGuard.NotNull(primaryResourceType);
+        ArgumentNullException.ThrowIfNull(primaryResourceType);
 
         ImmutableHashSet<IncludeElementExpression> includeElements = _targetedFields.Relationships
             .Select(relationship => new IncludeElementExpression(relationship)).ToImmutableHashSet();
@@ -403,7 +403,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     /// <inheritdoc />
     public IEnumerable<(QueryLayer, RelationshipAttribute)> ComposeForGetTargetedSecondaryResourceIds(IIdentifiable primaryResource)
     {
-        ArgumentGuard.NotNull(primaryResource);
+        ArgumentNullException.ThrowIfNull(primaryResource);
 
         foreach (RelationshipAttribute relationship in _targetedFields.Relationships)
         {
@@ -421,8 +421,8 @@ public class QueryLayerComposer : IQueryLayerComposer
     /// <inheritdoc />
     public QueryLayer ComposeForGetRelationshipRightIds(RelationshipAttribute relationship, ICollection<IIdentifiable> rightResourceIds)
     {
-        ArgumentGuard.NotNull(relationship);
-        ArgumentGuard.NotNull(rightResourceIds);
+        ArgumentNullException.ThrowIfNull(relationship);
+        ArgumentNullException.ThrowIfNull(rightResourceIds);
 
         AttrAttribute rightIdAttribute = GetIdAttribute(relationship.RightType);
 
@@ -446,8 +446,8 @@ public class QueryLayerComposer : IQueryLayerComposer
     /// <inheritdoc />
     public QueryLayer ComposeForHasMany<TId>(HasManyAttribute hasManyRelationship, [DisallowNull] TId leftId, ICollection<IIdentifiable> rightResourceIds)
     {
-        ArgumentGuard.NotNull(hasManyRelationship);
-        ArgumentGuard.NotNull(rightResourceIds);
+        ArgumentNullException.ThrowIfNull(hasManyRelationship);
+        ArgumentNullException.ThrowIfNull(rightResourceIds);
 
         AttrAttribute leftIdAttribute = GetIdAttribute(hasManyRelationship.LeftType);
         AttrAttribute rightIdAttribute = GetIdAttribute(hasManyRelationship.RightType);
@@ -482,16 +482,16 @@ public class QueryLayerComposer : IQueryLayerComposer
     protected virtual IImmutableSet<IncludeElementExpression> GetIncludeElements(IImmutableSet<IncludeElementExpression> includeElements,
         ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(includeElements);
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(includeElements);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         return _resourceDefinitionAccessor.OnApplyIncludes(resourceType, includeElements);
     }
 
     protected virtual FilterExpression? GetFilter(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(expressionsInScope);
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(expressionsInScope);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         FilterExpression[] filters = expressionsInScope.OfType<FilterExpression>().ToArray();
         FilterExpression? filter = LogicalExpression.Compose(LogicalOperator.And, filters);
@@ -501,8 +501,8 @@ public class QueryLayerComposer : IQueryLayerComposer
 
     protected virtual SortExpression GetSort(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(expressionsInScope);
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(expressionsInScope);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         SortExpression? sort = expressionsInScope.OfType<SortExpression>().FirstOrDefault();
 
@@ -520,8 +520,8 @@ public class QueryLayerComposer : IQueryLayerComposer
 
     protected virtual PaginationExpression GetPagination(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(expressionsInScope);
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(expressionsInScope);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         PaginationExpression? pagination = expressionsInScope.OfType<PaginationExpression>().FirstOrDefault();
 
@@ -536,7 +536,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     protected virtual FieldSelection? GetSelectionForSparseAttributeSet(ResourceType resourceType)
 #pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         var selection = new FieldSelection();
 

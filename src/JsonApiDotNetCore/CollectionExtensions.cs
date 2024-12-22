@@ -18,7 +18,7 @@ internal static class CollectionExtensions
 
     public static int FindIndex<T>(this IReadOnlyList<T> source, T item)
     {
-        ArgumentGuard.NotNull(source);
+        ArgumentNullException.ThrowIfNull(source);
 
         for (int index = 0; index < source.Count; index++)
         {
@@ -33,8 +33,8 @@ internal static class CollectionExtensions
 
     public static int FindIndex<T>(this IReadOnlyList<T> source, Predicate<T> match)
     {
-        ArgumentGuard.NotNull(source);
-        ArgumentGuard.NotNull(match);
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(match);
 
         for (int index = 0; index < source.Count; index++)
         {

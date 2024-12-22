@@ -40,8 +40,8 @@ public class MatchTextExpression : FilterExpression
 
     public MatchTextExpression(ResourceFieldChainExpression targetAttribute, LiteralConstantExpression textValue, TextMatchKind matchKind)
     {
-        ArgumentGuard.NotNull(targetAttribute);
-        ArgumentGuard.NotNull(textValue);
+        ArgumentNullException.ThrowIfNull(targetAttribute);
+        ArgumentNullException.ThrowIfNull(textValue);
 
         TargetAttribute = targetAttribute;
         TextValue = textValue;

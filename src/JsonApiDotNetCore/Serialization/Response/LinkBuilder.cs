@@ -56,13 +56,13 @@ public class LinkBuilder : ILinkBuilder
         LinkGenerator linkGenerator, IControllerResourceMapping controllerResourceMapping, IPaginationParser paginationParser,
         IDocumentDescriptionLinkProvider documentDescriptionLinkProvider)
     {
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(request);
-        ArgumentGuard.NotNull(paginationContext);
-        ArgumentGuard.NotNull(linkGenerator);
-        ArgumentGuard.NotNull(controllerResourceMapping);
-        ArgumentGuard.NotNull(paginationParser);
-        ArgumentGuard.NotNull(documentDescriptionLinkProvider);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(paginationContext);
+        ArgumentNullException.ThrowIfNull(linkGenerator);
+        ArgumentNullException.ThrowIfNull(controllerResourceMapping);
+        ArgumentNullException.ThrowIfNull(paginationParser);
+        ArgumentNullException.ThrowIfNull(documentDescriptionLinkProvider);
 
         _options = options;
         _request = request;
@@ -245,8 +245,8 @@ public class LinkBuilder : ILinkBuilder
     /// <inheritdoc />
     public ResourceLinks? GetResourceLinks(ResourceType resourceType, IIdentifiable resource)
     {
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resource);
 
         var links = new ResourceLinks();
 
@@ -283,8 +283,8 @@ public class LinkBuilder : ILinkBuilder
     /// <inheritdoc />
     public RelationshipLinks? GetRelationshipLinks(RelationshipAttribute relationship, IIdentifiable leftResource)
     {
-        ArgumentGuard.NotNull(relationship);
-        ArgumentGuard.NotNull(leftResource);
+        ArgumentNullException.ThrowIfNull(relationship);
+        ArgumentNullException.ThrowIfNull(leftResource);
 
         var links = new RelationshipLinks();
 
@@ -332,8 +332,8 @@ public class LinkBuilder : ILinkBuilder
 
     protected virtual string? RenderLinkForAction(string? controllerName, string actionName, IDictionary<string, object?> routeValues)
     {
-        ArgumentGuard.NotNull(actionName);
-        ArgumentGuard.NotNull(routeValues);
+        ArgumentNullException.ThrowIfNull(actionName);
+        ArgumentNullException.ThrowIfNull(routeValues);
 
         if (controllerName == null)
         {

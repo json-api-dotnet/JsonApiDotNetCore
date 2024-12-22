@@ -1,4 +1,3 @@
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Queries.Expressions;
 
 namespace DapperExample.TranslationToSql.TreeNodes;
@@ -20,7 +19,7 @@ internal sealed class LogicalNode : FilterNode
 
     public LogicalNode(LogicalOperator @operator, IReadOnlyList<FilterNode> terms)
     {
-        ArgumentGuard.NotNull(terms);
+        ArgumentNullException.ThrowIfNull(terms);
 
         if (terms.Count < 2)
         {

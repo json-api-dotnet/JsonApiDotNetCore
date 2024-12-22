@@ -13,7 +13,7 @@ public class AddToRelationshipProcessor<TResource, TId> : IAddToRelationshipProc
 
     public AddToRelationshipProcessor(IAddToRelationshipService<TResource, TId> service)
     {
-        ArgumentGuard.NotNull(service);
+        ArgumentNullException.ThrowIfNull(service);
 
         _service = service;
     }
@@ -21,7 +21,7 @@ public class AddToRelationshipProcessor<TResource, TId> : IAddToRelationshipProc
     /// <inheritdoc />
     public virtual async Task<OperationContainer?> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(operation);
+        ArgumentNullException.ThrowIfNull(operation);
 
         var leftId = (TId)operation.Resource.GetTypedId();
         ISet<IIdentifiable> rightResourceIds = operation.GetSecondaryResources();

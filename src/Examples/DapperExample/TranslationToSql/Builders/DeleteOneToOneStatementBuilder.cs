@@ -1,6 +1,5 @@
 using DapperExample.TranslationToSql.DataModel;
 using DapperExample.TranslationToSql.TreeNodes;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 
@@ -11,8 +10,8 @@ internal sealed class DeleteOneToOneStatementBuilder(IDataModelService dataModel
 {
     public DeleteNode Build(ResourceType resourceType, string whereColumnName, object? whereValue)
     {
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNullNorEmpty(whereColumnName);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentException.ThrowIfNullOrEmpty(whereColumnName);
 
         ResetState();
 

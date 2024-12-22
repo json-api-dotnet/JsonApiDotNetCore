@@ -27,7 +27,7 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
 
     public ResourceObjectConverter(IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
 
         _resourceGraph = resourceGraph;
     }
@@ -287,8 +287,8 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
     /// </summary>
     public override void Write(Utf8JsonWriter writer, ResourceObject value, JsonSerializerOptions options)
     {
-        ArgumentGuard.NotNull(writer);
-        ArgumentGuard.NotNull(value);
+        ArgumentNullException.ThrowIfNull(writer);
+        ArgumentNullException.ThrowIfNull(value);
 
         writer.WriteStartObject();
 

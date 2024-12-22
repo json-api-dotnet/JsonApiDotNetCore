@@ -1,5 +1,4 @@
 using JetBrains.Annotations;
-using JsonApiDotNetCore;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
 
@@ -16,7 +15,7 @@ public sealed class InjectionDbContext : TestableDbContext
     public InjectionDbContext(DbContextOptions<InjectionDbContext> options, ISystemClock systemClock)
         : base(options)
     {
-        ArgumentGuard.NotNull(systemClock);
+        ArgumentNullException.ThrowIfNull(systemClock);
 
         SystemClock = systemClock;
     }

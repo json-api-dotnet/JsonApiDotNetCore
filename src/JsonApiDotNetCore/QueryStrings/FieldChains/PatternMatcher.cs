@@ -15,8 +15,8 @@ internal sealed class PatternMatcher
 
     public PatternMatcher(FieldChainPattern pattern, FieldChainPatternMatchOptions options, ILogger<PatternMatcher> logger)
     {
-        ArgumentGuard.NotNull(pattern);
-        ArgumentGuard.NotNull(logger);
+        ArgumentNullException.ThrowIfNull(pattern);
+        ArgumentNullException.ThrowIfNull(logger);
 
         _pattern = pattern;
         _logger = logger;
@@ -25,8 +25,8 @@ internal sealed class PatternMatcher
 
     public PatternMatchResult Match(string fieldChain, ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(fieldChain);
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(fieldChain);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         var startState = MatchState.Create(_pattern, fieldChain, resourceType);
 
