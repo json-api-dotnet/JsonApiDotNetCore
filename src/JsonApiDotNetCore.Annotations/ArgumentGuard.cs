@@ -30,30 +30,12 @@ internal static class ArgumentGuard
     [AssertionMethod]
     public static void NotNullNorEmpty([SysNotNull] string? value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
-#if !NET6_0
         ArgumentException.ThrowIfNullOrEmpty(value, parameterName);
-#else
-        ArgumentNullException.ThrowIfNull(value, parameterName);
-
-        if (value.Length == 0)
-        {
-            throw new ArgumentException("String cannot be null or empty.", parameterName);
-        }
-#endif
     }
 
     [AssertionMethod]
     public static void NotNullNorWhitespace([SysNotNull] string? value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
-#if !NET6_0
         ArgumentException.ThrowIfNullOrWhiteSpace(value, parameterName);
-#else
-        ArgumentNullException.ThrowIfNull(value, parameterName);
-
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            throw new ArgumentException("String cannot be null, empty, or whitespace.", parameterName);
-        }
-#endif
     }
 }

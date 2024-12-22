@@ -3,9 +3,6 @@ using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
 using Xunit;
-#if NET6_0
-using Microsoft.Extensions.DependencyInjection;
-#endif
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState;
 
@@ -20,12 +17,6 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
 
         testContext.UseController<SystemDirectoriesController>();
         testContext.UseController<SystemFilesController>();
-
-#if NET6_0
-        testContext.ConfigureServices(services =>
-            // Polyfill for missing DateOnly/TimeOnly support in .NET 6 ModelState validation.
-            services.AddDateOnlyTimeOnlyStringConverters());
-#endif
     }
 
     [Fact]

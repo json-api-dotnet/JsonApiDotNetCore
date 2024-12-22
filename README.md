@@ -87,13 +87,9 @@ See also our [versioning policy](./VERSIONING_POLICY.md).
 |                   |              | 7        | 7                     |
 |                   |              | 8        | 8, 9                  |
 |                   |              | 9        | 9                     |
-| master            | Preview      | 6        | 6, 7                  |
-|                   |              | 7        | 7                     |
-|                   |              | 8        | 8, 9                  |
+| master            | Preview      | 8        | 8, 9                  |
 |                   |              | 9        | 9                     |
-| openapi           | Experimental | 6        | 6, 7                  |
-|                   |              | 7        | 7                     |
-|                   |              | 8        | 8, 9                  |
+| openapi           | Experimental | 8        | 8, 9                  |
 |                   |              | 9        | 9                     |
 
 ## Contributing

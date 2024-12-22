@@ -1,3 +1,4 @@
+using System.Text.Json;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using TestBuildingBlocks;
@@ -16,7 +17,7 @@ public sealed class KebabCasingConventionStartup<TDbContext> : TestableStartup<T
         options.UseRelativeLinks = true;
         options.IncludeTotalResourceCount = true;
 
-        options.SerializerOptions.PropertyNamingPolicy = JsonKebabCaseNamingPolicy.Instance;
-        options.SerializerOptions.DictionaryKeyPolicy = JsonKebabCaseNamingPolicy.Instance;
+        options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower;
+        options.SerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.KebabCaseLower;
     }
 }

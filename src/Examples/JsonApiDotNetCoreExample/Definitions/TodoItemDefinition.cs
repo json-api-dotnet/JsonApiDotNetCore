@@ -5,28 +5,14 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCoreExample.Models;
-#if NET6_0
-using Microsoft.AspNetCore.Authentication;
-#endif
 
 namespace JsonApiDotNetCoreExample.Definitions;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class TodoItemDefinition(
-    IResourceGraph resourceGraph,
-#if NET6_0
-    ISystemClock systemClock
-#else
-    TimeProvider timeProvider
-#endif
-)
+public sealed class TodoItemDefinition(IResourceGraph resourceGraph, TimeProvider timeProvider)
     : JsonApiResourceDefinition<TodoItem, long>(resourceGraph)
 {
-#if NET6_0
-    private readonly Func<DateTimeOffset> _getUtcNow = () => systemClock.UtcNow;
-#else
     private readonly Func<DateTimeOffset> _getUtcNow = timeProvider.GetUtcNow;
-#endif
 
     public override SortExpression OnApplySort(SortExpression? existingSort)
     {
