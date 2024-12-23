@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -12,10 +13,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion;
 
 public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<TestableStartup<SoftDeletionDbContext>, SoftDeletionDbContext>>
 {
+    private static readonly DateTimeOffset CurrentTime = 1.January(2005).AsUtc();
     private static readonly DateTimeOffset SoftDeletionTime = 1.January(2001).AsUtc();
 
     private readonly IntegrationTestContext<TestableStartup<SoftDeletionDbContext>, SoftDeletionDbContext> _testContext;
-    private readonly SoftDeletionFakers _fakers = new();
+    private readonly SoftDeletionFakers _fakers = new(CurrentTime);
 
     public SoftDeletionTests(IntegrationTestContext<TestableStartup<SoftDeletionDbContext>, SoftDeletionDbContext> testContext)
     {
@@ -28,12 +30,12 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         {
             services.AddResourceService<SoftDeletionAwareResourceService<Company, int>>();
             services.AddResourceService<SoftDeletionAwareResourceService<Department, int>>();
-
-            services.AddSingleton<ISystemClock>(new FrozenSystemClock
-            {
-                UtcNow = 1.January(2005).AsUtc()
-            });
         });
+
+        testContext.PostConfigureServices(services => services.Replace(ServiceDescriptor.Singleton<TimeProvider>(new FrozenTimeProvider(CurrentTime))));
+
+        var timeProvider = (FrozenTimeProvider)testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        timeProvider.Reset();
     }
 
     [Fact]

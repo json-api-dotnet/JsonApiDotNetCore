@@ -12,7 +12,7 @@ namespace JsonApiDotNetCoreExample.Definitions;
 public sealed class TodoItemDefinition(IResourceGraph resourceGraph, TimeProvider timeProvider)
     : JsonApiResourceDefinition<TodoItem, long>(resourceGraph)
 {
-    private readonly Func<DateTimeOffset> _getUtcNow = timeProvider.GetUtcNow;
+    private readonly TimeProvider _timeProvider = timeProvider;
 
     public override SortExpression OnApplySort(SortExpression? existingSort)
     {
@@ -31,11 +31,11 @@ public sealed class TodoItemDefinition(IResourceGraph resourceGraph, TimeProvide
     {
         if (writeOperation == WriteOperationKind.CreateResource)
         {
-            resource.CreatedAt = _getUtcNow();
+            resource.CreatedAt = _timeProvider.GetUtcNow();
         }
         else if (writeOperation == WriteOperationKind.UpdateResource)
         {
-            resource.LastModifiedAt = _getUtcNow();
+            resource.LastModifiedAt = _timeProvider.GetUtcNow();
         }
 
         return Task.CompletedTask;

@@ -23,13 +23,16 @@ internal sealed class InjectionFakers
 
         _serviceProvider = serviceProvider;
 
+        var timeProvider = serviceProvider.GetRequiredService<TimeProvider>();
+        DateTime systemTimeUtc = timeProvider.GetUtcNow().UtcDateTime;
+
         _lazyPostOfficeFaker = new Lazy<Faker<PostOffice>>(() => new Faker<PostOffice>()
-            .MakeDeterministic()
+            .MakeDeterministic(systemTimeUtc)
             .CustomInstantiator(_ => new PostOffice(ResolveDbContext()))
             .RuleFor(postOffice => postOffice.Address, faker => faker.Address.FullAddress()));
 
         _lazyGiftCertificateFaker = new Lazy<Faker<GiftCertificate>>(() => new Faker<GiftCertificate>()
-            .MakeDeterministic()
+            .MakeDeterministic(systemTimeUtc)
             .CustomInstantiator(_ => new GiftCertificate(ResolveDbContext()))
             .RuleFor(giftCertificate => giftCertificate.IssueDate, faker => faker.Date.PastOffset().TruncateToWholeMilliseconds()));
     }

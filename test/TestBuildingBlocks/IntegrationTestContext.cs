@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -74,6 +75,8 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
         factory.ConfigureServices(services =>
         {
             _configureServices?.Invoke(services);
+
+            services.Replace(ServiceDescriptor.Singleton<TimeProvider>(new FrozenTimeProvider(DefaultDateTimeUtc)));
 
             services.ReplaceControllers(_testControllerProvider);
 

@@ -11,14 +11,14 @@ namespace DapperExample.Definitions;
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class TodoItemDefinition : JsonApiResourceDefinition<TodoItem, long>
 {
-    private readonly IClock _clock;
+    private readonly TimeProvider _timeProvider;
 
-    public TodoItemDefinition(IResourceGraph resourceGraph, IClock clock)
+    public TodoItemDefinition(IResourceGraph resourceGraph, TimeProvider timeProvider)
         : base(resourceGraph)
     {
-        ArgumentNullException.ThrowIfNull(clock);
+        ArgumentNullException.ThrowIfNull(timeProvider);
 
-        _clock = clock;
+        _timeProvider = timeProvider;
     }
 
     public override SortExpression OnApplySort(SortExpression? existingSort)
@@ -38,11 +38,11 @@ public sealed class TodoItemDefinition : JsonApiResourceDefinition<TodoItem, lon
     {
         if (writeOperation == WriteOperationKind.CreateResource)
         {
-            resource.CreatedAt = _clock.UtcNow;
+            resource.CreatedAt = _timeProvider.GetUtcNow();
         }
         else if (writeOperation == WriteOperationKind.UpdateResource)
         {
-            resource.LastModifiedAt = _clock.UtcNow;
+            resource.LastModifiedAt = _timeProvider.GetUtcNow();
         }
 
         return Task.CompletedTask;

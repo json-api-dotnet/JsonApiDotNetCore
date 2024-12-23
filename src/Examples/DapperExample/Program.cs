@@ -11,13 +11,12 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.TryAddSingleton<IClock, SystemClock>();
+builder.Services.AddSingleton<TimeProvider>();
 
 DatabaseProvider databaseProvider = GetDatabaseProvider(builder.Configuration);
 string? connectionString = builder.Configuration.GetConnectionString($"DapperExample{databaseProvider}");
