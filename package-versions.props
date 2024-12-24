@@ -8,15 +8,15 @@
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
     <BenchmarkDotNetVersion>0.14.*</BenchmarkDotNetVersion>
     <BogusVersion>35.6.*</BogusVersion>
-    <CodeAnalysisVersion>4.11.*</CodeAnalysisVersion>
+    <CodeAnalysisVersion>4.12.*</CodeAnalysisVersion>
     <CoverletVersion>6.0.*</CoverletVersion>
     <DapperVersion>2.1.*</DapperVersion>
-    <FluentAssertionsVersion>6.12.*</FluentAssertionsVersion>
+    <FluentAssertionsVersion>7.0.*</FluentAssertionsVersion>
     <GitHubActionsTestLoggerVersion>2.4.*</GitHubActionsTestLoggerVersion>
     <InheritDocVersion>2.0.*</InheritDocVersion>
     <SourceLinkVersion>8.0.*</SourceLinkVersion>
     <SystemTextJsonVersion>9.0.*</SystemTextJsonVersion>
-    <TestSdkVersion>17.11.*</TestSdkVersion>
+    <TestSdkVersion>17.12.*</TestSdkVersion>
     <XunitVersion>2.9.*</XunitVersion>
     <XunitVisualStudioVersion>2.8.*</XunitVisualStudioVersion>
   </PropertyGroup>
