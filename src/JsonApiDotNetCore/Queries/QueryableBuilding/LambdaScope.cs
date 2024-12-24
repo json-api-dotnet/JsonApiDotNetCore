@@ -30,9 +30,9 @@ public sealed class LambdaScope : IDisposable
 
     internal static LambdaScope Create(LambdaScopeFactory owner, Type elementType, string parameterName, Expression? accessorExpression = null)
     {
-        ArgumentGuard.NotNull(owner);
-        ArgumentGuard.NotNull(elementType);
-        ArgumentGuard.NotNullNorEmpty(parameterName);
+        ArgumentNullException.ThrowIfNull(owner);
+        ArgumentNullException.ThrowIfNull(elementType);
+        ArgumentException.ThrowIfNullOrEmpty(parameterName);
 
         ParameterExpression parameter = Expression.Parameter(elementType, parameterName);
         Expression accessor = accessorExpression ?? parameter;
@@ -42,7 +42,7 @@ public sealed class LambdaScope : IDisposable
 
     public LambdaScope WithAccessor(Expression accessorExpression)
     {
-        ArgumentGuard.NotNull(accessorExpression);
+        ArgumentNullException.ThrowIfNull(accessorExpression);
 
         return new LambdaScope(_owner, Parameter, accessorExpression);
     }

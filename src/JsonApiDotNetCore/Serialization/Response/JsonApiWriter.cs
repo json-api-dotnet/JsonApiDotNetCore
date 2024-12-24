@@ -29,12 +29,12 @@ public sealed partial class JsonApiWriter : IJsonApiWriter
     public JsonApiWriter(IJsonApiRequest request, IJsonApiOptions options, IResponseModelAdapter responseModelAdapter, IExceptionHandler exceptionHandler,
         IETagGenerator eTagGenerator, ILogger<JsonApiWriter> logger)
     {
-        ArgumentGuard.NotNull(request);
-        ArgumentGuard.NotNull(responseModelAdapter);
-        ArgumentGuard.NotNull(exceptionHandler);
-        ArgumentGuard.NotNull(eTagGenerator);
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(logger);
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(responseModelAdapter);
+        ArgumentNullException.ThrowIfNull(exceptionHandler);
+        ArgumentNullException.ThrowIfNull(eTagGenerator);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(logger);
 
         _request = request;
         _options = options;
@@ -47,7 +47,7 @@ public sealed partial class JsonApiWriter : IJsonApiWriter
     /// <inheritdoc />
     public async Task WriteAsync(object? model, HttpContext httpContext)
     {
-        ArgumentGuard.NotNull(httpContext);
+        ArgumentNullException.ThrowIfNull(httpContext);
 
         if (model == null && !CanWriteBody((HttpStatusCode)httpContext.Response.StatusCode))
         {

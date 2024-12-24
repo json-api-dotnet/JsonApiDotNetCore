@@ -8,7 +8,7 @@ internal sealed class DefaultJsonApiApplicationBuilderEvents : IJsonApiApplicati
 
     public DefaultJsonApiApplicationBuilderEvents(IJsonApiOptions options)
     {
-        ArgumentGuard.NotNull(options);
+        ArgumentNullException.ThrowIfNull(options);
 
         _options = options;
     }

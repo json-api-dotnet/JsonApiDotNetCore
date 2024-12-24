@@ -46,8 +46,8 @@ internal sealed class InjectablesAssemblyScanner
 
     public InjectablesAssemblyScanner(ResourceDescriptorAssemblyCache assemblyCache, IServiceCollection services)
     {
-        ArgumentGuard.NotNull(assemblyCache);
-        ArgumentGuard.NotNull(services);
+        ArgumentNullException.ThrowIfNull(assemblyCache);
+        ArgumentNullException.ThrowIfNull(services);
 
         _assemblyCache = assemblyCache;
         _services = services;

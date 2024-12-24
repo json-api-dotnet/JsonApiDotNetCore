@@ -1,5 +1,3 @@
-using JsonApiDotNetCore;
-
 namespace DapperExample.TranslationToSql.TreeNodes;
 
 /// <summary>
@@ -17,8 +15,8 @@ internal sealed class ColumnAssignmentNode : SqlTreeNode
 
     public ColumnAssignmentNode(ColumnNode column, SqlValueNode value)
     {
-        ArgumentGuard.NotNull(column);
-        ArgumentGuard.NotNull(value);
+        ArgumentNullException.ThrowIfNull(column);
+        ArgumentNullException.ThrowIfNull(value);
 
         Column = column;
         Value = value;

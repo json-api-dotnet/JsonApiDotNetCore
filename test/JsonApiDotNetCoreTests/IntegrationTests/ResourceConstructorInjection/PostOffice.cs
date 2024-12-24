@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection;
 
@@ -10,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection;
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection")]
 public sealed class PostOffice(InjectionDbContext injectionDbContext) : Identifiable<int>
 {
-    private readonly ISystemClock _systemClock = injectionDbContext.SystemClock;
+    private readonly TimeProvider _timeProvider = injectionDbContext.TimeProvider;
 
     [Attr]
     public string Address { get; set; } = null!;
@@ -24,7 +23,7 @@ public sealed class PostOffice(InjectionDbContext injectionDbContext) : Identifi
 
     private bool IsWithinOperatingHours()
     {
-        DateTimeOffset currentTime = _systemClock.UtcNow;
-        return currentTime.DayOfWeek is >= DayOfWeek.Monday and <= DayOfWeek.Friday && currentTime.Hour is >= 9 and <= 17;
+        DateTimeOffset utcNow = _timeProvider.GetUtcNow();
+        return utcNow.DayOfWeek is >= DayOfWeek.Monday and <= DayOfWeek.Friday && utcNow.Hour is >= 9 and <= 17;
     }
 }

@@ -1,5 +1,3 @@
-using JsonApiDotNetCore;
-
 namespace DapperExample.TranslationToSql.TreeNodes;
 
 /// <summary>
@@ -13,7 +11,7 @@ internal abstract class ColumnNode : SqlValueNode
 
     protected ColumnNode(string name, ColumnType type, string? tableAlias)
     {
-        ArgumentGuard.NotNullNorEmpty(name);
+        ArgumentException.ThrowIfNullOrEmpty(name);
 
         Name = name;
         Type = type;

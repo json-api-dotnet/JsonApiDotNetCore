@@ -1,12 +1,14 @@
 using System.Net;
 using System.Net.Http.Headers;
 using FluentAssertions;
+using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Request.Adapters;
 using JsonApiDotNetCore.Serialization.Response;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -14,6 +16,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation.CustomExten
 
 public sealed class CustomExtensionsContentTypeTests : IClassFixture<IntegrationTestContext<TestableStartup<PolicyDbContext>, PolicyDbContext>>
 {
+    private static readonly DateTimeOffset CurrentTime = 31.December(2024).At(21, 53, 40).AsUtc();
     private readonly IntegrationTestContext<TestableStartup<PolicyDbContext>, PolicyDbContext> _testContext;
 
     public CustomExtensionsContentTypeTests(IntegrationTestContext<TestableStartup<PolicyDbContext>, PolicyDbContext> testContext)
@@ -38,6 +41,9 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
                 return new CapturingDocumentAdapter(documentAdapter, requestDocumentStore);
             });
         });
+
+        testContext.PostConfigureServices(services => services.Replace(
+            ServiceDescriptor.Singleton<TimeProvider>(new FrozenTimeProvider(CurrentTime, TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time")))));
 
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.IncludeExtensions(ServerTimeMediaTypeExtension.ServerTime, ServerTimeMediaTypeExtension.RelaxedServerTime);
@@ -108,7 +114,8 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(ServerTimeMediaTypes.ServerTime.ToString());
 
-        responseDocument.Meta.ShouldContainKey("localServerTime");
+        responseDocument.Meta.ShouldContainKey("localServerTime").With(time =>
+            time.ShouldNotBeNull().ToString().Should().Be("2025-01-01T06:53:40.0000000+09:00"));
     }
 
     [Fact]
@@ -143,7 +150,7 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(ServerTimeMediaTypes.RelaxedServerTime.ToString());
 
-        responseDocument.Meta.ShouldContainKey("utcServerTime");
+        responseDocument.Meta.ShouldContainKey("utcServerTime").With(time => time.ShouldNotBeNull().ToString().Should().Be("2024-12-31T21:53:40.0000000Z"));
     }
 
     [Fact]
@@ -185,7 +192,7 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(ServerTimeMediaTypes.AtomicOperationsWithServerTime.ToString());
 
-        responseDocument.Meta.ShouldContainKey("utcServerTime");
+        responseDocument.Meta.ShouldContainKey("utcServerTime").With(time => time.ShouldNotBeNull().ToString().Should().Be("2024-12-31T21:53:40.0000000Z"));
     }
 
     [Fact]

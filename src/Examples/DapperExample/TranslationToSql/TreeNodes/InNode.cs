@@ -14,7 +14,7 @@ internal sealed class InNode : FilterNode
 
     public InNode(ColumnNode column, IReadOnlyList<SqlValueNode> values)
     {
-        ArgumentGuard.NotNull(column);
+        ArgumentNullException.ThrowIfNull(column);
         ArgumentGuard.NotNullNorEmpty(values);
 
         Column = column;

@@ -14,7 +14,7 @@ public class IncludeClauseBuilder : QueryClauseBuilder, IIncludeClauseBuilder
 
     public virtual Expression ApplyInclude(IncludeExpression include, QueryClauseBuilderContext context)
     {
-        ArgumentGuard.NotNull(include);
+        ArgumentNullException.ThrowIfNull(include);
 
         return Visit(include, context);
     }

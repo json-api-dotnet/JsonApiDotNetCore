@@ -1,5 +1,3 @@
-using JsonApiDotNetCore;
-
 namespace DapperExample.TranslationToSql.TreeNodes;
 
 /// <summary>
@@ -16,7 +14,7 @@ internal sealed class ParameterNode : SqlValueNode
 
     public ParameterNode(string name, object? value)
     {
-        ArgumentGuard.NotNullNorEmpty(name);
+        ArgumentException.ThrowIfNullOrEmpty(name);
 
         if (!name.StartsWith('@') || name.Length < 2)
         {

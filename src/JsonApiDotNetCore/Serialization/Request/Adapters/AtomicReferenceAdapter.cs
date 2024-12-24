@@ -14,9 +14,9 @@ public sealed class AtomicReferenceAdapter(IResourceGraph resourceGraph, IResour
     /// <inheritdoc />
     public AtomicReferenceResult Convert(AtomicReference atomicReference, ResourceIdentityRequirements requirements, RequestAdapterState state)
     {
-        ArgumentGuard.NotNull(atomicReference);
-        ArgumentGuard.NotNull(requirements);
-        ArgumentGuard.NotNull(state);
+        ArgumentNullException.ThrowIfNull(atomicReference);
+        ArgumentNullException.ThrowIfNull(requirements);
+        ArgumentNullException.ThrowIfNull(state);
 
         using IDisposable _ = state.Position.PushElement("ref");
         (IIdentifiable resource, ResourceType resourceType) = ConvertResourceIdentity(atomicReference, requirements, state);

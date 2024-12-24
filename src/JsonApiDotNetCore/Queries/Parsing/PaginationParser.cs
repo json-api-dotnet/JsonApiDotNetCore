@@ -13,7 +13,7 @@ public class PaginationParser : QueryExpressionParser, IPaginationParser
     /// <inheritdoc />
     public PaginationQueryStringValueExpression Parse(string source, ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         Tokenize(source);
 
@@ -26,7 +26,7 @@ public class PaginationParser : QueryExpressionParser, IPaginationParser
 
     protected virtual PaginationQueryStringValueExpression ParsePagination(ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         ImmutableArray<PaginationElementQueryStringValueExpression>.Builder elementsBuilder =
             ImmutableArray.CreateBuilder<PaginationElementQueryStringValueExpression>();
@@ -47,7 +47,7 @@ public class PaginationParser : QueryExpressionParser, IPaginationParser
 
     protected virtual PaginationElementQueryStringValueExpression ParsePaginationElement(ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         int position = GetNextTokenPositionOrEnd();
         int? number = TryParseNumber();

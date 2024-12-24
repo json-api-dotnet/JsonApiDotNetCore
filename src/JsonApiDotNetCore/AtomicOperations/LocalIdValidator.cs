@@ -18,8 +18,8 @@ public sealed class LocalIdValidator
 
     public LocalIdValidator(ILocalIdTracker localIdTracker, IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(localIdTracker);
-        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(localIdTracker);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
 
         _localIdTracker = localIdTracker;
         _resourceGraph = resourceGraph;
@@ -27,7 +27,7 @@ public sealed class LocalIdValidator
 
     public void Validate(IEnumerable<OperationContainer> operations)
     {
-        ArgumentGuard.NotNull(operations);
+        ArgumentNullException.ThrowIfNull(operations);
 
         _localIdTracker.Reset();
 

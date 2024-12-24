@@ -11,7 +11,7 @@ internal sealed class EvaluatedIncludeCache : IEvaluatedIncludeCache
 
     public EvaluatedIncludeCache(IEnumerable<IQueryConstraintProvider> constraintProviders)
     {
-        ArgumentGuard.NotNull(constraintProviders);
+        ArgumentNullException.ThrowIfNull(constraintProviders);
 
         _constraintProviders = constraintProviders as IQueryConstraintProvider[] ?? constraintProviders.ToArray();
     }
@@ -19,7 +19,7 @@ internal sealed class EvaluatedIncludeCache : IEvaluatedIncludeCache
     /// <inheritdoc />
     public void Set(IncludeExpression include)
     {
-        ArgumentGuard.NotNull(include);
+        ArgumentNullException.ThrowIfNull(include);
 
         _include = include;
         _isAssigned = true;

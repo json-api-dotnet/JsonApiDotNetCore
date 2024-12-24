@@ -8,7 +8,7 @@ internal sealed class AbstractResourceWrapper<TId> : Identifiable<TId>, IAbstrac
 
     public AbstractResourceWrapper(Type abstractType)
     {
-        ArgumentGuard.NotNull(abstractType);
+        ArgumentNullException.ThrowIfNull(abstractType);
 
         AbstractType = abstractType;
     }

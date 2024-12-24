@@ -11,7 +11,7 @@ public class SparseFieldTypeParser : QueryExpressionParser, ISparseFieldTypePars
 
     public SparseFieldTypeParser(IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
 
         _resourceGraph = resourceGraph;
     }

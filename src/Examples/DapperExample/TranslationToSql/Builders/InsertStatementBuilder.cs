@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
 using DapperExample.TranslationToSql.DataModel;
 using DapperExample.TranslationToSql.TreeNodes;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 
@@ -12,8 +11,8 @@ internal sealed class InsertStatementBuilder(IDataModelService dataModelService)
 {
     public InsertNode Build(ResourceType resourceType, IReadOnlyDictionary<string, object?> columnsToSet)
     {
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(columnsToSet);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(columnsToSet);
 
         ResetState();
 

@@ -16,9 +16,9 @@ public sealed class OperationContainer
 
     public OperationContainer(IIdentifiable resource, ITargetedFields targetedFields, IJsonApiRequest request)
     {
-        ArgumentGuard.NotNull(resource);
-        ArgumentGuard.NotNull(targetedFields);
-        ArgumentGuard.NotNull(request);
+        ArgumentNullException.ThrowIfNull(resource);
+        ArgumentNullException.ThrowIfNull(targetedFields);
+        ArgumentNullException.ThrowIfNull(request);
 
         Resource = resource;
         TargetedFields = targetedFields;
@@ -32,7 +32,7 @@ public sealed class OperationContainer
 
     public OperationContainer WithResource(IIdentifiable resource)
     {
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
 
         return new OperationContainer(resource, TargetedFields, Request);
     }

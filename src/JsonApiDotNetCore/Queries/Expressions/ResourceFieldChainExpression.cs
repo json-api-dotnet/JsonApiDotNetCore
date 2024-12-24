@@ -26,7 +26,7 @@ public class ResourceFieldChainExpression : IdentifierExpression
 
     public ResourceFieldChainExpression(ResourceFieldAttribute field)
     {
-        ArgumentGuard.NotNull(field);
+        ArgumentNullException.ThrowIfNull(field);
 
         Fields = ImmutableArray.Create(field);
     }

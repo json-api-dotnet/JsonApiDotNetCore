@@ -32,8 +32,8 @@ public sealed class WriteOnlyDocumentConverter : JsonObjectConverter<Document>
     /// </summary>
     public override void Write(Utf8JsonWriter writer, Document value, JsonSerializerOptions options)
     {
-        ArgumentGuard.NotNull(writer);
-        ArgumentGuard.NotNull(value);
+        ArgumentNullException.ThrowIfNull(writer);
+        ArgumentNullException.ThrowIfNull(value);
 
         writer.WriteStartObject();
 

@@ -153,26 +153,26 @@ public sealed class InputConversionTests : IDisposable
             WriteOperation = WriteOperationKind.CreateResource
         });
 
-        const bool booleanValue = default;
-        const bool nullableBooleanValue = default;
-        const char charValue = default;
-        const char nullableCharValue = default;
-        const ulong unsignedLongValue = default;
-        const ulong nullableUnsignedLongValue = default;
-        const decimal decimalValue = default;
-        const decimal nullableDecimalValue = default;
-        const float floatValue = default;
-        const float nullableFloatValue = default;
-        const string stringValue = default!;
-        const string? nullableStringValue = default;
-        Guid guidValue = default;
-        Guid nullableGuidValue = default;
+        const bool booleanValue = false;
+        const bool nullableBooleanValue = false;
+        const char charValue = '\0';
+        const char nullableCharValue = '\0';
+        const ulong unsignedLongValue = 0;
+        const ulong nullableUnsignedLongValue = 0;
+        const decimal decimalValue = 0;
+        const decimal nullableDecimalValue = 0;
+        const float floatValue = 0;
+        const float nullableFloatValue = 0;
+        const string stringValue = null!;
+        const string? nullableStringValue = null;
+        var guidValue = Guid.Empty;
+        var nullableGuidValue = Guid.Empty;
         DateTime dateTimeValue = default;
         DateTime nullableDateTimeValue = default;
         DateTimeOffset dateTimeOffsetValue = default;
         DateTimeOffset nullableDateTimeOffsetValue = default;
-        TimeSpan timeSpanValue = default;
-        TimeSpan nullableTimeSpanValue = default;
+        TimeSpan timeSpanValue = TimeSpan.Zero;
+        TimeSpan nullableTimeSpanValue = TimeSpan.Zero;
         const DayOfWeek enumValue = default;
         const DayOfWeek nullableEnumValue = default;
 

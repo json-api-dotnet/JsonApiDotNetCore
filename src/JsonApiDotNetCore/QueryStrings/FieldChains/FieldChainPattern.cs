@@ -144,8 +144,8 @@ public sealed class FieldChainPattern
     public PatternMatchResult Match(string fieldChain, ResourceType resourceType, FieldChainPatternMatchOptions options = FieldChainPatternMatchOptions.None,
         ILoggerFactory? loggerFactory = null)
     {
-        ArgumentGuard.NotNull(fieldChain);
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(fieldChain);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         ILogger<PatternMatcher> logger = loggerFactory == null ? NullLogger<PatternMatcher>.Instance : loggerFactory.CreateLogger<PatternMatcher>();
         var matcher = new PatternMatcher(this, options, logger);

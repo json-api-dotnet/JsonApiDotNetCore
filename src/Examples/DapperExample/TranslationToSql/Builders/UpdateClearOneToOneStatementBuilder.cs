@@ -1,6 +1,5 @@
 using DapperExample.TranslationToSql.DataModel;
 using DapperExample.TranslationToSql.TreeNodes;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 
@@ -11,9 +10,9 @@ internal sealed class UpdateClearOneToOneStatementBuilder(IDataModelService data
 {
     public UpdateNode Build(ResourceType resourceType, string setColumnName, string whereColumnName, object? whereValue)
     {
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNullNorEmpty(setColumnName);
-        ArgumentGuard.NotNullNorEmpty(whereColumnName);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentException.ThrowIfNullOrEmpty(setColumnName);
+        ArgumentException.ThrowIfNullOrEmpty(whereColumnName);
 
         ResetState();
 

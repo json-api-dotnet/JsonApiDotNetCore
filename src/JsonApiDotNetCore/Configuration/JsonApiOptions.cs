@@ -144,7 +144,7 @@ public sealed class JsonApiOptions : IJsonApiOptions
     /// </param>
     public void IncludeExtensions(params JsonApiMediaTypeExtension[] extensionsToAdd)
     {
-        ArgumentGuard.NotNull(extensionsToAdd);
+        ArgumentNullException.ThrowIfNull(extensionsToAdd);
 
         if (!Extensions.IsSupersetOf(extensionsToAdd))
         {

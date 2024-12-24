@@ -19,8 +19,8 @@ public sealed class EntityFrameworkCoreTransaction : IOperationsTransaction
 
     public EntityFrameworkCoreTransaction(IDbContextTransaction transaction, DbContext dbContext)
     {
-        ArgumentGuard.NotNull(transaction);
-        ArgumentGuard.NotNull(dbContext);
+        ArgumentNullException.ThrowIfNull(transaction);
+        ArgumentNullException.ThrowIfNull(dbContext);
 
         _transaction = transaction;
         _dbContext = dbContext;

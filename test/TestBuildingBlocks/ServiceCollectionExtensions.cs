@@ -1,5 +1,4 @@
 using System.Reflection;
-using JsonApiDotNetCore;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +9,7 @@ internal static class ServiceCollectionExtensions
 {
     public static void ReplaceControllers(this IServiceCollection services, TestControllerProvider provider)
     {
-        ArgumentGuard.NotNull(services);
+        ArgumentNullException.ThrowIfNull(services);
 
         services.AddMvcCore().ConfigureApplicationPartManager(manager =>
         {

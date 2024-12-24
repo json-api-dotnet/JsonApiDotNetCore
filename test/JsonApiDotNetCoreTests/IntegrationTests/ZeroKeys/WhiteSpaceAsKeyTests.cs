@@ -1,7 +1,6 @@
 using System.Net;
 using System.Reflection;
 using FluentAssertions;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -604,7 +603,7 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
 
         public PreserveWhitespaceModelMetadataProvider(ModelMetadataProvider innerProvider)
         {
-            ArgumentGuard.NotNull(innerProvider);
+            ArgumentNullException.ThrowIfNull(innerProvider);
 
             _innerProvider = innerProvider;
         }

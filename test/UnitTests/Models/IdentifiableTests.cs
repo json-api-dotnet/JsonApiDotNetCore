@@ -33,7 +33,7 @@ public sealed class IdentifiableTests
     {
         var resource = new IntId();
 
-        string? stringId = resource.ExposedGetStringId(default);
+        string? stringId = resource.ExposedGetStringId(0);
 
         stringId.Should().BeNull();
     }

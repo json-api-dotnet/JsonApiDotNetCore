@@ -11,7 +11,7 @@ internal sealed class PatternTextFormatter
 
     public PatternTextFormatter(FieldChainPattern pattern)
     {
-        ArgumentGuard.NotNull(pattern);
+        ArgumentNullException.ThrowIfNull(pattern);
 
         _pattern = pattern;
     }

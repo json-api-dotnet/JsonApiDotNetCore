@@ -12,10 +12,10 @@
     <BenchmarkDotNetVersion>0.14.*</BenchmarkDotNetVersion>
     <BlushingPenguinVersion>1.0.*</BlushingPenguinVersion>
     <BogusVersion>35.6.*</BogusVersion>
-    <CodeAnalysisVersion>4.11.*</CodeAnalysisVersion>
+    <CodeAnalysisVersion>4.12.*</CodeAnalysisVersion>
     <CoverletVersion>6.0.*</CoverletVersion>
     <DapperVersion>2.1.*</DapperVersion>
-    <FluentAssertionsVersion>6.12.*</FluentAssertionsVersion>
+    <FluentAssertionsVersion>7.0.*</FluentAssertionsVersion>
     <GitHubActionsTestLoggerVersion>2.4.*</GitHubActionsTestLoggerVersion>
     <InheritDocVersion>2.0.*</InheritDocVersion>
     <KiotaVersion>1.*</KiotaVersion>
@@ -24,9 +24,20 @@
     <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
     <SourceLinkVersion>8.0.*</SourceLinkVersion>
     <SwashbuckleVersion>6.*-*</SwashbuckleVersion>
-    <TestSdkVersion>17.11.*</TestSdkVersion>
+    <SystemTextJsonVersion>9.0.*</SystemTextJsonVersion>
+    <TestSdkVersion>17.12.*</TestSdkVersion>
     <XunitVersion>2.9.*</XunitVersion>
     <XunitVisualStudioVersion>2.8.*</XunitVisualStudioVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
+    <!-- Published dependencies (only update on major version change) -->
+    <EntityFrameworkCoreFrozenVersion>N/A</EntityFrameworkCoreFrozenVersion>
+
+    <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
+    <AspNetCoreVersion>9.0.*</AspNetCoreVersion>
+    <EntityFrameworkCoreVersion>9.0.*</EntityFrameworkCoreVersion>
+    <EntityFrameworkCorePomeloVersion>9.0.0-*</EntityFrameworkCorePomeloVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
@@ -36,17 +47,6 @@
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
     <AspNetCoreVersion>8.0.*</AspNetCoreVersion>
     <EntityFrameworkCoreVersion>8.0.*</EntityFrameworkCoreVersion>
-    <SystemTextJsonVersion>$(AspNetCoreVersion)</SystemTextJsonVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <!-- Published dependencies (only update on major version change) -->
-    <EntityFrameworkCoreFrozenVersion>6.0.0</EntityFrameworkCoreFrozenVersion>
-
-    <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
-    <AspNetCoreVersion>6.0.*</AspNetCoreVersion>
-    <DateOnlyTimeOnlyVersion>2.1.*</DateOnlyTimeOnlyVersion>
-    <EntityFrameworkCoreVersion>7.0.*</EntityFrameworkCoreVersion>
-    <SystemTextJsonVersion>8.0.*</SystemTextJsonVersion>
+    <EntityFrameworkCorePomeloVersion>$(EntityFrameworkCoreVersion)</EntityFrameworkCorePomeloVersion>
   </PropertyGroup>
 </Project>

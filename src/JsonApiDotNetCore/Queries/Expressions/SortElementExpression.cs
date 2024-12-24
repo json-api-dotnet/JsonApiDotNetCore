@@ -29,7 +29,7 @@ public class SortElementExpression : QueryExpression
 
     public SortElementExpression(QueryExpression target, bool isAscending)
     {
-        ArgumentGuard.NotNull(target);
+        ArgumentNullException.ThrowIfNull(target);
 
         Target = target;
         IsAscending = isAscending;

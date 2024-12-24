@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using DapperExample.TranslationToSql.TreeNodes;
-using JsonApiDotNetCore;
 
 namespace DapperExample.TranslationToSql.Transformations;
 
@@ -37,8 +36,8 @@ internal sealed partial class StaleColumnReferenceRewriter : SqlTreeNodeVisitor<
 
     public StaleColumnReferenceRewriter(IReadOnlyDictionary<string, string> oldToNewTableAliasMap, ILoggerFactory loggerFactory)
     {
-        ArgumentGuard.NotNull(oldToNewTableAliasMap);
-        ArgumentGuard.NotNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(oldToNewTableAliasMap);
+        ArgumentNullException.ThrowIfNull(loggerFactory);
 
         _oldToNewTableAliasMap = oldToNewTableAliasMap;
         _logger = loggerFactory.CreateLogger<StaleColumnReferenceRewriter>();

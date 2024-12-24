@@ -33,7 +33,7 @@ public static class RuntimeTypeConverter
     /// </exception>
     public static object? ConvertType(object? value, Type type)
     {
-        ArgumentGuard.NotNull(type);
+        ArgumentNullException.ThrowIfNull(type);
 
         // Earlier versions of JsonApiDotNetCore failed to pass CultureInfo.InvariantCulture in the parsing below, which resulted in the 'current'
         // culture being used. Unlike parsing JSON request/response bodies, this effectively meant that query strings were parsed based on the
@@ -140,7 +140,7 @@ public static class RuntimeTypeConverter
     /// </summary>
     public static bool CanContainNull(Type type)
     {
-        ArgumentGuard.NotNull(type);
+        ArgumentNullException.ThrowIfNull(type);
 
         return !type.IsValueType || Nullable.GetUnderlyingType(type) != null;
     }
@@ -153,7 +153,7 @@ public static class RuntimeTypeConverter
     /// </returns>
     public static object? GetDefaultValue(Type type)
     {
-        ArgumentGuard.NotNull(type);
+        ArgumentNullException.ThrowIfNull(type);
 
         return type.IsValueType ? DefaultTypeCache.GetOrAdd(type, Activator.CreateInstance) : null;
     }

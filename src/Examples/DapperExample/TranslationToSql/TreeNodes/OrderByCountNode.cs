@@ -1,5 +1,3 @@
-using JsonApiDotNetCore;
-
 namespace DapperExample.TranslationToSql.TreeNodes;
 
 /// <summary>
@@ -17,7 +15,7 @@ internal sealed class OrderByCountNode : OrderByTermNode
     public OrderByCountNode(CountNode count, bool isAscending)
         : base(isAscending)
     {
-        ArgumentGuard.NotNull(count);
+        ArgumentNullException.ThrowIfNull(count);
 
         Count = count;
     }

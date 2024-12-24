@@ -24,8 +24,8 @@ internal sealed class ResourceChangeDetector
 
     public ResourceChangeDetector(ResourceType resourceType, IDataModelService dataModelService)
     {
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(dataModelService);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(dataModelService);
 
         ResourceType = resourceType;
         _dataModelService = dataModelService;
@@ -33,7 +33,7 @@ internal sealed class ResourceChangeDetector
 
     public void CaptureCurrentValues(IIdentifiable resource)
     {
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
         AssertSameType(ResourceType, resource);
 
         _currentColumnValues = CaptureColumnValues(resource);
@@ -42,7 +42,7 @@ internal sealed class ResourceChangeDetector
 
     public void CaptureNewValues(IIdentifiable resource)
     {
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
         AssertSameType(ResourceType, resource);
 
         _newColumnValues = CaptureColumnValues(resource);

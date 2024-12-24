@@ -4,6 +4,7 @@ using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -11,6 +12,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection;
 
 public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext>>
 {
+    private static readonly DateTimeOffset CurrentTime = 31.January(2021).At(17, 1).AsUtc();
+    private static readonly DateTimeOffset OfficeIsOpenTime = 27.January(2021).At(13, 53).AsUtc();
+    private static readonly DateTimeOffset OfficeIsClosedTime = 30.January(2021).At(21, 43).AsUtc();
+
     private readonly IntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext> _testContext;
     private readonly InjectionFakers _fakers;
 
@@ -21,7 +26,10 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         testContext.UseController<GiftCertificatesController>();
         testContext.UseController<PostOfficesController>();
 
-        testContext.ConfigureServices(services => services.AddSingleton<ISystemClock, FrozenSystemClock>());
+        testContext.PostConfigureServices(services => services.Replace(ServiceDescriptor.Singleton<TimeProvider>(new FrozenTimeProvider(CurrentTime))));
+
+        var timeProvider = (FrozenTimeProvider)testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        timeProvider.Reset();
 
         _fakers = new InjectionFakers(testContext.Factory.Services);
     }
@@ -30,11 +38,8 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
     public async Task Can_get_resource_by_ID()
     {
         // Arrange
-        var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
-        clock.UtcNow = 27.January(2021).AsUtc();
-
         GiftCertificate certificate = _fakers.GiftCertificate.GenerateOne();
-        certificate.IssueDate = 28.January(2020).AsUtc();
+        certificate.IssueDate = CurrentTime.AddYears(-1).AddDays(1).UtcDateTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -60,8 +65,8 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
     public async Task Can_filter_resources_by_ID()
     {
         // Arrange
-        var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
-        clock.UtcNow = 27.January(2021).At(13, 53).AsUtc();
+        var timeProvider = (FrozenTimeProvider)_testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        timeProvider.SetUtcNow(OfficeIsOpenTime);
 
         List<PostOffice> postOffices = _fakers.PostOffice.GenerateList(2);
 
@@ -90,8 +95,8 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
     public async Task Can_get_secondary_resource_with_fieldset()
     {
         // Arrange
-        var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
-        clock.UtcNow = 27.January(2021).At(13, 53).AsUtc();
+        var timeProvider = (FrozenTimeProvider)_testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        timeProvider.SetUtcNow(OfficeIsOpenTime);
 
         GiftCertificate certificate = _fakers.GiftCertificate.GenerateOne();
         certificate.Issuer = _fakers.PostOffice.GenerateOne();
@@ -120,12 +125,12 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
     public async Task Can_create_resource_with_ToOne_relationship_and_include()
     {
         // Arrange
-        var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
-        clock.UtcNow = 19.March(1998).At(6, 34).AsUtc();
+        var timeProvider = (FrozenTimeProvider)_testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        timeProvider.SetUtcNow(OfficeIsClosedTime);
 
         PostOffice existingOffice = _fakers.PostOffice.GenerateOne();
 
-        DateTimeOffset newIssueDate = 18.March(1997).AsUtc();
+        DateTimeOffset newIssueDate = OfficeIsClosedTime.AddYears(-1).AddDays(-1).UtcDateTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -202,8 +207,8 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
     public async Task Can_update_resource_with_ToMany_relationship()
     {
         // Arrange
-        var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
-        clock.UtcNow = 19.March(1998).At(6, 34).AsUtc();
+        var timeProvider = (FrozenTimeProvider)_testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        timeProvider.SetUtcNow(OfficeIsClosedTime);
 
         PostOffice existingOffice = _fakers.PostOffice.GenerateOne();
         existingOffice.GiftCertificates = _fakers.GiftCertificate.GenerateList(1);

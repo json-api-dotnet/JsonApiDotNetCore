@@ -69,7 +69,7 @@ public sealed class HasManyAttribute : RelationshipAttribute
     /// <inheritdoc />
     public override void SetValue(object resource, object? newValue)
     {
-        ArgumentGuard.NotNull(newValue);
+        ArgumentNullException.ThrowIfNull(newValue);
         AssertIsIdentifiableCollection(newValue);
 
         base.SetValue(resource, newValue);
@@ -99,8 +99,8 @@ public sealed class HasManyAttribute : RelationshipAttribute
     /// </summary>
     public void AddValue(object resource, IIdentifiable resourceToAdd)
     {
-        ArgumentGuard.NotNull(resource);
-        ArgumentGuard.NotNull(resourceToAdd);
+        ArgumentNullException.ThrowIfNull(resource);
+        ArgumentNullException.ThrowIfNull(resourceToAdd);
 
         object? rightValue = GetValue(resource);
         List<IIdentifiable> rightResources = CollectionConverter.Instance.ExtractResources(rightValue).ToList();

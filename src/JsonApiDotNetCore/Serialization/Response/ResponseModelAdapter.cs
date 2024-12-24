@@ -34,14 +34,14 @@ public class ResponseModelAdapter : IResponseModelAdapter
         IResourceDefinitionAccessor resourceDefinitionAccessor, IEvaluatedIncludeCache evaluatedIncludeCache, ISparseFieldSetCache sparseFieldSetCache,
         IRequestQueryStringAccessor requestQueryStringAccessor)
     {
-        ArgumentGuard.NotNull(request);
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(linkBuilder);
-        ArgumentGuard.NotNull(metaBuilder);
-        ArgumentGuard.NotNull(resourceDefinitionAccessor);
-        ArgumentGuard.NotNull(evaluatedIncludeCache);
-        ArgumentGuard.NotNull(sparseFieldSetCache);
-        ArgumentGuard.NotNull(requestQueryStringAccessor);
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(linkBuilder);
+        ArgumentNullException.ThrowIfNull(metaBuilder);
+        ArgumentNullException.ThrowIfNull(resourceDefinitionAccessor);
+        ArgumentNullException.ThrowIfNull(evaluatedIncludeCache);
+        ArgumentNullException.ThrowIfNull(sparseFieldSetCache);
+        ArgumentNullException.ThrowIfNull(requestQueryStringAccessor);
 
         _request = request;
         _options = options;
@@ -123,7 +123,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
     protected virtual AtomicResultObject ConvertOperation(OperationContainer? operation, IImmutableSet<IncludeElementExpression> includeElements)
     {
-        ArgumentGuard.NotNull(includeElements);
+        ArgumentNullException.ThrowIfNull(includeElements);
 
         ResourceObject? resourceObject = null;
 
@@ -206,8 +206,8 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
     protected virtual ResourceObject ConvertResource(IIdentifiable resource, ResourceType resourceType, EndpointKind kind)
     {
-        ArgumentGuard.NotNull(resource);
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resource);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         bool isRelationship = kind == EndpointKind.Relationship;
 
@@ -239,9 +239,9 @@ public class ResponseModelAdapter : IResponseModelAdapter
 #pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
         IImmutableSet<ResourceFieldAttribute> fieldSet)
     {
-        ArgumentGuard.NotNull(resource);
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(fieldSet);
+        ArgumentNullException.ThrowIfNull(resource);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(fieldSet);
 
         var attrMap = new Dictionary<string, object?>(resourceType.Attributes.Count);
 

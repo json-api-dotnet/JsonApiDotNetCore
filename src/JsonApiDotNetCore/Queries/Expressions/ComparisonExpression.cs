@@ -40,8 +40,8 @@ public class ComparisonExpression : FilterExpression
 
     public ComparisonExpression(ComparisonOperator @operator, QueryExpression left, QueryExpression right)
     {
-        ArgumentGuard.NotNull(left);
-        ArgumentGuard.NotNull(right);
+        ArgumentNullException.ThrowIfNull(left);
+        ArgumentNullException.ThrowIfNull(right);
 
         Operator = @operator;
         Left = left;

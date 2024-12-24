@@ -1,5 +1,4 @@
 using System.Text;
-using JsonApiDotNetCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit.Abstractions;
@@ -15,7 +14,7 @@ public sealed class XUnitLoggerProvider : ILoggerProvider
 
     public XUnitLoggerProvider(ITestOutputHelper testOutputHelper, string? categoryPrefixFilter, LogOutputFields outputFields = LogOutputFields.All)
     {
-        ArgumentGuard.NotNull(testOutputHelper);
+        ArgumentNullException.ThrowIfNull(testOutputHelper);
 
         _testOutputHelper = testOutputHelper;
         _categoryPrefixFilter = categoryPrefixFilter;
@@ -24,7 +23,7 @@ public sealed class XUnitLoggerProvider : ILoggerProvider
 
     public ILogger CreateLogger(string categoryName)
     {
-        ArgumentGuard.NotNullNorEmpty(categoryName);
+        ArgumentException.ThrowIfNullOrEmpty(categoryName);
 
         if (_categoryPrefixFilter == null || categoryName.StartsWith(_categoryPrefixFilter, StringComparison.Ordinal))
         {

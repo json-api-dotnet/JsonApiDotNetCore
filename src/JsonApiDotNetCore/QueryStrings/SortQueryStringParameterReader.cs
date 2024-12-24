@@ -25,8 +25,8 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
         IResourceGraph resourceGraph)
         : base(request, resourceGraph)
     {
-        ArgumentGuard.NotNull(scopeParser);
-        ArgumentGuard.NotNull(sortParser);
+        ArgumentNullException.ThrowIfNull(scopeParser);
+        ArgumentNullException.ThrowIfNull(sortParser);
 
         _scopeParser = scopeParser;
         _sortParser = sortParser;
@@ -35,7 +35,7 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
     /// <inheritdoc />
     public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
     {
-        ArgumentGuard.NotNull(disableQueryStringAttribute);
+        ArgumentNullException.ThrowIfNull(disableQueryStringAttribute);
 
         return !IsAtomicOperationsRequest && !disableQueryStringAttribute.ContainsParameter(JsonApiQueryStringParameters.Sort);
     }
@@ -43,7 +43,7 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
     /// <inheritdoc />
     public virtual bool CanRead(string parameterName)
     {
-        ArgumentGuard.NotNullNorEmpty(parameterName);
+        ArgumentException.ThrowIfNullOrEmpty(parameterName);
 
         bool isNested = parameterName.StartsWith("sort[", StringComparison.Ordinal) && parameterName.EndsWith(']');
         return parameterName == "sort" || isNested;

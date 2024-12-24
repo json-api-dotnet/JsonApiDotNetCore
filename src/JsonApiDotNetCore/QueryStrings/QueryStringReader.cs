@@ -18,10 +18,10 @@ public sealed partial class QueryStringReader : IQueryStringReader
     public QueryStringReader(IJsonApiOptions options, IRequestQueryStringAccessor queryStringAccessor,
         IEnumerable<IQueryStringParameterReader> parameterReaders, ILoggerFactory loggerFactory)
     {
-        ArgumentGuard.NotNull(loggerFactory);
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(queryStringAccessor);
-        ArgumentGuard.NotNull(parameterReaders);
+        ArgumentNullException.ThrowIfNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(queryStringAccessor);
+        ArgumentNullException.ThrowIfNull(parameterReaders);
 
         _options = options;
         _queryStringAccessor = queryStringAccessor;
