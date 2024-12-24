@@ -30,11 +30,11 @@ public sealed partial class JsonApiMiddleware
     public JsonApiMiddleware(RequestDelegate? next, IHttpContextAccessor httpContextAccessor, IControllerResourceMapping controllerResourceMapping,
         IJsonApiOptions options, IJsonApiContentNegotiator contentNegotiator, ILogger<JsonApiMiddleware> logger)
     {
-        ArgumentGuard.NotNull(httpContextAccessor);
-        ArgumentGuard.NotNull(controllerResourceMapping);
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(contentNegotiator);
-        ArgumentGuard.NotNull(logger);
+        ArgumentNullException.ThrowIfNull(httpContextAccessor);
+        ArgumentNullException.ThrowIfNull(controllerResourceMapping);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(contentNegotiator);
+        ArgumentNullException.ThrowIfNull(logger);
 
         _next = next;
         _controllerResourceMapping = controllerResourceMapping;
@@ -50,8 +50,8 @@ public sealed partial class JsonApiMiddleware
 
     public async Task InvokeAsync(HttpContext httpContext, IJsonApiRequest request)
     {
-        ArgumentGuard.NotNull(httpContext);
-        ArgumentGuard.NotNull(request);
+        ArgumentNullException.ThrowIfNull(httpContext);
+        ArgumentNullException.ThrowIfNull(request);
 
         using (CodeTimingSessionManager.Current.Measure("JSON:API middleware"))
         {

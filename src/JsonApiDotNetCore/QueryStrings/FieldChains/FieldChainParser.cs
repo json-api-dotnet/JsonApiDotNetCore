@@ -7,7 +7,7 @@ internal sealed class FieldChainParser
 {
     public IEnumerable<string> Parse(string source)
     {
-        ArgumentGuard.NotNull(source);
+        ArgumentNullException.ThrowIfNull(source);
 
         if (source.Length > 0)
         {

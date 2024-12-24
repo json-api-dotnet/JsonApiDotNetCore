@@ -32,7 +32,7 @@ public sealed class SerializerIgnoreConditionTests : IntegrationTestContext<Test
 
         Calendar calendar = _fakers.Calendar.GenerateOne();
         calendar.TimeZone = null;
-        calendar.DefaultAppointmentDurationInMinutes = default;
+        calendar.DefaultAppointmentDurationInMinutes = 0;
         calendar.ShowWeekNumbers = true;
         calendar.MostRecentAppointment = _fakers.Appointment.GenerateOne();
         calendar.MostRecentAppointment.Description = null;

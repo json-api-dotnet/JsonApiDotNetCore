@@ -26,7 +26,7 @@ public sealed class QueryTokenizer
 
     public QueryTokenizer(string source)
     {
-        ArgumentGuard.NotNull(source);
+        ArgumentNullException.ThrowIfNull(source);
 
         _source = source;
     }

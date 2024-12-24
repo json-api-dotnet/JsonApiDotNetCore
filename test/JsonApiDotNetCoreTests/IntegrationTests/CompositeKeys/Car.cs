@@ -12,13 +12,13 @@ public sealed class Car : Identifiable<string?>
     [NotMapped]
     public override string? Id
     {
-        get => RegionId == default && LicensePlate == default ? null : $"{RegionId}:{LicensePlate}";
+        get => RegionId == 0 && LicensePlate == null ? null : $"{RegionId}:{LicensePlate}";
         set
         {
             if (value == null)
             {
-                RegionId = default;
-                LicensePlate = default;
+                RegionId = 0;
+                LicensePlate = null;
                 return;
             }
 

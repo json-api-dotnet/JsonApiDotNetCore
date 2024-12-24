@@ -1,5 +1,4 @@
 using DapperExample.TranslationToSql.TreeNodes;
-using JsonApiDotNetCore;
 
 namespace DapperExample.TranslationToSql.Transformations;
 
@@ -15,14 +14,14 @@ internal sealed partial class ColumnSelectorUsageCollector : SqlTreeNodeVisitor<
 
     public ColumnSelectorUsageCollector(ILoggerFactory loggerFactory)
     {
-        ArgumentGuard.NotNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(loggerFactory);
 
         _logger = loggerFactory.CreateLogger<ColumnSelectorUsageCollector>();
     }
 
     public void Collect(SelectNode select)
     {
-        ArgumentGuard.NotNull(select);
+        ArgumentNullException.ThrowIfNull(select);
 
         LogStarted();
 

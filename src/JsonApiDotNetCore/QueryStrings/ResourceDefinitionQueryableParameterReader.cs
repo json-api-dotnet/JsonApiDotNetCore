@@ -21,8 +21,8 @@ public class ResourceDefinitionQueryableParameterReader : IResourceDefinitionQue
 
     public ResourceDefinitionQueryableParameterReader(IJsonApiRequest request, IResourceDefinitionAccessor resourceDefinitionAccessor)
     {
-        ArgumentGuard.NotNull(request);
-        ArgumentGuard.NotNull(resourceDefinitionAccessor);
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(resourceDefinitionAccessor);
 
         _request = request;
         _resourceDefinitionAccessor = resourceDefinitionAccessor;
@@ -37,7 +37,7 @@ public class ResourceDefinitionQueryableParameterReader : IResourceDefinitionQue
     /// <inheritdoc />
     public virtual bool CanRead(string parameterName)
     {
-        ArgumentGuard.NotNullNorEmpty(parameterName);
+        ArgumentException.ThrowIfNullOrEmpty(parameterName);
 
         if (_request.Kind == EndpointKind.AtomicOperations)
         {

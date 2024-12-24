@@ -1,5 +1,4 @@
 using System.Text;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.TimeOffset;
@@ -34,7 +33,7 @@ internal sealed class TimeOffsetExpression : FunctionExpression
 
     public TimeOffsetExpression(LiteralConstantExpression timeSpanConstant)
     {
-        ArgumentGuard.NotNull(timeSpanConstant);
+        ArgumentNullException.ThrowIfNull(timeSpanConstant);
 
         if (timeSpanConstant.TypedValue is not TimeSpan timeSpan)
         {

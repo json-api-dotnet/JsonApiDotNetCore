@@ -14,7 +14,7 @@ public sealed class SingleOrManyDataConverterFactory : JsonConverterFactory
     /// <inheritdoc />
     public override bool CanConvert(Type typeToConvert)
     {
-        ArgumentGuard.NotNull(typeToConvert);
+        ArgumentNullException.ThrowIfNull(typeToConvert);
 
         return typeToConvert.IsGenericType && typeToConvert.GetGenericTypeDefinition() == typeof(SingleOrManyData<>);
     }
@@ -22,7 +22,7 @@ public sealed class SingleOrManyDataConverterFactory : JsonConverterFactory
     /// <inheritdoc />
     public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
     {
-        ArgumentGuard.NotNull(typeToConvert);
+        ArgumentNullException.ThrowIfNull(typeToConvert);
 
         Type objectType = typeToConvert.GetGenericArguments()[0];
         Type converterType = typeof(SingleOrManyDataConverter<>).MakeGenericType(objectType);

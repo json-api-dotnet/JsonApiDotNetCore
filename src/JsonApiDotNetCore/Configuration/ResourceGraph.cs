@@ -19,7 +19,7 @@ public sealed class ResourceGraph : IResourceGraph
 
     public ResourceGraph(IReadOnlySet<ResourceType> resourceTypeSet)
     {
-        ArgumentGuard.NotNull(resourceTypeSet);
+        ArgumentNullException.ThrowIfNull(resourceTypeSet);
 
         _resourceTypeSet = resourceTypeSet;
 
@@ -52,7 +52,7 @@ public sealed class ResourceGraph : IResourceGraph
     /// <inheritdoc />
     public ResourceType? FindResourceType(string publicName)
     {
-        ArgumentGuard.NotNull(publicName);
+        ArgumentNullException.ThrowIfNull(publicName);
 
         return _resourceTypesByPublicName.GetValueOrDefault(publicName);
     }
@@ -73,7 +73,7 @@ public sealed class ResourceGraph : IResourceGraph
     /// <inheritdoc />
     public ResourceType? FindResourceType(Type resourceClrType)
     {
-        ArgumentGuard.NotNull(resourceClrType);
+        ArgumentNullException.ThrowIfNull(resourceClrType);
 
         Type typeToFind = IsLazyLoadingProxyForResourceType(resourceClrType) ? resourceClrType.BaseType! : resourceClrType;
         return _resourceTypesByClrType.GetValueOrDefault(typeToFind);
@@ -95,7 +95,7 @@ public sealed class ResourceGraph : IResourceGraph
     public IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, object?>> selector)
         where TResource : class, IIdentifiable
     {
-        ArgumentGuard.NotNull(selector);
+        ArgumentNullException.ThrowIfNull(selector);
 
         return FilterFields<TResource, ResourceFieldAttribute>(selector);
     }
@@ -104,7 +104,7 @@ public sealed class ResourceGraph : IResourceGraph
     public IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, object?>> selector)
         where TResource : class, IIdentifiable
     {
-        ArgumentGuard.NotNull(selector);
+        ArgumentNullException.ThrowIfNull(selector);
 
         return FilterFields<TResource, AttrAttribute>(selector);
     }
@@ -113,7 +113,7 @@ public sealed class ResourceGraph : IResourceGraph
     public IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, object?>> selector)
         where TResource : class, IIdentifiable
     {
-        ArgumentGuard.NotNull(selector);
+        ArgumentNullException.ThrowIfNull(selector);
 
         return FilterFields<TResource, RelationshipAttribute>(selector);
     }

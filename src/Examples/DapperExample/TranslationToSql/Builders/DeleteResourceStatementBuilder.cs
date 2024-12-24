@@ -12,7 +12,7 @@ internal sealed class DeleteResourceStatementBuilder(IDataModelService dataModel
 {
     public DeleteNode Build(ResourceType resourceType, params object[] idValues)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
         ArgumentGuard.NotNullNorEmpty(idValues);
 
         ResetState();

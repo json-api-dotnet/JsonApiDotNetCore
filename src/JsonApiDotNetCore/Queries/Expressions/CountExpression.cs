@@ -26,7 +26,7 @@ public class CountExpression : FunctionExpression
 
     public CountExpression(ResourceFieldChainExpression targetCollection)
     {
-        ArgumentGuard.NotNull(targetCollection);
+        ArgumentNullException.ThrowIfNull(targetCollection);
 
         TargetCollection = targetCollection;
     }

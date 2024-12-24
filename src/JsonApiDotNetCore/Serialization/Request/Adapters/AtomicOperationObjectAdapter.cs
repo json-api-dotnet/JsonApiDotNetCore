@@ -17,10 +17,10 @@ public sealed class AtomicOperationObjectAdapter : IAtomicOperationObjectAdapter
     public AtomicOperationObjectAdapter(IJsonApiOptions options, IAtomicReferenceAdapter atomicReferenceAdapter,
         IResourceDataInOperationsRequestAdapter resourceDataInOperationsRequestAdapter, IRelationshipDataAdapter relationshipDataAdapter)
     {
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(atomicReferenceAdapter);
-        ArgumentGuard.NotNull(resourceDataInOperationsRequestAdapter);
-        ArgumentGuard.NotNull(relationshipDataAdapter);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(atomicReferenceAdapter);
+        ArgumentNullException.ThrowIfNull(resourceDataInOperationsRequestAdapter);
+        ArgumentNullException.ThrowIfNull(relationshipDataAdapter);
 
         _options = options;
         _atomicReferenceAdapter = atomicReferenceAdapter;
@@ -31,8 +31,8 @@ public sealed class AtomicOperationObjectAdapter : IAtomicOperationObjectAdapter
     /// <inheritdoc />
     public OperationContainer Convert(AtomicOperationObject atomicOperationObject, RequestAdapterState state)
     {
-        ArgumentGuard.NotNull(atomicOperationObject);
-        ArgumentGuard.NotNull(state);
+        ArgumentNullException.ThrowIfNull(atomicOperationObject);
+        ArgumentNullException.ThrowIfNull(state);
 
         AssertNoHref(atomicOperationObject, state);
 

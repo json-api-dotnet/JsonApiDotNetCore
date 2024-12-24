@@ -36,8 +36,8 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder
 
     public JsonApiApplicationBuilder(IServiceCollection services, IMvcCoreBuilder mvcBuilder)
     {
-        ArgumentGuard.NotNull(services);
-        ArgumentGuard.NotNull(mvcBuilder);
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(mvcBuilder);
 
         _services = services;
         _mvcBuilder = mvcBuilder;
@@ -68,7 +68,7 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder
     /// </summary>
     public void ConfigureResourceGraph(ICollection<Type> dbContextTypes, Action<ResourceGraphBuilder>? configureResourceGraph)
     {
-        ArgumentGuard.NotNull(dbContextTypes);
+        ArgumentNullException.ThrowIfNull(dbContextTypes);
 
         _services.TryAddSingleton(serviceProvider =>
         {
@@ -135,7 +135,7 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder
     /// </summary>
     public void ConfigureServiceContainer(ICollection<Type> dbContextTypes)
     {
-        ArgumentGuard.NotNull(dbContextTypes);
+        ArgumentNullException.ThrowIfNull(dbContextTypes);
 
         if (dbContextTypes.Count > 0)
         {

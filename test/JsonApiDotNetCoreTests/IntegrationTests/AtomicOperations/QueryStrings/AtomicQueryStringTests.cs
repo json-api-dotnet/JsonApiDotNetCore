@@ -20,12 +20,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
         testContext.UseController<OperationsController>();
         testContext.UseController<MusicTracksController>();
 
-        testContext.ConfigureServices(services =>
-        {
-            services.AddResourceDefinition<MusicTrackReleaseDefinition>();
-
-            services.AddSingleton<ISystemClock, FrozenSystemClock>();
-        });
+        testContext.ConfigureServices(services => services.AddResourceDefinition<MusicTrackReleaseDefinition>());
     }
 
     [Fact]
@@ -272,12 +267,13 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
     public async Task Can_use_Queryable_handler_at_resource_endpoint()
     {
         // Arrange
-        var clock = _testContext.Factory.Services.GetRequiredService<ISystemClock>();
+        var timeProvider = _testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        DateTimeOffset utcNow = timeProvider.GetUtcNow();
 
         List<MusicTrack> musicTracks = _fakers.MusicTrack.GenerateList(3);
-        musicTracks[0].ReleasedAt = clock.UtcNow.AddMonths(5);
-        musicTracks[1].ReleasedAt = clock.UtcNow.AddMonths(-5);
-        musicTracks[2].ReleasedAt = clock.UtcNow.AddMonths(-1);
+        musicTracks[0].ReleasedAt = utcNow.AddMonths(5);
+        musicTracks[1].ReleasedAt = utcNow.AddMonths(-5);
+        musicTracks[2].ReleasedAt = utcNow.AddMonths(-1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

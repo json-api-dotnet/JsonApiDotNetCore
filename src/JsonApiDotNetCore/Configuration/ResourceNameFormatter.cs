@@ -14,7 +14,7 @@ internal sealed class ResourceNameFormatter(JsonNamingPolicy? namingPolicy)
     /// </summary>
     public string FormatResourceName(Type resourceClrType)
     {
-        ArgumentGuard.NotNull(resourceClrType);
+        ArgumentNullException.ThrowIfNull(resourceClrType);
 
         var resourceAttribute = resourceClrType.GetCustomAttribute<ResourceAttribute>(true);
 

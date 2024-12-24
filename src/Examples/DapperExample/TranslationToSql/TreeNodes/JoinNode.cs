@@ -1,5 +1,3 @@
-using JsonApiDotNetCore;
-
 namespace DapperExample.TranslationToSql.TreeNodes;
 
 /// <summary>
@@ -16,8 +14,8 @@ internal sealed class JoinNode : TableAccessorNode
     public JoinNode(JoinType joinType, TableSourceNode source, ColumnNode outerColumn, ColumnNode innerColumn)
         : base(source)
     {
-        ArgumentGuard.NotNull(outerColumn);
-        ArgumentGuard.NotNull(innerColumn);
+        ArgumentNullException.ThrowIfNull(outerColumn);
+        ArgumentNullException.ThrowIfNull(innerColumn);
 
         JoinType = joinType;
         OuterColumn = outerColumn;

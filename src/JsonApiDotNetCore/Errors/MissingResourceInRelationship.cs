@@ -11,9 +11,9 @@ public sealed class MissingResourceInRelationship
 
     public MissingResourceInRelationship(string relationshipName, string resourceType, string resourceId)
     {
-        ArgumentGuard.NotNull(relationshipName);
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(resourceId);
+        ArgumentNullException.ThrowIfNull(relationshipName);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceId);
 
         RelationshipName = relationshipName;
         ResourceType = resourceType;

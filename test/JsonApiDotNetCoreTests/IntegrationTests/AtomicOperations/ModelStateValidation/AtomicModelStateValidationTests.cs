@@ -17,8 +17,6 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
     {
         _testContext = testContext;
 
-        _testContext.ConfigureServices(services => services.AddSingleton<ISystemClock, FrozenSystemClock>());
-
         testContext.UseController<OperationsController>();
     }
 
@@ -74,7 +72,8 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
     public async Task Cannot_create_resource_when_violation_from_custom_ValidationAttribute()
     {
         // Arrange
-        var clock = _testContext.Factory.Services.GetRequiredService<ISystemClock>();
+        var timeProvider = _testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        DateTimeOffset utcNow = timeProvider.GetUtcNow();
 
         var requestBody = new
         {
@@ -90,7 +89,7 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
                         {
                             title = "some",
                             lengthInSeconds = 120,
-                            releasedAt = clock.UtcNow.AddDays(1)
+                            releasedAt = utcNow.AddDays(1)
                         }
                     }
                 }

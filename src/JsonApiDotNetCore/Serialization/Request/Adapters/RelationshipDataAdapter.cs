@@ -13,7 +13,7 @@ public sealed class RelationshipDataAdapter : BaseAdapter, IRelationshipDataAdap
 
     public RelationshipDataAdapter(IResourceIdentifierObjectAdapter resourceIdentifierObjectAdapter)
     {
-        ArgumentGuard.NotNull(resourceIdentifierObjectAdapter);
+        ArgumentNullException.ThrowIfNull(resourceIdentifierObjectAdapter);
 
         _resourceIdentifierObjectAdapter = resourceIdentifierObjectAdapter;
     }
@@ -60,8 +60,8 @@ public sealed class RelationshipDataAdapter : BaseAdapter, IRelationshipDataAdap
     public object? Convert(SingleOrManyData<ResourceIdentifierObject> data, RelationshipAttribute relationship, bool useToManyElementType,
         RequestAdapterState state)
     {
-        ArgumentGuard.NotNull(relationship);
-        ArgumentGuard.NotNull(state);
+        ArgumentNullException.ThrowIfNull(relationship);
+        ArgumentNullException.ThrowIfNull(state);
         AssertHasData(data, state);
 
         using IDisposable _ = state.Position.PushElement("data");

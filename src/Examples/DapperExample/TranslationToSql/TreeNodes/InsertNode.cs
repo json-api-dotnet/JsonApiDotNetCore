@@ -14,7 +14,7 @@ internal sealed class InsertNode : SqlTreeNode
 
     public InsertNode(TableNode table, IReadOnlyCollection<ColumnAssignmentNode> assignments)
     {
-        ArgumentGuard.NotNull(table);
+        ArgumentNullException.ThrowIfNull(table);
         ArgumentGuard.NotNullNorEmpty(assignments);
 
         Table = table;

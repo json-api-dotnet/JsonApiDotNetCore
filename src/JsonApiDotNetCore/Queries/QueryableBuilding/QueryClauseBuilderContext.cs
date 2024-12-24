@@ -54,13 +54,13 @@ public sealed class QueryClauseBuilderContext
     public QueryClauseBuilderContext(Expression source, ResourceType resourceType, Type extensionType, IReadOnlyModel entityModel,
         LambdaScopeFactory lambdaScopeFactory, LambdaScope lambdaScope, IQueryableBuilder queryableBuilder, object? state)
     {
-        ArgumentGuard.NotNull(source);
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(extensionType);
-        ArgumentGuard.NotNull(entityModel);
-        ArgumentGuard.NotNull(lambdaScopeFactory);
-        ArgumentGuard.NotNull(lambdaScope);
-        ArgumentGuard.NotNull(queryableBuilder);
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(extensionType);
+        ArgumentNullException.ThrowIfNull(entityModel);
+        ArgumentNullException.ThrowIfNull(lambdaScopeFactory);
+        ArgumentNullException.ThrowIfNull(lambdaScope);
+        ArgumentNullException.ThrowIfNull(queryableBuilder);
         AssertSameType(source.Type, resourceType);
 
         Source = source;
@@ -86,14 +86,14 @@ public sealed class QueryClauseBuilderContext
 
     public QueryClauseBuilderContext WithSource(Expression source)
     {
-        ArgumentGuard.NotNull(source);
+        ArgumentNullException.ThrowIfNull(source);
 
         return new QueryClauseBuilderContext(source, ResourceType, ExtensionType, EntityModel, LambdaScopeFactory, LambdaScope, QueryableBuilder, State);
     }
 
     public QueryClauseBuilderContext WithLambdaScope(LambdaScope lambdaScope)
     {
-        ArgumentGuard.NotNull(lambdaScope);
+        ArgumentNullException.ThrowIfNull(lambdaScope);
 
         return new QueryClauseBuilderContext(Source, ResourceType, ExtensionType, EntityModel, LambdaScopeFactory, lambdaScope, QueryableBuilder, State);
     }

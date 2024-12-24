@@ -1,6 +1,7 @@
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Middleware;
 using Xunit;
 
@@ -18,6 +19,8 @@ public abstract class IntegrationTest : IAsyncLifetime
         MediaTypeWithQualityHeaderValue.Parse(JsonApiMediaType.AtomicOperations.ToString());
 
     private static readonly SemaphoreSlim ThrottleSemaphore = GetDefaultThrottleSemaphore();
+
+    public static DateTimeOffset DefaultDateTimeUtc { get; } = 1.January(2020).At(1, 2, 3).AsUtc();
 
     protected abstract JsonSerializerOptions SerializerOptions { get; }
 

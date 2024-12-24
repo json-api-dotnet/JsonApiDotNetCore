@@ -7,7 +7,7 @@ namespace TestBuildingBlocks;
 
 public static class FakerExtensions
 {
-    public static Faker<T> MakeDeterministic<T>(this Faker<T> faker)
+    public static Faker<T> MakeDeterministic<T>(this Faker<T> faker, DateTime? systemTimeUtc = null)
         where T : class
     {
         int seed = GetFakerSeed();
@@ -15,7 +15,7 @@ public static class FakerExtensions
 
         // Setting the system DateTime to kind Utc, so that faker calls like PastOffset() don't depend on the system time zone.
         // See https://docs.microsoft.com/en-us/dotnet/api/system.datetimeoffset.op_implicit?view=net-6.0#remarks
-        faker.UseDateTimeReference(FrozenSystemClock.DefaultDateTimeUtc);
+        faker.UseDateTimeReference(systemTimeUtc ?? IntegrationTest.DefaultDateTimeUtc.UtcDateTime);
 
         return faker;
     }

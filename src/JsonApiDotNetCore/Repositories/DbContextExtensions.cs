@@ -13,8 +13,8 @@ public static class DbContextExtensions
     /// </summary>
     public static IIdentifiable GetTrackedOrAttach(this DbContext dbContext, IIdentifiable resource)
     {
-        ArgumentGuard.NotNull(dbContext);
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(dbContext);
+        ArgumentNullException.ThrowIfNull(resource);
 
         var trackedIdentifiable = (IIdentifiable?)dbContext.GetTrackedIdentifiable(resource);
 
@@ -32,8 +32,8 @@ public static class DbContextExtensions
     /// </summary>
     public static object? GetTrackedIdentifiable(this DbContext dbContext, IIdentifiable identifiable)
     {
-        ArgumentGuard.NotNull(dbContext);
-        ArgumentGuard.NotNull(identifiable);
+        ArgumentNullException.ThrowIfNull(dbContext);
+        ArgumentNullException.ThrowIfNull(identifiable);
 
         Type resourceClrType = identifiable.GetClrType();
         string? stringId = identifiable.StringId;
@@ -53,7 +53,7 @@ public static class DbContextExtensions
     /// </summary>
     public static void ResetChangeTracker(this DbContext dbContext)
     {
-        ArgumentGuard.NotNull(dbContext);
+        ArgumentNullException.ThrowIfNull(dbContext);
 
         dbContext.ChangeTracker.Clear();
     }

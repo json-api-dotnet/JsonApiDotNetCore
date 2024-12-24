@@ -13,7 +13,7 @@ internal static class HttpMethodAttributeExtensions
 
     public static JsonApiEndpoints GetJsonApiEndpoint(this IEnumerable<HttpMethodAttribute> httpMethods)
     {
-        ArgumentGuard.NotNull(httpMethods);
+        ArgumentNullException.ThrowIfNull(httpMethods);
 
         HttpMethodAttribute[] nonHeadAttributes = httpMethods.Where(attribute => attribute is not HttpHeadAttribute).ToArray();
 

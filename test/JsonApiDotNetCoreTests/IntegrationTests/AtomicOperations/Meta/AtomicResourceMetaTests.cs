@@ -27,7 +27,6 @@ public sealed class AtomicResourceMetaTests : IClassFixture<IntegrationTestConte
             services.AddResourceDefinition<TextLanguageMetaDefinition>();
 
             services.AddSingleton<ResourceDefinitionHitCounter>();
-            services.AddSingleton<ISystemClock, FrozenSystemClock>();
         });
 
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();

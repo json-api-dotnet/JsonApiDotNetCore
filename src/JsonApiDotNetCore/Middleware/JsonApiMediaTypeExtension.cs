@@ -15,7 +15,7 @@ public sealed class JsonApiMediaTypeExtension : IEquatable<JsonApiMediaTypeExten
 
     public JsonApiMediaTypeExtension(string unescapedValue)
     {
-        ArgumentGuard.NotNullNorEmpty(unescapedValue);
+        ArgumentException.ThrowIfNullOrEmpty(unescapedValue);
 
         UnescapedValue = unescapedValue;
     }

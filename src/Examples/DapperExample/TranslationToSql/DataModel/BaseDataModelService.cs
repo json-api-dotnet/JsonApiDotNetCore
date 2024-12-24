@@ -5,7 +5,6 @@ using System.Data.Common;
 using System.Reflection;
 using Dapper;
 using DapperExample.TranslationToSql.TreeNodes;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -25,7 +24,7 @@ public abstract class BaseDataModelService : IDataModelService
 
     protected BaseDataModelService(IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
 
         ResourceGraph = resourceGraph;
     }
@@ -114,10 +113,10 @@ public abstract class BaseDataModelService : IDataModelService
 
     public object? GetColumnValue(ResourceType resourceType, IIdentifiable resource, string columnName)
     {
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resource);
         AssertSameType(resourceType, resource);
-        ArgumentGuard.NotNullNorEmpty(columnName);
+        ArgumentException.ThrowIfNullOrEmpty(columnName);
 
         IReadOnlyDictionary<string, ResourceFieldAttribute?> columnMappings = GetColumnMappings(resourceType);
 

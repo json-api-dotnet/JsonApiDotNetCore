@@ -1,6 +1,5 @@
 using System.Net;
 using FluentAssertions;
-using FluentAssertions.Extensions;
 using Humanizer;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Parsing;
@@ -27,7 +26,6 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         testContext.ConfigureServices(services =>
         {
             services.AddTransient<IFilterParser, TimeOffsetFilterParser>();
-            services.AddSingleton<ISystemClock, FrozenSystemClock>();
             services.AddScoped(typeof(IResourceDefinition<,>), typeof(FilterRewritingResourceDefinition<,>));
         });
     }
@@ -46,16 +44,17 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
     public async Task Can_filter_comparison_on_relative_time(string filterValue, ComparisonOperator comparisonOperator, string matchingRowsExpected)
     {
         // Arrange
-        var clock = _testContext.Factory.Services.GetRequiredService<ISystemClock>();
+        var timeProvider = _testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        DateTimeOffset utcNow = timeProvider.GetUtcNow();
 
         List<Reminder> reminders = _fakers.Reminder.GenerateList(7);
-        reminders[0].RemindsAt = clock.UtcNow.Add(TimeSpan.FromMinutes(-15)).DateTime.AsUtc();
-        reminders[1].RemindsAt = clock.UtcNow.Add(TimeSpan.FromMinutes(-10)).DateTime.AsUtc();
-        reminders[2].RemindsAt = clock.UtcNow.Add(TimeSpan.FromMinutes(-5)).DateTime.AsUtc();
-        reminders[3].RemindsAt = clock.UtcNow.Add(TimeSpan.FromMinutes(0)).DateTime.AsUtc();
-        reminders[4].RemindsAt = clock.UtcNow.Add(TimeSpan.FromMinutes(5)).DateTime.AsUtc();
-        reminders[5].RemindsAt = clock.UtcNow.Add(TimeSpan.FromMinutes(10)).DateTime.AsUtc();
-        reminders[6].RemindsAt = clock.UtcNow.Add(TimeSpan.FromMinutes(15)).DateTime.AsUtc();
+        reminders[0].RemindsAt = utcNow.Add(TimeSpan.FromMinutes(-15)).UtcDateTime;
+        reminders[1].RemindsAt = utcNow.Add(TimeSpan.FromMinutes(-10)).UtcDateTime;
+        reminders[2].RemindsAt = utcNow.Add(TimeSpan.FromMinutes(-5)).UtcDateTime;
+        reminders[3].RemindsAt = utcNow.Add(TimeSpan.FromMinutes(0)).UtcDateTime;
+        reminders[4].RemindsAt = utcNow.Add(TimeSpan.FromMinutes(5)).UtcDateTime;
+        reminders[5].RemindsAt = utcNow.Add(TimeSpan.FromMinutes(10)).UtcDateTime;
+        reminders[6].RemindsAt = utcNow.Add(TimeSpan.FromMinutes(15)).UtcDateTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -200,16 +199,17 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
     public async Task Can_filter_comparison_on_relative_time_in_nested_expression()
     {
         // Arrange
-        var clock = _testContext.Factory.Services.GetRequiredService<ISystemClock>();
+        var timeProvider = _testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        DateTimeOffset utcNow = timeProvider.GetUtcNow();
 
         Calendar calendar = _fakers.Calendar.GenerateOne();
         calendar.Appointments = _fakers.Appointment.GenerateSet(2);
 
         calendar.Appointments.ElementAt(0).Reminders = _fakers.Reminder.GenerateList(1);
-        calendar.Appointments.ElementAt(0).Reminders[0].RemindsAt = clock.UtcNow.DateTime.AsUtc();
+        calendar.Appointments.ElementAt(0).Reminders[0].RemindsAt = utcNow.UtcDateTime;
 
         calendar.Appointments.ElementAt(1).Reminders = _fakers.Reminder.GenerateList(1);
-        calendar.Appointments.ElementAt(1).Reminders[0].RemindsAt = clock.UtcNow.Add(TimeSpan.FromMinutes(30)).DateTime.AsUtc();
+        calendar.Appointments.ElementAt(1).Reminders[0].RemindsAt = utcNow.Add(TimeSpan.FromMinutes(30)).UtcDateTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

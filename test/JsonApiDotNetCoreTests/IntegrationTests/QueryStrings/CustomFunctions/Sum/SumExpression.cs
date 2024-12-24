@@ -1,5 +1,4 @@
 using System.Text;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.Sum;
@@ -38,8 +37,8 @@ internal sealed class SumExpression : FunctionExpression
 
     public SumExpression(ResourceFieldChainExpression targetToManyRelationship, QueryExpression selector)
     {
-        ArgumentGuard.NotNull(targetToManyRelationship);
-        ArgumentGuard.NotNull(selector);
+        ArgumentNullException.ThrowIfNull(targetToManyRelationship);
+        ArgumentNullException.ThrowIfNull(selector);
 
         TargetToManyRelationship = targetToManyRelationship;
         Selector = selector;

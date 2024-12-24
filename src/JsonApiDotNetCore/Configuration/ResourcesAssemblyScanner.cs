@@ -12,8 +12,8 @@ internal sealed class ResourcesAssemblyScanner
 
     public ResourcesAssemblyScanner(ResourceDescriptorAssemblyCache assemblyCache, ResourceGraphBuilder resourceGraphBuilder)
     {
-        ArgumentGuard.NotNull(assemblyCache);
-        ArgumentGuard.NotNull(resourceGraphBuilder);
+        ArgumentNullException.ThrowIfNull(assemblyCache);
+        ArgumentNullException.ThrowIfNull(resourceGraphBuilder);
 
         _assemblyCache = assemblyCache;
         _resourceGraphBuilder = resourceGraphBuilder;

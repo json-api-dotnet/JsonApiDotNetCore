@@ -26,7 +26,7 @@ public class JsonApiResourceDefinition<TResource, TId> : IResourceDefinition<TRe
 
     public JsonApiResourceDefinition(IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
 
         ResourceGraph = resourceGraph;
         ResourceType = resourceGraph.GetResourceType<TResource>();

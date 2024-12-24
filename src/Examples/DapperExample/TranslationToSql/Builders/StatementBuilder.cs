@@ -1,7 +1,6 @@
 using DapperExample.TranslationToSql.DataModel;
 using DapperExample.TranslationToSql.Generators;
 using DapperExample.TranslationToSql.TreeNodes;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -15,7 +14,7 @@ internal abstract class StatementBuilder
 
     protected StatementBuilder(IDataModelService dataModelService)
     {
-        ArgumentGuard.NotNull(dataModelService);
+        ArgumentNullException.ThrowIfNull(dataModelService);
 
         _dataModelService = dataModelService;
     }

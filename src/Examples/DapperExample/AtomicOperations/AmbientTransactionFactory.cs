@@ -1,6 +1,5 @@
 using System.Data.Common;
 using DapperExample.TranslationToSql.DataModel;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Configuration;
 
@@ -18,8 +17,8 @@ public sealed class AmbientTransactionFactory : IOperationsTransactionFactory
 
     public AmbientTransactionFactory(IJsonApiOptions options, IDataModelService dataModelService)
     {
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(dataModelService);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(dataModelService);
 
         _options = options;
         _dataModelService = dataModelService;
@@ -64,7 +63,7 @@ public sealed class AmbientTransactionFactory : IOperationsTransactionFactory
 
     internal void Detach(AmbientTransaction ambientTransaction)
     {
-        ArgumentGuard.NotNull(ambientTransaction);
+        ArgumentNullException.ThrowIfNull(ambientTransaction);
 
         if (AmbientTransaction != null && AmbientTransaction == ambientTransaction)
         {

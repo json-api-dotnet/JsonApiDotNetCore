@@ -1,6 +1,5 @@
 using DapperExample.Data;
 using DapperExample.TranslationToSql.DataModel;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -18,9 +17,9 @@ internal sealed class FromEntitiesNavigationResolver : IInverseNavigationResolve
 
     public FromEntitiesNavigationResolver(IResourceGraph resourceGraph, FromEntitiesDataModelService dataModelService, AppDbContext appDbContext)
     {
-        ArgumentGuard.NotNull(resourceGraph);
-        ArgumentGuard.NotNull(dataModelService);
-        ArgumentGuard.NotNull(appDbContext);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(dataModelService);
+        ArgumentNullException.ThrowIfNull(appDbContext);
 
         _defaultResolver = new InverseNavigationResolver(resourceGraph, new[]
         {

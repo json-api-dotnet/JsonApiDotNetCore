@@ -17,8 +17,8 @@ public sealed class LocalIdTracker : ILocalIdTracker
     /// <inheritdoc />
     public void Declare(string localId, ResourceType resourceType)
     {
-        ArgumentGuard.NotNullNorEmpty(localId);
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentException.ThrowIfNullOrEmpty(localId);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         AssertIsNotDeclared(localId);
 
@@ -36,9 +36,9 @@ public sealed class LocalIdTracker : ILocalIdTracker
     /// <inheritdoc />
     public void Assign(string localId, ResourceType resourceType, string stringId)
     {
-        ArgumentGuard.NotNullNorEmpty(localId);
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNullNorEmpty(stringId);
+        ArgumentException.ThrowIfNullOrEmpty(localId);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentException.ThrowIfNullOrEmpty(stringId);
 
         AssertIsDeclared(localId);
 
@@ -57,8 +57,8 @@ public sealed class LocalIdTracker : ILocalIdTracker
     /// <inheritdoc />
     public string GetValue(string localId, ResourceType resourceType)
     {
-        ArgumentGuard.NotNullNorEmpty(localId);
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentException.ThrowIfNullOrEmpty(localId);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         AssertIsDeclared(localId);
 

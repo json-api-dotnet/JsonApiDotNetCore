@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -22,7 +21,7 @@ public abstract class HitCountingResourceDefinition<TResource, TId> : JsonApiRes
     protected HitCountingResourceDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter)
         : base(resourceGraph)
     {
-        ArgumentGuard.NotNull(hitCounter);
+        ArgumentNullException.ThrowIfNull(hitCounter);
 
         _hitCounter = hitCounter;
     }

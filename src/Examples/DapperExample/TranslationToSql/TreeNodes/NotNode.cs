@@ -1,5 +1,3 @@
-using JsonApiDotNetCore;
-
 namespace DapperExample.TranslationToSql.TreeNodes;
 
 /// <summary>
@@ -13,7 +11,7 @@ internal sealed class NotNode : FilterNode
 
     public NotNode(FilterNode child)
     {
-        ArgumentGuard.NotNull(child);
+        ArgumentNullException.ThrowIfNull(child);
 
         Child = child;
     }

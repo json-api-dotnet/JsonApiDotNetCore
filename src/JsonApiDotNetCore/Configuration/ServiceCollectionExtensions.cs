@@ -22,7 +22,7 @@ public static class ServiceCollectionExtensions
         ICollection<Type>? dbContextTypes = null)
 #pragma warning restore AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
     {
-        ArgumentGuard.NotNull(services);
+        ArgumentNullException.ThrowIfNull(services);
 
         SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder, dbContextTypes ?? Array.Empty<Type>());
 
@@ -59,7 +59,7 @@ public static class ServiceCollectionExtensions
     /// </summary>
     public static IServiceCollection AddResourceService<TService>(this IServiceCollection services)
     {
-        ArgumentGuard.NotNull(services);
+        ArgumentNullException.ThrowIfNull(services);
 
         RegisterTypeForUnboundInterfaces(services, typeof(TService), InjectablesAssemblyScanner.ServiceUnboundInterfaces);
 
@@ -72,7 +72,7 @@ public static class ServiceCollectionExtensions
     /// </summary>
     public static IServiceCollection AddResourceRepository<TRepository>(this IServiceCollection services)
     {
-        ArgumentGuard.NotNull(services);
+        ArgumentNullException.ThrowIfNull(services);
 
         RegisterTypeForUnboundInterfaces(services, typeof(TRepository), InjectablesAssemblyScanner.RepositoryUnboundInterfaces);
 
@@ -85,7 +85,7 @@ public static class ServiceCollectionExtensions
     /// </summary>
     public static IServiceCollection AddResourceDefinition<TResourceDefinition>(this IServiceCollection services)
     {
-        ArgumentGuard.NotNull(services);
+        ArgumentNullException.ThrowIfNull(services);
 
         RegisterTypeForUnboundInterfaces(services, typeof(TResourceDefinition), InjectablesAssemblyScanner.ResourceDefinitionUnboundInterfaces);
 

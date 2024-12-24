@@ -41,7 +41,7 @@ public class IsTypeExpression : FilterExpression
 
     public IsTypeExpression(ResourceFieldChainExpression? targetToOneRelationship, ResourceType derivedType, FilterExpression? child)
     {
-        ArgumentGuard.NotNull(derivedType);
+        ArgumentNullException.ThrowIfNull(derivedType);
 
         TargetToOneRelationship = targetToOneRelationship;
         DerivedType = derivedType;

@@ -1,5 +1,4 @@
 using Humanizer;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -26,8 +25,8 @@ internal sealed class TableNode : TableSourceNode
     public TableNode(ResourceType resourceType, IReadOnlyDictionary<string, ResourceFieldAttribute?> columnMappings, string? alias)
         : base(alias)
     {
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(columnMappings);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(columnMappings);
 
         _resourceType = resourceType;
         _columnMappings = columnMappings;

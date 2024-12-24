@@ -65,11 +65,7 @@ public abstract partial class InMemoryResourceService<TResource, TId>(
             _paginationContext.IsPageFull = true;
         }
 
-#if NET6_0
-        return Task.FromResult<IReadOnlyCollection<TResource>>(Array.AsReadOnly(resources));
-#else
         return Task.FromResult<IReadOnlyCollection<TResource>>(resources.AsReadOnly());
-#endif
     }
 
     private void LogFiltersInTopScope()

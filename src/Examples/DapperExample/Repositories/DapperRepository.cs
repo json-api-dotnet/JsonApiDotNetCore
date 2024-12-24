@@ -114,14 +114,14 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
         IResourceDefinitionAccessor resourceDefinitionAccessor, AmbientTransactionFactory transactionFactory, IDataModelService dataModelService,
         SqlCaptureStore captureStore, ILoggerFactory loggerFactory)
     {
-        ArgumentGuard.NotNull(targetedFields);
-        ArgumentGuard.NotNull(resourceGraph);
-        ArgumentGuard.NotNull(resourceFactory);
-        ArgumentGuard.NotNull(resourceDefinitionAccessor);
-        ArgumentGuard.NotNull(transactionFactory);
-        ArgumentGuard.NotNull(dataModelService);
-        ArgumentGuard.NotNull(captureStore);
-        ArgumentGuard.NotNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(targetedFields);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(resourceFactory);
+        ArgumentNullException.ThrowIfNull(resourceDefinitionAccessor);
+        ArgumentNullException.ThrowIfNull(transactionFactory);
+        ArgumentNullException.ThrowIfNull(dataModelService);
+        ArgumentNullException.ThrowIfNull(captureStore);
+        ArgumentNullException.ThrowIfNull(loggerFactory);
 
         _targetedFields = targetedFields;
         _resourceGraph = resourceGraph;
@@ -138,7 +138,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
     /// <inheritdoc />
     public async Task<IReadOnlyCollection<TResource>> GetAsync(QueryLayer queryLayer, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(queryLayer);
+        ArgumentNullException.ThrowIfNull(queryLayer);
 
         var mapper = new ResultSetMapper<TResource, TId>(queryLayer.Include);
 
@@ -180,7 +180,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
     /// <inheritdoc />
     public Task<TResource> GetForCreateAsync(Type resourceClrType, [DisallowNull] TId id, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(resourceClrType);
+        ArgumentNullException.ThrowIfNull(resourceClrType);
 
         var resource = (TResource)_resourceFactory.CreateInstance(resourceClrType);
         resource.Id = id;
@@ -191,8 +191,8 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
     /// <inheritdoc />
     public async Task CreateAsync(TResource resourceFromRequest, TResource resourceForDatabase, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(resourceFromRequest);
-        ArgumentGuard.NotNull(resourceForDatabase);
+        ArgumentNullException.ThrowIfNull(resourceFromRequest);
+        ArgumentNullException.ThrowIfNull(resourceForDatabase);
 
         var changeDetector = new ResourceChangeDetector(ResourceType, _dataModelService);
 
@@ -283,7 +283,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
     /// <inheritdoc />
     public async Task<TResource?> GetForUpdateAsync(QueryLayer queryLayer, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(queryLayer);
+        ArgumentNullException.ThrowIfNull(queryLayer);
 
         IReadOnlyCollection<TResource> resources = await GetAsync(queryLayer, cancellationToken);
         return resources.FirstOrDefault();
@@ -292,8 +292,8 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
     /// <inheritdoc />
     public async Task UpdateAsync(TResource resourceFromRequest, TResource resourceFromDatabase, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(resourceFromRequest);
-        ArgumentGuard.NotNull(resourceFromDatabase);
+        ArgumentNullException.ThrowIfNull(resourceFromRequest);
+        ArgumentNullException.ThrowIfNull(resourceFromDatabase);
 
         var changeDetector = new ResourceChangeDetector(ResourceType, _dataModelService);
         changeDetector.CaptureCurrentValues(resourceFromDatabase);
@@ -384,7 +384,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
     /// <inheritdoc />
     public async Task SetRelationshipAsync(TResource leftResource, object? rightValue, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(leftResource);
+        ArgumentNullException.ThrowIfNull(leftResource);
 
         RelationshipAttribute relationship = _targetedFields.Relationships.Single();
 
@@ -455,7 +455,7 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
     public async Task AddToToManyRelationshipAsync(TResource? leftResource, [DisallowNull] TId leftId, ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(rightResourceIds);
+        ArgumentNullException.ThrowIfNull(rightResourceIds);
 
         var relationship = (HasManyAttribute)_targetedFields.Relationships.Single();
 
@@ -495,8 +495,8 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
     /// <inheritdoc />
     public async Task RemoveFromToManyRelationshipAsync(TResource leftResource, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(leftResource);
-        ArgumentGuard.NotNull(rightResourceIds);
+        ArgumentNullException.ThrowIfNull(leftResource);
+        ArgumentNullException.ThrowIfNull(rightResourceIds);
 
         var relationship = (HasManyAttribute)_targetedFields.Relationships.Single();
 

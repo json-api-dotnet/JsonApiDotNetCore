@@ -13,7 +13,7 @@ public abstract class BaseAdapter
     protected static void AssertHasData<T>(SingleOrManyData<T> data, RequestAdapterState state)
         where T : ResourceIdentifierObject, new()
     {
-        ArgumentGuard.NotNull(state);
+        ArgumentNullException.ThrowIfNull(state);
 
         if (!data.IsAssigned)
         {
@@ -25,7 +25,7 @@ public abstract class BaseAdapter
     protected static void AssertDataHasSingleValue<T>(SingleOrManyData<T> data, bool allowNull, RequestAdapterState state)
         where T : ResourceIdentifierObject, new()
     {
-        ArgumentGuard.NotNull(state);
+        ArgumentNullException.ThrowIfNull(state);
 
         if (data.SingleValue == null)
         {
@@ -50,7 +50,7 @@ public abstract class BaseAdapter
     protected static void AssertDataHasManyValue<T>(SingleOrManyData<T> data, RequestAdapterState state)
         where T : ResourceIdentifierObject, new()
     {
-        ArgumentGuard.NotNull(state);
+        ArgumentNullException.ThrowIfNull(state);
 
         if (data.ManyValue == null)
         {
@@ -62,7 +62,7 @@ public abstract class BaseAdapter
     protected static void AssertObjectIsNotNull<T>([SysNotNull] T? value, RequestAdapterState state)
         where T : class
     {
-        ArgumentGuard.NotNull(state);
+        ArgumentNullException.ThrowIfNull(state);
 
         if (value is null)
         {

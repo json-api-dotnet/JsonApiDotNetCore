@@ -32,7 +32,7 @@ public class HasExpression : FilterExpression
 
     public HasExpression(ResourceFieldChainExpression targetCollection, FilterExpression? filter)
     {
-        ArgumentGuard.NotNull(targetCollection);
+        ArgumentNullException.ThrowIfNull(targetCollection);
 
         TargetCollection = targetCollection;
         Filter = filter;
