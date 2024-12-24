@@ -3,7 +3,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCore.OpenApi.Client.NSwag;
 
 namespace OpenApiNSwagClientTests;
 
@@ -86,7 +85,7 @@ internal sealed class FakeHttpClientWrapper : IDisposable
 
         public void SetResponse(HttpResponseMessage response)
         {
-            ArgumentGuard.NotNull(response);
+            ArgumentNullException.ThrowIfNull(response);
 
             _response = response;
         }

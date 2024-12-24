@@ -20,8 +20,6 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
         testContext.UseController<EnrollmentsController>();
         testContext.UseController<OperationsController>();
 
-        testContext.ConfigureServices(services => services.AddSingleton<ISystemClock, FrozenSystemClock>());
-
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.IncludeJsonApiVersion = true;
 

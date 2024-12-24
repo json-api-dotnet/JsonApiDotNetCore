@@ -14,7 +14,7 @@ internal sealed class ResourceDocumentationReader
 
     public string? GetDocumentationForType(ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         XPathNavigator? navigator = GetNavigator(resourceType.ClrType.Assembly);
 
@@ -29,7 +29,7 @@ internal sealed class ResourceDocumentationReader
 
     public string? GetDocumentationForAttribute(AttrAttribute attribute)
     {
-        ArgumentGuard.NotNull(attribute);
+        ArgumentNullException.ThrowIfNull(attribute);
 
         XPathNavigator? navigator = GetNavigator(attribute.Type.ClrType.Assembly);
 
@@ -44,7 +44,7 @@ internal sealed class ResourceDocumentationReader
 
     public string? GetDocumentationForRelationship(RelationshipAttribute relationship)
     {
-        ArgumentGuard.NotNull(relationship);
+        ArgumentNullException.ThrowIfNull(relationship);
 
         XPathNavigator? navigator = GetNavigator(relationship.Type.ClrType.Assembly);
 

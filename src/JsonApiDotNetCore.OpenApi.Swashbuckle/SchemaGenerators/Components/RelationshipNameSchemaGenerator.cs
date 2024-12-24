@@ -11,15 +11,15 @@ internal sealed class RelationshipNameSchemaGenerator
 
     public RelationshipNameSchemaGenerator(JsonApiSchemaIdSelector schemaIdSelector)
     {
-        ArgumentGuard.NotNull(schemaIdSelector);
+        ArgumentNullException.ThrowIfNull(schemaIdSelector);
 
         _schemaIdSelector = schemaIdSelector;
     }
 
     public OpenApiSchema GenerateSchema(RelationshipAttribute relationship, SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(relationship);
-        ArgumentGuard.NotNull(schemaRepository);
+        ArgumentNullException.ThrowIfNull(relationship);
+        ArgumentNullException.ThrowIfNull(schemaRepository);
 
         string schemaId = _schemaIdSelector.GetRelationshipNameSchemaId(relationship);
 

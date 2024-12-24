@@ -4,11 +4,10 @@
     <CodeAnalysisFrozenVersion>4.1.0</CodeAnalysisFrozenVersion>
     <DemystifierFrozenVersion>0.4.1</DemystifierFrozenVersion>
     <HumanizerFrozenVersion>2.14.1</HumanizerFrozenVersion>
-    <SwashbuckleFrozenVersion>6.8.1</SwashbuckleFrozenVersion>
+    <SwashbuckleFrozenVersion>7.2.0</SwashbuckleFrozenVersion>
     <NewtonsoftJsonFrozenVersion>13.0.3</NewtonsoftJsonFrozenVersion>
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
-    <ApiDescriptionServerVersion>8.0.*</ApiDescriptionServerVersion>
     <BenchmarkDotNetVersion>0.14.*</BenchmarkDotNetVersion>
     <BlushingPenguinVersion>1.0.*</BlushingPenguinVersion>
     <BogusVersion>35.6.*</BogusVersion>
@@ -19,11 +18,12 @@
     <GitHubActionsTestLoggerVersion>2.4.*</GitHubActionsTestLoggerVersion>
     <InheritDocVersion>2.0.*</InheritDocVersion>
     <KiotaVersion>1.*</KiotaVersion>
-    <MicrosoftApiClientVersion>8.0.*</MicrosoftApiClientVersion>
-    <NSwagApiClientVersion>14.1.*</NSwagApiClientVersion>
+    <MicrosoftApiClientVersion>9.0.*</MicrosoftApiClientVersion>
+    <MicrosoftApiServerVersion>9.0.*</MicrosoftApiServerVersion>
+    <NSwagApiClientVersion>14.2.*</NSwagApiClientVersion>
     <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
     <SourceLinkVersion>8.0.*</SourceLinkVersion>
-    <SwashbuckleVersion>6.*-*</SwashbuckleVersion>
+    <SwashbuckleVersion>7.*-*</SwashbuckleVersion>
     <SystemTextJsonVersion>9.0.*</SystemTextJsonVersion>
     <TestSdkVersion>17.12.*</TestSdkVersion>
     <XunitVersion>2.9.*</XunitVersion>

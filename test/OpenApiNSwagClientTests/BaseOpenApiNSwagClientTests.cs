@@ -1,6 +1,5 @@
 using System.Linq.Expressions;
 using System.Reflection;
-using JsonApiDotNetCore.OpenApi.Client.NSwag;
 
 namespace OpenApiNSwagClientTests;
 
@@ -26,8 +25,8 @@ public abstract class BaseOpenApiNSwagClientTests
     protected static object? SetPropertyToDefaultValue<T>(T source, string propertyName)
         where T : class
     {
-        ArgumentGuard.NotNull(source);
-        ArgumentGuard.NotNull(propertyName);
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(propertyName);
 
         PropertyInfo property = GetExistingProperty(typeof(T), propertyName);
 
@@ -44,8 +43,8 @@ public abstract class BaseOpenApiNSwagClientTests
     protected static void SetPropertyToInitialValue<T>(T source, string propertyName)
         where T : class, new()
     {
-        ArgumentGuard.NotNull(source);
-        ArgumentGuard.NotNull(propertyName);
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(propertyName);
 
         var emptyRelationshipsObject = new T();
         object? defaultValue = emptyRelationshipsObject.GetPropertyValue(propertyName);
@@ -59,8 +58,8 @@ public abstract class BaseOpenApiNSwagClientTests
     protected static void SetDataPropertyToNull<T>(T source, string relationshipPropertyName)
         where T : class
     {
-        ArgumentGuard.NotNull(source);
-        ArgumentGuard.NotNull(relationshipPropertyName);
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(relationshipPropertyName);
 
         PropertyInfo relationshipProperty = GetExistingProperty(typeof(T), relationshipPropertyName);
         object? relationshipValue = relationshipProperty.GetValue(source);

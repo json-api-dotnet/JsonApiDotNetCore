@@ -15,7 +15,7 @@ internal sealed class EndpointResolver
 
     public JsonApiEndpoints GetEndpoint(MethodInfo controllerAction)
     {
-        ArgumentGuard.NotNull(controllerAction);
+        ArgumentNullException.ThrowIfNull(controllerAction);
 
         if (!IsJsonApiController(controllerAction))
         {

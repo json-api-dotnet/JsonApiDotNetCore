@@ -22,13 +22,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
 
         testContext.UseController<SocialMediaAccountsController>();
 
-        const string targetFramework =
-#if NET6_0
-            "net6.0";
-#else
-            "net8.0";
-#endif
-        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger/{targetFramework}";
+        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
     [Theory]
@@ -56,11 +50,9 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.properties.firstName").With(firstNameElement =>
         {
-#if !NET6_0
+            firstNameElement.Should().HaveProperty("type", "string");
             firstNameElement.Should().HaveProperty("maxLength", 20);
             firstNameElement.Should().HaveProperty("minLength", 2);
-#endif
-            firstNameElement.Should().HaveProperty("type", "string");
         });
     }
 
@@ -74,8 +66,8 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.properties.lastName").With(lastNameElement =>
         {
-            lastNameElement.Should().NotContainPath("minLength");
             lastNameElement.Should().HaveProperty("type", "string");
+            lastNameElement.Should().NotContainPath("minLength");
         });
     }
 
@@ -89,9 +81,9 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.properties.userName").With(userNameElement =>
         {
+            userNameElement.Should().HaveProperty("type", "string");
             userNameElement.Should().HaveProperty("maxLength", 18);
             userNameElement.Should().HaveProperty("minLength", 3);
-            userNameElement.Should().HaveProperty("type", "string");
         });
     }
 
@@ -105,8 +97,8 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.properties.userName").With(userNameElement =>
         {
-            userNameElement.Should().HaveProperty("pattern", "^[a-zA-Z]+$");
             userNameElement.Should().HaveProperty("type", "string");
+            userNameElement.Should().HaveProperty("pattern", "^[a-zA-Z]+$");
         });
     }
 
@@ -150,12 +142,10 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.properties.password").With(passwordElement =>
         {
-#if !NET6_0
+            passwordElement.Should().HaveProperty("type", "string");
             passwordElement.Should().HaveProperty("format", "byte");
             passwordElement.Should().HaveProperty("maxLength", SocialMediaAccount.MaxPasswordCharsInBase64);
             passwordElement.Should().HaveProperty("minLength", SocialMediaAccount.MinPasswordCharsInBase64);
-#endif
-            passwordElement.Should().HaveProperty("type", "string");
         });
     }
 
@@ -184,14 +174,12 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.properties.age").With(ageElement =>
         {
-            ageElement.Should().HaveProperty("maximum", 122.9);
-            ageElement.Should().HaveProperty("minimum", 0.1);
-#if !NET6_0
-            ageElement.Should().ContainPath("exclusiveMaximum").With(exclusiveElement => exclusiveElement.Should().Be(true));
-            ageElement.Should().ContainPath("exclusiveMinimum").With(exclusiveElement => exclusiveElement.Should().Be(true));
-#endif
             ageElement.Should().HaveProperty("type", "number");
             ageElement.Should().HaveProperty("format", "double");
+            ageElement.Should().HaveProperty("maximum", 122.9);
+            ageElement.Should().HaveProperty("minimum", 0.1);
+            ageElement.Should().ContainPath("exclusiveMaximum").With(exclusiveElement => exclusiveElement.Should().Be(true));
+            ageElement.Should().ContainPath("exclusiveMinimum").With(exclusiveElement => exclusiveElement.Should().Be(true));
         });
     }
 
@@ -235,15 +223,13 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         // Assert
         document.Should().ContainPath($"components.schemas.{modelName}.properties.tags").With(tagsElement =>
         {
-#if !NET6_0
+            tagsElement.Should().HaveProperty("type", "array");
             tagsElement.Should().HaveProperty("maxItems", 10);
             tagsElement.Should().HaveProperty("minItems", 1);
-#endif
-            tagsElement.Should().HaveProperty("type", "array");
 
-            tagsElement.Should().ContainPath("items").With(itemsEl =>
+            tagsElement.Should().ContainPath("items").With(itemsElement =>
             {
-                itemsEl.Should().HaveProperty("type", "string");
+                itemsElement.Should().HaveProperty("type", "string");
             });
         });
     }

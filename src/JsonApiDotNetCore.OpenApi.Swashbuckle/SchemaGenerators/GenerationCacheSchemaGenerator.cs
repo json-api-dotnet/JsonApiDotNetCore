@@ -21,8 +21,8 @@ internal sealed class GenerationCacheSchemaGenerator
 
     public GenerationCacheSchemaGenerator(IActionDescriptorCollectionProvider defaultProvider, JsonApiEndpointMetadataProvider jsonApiEndpointMetadataProvider)
     {
-        ArgumentGuard.NotNull(defaultProvider);
-        ArgumentGuard.NotNull(jsonApiEndpointMetadataProvider);
+        ArgumentNullException.ThrowIfNull(defaultProvider);
+        ArgumentNullException.ThrowIfNull(jsonApiEndpointMetadataProvider);
 
         _defaultProvider = defaultProvider;
         _jsonApiEndpointMetadataProvider = jsonApiEndpointMetadataProvider;
@@ -38,7 +38,7 @@ internal sealed class GenerationCacheSchemaGenerator
 
     private OpenApiSchema GenerateFullSchema(SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(schemaRepository);
+        ArgumentNullException.ThrowIfNull(schemaRepository);
 
         if (schemaRepository.Schemas.TryGetValue(SchemaId, out OpenApiSchema? fullSchema))
         {

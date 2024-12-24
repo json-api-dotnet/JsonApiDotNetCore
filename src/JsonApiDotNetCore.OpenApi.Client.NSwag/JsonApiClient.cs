@@ -17,7 +17,7 @@ public abstract class JsonApiClient : IJsonApiClient
     /// </summary>
     protected void SetSerializerSettingsForJsonApi(JsonSerializerSettings settings)
     {
-        ArgumentGuard.NotNull(settings);
+        ArgumentNullException.ThrowIfNull(settings);
 
         settings.Converters.Add(_documentJsonConverter);
     }
@@ -27,8 +27,8 @@ public abstract class JsonApiClient : IJsonApiClient
         params Expression<Func<TAttributesObject, object?>>[] alwaysIncludedAttributeSelectors)
         where TRequestDocument : class
     {
-        ArgumentGuard.NotNull(requestDocument);
-        ArgumentGuard.NotNull(alwaysIncludedAttributeSelectors);
+        ArgumentNullException.ThrowIfNull(requestDocument);
+        ArgumentNullException.ThrowIfNull(alwaysIncludedAttributeSelectors);
 
         HashSet<string> attributeNames = [];
 
@@ -79,8 +79,8 @@ public abstract class JsonApiClient : IJsonApiClient
 
         public DocumentRegistrationScope(DocumentJsonConverter documentJsonConverter, object document)
         {
-            ArgumentGuard.NotNull(documentJsonConverter);
-            ArgumentGuard.NotNull(document);
+            ArgumentNullException.ThrowIfNull(documentJsonConverter);
+            ArgumentNullException.ThrowIfNull(document);
 
             _documentJsonConverter = documentJsonConverter;
             _document = document;
@@ -102,8 +102,8 @@ public abstract class JsonApiClient : IJsonApiClient
 
         public AlwaysIncludedAttributes(HashSet<string> propertyNames, Type attributesObjectType)
         {
-            ArgumentGuard.NotNull(propertyNames);
-            ArgumentGuard.NotNull(attributesObjectType);
+            ArgumentNullException.ThrowIfNull(propertyNames);
+            ArgumentNullException.ThrowIfNull(attributesObjectType);
 
             _propertyNames = propertyNames;
             _attributesObjectType = attributesObjectType;
@@ -162,7 +162,7 @@ public abstract class JsonApiClient : IJsonApiClient
 
         public override bool CanConvert(Type objectType)
         {
-            ArgumentGuard.NotNull(objectType);
+            ArgumentNullException.ThrowIfNull(objectType);
 
             if (_isSerializing)
             {
@@ -180,8 +180,8 @@ public abstract class JsonApiClient : IJsonApiClient
 
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
-            ArgumentGuard.NotNull(writer);
-            ArgumentGuard.NotNull(serializer);
+            ArgumentNullException.ThrowIfNull(writer);
+            ArgumentNullException.ThrowIfNull(serializer);
 
             if (value != null)
             {
@@ -216,14 +216,14 @@ public abstract class JsonApiClient : IJsonApiClient
 
         public AttributesJsonConverter(AlwaysIncludedAttributes alwaysIncludedAttributes)
         {
-            ArgumentGuard.NotNull(alwaysIncludedAttributes);
+            ArgumentNullException.ThrowIfNull(alwaysIncludedAttributes);
 
             _alwaysIncludedAttributes = alwaysIncludedAttributes;
         }
 
         public override bool CanConvert(Type objectType)
         {
-            ArgumentGuard.NotNull(objectType);
+            ArgumentNullException.ThrowIfNull(objectType);
 
             if (_isSerializing)
             {
@@ -241,8 +241,8 @@ public abstract class JsonApiClient : IJsonApiClient
 
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
-            ArgumentGuard.NotNull(writer);
-            ArgumentGuard.NotNull(serializer);
+            ArgumentNullException.ThrowIfNull(writer);
+            ArgumentNullException.ThrowIfNull(serializer);
 
             if (value != null)
             {
@@ -322,7 +322,7 @@ public abstract class JsonApiClient : IJsonApiClient
 
         public JsonApiAttributeContractResolver(AlwaysIncludedAttributes alwaysIncludedAttributes)
         {
-            ArgumentGuard.NotNull(alwaysIncludedAttributes);
+            ArgumentNullException.ThrowIfNull(alwaysIncludedAttributes);
 
             _alwaysIncludedAttributes = alwaysIncludedAttributes;
         }

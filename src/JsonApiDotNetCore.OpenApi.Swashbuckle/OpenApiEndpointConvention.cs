@@ -21,8 +21,8 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
 
     public OpenApiEndpointConvention(IControllerResourceMapping controllerResourceMapping, IJsonApiOptions options)
     {
-        ArgumentGuard.NotNull(controllerResourceMapping);
-        ArgumentGuard.NotNull(options);
+        ArgumentNullException.ThrowIfNull(controllerResourceMapping);
+        ArgumentNullException.ThrowIfNull(options);
 
         _controllerResourceMapping = controllerResourceMapping;
         _options = options;
@@ -30,7 +30,7 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
 
     public void Apply(ActionModel action)
     {
-        ArgumentGuard.NotNull(action);
+        ArgumentNullException.ThrowIfNull(action);
 
         JsonApiEndpointWrapper endpoint = JsonApiEndpointWrapper.FromActionModel(action);
 

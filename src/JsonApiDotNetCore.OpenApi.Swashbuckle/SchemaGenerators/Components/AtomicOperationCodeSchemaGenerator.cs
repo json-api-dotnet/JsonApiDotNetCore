@@ -11,14 +11,14 @@ internal sealed class AtomicOperationCodeSchemaGenerator
 
     public AtomicOperationCodeSchemaGenerator(JsonApiSchemaIdSelector schemaIdSelector)
     {
-        ArgumentGuard.NotNull(schemaIdSelector);
+        ArgumentNullException.ThrowIfNull(schemaIdSelector);
 
         _schemaIdSelector = schemaIdSelector;
     }
 
     public OpenApiSchema GenerateSchema(AtomicOperationCode operationCode, SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(schemaRepository);
+        ArgumentNullException.ThrowIfNull(schemaRepository);
 
         string schemaId = _schemaIdSelector.GetAtomicOperationCodeSchemaId(operationCode);
 

@@ -32,10 +32,10 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
     public ConfigureSwaggerGenOptions(OpenApiOperationIdSelector operationIdSelector, JsonApiSchemaIdSelector schemaIdSelector,
         IControllerResourceMapping controllerResourceMapping, IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(operationIdSelector);
-        ArgumentGuard.NotNull(schemaIdSelector);
-        ArgumentGuard.NotNull(controllerResourceMapping);
-        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(operationIdSelector);
+        ArgumentNullException.ThrowIfNull(schemaIdSelector);
+        ArgumentNullException.ThrowIfNull(controllerResourceMapping);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
 
         _operationIdSelector = operationIdSelector;
         _schemaIdSelector = schemaIdSelector;

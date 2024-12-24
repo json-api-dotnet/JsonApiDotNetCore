@@ -64,16 +64,16 @@ internal sealed class LinksVisibilitySchemaGenerator
 
     public LinksVisibilitySchemaGenerator(IJsonApiOptions options, IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
 
         _lazyLinksVisibility = new Lazy<LinksVisibility>(() => new LinksVisibility(options, resourceGraph), LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
     public void UpdateSchemaForTopLevel(Type modelType, OpenApiSchema fullSchemaForLinksContainer, SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(modelType);
-        ArgumentGuard.NotNull(fullSchemaForLinksContainer);
+        ArgumentNullException.ThrowIfNull(modelType);
+        ArgumentNullException.ThrowIfNull(fullSchemaForLinksContainer);
 
         Type lookupType = modelType.ConstructedToOpenType();
 
@@ -85,8 +85,8 @@ internal sealed class LinksVisibilitySchemaGenerator
 
     public void UpdateSchemaForResource(ResourceSchemaType resourceSchemaType, OpenApiSchema fullSchemaForResourceData, SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(resourceSchemaType);
-        ArgumentGuard.NotNull(fullSchemaForResourceData);
+        ArgumentNullException.ThrowIfNull(resourceSchemaType);
+        ArgumentNullException.ThrowIfNull(fullSchemaForResourceData);
 
         if (LinksInJsonApiSchemaTypes.TryGetValue(resourceSchemaType.SchemaOpenType, out LinkTypes possibleLinkTypes))
         {
@@ -96,8 +96,8 @@ internal sealed class LinksVisibilitySchemaGenerator
 
     public void UpdateSchemaForRelationship(Type modelType, OpenApiSchema fullSchemaForRelationship, SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(modelType);
-        ArgumentGuard.NotNull(fullSchemaForRelationship);
+        ArgumentNullException.ThrowIfNull(modelType);
+        ArgumentNullException.ThrowIfNull(fullSchemaForRelationship);
 
         Type lookupType = modelType.ConstructedToOpenType();
 
@@ -144,8 +144,8 @@ internal sealed class LinksVisibilitySchemaGenerator
 
         public LinksVisibility(IJsonApiOptions options, IResourceGraph resourceGraph)
         {
-            ArgumentGuard.NotNull(options);
-            ArgumentGuard.NotNull(resourceGraph);
+            ArgumentNullException.ThrowIfNull(options);
+            ArgumentNullException.ThrowIfNull(resourceGraph);
 
             var unionTopLevelLinks = LinkTypes.None;
             var unionResourceLinks = LinkTypes.None;

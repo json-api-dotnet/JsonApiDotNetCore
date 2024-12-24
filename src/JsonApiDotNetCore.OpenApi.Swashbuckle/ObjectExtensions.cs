@@ -11,7 +11,7 @@ internal static class ObjectExtensions
     public static T MemberwiseClone<T>(this T source)
         where T : class
     {
-        ArgumentGuard.NotNull(source);
+        ArgumentNullException.ThrowIfNull(source);
 
         return (T)MemberwiseCloneMethod.Value.Invoke(source, null)!;
     }

@@ -18,8 +18,8 @@ internal sealed class JsonApiEndpointMetadataProvider
 
     public JsonApiEndpointMetadataProvider(IControllerResourceMapping controllerResourceMapping, NonPrimaryDocumentTypeFactory nonPrimaryDocumentTypeFactory)
     {
-        ArgumentGuard.NotNull(controllerResourceMapping);
-        ArgumentGuard.NotNull(nonPrimaryDocumentTypeFactory);
+        ArgumentNullException.ThrowIfNull(controllerResourceMapping);
+        ArgumentNullException.ThrowIfNull(nonPrimaryDocumentTypeFactory);
 
         _controllerResourceMapping = controllerResourceMapping;
         _nonPrimaryDocumentTypeFactory = nonPrimaryDocumentTypeFactory;
@@ -27,7 +27,7 @@ internal sealed class JsonApiEndpointMetadataProvider
 
     public JsonApiEndpointMetadataContainer Get(MethodInfo controllerAction)
     {
-        ArgumentGuard.NotNull(controllerAction);
+        ArgumentNullException.ThrowIfNull(controllerAction);
 
         if (EndpointResolver.Instance.IsAtomicOperationsController(controllerAction))
         {

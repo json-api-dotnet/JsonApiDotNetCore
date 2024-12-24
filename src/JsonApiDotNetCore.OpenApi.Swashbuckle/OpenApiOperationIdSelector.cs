@@ -42,8 +42,8 @@ internal sealed class OpenApiOperationIdSelector
 
     public OpenApiOperationIdSelector(IControllerResourceMapping controllerResourceMapping, IJsonApiOptions options)
     {
-        ArgumentGuard.NotNull(controllerResourceMapping);
-        ArgumentGuard.NotNull(options);
+        ArgumentNullException.ThrowIfNull(controllerResourceMapping);
+        ArgumentNullException.ThrowIfNull(options);
 
         _controllerResourceMapping = controllerResourceMapping;
         _options = options;
@@ -51,7 +51,7 @@ internal sealed class OpenApiOperationIdSelector
 
     public string GetOpenApiOperationId(ApiDescription endpoint)
     {
-        ArgumentGuard.NotNull(endpoint);
+        ArgumentNullException.ThrowIfNull(endpoint);
 
         MethodInfo actionMethod = endpoint.ActionDescriptor.GetActionMethod();
         ResourceType? primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(actionMethod.ReflectedType);

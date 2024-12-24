@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
 
   <Import Project="..\..\package-versions.props" />
@@ -25,6 +25,10 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
   </ItemGroup>
 
+  <Target Name="KiotaRestoreTool" BeforeTargets="ExcludeKiotaGeneratedCode" Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
+    <Exec Command="dotnet tool restore" />
+  </Target>
+
   <Target Name="ExcludeKiotaGeneratedCode" BeforeTargets="BeforeCompile;CoreCompile" Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
     <ItemGroup>
       <Compile Remove="**\GeneratedCode\**\*.cs" />
@@ -40,7 +44,7 @@
     <Exec
       Command="dotnet kiota generate --language CSharp --class-name ClientIdGenerationModesClient --namespace-name OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode --output ./ClientIdGenerationModes/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/ClientIdGenerationModes/GeneratedSwagger/swagger.g.json" />
     <Exec
-      Command="dotnet kiota generate --language CSharp --class-name ModelStateValidationClient --namespace-name OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode --output ./ModelStateValidation/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/ModelStateValidation/GeneratedSwagger/$(TargetFramework)/swagger.g.json" />
+      Command="dotnet kiota generate --language CSharp --class-name ModelStateValidationClient --namespace-name OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode --output ./ModelStateValidation/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/ModelStateValidation/GeneratedSwagger/swagger.g.json" />
     <Exec
       Command="dotnet kiota generate --language CSharp --class-name RestrictedControllersClient --namespace-name OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode --output ./RestrictedControllers/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/RestrictedControllers/GeneratedSwagger/swagger.g.json" />
     <Exec

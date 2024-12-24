@@ -11,15 +11,15 @@ internal sealed class ResourceTypeSchemaGenerator
 
     public ResourceTypeSchemaGenerator(JsonApiSchemaIdSelector schemaIdSelector)
     {
-        ArgumentGuard.NotNull(schemaIdSelector);
+        ArgumentNullException.ThrowIfNull(schemaIdSelector);
 
         _schemaIdSelector = schemaIdSelector;
     }
 
     public OpenApiSchema GenerateSchema(ResourceType resourceType, SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(schemaRepository);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(schemaRepository);
 
         if (schemaRepository.TryLookupByType(resourceType.ClrType, out OpenApiSchema? referenceSchema))
         {

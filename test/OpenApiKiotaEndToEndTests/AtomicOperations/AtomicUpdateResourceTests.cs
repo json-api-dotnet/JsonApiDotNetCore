@@ -28,11 +28,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
 
         testContext.UseController<OperationsController>();
 
-        testContext.ConfigureServices(services =>
-        {
-            services.AddSingleton<ISystemClock, FrozenSystemClock>();
-            services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
-        });
+        testContext.ConfigureServices(services => services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>)));
 
         _fakers = new OperationsFakers(testContext.Factory.Services);
     }

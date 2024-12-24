@@ -32,8 +32,8 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
     public JsonApiActionDescriptorCollectionProvider(IActionDescriptorCollectionProvider defaultProvider,
         JsonApiEndpointMetadataProvider jsonApiEndpointMetadataProvider)
     {
-        ArgumentGuard.NotNull(defaultProvider);
-        ArgumentGuard.NotNull(jsonApiEndpointMetadataProvider);
+        ArgumentNullException.ThrowIfNull(defaultProvider);
+        ArgumentNullException.ThrowIfNull(jsonApiEndpointMetadataProvider);
 
         _defaultProvider = defaultProvider;
         _jsonApiEndpointMetadataProvider = jsonApiEndpointMetadataProvider;

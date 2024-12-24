@@ -5,10 +5,10 @@ using TestBuildingBlocks;
 namespace OpenApiTests.AtomicOperations;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class OperationsDbContext(ISystemClock systemClock, DbContextOptions<OperationsDbContext> options)
+public sealed class OperationsDbContext(TimeProvider timeProvider, DbContextOptions<OperationsDbContext> options)
     : TestableDbContext(options)
 {
-    internal ISystemClock SystemClock { get; } = systemClock;
+    internal TimeProvider TimeProvider { get; } = timeProvider;
 
     public DbSet<Course> Courses => Set<Course>();
     public DbSet<Teacher> Teachers => Set<Teacher>();

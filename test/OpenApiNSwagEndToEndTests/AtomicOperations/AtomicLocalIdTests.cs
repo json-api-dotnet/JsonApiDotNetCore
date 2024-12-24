@@ -1,7 +1,6 @@
 using FluentAssertions;
 using JsonApiDotNetCore.OpenApi.Client.NSwag;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using OpenApiNSwagEndToEndTests.AtomicOperations.GeneratedCode;
 using OpenApiTests;
 using OpenApiTests.AtomicOperations;
@@ -23,8 +22,6 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
         _logHttpMessageHandler = new XUnitLogHttpMessageHandler(testOutputHelper);
 
         testContext.UseController<OperationsController>();
-
-        testContext.ConfigureServices(services => services.AddSingleton<ISystemClock, FrozenSystemClock>());
 
         _fakers = new OperationsFakers(testContext.Factory.Services);
     }

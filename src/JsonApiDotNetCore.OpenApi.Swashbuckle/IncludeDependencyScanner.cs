@@ -10,7 +10,7 @@ internal sealed class IncludeDependencyScanner
     /// </summary>
     public IReadOnlySet<ResourceType> GetReachableRelatedTypes(ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         HashSet<ResourceType> resourceTypesFound = [];
         AddTypesFromRelationships(resourceType.Relationships, resourceTypesFound);

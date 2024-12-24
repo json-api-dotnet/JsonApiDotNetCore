@@ -8,16 +8,6 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 
 internal sealed class RelationshipIdentifierSchemaGenerator
 {
-#if NET6_0
-    private static readonly string[] RelationshipIdentifierPropertyNamesInOrder =
-    [
-        JsonApiPropertyName.Type,
-        JsonApiPropertyName.Id,
-        JsonApiPropertyName.Lid,
-        JsonApiPropertyName.Relationship
-    ];
-#endif
-
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly ResourceTypeSchemaGenerator _resourceTypeSchemaGenerator;
     private readonly ResourceIdSchemaGenerator _resourceIdSchemaGenerator;
@@ -28,11 +18,11 @@ internal sealed class RelationshipIdentifierSchemaGenerator
         ResourceIdSchemaGenerator resourceIdSchemaGenerator, RelationshipNameSchemaGenerator relationshipNameSchemaGenerator,
         JsonApiSchemaIdSelector schemaIdSelector)
     {
-        ArgumentGuard.NotNull(defaultSchemaGenerator);
-        ArgumentGuard.NotNull(resourceTypeSchemaGenerator);
-        ArgumentGuard.NotNull(resourceIdSchemaGenerator);
-        ArgumentGuard.NotNull(relationshipNameSchemaGenerator);
-        ArgumentGuard.NotNull(schemaIdSelector);
+        ArgumentNullException.ThrowIfNull(defaultSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(resourceTypeSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(resourceIdSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(relationshipNameSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(schemaIdSelector);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _resourceTypeSchemaGenerator = resourceTypeSchemaGenerator;
@@ -43,8 +33,8 @@ internal sealed class RelationshipIdentifierSchemaGenerator
 
     public OpenApiSchema GenerateSchema(RelationshipAttribute relationship, SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(relationship);
-        ArgumentGuard.NotNull(schemaRepository);
+        ArgumentNullException.ThrowIfNull(relationship);
+        ArgumentNullException.ThrowIfNull(schemaRepository);
 
         string schemaId = _schemaIdSelector.GetRelationshipIdentifierSchemaId(relationship);
 
@@ -75,10 +65,6 @@ internal sealed class RelationshipIdentifierSchemaGenerator
         SetResourceType(fullSchemaForIdentifier, relationship.LeftType, schemaRepository);
         SetResourceId(fullSchemaForIdentifier, relationship.LeftType, schemaRepository);
         SetRelationship(fullSchemaForIdentifier, relationship, schemaRepository);
-
-#if NET6_0
-        fullSchemaForIdentifier.ReorderProperties(RelationshipIdentifierPropertyNamesInOrder);
-#endif
 
         schemaRepository.ReplaceSchemaId(relationshipIdentifierConstructedType, schemaId);
         referenceSchemaForIdentifier.Reference.Id = schemaId;

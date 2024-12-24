@@ -12,7 +12,7 @@ internal sealed class ServerDocumentFilter : IDocumentFilter
 
     public ServerDocumentFilter(IHttpContextAccessor httpContextAccessor)
     {
-        ArgumentGuard.NotNull(httpContextAccessor);
+        ArgumentNullException.ThrowIfNull(httpContextAccessor);
 
         _httpContextAccessor = httpContextAccessor;
     }

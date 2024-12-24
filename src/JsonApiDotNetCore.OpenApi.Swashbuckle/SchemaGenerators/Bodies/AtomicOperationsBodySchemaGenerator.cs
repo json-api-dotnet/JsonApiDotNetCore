@@ -35,16 +35,16 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
         IResourceGraph resourceGraph)
         : base(metaSchemaGenerator, linksVisibilitySchemaGenerator, options)
     {
-        ArgumentGuard.NotNull(defaultSchemaGenerator);
-        ArgumentGuard.NotNull(atomicOperationCodeSchemaGenerator);
-        ArgumentGuard.NotNull(resourceIdentifierSchemaGenerator);
-        ArgumentGuard.NotNull(relationshipIdentifierSchemaGenerator);
-        ArgumentGuard.NotNull(abstractAtomicOperationSchemaGenerator);
-        ArgumentGuard.NotNull(dataContainerSchemaGenerator);
-        ArgumentGuard.NotNull(atomicOperationFilter);
-        ArgumentGuard.NotNull(schemaIdSelector);
-        ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
-        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(defaultSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(atomicOperationCodeSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(resourceIdentifierSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(relationshipIdentifierSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(abstractAtomicOperationSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(dataContainerSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(atomicOperationFilter);
+        ArgumentNullException.ThrowIfNull(schemaIdSelector);
+        ArgumentNullException.ThrowIfNull(resourceFieldValidationMetadataProvider);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _atomicOperationCodeSchemaGenerator = atomicOperationCodeSchemaGenerator;

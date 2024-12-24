@@ -14,8 +14,8 @@ internal sealed class ResourceFieldValidationMetadataProvider
 
     public ResourceFieldValidationMetadataProvider(IJsonApiOptions options, IModelMetadataProvider modelMetadataProvider)
     {
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(modelMetadataProvider);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(modelMetadataProvider);
 
         _options = options;
         _modelMetadataProvider = modelMetadataProvider;
@@ -23,7 +23,7 @@ internal sealed class ResourceFieldValidationMetadataProvider
 
     public bool IsNullable(ResourceFieldAttribute field)
     {
-        ArgumentGuard.NotNull(field);
+        ArgumentNullException.ThrowIfNull(field);
 
         if (field is HasManyAttribute)
         {
@@ -44,7 +44,7 @@ internal sealed class ResourceFieldValidationMetadataProvider
 
     public bool IsRequired(ResourceFieldAttribute field)
     {
-        ArgumentGuard.NotNull(field);
+        ArgumentNullException.ThrowIfNull(field);
 
         bool hasRequiredAttribute = field.Property.HasAttribute<RequiredAttribute>();
 

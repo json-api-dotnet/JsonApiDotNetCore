@@ -15,10 +15,10 @@ internal sealed class ResourceIdentifierSchemaGenerator
     public ResourceIdentifierSchemaGenerator(SchemaGenerator defaultSchemaGenerator, GenerationCacheSchemaGenerator generationCacheSchemaGenerator,
         ResourceTypeSchemaGenerator resourceTypeSchemaGenerator, ResourceIdSchemaGenerator resourceIdSchemaGenerator)
     {
-        ArgumentGuard.NotNull(defaultSchemaGenerator);
-        ArgumentGuard.NotNull(generationCacheSchemaGenerator);
-        ArgumentGuard.NotNull(resourceTypeSchemaGenerator);
-        ArgumentGuard.NotNull(resourceIdSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(defaultSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(generationCacheSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(resourceTypeSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(resourceIdSchemaGenerator);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _generationCacheSchemaGenerator = generationCacheSchemaGenerator;
@@ -28,8 +28,8 @@ internal sealed class ResourceIdentifierSchemaGenerator
 
     public OpenApiSchema GenerateSchema(ResourceType resourceType, bool forRequestSchema, SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(schemaRepository);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(schemaRepository);
 
         Type resourceIdentifierOpenType = forRequestSchema ? typeof(ResourceIdentifierInRequest<>) : typeof(ResourceIdentifierInResponse<>);
         Type resourceIdentifierConstructedType = resourceIdentifierOpenType.MakeGenericType(resourceType.ClrType);
