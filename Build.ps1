@@ -19,7 +19,7 @@ VerifySuccessExitCode
 dotnet build --configuration Release /p:VersionSuffix=$versionSuffix
 VerifySuccessExitCode
 
-dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage"
+dotnet test --no-build --configuration Release --verbosity quiet --collect:"XPlat Code Coverage"
 VerifySuccessExitCode
 
 dotnet reportgenerator -reports:**\coverage.cobertura.xml -targetdir:artifacts\coverage -filefilters:-*.g.cs
