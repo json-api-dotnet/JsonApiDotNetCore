@@ -8,11 +8,11 @@ public abstract class ObfuscatedIdentifiable : Identifiable<int>
 
     protected override string? GetStringId(int value)
     {
-        return value == default ? null : Codec.Encode(value);
+        return value == 0 ? null : Codec.Encode(value);
     }
 
     protected override int GetTypedId(string? value)
     {
-        return value == null ? default : Codec.Decode(value);
+        return value == null ? 0 : Codec.Decode(value);
     }
 }
