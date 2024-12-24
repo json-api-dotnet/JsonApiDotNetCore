@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
@@ -94,19 +94,19 @@ Classes
       <dt><a class="xref" href="JsonApiDotNetCore.Diagnostics.AspNetCodeTimerSession.html">AspNetCodeTimerSession</a></dt>
       <dd><p>Code timing session management intended for use in ASP.NET Web Applications. Uses <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.httpcontext.items">Items</a> to isolate concurrent requests.
 Can be used with async/wait, but it cannot distinguish between concurrently running threads within a single HTTP request, so you'll need to pass an
-<a class="xref" href="JsonApiDotNetCore.Diagnostics.CascadingCodeTimer.html">CascadingCodeTimer</a> instance through the entire call chain in that case.</p>
+<span class="xref">JsonApiDotNetCore.Diagnostics.CascadingCodeTimer</span> instance through the entire call chain in that case.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Diagnostics.CodeTimingSessionManager.html">CodeTimingSessionManager</a></dt>
-      <dd><p>Provides access to the &quot;current&quot; measurement, which removes the need to pass along a <a class="xref" href="JsonApiDotNetCore.Diagnostics.CascadingCodeTimer.html">CascadingCodeTimer</a> instance through the entire
+      <dd><p>Provides access to the &quot;current&quot; measurement, which removes the need to pass along a <span class="xref">JsonApiDotNetCore.Diagnostics.CascadingCodeTimer</span> instance through the entire
 call chain.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Diagnostics.DefaultCodeTimerSession.html">DefaultCodeTimerSession</a></dt>
       <dd><p>General code timing session management. Can be used with async/wait, but it cannot distinguish between concurrently running threads, so you'll need
-to pass an <a class="xref" href="JsonApiDotNetCore.Diagnostics.CascadingCodeTimer.html">CascadingCodeTimer</a> instance through the entire call chain in that case.</p>
+to pass a <span class="xref">JsonApiDotNetCore.Diagnostics.CascadingCodeTimer</span> instance through the entire call chain in that case.</p>
 </dd>
     </dl>
     <h3 id="interfaces">
@@ -119,7 +119,7 @@ Interfaces
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Diagnostics.ICodeTimerSession.html">ICodeTimerSession</a></dt>
-      <dd><p>Removes the need to pass along a <a class="xref" href="JsonApiDotNetCore.Diagnostics.CascadingCodeTimer.html">CascadingCodeTimer</a> instance through the entire call chain when using code timing.</p>
+      <dd><p>Removes the need to pass along a <span class="xref">JsonApiDotNetCore.Diagnostics.CascadingCodeTimer</span> instance through the entire call chain when using code timing.</p>
 </dd>
     </dl>
 
