@@ -16,8 +16,8 @@ internal sealed class JsonApiDataContractResolver : ISerializerDataContractResol
 
     public JsonApiDataContractResolver(IJsonApiOptions options, IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
 
         _resourceGraph = resourceGraph;
         _dataContractResolver = new JsonSerializerDataContractResolver(options.SerializerOptions);
@@ -25,7 +25,7 @@ internal sealed class JsonApiDataContractResolver : ISerializerDataContractResol
 
     public DataContract GetDataContractForType(Type type)
     {
-        ArgumentGuard.NotNull(type);
+        ArgumentNullException.ThrowIfNull(type);
 
         if (type == typeof(IIdentifiable))
         {
@@ -47,8 +47,6 @@ internal sealed class JsonApiDataContractResolver : ISerializerDataContractResol
             dataContract = ReplacePropertiesInDataContract(dataContract, replacementProperties);
         }
 
-        dataContract = OrderPropertiesInDataContract(dataContract);
-
         return dataContract;
     }
 
@@ -56,29 +54,6 @@ internal sealed class JsonApiDataContractResolver : ISerializerDataContractResol
     {
         return DataContract.ForObject(dataContract.UnderlyingType, dataProperties, dataContract.ObjectExtensionDataType, dataContract.ObjectTypeNameProperty,
             dataContract.ObjectTypeNameValue);
-    }
-
-    private static DataContract OrderPropertiesInDataContract(DataContract dataContract)
-    {
-#if NET6_0
-        // From https://learn.microsoft.com/en-us/dotnet/api/system.type.getproperties#system-type-getproperties:
-        //   In .NET 6 and earlier versions, the GetProperties method does not return properties in a particular order, such as alphabetical or declaration
-        //   order. Your code must not depend on the order in which properties are returned, because that order varies. However, starting with .NET 7, the
-        //   ordering is deterministic based upon the metadata ordering in the assembly.
-
-        if (dataContract.ObjectProperties != null)
-        {
-            DataProperty[] dataPropertiesInOrder = dataContract.ObjectProperties.OrderBy(dataProperty => dataProperty.MemberInfo.MetadataToken).ToArray();
-
-            // @formatter:keep_existing_linebreaks true
-
-            return DataContract.ForObject(dataContract.UnderlyingType, dataPropertiesInOrder, dataContract.ObjectExtensionDataType,
-                dataContract.ObjectTypeNameProperty, dataContract.ObjectTypeNameValue);
-
-            // @formatter:keep_existing_linebreaks restore
-        }
-#endif
-        return dataContract;
     }
 
     private List<DataProperty> GetDataPropertiesThatExistInResourceClrType(Type resourceClrType, DataContract dataContract)

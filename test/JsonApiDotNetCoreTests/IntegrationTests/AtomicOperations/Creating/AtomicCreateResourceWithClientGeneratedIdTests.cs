@@ -28,7 +28,6 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
             services.AddResourceDefinition<AssignIdToTextLanguageDefinition>();
 
             services.AddSingleton<ResourceDefinitionHitCounter>();
-            services.AddSingleton<ISystemClock, FrozenSystemClock>();
         });
     }
 

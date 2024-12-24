@@ -60,9 +60,9 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
     public DocumentationOpenApiOperationFilter(IJsonApiOptions options, IControllerResourceMapping controllerResourceMapping,
         ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
     {
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(controllerResourceMapping);
-        ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(controllerResourceMapping);
+        ArgumentNullException.ThrowIfNull(resourceFieldValidationMetadataProvider);
 
         _options = options;
         _controllerResourceMapping = controllerResourceMapping;
@@ -71,8 +71,8 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
-        ArgumentGuard.NotNull(operation);
-        ArgumentGuard.NotNull(context);
+        ArgumentNullException.ThrowIfNull(operation);
+        ArgumentNullException.ThrowIfNull(context);
 
         bool hasHeadVerb = context.ApiDescription.HttpMethod == "HEAD";
 

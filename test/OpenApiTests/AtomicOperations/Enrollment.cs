@@ -1,7 +1,6 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using TestBuildingBlocks;
 
 namespace OpenApiTests.AtomicOperations;
 
@@ -9,9 +8,9 @@ namespace OpenApiTests.AtomicOperations;
 [Resource(ControllerNamespace = "OpenApiTests.AtomicOperations")]
 public sealed class Enrollment(OperationsDbContext dbContext) : Identifiable<long>
 {
-    private readonly ISystemClock _systemClock = dbContext.SystemClock;
+    private readonly TimeProvider _timeProvider = dbContext.TimeProvider;
 
-    private DateOnly Today => DateOnly.FromDateTime(_systemClock.UtcNow.Date);
+    private DateOnly Today => DateOnly.FromDateTime(_timeProvider.GetUtcNow().Date);
 
     [Attr]
     public DateOnly EnrolledAt { get; set; }

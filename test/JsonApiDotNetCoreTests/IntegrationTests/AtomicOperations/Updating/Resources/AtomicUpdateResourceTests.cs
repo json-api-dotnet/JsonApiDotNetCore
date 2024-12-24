@@ -29,7 +29,6 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
             services.AddResourceDefinition<ImplicitlyChangingTextLanguageDefinition>();
 
             services.AddSingleton<ResourceDefinitionHitCounter>();
-            services.AddSingleton<ISystemClock, FrozenSystemClock>();
         });
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();

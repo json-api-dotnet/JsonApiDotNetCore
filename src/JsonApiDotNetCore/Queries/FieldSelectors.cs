@@ -30,21 +30,21 @@ public sealed class FieldSelectors : Dictionary<ResourceFieldAttribute, QueryLay
 
     public bool ContainsField(ResourceFieldAttribute field)
     {
-        ArgumentGuard.NotNull(field);
+        ArgumentNullException.ThrowIfNull(field);
 
         return ContainsKey(field);
     }
 
     public void IncludeAttribute(AttrAttribute attribute)
     {
-        ArgumentGuard.NotNull(attribute);
+        ArgumentNullException.ThrowIfNull(attribute);
 
         this[attribute] = null;
     }
 
     public void IncludeAttributes(IEnumerable<AttrAttribute> attributes)
     {
-        ArgumentGuard.NotNull(attributes);
+        ArgumentNullException.ThrowIfNull(attributes);
 
         foreach (AttrAttribute attribute in attributes)
         {
@@ -54,8 +54,8 @@ public sealed class FieldSelectors : Dictionary<ResourceFieldAttribute, QueryLay
 
     public void IncludeRelationship(RelationshipAttribute relationship, QueryLayer queryLayer)
     {
-        ArgumentGuard.NotNull(relationship);
-        ArgumentGuard.NotNull(queryLayer);
+        ArgumentNullException.ThrowIfNull(relationship);
+        ArgumentNullException.ThrowIfNull(queryLayer);
 
         this[relationship] = queryLayer;
     }

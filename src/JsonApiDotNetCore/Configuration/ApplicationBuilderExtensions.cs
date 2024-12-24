@@ -22,7 +22,7 @@ public static class ApplicationBuilderExtensions
     /// </example>
     public static void UseJsonApi(this IApplicationBuilder builder)
     {
-        ArgumentGuard.NotNull(builder);
+        ArgumentNullException.ThrowIfNull(builder);
 
         using (IServiceScope scope = builder.ApplicationServices.CreateScope())
         {

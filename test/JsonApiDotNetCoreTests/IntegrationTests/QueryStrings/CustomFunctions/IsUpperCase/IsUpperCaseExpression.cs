@@ -1,5 +1,4 @@
 using System.Text;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.IsUpperCase;
@@ -27,7 +26,7 @@ internal sealed class IsUpperCaseExpression : FilterExpression
 
     public IsUpperCaseExpression(ResourceFieldChainExpression targetAttribute)
     {
-        ArgumentGuard.NotNull(targetAttribute);
+        ArgumentNullException.ThrowIfNull(targetAttribute);
 
         TargetAttribute = targetAttribute;
     }

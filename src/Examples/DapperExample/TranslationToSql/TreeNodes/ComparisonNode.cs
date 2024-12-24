@@ -1,4 +1,3 @@
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Queries.Expressions;
 
 namespace DapperExample.TranslationToSql.TreeNodes;
@@ -16,8 +15,8 @@ internal sealed class ComparisonNode : FilterNode
 
     public ComparisonNode(ComparisonOperator @operator, SqlValueNode left, SqlValueNode right)
     {
-        ArgumentGuard.NotNull(left);
-        ArgumentGuard.NotNull(right);
+        ArgumentNullException.ThrowIfNull(left);
+        ArgumentNullException.ThrowIfNull(right);
 
         Operator = @operator;
         Left = left;

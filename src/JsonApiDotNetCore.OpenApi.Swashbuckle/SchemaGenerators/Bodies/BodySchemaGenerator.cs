@@ -17,9 +17,9 @@ internal abstract class BodySchemaGenerator
     protected BodySchemaGenerator(MetaSchemaGenerator metaSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator,
         IJsonApiOptions options)
     {
-        ArgumentGuard.NotNull(metaSchemaGenerator);
-        ArgumentGuard.NotNull(linksVisibilitySchemaGenerator);
-        ArgumentGuard.NotNull(options);
+        ArgumentNullException.ThrowIfNull(metaSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(linksVisibilitySchemaGenerator);
+        ArgumentNullException.ThrowIfNull(options);
 
         _metaSchemaGenerator = metaSchemaGenerator;
         _linksVisibilitySchemaGenerator = linksVisibilitySchemaGenerator;
@@ -30,8 +30,8 @@ internal abstract class BodySchemaGenerator
 
     public OpenApiSchema GenerateSchema(Type bodyType, SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(bodyType);
-        ArgumentGuard.NotNull(schemaRepository);
+        ArgumentNullException.ThrowIfNull(bodyType);
+        ArgumentNullException.ThrowIfNull(schemaRepository);
 
         if (schemaRepository.TryLookupByType(bodyType, out OpenApiSchema? referenceSchema))
         {

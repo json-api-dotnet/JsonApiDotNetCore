@@ -39,17 +39,17 @@ internal sealed class DataSchemaGenerator
         IJsonApiOptions options, IResourceGraph resourceGraph, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider,
         RelationshipTypeFactory relationshipTypeFactory, ResourceDocumentationReader resourceDocumentationReader)
     {
-        ArgumentGuard.NotNull(defaultSchemaGenerator);
-        ArgumentGuard.NotNull(generationCacheSchemaGenerator);
-        ArgumentGuard.NotNull(resourceTypeSchemaGenerator);
-        ArgumentGuard.NotNull(resourceIdSchemaGenerator);
-        ArgumentGuard.NotNull(resourceIdentifierSchemaGenerator);
-        ArgumentGuard.NotNull(linksVisibilitySchemaGenerator);
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(resourceGraph);
-        ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
-        ArgumentGuard.NotNull(relationshipTypeFactory);
-        ArgumentGuard.NotNull(resourceDocumentationReader);
+        ArgumentNullException.ThrowIfNull(defaultSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(generationCacheSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(resourceTypeSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(resourceIdSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(resourceIdentifierSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(linksVisibilitySchemaGenerator);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(resourceFieldValidationMetadataProvider);
+        ArgumentNullException.ThrowIfNull(relationshipTypeFactory);
+        ArgumentNullException.ThrowIfNull(resourceDocumentationReader);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _generationCacheSchemaGenerator = generationCacheSchemaGenerator;
@@ -66,8 +66,8 @@ internal sealed class DataSchemaGenerator
 
     public OpenApiSchema GenerateSchema(Type dataSchemaType, SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(dataSchemaType);
-        ArgumentGuard.NotNull(schemaRepository);
+        ArgumentNullException.ThrowIfNull(dataSchemaType);
+        ArgumentNullException.ThrowIfNull(schemaRepository);
 
         if (schemaRepository.TryLookupByType(dataSchemaType, out OpenApiSchema referenceSchemaForData))
         {

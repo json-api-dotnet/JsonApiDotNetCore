@@ -69,8 +69,8 @@ internal sealed class JsonApiSchemaIdSelector
 
     public JsonApiSchemaIdSelector(IJsonApiOptions options, IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
 
         _options = options;
         _resourceGraph = resourceGraph;
@@ -78,7 +78,7 @@ internal sealed class JsonApiSchemaIdSelector
 
     public string GetSchemaId(Type type)
     {
-        ArgumentGuard.NotNull(type);
+        ArgumentNullException.ThrowIfNull(type);
 
         ResourceType? resourceType = _resourceGraph.FindResourceType(type);
 
@@ -152,14 +152,14 @@ internal sealed class JsonApiSchemaIdSelector
 
     public string GetAtomicOperationDiscriminatorValue(AtomicOperationCode operationCode, ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         return ApplySchemaTemplate(ResourceAtomicOperationDiscriminatorValueTemplate, resourceType, null, operationCode);
     }
 
     public string GetAtomicOperationDiscriminatorValue(AtomicOperationCode operationCode, RelationshipAttribute relationship)
     {
-        ArgumentGuard.NotNull(relationship);
+        ArgumentNullException.ThrowIfNull(relationship);
 
         string schemaIdTemplate = operationCode switch
         {
@@ -173,7 +173,7 @@ internal sealed class JsonApiSchemaIdSelector
 
     public string GetRelationshipAtomicOperationSchemaId(RelationshipAttribute relationship, AtomicOperationCode operationCode)
     {
-        ArgumentGuard.NotNull(relationship);
+        ArgumentNullException.ThrowIfNull(relationship);
 
         string schemaIdTemplate = operationCode switch
         {
@@ -187,14 +187,14 @@ internal sealed class JsonApiSchemaIdSelector
 
     public string GetRelationshipIdentifierSchemaId(RelationshipAttribute relationship)
     {
-        ArgumentGuard.NotNull(relationship);
+        ArgumentNullException.ThrowIfNull(relationship);
 
         return ApplySchemaTemplate(RelationshipIdentifierSchemaIdTemplate, relationship.LeftType, relationship.PublicName, null);
     }
 
     public string GetRelationshipNameSchemaId(RelationshipAttribute relationship)
     {
-        ArgumentGuard.NotNull(relationship);
+        ArgumentNullException.ThrowIfNull(relationship);
 
         return ApplySchemaTemplate(RelationshipNameSchemaIdTemplate, relationship.LeftType, relationship.PublicName, null);
     }

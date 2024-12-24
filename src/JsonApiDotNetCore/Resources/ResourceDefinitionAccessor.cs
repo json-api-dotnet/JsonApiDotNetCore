@@ -33,8 +33,8 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
 
     public ResourceDefinitionAccessor(IResourceGraph resourceGraph, IServiceProvider serviceProvider)
     {
-        ArgumentGuard.NotNull(resourceGraph);
-        ArgumentGuard.NotNull(serviceProvider);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(serviceProvider);
 
         _resourceGraph = resourceGraph;
         _serviceProvider = serviceProvider;
@@ -43,7 +43,7 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     /// <inheritdoc />
     public IImmutableSet<IncludeElementExpression> OnApplyIncludes(ResourceType resourceType, IImmutableSet<IncludeElementExpression> existingIncludes)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
         return resourceDefinition.OnApplyIncludes(existingIncludes);
@@ -52,7 +52,7 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     /// <inheritdoc />
     public FilterExpression? OnApplyFilter(ResourceType resourceType, FilterExpression? existingFilter)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
         return resourceDefinition.OnApplyFilter(existingFilter);
@@ -61,7 +61,7 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     /// <inheritdoc />
     public SortExpression? OnApplySort(ResourceType resourceType, SortExpression? existingSort)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
         return resourceDefinition.OnApplySort(existingSort);
@@ -70,7 +70,7 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     /// <inheritdoc />
     public PaginationExpression? OnApplyPagination(ResourceType resourceType, PaginationExpression? existingPagination)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
         return resourceDefinition.OnApplyPagination(existingPagination);
@@ -79,7 +79,7 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     /// <inheritdoc />
     public SparseFieldSetExpression? OnApplySparseFieldSet(ResourceType resourceType, SparseFieldSetExpression? existingSparseFieldSet)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
         return resourceDefinition.OnApplySparseFieldSet(existingSparseFieldSet);
@@ -88,8 +88,8 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     /// <inheritdoc />
     public object? GetQueryableHandlerForQueryStringParameter(Type resourceClrType, string parameterName)
     {
-        ArgumentGuard.NotNull(resourceClrType);
-        ArgumentGuard.NotNullNorEmpty(parameterName);
+        ArgumentNullException.ThrowIfNull(resourceClrType);
+        ArgumentException.ThrowIfNullOrEmpty(parameterName);
 
         dynamic resourceDefinition = ResolveResourceDefinition(resourceClrType);
         dynamic? handlers = resourceDefinition.OnRegisterQueryableHandlersForQueryStringParameters();
@@ -108,7 +108,7 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     /// <inheritdoc />
     public IDictionary<string, object?>? GetMeta(ResourceType resourceType, IIdentifiable resourceInstance)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
         return resourceDefinition.GetMeta((dynamic)resourceInstance);
@@ -118,7 +118,7 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     public async Task OnPrepareWriteAsync<TResource>(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         where TResource : class, IIdentifiable
     {
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
 
         dynamic resourceDefinition = ResolveResourceDefinition(resource.GetClrType());
         await resourceDefinition.OnPrepareWriteAsync((dynamic)resource, writeOperation, cancellationToken);
@@ -129,8 +129,8 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
         IIdentifiable? rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         where TResource : class, IIdentifiable
     {
-        ArgumentGuard.NotNull(leftResource);
-        ArgumentGuard.NotNull(hasOneRelationship);
+        ArgumentNullException.ThrowIfNull(leftResource);
+        ArgumentNullException.ThrowIfNull(hasOneRelationship);
 
         dynamic resourceDefinition = ResolveResourceDefinition(leftResource.GetClrType());
 
@@ -143,9 +143,9 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
         ISet<IIdentifiable> rightResourceIds, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         where TResource : class, IIdentifiable
     {
-        ArgumentGuard.NotNull(leftResource);
-        ArgumentGuard.NotNull(hasManyRelationship);
-        ArgumentGuard.NotNull(rightResourceIds);
+        ArgumentNullException.ThrowIfNull(leftResource);
+        ArgumentNullException.ThrowIfNull(hasManyRelationship);
+        ArgumentNullException.ThrowIfNull(rightResourceIds);
 
         dynamic resourceDefinition = ResolveResourceDefinition(leftResource.GetClrType());
         await resourceDefinition.OnSetToManyRelationshipAsync((dynamic)leftResource, hasManyRelationship, rightResourceIds, writeOperation, cancellationToken);
@@ -156,8 +156,8 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
         CancellationToken cancellationToken)
         where TResource : class, IIdentifiable
     {
-        ArgumentGuard.NotNull(hasManyRelationship);
-        ArgumentGuard.NotNull(rightResourceIds);
+        ArgumentNullException.ThrowIfNull(hasManyRelationship);
+        ArgumentNullException.ThrowIfNull(rightResourceIds);
 
         dynamic resourceDefinition = ResolveResourceDefinition(leftResource.GetClrType());
         await resourceDefinition.OnAddToRelationshipAsync((dynamic)leftResource, hasManyRelationship, rightResourceIds, cancellationToken);
@@ -168,9 +168,9 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
         ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
         where TResource : class, IIdentifiable
     {
-        ArgumentGuard.NotNull(leftResource);
-        ArgumentGuard.NotNull(hasManyRelationship);
-        ArgumentGuard.NotNull(rightResourceIds);
+        ArgumentNullException.ThrowIfNull(leftResource);
+        ArgumentNullException.ThrowIfNull(hasManyRelationship);
+        ArgumentNullException.ThrowIfNull(rightResourceIds);
 
         dynamic resourceDefinition = ResolveResourceDefinition(leftResource.GetClrType());
         await resourceDefinition.OnRemoveFromRelationshipAsync((dynamic)leftResource, hasManyRelationship, rightResourceIds, cancellationToken);
@@ -180,7 +180,7 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     public async Task OnWritingAsync<TResource>(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         where TResource : class, IIdentifiable
     {
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
 
         dynamic resourceDefinition = ResolveResourceDefinition(resource.GetClrType());
         await resourceDefinition.OnWritingAsync((dynamic)resource, writeOperation, cancellationToken);
@@ -190,7 +190,7 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     public async Task OnWriteSucceededAsync<TResource>(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         where TResource : class, IIdentifiable
     {
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
 
         dynamic resourceDefinition = ResolveResourceDefinition(resource.GetClrType());
         await resourceDefinition.OnWriteSucceededAsync((dynamic)resource, writeOperation, cancellationToken);
@@ -199,7 +199,7 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     /// <inheritdoc />
     public void OnDeserialize(IIdentifiable resource)
     {
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
 
         dynamic resourceDefinition = ResolveResourceDefinition(resource.GetClrType());
         resourceDefinition.OnDeserialize((dynamic)resource);
@@ -208,7 +208,7 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     /// <inheritdoc />
     public void OnSerialize(IIdentifiable resource)
     {
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
 
         dynamic resourceDefinition = ResolveResourceDefinition(resource.GetClrType());
         resourceDefinition.OnSerialize((dynamic)resource);
@@ -216,7 +216,7 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
 
     protected object ResolveResourceDefinition(Type resourceClrType)
     {
-        ArgumentGuard.NotNull(resourceClrType);
+        ArgumentNullException.ThrowIfNull(resourceClrType);
 
         ResourceType resourceType = _resourceGraph.GetResourceType(resourceClrType);
         return ResolveResourceDefinition(resourceType);
@@ -224,7 +224,7 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
 
     protected virtual object ResolveResourceDefinition(ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         Type resourceDefinitionType = typeof(IResourceDefinition<,>).MakeGenericType(resourceType.ClrType, resourceType.IdentityClrType);
         return _serviceProvider.GetRequiredService(resourceDefinitionType);

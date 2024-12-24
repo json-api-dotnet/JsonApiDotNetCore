@@ -13,8 +13,8 @@ public sealed class DocumentInOperationsRequestAdapter : BaseAdapter, IDocumentI
 
     public DocumentInOperationsRequestAdapter(IJsonApiOptions options, IAtomicOperationObjectAdapter atomicOperationObjectAdapter)
     {
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(atomicOperationObjectAdapter);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(atomicOperationObjectAdapter);
 
         _options = options;
         _atomicOperationObjectAdapter = atomicOperationObjectAdapter;
@@ -23,8 +23,8 @@ public sealed class DocumentInOperationsRequestAdapter : BaseAdapter, IDocumentI
     /// <inheritdoc />
     public IList<OperationContainer> Convert(Document document, RequestAdapterState state)
     {
-        ArgumentGuard.NotNull(document);
-        ArgumentGuard.NotNull(state);
+        ArgumentNullException.ThrowIfNull(document);
+        ArgumentNullException.ThrowIfNull(state);
 
         AssertHasOperations(document.Operations, state);
 

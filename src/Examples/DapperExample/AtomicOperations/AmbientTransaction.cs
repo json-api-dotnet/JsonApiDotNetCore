@@ -1,5 +1,4 @@
 using System.Data.Common;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.AtomicOperations;
 
 namespace DapperExample.AtomicOperations;
@@ -18,8 +17,8 @@ internal sealed class AmbientTransaction : IOperationsTransaction
 
     public AmbientTransaction(AmbientTransactionFactory owner, DbTransaction current, Guid transactionId)
     {
-        ArgumentGuard.NotNull(owner);
-        ArgumentGuard.NotNull(current);
+        ArgumentNullException.ThrowIfNull(owner);
+        ArgumentNullException.ThrowIfNull(current);
 
         _owner = owner;
         Current = current;

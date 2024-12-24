@@ -1,6 +1,5 @@
 using FluentAssertions;
 using JetBrains.Annotations;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Queries;
@@ -148,7 +147,7 @@ public sealed class DependencyContainerRegistrationTests
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         public SomeSingletonService(SomeScopedService scopedService)
         {
-            ArgumentGuard.NotNull(scopedService);
+            ArgumentNullException.ThrowIfNull(scopedService);
         }
     }
 
@@ -161,7 +160,7 @@ public sealed class DependencyContainerRegistrationTests
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         public CircularServiceA(CircularServiceB serviceB)
         {
-            ArgumentGuard.NotNull(serviceB);
+            ArgumentNullException.ThrowIfNull(serviceB);
         }
     }
 
@@ -171,7 +170,7 @@ public sealed class DependencyContainerRegistrationTests
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         public CircularServiceB(CircularServiceA serviceA)
         {
-            ArgumentGuard.NotNull(serviceA);
+            ArgumentNullException.ThrowIfNull(serviceA);
         }
     }
 

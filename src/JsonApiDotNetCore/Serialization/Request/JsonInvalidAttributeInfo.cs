@@ -16,8 +16,8 @@ internal sealed class JsonInvalidAttributeInfo
 
     public JsonInvalidAttributeInfo(string attributeName, Type attributeType, string? jsonValue, JsonValueKind jsonType)
     {
-        ArgumentGuard.NotNull(attributeName);
-        ArgumentGuard.NotNull(attributeType);
+        ArgumentNullException.ThrowIfNull(attributeName);
+        ArgumentNullException.ThrowIfNull(attributeType);
 
         AttributeName = attributeName;
         AttributeType = attributeType;

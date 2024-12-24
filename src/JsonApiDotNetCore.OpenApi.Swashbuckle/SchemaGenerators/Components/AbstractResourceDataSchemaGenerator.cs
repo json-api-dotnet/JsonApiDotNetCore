@@ -17,9 +17,9 @@ internal sealed class AbstractResourceDataSchemaGenerator
 
     public AbstractResourceDataSchemaGenerator(MetaSchemaGenerator metaSchemaGenerator, JsonApiSchemaIdSelector schemaIdSelector, IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(metaSchemaGenerator);
-        ArgumentGuard.NotNull(schemaIdSelector);
-        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(metaSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(schemaIdSelector);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
 
         _metaSchemaGenerator = metaSchemaGenerator;
         _schemaIdSelector = schemaIdSelector;
@@ -28,7 +28,7 @@ internal sealed class AbstractResourceDataSchemaGenerator
 
     public OpenApiSchema GenerateSchema(SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(schemaRepository);
+        ArgumentNullException.ThrowIfNull(schemaRepository);
 
         if (schemaRepository.TryLookupByType(ResourceDataAbstractType, out OpenApiSchema? referenceSchema))
         {
@@ -87,9 +87,9 @@ internal sealed class AbstractResourceDataSchemaGenerator
 
     public void MapDiscriminator(Type resourceDataConstructedType, OpenApiSchema referenceSchemaForResourceData, SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(resourceDataConstructedType);
-        ArgumentGuard.NotNull(referenceSchemaForResourceData);
-        ArgumentGuard.NotNull(schemaRepository);
+        ArgumentNullException.ThrowIfNull(resourceDataConstructedType);
+        ArgumentNullException.ThrowIfNull(referenceSchemaForResourceData);
+        ArgumentNullException.ThrowIfNull(schemaRepository);
 
         var resourceSchemaType = ResourceSchemaType.Create(resourceDataConstructedType, _resourceGraph);
 

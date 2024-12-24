@@ -66,9 +66,9 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
         IUpdateService<TResource, TId>? update = null, ISetRelationshipService<TResource, TId>? setRelationship = null,
         IDeleteService<TResource, TId>? delete = null, IRemoveFromRelationshipService<TResource, TId>? removeFromRelationship = null)
     {
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(resourceGraph);
-        ArgumentGuard.NotNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(loggerFactory);
 
         _options = options;
         _resourceGraph = resourceGraph;
@@ -143,7 +143,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
             relationshipName
         });
 
-        ArgumentGuard.NotNull(relationshipName);
+        ArgumentNullException.ThrowIfNull(relationshipName);
 
         if (_getSecondary == null)
         {
@@ -173,7 +173,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
             relationshipName
         });
 
-        ArgumentGuard.NotNull(relationshipName);
+        ArgumentNullException.ThrowIfNull(relationshipName);
 
         if (_getRelationship == null)
         {
@@ -197,7 +197,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
             resource
         });
 
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
 
         if (_create == null)
         {
@@ -259,8 +259,8 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
             rightResourceIds
         });
 
-        ArgumentGuard.NotNull(relationshipName);
-        ArgumentGuard.NotNull(rightResourceIds);
+        ArgumentNullException.ThrowIfNull(relationshipName);
+        ArgumentNullException.ThrowIfNull(rightResourceIds);
 
         if (_addToRelationship == null)
         {
@@ -286,7 +286,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
             resource
         });
 
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
 
         if (_update == null)
         {
@@ -334,7 +334,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
             rightValue
         });
 
-        ArgumentGuard.NotNull(relationshipName);
+        ArgumentNullException.ThrowIfNull(relationshipName);
 
         if (_setRelationship == null)
         {
@@ -395,8 +395,8 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
             rightResourceIds
         });
 
-        ArgumentGuard.NotNull(relationshipName);
-        ArgumentGuard.NotNull(rightResourceIds);
+        ArgumentNullException.ThrowIfNull(relationshipName);
+        ArgumentNullException.ThrowIfNull(rightResourceIds);
 
         if (_removeFromRelationship == null)
         {

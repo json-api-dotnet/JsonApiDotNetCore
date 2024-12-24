@@ -30,9 +30,9 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
         IResourceGraph resourceGraph, IJsonApiOptions options)
         : base(request, resourceGraph)
     {
-        ArgumentGuard.NotNull(scopeParser);
-        ArgumentGuard.NotNull(filterParser);
-        ArgumentGuard.NotNull(options);
+        ArgumentNullException.ThrowIfNull(scopeParser);
+        ArgumentNullException.ThrowIfNull(filterParser);
+        ArgumentNullException.ThrowIfNull(options);
 
         _options = options;
         _scopeParser = scopeParser;
@@ -42,7 +42,7 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
     /// <inheritdoc />
     public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
     {
-        ArgumentGuard.NotNull(disableQueryStringAttribute);
+        ArgumentNullException.ThrowIfNull(disableQueryStringAttribute);
 
         return !IsAtomicOperationsRequest && !disableQueryStringAttribute.ContainsParameter(JsonApiQueryStringParameters.Filter);
     }
@@ -50,7 +50,7 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
     /// <inheritdoc />
     public virtual bool CanRead(string parameterName)
     {
-        ArgumentGuard.NotNullNorEmpty(parameterName);
+        ArgumentException.ThrowIfNullOrEmpty(parameterName);
 
         bool isNested = parameterName.StartsWith("filter[", StringComparison.Ordinal) && parameterName.EndsWith(']');
         return parameterName == "filter" || isNested;

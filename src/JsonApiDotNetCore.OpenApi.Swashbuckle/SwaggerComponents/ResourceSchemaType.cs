@@ -25,8 +25,8 @@ internal sealed class ResourceSchemaType
 
     public static ResourceSchemaType Create(Type schemaConstructedType, IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(schemaConstructedType);
-        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(schemaConstructedType);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
 
         Type schemaOpenType = schemaConstructedType.GetGenericTypeDefinition();
         Type resourceClrType = schemaConstructedType.GenericTypeArguments[0];

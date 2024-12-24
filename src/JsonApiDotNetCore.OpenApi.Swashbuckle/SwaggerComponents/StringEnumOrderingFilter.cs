@@ -14,8 +14,8 @@ internal sealed class StringEnumOrderingFilter : IDocumentFilter
 
     public void Apply(OpenApiDocument document, DocumentFilterContext context)
     {
-        ArgumentGuard.NotNull(document);
-        ArgumentGuard.NotNull(context);
+        ArgumentNullException.ThrowIfNull(document);
+        ArgumentNullException.ThrowIfNull(context);
 
         var visitor = new OpenApiEnumVisitor();
         var walker = new OpenApiWalker(visitor);

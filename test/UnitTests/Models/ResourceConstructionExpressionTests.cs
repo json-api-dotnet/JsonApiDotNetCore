@@ -2,7 +2,6 @@ using System.ComponentModel.Design;
 using System.Linq.Expressions;
 using FluentAssertions;
 using JetBrains.Annotations;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Resources;
 using TestBuildingBlocks;
 using Xunit;
@@ -52,7 +51,7 @@ public sealed class ResourceConstructionExpressionTests
 
         public ResourceWithStringConstructor(string text)
         {
-            ArgumentGuard.NotNullNorEmpty(text);
+            ArgumentException.ThrowIfNullOrEmpty(text);
 
             Text = text;
         }

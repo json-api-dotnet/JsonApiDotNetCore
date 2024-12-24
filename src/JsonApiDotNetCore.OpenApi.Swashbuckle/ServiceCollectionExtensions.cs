@@ -20,7 +20,7 @@ public static class ServiceCollectionExtensions
     /// </summary>
     public static void AddOpenApiForJsonApi(this IServiceCollection services, Action<SwaggerGenOptions>? setupSwaggerGenAction = null)
     {
-        ArgumentGuard.NotNull(services);
+        ArgumentNullException.ThrowIfNull(services);
 
         AddCustomApiExplorer(services);
         AddCustomSwaggerComponents(services);

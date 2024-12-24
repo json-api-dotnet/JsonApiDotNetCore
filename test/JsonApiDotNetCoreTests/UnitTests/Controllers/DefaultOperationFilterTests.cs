@@ -1,6 +1,5 @@
 using FluentAssertions;
 using JetBrains.Annotations;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
@@ -85,7 +84,7 @@ public sealed class DefaultOperationFilterTests
 
         public FakeOperationFilter(Func<ResourceType, bool> isResourceTypeEnabled)
         {
-            ArgumentGuard.NotNull(isResourceTypeEnabled);
+            ArgumentNullException.ThrowIfNull(isResourceTypeEnabled);
 
             _isResourceTypeEnabled = isResourceTypeEnabled;
         }

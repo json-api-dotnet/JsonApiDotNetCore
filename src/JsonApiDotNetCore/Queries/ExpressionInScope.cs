@@ -15,7 +15,7 @@ public class ExpressionInScope
 
     public ExpressionInScope(ResourceFieldChainExpression? scope, QueryExpression expression)
     {
-        ArgumentGuard.NotNull(expression);
+        ArgumentNullException.ThrowIfNull(expression);
 
         Scope = scope;
         Expression = expression;

@@ -20,10 +20,10 @@ internal sealed class DataContainerSchemaGenerator
     public DataContainerSchemaGenerator(AbstractResourceDataSchemaGenerator abstractResourceDataSchemaGenerator, DataSchemaGenerator dataSchemaGenerator,
         IncludeDependencyScanner includeDependencyScanner, IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(abstractResourceDataSchemaGenerator);
-        ArgumentGuard.NotNull(dataSchemaGenerator);
-        ArgumentGuard.NotNull(includeDependencyScanner);
-        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(abstractResourceDataSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(dataSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(includeDependencyScanner);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
 
         _abstractResourceDataSchemaGenerator = abstractResourceDataSchemaGenerator;
         _dataSchemaGenerator = dataSchemaGenerator;
@@ -33,9 +33,9 @@ internal sealed class DataContainerSchemaGenerator
 
     public OpenApiSchema GenerateSchema(Type dataContainerConstructedType, ResourceType resourceType, bool forRequestSchema, SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(dataContainerConstructedType);
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(schemaRepository);
+        ArgumentNullException.ThrowIfNull(dataContainerConstructedType);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(schemaRepository);
 
         if (schemaRepository.TryLookupByType(dataContainerConstructedType, out OpenApiSchema referenceSchemaForData))
         {

@@ -49,14 +49,14 @@ public sealed class PatternMatchResult
 
     internal static PatternMatchResult CreateForSuccess(IReadOnlyList<ResourceFieldAttribute> fieldChain)
     {
-        ArgumentGuard.NotNull(fieldChain);
+        ArgumentNullException.ThrowIfNull(fieldChain);
 
         return new PatternMatchResult(true, fieldChain, string.Empty, -1, false);
     }
 
     internal static PatternMatchResult CreateForFailure(MatchError error)
     {
-        ArgumentGuard.NotNull(error);
+        ArgumentNullException.ThrowIfNull(error);
 
         return new PatternMatchResult(false, Array.Empty<ResourceFieldAttribute>(), error.Message, error.Position, error.IsFieldChainError);
     }

@@ -10,7 +10,7 @@ public sealed class JsonApiInputFormatter : IJsonApiInputFormatter
     /// <inheritdoc />
     public bool CanRead(InputFormatterContext context)
     {
-        ArgumentGuard.NotNull(context);
+        ArgumentNullException.ThrowIfNull(context);
 
         return context.HttpContext.IsJsonApiRequest();
     }
@@ -18,7 +18,7 @@ public sealed class JsonApiInputFormatter : IJsonApiInputFormatter
     /// <inheritdoc />
     public async Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
     {
-        ArgumentGuard.NotNull(context);
+        ArgumentNullException.ThrowIfNull(context);
 
         var reader = context.HttpContext.RequestServices.GetRequiredService<IJsonApiReader>();
 

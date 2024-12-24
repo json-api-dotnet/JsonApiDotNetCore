@@ -1,23 +1,21 @@
 using JetBrains.Annotations;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Primitives;
-using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.QueryStrings;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class MusicTrackReleaseDefinition : JsonApiResourceDefinition<MusicTrack, Guid>
 {
-    private readonly ISystemClock _systemClock;
+    private readonly TimeProvider _timeProvider;
 
-    public MusicTrackReleaseDefinition(IResourceGraph resourceGraph, ISystemClock systemClock)
+    public MusicTrackReleaseDefinition(IResourceGraph resourceGraph, TimeProvider timeProvider)
         : base(resourceGraph)
     {
-        ArgumentGuard.NotNull(systemClock);
+        ArgumentNullException.ThrowIfNull(timeProvider);
 
-        _systemClock = systemClock;
+        _timeProvider = timeProvider;
     }
 
     public override QueryStringParameterHandlers<MusicTrack> OnRegisterQueryableHandlersForQueryStringParameters()
@@ -34,7 +32,8 @@ public sealed class MusicTrackReleaseDefinition : JsonApiResourceDefinition<Musi
 
         if (bool.Parse(parameterValue.ToString()))
         {
-            tracks = tracks.Where(musicTrack => musicTrack.ReleasedAt < _systemClock.UtcNow && musicTrack.ReleasedAt > _systemClock.UtcNow.AddMonths(-3));
+            DateTimeOffset utcNow = _timeProvider.GetUtcNow();
+            tracks = tracks.Where(musicTrack => musicTrack.ReleasedAt < utcNow && musicTrack.ReleasedAt > utcNow.AddMonths(-3));
         }
 
         return tracks;

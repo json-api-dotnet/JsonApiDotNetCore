@@ -17,8 +17,8 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         IRelationshipDataAdapter relationshipDataAdapter)
         : base(resourceGraph, resourceFactory)
     {
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(relationshipDataAdapter);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(relationshipDataAdapter);
 
         _options = options;
         _relationshipDataAdapter = relationshipDataAdapter;
@@ -28,9 +28,9 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
     public (IIdentifiable resource, ResourceType resourceType) Convert(ResourceObject resourceObject, ResourceIdentityRequirements requirements,
         RequestAdapterState state)
     {
-        ArgumentGuard.NotNull(resourceObject);
-        ArgumentGuard.NotNull(requirements);
-        ArgumentGuard.NotNull(state);
+        ArgumentNullException.ThrowIfNull(resourceObject);
+        ArgumentNullException.ThrowIfNull(requirements);
+        ArgumentNullException.ThrowIfNull(state);
 
         (IIdentifiable resource, ResourceType resourceType) = ConvertResourceIdentity(resourceObject, requirements, state);
 

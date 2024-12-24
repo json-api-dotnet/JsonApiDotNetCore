@@ -41,10 +41,10 @@ public sealed partial class JsonApiRoutingConvention : IJsonApiRoutingConvention
     public JsonApiRoutingConvention(IJsonApiOptions options, IResourceGraph resourceGraph, IJsonApiEndpointFilter jsonApiEndpointFilter,
         ILogger<JsonApiRoutingConvention> logger)
     {
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(resourceGraph);
-        ArgumentGuard.NotNull(jsonApiEndpointFilter);
-        ArgumentGuard.NotNull(logger);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(jsonApiEndpointFilter);
+        ArgumentNullException.ThrowIfNull(logger);
 
         _options = options;
         _resourceGraph = resourceGraph;
@@ -69,7 +69,7 @@ public sealed partial class JsonApiRoutingConvention : IJsonApiRoutingConvention
     /// <inheritdoc />
     public void Apply(ApplicationModel application)
     {
-        ArgumentGuard.NotNull(application);
+        ArgumentNullException.ThrowIfNull(application);
 
         foreach (ControllerModel controller in application.Controllers)
         {

@@ -6,8 +6,8 @@ internal static class OpenApiSchemaExtensions
 {
     public static void ReorderProperties(this OpenApiSchema fullSchema, IEnumerable<string> propertyNamesInOrder)
     {
-        ArgumentGuard.NotNull(fullSchema);
-        ArgumentGuard.NotNull(propertyNamesInOrder);
+        ArgumentNullException.ThrowIfNull(fullSchema);
+        ArgumentNullException.ThrowIfNull(propertyNamesInOrder);
 
         var propertiesInOrder = new Dictionary<string, OpenApiSchema>();
 
@@ -29,7 +29,7 @@ internal static class OpenApiSchemaExtensions
 
     public static OpenApiSchema WrapInExtendedSchema(this OpenApiSchema source)
     {
-        ArgumentGuard.NotNull(source);
+        ArgumentNullException.ThrowIfNull(source);
 
         return new OpenApiSchema
         {
@@ -39,7 +39,7 @@ internal static class OpenApiSchemaExtensions
 
     public static OpenApiSchema UnwrapLastExtendedSchema(this OpenApiSchema source)
     {
-        ArgumentGuard.NotNull(source);
+        ArgumentNullException.ThrowIfNull(source);
 
         if (source.AllOf is { Count: > 0 })
         {

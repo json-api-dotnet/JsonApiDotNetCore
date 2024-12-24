@@ -2,7 +2,6 @@ using System.Text;
 using System.Text.Json;
 using FluentAssertions;
 using JetBrains.Annotations;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
@@ -411,8 +410,8 @@ public sealed class ResourceObjectConverterTests
         public ExtensionAwareResourceObjectConverter(IResourceGraph resourceGraph, JsonApiRequestAccessor requestAccessor)
             : base(resourceGraph)
         {
-            ArgumentGuard.NotNull(resourceGraph);
-            ArgumentGuard.NotNull(requestAccessor);
+            ArgumentNullException.ThrowIfNull(resourceGraph);
+            ArgumentNullException.ThrowIfNull(requestAccessor);
 
             _resourceGraph = resourceGraph;
             _requestAccessor = requestAccessor;
@@ -478,7 +477,7 @@ public sealed class ResourceObjectConverterTests
 
         public JsonApiRequestAccessor(IJsonApiRequest request)
         {
-            ArgumentGuard.NotNull(request);
+            ArgumentNullException.ThrowIfNull(request);
 
             Request = request;
         }

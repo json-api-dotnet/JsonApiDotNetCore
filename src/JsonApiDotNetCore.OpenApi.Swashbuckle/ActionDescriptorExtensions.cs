@@ -10,7 +10,7 @@ internal static class ActionDescriptorExtensions
 {
     public static MethodInfo GetActionMethod(this ActionDescriptor descriptor)
     {
-        ArgumentGuard.NotNull(descriptor);
+        ArgumentNullException.ThrowIfNull(descriptor);
 
         return ((ControllerActionDescriptor)descriptor).MethodInfo;
     }
@@ -18,14 +18,14 @@ internal static class ActionDescriptorExtensions
     public static TFilterMetaData? GetFilterMetadata<TFilterMetaData>(this ActionDescriptor descriptor)
         where TFilterMetaData : IFilterMetadata
     {
-        ArgumentGuard.NotNull(descriptor);
+        ArgumentNullException.ThrowIfNull(descriptor);
 
         return descriptor.FilterDescriptors.Select(filterDescriptor => filterDescriptor.Filter).OfType<TFilterMetaData>().FirstOrDefault();
     }
 
     public static ControllerParameterDescriptor? GetBodyParameterDescriptor(this ActionDescriptor descriptor)
     {
-        ArgumentGuard.NotNull(descriptor);
+        ArgumentNullException.ThrowIfNull(descriptor);
 
         return (ControllerParameterDescriptor?)descriptor.Parameters.FirstOrDefault(parameterDescriptor =>
             parameterDescriptor.BindingInfo?.BindingSource == BindingSource.Body);

@@ -41,7 +41,7 @@ internal sealed class PatternParser
 
     public FieldChainPattern Parse(string source)
     {
-        ArgumentGuard.NotNull(source);
+        ArgumentNullException.ThrowIfNull(source);
 
         _source = source;
         EnqueueTokens();

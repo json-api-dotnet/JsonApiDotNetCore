@@ -1,5 +1,4 @@
 using System.Reflection;
-using JsonApiDotNetCore.OpenApi.Client.NSwag;
 
 namespace OpenApiNSwagClientTests;
 
@@ -7,8 +6,8 @@ internal static class ObjectExtensions
 {
     public static object? GetPropertyValue(this object source, string propertyName)
     {
-        ArgumentGuard.NotNull(source);
-        ArgumentGuard.NotNull(propertyName);
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(propertyName);
 
         PropertyInfo propertyInfo = GetExistingProperty(source.GetType(), propertyName);
         return propertyInfo.GetValue(source);
@@ -16,8 +15,8 @@ internal static class ObjectExtensions
 
     public static void SetPropertyValue(this object source, string propertyName, object? value)
     {
-        ArgumentGuard.NotNull(source);
-        ArgumentGuard.NotNull(propertyName);
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(propertyName);
 
         PropertyInfo propertyInfo = GetExistingProperty(source.GetType(), propertyName);
         propertyInfo.SetValue(source, value);

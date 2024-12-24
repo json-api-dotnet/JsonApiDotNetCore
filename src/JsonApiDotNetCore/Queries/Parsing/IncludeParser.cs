@@ -17,7 +17,7 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
 
     public IncludeParser(IJsonApiOptions options)
     {
-        ArgumentGuard.NotNull(options);
+        ArgumentNullException.ThrowIfNull(options);
 
         _options = options;
     }
@@ -25,7 +25,7 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
     /// <inheritdoc />
     public IncludeExpression Parse(string source, ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         Tokenize(source);
 
@@ -39,8 +39,8 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
 
     protected virtual IncludeExpression ParseInclude(string source, ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(source);
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         var treeRoot = IncludeTreeNode.CreateRoot(resourceType);
         bool isAtStart = true;
@@ -307,7 +307,7 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
         {
             public HiddenRootRelationshipAttribute(ResourceType rightType)
             {
-                ArgumentGuard.NotNull(rightType);
+                ArgumentNullException.ThrowIfNull(rightType);
 
                 RightType = rightType;
                 PublicName = "<<root>>";

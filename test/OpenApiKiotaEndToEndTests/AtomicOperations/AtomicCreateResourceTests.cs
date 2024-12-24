@@ -1,5 +1,4 @@
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Kiota.Abstractions;
 using Microsoft.Kiota.Http.HttpClientLibrary;
 using OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode;
@@ -25,8 +24,6 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         _requestAdapterFactory = new TestableHttpClientRequestAdapterFactory(testOutputHelper);
 
         testContext.UseController<OperationsController>();
-
-        testContext.ConfigureServices(services => services.AddSingleton<ISystemClock, FrozenSystemClock>());
 
         _fakers = new OperationsFakers(testContext.Factory.Services);
     }

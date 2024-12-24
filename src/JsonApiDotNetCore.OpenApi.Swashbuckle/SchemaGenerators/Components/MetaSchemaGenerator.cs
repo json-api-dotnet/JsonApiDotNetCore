@@ -10,14 +10,14 @@ internal sealed class MetaSchemaGenerator
 
     public MetaSchemaGenerator(JsonApiSchemaIdSelector schemaIdSelector)
     {
-        ArgumentGuard.NotNull(schemaIdSelector);
+        ArgumentNullException.ThrowIfNull(schemaIdSelector);
 
         _schemaIdSelector = schemaIdSelector;
     }
 
     public OpenApiSchema GenerateSchema(SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(schemaRepository);
+        ArgumentNullException.ThrowIfNull(schemaRepository);
 
         if (schemaRepository.TryLookupByType(typeof(Meta), out OpenApiSchema? referenceSchema))
         {

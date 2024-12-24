@@ -17,8 +17,8 @@ internal sealed class AbstractAtomicOperationSchemaGenerator
 
     public AbstractAtomicOperationSchemaGenerator(MetaSchemaGenerator metaSchemaGenerator, JsonApiSchemaIdSelector schemaIdSelector)
     {
-        ArgumentGuard.NotNull(metaSchemaGenerator);
-        ArgumentGuard.NotNull(schemaIdSelector);
+        ArgumentNullException.ThrowIfNull(metaSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(schemaIdSelector);
 
         _metaSchemaGenerator = metaSchemaGenerator;
         _schemaIdSelector = schemaIdSelector;
@@ -26,7 +26,7 @@ internal sealed class AbstractAtomicOperationSchemaGenerator
 
     public OpenApiSchema GenerateSchema(SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(schemaRepository);
+        ArgumentNullException.ThrowIfNull(schemaRepository);
 
         if (schemaRepository.TryLookupByType(AtomicOperationAbstractType, out OpenApiSchema? referenceSchema))
         {
@@ -69,8 +69,8 @@ internal sealed class AbstractAtomicOperationSchemaGenerator
 
     public void MapDiscriminator(OpenApiSchema referenceSchemaForOperation, string discriminatorValue, SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(referenceSchemaForOperation);
-        ArgumentGuard.NotNull(schemaRepository);
+        ArgumentNullException.ThrowIfNull(referenceSchemaForOperation);
+        ArgumentNullException.ThrowIfNull(schemaRepository);
 
         if (!schemaRepository.TryLookupByType(AtomicOperationAbstractType, out OpenApiSchema? referenceSchemaForAbstractOperation))
         {

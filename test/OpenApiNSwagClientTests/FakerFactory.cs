@@ -23,7 +23,7 @@ internal sealed class FakerFactory
         where TTarget : class
     {
         var autoFaker = new AutoFaker<TTarget>();
-        autoFaker.UseDateTimeReference(FrozenSystemClock.DefaultDateTimeUtc);
+        autoFaker.UseDateTimeReference(IntegrationTest.DefaultDateTimeUtc.UtcDateTime);
         autoFaker.UseSeed(FakerExtensions.GetFakerSeed());
         return autoFaker;
     }

@@ -4,8 +4,6 @@ using DapperExample.Data;
 using DapperExample.Models;
 using DapperExample.Repositories;
 using DapperExample.TranslationToSql.DataModel;
-using FluentAssertions.Common;
-using FluentAssertions.Extensions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using Microsoft.AspNetCore.Hosting;
@@ -13,10 +11,10 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
 using Xunit.Abstractions;
-using IClock = DapperExample.IClock;
 
 namespace DapperTests.IntegrationTests;
 
@@ -29,7 +27,7 @@ public sealed class DapperTestContext : IntegrationTest
         EXEC sp_MSForEachTable 'ALTER TABLE ? CHECK CONSTRAINT ALL';
         """;
 
-    public static readonly DateTimeOffset FrozenTime = 29.September(2018).At(16, 41, 56).AsUtc().ToDateTimeOffset();
+    public static readonly DateTimeOffset FrozenTime = DefaultDateTimeUtc;
 
     private readonly Lazy<WebApplicationFactory<TodoItem>> _lazyFactory;
     private ITestOutputHelper? _testOutputHelper;
@@ -82,10 +80,7 @@ public sealed class DapperTestContext : IntegrationTest
 
             builder.ConfigureServices(services =>
             {
-                services.AddSingleton<IClock>(new FrozenClock
-                {
-                    UtcNow = FrozenTime
-                });
+                services.Replace(ServiceDescriptor.Singleton<TimeProvider>(new FrozenTimeProvider(FrozenTime)));
 
                 ServiceDescriptor scopedCaptureStore = services.Single(descriptor => descriptor.ImplementationType == typeof(SqlCaptureStore));
                 services.Remove(scopedCaptureStore);
@@ -122,14 +117,10 @@ public sealed class DapperTestContext : IntegrationTest
                     _ => throw new NotSupportedException($"Unsupported database provider '{databaseProvider}'.")
                 };
 
-#if !NET6_0
 #pragma warning disable EF1002 // Risk of vulnerability to SQL injection.
-#endif
                 // Justification: Table names cannot be parameterized.
                 await dbContext.Database.ExecuteSqlRawAsync($"DELETE FROM {escapedTableName}");
-#if !NET6_0
 #pragma warning restore EF1002 // Risk of vulnerability to SQL injection.
-#endif
             }
         }
     }

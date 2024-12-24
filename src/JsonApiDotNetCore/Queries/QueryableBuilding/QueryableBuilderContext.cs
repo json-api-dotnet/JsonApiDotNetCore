@@ -44,11 +44,11 @@ public sealed class QueryableBuilderContext
     public QueryableBuilderContext(Expression source, Type elementType, Type extensionType, IReadOnlyModel entityModel, LambdaScopeFactory lambdaScopeFactory,
         object? state)
     {
-        ArgumentGuard.NotNull(source);
-        ArgumentGuard.NotNull(elementType);
-        ArgumentGuard.NotNull(extensionType);
-        ArgumentGuard.NotNull(entityModel);
-        ArgumentGuard.NotNull(lambdaScopeFactory);
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(elementType);
+        ArgumentNullException.ThrowIfNull(extensionType);
+        ArgumentNullException.ThrowIfNull(entityModel);
+        ArgumentNullException.ThrowIfNull(lambdaScopeFactory);
 
         Source = source;
         ElementType = elementType;
@@ -60,9 +60,9 @@ public sealed class QueryableBuilderContext
 
     public static QueryableBuilderContext CreateRoot(IQueryable source, Type extensionType, IReadOnlyModel entityModel, object? state)
     {
-        ArgumentGuard.NotNull(source);
-        ArgumentGuard.NotNull(extensionType);
-        ArgumentGuard.NotNull(entityModel);
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(extensionType);
+        ArgumentNullException.ThrowIfNull(entityModel);
 
         var lambdaScopeFactory = new LambdaScopeFactory();
 
@@ -72,10 +72,10 @@ public sealed class QueryableBuilderContext
     public QueryClauseBuilderContext CreateClauseContext(IQueryableBuilder queryableBuilder, Expression source, ResourceType resourceType,
         LambdaScope lambdaScope)
     {
-        ArgumentGuard.NotNull(queryableBuilder);
-        ArgumentGuard.NotNull(source);
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(lambdaScope);
+        ArgumentNullException.ThrowIfNull(queryableBuilder);
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(lambdaScope);
 
         return new QueryClauseBuilderContext(source, resourceType, ExtensionType, EntityModel, LambdaScopeFactory, lambdaScope, queryableBuilder, State);
     }

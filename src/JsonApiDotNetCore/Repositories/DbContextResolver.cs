@@ -15,7 +15,7 @@ public sealed class DbContextResolver<TDbContext> : IDbContextResolver
 
     public DbContextResolver(TDbContext dbContext)
     {
-        ArgumentGuard.NotNull(dbContext);
+        ArgumentNullException.ThrowIfNull(dbContext);
 
         _dbContext = dbContext;
     }

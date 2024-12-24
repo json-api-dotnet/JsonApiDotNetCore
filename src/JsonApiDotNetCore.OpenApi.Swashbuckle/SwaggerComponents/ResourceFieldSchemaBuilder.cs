@@ -25,12 +25,12 @@ internal sealed class ResourceFieldSchemaBuilder
         LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider,
         RelationshipTypeFactory relationshipTypeFactory, ResourceSchemaType resourceSchemaType)
     {
-        ArgumentGuard.NotNull(defaultSchemaGenerator);
-        ArgumentGuard.NotNull(resourceIdentifierSchemaGenerator);
-        ArgumentGuard.NotNull(linksVisibilitySchemaGenerator);
-        ArgumentGuard.NotNull(resourceSchemaType);
-        ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
-        ArgumentGuard.NotNull(relationshipTypeFactory);
+        ArgumentNullException.ThrowIfNull(defaultSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(resourceIdentifierSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(linksVisibilitySchemaGenerator);
+        ArgumentNullException.ThrowIfNull(resourceSchemaType);
+        ArgumentNullException.ThrowIfNull(resourceFieldValidationMetadataProvider);
+        ArgumentNullException.ThrowIfNull(relationshipTypeFactory);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _resourceIdentifierSchemaGenerator = resourceIdentifierSchemaGenerator;
@@ -55,8 +55,8 @@ internal sealed class ResourceFieldSchemaBuilder
 
     public void SetMembersOfAttributes(OpenApiSchema fullSchemaForAttributes, bool forRequestSchema, SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(fullSchemaForAttributes);
-        ArgumentGuard.NotNull(schemaRepository);
+        ArgumentNullException.ThrowIfNull(fullSchemaForAttributes);
+        ArgumentNullException.ThrowIfNull(schemaRepository);
         AssertHasNoProperties(fullSchemaForAttributes);
 
         AttrCapabilities requiredCapability = GetRequiredCapabilityForAttributes(_resourceSchemaType.SchemaOpenType);
@@ -150,8 +150,8 @@ internal sealed class ResourceFieldSchemaBuilder
 
     public void SetMembersOfRelationships(OpenApiSchema fullSchemaForRelationships, bool forRequestSchema, SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(fullSchemaForRelationships);
-        ArgumentGuard.NotNull(schemaRepository);
+        ArgumentNullException.ThrowIfNull(fullSchemaForRelationships);
+        ArgumentNullException.ThrowIfNull(schemaRepository);
         AssertHasNoProperties(fullSchemaForRelationships);
 
         foreach (string publicName in _schemasForResourceFields.Keys)

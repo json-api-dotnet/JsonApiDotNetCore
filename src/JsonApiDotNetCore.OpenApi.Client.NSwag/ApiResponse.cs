@@ -12,7 +12,7 @@ public class ApiResponse(int statusCode, IReadOnlyDictionary<string, IEnumerable
     public static async Task<TResponse?> TranslateAsync<TResponse>(Func<Task<TResponse>> operation)
         where TResponse : class
     {
-        ArgumentGuard.NotNull(operation);
+        ArgumentNullException.ThrowIfNull(operation);
 
         try
         {
@@ -27,7 +27,7 @@ public class ApiResponse(int statusCode, IReadOnlyDictionary<string, IEnumerable
 
     public static async Task TranslateAsync(Func<Task> operation)
     {
-        ArgumentGuard.NotNull(operation);
+        ArgumentNullException.ThrowIfNull(operation);
 
         try
         {
@@ -42,7 +42,7 @@ public class ApiResponse(int statusCode, IReadOnlyDictionary<string, IEnumerable
     public static async Task<ApiResponse<TResult?>> TranslateAsync<TResult>(Func<Task<ApiResponse<TResult>>> operation)
         where TResult : class
     {
-        ArgumentGuard.NotNull(operation);
+        ArgumentNullException.ThrowIfNull(operation);
 
         try
         {
@@ -57,7 +57,7 @@ public class ApiResponse(int statusCode, IReadOnlyDictionary<string, IEnumerable
 
     public static async Task<ApiResponse> TranslateAsync(Func<Task<ApiResponse>> operation)
     {
-        ArgumentGuard.NotNull(operation);
+        ArgumentNullException.ThrowIfNull(operation);
 
         try
         {

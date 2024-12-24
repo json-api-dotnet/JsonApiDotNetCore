@@ -19,7 +19,7 @@ internal sealed class ErrorResponseBodySchemaGenerator : BodySchemaGenerator
         LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, IJsonApiOptions options)
         : base(metaSchemaGenerator, linksVisibilitySchemaGenerator, options)
     {
-        ArgumentGuard.NotNull(defaultSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(defaultSchemaGenerator);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _metaSchemaGenerator = metaSchemaGenerator;

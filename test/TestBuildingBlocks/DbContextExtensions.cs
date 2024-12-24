@@ -44,14 +44,10 @@ public static class DbContextExtensions
             }
             else
             {
-#if !NET6_0
 #pragma warning disable EF1002 // Risk of vulnerability to SQL injection.
-#endif
                 // Justification: Table names cannot be parameterized.
                 await dbContext.Database.ExecuteSqlRawAsync($"DELETE FROM \"{tableName}\"");
-#if !NET6_0
 #pragma warning restore EF1002 // Risk of vulnerability to SQL injection.
-#endif
             }
         }
     }

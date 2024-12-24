@@ -20,7 +20,7 @@ internal static class SystemExpressionBuilder
 
     public static Expression CloseOver(object value)
     {
-        ArgumentGuard.NotNull(value);
+        ArgumentNullException.ThrowIfNull(value);
 
         MethodInfo closeOverClosedMethod = CloseOverOpenMethod.MakeGenericMethod(value.GetType());
         return (Expression)closeOverClosedMethod.Invoke(null, [value])!;

@@ -23,8 +23,8 @@ internal sealed class ParameterInfoWrapper : ParameterInfo
 
     public ParameterInfoWrapper(ParameterInfo innerParameter, Type overriddenParameterType, string? overriddenName)
     {
-        ArgumentGuard.NotNull(innerParameter);
-        ArgumentGuard.NotNull(overriddenParameterType);
+        ArgumentNullException.ThrowIfNull(innerParameter);
+        ArgumentNullException.ThrowIfNull(overriddenParameterType);
 
         _innerParameter = innerParameter;
         ParameterType = overriddenParameterType;

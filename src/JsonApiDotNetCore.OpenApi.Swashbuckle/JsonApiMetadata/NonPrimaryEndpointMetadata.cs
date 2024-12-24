@@ -6,7 +6,7 @@ internal abstract class NonPrimaryEndpointMetadata
 
     protected NonPrimaryEndpointMetadata(IDictionary<string, Type> documentTypesByRelationshipName)
     {
-        ArgumentGuard.NotNull(documentTypesByRelationshipName);
+        ArgumentNullException.ThrowIfNull(documentTypesByRelationshipName);
 
         DocumentTypesByRelationshipName = documentTypesByRelationshipName;
     }

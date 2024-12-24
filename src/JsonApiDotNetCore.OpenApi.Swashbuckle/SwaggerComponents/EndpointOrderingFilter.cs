@@ -6,23 +6,12 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-#if NET6_0
-internal sealed class EndpointOrderingFilter : IDocumentFilter
-#else
 internal sealed partial class EndpointOrderingFilter : IDocumentFilter
-#endif
 {
-    private const string PatternText = @".*{id}/(?>relationships\/)?(?<RelationshipName>\w+)";
-
-#if NET6_0
-    private const RegexOptions RegexOptionsNet60 = RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture;
-    private static readonly Regex RelationshipNameInUrlPattern = new(PatternText, RegexOptionsNet60);
-#endif
-
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
-        ArgumentGuard.NotNull(swaggerDoc);
-        ArgumentGuard.NotNull(context);
+        ArgumentNullException.ThrowIfNull(swaggerDoc);
+        ArgumentNullException.ThrowIfNull(context);
 
         KeyValuePair<string, OpenApiPathItem>[] endpointsInOrder = swaggerDoc.Paths.OrderBy(GetPrimaryResourcePublicName)
             .ThenBy(GetRelationshipName).ThenBy(IsSecondaryEndpoint).ToArray();
@@ -52,13 +41,6 @@ internal sealed partial class EndpointOrderingFilter : IDocumentFilter
         return match.Success ? match.Groups["RelationshipName"].Value : string.Empty;
     }
 
-#if NET6_0
-    private static Regex RelationshipNameInUrlRegex()
-    {
-        return RelationshipNameInUrlPattern;
-    }
-#else
-    [GeneratedRegex(PatternText, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture)]
+    [GeneratedRegex(@".*{id}/(?>relationships\/)?(?<RelationshipName>\w+)", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture)]
     private static partial Regex RelationshipNameInUrlRegex();
-#endif
 }

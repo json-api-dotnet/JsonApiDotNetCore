@@ -30,9 +30,9 @@ internal static class SchemaRepositoryExtensions
 
     public static void ReplaceSchemaId(this SchemaRepository schemaRepository, Type oldSchemaType, string newSchemaId)
     {
-        ArgumentGuard.NotNull(schemaRepository);
-        ArgumentGuard.NotNull(oldSchemaType);
-        ArgumentGuard.NotNullNorEmpty(newSchemaId);
+        ArgumentNullException.ThrowIfNull(schemaRepository);
+        ArgumentNullException.ThrowIfNull(oldSchemaType);
+        ArgumentException.ThrowIfNullOrEmpty(newSchemaId);
 
         if (schemaRepository.TryLookupByType(oldSchemaType, out OpenApiSchema? referenceSchema))
         {

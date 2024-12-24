@@ -37,9 +37,9 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
 
     public ResourceObjectTreeNode(IIdentifiable resource, ResourceType resourceType, ResourceObject resourceObject)
     {
-        ArgumentGuard.NotNull(resource);
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(resourceObject);
+        ArgumentNullException.ThrowIfNull(resource);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceObject);
 
         Resource = resource;
         ResourceType = resourceType;
@@ -53,7 +53,7 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
 
     public void AttachDirectChild(ResourceObjectTreeNode treeNode)
     {
-        ArgumentGuard.NotNull(treeNode);
+        ArgumentNullException.ThrowIfNull(treeNode);
 
         _directChildren ??= [];
         _directChildren.Add(treeNode);
@@ -61,7 +61,7 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
 
     public void EnsureHasRelationship(RelationshipAttribute relationship)
     {
-        ArgumentGuard.NotNull(relationship);
+        ArgumentNullException.ThrowIfNull(relationship);
 
         _childrenByRelationship ??= [];
 
@@ -73,8 +73,8 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
 
     public void AttachRelationshipChild(RelationshipAttribute relationship, ResourceObjectTreeNode rightNode)
     {
-        ArgumentGuard.NotNull(relationship);
-        ArgumentGuard.NotNull(rightNode);
+        ArgumentNullException.ThrowIfNull(relationship);
+        ArgumentNullException.ThrowIfNull(rightNode);
 
         if (_childrenByRelationship == null)
         {

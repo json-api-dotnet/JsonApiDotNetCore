@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <!-- TargetFrameworks does not work, see https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/2706 -->
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
 
   <Import Project="..\..\package-versions.props" />
@@ -34,7 +34,7 @@
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
     </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\ModelStateValidation\GeneratedSwagger\$(TargetFramework)\swagger.g.json">
+    <OpenApiReference Include="..\OpenApiTests\ModelStateValidation\GeneratedSwagger\swagger.g.json">
       <Name>ModelStateValidation</Name>
       <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
       <ClassName>%(Name)Client</ClassName>

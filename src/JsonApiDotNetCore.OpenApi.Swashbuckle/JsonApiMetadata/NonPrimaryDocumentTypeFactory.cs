@@ -19,28 +19,28 @@ internal sealed class NonPrimaryDocumentTypeFactory
 
     public NonPrimaryDocumentTypeFactory(ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
     {
-        ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
+        ArgumentNullException.ThrowIfNull(resourceFieldValidationMetadataProvider);
 
         _resourceFieldValidationMetadataProvider = resourceFieldValidationMetadataProvider;
     }
 
     public Type GetForSecondaryResponse(RelationshipAttribute relationship)
     {
-        ArgumentGuard.NotNull(relationship);
+        ArgumentNullException.ThrowIfNull(relationship);
 
         return Get(relationship, SecondaryResponseDocumentOpenTypes);
     }
 
     public Type GetForRelationshipRequest(RelationshipAttribute relationship)
     {
-        ArgumentGuard.NotNull(relationship);
+        ArgumentNullException.ThrowIfNull(relationship);
 
         return Get(relationship, RelationshipRequestDocumentOpenTypes);
     }
 
     public Type GetForRelationshipResponse(RelationshipAttribute relationship)
     {
-        ArgumentGuard.NotNull(relationship);
+        ArgumentNullException.ThrowIfNull(relationship);
 
         return Get(relationship, RelationshipResponseDocumentOpenTypes);
     }
@@ -68,9 +68,9 @@ internal sealed class NonPrimaryDocumentTypeFactory
 
         public DocumentOpenTypes(Type manyDataOpenType, Type nullableSingleDataOpenType, Type singleDataOpenType)
         {
-            ArgumentGuard.NotNull(manyDataOpenType);
-            ArgumentGuard.NotNull(nullableSingleDataOpenType);
-            ArgumentGuard.NotNull(singleDataOpenType);
+            ArgumentNullException.ThrowIfNull(manyDataOpenType);
+            ArgumentNullException.ThrowIfNull(nullableSingleDataOpenType);
+            ArgumentNullException.ThrowIfNull(singleDataOpenType);
 
             ManyDataOpenType = manyDataOpenType;
             NullableSingleDataOpenType = nullableSingleDataOpenType;

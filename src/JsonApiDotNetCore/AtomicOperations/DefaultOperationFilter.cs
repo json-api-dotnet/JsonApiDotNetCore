@@ -12,7 +12,7 @@ public class DefaultOperationFilter : IAtomicOperationFilter
     /// <inheritdoc />
     public virtual bool IsEnabled(ResourceType resourceType, WriteOperationKind writeOperation)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         // To match the behavior of non-operations controllers:
         // If an operation is enabled on a base type, it is implicitly enabled on all derived types.
@@ -34,7 +34,7 @@ public class DefaultOperationFilter : IAtomicOperationFilter
 
     protected virtual JsonApiEndpoints? GetJsonApiEndpoints(ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         var resourceAttribute = resourceType.ClrType.GetCustomAttribute<ResourceAttribute>();
         return resourceAttribute?.GenerateControllerEndpoints;

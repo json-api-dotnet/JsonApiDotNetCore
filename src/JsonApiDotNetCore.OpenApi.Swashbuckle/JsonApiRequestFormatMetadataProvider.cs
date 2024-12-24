@@ -24,8 +24,8 @@ internal sealed class JsonApiRequestFormatMetadataProvider : IInputFormatter, IA
     /// <inheritdoc />
     public IReadOnlyList<string> GetSupportedContentTypes(string contentType, Type objectType)
     {
-        ArgumentGuard.NotNullNorEmpty(contentType);
-        ArgumentGuard.NotNull(objectType);
+        ArgumentException.ThrowIfNullOrEmpty(contentType);
+        ArgumentNullException.ThrowIfNull(objectType);
 
         if (JsonApiSchemaFacts.IsRequestBodySchemaType(objectType) && MediaTypeHeaderValue.TryParse(contentType, out MediaTypeHeaderValue? headerValue) &&
             headerValue.MediaType.Equals(DefaultMediaType, StringComparison.OrdinalIgnoreCase))

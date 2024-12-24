@@ -15,8 +15,8 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
 
     public JsonApiSchemaGenerator(ResourceIdSchemaGenerator resourceIdSchemaGenerator, IEnumerable<BodySchemaGenerator> bodySchemaGenerators)
     {
-        ArgumentGuard.NotNull(resourceIdSchemaGenerator);
-        ArgumentGuard.NotNull(bodySchemaGenerators);
+        ArgumentNullException.ThrowIfNull(resourceIdSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(bodySchemaGenerators);
 
         _resourceIdSchemaGenerator = resourceIdSchemaGenerator;
         _bodySchemaGenerators = bodySchemaGenerators as BodySchemaGenerator[] ?? bodySchemaGenerators.ToArray();
@@ -25,8 +25,8 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
     public OpenApiSchema GenerateSchema(Type modelType, SchemaRepository schemaRepository, MemberInfo? memberInfo = null, ParameterInfo? parameterInfo = null,
         ApiParameterRouteInfo? routeInfo = null)
     {
-        ArgumentGuard.NotNull(modelType);
-        ArgumentGuard.NotNull(schemaRepository);
+        ArgumentNullException.ThrowIfNull(modelType);
+        ArgumentNullException.ThrowIfNull(schemaRepository);
 
         if (parameterInfo is { Name: "id" } && IsJsonApiParameter(parameterInfo))
         {

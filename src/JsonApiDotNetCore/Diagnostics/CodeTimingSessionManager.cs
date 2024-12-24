@@ -68,7 +68,7 @@ public static class CodeTimingSessionManager
 
     public static void Capture(ICodeTimerSession session)
     {
-        ArgumentGuard.NotNull(session);
+        ArgumentNullException.ThrowIfNull(session);
 
         AssertNoActiveSession();
 

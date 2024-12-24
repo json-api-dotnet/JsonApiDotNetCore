@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using JetBrains.Annotations;
-using JsonApiDotNetCore;
 
 namespace TestBuildingBlocks;
 
@@ -14,7 +13,7 @@ public sealed class MarkedText
 
     public MarkedText(string source, char marker)
     {
-        ArgumentGuard.NotNull(source);
+        ArgumentNullException.ThrowIfNull(source);
 
         Source = source;
         Position = GetPositionFromMarker(marker);

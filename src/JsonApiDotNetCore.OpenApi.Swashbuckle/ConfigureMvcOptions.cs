@@ -14,9 +14,9 @@ internal sealed class ConfigureMvcOptions : IConfigureOptions<MvcOptions>
     public ConfigureMvcOptions(IJsonApiRoutingConvention jsonApiRoutingConvention, OpenApiEndpointConvention openApiEndpointConvention,
         JsonApiRequestFormatMetadataProvider jsonApiRequestFormatMetadataProvider)
     {
-        ArgumentGuard.NotNull(jsonApiRoutingConvention);
-        ArgumentGuard.NotNull(openApiEndpointConvention);
-        ArgumentGuard.NotNull(jsonApiRequestFormatMetadataProvider);
+        ArgumentNullException.ThrowIfNull(jsonApiRoutingConvention);
+        ArgumentNullException.ThrowIfNull(openApiEndpointConvention);
+        ArgumentNullException.ThrowIfNull(jsonApiRequestFormatMetadataProvider);
 
         _jsonApiRoutingConvention = jsonApiRoutingConvention;
         _openApiEndpointConvention = openApiEndpointConvention;

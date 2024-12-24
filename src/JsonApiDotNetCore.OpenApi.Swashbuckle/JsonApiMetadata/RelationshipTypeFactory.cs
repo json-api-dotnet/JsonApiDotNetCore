@@ -11,8 +11,8 @@ internal sealed class RelationshipTypeFactory
     public RelationshipTypeFactory(NonPrimaryDocumentTypeFactory nonPrimaryDocumentTypeFactory,
         ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
     {
-        ArgumentGuard.NotNull(nonPrimaryDocumentTypeFactory);
-        ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
+        ArgumentNullException.ThrowIfNull(nonPrimaryDocumentTypeFactory);
+        ArgumentNullException.ThrowIfNull(resourceFieldValidationMetadataProvider);
 
         _nonPrimaryDocumentTypeFactory = nonPrimaryDocumentTypeFactory;
         _resourceFieldValidationMetadataProvider = resourceFieldValidationMetadataProvider;
@@ -20,14 +20,14 @@ internal sealed class RelationshipTypeFactory
 
     public Type GetForRequest(RelationshipAttribute relationship)
     {
-        ArgumentGuard.NotNull(relationship);
+        ArgumentNullException.ThrowIfNull(relationship);
 
         return _nonPrimaryDocumentTypeFactory.GetForRelationshipRequest(relationship);
     }
 
     public Type GetForResponse(RelationshipAttribute relationship)
     {
-        ArgumentGuard.NotNull(relationship);
+        ArgumentNullException.ThrowIfNull(relationship);
 
         // @formatter:nested_ternary_style expanded
 

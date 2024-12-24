@@ -16,8 +16,8 @@ internal sealed class OpenApiDescriptionLinkProvider : IDocumentDescriptionLinkP
     public OpenApiDescriptionLinkProvider(IOptionsMonitor<SwaggerGeneratorOptions> swaggerGeneratorOptionsMonitor,
         IOptionsMonitor<SwaggerOptions> swaggerOptionsMonitor)
     {
-        ArgumentGuard.NotNull(swaggerGeneratorOptionsMonitor);
-        ArgumentGuard.NotNull(swaggerOptionsMonitor);
+        ArgumentNullException.ThrowIfNull(swaggerGeneratorOptionsMonitor);
+        ArgumentNullException.ThrowIfNull(swaggerOptionsMonitor);
 
         _swaggerGeneratorOptionsMonitor = swaggerGeneratorOptionsMonitor;
         _swaggerOptionsMonitor = swaggerOptionsMonitor;

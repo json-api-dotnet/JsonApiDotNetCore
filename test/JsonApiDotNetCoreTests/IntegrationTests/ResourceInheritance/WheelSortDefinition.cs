@@ -1,7 +1,6 @@
 using System.Collections.Immutable;
 using System.ComponentModel;
 using JetBrains.Annotations;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
@@ -19,7 +18,7 @@ public sealed class WheelSortDefinition : JsonApiResourceDefinition<Wheel, long>
     public WheelSortDefinition(IResourceGraph resourceGraph, IHttpContextAccessor httpContextAccessor)
         : base(resourceGraph)
     {
-        ArgumentGuard.NotNull(httpContextAccessor);
+        ArgumentNullException.ThrowIfNull(httpContextAccessor);
 
         _httpContextAccessor = httpContextAccessor;
     }

@@ -11,13 +11,12 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.TryAddSingleton<IClock, SystemClock>();
+builder.Services.AddSingleton<TimeProvider>();
 
 DatabaseProvider databaseProvider = GetDatabaseProvider(builder.Configuration);
 string? connectionString = builder.Configuration.GetConnectionString($"DapperExample{databaseProvider}");
@@ -31,8 +30,13 @@ switch (databaseProvider)
     }
     case DatabaseProvider.MySql:
     {
-        builder.Services.AddMySql<AppDbContext>(connectionString, ServerVersion.AutoDetect(connectionString),
-            optionsAction: options => SetDbContextDebugOptions(options));
+#if NET8_0
+        ServerVersion serverVersion = ServerVersion.AutoDetect(connectionString);
+#else
+        ServerVersion serverVersion = await ServerVersion.AutoDetectAsync(connectionString);
+#endif
+
+        builder.Services.AddMySql<AppDbContext>(connectionString, serverVersion, optionsAction: options => SetDbContextDebugOptions(options));
 
         break;
     }

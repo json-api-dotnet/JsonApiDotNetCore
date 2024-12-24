@@ -111,9 +111,9 @@ public sealed class ResourceType
         IReadOnlyCollection<EagerLoadAttribute>? eagerLoads, LinkTypes topLevelLinks = LinkTypes.NotConfigured,
         LinkTypes resourceLinks = LinkTypes.NotConfigured, LinkTypes relationshipLinks = LinkTypes.NotConfigured)
     {
-        ArgumentGuard.NotNullNorWhitespace(publicName);
-        ArgumentGuard.NotNull(clrType);
-        ArgumentGuard.NotNull(identityClrType);
+        ArgumentException.ThrowIfNullOrWhiteSpace(publicName);
+        ArgumentNullException.ThrowIfNull(clrType);
+        ArgumentNullException.ThrowIfNull(identityClrType);
 
         PublicName = publicName;
         ClientIdGeneration = clientIdGeneration;
@@ -165,7 +165,7 @@ public sealed class ResourceType
 
     public AttrAttribute? FindAttributeByPublicName(string publicName)
     {
-        ArgumentGuard.NotNull(publicName);
+        ArgumentNullException.ThrowIfNull(publicName);
 
         return _fieldsByPublicName.TryGetValue(publicName, out ResourceFieldAttribute? field) && field is AttrAttribute attribute ? attribute : null;
     }
@@ -179,7 +179,7 @@ public sealed class ResourceType
 
     public AttrAttribute? FindAttributeByPropertyName(string propertyName)
     {
-        ArgumentGuard.NotNull(propertyName);
+        ArgumentNullException.ThrowIfNull(propertyName);
 
         return _fieldsByPropertyName.TryGetValue(propertyName, out ResourceFieldAttribute? field) && field is AttrAttribute attribute ? attribute : null;
     }
@@ -192,7 +192,7 @@ public sealed class ResourceType
 
     public RelationshipAttribute? FindRelationshipByPublicName(string publicName)
     {
-        ArgumentGuard.NotNull(publicName);
+        ArgumentNullException.ThrowIfNull(publicName);
 
         return _fieldsByPublicName.TryGetValue(publicName, out ResourceFieldAttribute? field) && field is RelationshipAttribute relationship
             ? relationship
@@ -209,7 +209,7 @@ public sealed class ResourceType
 
     public RelationshipAttribute? FindRelationshipByPropertyName(string propertyName)
     {
-        ArgumentGuard.NotNull(propertyName);
+        ArgumentNullException.ThrowIfNull(propertyName);
 
         return _fieldsByPropertyName.TryGetValue(propertyName, out ResourceFieldAttribute? field) && field is RelationshipAttribute relationship
             ? relationship
@@ -229,7 +229,7 @@ public sealed class ResourceType
     /// </summary>
     public ResourceType GetTypeOrDerived(Type clrType)
     {
-        ArgumentGuard.NotNull(clrType);
+        ArgumentNullException.ThrowIfNull(clrType);
 
         ResourceType? derivedType = FindTypeOrDerived(this, clrType);
 

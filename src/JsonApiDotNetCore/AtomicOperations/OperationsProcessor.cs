@@ -25,13 +25,13 @@ public class OperationsProcessor : IOperationsProcessor
         ILocalIdTracker localIdTracker, IResourceGraph resourceGraph, IJsonApiRequest request, ITargetedFields targetedFields,
         ISparseFieldSetCache sparseFieldSetCache)
     {
-        ArgumentGuard.NotNull(operationProcessorAccessor);
-        ArgumentGuard.NotNull(operationsTransactionFactory);
-        ArgumentGuard.NotNull(localIdTracker);
-        ArgumentGuard.NotNull(resourceGraph);
-        ArgumentGuard.NotNull(request);
-        ArgumentGuard.NotNull(targetedFields);
-        ArgumentGuard.NotNull(sparseFieldSetCache);
+        ArgumentNullException.ThrowIfNull(operationProcessorAccessor);
+        ArgumentNullException.ThrowIfNull(operationsTransactionFactory);
+        ArgumentNullException.ThrowIfNull(localIdTracker);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(targetedFields);
+        ArgumentNullException.ThrowIfNull(sparseFieldSetCache);
 
         _operationProcessorAccessor = operationProcessorAccessor;
         _operationsTransactionFactory = operationsTransactionFactory;
@@ -46,7 +46,7 @@ public class OperationsProcessor : IOperationsProcessor
     /// <inheritdoc />
     public virtual async Task<IList<OperationContainer?>> ProcessAsync(IList<OperationContainer> operations, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(operations);
+        ArgumentNullException.ThrowIfNull(operations);
 
         _localIdValidator.Validate(operations);
         _localIdTracker.Reset();
@@ -101,7 +101,7 @@ public class OperationsProcessor : IOperationsProcessor
 
     protected virtual async Task<OperationContainer?> ProcessOperationAsync(OperationContainer operation, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(operation);
+        ArgumentNullException.ThrowIfNull(operation);
 
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -115,7 +115,7 @@ public class OperationsProcessor : IOperationsProcessor
 
     protected void TrackLocalIdsForOperation(OperationContainer operation)
     {
-        ArgumentGuard.NotNull(operation);
+        ArgumentNullException.ThrowIfNull(operation);
 
         if (operation.Request.WriteOperation == WriteOperationKind.CreateResource)
         {

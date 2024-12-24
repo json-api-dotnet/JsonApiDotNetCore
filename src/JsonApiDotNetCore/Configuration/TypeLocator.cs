@@ -66,9 +66,9 @@ internal sealed class TypeLocator
     public (Type implementationType, Type serviceInterface)? GetContainerRegistrationFromAssembly(Assembly assembly, Type unboundInterface,
         params Type[] interfaceTypeArguments)
     {
-        ArgumentGuard.NotNull(assembly);
-        ArgumentGuard.NotNull(unboundInterface);
-        ArgumentGuard.NotNull(interfaceTypeArguments);
+        ArgumentNullException.ThrowIfNull(assembly);
+        ArgumentNullException.ThrowIfNull(unboundInterface);
+        ArgumentNullException.ThrowIfNull(interfaceTypeArguments);
 
         if (!unboundInterface.IsInterface || !unboundInterface.IsGenericType || unboundInterface != unboundInterface.GetGenericTypeDefinition())
         {
@@ -126,8 +126,8 @@ internal sealed class TypeLocator
     /// </example>
     public IEnumerable<Type> GetDerivedTypes(Assembly assembly, Type baseType)
     {
-        ArgumentGuard.NotNull(assembly);
-        ArgumentGuard.NotNull(baseType);
+        ArgumentNullException.ThrowIfNull(assembly);
+        ArgumentNullException.ThrowIfNull(baseType);
 
         foreach (Type type in assembly.GetTypes())
         {

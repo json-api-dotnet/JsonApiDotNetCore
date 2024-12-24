@@ -15,9 +15,9 @@ internal sealed class UpdateNode : SqlTreeNode
 
     public UpdateNode(TableNode table, IReadOnlyCollection<ColumnAssignmentNode> assignments, WhereNode where)
     {
-        ArgumentGuard.NotNull(table);
+        ArgumentNullException.ThrowIfNull(table);
         ArgumentGuard.NotNullNorEmpty(assignments);
-        ArgumentGuard.NotNull(where);
+        ArgumentNullException.ThrowIfNull(where);
 
         Table = table;
         Assignments = assignments;

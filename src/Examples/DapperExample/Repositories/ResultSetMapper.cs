@@ -3,9 +3,6 @@ using DapperExample.TranslationToSql.TreeNodes;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-#if NET6_0
-using JsonApiDotNetCore;
-#endif
 
 namespace DapperExample.Repositories;
 

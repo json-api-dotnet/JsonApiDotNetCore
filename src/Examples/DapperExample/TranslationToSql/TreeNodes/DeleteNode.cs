@@ -1,5 +1,3 @@
-using JsonApiDotNetCore;
-
 namespace DapperExample.TranslationToSql.TreeNodes;
 
 /// <summary>
@@ -14,8 +12,8 @@ internal sealed class DeleteNode : SqlTreeNode
 
     public DeleteNode(TableNode table, WhereNode where)
     {
-        ArgumentGuard.NotNull(table);
-        ArgumentGuard.NotNull(where);
+        ArgumentNullException.ThrowIfNull(table);
+        ArgumentNullException.ThrowIfNull(where);
 
         Table = table;
         Where = where;

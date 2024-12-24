@@ -42,9 +42,9 @@ internal sealed class ResourceOrRelationshipBodySchemaGenerator : BodySchemaGene
         IResourceGraph resourceGraph)
         : base(metaSchemaGenerator, linksVisibilitySchemaGenerator, options)
     {
-        ArgumentGuard.NotNull(defaultSchemaGenerator);
-        ArgumentGuard.NotNull(dataContainerSchemaGenerator);
-        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(defaultSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(dataContainerSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _dataContainerSchemaGenerator = dataContainerSchemaGenerator;
@@ -59,8 +59,8 @@ internal sealed class ResourceOrRelationshipBodySchemaGenerator : BodySchemaGene
 
     protected override OpenApiSchema GenerateBodySchema(Type bodyType, SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(bodyType);
-        ArgumentGuard.NotNull(schemaRepository);
+        ArgumentNullException.ThrowIfNull(bodyType);
+        ArgumentNullException.ThrowIfNull(schemaRepository);
 
         if (schemaRepository.TryLookupByType(bodyType, out OpenApiSchema? referenceSchemaForBody))
         {

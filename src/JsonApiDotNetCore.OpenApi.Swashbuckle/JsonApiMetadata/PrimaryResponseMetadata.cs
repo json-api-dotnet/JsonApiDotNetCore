@@ -6,7 +6,7 @@ internal sealed class PrimaryResponseMetadata : IJsonApiResponseMetadata
 
     public PrimaryResponseMetadata(Type documentType)
     {
-        ArgumentGuard.NotNull(documentType);
+        ArgumentNullException.ThrowIfNull(documentType);
 
         DocumentType = documentType;
     }

@@ -17,8 +17,8 @@ public partial class ExceptionHandler : IExceptionHandler
 
     public ExceptionHandler(ILoggerFactory loggerFactory, IJsonApiOptions options)
     {
-        ArgumentGuard.NotNull(loggerFactory);
-        ArgumentGuard.NotNull(options);
+        ArgumentNullException.ThrowIfNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(options);
 
         _options = options;
         _logger = loggerFactory.CreateLogger<ExceptionHandler>();
@@ -26,7 +26,7 @@ public partial class ExceptionHandler : IExceptionHandler
 
     public IReadOnlyList<ErrorObject> HandleException(Exception exception)
     {
-        ArgumentGuard.NotNull(exception);
+        ArgumentNullException.ThrowIfNull(exception);
 
         Exception demystified = exception.Demystify();
 
@@ -45,7 +45,7 @@ public partial class ExceptionHandler : IExceptionHandler
 
     protected virtual LogLevel GetLogLevel(Exception exception)
     {
-        ArgumentGuard.NotNull(exception);
+        ArgumentNullException.ThrowIfNull(exception);
 
         if (exception is OperationCanceledException)
         {
@@ -62,14 +62,14 @@ public partial class ExceptionHandler : IExceptionHandler
 
     protected virtual string GetLogMessage(Exception exception)
     {
-        ArgumentGuard.NotNull(exception);
+        ArgumentNullException.ThrowIfNull(exception);
 
         return exception is JsonApiException jsonApiException ? jsonApiException.GetSummary() : exception.Message;
     }
 
     protected virtual IReadOnlyList<ErrorObject> CreateErrorResponse(Exception exception)
     {
-        ArgumentGuard.NotNull(exception);
+        ArgumentNullException.ThrowIfNull(exception);
 
         IReadOnlyList<ErrorObject> errors = exception switch
         {
