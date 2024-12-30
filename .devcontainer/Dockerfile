@@ -1,8 +1,8 @@
-# See here for image contents: https://github.com/microsoft/vscode-dev-containers/tree/v0.245.2/containers/dotnet/.devcontainer/base.Dockerfile
+# Base images:
+# - <https://github.com/devcontainers/images/blob/633d1fb3ab2002894d7ee00781863a37c3531bab/src/dotnet/.devcontainer/Dockerfile>
+# - <https://github.com/dotnet/dotnet-docker/tree/019198c5f4ee65d20dda7bbf9b6b38980c38a3b1/src/sdk/8.0/bookworm-slim>
 
-# [Choice] .NET version: 6.0, 3.1, 6.0-bullseye, 3.1-bullseye, 6.0-focal, 3.1-focal
-ARG VARIANT="6.0"
-FROM mcr.microsoft.com/vscode/devcontainers/dotnet:0-${VARIANT}
+FROM mcr.microsoft.com/devcontainers/dotnet:8.0-bookworm-slim
 
 
 

@@ -1,9 +1,9 @@
 <Project>
   <PropertyGroup>
-    <NetCoreAppVersion>net6.0</NetCoreAppVersion>
+    <NetCoreAppVersion>net8.0</NetCoreAppVersion>
     <NetStandardVersion>netstandard2.1</NetStandardVersion>
-    <AspNetCoreVersion>6.0.*</AspNetCoreVersion>
-    <EFCoreVersion>6.0.32</EFCoreVersion>
+    <AspNetCoreVersion>8.0.*</AspNetCoreVersion>
+    <EFCoreVersion>8.0.11</EFCoreVersion>
     <NpgsqlPostgreSQLVersion>6.0.*</NpgsqlPostgreSQLVersion>
   </PropertyGroup>
 

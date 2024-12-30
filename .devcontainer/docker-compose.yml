@@ -5,7 +5,7 @@ services:
       context: ../
       dockerfile: .devcontainer/Dockerfile
       args:
-        VARIANT: "6.0"
+        VARIANT: "8.0"
     tty: true
     volumes:
       - ../:/workspaces/discover-server
