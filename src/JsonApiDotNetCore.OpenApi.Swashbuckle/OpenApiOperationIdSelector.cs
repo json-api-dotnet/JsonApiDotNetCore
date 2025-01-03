@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json;
 using Humanizer;
@@ -66,7 +67,7 @@ internal sealed class OpenApiOperationIdSelector
 
         if (!SchemaOpenTypeToOpenApiOperationIdTemplateMap.TryGetValue(bodyType, out string? template))
         {
-            throw new UnreachableCodeException();
+            throw new UnreachableException();
         }
 
         return template;
@@ -78,7 +79,7 @@ internal sealed class OpenApiOperationIdSelector
 
         if (producesResponseTypeAttribute == null)
         {
-            throw new UnreachableCodeException();
+            throw new UnreachableException();
         }
 
         ControllerParameterDescriptor? requestBodyDescriptor = endpoint.ActionDescriptor.GetBodyParameterDescriptor();
@@ -96,7 +97,7 @@ internal sealed class OpenApiOperationIdSelector
     {
         if (endpoint.RelativePath == null || endpoint.HttpMethod == null)
         {
-            throw new UnreachableCodeException();
+            throw new UnreachableException();
         }
 
         string method = endpoint.HttpMethod.ToLowerInvariant();

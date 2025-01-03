@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.OpenApi.Models;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
@@ -21,7 +22,7 @@ internal static class OpenApiSchemaExtensions
 
         if (fullSchema.Properties.Count != propertiesInOrder.Count)
         {
-            throw new UnreachableCodeException();
+            throw new UnreachableException();
         }
 
         fullSchema.Properties = propertiesInOrder;

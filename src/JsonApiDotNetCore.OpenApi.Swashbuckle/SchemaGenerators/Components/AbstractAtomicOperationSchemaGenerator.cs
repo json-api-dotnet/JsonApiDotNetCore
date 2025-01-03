@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.AtomicOperations;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -74,7 +75,7 @@ internal sealed class AbstractAtomicOperationSchemaGenerator
 
         if (!schemaRepository.TryLookupByType(AtomicOperationAbstractType, out OpenApiSchema? referenceSchemaForAbstractOperation))
         {
-            throw new UnreachableCodeException();
+            throw new UnreachableException();
         }
 
         OpenApiSchema fullSchemaForAbstractOperation = schemaRepository.Schemas[referenceSchemaForAbstractOperation.Reference.Id];

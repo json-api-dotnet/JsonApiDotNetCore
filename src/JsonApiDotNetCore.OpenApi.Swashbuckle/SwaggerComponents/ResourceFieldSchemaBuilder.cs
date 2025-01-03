@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reflection;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
@@ -109,7 +110,7 @@ internal sealed class ResourceFieldSchemaBuilder
     {
         return resourceDataOpenType == typeof(ResourceDataInResponse<>) ? AttrCapabilities.AllowView :
             resourceDataOpenType == typeof(DataInCreateResourceRequest<>) ? AttrCapabilities.AllowCreate :
-            resourceDataOpenType == typeof(DataInUpdateResourceRequest<>) ? AttrCapabilities.AllowChange : throw new UnreachableCodeException();
+            resourceDataOpenType == typeof(DataInUpdateResourceRequest<>) ? AttrCapabilities.AllowChange : throw new UnreachableException();
     }
 
     private void EnsureAttributeSchemaIsExposed(OpenApiSchema referenceSchemaForAttribute, AttrAttribute attribute, SchemaRepository schemaRepository)
@@ -219,7 +220,7 @@ internal sealed class ResourceFieldSchemaBuilder
     {
         if (fullSchema.Properties.Count > 0)
         {
-            throw new UnreachableCodeException();
+            throw new UnreachableException();
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
@@ -75,7 +76,7 @@ internal sealed class DataContainerSchemaGenerator
 
         if (dataProperty == null)
         {
-            throw new UnreachableCodeException();
+            throw new UnreachableException();
         }
 
         Type innerPropertyType = dataProperty.PropertyType.ConstructedToOpenType().IsAssignableTo(typeof(ICollection<>))
@@ -89,7 +90,7 @@ internal sealed class DataContainerSchemaGenerator
 
         if (!innerPropertyType.IsGenericType)
         {
-            throw new UnreachableCodeException();
+            throw new UnreachableException();
         }
 
         return innerPropertyType;

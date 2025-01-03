@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using JetBrains.Annotations;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
@@ -52,7 +53,7 @@ internal sealed class StringEnumOrderingFilter : IDocumentFilter
 
             if (ordered.Count != schema.Enum.Count)
             {
-                throw new UnreachableCodeException();
+                throw new UnreachableException();
             }
 
             schema.Enum = ordered;
