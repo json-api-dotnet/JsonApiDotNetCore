@@ -7,6 +7,9 @@ Exposing an [OpenAPI document](https://swagger.io/specification/) for your JSON:
 The [JsonApiDotNetCore.OpenApi.Swashbuckle](https://github.com/json-api-dotnet/JsonApiDotNetCore/pkgs/nuget/JsonApiDotNetCore.OpenApi.Swashbuckle) NuGet package
 provides OpenAPI support for JSON:API by integrating with [Swashbuckle](https://github.com/domaindrivendev/Swashbuckle.AspNetCore).
 
+> [!WARNING]
+> OpenAPI support for JSON:API is currently experimental. The API and the structure of the OpenAPI document may change in future versions.
+
 ## Getting started
 
 1.  Install the `JsonApiDotNetCore.OpenApi.Swashbuckle` NuGet package:

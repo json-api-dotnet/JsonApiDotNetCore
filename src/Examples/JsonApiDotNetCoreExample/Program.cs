@@ -79,7 +79,9 @@ static void ConfigureServices(WebApplicationBuilder builder)
 
     using (CodeTimingSessionManager.Current.Measure("AddOpenApiForJsonApi()"))
     {
+#pragma warning disable JADNC_OA_001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
         builder.Services.AddOpenApiForJsonApi(options => options.DocumentFilter<SetOpenApiServerAtBuildTimeFilter>());
+#pragma warning restore JADNC_OA_001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
     }
 }
 
