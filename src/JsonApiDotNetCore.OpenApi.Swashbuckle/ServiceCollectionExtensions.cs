@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Bodies;
@@ -18,7 +19,8 @@ public static class ServiceCollectionExtensions
     /// <summary>
     /// Configures OpenAPI for JsonApiDotNetCore using Swashbuckle.
     /// </summary>
-    public static void AddOpenApiForJsonApi(this IServiceCollection services, Action<SwaggerGenOptions>? setupSwaggerGenAction = null)
+    [Experimental("JADNC_OA_001", UrlFormat = "https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/openapi/docs/usage/openapi.md")]
+    public static void AddOpenApiForJsonApi(this IServiceCollection services, Action<SwaggerGenOptions>? configureSwaggerGenOptions = null)
     {
         ArgumentNullException.ThrowIfNull(services);
 
@@ -26,9 +28,9 @@ public static class ServiceCollectionExtensions
         AddCustomSwaggerComponents(services);
         AddSwaggerGenerator(services);
 
-        if (setupSwaggerGenAction != null)
+        if (configureSwaggerGenOptions != null)
         {
-            services.Configure(setupSwaggerGenAction);
+            services.Configure(configureSwaggerGenOptions);
         }
     }
 

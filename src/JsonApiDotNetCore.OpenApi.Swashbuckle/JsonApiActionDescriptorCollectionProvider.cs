@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reflection;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
@@ -125,7 +126,7 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
             }
         }
 
-        throw new UnreachableCodeException();
+        throw new UnreachableException();
     }
 
     private static bool ProducesJsonApiResponseDocument(ActionDescriptor endpoint)

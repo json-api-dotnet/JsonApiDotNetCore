@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
@@ -45,7 +46,7 @@ internal sealed class JsonApiEndpointMetadataProvider
 
         if (primaryResourceType == null)
         {
-            throw new UnreachableCodeException();
+            throw new UnreachableException();
         }
 
         IJsonApiRequestMetadata? requestMetadata = GetRequestMetadata(endpoint, primaryResourceType);

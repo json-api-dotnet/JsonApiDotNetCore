@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net;
 using System.Reflection;
 using JsonApiDotNetCore.Configuration;
@@ -108,7 +109,7 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
             JsonApiEndpoints.PatchRelationship => availableEndpoints.HasFlag(JsonApiEndpoints.PatchRelationship),
             JsonApiEndpoints.Delete => availableEndpoints.HasFlag(JsonApiEndpoints.Delete),
             JsonApiEndpoints.DeleteRelationship => availableEndpoints.HasFlag(JsonApiEndpoints.DeleteRelationship),
-            _ => throw new UnreachableCodeException()
+            _ => throw new UnreachableException()
         };
     }
 
@@ -178,7 +179,7 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
             [
                 HttpStatusCode.NoContent
             ],
-            _ => throw new UnreachableCodeException()
+            _ => throw new UnreachableException()
         };
     }
 
@@ -236,7 +237,7 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
                 HttpStatusCode.NotFound,
                 HttpStatusCode.Conflict
             ],
-            _ => throw new UnreachableCodeException()
+            _ => throw new UnreachableException()
         };
     }
 

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net;
 using System.Reflection;
 using Humanizer;
@@ -437,7 +438,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
     {
         if (apiDescription.RelativePath == null)
         {
-            throw new UnreachableCodeException();
+            throw new UnreachableException();
         }
 
         string relationshipName = apiDescription.RelativePath.Split('/').Last();

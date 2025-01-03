@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -54,7 +55,7 @@ internal sealed class RelationshipIdentifierSchemaGenerator
 
         if (schemaRepository.TryLookupByType(relationshipIdentifierConstructedType, out _))
         {
-            throw new UnreachableCodeException();
+            throw new UnreachableException();
         }
 
         OpenApiSchema referenceSchemaForIdentifier = _defaultSchemaGenerator.GenerateSchema(relationshipIdentifierConstructedType, schemaRepository);

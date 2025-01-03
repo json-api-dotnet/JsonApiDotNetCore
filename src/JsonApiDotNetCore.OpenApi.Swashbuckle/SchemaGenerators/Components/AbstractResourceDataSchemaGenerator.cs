@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
@@ -97,7 +98,7 @@ internal sealed class AbstractResourceDataSchemaGenerator
         {
             if (!schemaRepository.TryLookupByType(ResourceDataAbstractType, out OpenApiSchema? referenceSchemaForAbstractResourceData))
             {
-                throw new UnreachableCodeException();
+                throw new UnreachableException();
             }
 
             OpenApiSchema fullSchemaForAbstractResourceData = schemaRepository.Schemas[referenceSchemaForAbstractResourceData.Reference.Id];

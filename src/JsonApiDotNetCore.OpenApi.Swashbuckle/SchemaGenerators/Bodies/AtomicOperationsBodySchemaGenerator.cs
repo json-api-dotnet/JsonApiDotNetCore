@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
@@ -121,7 +122,7 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
             AtomicOperationCode.Add => WriteOperationKind.CreateResource,
             AtomicOperationCode.Update => WriteOperationKind.UpdateResource,
             AtomicOperationCode.Remove => WriteOperationKind.DeleteResource,
-            _ => throw new UnreachableCodeException()
+            _ => throw new UnreachableException()
         };
 
         if (!_atomicOperationFilter.IsEnabled(resourceType, writeOperation))
@@ -158,7 +159,7 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
             AtomicOperationCode.Add => WriteOperationKind.AddToRelationship,
             AtomicOperationCode.Update => WriteOperationKind.SetRelationship,
             AtomicOperationCode.Remove => WriteOperationKind.RemoveFromRelationship,
-            _ => throw new UnreachableCodeException()
+            _ => throw new UnreachableException()
         };
 
         if (!_atomicOperationFilter.IsEnabled(relationship.LeftType, writeOperation))
@@ -211,7 +212,7 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
         return writeOperation switch
         {
             WriteOperationKind.SetRelationship => relationship.Capabilities.HasFlag(HasOneCapabilities.AllowSet),
-            _ => throw new UnreachableCodeException()
+            _ => throw new UnreachableException()
         };
     }
 
@@ -222,7 +223,7 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
             WriteOperationKind.SetRelationship => relationship.Capabilities.HasFlag(HasManyCapabilities.AllowSet),
             WriteOperationKind.AddToRelationship => relationship.Capabilities.HasFlag(HasManyCapabilities.AllowAdd),
             WriteOperationKind.RemoveFromRelationship => relationship.Capabilities.HasFlag(HasManyCapabilities.AllowRemove),
-            _ => throw new UnreachableCodeException()
+            _ => throw new UnreachableException()
         };
     }
 

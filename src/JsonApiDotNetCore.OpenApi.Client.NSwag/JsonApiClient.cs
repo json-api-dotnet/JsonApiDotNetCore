@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 using Newtonsoft.Json;
@@ -175,7 +176,7 @@ public abstract class JsonApiClient : IJsonApiClient
 
         public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
-            throw new UnreachableCodeException();
+            throw new UnreachableException();
         }
 
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
@@ -236,7 +237,7 @@ public abstract class JsonApiClient : IJsonApiClient
 
         public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
-            throw new UnreachableCodeException();
+            throw new UnreachableException();
         }
 
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)

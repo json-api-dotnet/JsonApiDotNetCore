@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -18,7 +19,7 @@ internal sealed class JsonApiRequestFormatMetadataProvider : IInputFormatter, IA
     /// <inheritdoc />
     public Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
     {
-        throw new UnreachableCodeException();
+        throw new UnreachableException();
     }
 
     /// <inheritdoc />

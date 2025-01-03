@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reflection;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Bodies;
@@ -61,6 +62,6 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
             }
         }
 
-        throw new UnreachableCodeException();
+        throw new UnreachableException();
     }
 }
