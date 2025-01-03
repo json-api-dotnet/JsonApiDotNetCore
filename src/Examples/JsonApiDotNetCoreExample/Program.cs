@@ -9,6 +9,7 @@ using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Scalar.AspNetCore;
 
 [assembly: ExcludeFromCodeCoverage]
 
@@ -103,6 +104,8 @@ static void ConfigurePipeline(WebApplication app)
 
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseReDoc();
+    app.MapScalarApiReference(options => options.OpenApiRoutePattern = "/swagger/{documentName}/swagger.json");
 
     app.MapControllers();
 }
