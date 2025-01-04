@@ -25,7 +25,7 @@ public sealed class JsonApiMediaType : IEquatable<JsonApiMediaType>
     public static readonly JsonApiMediaType AtomicOperations = new([JsonApiMediaTypeExtension.AtomicOperations]);
 
     /// <summary>
-    /// Gets the JSON:API media type with the "atomic-operations" extension.
+    /// Gets the JSON:API media type with the "atomic" extension.
     /// </summary>
     public static readonly JsonApiMediaType RelaxedAtomicOperations = new([JsonApiMediaTypeExtension.RelaxedAtomicOperations]);
 
