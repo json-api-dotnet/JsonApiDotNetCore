@@ -84,8 +84,8 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Operations
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = new RequestInformation(Method.POST, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
-            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=atomic-operations");
-            requestInfo.SetContentFromParsable(RequestAdapter, "application/vnd.api+json;ext=atomic-operations", body);
+            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=atomic");
+            requestInfo.SetContentFromParsable(RequestAdapter, "application/vnd.api+json;ext=atomic", body);
             return requestInfo;
         }
         /// <summary>

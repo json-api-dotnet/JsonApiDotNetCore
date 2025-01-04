@@ -121,7 +121,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
             headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{JsonApiMediaType.Default}; profile=some"));
             headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(JsonApiMediaType.Default.ToString()));
             headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{JsonApiMediaType.Default}; unknown=unexpected"));
-            headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{JsonApiMediaType.Default};EXT=atomic-operations; q=0.8"));
+            headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{JsonApiMediaType.Default};EXT=atomic; q=0.8"));
             headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{JsonApiMediaType.Default};EXT=\"https://jsonapi.org/ext/atomic\"; q=0.2"));
         };
 
@@ -168,7 +168,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
             headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(JsonApiMediaType.Default.ToString()));
             headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{JsonApiMediaType.Default}; unknown=unexpected"));
             headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{JsonApiMediaType.Default};EXT=\"https://jsonapi.org/ext/atomic\"; q=0.8"));
-            headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{JsonApiMediaType.Default};EXT=atomic-operations; q=0.2"));
+            headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{JsonApiMediaType.Default};EXT=atomic; q=0.2"));
         };
 
         // Act

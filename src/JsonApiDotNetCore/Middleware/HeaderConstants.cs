@@ -14,5 +14,5 @@ public static class HeaderConstants
     public const string AtomicOperationsMediaType = $"{MediaType}; ext=\"https://jsonapi.org/ext/atomic\"";
 
     [Obsolete($"Use {nameof(JsonApiMediaType)}.{nameof(JsonApiMediaType.RelaxedAtomicOperations)}.ToString() instead.")]
-    public const string RelaxedAtomicOperationsMediaType = $"{MediaType}; ext=atomic-operations";
+    public const string RelaxedAtomicOperationsMediaType = $"{MediaType}; ext=atomic";
 }
