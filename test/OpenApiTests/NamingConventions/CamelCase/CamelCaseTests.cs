@@ -566,10 +566,10 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
                 operationElement.Should().Be("postOperations");
             });
 
-            getElement.Should().ContainPath("requestBody.content['application/vnd.api+json; ext=atomic-operations'].schema.allOf[0].$ref")
+            getElement.Should().ContainPath("requestBody.content['application/vnd.api+json; ext=atomic'].schema.allOf[0].$ref")
                 .ShouldBeSchemaReferenceId("operationsRequestDocument");
 
-            getElement.Should().ContainPath("responses.200.content['application/vnd.api+json; ext=atomic-operations'].schema.$ref")
+            getElement.Should().ContainPath("responses.200.content['application/vnd.api+json; ext=atomic'].schema.$ref")
                 .ShouldBeSchemaReferenceId("operationsResponseDocument");
         });
 

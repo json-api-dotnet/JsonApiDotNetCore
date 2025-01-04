@@ -568,10 +568,10 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
                 operationElement.Should().Be("post-operations");
             });
 
-            getElement.Should().ContainPath("requestBody.content['application/vnd.api+json; ext=atomic-operations'].schema.allOf[0].$ref")
+            getElement.Should().ContainPath("requestBody.content['application/vnd.api+json; ext=atomic'].schema.allOf[0].$ref")
                 .ShouldBeSchemaReferenceId("operations-request-document");
 
-            getElement.Should().ContainPath("responses.200.content['application/vnd.api+json; ext=atomic-operations'].schema.$ref")
+            getElement.Should().ContainPath("responses.200.content['application/vnd.api+json; ext=atomic'].schema.$ref")
                 .ShouldBeSchemaReferenceId("operations-response-document");
         });
 
