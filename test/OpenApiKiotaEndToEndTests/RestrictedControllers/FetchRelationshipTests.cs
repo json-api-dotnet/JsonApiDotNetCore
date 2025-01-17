@@ -43,7 +43,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         var apiClient = new RestrictedControllersClient(requestAdapter);
 
         // Act
-        DataStreamIdentifierResponseDocument? response = await apiClient.ReadOnlyChannels[channel.StringId].Relationships.VideoStream.GetAsync();
+        DataStreamIdentifierResponseDocument? response = await apiClient.ReadOnlyChannels[channel.StringId!].Relationships.VideoStream.GetAsync();
 
         // Assert
         response.ShouldNotBeNull();
@@ -69,7 +69,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
 
         // Act
         NullableDataStreamIdentifierResponseDocument? response =
-            await apiClient.ReadOnlyChannels[channel.StringId].Relationships.UltraHighDefinitionVideoStream.GetAsync();
+            await apiClient.ReadOnlyChannels[channel.StringId!].Relationships.UltraHighDefinitionVideoStream.GetAsync();
 
         // Assert
         response.ShouldNotBeNull();
@@ -94,7 +94,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         var apiClient = new RestrictedControllersClient(requestAdapter);
 
         // Act
-        DataStreamIdentifierCollectionResponseDocument? response = await apiClient.ReadOnlyChannels[channel.StringId].Relationships.AudioStreams.GetAsync();
+        DataStreamIdentifierCollectionResponseDocument? response = await apiClient.ReadOnlyChannels[channel.StringId!].Relationships.AudioStreams.GetAsync();
 
         // Assert
         response.ShouldNotBeNull();
@@ -120,7 +120,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         var apiClient = new RestrictedControllersClient(requestAdapter);
 
         // Act
-        DataStreamIdentifierCollectionResponseDocument? response = await apiClient.ReadOnlyChannels[channel.StringId].Relationships.AudioStreams.GetAsync();
+        DataStreamIdentifierCollectionResponseDocument? response = await apiClient.ReadOnlyChannels[channel.StringId!].Relationships.AudioStreams.GetAsync();
 
         // Assert
         response.ShouldNotBeNull();

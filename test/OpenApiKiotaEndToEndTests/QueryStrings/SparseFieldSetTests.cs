@@ -89,7 +89,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
         using (_requestAdapterFactory.WithQueryString(queryString))
         {
             // Act
-            NodePrimaryResponseDocument? response = await apiClient.Nodes[node.StringId].GetAsync();
+            NodePrimaryResponseDocument? response = await apiClient.Nodes[node.StringId!].GetAsync();
 
             // Assert
             response.ShouldNotBeNull();
@@ -129,7 +129,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
         using (_requestAdapterFactory.WithQueryString(queryString))
         {
             // Act
-            NodeCollectionResponseDocument? response = await apiClient.Nodes[node.StringId].Children.GetAsync();
+            NodeCollectionResponseDocument? response = await apiClient.Nodes[node.StringId!].Children.GetAsync();
 
             // Assert
             response.ShouldNotBeNull();
@@ -174,7 +174,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
         using (_requestAdapterFactory.WithQueryString(queryString))
         {
             // Act
-            NullableNodeSecondaryResponseDocument? response = await apiClient.Nodes[node.StringId].Parent.GetAsync();
+            NullableNodeSecondaryResponseDocument? response = await apiClient.Nodes[node.StringId!].Parent.GetAsync();
 
             // Assert
             response.ShouldNotBeNull();
@@ -212,7 +212,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
         using (_requestAdapterFactory.WithQueryString(queryString))
         {
             // Act
-            NodePrimaryResponseDocument? response = await apiClient.Nodes[node.StringId].GetAsync();
+            NodePrimaryResponseDocument? response = await apiClient.Nodes[node.StringId!].GetAsync();
 
             // Assert
             response.ShouldNotBeNull();

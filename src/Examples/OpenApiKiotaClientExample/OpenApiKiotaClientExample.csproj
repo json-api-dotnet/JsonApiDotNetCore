@@ -34,6 +34,7 @@
     Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
     <Exec
       Command="dotnet kiota generate --language CSharp --class-name ExampleApiClient --namespace-name OpenApiKiotaClientExample.GeneratedCode --output ./GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../JsonApiDotNetCoreExample/GeneratedSwagger/JsonApiDotNetCoreExample.json" />
+    <Exec Command="pwsh $(KiotaPatchGeneratedCodeScriptPath) ./GeneratedCode" />
   </Target>
 
   <Target Name="IncludeKiotaGeneratedCode" BeforeTargets="BeforeCompile;CoreCompile" AfterTargets="KiotaRunTool"

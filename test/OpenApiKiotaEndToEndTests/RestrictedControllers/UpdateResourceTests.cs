@@ -95,7 +95,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         using (_requestAdapterFactory.WithQueryString(queryString))
         {
             // Act
-            WriteOnlyChannelPrimaryResponseDocument? response = await apiClient.WriteOnlyChannels[existingChannel.StringId].PatchAsync(requestBody);
+            WriteOnlyChannelPrimaryResponseDocument? response = await apiClient.WriteOnlyChannels[existingChannel.StringId!].PatchAsync(requestBody);
 
             response.ShouldNotBeNull();
 
@@ -174,7 +174,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         };
 
         // Act
-        WriteOnlyChannelPrimaryResponseDocument? response = await apiClient.WriteOnlyChannels[existingChannel.StringId].PatchAsync(requestBody);
+        WriteOnlyChannelPrimaryResponseDocument? response = await apiClient.WriteOnlyChannels[existingChannel.StringId!].PatchAsync(requestBody);
 
         response.ShouldNotBeNull();
 
@@ -239,7 +239,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         UpdateWriteOnlyChannelRequestDocument requestBody = null!;
 
         // Act
-        Func<Task> action = async () => _ = await apiClient.WriteOnlyChannels[existingChannel.StringId].PatchAsync(requestBody);
+        Func<Task> action = async () => _ = await apiClient.WriteOnlyChannels[existingChannel.StringId!].PatchAsync(requestBody);
 
         // Assert
         await action.Should().ThrowExactlyAsync<ArgumentNullException>().WithParameterName("body");
@@ -295,7 +295,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         };
 
         // Act
-        Func<Task> action = async () => _ = await apiClient.WriteOnlyChannels[existingChannel.StringId].PatchAsync(requestBody);
+        Func<Task> action = async () => _ = await apiClient.WriteOnlyChannels[existingChannel.StringId!].PatchAsync(requestBody);
 
         // Assert
         ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;

@@ -96,7 +96,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         using (_requestAdapterFactory.WithQueryString(queryString))
         {
             // Act
-            NodeCollectionResponseDocument? response = await apiClient.Nodes[node.StringId].Children.GetAsync();
+            NodeCollectionResponseDocument? response = await apiClient.Nodes[node.StringId!].Children.GetAsync();
 
             // Assert
             response.ShouldNotBeNull();
@@ -141,7 +141,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         using (_requestAdapterFactory.WithQueryString(queryString))
         {
             // Act
-            NodeIdentifierCollectionResponseDocument? response = await apiClient.Nodes[node.StringId].Relationships.Children.GetAsync();
+            NodeIdentifierCollectionResponseDocument? response = await apiClient.Nodes[node.StringId!].Relationships.Children.GetAsync();
 
             // Assert
             response.ShouldNotBeNull();
