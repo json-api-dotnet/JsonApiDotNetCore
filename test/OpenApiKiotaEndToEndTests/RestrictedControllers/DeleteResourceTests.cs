@@ -43,7 +43,7 @@ public sealed class DeleteResourceTests : IClassFixture<IntegrationTestContext<O
         var apiClient = new RestrictedControllersClient(requestAdapter);
 
         // Act
-        await apiClient.WriteOnlyChannels[existingChannel.StringId].DeleteAsync();
+        await apiClient.WriteOnlyChannels[existingChannel.StringId!].DeleteAsync();
 
         // Assert
         await _testContext.RunOnDatabaseAsync(async dbContext =>

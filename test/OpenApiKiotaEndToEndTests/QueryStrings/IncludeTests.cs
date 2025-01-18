@@ -89,7 +89,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         using (_requestAdapterFactory.WithQueryString(queryString))
         {
             // Act
-            NodePrimaryResponseDocument? response = await apiClient.Nodes[node.StringId].GetAsync();
+            NodePrimaryResponseDocument? response = await apiClient.Nodes[node.StringId!].GetAsync();
 
             // Assert
             response.ShouldNotBeNull();
@@ -129,7 +129,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         using (_requestAdapterFactory.WithQueryString(queryString))
         {
             // Act
-            NameValuePairCollectionResponseDocument? response = await apiClient.Nodes[node.StringId].Values.GetAsync();
+            NameValuePairCollectionResponseDocument? response = await apiClient.Nodes[node.StringId!].Values.GetAsync();
 
             // Assert
             response.ShouldNotBeNull();
@@ -167,7 +167,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         using (_requestAdapterFactory.WithQueryString(queryString))
         {
             // Act
-            NullableNodeSecondaryResponseDocument? response = await apiClient.Nodes[node.StringId].Parent.GetAsync();
+            NullableNodeSecondaryResponseDocument? response = await apiClient.Nodes[node.StringId!].Parent.GetAsync();
 
             // Assert
             response.ShouldNotBeNull();
@@ -208,7 +208,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         using (_requestAdapterFactory.WithQueryString(queryString))
         {
             // Act
-            NodePrimaryResponseDocument? response = await apiClient.Nodes[node.StringId].GetAsync();
+            NodePrimaryResponseDocument? response = await apiClient.Nodes[node.StringId!].GetAsync();
 
             // Assert
             response.ShouldNotBeNull();

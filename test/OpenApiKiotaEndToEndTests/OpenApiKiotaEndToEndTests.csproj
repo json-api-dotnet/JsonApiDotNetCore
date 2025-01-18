@@ -39,18 +39,25 @@
     Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
     <Exec
       Command="dotnet kiota generate --language CSharp --class-name HeadersClient --namespace-name OpenApiKiotaEndToEndTests.Headers.GeneratedCode --output ./Headers/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/Headers/GeneratedSwagger/swagger.g.json" />
+    <Exec Command="pwsh $(KiotaPatchGeneratedCodeScriptPath) ./Headers/GeneratedCode" />
     <Exec
       Command="dotnet kiota generate --language CSharp --class-name QueryStringsClient --namespace-name OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode --output ./QueryStrings/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/QueryStrings/GeneratedSwagger/swagger.g.json" />
+    <Exec Command="pwsh $(KiotaPatchGeneratedCodeScriptPath) ./QueryStrings/GeneratedCode" />
     <Exec
       Command="dotnet kiota generate --language CSharp --class-name ClientIdGenerationModesClient --namespace-name OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode --output ./ClientIdGenerationModes/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/ClientIdGenerationModes/GeneratedSwagger/swagger.g.json" />
+    <Exec Command="pwsh $(KiotaPatchGeneratedCodeScriptPath) ./ClientIdGenerationModes/GeneratedCode" />
     <Exec
       Command="dotnet kiota generate --language CSharp --class-name ModelStateValidationClient --namespace-name OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode --output ./ModelStateValidation/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/ModelStateValidation/GeneratedSwagger/swagger.g.json" />
+    <Exec Command="pwsh $(KiotaPatchGeneratedCodeScriptPath) ./ModelStateValidation/GeneratedCode" />
     <Exec
       Command="dotnet kiota generate --language CSharp --class-name RestrictedControllersClient --namespace-name OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode --output ./RestrictedControllers/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/RestrictedControllers/GeneratedSwagger/swagger.g.json" />
+    <Exec Command="pwsh $(KiotaPatchGeneratedCodeScriptPath) ./RestrictedControllers/GeneratedCode" />
     <Exec
       Command="dotnet kiota generate --language CSharp --class-name LinksClient --namespace-name OpenApiKiotaEndToEndTests.Links.GeneratedCode --output ./Links/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/Links/Enabled/GeneratedSwagger/swagger.g.json" />
+    <Exec Command="pwsh $(KiotaPatchGeneratedCodeScriptPath) ./Links/GeneratedCode" />
     <Exec
       Command="dotnet kiota generate --language CSharp --class-name AtomicOperationsClient --namespace-name OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode --output ./AtomicOperations/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/AtomicOperations/GeneratedSwagger/swagger.g.json" />
+    <Exec Command="pwsh $(KiotaPatchGeneratedCodeScriptPath) ./AtomicOperations/GeneratedCode" />
   </Target>
 
   <Target Name="IncludeKiotaGeneratedCode" BeforeTargets="BeforeCompile;CoreCompile" AfterTargets="KiotaRunTool"

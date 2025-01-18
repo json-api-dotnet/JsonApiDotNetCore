@@ -94,7 +94,7 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Op
         var apiClient = new RestrictedControllersClient(requestAdapter);
 
         // Act
-        ReadOnlyChannelPrimaryResponseDocument? response = await apiClient.ReadOnlyChannels[channel.StringId].GetAsync();
+        ReadOnlyChannelPrimaryResponseDocument? response = await apiClient.ReadOnlyChannels[channel.StringId!].GetAsync();
 
         // Assert
         response.ShouldNotBeNull();
@@ -154,7 +154,7 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Op
         var apiClient = new RestrictedControllersClient(requestAdapter);
 
         // Act
-        DataStreamSecondaryResponseDocument? response = await apiClient.ReadOnlyChannels[channel.StringId].VideoStream.GetAsync();
+        DataStreamSecondaryResponseDocument? response = await apiClient.ReadOnlyChannels[channel.StringId!].VideoStream.GetAsync();
 
         // Assert
         response.ShouldNotBeNull();
@@ -181,7 +181,7 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Op
         var apiClient = new RestrictedControllersClient(requestAdapter);
 
         // Act
-        NullableDataStreamSecondaryResponseDocument? response = await apiClient.ReadOnlyChannels[channel.StringId].UltraHighDefinitionVideoStream.GetAsync();
+        NullableDataStreamSecondaryResponseDocument? response = await apiClient.ReadOnlyChannels[channel.StringId!].UltraHighDefinitionVideoStream.GetAsync();
 
         // Assert
         response.ShouldNotBeNull();
@@ -206,7 +206,7 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Op
         var apiClient = new RestrictedControllersClient(requestAdapter);
 
         // Act
-        DataStreamCollectionResponseDocument? response = await apiClient.ReadOnlyChannels[channel.StringId].AudioStreams.GetAsync();
+        DataStreamCollectionResponseDocument? response = await apiClient.ReadOnlyChannels[channel.StringId!].AudioStreams.GetAsync();
 
         // Assert
         response.ShouldNotBeNull();
@@ -238,7 +238,7 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Op
         var apiClient = new RestrictedControllersClient(requestAdapter);
 
         // Act
-        DataStreamCollectionResponseDocument? response = await apiClient.ReadOnlyChannels[channel.StringId].AudioStreams.GetAsync();
+        DataStreamCollectionResponseDocument? response = await apiClient.ReadOnlyChannels[channel.StringId!].AudioStreams.GetAsync();
 
         // Assert
         response.ShouldNotBeNull();

@@ -40,7 +40,7 @@ public static class NullabilityAssertionExtensions
     }
 
     [CustomAssertion]
-    public static TValue? ShouldContainKey<TKey, TValue>([SysNotNull] this IDictionary<TKey, TValue?>? subject, TKey expected)
+    public static TValue ShouldContainKey<TKey, TValue>([SysNotNull] this IDictionary<TKey, TValue>? subject, TKey expected)
     {
         subject.Should().ContainKey(expected);
 

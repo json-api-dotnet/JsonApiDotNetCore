@@ -12,6 +12,7 @@
     <JsonApiDotNetCoreVersionPrefix>5.6.1</JsonApiDotNetCoreVersionPrefix>
     <NuGetAuditMode>direct</NuGetAuditMode>
     <NoWarn>$(NoWarn);NETSDK1215</NoWarn>
+    <KiotaPatchGeneratedCodeScriptPath>$(MSBuildThisFileDirectory)kiota-patch-generated-code.ps1</KiotaPatchGeneratedCodeScriptPath>
   </PropertyGroup>
 
   <PropertyGroup>
