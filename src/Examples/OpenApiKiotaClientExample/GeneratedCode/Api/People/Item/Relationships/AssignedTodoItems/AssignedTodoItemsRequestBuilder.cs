@@ -240,4 +240,3 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.Relationships.
     }
 }
 #pragma warning restore CS0618
-

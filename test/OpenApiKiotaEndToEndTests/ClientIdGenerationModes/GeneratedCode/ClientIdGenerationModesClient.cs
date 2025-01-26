@@ -66,4 +66,3 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode
     }
 }
 #pragma warning restore CS0618
-

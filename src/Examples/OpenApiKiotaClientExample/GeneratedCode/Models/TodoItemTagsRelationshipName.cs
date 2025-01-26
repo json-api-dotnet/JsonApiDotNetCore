@@ -16,4 +16,3 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
         #pragma warning restore CS1591
     }
 }
-

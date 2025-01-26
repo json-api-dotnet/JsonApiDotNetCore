@@ -235,4 +235,3 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item
     }
 }
 #pragma warning restore CS0618
-

@@ -4,6 +4,8 @@
   </PropertyGroup>
 
   <Import Project="..\..\package-versions.props" />
+  <Import Project="..\..\src\JsonApiDotNetCore.OpenApi.Client.Kiota\Build\JsonApiDotNetCore.OpenApi.Client.Kiota.props" />
+  <Import Project="..\..\src\JsonApiDotNetCore.OpenApi.Client.Kiota\Build\JsonApiDotNetCore.OpenApi.Client.Kiota.targets" />
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\JsonApiDotNetCore.OpenApi.Client.Kiota\JsonApiDotNetCore.OpenApi.Client.Kiota.csproj" />
@@ -16,54 +18,59 @@
     <PackageReference Include="GitHubActionsTestLogger" Version="$(GitHubActionsTestLoggerVersion)" PrivateAssets="All" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="$(AspNetCoreVersion)" />
-    <PackageReference Include="Microsoft.Kiota.Abstractions" Version="$(KiotaVersion)" />
-    <PackageReference Include="Microsoft.Kiota.Http.HttpClientLibrary" Version="$(KiotaVersion)" />
-    <PackageReference Include="Microsoft.Kiota.Serialization.Form" Version="$(KiotaVersion)" />
-    <PackageReference Include="Microsoft.Kiota.Serialization.Json" Version="$(KiotaVersion)" />
-    <PackageReference Include="Microsoft.Kiota.Serialization.Multipart" Version="$(KiotaVersion)" />
-    <PackageReference Include="Microsoft.Kiota.Serialization.Text" Version="$(KiotaVersion)" />
+    <PackageReference Include="Microsoft.Kiota.Bundle" Version="$(KiotaVersion)" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
   </ItemGroup>
 
-  <Target Name="KiotaRestoreTool" BeforeTargets="ExcludeKiotaGeneratedCode" Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
-    <Exec Command="dotnet tool restore" />
-  </Target>
-
-  <Target Name="ExcludeKiotaGeneratedCode" BeforeTargets="BeforeCompile;CoreCompile" Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
-    <ItemGroup>
-      <Compile Remove="**\GeneratedCode\**\*.cs" />
-    </ItemGroup>
-  </Target>
-
-  <Target Name="KiotaRunTool" BeforeTargets="BeforeCompile;CoreCompile" AfterTargets="ExcludeKiotaGeneratedCode"
-    Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
-    <Exec
-      Command="dotnet kiota generate --language CSharp --class-name HeadersClient --namespace-name OpenApiKiotaEndToEndTests.Headers.GeneratedCode --output ./Headers/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/Headers/GeneratedSwagger/swagger.g.json" />
-    <Exec Command="pwsh $(KiotaPatchGeneratedCodeScriptPath) ./Headers/GeneratedCode" />
-    <Exec
-      Command="dotnet kiota generate --language CSharp --class-name QueryStringsClient --namespace-name OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode --output ./QueryStrings/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/QueryStrings/GeneratedSwagger/swagger.g.json" />
-    <Exec Command="pwsh $(KiotaPatchGeneratedCodeScriptPath) ./QueryStrings/GeneratedCode" />
-    <Exec
-      Command="dotnet kiota generate --language CSharp --class-name ClientIdGenerationModesClient --namespace-name OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode --output ./ClientIdGenerationModes/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/ClientIdGenerationModes/GeneratedSwagger/swagger.g.json" />
-    <Exec Command="pwsh $(KiotaPatchGeneratedCodeScriptPath) ./ClientIdGenerationModes/GeneratedCode" />
-    <Exec
-      Command="dotnet kiota generate --language CSharp --class-name ModelStateValidationClient --namespace-name OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode --output ./ModelStateValidation/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/ModelStateValidation/GeneratedSwagger/swagger.g.json" />
-    <Exec Command="pwsh $(KiotaPatchGeneratedCodeScriptPath) ./ModelStateValidation/GeneratedCode" />
-    <Exec
-      Command="dotnet kiota generate --language CSharp --class-name RestrictedControllersClient --namespace-name OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode --output ./RestrictedControllers/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/RestrictedControllers/GeneratedSwagger/swagger.g.json" />
-    <Exec Command="pwsh $(KiotaPatchGeneratedCodeScriptPath) ./RestrictedControllers/GeneratedCode" />
-    <Exec
-      Command="dotnet kiota generate --language CSharp --class-name LinksClient --namespace-name OpenApiKiotaEndToEndTests.Links.GeneratedCode --output ./Links/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/Links/Enabled/GeneratedSwagger/swagger.g.json" />
-    <Exec Command="pwsh $(KiotaPatchGeneratedCodeScriptPath) ./Links/GeneratedCode" />
-    <Exec
-      Command="dotnet kiota generate --language CSharp --class-name AtomicOperationsClient --namespace-name OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode --output ./AtomicOperations/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/AtomicOperations/GeneratedSwagger/swagger.g.json" />
-    <Exec Command="pwsh $(KiotaPatchGeneratedCodeScriptPath) ./AtomicOperations/GeneratedCode" />
-  </Target>
-
-  <Target Name="IncludeKiotaGeneratedCode" BeforeTargets="BeforeCompile;CoreCompile" AfterTargets="KiotaRunTool"
-    Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
-    <ItemGroup>
-      <Compile Include="**\GeneratedCode\**\*.cs" />
-    </ItemGroup>
-  </Target>
+  <ItemGroup>
+    <KiotaReference Include="../OpenApiTests/AtomicOperations/GeneratedSwagger/swagger.g.json">
+      <Name>AtomicOperations</Name>
+      <NamespaceName>$(MSBuildProjectName).%(Name).GeneratedCode</NamespaceName>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>./%(Name)/GeneratedCode</OutputPath>
+      <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
+    </KiotaReference>
+    <KiotaReference Include="../OpenApiTests/ClientIdGenerationModes/GeneratedSwagger/swagger.g.json">
+      <Name>ClientIdGenerationModes</Name>
+      <NamespaceName>$(MSBuildProjectName).%(Name).GeneratedCode</NamespaceName>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>./%(Name)/GeneratedCode</OutputPath>
+      <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
+    </KiotaReference>
+    <KiotaReference Include="../OpenApiTests/Headers/GeneratedSwagger/swagger.g.json">
+      <Name>Headers</Name>
+      <NamespaceName>$(MSBuildProjectName).%(Name).GeneratedCode</NamespaceName>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>./%(Name)/GeneratedCode</OutputPath>
+      <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
+    </KiotaReference>
+    <KiotaReference Include="../OpenApiTests/Links/Enabled/GeneratedSwagger/swagger.g.json">
+      <Name>Links</Name>
+      <NamespaceName>$(MSBuildProjectName).%(Name).GeneratedCode</NamespaceName>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>./%(Name)/GeneratedCode</OutputPath>
+      <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
+    </KiotaReference>
+    <KiotaReference Include="../OpenApiTests/ModelStateValidation/GeneratedSwagger/swagger.g.json">
+      <Name>ModelStateValidation</Name>
+      <NamespaceName>$(MSBuildProjectName).%(Name).GeneratedCode</NamespaceName>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>./%(Name)/GeneratedCode</OutputPath>
+      <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
+    </KiotaReference>
+    <KiotaReference Include="../OpenApiTests/QueryStrings/GeneratedSwagger/swagger.g.json">
+      <Name>QueryStrings</Name>
+      <NamespaceName>$(MSBuildProjectName).%(Name).GeneratedCode</NamespaceName>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>./%(Name)/GeneratedCode</OutputPath>
+      <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
+    </KiotaReference>
+    <KiotaReference Include="../OpenApiTests/RestrictedControllers/GeneratedSwagger/swagger.g.json">
+      <Name>RestrictedControllers</Name>
+      <NamespaceName>$(MSBuildProjectName).%(Name).GeneratedCode</NamespaceName>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>./%(Name)/GeneratedCode</OutputPath>
+      <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
+    </KiotaReference>
+  </ItemGroup>
 </Project>

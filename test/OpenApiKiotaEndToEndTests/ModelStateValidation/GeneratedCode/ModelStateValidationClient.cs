@@ -52,4 +52,3 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode
     }
 }
 #pragma warning restore CS0618
-

@@ -117,4 +117,3 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMed
     }
 }
 #pragma warning restore CS0618
-

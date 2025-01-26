@@ -57,4 +57,3 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Relationshi
     }
 }
 #pragma warning restore CS0618
-

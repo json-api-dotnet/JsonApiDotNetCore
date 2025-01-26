@@ -80,4 +80,3 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode
     }
 }
 #pragma warning restore CS0618
-

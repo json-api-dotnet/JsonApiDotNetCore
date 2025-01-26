@@ -87,4 +87,3 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
     }
 }
 #pragma warning restore CS0618
-

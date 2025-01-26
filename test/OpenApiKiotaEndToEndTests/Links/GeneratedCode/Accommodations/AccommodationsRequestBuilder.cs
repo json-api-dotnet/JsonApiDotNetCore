@@ -192,4 +192,3 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Accommodations
     }
 }
 #pragma warning restore CS0618
-

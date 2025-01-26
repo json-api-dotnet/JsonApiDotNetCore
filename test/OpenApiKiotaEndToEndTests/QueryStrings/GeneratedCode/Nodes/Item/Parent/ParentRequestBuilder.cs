@@ -126,4 +126,3 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Parent
     }
 }
 #pragma warning restore CS0618
-

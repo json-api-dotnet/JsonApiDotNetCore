@@ -221,4 +221,3 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item
     }
 }
 #pragma warning restore CS0618
-
