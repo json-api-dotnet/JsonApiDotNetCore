@@ -240,4 +240,3 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.Relatio
     }
 }
 #pragma warning restore CS0618
-

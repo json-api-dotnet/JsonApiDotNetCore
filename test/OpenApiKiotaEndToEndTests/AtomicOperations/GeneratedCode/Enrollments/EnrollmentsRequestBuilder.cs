@@ -192,4 +192,3 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Enrollments
     }
 }
 #pragma warning restore CS0618
-

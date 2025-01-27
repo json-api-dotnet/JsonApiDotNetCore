@@ -192,4 +192,3 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Excursions
     }
 }
 #pragma warning restore CS0618
-

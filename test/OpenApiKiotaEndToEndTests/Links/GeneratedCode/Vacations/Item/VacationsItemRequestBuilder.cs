@@ -235,4 +235,3 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Vacations.Item
     }
 }
 #pragma warning restore CS0618
-

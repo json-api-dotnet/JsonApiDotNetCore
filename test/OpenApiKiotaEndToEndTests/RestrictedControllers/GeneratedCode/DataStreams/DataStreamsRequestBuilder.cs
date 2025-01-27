@@ -138,4 +138,3 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.DataStre
     }
 }
 #pragma warning restore CS0618
-

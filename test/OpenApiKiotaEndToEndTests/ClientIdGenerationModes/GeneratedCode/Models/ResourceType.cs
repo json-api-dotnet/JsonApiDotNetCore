@@ -24,4 +24,3 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models
         #pragma warning restore CS1591
     }
 }
-

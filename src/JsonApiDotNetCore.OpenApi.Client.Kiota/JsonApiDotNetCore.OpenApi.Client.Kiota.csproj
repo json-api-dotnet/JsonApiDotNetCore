@@ -4,6 +4,7 @@
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <OpenApiGenerateDocuments>false</OpenApiGenerateDocuments>
+    <NoWarn>$(NoWarn);NU5110;NU5111</NoWarn>
   </PropertyGroup>
 
   <Import Project="..\..\package-versions.props" />
@@ -27,6 +28,9 @@
   <ItemGroup>
     <None Include="..\..\package-icon.png" Visible="false" Pack="True" PackagePath="" />
     <None Include="..\..\PackageReadme.md" Visible="false" Pack="True" PackagePath="" />
+    <None Include="Build\*.props" Pack="True" PackagePath="build" />
+    <None Include="Build\*.targets" Pack="True" PackagePath="build" />
+    <None Include="Build\*.ps1" Pack="True" PackagePath="build" />
   </ItemGroup>
 
   <ItemGroup>

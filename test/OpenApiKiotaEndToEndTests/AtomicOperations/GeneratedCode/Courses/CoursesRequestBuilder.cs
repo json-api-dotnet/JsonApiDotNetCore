@@ -190,4 +190,3 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Courses
     }
 }
 #pragma warning restore CS0618
-

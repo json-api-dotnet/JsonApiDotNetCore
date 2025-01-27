@@ -16,4 +16,3 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models
         #pragma warning restore CS1591
     }
 }
-
