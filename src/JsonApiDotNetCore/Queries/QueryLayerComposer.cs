@@ -98,36 +98,64 @@ public class QueryLayerComposer : IQueryLayerComposer
         FilterExpression? primaryFilter = GetFilter(Array.Empty<QueryExpression>(), hasManyRelationship.LeftType);
         FilterExpression? secondaryFilter = GetFilter(filtersInSecondaryScope, hasManyRelationship.RightType);
 
-        FilterExpression inverseFilter = GetInverseRelationshipFilter(primaryId, hasManyRelationship, inverseRelationship);
+        if (primaryFilter != null)
+        {
+            // This would hide total resource count on secondary to-one endpoint, but at least not crash anymore.
+            // return null;
+        }
 
-        return LogicalExpression.Compose(LogicalOperator.And, inverseFilter, primaryFilter, secondaryFilter);
+        FilterExpression inverseFilter = GetInverseRelationshipFilter(primaryId, hasManyRelationship, inverseRelationship, primaryFilter);
+
+        return LogicalExpression.Compose(LogicalOperator.And, inverseFilter, secondaryFilter);
     }
 
     private static FilterExpression GetInverseRelationshipFilter<TId>([DisallowNull] TId primaryId, HasManyAttribute relationship,
-        RelationshipAttribute inverseRelationship)
+        RelationshipAttribute inverseRelationship, FilterExpression? primaryFilter)
     {
         return inverseRelationship is HasManyAttribute hasManyInverseRelationship
-            ? GetInverseHasManyRelationshipFilter(primaryId, relationship, hasManyInverseRelationship)
-            : GetInverseHasOneRelationshipFilter(primaryId, relationship, (HasOneAttribute)inverseRelationship);
+            ? GetInverseHasManyRelationshipFilter(primaryId, relationship, hasManyInverseRelationship, primaryFilter)
+            : GetInverseHasOneRelationshipFilter(primaryId, relationship, (HasOneAttribute)inverseRelationship, primaryFilter);
     }
 
-    private static ComparisonExpression GetInverseHasOneRelationshipFilter<TId>([DisallowNull] TId primaryId, HasManyAttribute relationship,
-        HasOneAttribute inverseRelationship)
+    private static FilterExpression GetInverseHasOneRelationshipFilter<TId>([DisallowNull] TId primaryId, HasManyAttribute relationship,
+        HasOneAttribute inverseRelationship, FilterExpression? primaryFilter)
     {
         AttrAttribute idAttribute = GetIdAttribute(relationship.LeftType);
         var idChain = new ResourceFieldChainExpression(ImmutableArray.Create<ResourceFieldAttribute>(inverseRelationship, idAttribute));
+        var idComparison = new ComparisonExpression(ComparisonOperator.Equals, idChain, new LiteralConstantExpression(primaryId));
 
-        return new ComparisonExpression(ComparisonOperator.Equals, idChain, new LiteralConstantExpression(primaryId));
+        FilterExpression? newPrimaryFilter = null;
+
+        if (primaryFilter != null)
+        {
+            // many-to-one. This is the hard part. We can special-case for built-in has() and isType() usage, however third-party filters can't participate.
+            // Because there is no way of indicating in an expression "this chain belongs to something related"; the parsers only know that.
+            // For example, see the third-party SumExpression.Selector with SumFilterParser in test project.
+
+            // For example:
+            // input:  and(equals(isDeleted,'false'),       has(books       ,equals(author.name,'Mary Shelley')),isType(       house,bigHouses,equals(floorCount,'3')))
+            // output: and(equals(author.isDeleted,'false'),has(author.books,equals(author.name,'Mary Shelley')),isType(author.house,bigHouses,equals(floorCount,'3')))
+            //                    ^                             ^                   ^!                                  ^                             ^!
+            // Note how some chains are updated, while others (expressions on related types) are intentionally not.
+
+            var rewriter = new ChainInsertionFilterRewriter(inverseRelationship);
+            newPrimaryFilter = (FilterExpression?)rewriter.Visit(primaryFilter, null);
+        }
+
+        return LogicalExpression.Compose(LogicalOperator.And, idComparison, newPrimaryFilter)!;
     }
 
     private static HasExpression GetInverseHasManyRelationshipFilter<TId>([DisallowNull] TId primaryId, HasManyAttribute relationship,
-        HasManyAttribute inverseRelationship)
+        HasManyAttribute inverseRelationship, FilterExpression? primaryFilter)
     {
+        // many-to-many. This one is easy, we can just push into the sub-condition of has().
+
         AttrAttribute idAttribute = GetIdAttribute(relationship.LeftType);
         var idChain = new ResourceFieldChainExpression(ImmutableArray.Create<ResourceFieldAttribute>(idAttribute));
         var idComparison = new ComparisonExpression(ComparisonOperator.Equals, idChain, new LiteralConstantExpression(primaryId));
 
-        return new HasExpression(new ResourceFieldChainExpression(inverseRelationship), idComparison);
+        FilterExpression filter = LogicalExpression.Compose(LogicalOperator.And, idComparison, primaryFilter)!;
+        return new HasExpression(new ResourceFieldChainExpression(inverseRelationship), filter);
     }
 
     /// <inheritdoc />

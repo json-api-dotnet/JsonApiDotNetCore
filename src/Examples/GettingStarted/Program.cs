@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using GettingStarted.Data;
+using GettingStarted.Definitions;
 using GettingStarted.Models;
 using JsonApiDotNetCore.Configuration;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,8 @@ builder.Services.AddJsonApi<SampleDbContext>(options =>
     options.SerializerOptions.WriteIndented = true;
 #endif
 });
+
+builder.Services.AddResourceDefinition<PersonDefinition>();
 
 WebApplication app = builder.Build();
 
@@ -69,7 +72,11 @@ static async Task CreateSampleDataAsync(SampleDbContext dbContext)
         PublishYear = 1818,
         Author = new Person
         {
-            Name = "Mary Shelley"
+            Name = "Mary Shelley",
+            House = new BigHouse
+            {
+                FloorCount = 3
+            }
         }
     }, new Book
     {
@@ -77,7 +84,8 @@ static async Task CreateSampleDataAsync(SampleDbContext dbContext)
         PublishYear = 1719,
         Author = new Person
         {
-            Name = "Daniel Defoe"
+            Name = "Daniel Defoe",
+            House = new TinyHouse()
         }
     }, new Book
     {
@@ -85,7 +93,11 @@ static async Task CreateSampleDataAsync(SampleDbContext dbContext)
         PublishYear = 1726,
         Author = new Person
         {
-            Name = "Jonathan Swift"
+            Name = "Jonathan Swift",
+            House = new BigHouse
+            {
+                FloorCount = 4
+            }
         }
     });
 
