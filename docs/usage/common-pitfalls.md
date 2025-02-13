@@ -143,3 +143,7 @@ A better way is to inject your `DbContext` in a [Resource Definition](~/usage/ex
 While we'd love to support such [tokens for optimistic concurrency](https://learn.microsoft.com/en-us/ef/core/saving/concurrency?tabs=data-annotations),
 it turns out that the implementation is far from trivial. We've come a long way, but aren't sure how it should work when relationship endpoints and atomic operations are involved.
 If you're interested, we welcome your feedback at https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/1119.
+
+#### Source generation features doesn't work on code in separated projects
+
+See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1511.
