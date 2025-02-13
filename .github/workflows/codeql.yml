@@ -26,9 +26,10 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
+        # Block buggy release from February 11, 2025
         dotnet-version: |
-          8.0.x
-          9.0.x
+          8.0.309 
+          9.0.103
     - name: Git checkout
       uses: actions/checkout@v4
     - name: Initialize CodeQL
