@@ -19,7 +19,6 @@
     <PackageIcon>package-icon.png</PackageIcon>
     <PackageReadmeFile>PackageReadme.md</PackageReadmeFile>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <DebugType>embedded</DebugType>
   </PropertyGroup>
 
@@ -42,7 +41,6 @@
     <PackageReference Include="Humanizer.Core" Version="$(HumanizerFrozenVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EntityFrameworkCoreFrozenVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="$(EntityFrameworkCoreFrozenVersion)" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(SourceLinkVersion)" PrivateAssets="All" />
     <PackageReference Include="SauceControl.InheritDoc" Version="$(InheritDocVersion)" PrivateAssets="All" />
   </ItemGroup>
 </Project>
