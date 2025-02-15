@@ -50,7 +50,7 @@ Did you notice the missing type of the `LoginAccount.Customer` property? We must
 This is only one of the issues you'll run into. Just don't go there.
 
 The right way to model this is by having only `Customer` instead of `WebCustomer` and `AdminCustomer`. And then:
-- Hide the `CreditRating` property for web users using [this](https://www.jsonapi.net/usage/extensibility/resource-definitions.html#excluding-fields) approach.
+- Hide the `CreditRating` property for web users using [this](~/usage/extensibility/resource-definitions.md#excluding-fields) approach.
 - Block web users from setting the `CreditRating` property from POST/PATCH resource endpoints by either:
   - Detecting if the `CreditRating` property has changed, such as done [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/test/JsonApiDotNetCoreTests/IntegrationTests/InputValidation/RequestBody/WorkflowDefinition.cs).
   - Injecting `ITargetedFields`, throwing an error when it contains the `CreditRating` property.
@@ -86,6 +86,11 @@ Neither sounds very compelling. If stored procedures is what you need, you're be
 #### Do not use `[ApiController]` on JSON:API controllers
 Although recommended by Microsoft for hard-written controllers, the opinionated behavior of [`[ApiController]`](https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-7.0#apicontroller-attribute) violates the JSON:API specification.
 Despite JsonApiDotNetCore trying its best to deal with it, the experience won't be as good as leaving it out.
+
+#### Don't use auto-generated controllers with shared models
+
+When model classes are defined in a separate project, the controllers are generated in that project as well, which is probably not what you want.
+For details, see [here](~/usage/extensibility/controllers.md#auto-generated-controllers).
 
 #### Register/override injectable services
 Register your JSON:API resource services, resource definitions and repositories with `services.AddResourceService/AddResourceDefinition/AddResourceRepository()` instead of `services.AddScoped()`.
