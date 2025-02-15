@@ -129,7 +129,7 @@ public sealed class LoginAccount : Identifiable&lt;long&gt;
 This is only one of the issues you'll run into. Just don't go there.</p>
 <p>The right way to model this is by having only <code>Customer</code> instead of <code>WebCustomer</code> and <code>AdminCustomer</code>. And then:</p>
 <ul>
-<li>Hide the <code>CreditRating</code> property for web users using <a href="https://www.jsonapi.net/usage/extensibility/resource-definitions.html#excluding-fields">this</a> approach.</li>
+<li>Hide the <code>CreditRating</code> property for web users using <a href="extensibility/resource-definitions.html#excluding-fields">this</a> approach.</li>
 <li>Block web users from setting the <code>CreditRating</code> property from POST/PATCH resource endpoints by either:
 <ul>
 <li>Detecting if the <code>CreditRating</code> property has changed, such as done <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/test/JsonApiDotNetCoreTests/IntegrationTests/InputValidation/RequestBody/WorkflowDefinition.cs">here</a>.</li>
@@ -162,6 +162,9 @@ Neither sounds very compelling. If stored procedures is what you need, you're be
 <h4 id="do-not-use-apicontroller-on-jsonapi-controllers">Do not use <code>[ApiController]</code> on JSON:API controllers</h4>
 <p>Although recommended by Microsoft for hard-written controllers, the opinionated behavior of <a href="https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-7.0#apicontroller-attribute"><code>[ApiController]</code></a> violates the JSON:API specification.
 Despite JsonApiDotNetCore trying its best to deal with it, the experience won't be as good as leaving it out.</p>
+<h4 id="dont-use-auto-generated-controllers-with-shared-models">Don't use auto-generated controllers with shared models</h4>
+<p>When model classes are defined in a separate project, the controllers are generated in that project as well, which is probably not what you want.
+For details, see <a href="extensibility/controllers.html#auto-generated-controllers">here</a>.</p>
 <h4 id="registeroverride-injectable-services">Register/override injectable services</h4>
 <p>Register your JSON:API resource services, resource definitions and repositories with <code>services.AddResourceService/AddResourceDefinition/AddResourceRepository()</code> instead of <code>services.AddScoped()</code>.
 When using <a href="resource-graph.html#auto-discovery">Auto-discovery</a>, you don't need to register these at all.</p>
