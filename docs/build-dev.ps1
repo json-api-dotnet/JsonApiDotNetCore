@@ -40,7 +40,7 @@ if (-Not $NoBuild -Or -Not (Test-Path -Path _site)) {
 dotnet tool restore
 VerifySuccessExitCode
 
-dotnet docfx ./docfx.json
+dotnet docfx ./docfx.json --warningsAsErrors true
 VerifySuccessExitCode
 
 Copy-Item -Force home/*.html _site/

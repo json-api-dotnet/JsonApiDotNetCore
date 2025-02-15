@@ -133,7 +133,7 @@ jobs:
       run: |
         cd docs
         & ./generate-examples.ps1
-        dotnet docfx docfx.json
+        dotnet docfx docfx.json --warningsAsErrors true
         if ($LastExitCode -ne 0) {
             Write-Error "docfx failed with exit code $LastExitCode."
         }
