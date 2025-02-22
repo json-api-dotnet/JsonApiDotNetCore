@@ -1,0 +1,14 @@
+{% comment %}
+
+    Adapted from https://github.com/RicoSuter/NSwag/blob/v14.2.0/src/NSwag.CodeGeneration.CSharp/Templates/Client.Class.Annotations.liquid
+    for JsonApiDotNetCore, to initialize the JSON serializer for use with JSON:API.
+
+{% endcomment %}
+partial class {{ Class }}
+{
+    partial void Initialize()
+    {
+        _instanceSettings = new Newtonsoft.Json.JsonSerializerSettings(_settings.Value);
+        SetSerializerSettingsForJsonApi(_instanceSettings);
+    }
+}

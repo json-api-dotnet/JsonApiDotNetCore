@@ -1,24 +1,9 @@
-using System.Linq.Expressions;
 using System.Reflection;
 
 namespace OpenApiNSwagClientTests;
 
 public abstract class BaseOpenApiNSwagClientTests
 {
-    private const string AttributesObjectParameterName = "attributesObject";
-
-    protected static Expression<Func<TAttributesObject, object?>> CreateAttributeSelectorFor<TAttributesObject>(string propertyName)
-        where TAttributesObject : class
-    {
-        Type attributesObjectType = typeof(TAttributesObject);
-
-        ParameterExpression parameter = Expression.Parameter(attributesObjectType, AttributesObjectParameterName);
-        MemberExpression property = Expression.Property(parameter, propertyName);
-        UnaryExpression castToObject = Expression.Convert(property, typeof(object));
-
-        return Expression.Lambda<Func<TAttributesObject, object?>>(castToObject, parameter);
-    }
-
     /// <summary>
     /// Sets the property on the specified source to its default value (null for string, 0 for int, false for bool, etc).
     /// </summary>

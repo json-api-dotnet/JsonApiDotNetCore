@@ -8,5 +8,8 @@
     <NSwagGenerateNullableReferenceTypes>true</NSwagGenerateNullableReferenceTypes>
     <NSwagGenerateOptionalPropertiesAsNullable>true</NSwagGenerateOptionalPropertiesAsNullable>
     <NSwagGenerateOptionalParameters>true</NSwagGenerateOptionalParameters>
+    <NSwagClientBaseClass>JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient</NSwagClientBaseClass>
+    <NSwagClassStyle>Prism</NSwagClassStyle>
+    <NSwagTemplateDirectory>$(MSBuildThisFileDirectory)../Templates</NSwagTemplateDirectory>
   </PropertyGroup>
 </Project>

@@ -7,7 +7,7 @@ After [enabling OpenAPI](~/usage/openapi.md), you can generate a typed JSON:API 
 > [client libraries](https://jsonapi.org/implementations/#client-libraries).
 
 The following code generators are supported, though you may try others as well:
-- [NSwag](https://github.com/RicoSuter/NSwag) (v14.1 or higher): Produces clients for C# and TypeScript
+- [NSwag](https://github.com/RicoSuter/NSwag) (v14.1 or higher): Produces clients for C# (requires `Newtonsoft.Json`) and TypeScript
 - [Kiota](https://learn.microsoft.com/en-us/openapi/kiota/overview): Produces clients for C#, Go, Java, PHP, Python, Ruby, Swift and TypeScript
 
 # [NSwag](#tab/nswag)
@@ -21,7 +21,7 @@ dotnet add package JsonApiDotNetCore.OpenApi.Client.NSwag
 
 # [Kiota](#tab/kiota)
 
-For C# clients, we provide an additional package that provides workarounds for bugs in Kiota.
+For C# clients, we provide an additional package that provides workarounds for bugs in Kiota, as well as MSBuild integration.
 
 To add it to your project, run the following command:
 ```
@@ -60,27 +60,6 @@ The following steps describe how to generate and use a JSON:API client in C#, co
     dotnet add package JsonApiDotNetCore.OpenApi.Client.NSwag
     ```
 
-1.  Add the following glue code to connect our package with your generated code.
-
-    > [!NOTE]
-    > The class name must be the same as specified in step 2.
-    > If you also specified a namespace, put this class in the same namespace.
-    > For example, add `namespace GeneratedCode;` below the `using` lines.
-
-    ```c#
-    using JsonApiDotNetCore.OpenApi.Client.NSwag;
-    using Newtonsoft.Json;
-
-    partial class ExampleApiClient : JsonApiClient
-    {
-        partial void Initialize()
-        {
-            _instanceSettings = new JsonSerializerSettings(_settings.Value);
-            SetSerializerSettingsForJsonApi(_instanceSettings);
-        }
-    }
-    ```
-
 1.  Add code that calls one of your JSON:API endpoints.
 
     ```c#
@@ -108,33 +87,32 @@ The following steps describe how to generate and use a JSON:API client in C#, co
         Data = new DataInUpdatePersonRequest
         {
             Id = "1",
-            Attributes = new AttributesInUpdatePersonRequest
+            // Using TrackChangesFor to send "firstName: null" instead of omitting it.
+            Attributes = new TrackChangesFor<AttributesInUpdatePersonRequest>(_apiClient)
             {
-                LastName = "Doe"
-            }
+                Initializer =
+                {
+                    FirstName = null,
+                    LastName = "Doe"
+                }
+            }.Initializer
         }
     };
 
-    // This line results in sending "firstName: null" instead of omitting it.
-    using (apiClient.WithPartialAttributeSerialization<UpdatePersonRequestDocument, AttributesInUpdatePersonRequest>(
-        updatePersonRequest, person => person.FirstName))
-    {
-        // Workaround for https://github.com/RicoSuter/NSwag/issues/2499.
-        await ApiResponse.TranslateAsync(() =>
-            apiClient.PatchPersonAsync(updatePersonRequest.Data.Id, updatePersonRequest));
+    await ApiResponse.TranslateAsync(async () =>
+        await _apiClient.PatchPersonAsync(updatePersonRequest.Data.Id, updatePersonRequest));
 
-        // The sent request looks like this:
-        // {
-        //   "data": {
-        //     "type": "people",
-        //     "id": "1",
-        //     "attributes": {
-        //       "firstName": null,
-        //       "lastName": "Doe"
-        //     }
-        //   }
-        // }
-    }
+    // The sent request looks like this:
+    // {
+    //   "data": {
+    //     "type": "people",
+    //     "id": "1",
+    //     "attributes": {
+    //       "firstName": null,
+    //       "lastName": "Doe"
+    //     }
+    //   }
+    // }
     ```
 
 > [!TIP]
@@ -146,9 +124,7 @@ The following steps describe how to generate and use a JSON:API client in C#, co
 
 ### Other IDEs
 
-When using the command line, you can try the [Microsoft.dotnet-openapi Global Tool](https://docs.microsoft.com/en-us/aspnet/core/web-api/microsoft.dotnet-openapi?view=aspnetcore-5.0).
-
-Alternatively, the following section shows what to add to your client project file directly:
+The following section shows what to add to your client project file directly:
 
 ```xml
 <ItemGroup>
@@ -160,9 +136,8 @@ Alternatively, the following section shows what to add to your client project fi
 <ItemGroup>
   <OpenApiReference Include="OpenAPIs\swagger.json">
     <SourceUri>http://localhost:14140/swagger/v1/swagger.json</SourceUri>
-    <CodeGenerator>NSwagCSharp</CodeGenerator>
     <ClassName>ExampleApiClient</ClassName>
-    <OutputPath>ExampleApiClient.cs</OutputPath>
+    <OutputPath>%(ClassName).cs</OutputPath>
   </OpenApiReference>
 </ItemGroup>
 ```
@@ -193,20 +168,20 @@ Various switches enable you to tweak the client generation to your needs. See th
 
 # [NSwag](#tab/nswag)
 
-The `OpenApiReference` can be customized using various [NSwag-specific MSBuild properties](https://github.com/RicoSuter/NSwag/blob/7d6df3af95081f3f0ed6dee04be8d27faa86f91a/src/NSwag.ApiDescription.Client/NSwag.ApiDescription.Client.props).
+The `OpenApiReference` element can be customized using various [NSwag-specific MSBuild properties](https://github.com/RicoSuter/NSwag/blob/7d6df3af95081f3f0ed6dee04be8d27faa86f91a/src/NSwag.ApiDescription.Client/NSwag.ApiDescription.Client.props).
 See [the source code](https://github.com/RicoSuter/NSwag/blob/master/src/NSwag.Commands/Commands/CodeGeneration/OpenApiToCSharpClientCommand.cs) for their meaning.
+The `JsonApiDotNetCore.OpenApi.Client.NSwag` package sets various of these for optimal JSON:API support.
 
 > [!NOTE]
 > Earlier versions of NSwag required the use of `<Options>` to specify command-line switches directly.
 > This is no longer recommended and may conflict with the new MSBuild properties.
 
-For example, the following section puts the generated code in a namespace and generates an interface (handy when writing tests):
+For example, the following section puts the generated code in a namespace, makes the client class internal and generates an interface (handy when writing tests):
 
 ```xml
 <OpenApiReference Include="swagger.json">
   <Namespace>ExampleProject.GeneratedCode</Namespace>
-  <ClassName>SalesApiClient</ClassName>
-  <CodeGenerator>NSwagCSharp</CodeGenerator>
+  <NSwagClientClassAccessModifier>internal</NSwagClientClassAccessModifier>
   <NSwagGenerateClientInterfaces>true</NSwagGenerateClientInterfaces>
 </OpenApiReference>
 ```
@@ -306,6 +281,7 @@ The [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/
 demonstrates how to use them. It uses local IDs to:
 - Create a new tag
 - Create a new person
+- Update the person to clear an attribute (using `TrackChangesFor`)
 - Create a new todo-item, tagged with the new tag, and owned by the new person
 - Assign the todo-item to the created person
 
@@ -316,6 +292,7 @@ See the [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/t
 demonstrates how to use them. It uses local IDs to:
 - Create a new tag
 - Create a new person
+- Update the person to clear an attribute (using built-in backing-store)
 - Create a new todo-item, tagged with the new tag, and owned by the new person
 - Assign the todo-item to the created person
 
