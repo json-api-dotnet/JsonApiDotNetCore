@@ -77,12 +77,11 @@ public sealed class UpdateResourceTests : BaseOpenApiNSwagClientTests
             }
         };
 
-        SetPropertyToInitialValue(requestDocument.Data.Attributes, attributePropertyName);
-
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOffClient(wrapper.HttpClient);
 
-        using IDisposable _ = apiClient.WithPartialAttributeSerialization<UpdateResourceRequestDocument, AttributesInUpdateResourceRequest>(requestDocument);
+        SetPropertyToInitialValue(requestDocument.Data.Attributes, attributePropertyName);
+        apiClient.MarkAsTracked(requestDocument.Data.Attributes);
 
         // Act
         await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(requestDocument.Data.Id, null, requestDocument));
@@ -124,10 +123,11 @@ public sealed class UpdateResourceTests : BaseOpenApiNSwagClientTests
             }
         };
 
-        SetPropertyToInitialValue(requestDocument.Data.Relationships, relationshipPropertyName);
-
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOffClient(wrapper.HttpClient);
+
+        SetPropertyToInitialValue(requestDocument.Data.Relationships, relationshipPropertyName);
+        apiClient.MarkAsTracked(requestDocument.Data.Relationships);
 
         // Act
         await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(requestDocument.Data.Id, null, requestDocument));

@@ -38,7 +38,7 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
 
             await SendOperationsRequestAsync(stoppingToken);
 
-            _ = await _apiClient.Api.People["999999"].GetAsync(cancellationToken: stoppingToken);
+            await _apiClient.Api.People["999999"].GetAsync(cancellationToken: stoppingToken);
         }
         catch (ErrorResponseDocument exception)
         {
@@ -100,7 +100,7 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
             }
         };
 
-        _ = await _apiClient.Api.People[updatePersonRequest.Data.Id].PatchAsync(updatePersonRequest, cancellationToken: cancellationToken);
+        await _apiClient.Api.People[updatePersonRequest.Data.Id].PatchAsync(updatePersonRequest, cancellationToken: cancellationToken);
     }
 
     private async Task SendOperationsRequestAsync(CancellationToken cancellationToken)
@@ -131,7 +131,22 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
                         Lid = "new-person",
                         Attributes = new AttributesInCreatePersonRequest
                         {
-                            LastName = "Cinderella"
+                            FirstName = "Cinderella",
+                            LastName = "Tremaine"
+                        }
+                    }
+                },
+                new UpdatePersonOperation
+                {
+                    Op = UpdateOperationCode.Update,
+                    Data = new DataInUpdatePersonRequest
+                    {
+                        Type = PersonResourceType.People,
+                        Lid = "new-person",
+                        Attributes = new AttributesInUpdatePersonRequest
+                        {
+                            // The --backing-store switch enables to send null and default values.
+                            FirstName = null
                         }
                     }
                 },
@@ -191,7 +206,7 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
 
         OperationsResponseDocument? operationsResponse = await _apiClient.Api.Operations.PostAsync(operationsRequest, cancellationToken: cancellationToken);
 
-        var newTodoItem = (TodoItemDataInResponse)operationsResponse!.AtomicResults!.ElementAt(2).Data!;
+        var newTodoItem = (TodoItemDataInResponse)operationsResponse!.AtomicResults!.ElementAt(3).Data!;
         Console.WriteLine($"Created todo-item with ID {newTodoItem.Id}: {newTodoItem.Attributes!.Description}.");
     }
 }

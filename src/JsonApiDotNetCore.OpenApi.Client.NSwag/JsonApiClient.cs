@@ -1,280 +1,363 @@
-using System.Diagnostics;
-using System.Linq.Expressions;
+using System.ComponentModel;
 using System.Reflection;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.OpenApi.Client.NSwag;
 
 /// <summary>
-/// Base class to inherit auto-generated OpenAPI clients from. Provides support for partial POST/PATCH in JSON:API requests.
+/// Base class to inherit auto-generated NSwag OpenAPI clients from. Provides support for partial POST/PATCH in JSON:API requests, optionally combined
+/// with OpenAPI inheritance.
 /// </summary>
-public abstract class JsonApiClient : IJsonApiClient
+[PublicAPI]
+public abstract class JsonApiClient
 {
-    private readonly DocumentJsonConverter _documentJsonConverter = new();
+    private const string GeneratedJsonInheritanceConverterName = "JsonInheritanceConverter";
+    private static readonly DefaultContractResolver UnmodifiedContractResolver = new();
+
+    private readonly Dictionary<INotifyPropertyChanged, ISet<string>> _propertyStore = [];
 
     /// <summary>
-    /// Initial setup. Call this from the UpdateJsonSerializerSettings partial method in the auto-generated OpenAPI client.
+    /// Whether to automatically clear tracked properties after sending a request. Default value: <c>true</c>. Set to <c>false</c> to reuse tracked
+    /// properties for multiple requests and call <see cref="ClearAllTracked" /> after the last request to clean up.
     /// </summary>
-    protected void SetSerializerSettingsForJsonApi(JsonSerializerSettings settings)
-    {
-        ArgumentNullException.ThrowIfNull(settings);
+    public bool AutoClearTracked { get; set; } = true;
 
-        settings.Converters.Add(_documentJsonConverter);
+    internal void Track<T>(T container)
+        where T : INotifyPropertyChanged, new()
+    {
+        container.PropertyChanged += ContainerOnPropertyChanged;
+
+        MarkAsTracked(container);
     }
 
-    /// <inheritdoc />
-    public IDisposable WithPartialAttributeSerialization<TRequestDocument, TAttributesObject>(TRequestDocument requestDocument,
-        params Expression<Func<TAttributesObject, object?>>[] alwaysIncludedAttributeSelectors)
-        where TRequestDocument : class
+    private void ContainerOnPropertyChanged(object? sender, PropertyChangedEventArgs args)
     {
-        ArgumentNullException.ThrowIfNull(requestDocument);
-        ArgumentNullException.ThrowIfNull(alwaysIncludedAttributeSelectors);
-
-        HashSet<string> attributeNames = [];
-
-        foreach (Expression<Func<TAttributesObject, object?>> selector in alwaysIncludedAttributeSelectors)
+        if (sender is INotifyPropertyChanged container && args.PropertyName != null)
         {
-            if (RemoveConvert(selector.Body) is MemberExpression selectorBody)
-            {
-                attributeNames.Add(selectorBody.Member.Name);
-            }
-            else
-            {
-                throw new ArgumentException($"The expression '{selector}' should select a single property. For example: 'article => article.Title'.",
-                    nameof(alwaysIncludedAttributeSelectors));
-            }
-        }
-
-        var alwaysIncludedAttributes = new AlwaysIncludedAttributes(attributeNames, typeof(TAttributesObject));
-        _documentJsonConverter.RegisterDocument(requestDocument, alwaysIncludedAttributes);
-
-        return new DocumentRegistrationScope(_documentJsonConverter, requestDocument);
-    }
-
-    private static Expression RemoveConvert(Expression expression)
-    {
-        Expression innerExpression = expression;
-
-        while (true)
-        {
-            if (innerExpression is UnaryExpression { NodeType: ExpressionType.Convert } unaryExpression)
-            {
-                innerExpression = unaryExpression.Operand;
-            }
-            else
-            {
-                return innerExpression;
-            }
+            MarkAsTracked(container, args.PropertyName);
         }
     }
 
     /// <summary>
-    /// Tracks a JSON:API attributes registration for a JSON:API document instance in the serializer. Disposing removes the registration, so the client can
-    /// be reused.
+    /// Marks the specified properties on an object instance as tracked. Use this when unable to use inline initializer syntax for tracking.
     /// </summary>
-    private sealed class DocumentRegistrationScope : IDisposable
+    /// <param name="container">
+    /// The object instance whose properties to mark as tracked.
+    /// </param>
+    /// <param name="propertyNames">
+    /// The names of the properties to mark as tracked. Properties in this list are always included. Any other property is only included if its value differs
+    /// from the property type's default value.
+    /// </param>
+    public void MarkAsTracked(INotifyPropertyChanged container, params string[] propertyNames)
     {
-        private readonly DocumentJsonConverter _documentJsonConverter;
-        private readonly object _document;
+        ArgumentNullException.ThrowIfNull(container);
+        ArgumentNullException.ThrowIfNull(propertyNames);
 
-        public DocumentRegistrationScope(DocumentJsonConverter documentJsonConverter, object document)
+        if (!_propertyStore.TryGetValue(container, out ISet<string>? properties))
         {
-            ArgumentNullException.ThrowIfNull(documentJsonConverter);
-            ArgumentNullException.ThrowIfNull(document);
-
-            _documentJsonConverter = documentJsonConverter;
-            _document = document;
+            properties = new HashSet<string>();
+            _propertyStore[container] = properties;
         }
 
-        public void Dispose()
+        foreach (string propertyName in propertyNames)
         {
-            _documentJsonConverter.UnRegisterDocument(_document);
+            properties.Add(propertyName);
         }
     }
 
     /// <summary>
-    /// Represents the set of JSON:API attributes to always send to the server, even if they are uninitialized (contain default value).
+    /// Clears all tracked properties. Call this after sending multiple requests when <see cref="AutoClearTracked" /> is set to <c>false</c>.
     /// </summary>
-    private sealed class AlwaysIncludedAttributes
+    public void ClearAllTracked()
     {
-        private readonly HashSet<string> _propertyNames;
-        private readonly Type _attributesObjectType;
-
-        public AlwaysIncludedAttributes(HashSet<string> propertyNames, Type attributesObjectType)
+        foreach (INotifyPropertyChanged container in _propertyStore.Keys)
         {
-            ArgumentNullException.ThrowIfNull(propertyNames);
-            ArgumentNullException.ThrowIfNull(attributesObjectType);
-
-            _propertyNames = propertyNames;
-            _attributesObjectType = attributesObjectType;
+            container.PropertyChanged -= ContainerOnPropertyChanged;
         }
 
-        public bool ContainsAttribute(string propertyName)
-        {
-            return _propertyNames.Contains(propertyName);
-        }
+        _propertyStore.Clear();
+    }
 
-        public bool IsAttributesObjectType(Type type)
-        {
-            return _attributesObjectType == type;
-        }
+    private void RemoveContainer(INotifyPropertyChanged container)
+    {
+        container.PropertyChanged -= ContainerOnPropertyChanged;
+        _propertyStore.Remove(container);
     }
 
     /// <summary>
-    /// A <see cref="JsonConverter" /> that acts on JSON:API documents.
+    /// Initial setup. Call this from the Initialize partial method in the auto-generated NSwag client.
     /// </summary>
-    private sealed class DocumentJsonConverter : JsonConverter
+    /// <param name="serializerSettings">
+    /// The <see cref="JsonSerializerSettings" /> to configure.
+    /// </param>
+    /// <remarks>
+    /// CAUTION: Calling this method makes the serializer stateful, which removes thread-safety of the owning auto-generated NSwag client. As a result, the
+    /// client MUST NOT be shared. So don't use a static instance, and don't register as a singleton in the service container. Also, do not execute parallel
+    /// requests on the same NSwag client instance. Executing multiple sequential requests on the same generated client instance is fine.
+    /// </remarks>
+    protected void SetSerializerSettingsForJsonApi(JsonSerializerSettings serializerSettings)
     {
-        private readonly Dictionary<object, AlwaysIncludedAttributes> _alwaysIncludedAttributesByDocument = [];
-        private readonly Dictionary<Type, ISet<object>> _documentsByType = [];
-        private bool _isSerializing;
+        ArgumentNullException.ThrowIfNull(serializerSettings);
 
-        public override bool CanRead => false;
+        serializerSettings.ContractResolver = new InsertDiscriminatorPropertyContractResolver();
+        serializerSettings.Converters.Insert(0, new PropertyTrackingInheritanceConverter(this));
+    }
 
-        public void RegisterDocument(object document, AlwaysIncludedAttributes alwaysIncludedAttributes)
+    private static string? GetDiscriminatorName(Type objectType)
+    {
+        JsonContract contract = UnmodifiedContractResolver.ResolveContract(objectType);
+
+        if (contract.Converter != null && contract.Converter.GetType().Name == GeneratedJsonInheritanceConverterName)
         {
-            _alwaysIncludedAttributesByDocument[document] = alwaysIncludedAttributes;
+            var inheritanceConverter = (BlockedJsonInheritanceConverter)contract.Converter;
+            return inheritanceConverter.DiscriminatorName;
+        }
 
-            Type documentType = document.GetType();
+        return null;
+    }
 
-            if (!_documentsByType.TryGetValue(documentType, out ISet<object>? documents))
+    /// <summary>
+    /// Replacement for the writing part of client-generated JsonInheritanceConverter that doesn't block other converters and preserves the JSON path on
+    /// error.
+    /// </summary>
+    private class InsertDiscriminatorPropertyContractResolver : DefaultContractResolver
+    {
+        protected override JsonObjectContract CreateObjectContract(Type objectType)
+        {
+            // NSwag adds [JsonConverter(typeof(JsonInheritanceConverter), "type")] on types to write the discriminator.
+            // This annotation has higher precedence over converters in the serializer settings, which is why ours normally won't execute.
+            // Once we tell Newtonsoft to ignore JsonInheritanceConverter, our converter can kick in.
+
+            JsonObjectContract contract = base.CreateObjectContract(objectType);
+
+            if (contract.Converter != null && contract.Converter.GetType().Name == GeneratedJsonInheritanceConverterName)
             {
-                documents = new HashSet<object>();
-                _documentsByType[documentType] = documents;
+                contract.Converter = null;
             }
 
-            documents.Add(document);
+            return contract;
         }
 
-        public void UnRegisterDocument(object document)
+        protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
         {
-            if (_alwaysIncludedAttributesByDocument.Remove(document))
-            {
-                Type documentType = document.GetType();
-                _documentsByType[documentType].Remove(document);
+            IList<JsonProperty> properties = base.CreateProperties(type, memberSerialization);
 
-                if (_documentsByType[documentType].Count == 0)
+            string? discriminatorName = GetDiscriminatorName(type);
+
+            if (discriminatorName != null)
+            {
+                JsonProperty discriminatorProperty = CreateDiscriminatorProperty(discriminatorName, type);
+                properties.Insert(0, discriminatorProperty);
+            }
+
+            return properties;
+        }
+
+        private static JsonProperty CreateDiscriminatorProperty(string discriminatorName, Type declaringType)
+        {
+            return new JsonProperty
+            {
+                PropertyName = discriminatorName,
+                PropertyType = typeof(string),
+                DeclaringType = declaringType,
+                ValueProvider = new DiscriminatorValueProvider(),
+                Readable = true,
+                Writable = true
+            };
+        }
+
+        private sealed class DiscriminatorValueProvider : IValueProvider
+        {
+            public object? GetValue(object target)
+            {
+                Type type = target.GetType();
+
+                foreach (Attribute attribute in type.GetCustomAttributes<Attribute>(true))
                 {
-                    _documentsByType.Remove(documentType);
+                    var shim = JsonInheritanceAttributeShim.TryCreate(attribute);
+
+                    if (shim != null && shim.Type == type)
+                    {
+                        return shim.Key;
+                    }
                 }
+
+                return null;
             }
+
+            public void SetValue(object target, object? value)
+            {
+                // Nothing to do, NSwag doesn't generate a property for the discriminator.
+            }
+        }
+    }
+
+    /// <summary>
+    /// Provides support for writing partial POST/PATCH in JSON:API requests via tracked properties. Provides reading of discriminator for inheritance.
+    /// </summary>
+    private sealed class PropertyTrackingInheritanceConverter : JsonConverter
+    {
+        [ThreadStatic]
+        private static bool _isWriting;
+
+        [ThreadStatic]
+        private static bool _isReading;
+
+        private readonly JsonApiClient _apiClient;
+
+        public override bool CanRead
+        {
+            get
+            {
+                if (_isReading)
+                {
+                    // Prevent infinite recursion, but auto-reset so we'll participate in nested objects.
+                    _isReading = false;
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
+        public override bool CanWrite
+        {
+            get
+            {
+                if (_isWriting)
+                {
+                    // Prevent infinite recursion, but auto-reset so we'll participate in nested objects.
+                    _isWriting = false;
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
+        public PropertyTrackingInheritanceConverter(JsonApiClient apiClient)
+        {
+            ArgumentNullException.ThrowIfNull(apiClient);
+
+            _apiClient = apiClient;
         }
 
         public override bool CanConvert(Type objectType)
         {
-            ArgumentNullException.ThrowIfNull(objectType);
+            // Because this is called BEFORE CanRead/CanWrite, respond to both tracking and inheritance.
+            // We don't actually write for inheritance, so bail out later if that's the case.
 
-            if (_isSerializing)
+            if (_apiClient._propertyStore.Keys.Any(containingType => containingType.GetType() == objectType))
             {
-                // Protect against infinite recursion.
-                return false;
+                return true;
             }
 
-            return _documentsByType.ContainsKey(objectType);
+            var converterAttribute = objectType.GetCustomAttribute<JsonConverterAttribute>(true);
+            return converterAttribute is { ConverterType.Name: GeneratedJsonInheritanceConverterName };
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
-            throw new UnreachableException();
+            _isReading = true;
+
+            try
+            {
+                JToken token = JToken.ReadFrom(reader);
+                string? discriminatorValue = GetDiscriminatorValue(objectType, token);
+
+                Type resolvedType = ResolveTypeFromDiscriminatorValue(objectType, discriminatorValue);
+                return token.ToObject(resolvedType, serializer);
+            }
+            finally
+            {
+                _isReading = false;
+            }
+        }
+
+        private static string? GetDiscriminatorValue(Type objectType, JToken token)
+        {
+            var jsonConverterAttribute = objectType.GetCustomAttribute<JsonConverterAttribute>(true)!;
+
+            if (jsonConverterAttribute.ConverterParameters is not [string])
+            {
+                throw new JsonException($"Expected single 'type' parameter for JsonInheritanceConverter usage on type '{objectType}'.");
+            }
+
+            string discriminatorName = (string)jsonConverterAttribute.ConverterParameters[0];
+            return token.Children<JProperty>().FirstOrDefault(property => property.Name == discriminatorName)?.Value.ToString();
+        }
+
+        private static Type ResolveTypeFromDiscriminatorValue(Type objectType, string? discriminatorValue)
+        {
+            if (discriminatorValue != null)
+            {
+                foreach (Attribute attribute in objectType.GetCustomAttributes<Attribute>(true))
+                {
+                    var shim = JsonInheritanceAttributeShim.TryCreate(attribute);
+
+                    if (shim != null && shim.Key == discriminatorValue)
+                    {
+                        return shim.Type;
+                    }
+                }
+            }
+
+            return objectType;
         }
 
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
-            ArgumentNullException.ThrowIfNull(writer);
-            ArgumentNullException.ThrowIfNull(serializer);
+            _isWriting = true;
 
-            if (value != null)
+            try
             {
-                if (_alwaysIncludedAttributesByDocument.TryGetValue(value, out AlwaysIncludedAttributes? alwaysIncludedAttributes))
+                if (value is INotifyPropertyChanged container && _apiClient._propertyStore.TryGetValue(container, out ISet<string>? properties))
                 {
-                    var attributesJsonConverter = new AttributesJsonConverter(alwaysIncludedAttributes);
-                    serializer.Converters.Add(attributesJsonConverter);
-                }
+                    // Because we're overwriting NullValueHandling/DefaultValueHandling, we miss out on some validations that Newtonsoft would otherwise run.
+                    AssertRequiredTrackedPropertiesHaveNoDefaultValue(container, properties, writer.Path);
 
-                try
+                    IContractResolver backupContractResolver = serializer.ContractResolver;
+
+                    try
+                    {
+                        // Caution: Swapping the contract resolver is not safe for concurrent usage, yet it needs to know the tracked instance.
+                        serializer.ContractResolver = new PropertyTrackingContractResolver(container, properties);
+                        serializer.Serialize(writer, value);
+
+                        if (_apiClient.AutoClearTracked)
+                        {
+                            _apiClient.RemoveContainer(container);
+                        }
+                    }
+                    finally
+                    {
+                        serializer.ContractResolver = backupContractResolver;
+                    }
+                }
+                else
                 {
-                    _isSerializing = true;
+                    // We get here when the type is tracked, but not this instance. Or when writing for inheritance.
                     serializer.Serialize(writer, value);
                 }
-                finally
-                {
-                    _isSerializing = false;
-                }
             }
-        }
-    }
-
-    /// <summary>
-    /// A <see cref="JsonConverter" /> that acts on JSON:API attribute objects.
-    /// </summary>
-    private sealed class AttributesJsonConverter : JsonConverter
-    {
-        private readonly AlwaysIncludedAttributes _alwaysIncludedAttributes;
-        private bool _isSerializing;
-
-        public override bool CanRead => false;
-
-        public AttributesJsonConverter(AlwaysIncludedAttributes alwaysIncludedAttributes)
-        {
-            ArgumentNullException.ThrowIfNull(alwaysIncludedAttributes);
-
-            _alwaysIncludedAttributes = alwaysIncludedAttributes;
-        }
-
-        public override bool CanConvert(Type objectType)
-        {
-            ArgumentNullException.ThrowIfNull(objectType);
-
-            if (_isSerializing)
+            finally
             {
-                // Protect against infinite recursion.
-                return false;
-            }
-
-            return _alwaysIncludedAttributes.IsAttributesObjectType(objectType);
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
-        {
-            throw new UnreachableException();
-        }
-
-        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
-        {
-            ArgumentNullException.ThrowIfNull(writer);
-            ArgumentNullException.ThrowIfNull(serializer);
-
-            if (value != null)
-            {
-                if (_alwaysIncludedAttributes.IsAttributesObjectType(value.GetType()))
-                {
-                    AssertRequiredAttributesHaveNonDefaultValues(value, writer.Path);
-
-                    serializer.ContractResolver = new JsonApiAttributeContractResolver(_alwaysIncludedAttributes);
-                }
-
-                try
-                {
-                    _isSerializing = true;
-                    serializer.Serialize(writer, value);
-                }
-                finally
-                {
-                    _isSerializing = false;
-                }
+                _isWriting = false;
             }
         }
 
-        private void AssertRequiredAttributesHaveNonDefaultValues(object attributesObject, string jsonPath)
+        private static void AssertRequiredTrackedPropertiesHaveNoDefaultValue(object container, ISet<string> properties, string jsonPath)
         {
-            foreach (PropertyInfo propertyInfo in attributesObject.GetType().GetProperties())
+            foreach (PropertyInfo propertyInfo in container.GetType().GetProperties())
             {
-                bool isExplicitlyIncluded = _alwaysIncludedAttributes.ContainsAttribute(propertyInfo.Name);
+                bool isTracked = properties.Contains(propertyInfo.Name);
 
-                if (!isExplicitlyIncluded)
+                if (!isTracked)
                 {
-                    AssertPropertyHasNonDefaultValueIfRequired(attributesObject, propertyInfo, jsonPath);
+                    AssertPropertyHasNonDefaultValueIfRequired(container, propertyInfo, jsonPath);
                 }
             }
         }
@@ -285,12 +368,11 @@ public abstract class JsonApiClient : IJsonApiClient
 
             if (jsonProperty is { Required: Required.Always or Required.AllowNull })
             {
-                bool propertyHasDefaultValue = PropertyHasDefaultValue(propertyInfo, attributesObject);
-
-                if (propertyHasDefaultValue)
+                if (PropertyHasDefaultValue(propertyInfo, attributesObject))
                 {
-                    throw new InvalidOperationException(
-                        $"Required property '{propertyInfo.Name}' at JSON path '{jsonPath}.{jsonProperty.PropertyName}' is not set. If sending its default value is intended, include it explicitly.");
+                    throw new JsonSerializationException(
+                        $"Cannot write a default value for property '{jsonProperty.PropertyName}'. Property requires a non-default value. Path '{jsonPath}'.",
+                        jsonPath, 0, 0, null);
                 }
             }
         }
@@ -310,31 +392,30 @@ public abstract class JsonApiClient : IJsonApiClient
     }
 
     /// <summary>
-    /// Corrects the <see cref="NullValueHandling" /> and <see cref="DefaultValueHandling" /> JSON annotations at runtime, which appear on the auto-generated
-    /// properties for JSON:API attributes. For example:
-    /// <code><![CDATA[
-    /// [Newtonsoft.Json.JsonProperty("firstName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-    /// ]]>
-    /// </code>
+    /// Overrules the <see cref="NullValueHandling" /> and <see cref="DefaultValueHandling" /> annotations on generated properties for tracked object
+    /// instances to support JSON:API partial POST/PATCH.
     /// </summary>
-    private sealed class JsonApiAttributeContractResolver : DefaultContractResolver
+    private sealed class PropertyTrackingContractResolver : InsertDiscriminatorPropertyContractResolver
     {
-        private readonly AlwaysIncludedAttributes _alwaysIncludedAttributes;
+        private readonly INotifyPropertyChanged _container;
+        private readonly ISet<string> _properties;
 
-        public JsonApiAttributeContractResolver(AlwaysIncludedAttributes alwaysIncludedAttributes)
+        public PropertyTrackingContractResolver(INotifyPropertyChanged container, ISet<string> properties)
         {
-            ArgumentNullException.ThrowIfNull(alwaysIncludedAttributes);
+            ArgumentNullException.ThrowIfNull(container);
+            ArgumentNullException.ThrowIfNull(properties);
 
-            _alwaysIncludedAttributes = alwaysIncludedAttributes;
+            _container = container;
+            _properties = properties;
         }
 
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
             JsonProperty jsonProperty = base.CreateProperty(member, memberSerialization);
 
-            if (_alwaysIncludedAttributes.IsAttributesObjectType(jsonProperty.DeclaringType!))
+            if (jsonProperty.DeclaringType == _container.GetType())
             {
-                if (_alwaysIncludedAttributes.ContainsAttribute(jsonProperty.UnderlyingName!))
+                if (_properties.Contains(jsonProperty.UnderlyingName!))
                 {
                     jsonProperty.NullValueHandling = NullValueHandling.Include;
                     jsonProperty.DefaultValueHandling = DefaultValueHandling.Include;
@@ -347,6 +428,31 @@ public abstract class JsonApiClient : IJsonApiClient
             }
 
             return jsonProperty;
+        }
+    }
+
+    private sealed class JsonInheritanceAttributeShim
+    {
+        private readonly Attribute _instance;
+        private readonly PropertyInfo _keyProperty;
+        private readonly PropertyInfo _typeProperty;
+
+        public string Key => (string)_keyProperty.GetValue(_instance)!;
+        public Type Type => (Type)_typeProperty.GetValue(_instance)!;
+
+        private JsonInheritanceAttributeShim(Attribute instance, Type type)
+        {
+            _instance = instance;
+            _keyProperty = type.GetProperty("Key") ?? throw new ArgumentException("Key property not found.", nameof(instance));
+            _typeProperty = type.GetProperty("Type") ?? throw new ArgumentException("Type property not found.", nameof(instance));
+        }
+
+        public static JsonInheritanceAttributeShim? TryCreate(Attribute attribute)
+        {
+            ArgumentNullException.ThrowIfNull(attribute);
+
+            Type type = attribute.GetType();
+            return type.Name == "JsonInheritanceAttribute" ? new JsonInheritanceAttributeShim(attribute, type) : null;
         }
     }
 }

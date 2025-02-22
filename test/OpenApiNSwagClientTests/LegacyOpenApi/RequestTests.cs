@@ -64,23 +64,20 @@ public sealed class RequestTests
         {
             Data = new DataInCreateFlightRequest
             {
-                Type = FlightResourceType.Flights,
                 Relationships = new RelationshipsInCreateFlightRequest
                 {
                     Purser = new ToOneFlightAttendantInRequest
                     {
                         Data = new FlightAttendantIdentifierInRequest
                         {
-                            Id = "bBJHu",
-                            Type = FlightAttendantResourceType.FlightAttendants
+                            Id = "bBJHu"
                         }
                     },
                     BackupPurser = new NullableToOneFlightAttendantInRequest
                     {
                         Data = new FlightAttendantIdentifierInRequest
                         {
-                            Id = "NInmX",
-                            Type = FlightAttendantResourceType.FlightAttendants
+                            Id = "NInmX"
                         }
                     }
                 }
@@ -146,21 +143,20 @@ public sealed class RequestTests
         {
             Data = new DataInCreateAirplaneRequest
             {
-                Type = AirplaneResourceType.Airplanes,
-                Attributes = new AttributesInCreateAirplaneRequest
+                Attributes = new TrackChangesFor<AttributesInCreateAirplaneRequest>(apiClient)
                 {
-                    Name = name,
-                    AirtimeInHours = 800
-                }
+                    Initializer =
+                    {
+                        Name = name,
+                        AirtimeInHours = 800,
+                        SerialNumber = null
+                    }
+                }.Initializer
             }
         };
 
-        using (apiClient.WithPartialAttributeSerialization<CreateAirplaneRequestDocument, AttributesInCreateAirplaneRequest>(requestDocument,
-            airplane => airplane.SerialNumber))
-        {
-            // Act
-            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostAirplaneAsync(null, requestDocument));
-        }
+        // Act
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostAirplaneAsync(null, requestDocument));
 
         // Assert
         wrapper.Request.ShouldNotBeNull();
@@ -200,20 +196,21 @@ public sealed class RequestTests
             Data = new DataInUpdateAirplaneRequest
             {
                 Id = airplaneId,
-                Type = AirplaneResourceType.Airplanes,
-                Attributes = new AttributesInUpdateAirplaneRequest
+                Attributes = new TrackChangesFor<AttributesInUpdateAirplaneRequest>(apiClient)
                 {
-                    LastServicedAt = lastServicedAt
-                }
+                    Initializer =
+                    {
+                        LastServicedAt = lastServicedAt,
+                        SerialNumber = null,
+                        IsInMaintenance = false,
+                        AirtimeInHours = null
+                    }
+                }.Initializer
             }
         };
 
-        using (apiClient.WithPartialAttributeSerialization<UpdateAirplaneRequestDocument, AttributesInUpdateAirplaneRequest>(requestDocument,
-            airplane => airplane.SerialNumber, airplane => airplane.LastServicedAt, airplane => airplane.IsInMaintenance, airplane => airplane.AirtimeInHours))
-        {
-            // Act
-            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
-        }
+        // Act
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
 
         // Assert
         wrapper.Request.ShouldNotBeNull();
@@ -332,8 +329,7 @@ public sealed class RequestTests
         {
             Data = new FlightAttendantIdentifierInRequest
             {
-                Id = "bBJHu",
-                Type = FlightAttendantResourceType.FlightAttendants
+                Id = "bBJHu"
             }
         };
 
@@ -393,12 +389,10 @@ public sealed class RequestTests
             [
                 new FlightAttendantIdentifierInRequest
                 {
-                    Type = FlightAttendantResourceType.FlightAttendants,
                     Id = "bBJHu"
                 },
                 new FlightAttendantIdentifierInRequest
                 {
-                    Type = FlightAttendantResourceType.FlightAttendants,
                     Id = "NInmX"
                 }
             ]
@@ -446,13 +440,11 @@ public sealed class RequestTests
             [
                 new FlightAttendantIdentifierInRequest
                 {
-                    Id = "bBJHu",
-                    Type = FlightAttendantResourceType.FlightAttendants
+                    Id = "bBJHu"
                 },
                 new FlightAttendantIdentifierInRequest
                 {
-                    Id = "NInmX",
-                    Type = FlightAttendantResourceType.FlightAttendants
+                    Id = "NInmX"
                 }
             ]
         };
@@ -499,13 +491,11 @@ public sealed class RequestTests
             [
                 new FlightAttendantIdentifierInRequest
                 {
-                    Id = "bBJHu",
-                    Type = FlightAttendantResourceType.FlightAttendants
+                    Id = "bBJHu"
                 },
                 new FlightAttendantIdentifierInRequest
                 {
-                    Id = "NInmX",
-                    Type = FlightAttendantResourceType.FlightAttendants
+                    Id = "NInmX"
                 }
             ]
         };

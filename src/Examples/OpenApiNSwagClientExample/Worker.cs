@@ -30,7 +30,7 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
 
             await SendOperationsRequestAsync(stoppingToken);
 
-            _ = await _apiClient.GetPersonAsync("999999", null, null, stoppingToken);
+            await _apiClient.GetPersonAsync("999999", null, null, stoppingToken);
         }
         catch (ApiException<ErrorResponseDocument> exception)
         {
@@ -57,20 +57,20 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
             Data = new DataInUpdatePersonRequest
             {
                 Id = "1",
-                Attributes = new AttributesInUpdatePersonRequest
+                // Using TrackChangesFor to send "firstName: null" instead of omitting it.
+                Attributes = new TrackChangesFor<AttributesInUpdatePersonRequest>(_apiClient)
                 {
-                    LastName = "Doe"
-                }
+                    Initializer =
+                    {
+                        FirstName = null,
+                        LastName = "Doe"
+                    }
+                }.Initializer
             }
         };
 
-        // This line results in sending "firstName: null" instead of omitting it.
-        using (_apiClient.WithPartialAttributeSerialization<UpdatePersonRequestDocument, AttributesInUpdatePersonRequest>(updatePersonRequest,
-            person => person.FirstName))
-        {
-            _ = await ApiResponse.TranslateAsync(async () =>
-                await _apiClient.PatchPersonAsync(updatePersonRequest.Data.Id, updatePersonRequest, cancellationToken: cancellationToken));
-        }
+        await ApiResponse.TranslateAsync(async () =>
+            await _apiClient.PatchPersonAsync(updatePersonRequest.Data.Id, updatePersonRequest, cancellationToken: cancellationToken));
     }
 
     private async Task SendOperationsRequestAsync(CancellationToken cancellationToken)
@@ -97,8 +97,24 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
                         Lid = "new-person",
                         Attributes = new AttributesInCreatePersonRequest
                         {
-                            LastName = "Cinderella"
+                            FirstName = "Cinderella",
+                            LastName = "Tremaine"
                         }
+                    }
+                },
+                new UpdatePersonOperation
+                {
+                    Data = new DataInUpdatePersonRequest
+                    {
+                        Lid = "new-person",
+                        // Using TrackChangesFor to send "firstName: null" instead of omitting it.
+                        Attributes = new TrackChangesFor<AttributesInUpdatePersonRequest>(_apiClient)
+                        {
+                            Initializer =
+                            {
+                                FirstName = null
+                            }
+                        }.Initializer
                     }
                 },
                 new CreateTodoItemOperation
@@ -149,7 +165,7 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
 
         ApiResponse<OperationsResponseDocument> operationsResponse = await _apiClient.PostOperationsAsync(operationsRequest, cancellationToken);
 
-        var newTodoItem = (TodoItemDataInResponse)operationsResponse.Result.Atomic_results.ElementAt(2).Data!;
+        var newTodoItem = (TodoItemDataInResponse)operationsResponse.Result.Atomic_results.ElementAt(3).Data!;
         Console.WriteLine($"Created todo-item with ID {newTodoItem.Id}: {newTodoItem.Attributes!.Description}.");
     }
 }

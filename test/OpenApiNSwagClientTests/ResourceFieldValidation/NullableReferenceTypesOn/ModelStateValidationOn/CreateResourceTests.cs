@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using System.Net;
 using System.Text.Json;
 using FluentAssertions;
@@ -41,15 +40,11 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
             }
         };
 
-        object? defaultValue = SetPropertyToDefaultValue(requestDocument.Data.Attributes, attributePropertyName);
-
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
 
-        Expression<Func<AttributesInCreateResourceRequest, object?>> includeAttributeSelector =
-            CreateAttributeSelectorFor<AttributesInCreateResourceRequest>(attributePropertyName);
-
-        using IDisposable _ = apiClient.WithPartialAttributeSerialization(requestDocument, includeAttributeSelector);
+        object? defaultValue = SetPropertyToDefaultValue(requestDocument.Data.Attributes, attributePropertyName);
+        apiClient.MarkAsTracked(requestDocument.Data.Attributes, attributePropertyName);
 
         // Act
         await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(null, requestDocument));
@@ -87,15 +82,11 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
             }
         };
 
-        SetPropertyToDefaultValue(requestDocument.Data.Attributes, attributePropertyName);
-
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
 
-        Expression<Func<AttributesInCreateResourceRequest, object?>> includeAttributeSelector =
-            CreateAttributeSelectorFor<AttributesInCreateResourceRequest>(attributePropertyName);
-
-        using IDisposable _ = apiClient.WithPartialAttributeSerialization(requestDocument, includeAttributeSelector);
+        SetPropertyToDefaultValue(requestDocument.Data.Attributes, attributePropertyName);
+        apiClient.MarkAsTracked(requestDocument.Data.Attributes, attributePropertyName);
 
         // Act
         Func<Task> action = async () => await apiClient.PostResourceAsync(null, requestDocument);
@@ -131,12 +122,11 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
             }
         };
 
-        SetPropertyToInitialValue(requestDocument.Data.Attributes, attributePropertyName);
-
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
 
-        using IDisposable _ = apiClient.WithPartialAttributeSerialization<CreateResourceRequestDocument, AttributesInCreateResourceRequest>(requestDocument);
+        SetPropertyToInitialValue(requestDocument.Data.Attributes, attributePropertyName);
+        apiClient.MarkAsTracked(requestDocument.Data.Attributes);
 
         // Act
         await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(null, requestDocument));
@@ -175,21 +165,20 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
             }
         };
 
-        SetPropertyToInitialValue(requestDocument.Data.Attributes, attributePropertyName);
-
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
 
-        using IDisposable _ = apiClient.WithPartialAttributeSerialization<CreateResourceRequestDocument, AttributesInCreateResourceRequest>(requestDocument);
+        SetPropertyToInitialValue(requestDocument.Data.Attributes, attributePropertyName);
+        apiClient.MarkAsTracked(requestDocument.Data.Attributes);
 
         // Act
         Func<Task> action = async () => await apiClient.PostResourceAsync(null, requestDocument);
 
         // Assert
-        ExceptionAssertions<InvalidOperationException> assertion = await action.Should().ThrowExactlyAsync<InvalidOperationException>();
+        ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
 
         assertion.Which.Message.Should().Be(
-            $"Required property '{attributePropertyName}' at JSON path 'data.attributes.{jsonPropertyName}' is not set. If sending its default value is intended, include it explicitly.");
+            $"Cannot write a default value for property '{jsonPropertyName}'. Property requires a non-default value. Path 'data.attributes'.");
     }
 
     [Theory]
@@ -214,10 +203,11 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
             }
         };
 
-        SetDataPropertyToNull(requestDocument.Data.Relationships, relationshipPropertyName);
-
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
+
+        SetDataPropertyToNull(requestDocument.Data.Relationships, relationshipPropertyName);
+        apiClient.MarkAsTracked(requestDocument.Data.Relationships, relationshipPropertyName);
 
         // Act
         await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(null, requestDocument));
@@ -257,10 +247,11 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
             }
         };
 
-        SetDataPropertyToNull(requestDocument.Data.Relationships, relationshipPropertyName);
-
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
+
+        SetDataPropertyToNull(requestDocument.Data.Relationships, relationshipPropertyName);
+        apiClient.MarkAsTracked(requestDocument.Data.Relationships, relationshipPropertyName);
 
         // Act
         Func<Task> action = async () => await apiClient.PostResourceAsync(null, requestDocument);
@@ -296,10 +287,11 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
             }
         };
 
-        SetPropertyToInitialValue(requestDocument.Data.Relationships, relationshipPropertyName);
-
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
+
+        SetPropertyToInitialValue(requestDocument.Data.Relationships, relationshipPropertyName);
+        apiClient.MarkAsTracked(requestDocument.Data.Relationships);
 
         // Act
         await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(null, requestDocument));
@@ -337,10 +329,11 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
             }
         };
 
-        SetPropertyToInitialValue(requestDocument.Data.Relationships, relationshipPropertyName);
-
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
+
+        SetPropertyToInitialValue(requestDocument.Data.Relationships, relationshipPropertyName);
+        apiClient.MarkAsTracked(requestDocument.Data.Relationships);
 
         // Act
         Func<Task> action = async () => await apiClient.PostResourceAsync(null, requestDocument);

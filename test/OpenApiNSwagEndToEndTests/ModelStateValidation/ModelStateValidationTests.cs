@@ -222,7 +222,6 @@ public sealed class ModelStateValidationTests
         {
             Data = new DataInCreateSocialMediaAccountRequest
             {
-                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
                 Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
@@ -261,7 +260,6 @@ public sealed class ModelStateValidationTests
         {
             Data = new DataInCreateSocialMediaAccountRequest
             {
-                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
                 Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
