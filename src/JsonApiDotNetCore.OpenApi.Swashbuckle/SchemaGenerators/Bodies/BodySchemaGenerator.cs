@@ -45,18 +45,19 @@ internal abstract class BodySchemaGenerator
 
         _linksVisibilitySchemaGenerator.UpdateSchemaForTopLevel(bodyType, fullSchema, schemaRepository);
 
-        SetJsonApiVersion(fullSchema);
+        SetJsonApiVersion(fullSchema, schemaRepository);
 
         return referenceSchema;
     }
 
     protected abstract OpenApiSchema GenerateBodySchema(Type bodyType, SchemaRepository schemaRepository);
 
-    private void SetJsonApiVersion(OpenApiSchema fullSchema)
+    private void SetJsonApiVersion(OpenApiSchema fullSchema, SchemaRepository schemaRepository)
     {
         if (fullSchema.Properties.ContainsKey(JsonApiPropertyName.Jsonapi) && !_options.IncludeJsonApiVersion)
         {
             fullSchema.Properties.Remove(JsonApiPropertyName.Jsonapi);
+            schemaRepository.Schemas.Remove(JsonApiPropertyName.Jsonapi);
         }
     }
 }

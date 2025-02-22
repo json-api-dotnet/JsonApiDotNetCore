@@ -27,18 +27,15 @@ internal sealed class StringEnumOrderingFilter : IDocumentFilter
     {
         public override void Visit(OpenApiSchema schema)
         {
-            if (schema.Enum.Count > 0)
+            if (HasSortAnnotation(schema))
             {
-                if (HasSortAnnotation(schema))
+                if (schema.Enum.Count > 1)
                 {
-                    if (schema.Enum.Count > 1)
-                    {
-                        OrderEnumMembers(schema);
-                    }
+                    OrderEnumMembers(schema);
                 }
-
-                schema.Extensions.Remove(RequiresSortKey);
             }
+
+            schema.Extensions.Remove(RequiresSortKey);
         }
 
         private static bool HasSortAnnotation(OpenApiSchema schema)

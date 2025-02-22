@@ -45,6 +45,8 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
 
     public void Configure(SwaggerGenOptions options)
     {
+        ArgumentNullException.ThrowIfNull(options);
+
         options.SupportNonNullableReferenceTypes();
         options.UseAllOfToExtendReferenceSchemas();
 
@@ -57,10 +59,10 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
         options.CustomOperationIds(_operationIdSelector.GetOpenApiOperationId);
         options.CustomSchemaIds(_schemaIdSelector.GetSchemaId);
 
+        options.OperationFilter<DocumentationOpenApiOperationFilter>();
         options.DocumentFilter<ServerDocumentFilter>();
         options.DocumentFilter<EndpointOrderingFilter>();
         options.DocumentFilter<StringEnumOrderingFilter>();
-        options.OperationFilter<DocumentationOpenApiOperationFilter>();
         options.DocumentFilter<UnusedComponentSchemaCleaner>();
     }
 
