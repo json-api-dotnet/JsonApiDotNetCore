@@ -280,5 +280,10 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
             JsonApiEndpoints endpoint = EndpointResolver.Instance.GetEndpoint(actionModel.ActionMethod);
             return new JsonApiEndpointWrapper(false, endpoint);
         }
+
+        public override string ToString()
+        {
+            return IsAtomicOperationsEndpoint ? "PostOperations" : Value.ToString();
+        }
     }
 }
