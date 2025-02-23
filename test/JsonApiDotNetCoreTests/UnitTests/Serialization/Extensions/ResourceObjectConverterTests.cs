@@ -1,8 +1,10 @@
+using System.Net;
 using System.Text;
 using System.Text.Json;
 using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -186,7 +188,16 @@ public sealed class ResourceObjectConverterTests
         };
 
         // Assert
-        action.Should().ThrowExactly<JsonException>().WithMessage("Failure requested from attributes.");
+        JsonApiException? exception = action.Should().ThrowExactly<NotSupportedException>().WithInnerExceptionExactly<JsonApiException>().Which;
+
+        exception.StackTrace.Should().Contain(nameof(ExtensionAwareResourceObjectConverter));
+        exception.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = exception.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("Failure requested from attributes.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Pointer.Should().Be("attributes/type-info:fail");
     }
 
     [Fact]
@@ -218,7 +229,16 @@ public sealed class ResourceObjectConverterTests
         };
 
         // Assert
-        action.Should().ThrowExactly<JsonException>().WithMessage("Failure requested from relationships.");
+        JsonApiException? exception = action.Should().ThrowExactly<NotSupportedException>().WithInnerExceptionExactly<JsonApiException>().Which;
+
+        exception.StackTrace.Should().Contain(nameof(ExtensionAwareResourceObjectConverter));
+        exception.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = exception.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("Failure requested from relationships.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Pointer.Should().Be("relationships/type-info:fail");
     }
 
     [Fact]
@@ -401,6 +421,7 @@ public sealed class ResourceObjectConverterTests
     private sealed class ExtensionAwareResourceObjectConverter : ResourceObjectConverter
     {
         private const string ExtensionNamespace = "type-info";
+        private const string ExtensionName = "fail";
 
         private readonly IResourceGraph _resourceGraph;
         private readonly JsonApiRequestAccessor _requestAccessor;
@@ -420,11 +441,18 @@ public sealed class ResourceObjectConverterTests
         private protected override void ValidateExtensionInAttributes(string extensionNamespace, string extensionName, ResourceType resourceType,
             Utf8JsonReader reader)
         {
-            if (extensionNamespace == ExtensionNamespace && IsTypeInfoExtensionEnabled && extensionName == "fail")
+            if (extensionNamespace == ExtensionNamespace && IsTypeInfoExtensionEnabled && extensionName == ExtensionName)
             {
                 if (reader.GetBoolean())
                 {
-                    throw new JsonException("Failure requested from attributes.");
+                    CapturedThrow(new JsonApiException(new ErrorObject(HttpStatusCode.BadRequest)
+                    {
+                        Title = "Failure requested from attributes.",
+                        Source = new ErrorSource
+                        {
+                            Pointer = $"attributes/{ExtensionNamespace}:{ExtensionName}"
+                        }
+                    }));
                 }
 
                 return;
@@ -436,11 +464,18 @@ public sealed class ResourceObjectConverterTests
         private protected override void ValidateExtensionInRelationships(string extensionNamespace, string extensionName, ResourceType resourceType,
             Utf8JsonReader reader)
         {
-            if (extensionNamespace == ExtensionNamespace && IsTypeInfoExtensionEnabled && extensionName == "fail")
+            if (extensionNamespace == ExtensionNamespace && IsTypeInfoExtensionEnabled && extensionName == ExtensionName)
             {
                 if (reader.GetBoolean())
                 {
-                    throw new JsonException("Failure requested from relationships.");
+                    CapturedThrow(new JsonApiException(new ErrorObject(HttpStatusCode.BadRequest)
+                    {
+                        Title = "Failure requested from relationships.",
+                        Source = new ErrorSource
+                        {
+                            Pointer = $"relationships/{ExtensionNamespace}:{ExtensionName}"
+                        }
+                    }));
                 }
 
                 return;
