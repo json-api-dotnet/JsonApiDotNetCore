@@ -1,7 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 using System.Text.Json;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -371,5 +374,23 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
     // Currently exposed for internal use only, so we don't need a breaking change when adding support for multiple extensions.
     private protected virtual void WriteExtensionInRelationships(Utf8JsonWriter writer, ResourceObject value)
     {
+    }
+
+    /// <summary>
+    /// Throws a <see cref="JsonApiException" /> in such a way that <see cref="JsonApiReader" /> can reconstruct the source pointer.
+    /// </summary>
+    /// <param name="exception">
+    /// The <see cref="JsonApiException" /> to throw, which may contain a relative source pointer.
+    /// </param>
+    [DoesNotReturn]
+    [ContractAnnotation("=> halt")]
+    private protected static void CapturedThrow(JsonApiException exception)
+    {
+        ExceptionDispatchInfo.SetCurrentStackTrace(exception);
+
+        throw new NotSupportedException(null, exception)
+        {
+            Source = "System.Text.Json.Rethrowable"
+        };
     }
 }

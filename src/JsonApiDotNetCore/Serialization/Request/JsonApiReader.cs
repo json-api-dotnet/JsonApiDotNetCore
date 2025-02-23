@@ -97,6 +97,10 @@ public sealed partial class JsonApiReader : IJsonApiReader
             // https://github.com/dotnet/runtime/issues/50205#issuecomment-808401245
             throw new InvalidRequestBodyException(_options.IncludeRequestBodyInErrors ? requestBody : null, null, exception.Message, null, null, exception);
         }
+        catch (NotSupportedException exception) when (exception.HasJsonApiException())
+        {
+            throw exception.EnrichSourcePointer();
+        }
     }
 
     private void AssertHasDocument([SysNotNull] Document? document, string requestBody)
