@@ -417,7 +417,8 @@ public sealed class ResourceObjectConverterTests
             _requestAccessor = requestAccessor;
         }
 
-        private protected override void ValidateExtensionInAttributes(string extensionNamespace, string extensionName, Utf8JsonReader reader)
+        private protected override void ValidateExtensionInAttributes(string extensionNamespace, string extensionName, ResourceType resourceType,
+            Utf8JsonReader reader)
         {
             if (extensionNamespace == ExtensionNamespace && IsTypeInfoExtensionEnabled && extensionName == "fail")
             {
@@ -429,10 +430,11 @@ public sealed class ResourceObjectConverterTests
                 return;
             }
 
-            base.ValidateExtensionInAttributes(extensionNamespace, extensionName, reader);
+            base.ValidateExtensionInAttributes(extensionNamespace, extensionName, resourceType, reader);
         }
 
-        private protected override void ValidateExtensionInRelationships(string extensionNamespace, string extensionName, Utf8JsonReader reader)
+        private protected override void ValidateExtensionInRelationships(string extensionNamespace, string extensionName, ResourceType resourceType,
+            Utf8JsonReader reader)
         {
             if (extensionNamespace == ExtensionNamespace && IsTypeInfoExtensionEnabled && extensionName == "fail")
             {
@@ -444,7 +446,7 @@ public sealed class ResourceObjectConverterTests
                 return;
             }
 
-            base.ValidateExtensionInRelationships(extensionNamespace, extensionName, reader);
+            base.ValidateExtensionInRelationships(extensionNamespace, extensionName, resourceType, reader);
         }
 
         private protected override void WriteExtensionInAttributes(Utf8JsonWriter writer, ResourceObject value)

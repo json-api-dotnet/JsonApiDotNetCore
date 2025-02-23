@@ -44,9 +44,9 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
 
         var resourceObject = new ResourceObject
         {
-            // The 'attributes' element may occur before 'type', but we need to know the resource type before we can deserialize attributes
-            // into their corresponding CLR types.
-            Type = PeekType(ref reader)
+            // The 'attributes' or 'relationships' element may occur before 'type', but we need to know the resource type
+            // before we can deserialize attributes/relationships into their corresponding CLR types.
+            Type = PeekType(reader)
         };
 
         ResourceType? resourceType = resourceObject.Type != null ? _resourceGraph.FindResourceType(resourceObject.Type) : null;
@@ -99,7 +99,15 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
                         }
                         case "relationships":
                         {
-                            resourceObject.Relationships = ReadRelationships(ref reader, options);
+                            if (resourceType != null)
+                            {
+                                resourceObject.Relationships = ReadRelationships(ref reader, options, resourceType);
+                            }
+                            else
+                            {
+                                reader.Skip();
+                            }
+
                             break;
                         }
                         case "links":
@@ -127,27 +135,27 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
         throw GetEndOfStreamError();
     }
 
-    private static string? PeekType(ref Utf8JsonReader reader)
+    private static string? PeekType(Utf8JsonReader reader)
     {
-        // https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-converters-how-to?pivots=dotnet-5-0#an-alternative-way-to-do-polymorphic-deserialization
-        Utf8JsonReader readerClone = reader;
+        // This method receives a clone of the reader (which is a struct, and there's no ref modifier on the parameter),
+        // so advancing here doesn't affect the reader position of the caller.
 
-        while (readerClone.Read())
+        while (reader.Read())
         {
-            if (readerClone.TokenType == JsonTokenType.PropertyName)
+            if (reader.TokenType == JsonTokenType.PropertyName)
             {
-                string? propertyName = readerClone.GetString();
-                readerClone.Read();
+                string? propertyName = reader.GetString();
+                reader.Read();
 
                 switch (propertyName)
                 {
                     case "type":
                     {
-                        return readerClone.GetString();
+                        return reader.GetString();
                     }
                     default:
                     {
-                        readerClone.Skip();
+                        reader.Skip();
                         break;
                     }
                 }
@@ -181,7 +189,7 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
                         string extensionNamespace = attributeName[..extensionSeparatorIndex];
                         string extensionName = attributeName[(extensionSeparatorIndex + 1)..];
 
-                        ValidateExtensionInAttributes(extensionNamespace, extensionName, reader);
+                        ValidateExtensionInAttributes(extensionNamespace, extensionName, resourceType, reader);
                         reader.Skip();
                         continue;
                     }
@@ -232,12 +240,14 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
     }
 
     // Currently exposed for internal use only, so we don't need a breaking change when adding support for multiple extensions.
-    private protected virtual void ValidateExtensionInAttributes(string extensionNamespace, string extensionName, Utf8JsonReader reader)
+    // ReSharper disable once UnusedParameter.Global
+    private protected virtual void ValidateExtensionInAttributes(string extensionNamespace, string extensionName, ResourceType resourceType,
+        Utf8JsonReader reader)
     {
         throw new JsonException($"Unsupported usage of JSON:API extension '{extensionNamespace}' in attributes.");
     }
 
-    private Dictionary<string, RelationshipObject?> ReadRelationships(ref Utf8JsonReader reader, JsonSerializerOptions options)
+    private Dictionary<string, RelationshipObject?> ReadRelationships(ref Utf8JsonReader reader, JsonSerializerOptions options, ResourceType resourceType)
     {
         var relationships = new Dictionary<string, RelationshipObject?>();
 
@@ -261,7 +271,7 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
                         string extensionNamespace = relationshipName[..extensionSeparatorIndex];
                         string extensionName = relationshipName[(extensionSeparatorIndex + 1)..];
 
-                        ValidateExtensionInRelationships(extensionNamespace, extensionName, reader);
+                        ValidateExtensionInRelationships(extensionNamespace, extensionName, resourceType, reader);
                         reader.Skip();
                         continue;
                     }
@@ -277,7 +287,9 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
     }
 
     // Currently exposed for internal use only, so we don't need a breaking change when adding support for multiple extensions.
-    private protected virtual void ValidateExtensionInRelationships(string extensionNamespace, string extensionName, Utf8JsonReader reader)
+    // ReSharper disable once UnusedParameter.Global
+    private protected virtual void ValidateExtensionInRelationships(string extensionNamespace, string extensionName, ResourceType resourceType,
+        Utf8JsonReader reader)
     {
         throw new JsonException($"Unsupported usage of JSON:API extension '{extensionNamespace}' in relationships.");
     }
