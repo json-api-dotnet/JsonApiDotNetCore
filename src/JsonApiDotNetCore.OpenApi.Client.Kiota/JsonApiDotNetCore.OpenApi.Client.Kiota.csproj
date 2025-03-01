@@ -29,7 +29,6 @@
     <None Include="..\..\PackageReadme.md" Visible="false" Pack="True" PackagePath="" />
     <None Include="Build\*.props" Pack="True" PackagePath="build" />
     <None Include="Build\*.targets" Pack="True" PackagePath="build" />
-    <None Include="Build\*.ps1" Pack="True" PackagePath="build" />
   </ItemGroup>
 
   <ItemGroup>
