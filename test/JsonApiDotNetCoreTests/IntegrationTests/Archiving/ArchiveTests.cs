@@ -97,7 +97,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(broadcasts[1].StringId);
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
     }
@@ -124,7 +124,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(broadcasts[0].StringId);
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().Be(broadcasts[0].ArchivedAt));
 
@@ -157,7 +157,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(station.StringId);
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
     }
@@ -187,7 +187,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(station.StringId);
 
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
         responseDocument.Included[0].Id.Should().Be(station.Broadcasts.ElementAt(0).StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().Be(station.Broadcasts.ElementAt(0).ArchivedAt));
         responseDocument.Included[1].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
@@ -242,7 +242,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
     }
@@ -271,7 +271,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
 
         DateTimeOffset archivedAt0 = station.Broadcasts.ElementAt(0).ArchivedAt!.Value;
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(station.Broadcasts.ElementAt(0).StringId);
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().Be(archivedAt0));
 
@@ -302,10 +302,10 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(network.Stations.ElementAt(0).StringId);
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Id.Should().Be(network.Stations.ElementAt(0).Broadcasts.ElementAt(1).StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
     }
@@ -335,10 +335,10 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
 
         DateTimeOffset archivedAt0 = network.Stations.ElementAt(0).Broadcasts.ElementAt(0).ArchivedAt!.Value;
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(network.Stations.ElementAt(0).StringId);
 
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
         responseDocument.Included[0].Id.Should().Be(network.Stations.ElementAt(0).Broadcasts.ElementAt(0).StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().Be(archivedAt0));
         responseDocument.Included[1].Id.Should().Be(network.Stations.ElementAt(0).Broadcasts.ElementAt(1).StringId);
@@ -367,7 +367,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
     }
 
@@ -393,7 +393,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(station.Broadcasts.ElementAt(0).StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
     }
@@ -459,7 +459,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -591,7 +591,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -650,7 +650,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);

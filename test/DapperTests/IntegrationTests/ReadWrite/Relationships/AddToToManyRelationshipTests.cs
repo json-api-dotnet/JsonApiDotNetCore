@@ -73,10 +73,10 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<DapperTestConte
         {
             Person personInDatabase = await dbContext.People.Include(person => person.OwnedTodoItems).FirstWithIdAsync(existingPerson.Id);
 
-            personInDatabase.OwnedTodoItems.ShouldHaveCount(3);
+            personInDatabase.OwnedTodoItems.Should().HaveCount(3);
         });
 
-        store.SqlCommands.ShouldHaveCount(1);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
         {
@@ -86,7 +86,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<DapperTestConte
                 WHERE "Id" IN (@p2, @p3)
                 """));
 
-            command.Parameters.ShouldHaveCount(3);
+            command.Parameters.Should().HaveCount(3);
             command.Parameters.Should().Contain("@p1", existingPerson.Id);
             command.Parameters.Should().Contain("@p2", existingTodoItems.ElementAt(0).Id);
             command.Parameters.Should().Contain("@p3", existingTodoItems.ElementAt(1).Id);

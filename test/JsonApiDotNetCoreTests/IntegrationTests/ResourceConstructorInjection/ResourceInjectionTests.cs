@@ -85,7 +85,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(postOffices[1].StringId);
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("address").With(value => value.Should().Be(postOffices[1].Address));
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("isOpen").With(value => value.Should().Be(true));
@@ -117,7 +117,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(certificate.Issuer.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldHaveCount(1);
+        responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("isOpen").With(value => value.Should().Be(true));
     }
 
@@ -180,7 +180,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
             value.Data.SingleValue.Id.Should().Be(existingOffice.StringId);
         });
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
 
         responseDocument.Included[0].With(resource =>
         {
@@ -264,7 +264,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
 
             officeInDatabase.Address.Should().Be(newAddress);
 
-            officeInDatabase.GiftCertificates.ShouldHaveCount(1);
+            officeInDatabase.GiftCertificates.Should().HaveCount(1);
             officeInDatabase.GiftCertificates[0].Id.Should().Be(existingOffice.GiftCertificates[0].Id);
         });
     }
@@ -313,7 +313,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -362,7 +362,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         {
             PostOffice officeInDatabase = await dbContext.PostOffices.Include(postOffice => postOffice.GiftCertificates).FirstWithIdAsync(existingOffice.Id);
 
-            officeInDatabase.GiftCertificates.ShouldHaveCount(2);
+            officeInDatabase.GiftCertificates.Should().HaveCount(2);
         });
     }
 }

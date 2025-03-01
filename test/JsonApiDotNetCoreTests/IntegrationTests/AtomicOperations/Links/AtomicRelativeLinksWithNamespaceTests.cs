@@ -73,7 +73,7 @@ public sealed class AtomicRelativeLinksWithNamespaceTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(2);
+        responseDocument.Results.Should().HaveCount(2);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
 

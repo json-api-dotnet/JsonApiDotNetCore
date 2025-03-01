@@ -59,7 +59,7 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
         {
@@ -110,9 +110,9 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
-        responseDocument.Included.ShouldHaveCount(4);
+        responseDocument.Included.Should().HaveCount(4);
 
         responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
         {
@@ -218,7 +218,7 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
         {
@@ -309,7 +309,7 @@ public sealed class ResourceDefinitionSerializationTests
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
 
         responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
         {
@@ -434,7 +434,7 @@ public sealed class ResourceDefinitionSerializationTests
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
 
         responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
         {
@@ -572,7 +572,7 @@ public sealed class ResourceDefinitionSerializationTests
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
 
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
 
         responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
         {
@@ -649,7 +649,7 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(scholarship.Participants[0].StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(scholarship.Participants[1].StringId);
 

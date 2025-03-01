@@ -48,7 +48,7 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be("0");
 
         responseDocument.Data.ManyValue[0].With(resource =>
@@ -86,7 +86,7 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
         responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Links.Self.Should().Be("/games/0");
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Id.Should().Be(game.ActivePlayers.ElementAt(0).StringId);
     }
 
@@ -398,7 +398,7 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
             Player playerInDatabase = await dbContext.Players.Include(player => player.RecentlyPlayed).FirstWithIdAsync(existingPlayer.Id);
 
             playerInDatabase.ShouldNotBeNull();
-            playerInDatabase.RecentlyPlayed.ShouldHaveCount(1);
+            playerInDatabase.RecentlyPlayed.Should().HaveCount(1);
             playerInDatabase.RecentlyPlayed.ElementAt(0).Id.Should().Be(0);
         });
     }
@@ -447,7 +447,7 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
             Player playerInDatabase = await dbContext.Players.Include(player => player.RecentlyPlayed).FirstWithIdAsync(existingPlayer.Id);
 
             playerInDatabase.ShouldNotBeNull();
-            playerInDatabase.RecentlyPlayed.ShouldHaveCount(1);
+            playerInDatabase.RecentlyPlayed.Should().HaveCount(1);
             playerInDatabase.RecentlyPlayed.ElementAt(0).Id.Should().Be(0);
         });
     }
@@ -496,7 +496,7 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
             Player playerInDatabase = await dbContext.Players.Include(player => player.RecentlyPlayed).FirstWithIdAsync(existingPlayer.Id);
 
             playerInDatabase.ShouldNotBeNull();
-            playerInDatabase.RecentlyPlayed.ShouldHaveCount(2);
+            playerInDatabase.RecentlyPlayed.Should().HaveCount(2);
             playerInDatabase.RecentlyPlayed.Should().ContainSingle(game => game.Id == 0);
         });
     }
@@ -543,7 +543,7 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
             Player playerInDatabase = await dbContext.Players.Include(player => player.RecentlyPlayed).FirstWithIdAsync(existingPlayer.Id);
 
             playerInDatabase.ShouldNotBeNull();
-            playerInDatabase.RecentlyPlayed.ShouldHaveCount(1);
+            playerInDatabase.RecentlyPlayed.Should().HaveCount(1);
             playerInDatabase.RecentlyPlayed.Should().ContainSingle(game => game.Id != 0);
         });
     }

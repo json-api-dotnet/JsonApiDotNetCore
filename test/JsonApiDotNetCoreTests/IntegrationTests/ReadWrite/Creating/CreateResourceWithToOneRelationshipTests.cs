@@ -202,7 +202,7 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
         responseDocument.Data.SingleValue.Attributes.ShouldNotBeEmpty();
         responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("userAccounts");
         responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("firstName").With(value => value.Should().Be(existingUserAccount.FirstName));
@@ -266,9 +266,9 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldHaveCount(1);
+        responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(newWorkItem.Description));
-        responseDocument.Data.SingleValue.Relationships.ShouldHaveCount(1);
+        responseDocument.Data.SingleValue.Relationships.Should().HaveCount(1);
 
         responseDocument.Data.SingleValue.Relationships.ShouldContainKey("assignee").With(value =>
         {
@@ -277,7 +277,7 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
             value.Data.SingleValue.Id.Should().Be(existingUserAccount.StringId);
         });
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("userAccounts");
         responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("firstName").With(value => value.Should().Be(existingUserAccount.FirstName));
@@ -329,7 +329,7 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -374,7 +374,7 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -427,7 +427,7 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -468,7 +468,7 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -510,7 +510,7 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -551,7 +551,7 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -595,7 +595,7 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -636,7 +636,7 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
@@ -700,7 +700,7 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
         responseDocument.Data.SingleValue.Attributes.ShouldNotBeEmpty();
         responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("userAccounts");
         responseDocument.Included[0].Id.Should().Be(existingUserAccounts[1].StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("firstName").With(value => value.Should().Be(existingUserAccounts[1].FirstName));
@@ -752,7 +752,7 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -794,7 +794,7 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);

@@ -88,7 +88,7 @@ public sealed class AtomicSerializationResourceDefinitionTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(2);
+        responseDocument.Results.Should().HaveCount(2);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -109,7 +109,7 @@ public sealed class AtomicSerializationResourceDefinitionTests
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             List<RecordCompany> companiesInDatabase = await dbContext.RecordCompanies.ToListAsync();
-            companiesInDatabase.ShouldHaveCount(2);
+            companiesInDatabase.Should().HaveCount(2);
 
             companiesInDatabase[0].Name.Should().Be(newCompanies[0].Name.ToUpperInvariant());
             companiesInDatabase[0].CountryOfResidence.Should().Be(newCompanies[0].CountryOfResidence);
@@ -181,7 +181,7 @@ public sealed class AtomicSerializationResourceDefinitionTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(1);
+        responseDocument.Results.Should().HaveCount(1);
 
         hitCounter.HitExtensibilityPoints.Should().BeEmpty();
     }
@@ -240,7 +240,7 @@ public sealed class AtomicSerializationResourceDefinitionTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(2);
+        responseDocument.Results.Should().HaveCount(2);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -261,7 +261,7 @@ public sealed class AtomicSerializationResourceDefinitionTests
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             List<RecordCompany> companiesInDatabase = await dbContext.RecordCompanies.ToListAsync();
-            companiesInDatabase.ShouldHaveCount(2);
+            companiesInDatabase.Should().HaveCount(2);
 
             companiesInDatabase[0].Name.Should().Be(existingCompanies[0].Name);
             companiesInDatabase[0].CountryOfResidence.Should().Be(existingCompanies[0].CountryOfResidence);
@@ -332,7 +332,7 @@ public sealed class AtomicSerializationResourceDefinitionTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(1);
+        responseDocument.Results.Should().HaveCount(1);
 
         hitCounter.HitExtensibilityPoints.Should().BeEmpty();
     }

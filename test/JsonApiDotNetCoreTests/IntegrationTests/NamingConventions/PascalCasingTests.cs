@@ -42,7 +42,7 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Type == "SwimmingPools");
         responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Attributes.ShouldContainKey("IsIndoor") != null);
         responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.ShouldContainKey("WaterSlides") != null);
@@ -50,7 +50,7 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
 
         decimal height = pools[1].DivingBoards[0].HeightInMeters;
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("DivingBoards");
         responseDocument.Included[0].Id.Should().Be(pools[1].DivingBoards[0].StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("HeightInMeters").With(value => value.As<decimal>().Should().BeApproximately(height));
@@ -87,10 +87,10 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("WaterSlides");
         responseDocument.Data.ManyValue[0].Id.Should().Be(pool.WaterSlides[1].StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue[0].Attributes.Should().HaveCount(1);
     }
 
     [Fact]
@@ -164,7 +164,7 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -205,7 +205,7 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);

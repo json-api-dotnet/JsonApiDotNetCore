@@ -51,7 +51,7 @@ public sealed class LengthSortTests : IClassFixture<IntegrationTestContext<Testa
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
         responseDocument.Data.ManyValue[0].Type.Should().Be("blogs");
         responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
@@ -90,7 +90,7 @@ public sealed class LengthSortTests : IClassFixture<IntegrationTestContext<Testa
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(3);
+        responseDocument.Data.ManyValue.Should().HaveCount(3);
 
         responseDocument.Data.ManyValue[0].Type.Should().Be("blogPosts");
         responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[2].StringId);
@@ -129,7 +129,7 @@ public sealed class LengthSortTests : IClassFixture<IntegrationTestContext<Testa
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
         responseDocument.Data.ManyValue[0].Type.Should().Be("blogs");
         responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
@@ -137,7 +137,7 @@ public sealed class LengthSortTests : IClassFixture<IntegrationTestContext<Testa
         responseDocument.Data.ManyValue[1].Type.Should().Be("blogs");
         responseDocument.Data.ManyValue[1].Id.Should().Be(blogs[0].StringId);
 
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
 
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(blogs[1].Posts[1].StringId);

@@ -35,7 +35,7 @@ public sealed class TodoItemTests(NoLoggingWebApplicationFactory<TodoItem> facto
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(4);
+        responseDocument.Data.ManyValue.Should().HaveCount(4);
 
         responseDocument.Meta.Should().ContainTotal(4);
     }
@@ -52,7 +52,7 @@ public sealed class TodoItemTests(NoLoggingWebApplicationFactory<TodoItem> facto
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("priority").With(value => value.Should().Be(TodoItemPriority.High));
 
         responseDocument.Meta.Should().ContainTotal(1);
@@ -70,7 +70,7 @@ public sealed class TodoItemTests(NoLoggingWebApplicationFactory<TodoItem> facto
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(3);
+        responseDocument.Data.ManyValue.Should().HaveCount(3);
 
         responseDocument.Meta.Should().ContainTotal(3);
     }
@@ -87,7 +87,7 @@ public sealed class TodoItemTests(NoLoggingWebApplicationFactory<TodoItem> facto
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(4);
+        responseDocument.Data.ManyValue.Should().HaveCount(4);
         responseDocument.Data.ManyValue[0].Id.Should().Be("4");
         responseDocument.Data.ManyValue[1].Id.Should().Be("3");
         responseDocument.Data.ManyValue[2].Id.Should().Be("2");
@@ -106,7 +106,7 @@ public sealed class TodoItemTests(NoLoggingWebApplicationFactory<TodoItem> facto
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(4);
+        responseDocument.Data.ManyValue.Should().HaveCount(4);
         responseDocument.Data.ManyValue[0].Id.Should().Be("2");
     }
 
@@ -122,7 +122,7 @@ public sealed class TodoItemTests(NoLoggingWebApplicationFactory<TodoItem> facto
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("description").With(value => value.Should().Be("Check emails"));
 
         responseDocument.Meta.Should().ContainTotal(4);
@@ -188,7 +188,7 @@ public sealed class TodoItemTests(NoLoggingWebApplicationFactory<TodoItem> facto
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -208,7 +208,7 @@ public sealed class TodoItemTests(NoLoggingWebApplicationFactory<TodoItem> facto
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be("Personal"));
         responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("name").With(value => value.Should().Be("Family"));
 
@@ -244,7 +244,7 @@ public sealed class TodoItemTests(NoLoggingWebApplicationFactory<TodoItem> facto
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -279,7 +279,7 @@ public sealed class TodoItemTests(NoLoggingWebApplicationFactory<TodoItem> facto
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -331,7 +331,7 @@ public sealed class TodoItemTests(NoLoggingWebApplicationFactory<TodoItem> facto
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be("3");
 
         responseDocument.Meta.Should().ContainTotal(1);

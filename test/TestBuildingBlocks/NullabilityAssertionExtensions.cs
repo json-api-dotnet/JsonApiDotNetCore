@@ -35,12 +35,6 @@ public static class NullabilityAssertionExtensions
     }
 
     [CustomAssertion]
-    public static void ShouldHaveCount<T>([SysNotNull] this IEnumerable<T>? subject, int expected)
-    {
-        subject.Should().HaveCount(expected);
-    }
-
-    [CustomAssertion]
     public static TValue? ShouldContainKey<TKey, TValue>([SysNotNull] this IDictionary<TKey, TValue?>? subject, TKey expected)
     {
         subject.Should().ContainKey(expected);

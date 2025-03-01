@@ -46,7 +46,7 @@ public sealed class ModelStateValidationTests
         var exception = new InvalidModelStateException(modelState, typeof(Parent), false, resourceGraph);
 
         // Assert
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
 
         if (expectedJsonPath == null)
         {
@@ -94,7 +94,7 @@ public sealed class ModelStateValidationTests
         var exception = new InvalidModelStateException(modelState, typeof(IList<OperationContainer>), false, resourceGraph, getOperationTypeCallback);
 
         // Assert
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
 
         if (expectedJsonPath == null)
         {

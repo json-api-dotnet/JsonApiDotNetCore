@@ -97,7 +97,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -222,14 +222,14 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             bikeInDatabase.Manufacturer.ShouldNotBeNull();
             bikeInDatabase.Manufacturer.Id.Should().Be(existingManufacturer.Id);
 
-            bikeInDatabase.Wheels.ShouldHaveCount(1);
+            bikeInDatabase.Wheels.Should().HaveCount(1);
             bikeInDatabase.Wheels.ElementAt(0).Should().BeOfType<ChromeWheel>();
             bikeInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingChromeWheel.Id);
 
             bikeInDatabase.CargoBox.ShouldNotBeNull();
             bikeInDatabase.CargoBox.Id.Should().Be(existingBox.Id);
 
-            bikeInDatabase.Lights.ShouldHaveCount(1);
+            bikeInDatabase.Lights.Should().HaveCount(1);
             bikeInDatabase.Lights.ElementAt(0).Id.Should().Be(existingLight.Id);
         });
 
@@ -365,7 +365,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             carInDatabase.Manufacturer.ShouldNotBeNull();
             carInDatabase.Manufacturer.Id.Should().Be(existingManufacturer.Id);
 
-            carInDatabase.Wheels.ShouldHaveCount(1);
+            carInDatabase.Wheels.Should().HaveCount(1);
             carInDatabase.Wheels.ElementAt(0).Should().BeOfType<CarbonWheel>();
             carInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingCarbonWheel.Id);
 
@@ -376,7 +376,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             carInDatabase.NavigationSystem.ShouldNotBeNull();
             carInDatabase.NavigationSystem.Id.Should().Be(existingNavigationSystem.Id);
 
-            carInDatabase.Features.ShouldHaveCount(1);
+            carInDatabase.Features.Should().HaveCount(1);
             carInDatabase.Features.ElementAt(0).Id.Should().Be(existingFeature.Id);
         });
 
@@ -515,17 +515,17 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             tandemInDatabase.Manufacturer.ShouldNotBeNull();
             tandemInDatabase.Manufacturer.Id.Should().Be(existingManufacturer.Id);
 
-            tandemInDatabase.Wheels.ShouldHaveCount(1);
+            tandemInDatabase.Wheels.Should().HaveCount(1);
             tandemInDatabase.Wheels.ElementAt(0).Should().BeOfType<ChromeWheel>();
             tandemInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingChromeWheel.Id);
 
             tandemInDatabase.CargoBox.ShouldNotBeNull();
             tandemInDatabase.CargoBox.Id.Should().Be(existingBox.Id);
 
-            tandemInDatabase.Lights.ShouldHaveCount(1);
+            tandemInDatabase.Lights.Should().HaveCount(1);
             tandemInDatabase.Lights.ElementAt(0).Id.Should().Be(existingLight.Id);
 
-            tandemInDatabase.Features.ShouldHaveCount(1);
+            tandemInDatabase.Features.Should().HaveCount(1);
             tandemInDatabase.Features.ElementAt(0).Id.Should().Be(existingFeature.Id);
         });
 
@@ -561,7 +561,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
@@ -610,7 +610,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -738,7 +738,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             VehicleManufacturer manufacturerInDatabase = await dbContext.VehicleManufacturers.Include(manufacturer => manufacturer.Vehicles)
                 .FirstWithIdAsync(newManufacturerId);
 
-            manufacturerInDatabase.Vehicles.ShouldHaveCount(1);
+            manufacturerInDatabase.Vehicles.Should().HaveCount(1);
             manufacturerInDatabase.Vehicles.ElementAt(0).Should().BeOfType<Tandem>();
             manufacturerInDatabase.Vehicles.ElementAt(0).Id.Should().Be(existingTandem.Id);
         });
@@ -786,7 +786,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -838,7 +838,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -880,7 +880,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -925,7 +925,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -969,7 +969,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -1093,14 +1093,14 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             bikeInDatabase.Manufacturer.ShouldNotBeNull();
             bikeInDatabase.Manufacturer.Id.Should().Be(existingManufacturer.Id);
 
-            bikeInDatabase.Wheels.ShouldHaveCount(1);
+            bikeInDatabase.Wheels.Should().HaveCount(1);
             bikeInDatabase.Wheels.ElementAt(0).Should().BeOfType<ChromeWheel>();
             bikeInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingChromeWheel.Id);
 
             bikeInDatabase.CargoBox.ShouldNotBeNull();
             bikeInDatabase.CargoBox.Id.Should().Be(existingBox.Id);
 
-            bikeInDatabase.Lights.ShouldHaveCount(1);
+            bikeInDatabase.Lights.Should().HaveCount(1);
             bikeInDatabase.Lights.ElementAt(0).Id.Should().Be(existingLight.Id);
         });
 
@@ -1222,14 +1222,14 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             tandemInDatabase.Manufacturer.ShouldNotBeNull();
             tandemInDatabase.Manufacturer.Id.Should().Be(existingManufacturer.Id);
 
-            tandemInDatabase.Wheels.ShouldHaveCount(1);
+            tandemInDatabase.Wheels.Should().HaveCount(1);
             tandemInDatabase.Wheels.ElementAt(0).Should().BeOfType<ChromeWheel>();
             tandemInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingChromeWheel.Id);
 
             tandemInDatabase.CargoBox.ShouldNotBeNull();
             tandemInDatabase.CargoBox.Id.Should().Be(existingBox.Id);
 
-            tandemInDatabase.Lights.ShouldHaveCount(1);
+            tandemInDatabase.Lights.Should().HaveCount(1);
             tandemInDatabase.Lights.ElementAt(0).Id.Should().Be(existingLight.Id);
         });
 
@@ -1272,7 +1272,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
@@ -1326,7 +1326,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -1452,7 +1452,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             VehicleManufacturer manufacturerInDatabase = await dbContext.VehicleManufacturers.Include(manufacturer => manufacturer.Vehicles)
                 .FirstWithIdAsync(existingManufacturer.Id);
 
-            manufacturerInDatabase.Vehicles.ShouldHaveCount(1);
+            manufacturerInDatabase.Vehicles.Should().HaveCount(1);
             manufacturerInDatabase.Vehicles.ElementAt(0).Should().BeOfType<Tandem>();
             manufacturerInDatabase.Vehicles.ElementAt(0).Id.Should().Be(existingTandem.Id);
         });
@@ -1504,7 +1504,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -1560,7 +1560,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -1611,7 +1611,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -1665,7 +1665,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -1729,7 +1729,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -1834,7 +1834,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
             vehicleInDatabase.Should().BeOfType<Tandem>();
 
-            vehicleInDatabase.Wheels.ShouldHaveCount(1);
+            vehicleInDatabase.Wheels.Should().HaveCount(1);
             vehicleInDatabase.Wheels.ElementAt(0).Should().BeOfType<ChromeWheel>();
             vehicleInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingChromeWheel.Id);
         });
@@ -1938,7 +1938,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             VehicleManufacturer manufacturerInDatabase = await dbContext.VehicleManufacturers.Include(manufacturer => manufacturer.Vehicles)
                 .FirstWithIdAsync(existingManufacturer.Id);
 
-            manufacturerInDatabase.Vehicles.ShouldHaveCount(1);
+            manufacturerInDatabase.Vehicles.Should().HaveCount(1);
             manufacturerInDatabase.Vehicles.ElementAt(0).Should().BeOfType<Tandem>();
             manufacturerInDatabase.Vehicles.ElementAt(0).Id.Should().Be(existingTandem.Id);
         });
@@ -1979,7 +1979,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -2024,7 +2024,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -2067,7 +2067,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -2101,7 +2101,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -2156,7 +2156,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
             vehicleInDatabase.Should().BeOfType<Tandem>();
 
-            vehicleInDatabase.Wheels.ShouldHaveCount(2);
+            vehicleInDatabase.Wheels.Should().HaveCount(2);
             vehicleInDatabase.Wheels.ElementAt(0).Should().BeOfType<CarbonWheel>();
             vehicleInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingTandem.Wheels.ElementAt(0).Id);
             vehicleInDatabase.Wheels.ElementAt(1).Should().BeOfType<ChromeWheel>();
@@ -2213,7 +2213,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
             vehicleInDatabase.Should().BeOfType<Tandem>();
 
-            vehicleInDatabase.Wheels.ShouldHaveCount(2);
+            vehicleInDatabase.Wheels.Should().HaveCount(2);
             vehicleInDatabase.Wheels.ElementAt(0).Should().BeOfType<CarbonWheel>();
             vehicleInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingTandem.Wheels.ElementAt(0).Id);
             vehicleInDatabase.Wheels.ElementAt(1).Should().BeOfType<ChromeWheel>();
@@ -2277,7 +2277,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
-            manufacturerInDatabase.Vehicles.ShouldHaveCount(2);
+            manufacturerInDatabase.Vehicles.Should().HaveCount(2);
             manufacturerInDatabase.Vehicles.ElementAt(0).Should().BeOfType<Car>();
             manufacturerInDatabase.Vehicles.ElementAt(0).Id.Should().Be(existingManufacturer.Vehicles.ElementAt(0).Id);
             manufacturerInDatabase.Vehicles.ElementAt(1).Should().BeOfType<Tandem>();
@@ -2323,7 +2323,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -2366,7 +2366,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -2400,7 +2400,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -2452,7 +2452,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
             vehicleInDatabase.Should().BeOfType<Tandem>();
 
-            vehicleInDatabase.Wheels.ShouldHaveCount(1);
+            vehicleInDatabase.Wheels.Should().HaveCount(1);
             vehicleInDatabase.Wheels.ElementAt(0).Should().BeOfType<ChromeWheel>();
             vehicleInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingTandem.Wheels.ElementAt(1).Id);
         });
@@ -2504,7 +2504,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
             vehicleInDatabase.Should().BeOfType<Tandem>();
 
-            vehicleInDatabase.Wheels.ShouldHaveCount(1);
+            vehicleInDatabase.Wheels.Should().HaveCount(1);
             vehicleInDatabase.Wheels.ElementAt(0).Should().BeOfType<ChromeWheel>();
             vehicleInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingTandem.Wheels.ElementAt(1).Id);
         });
@@ -2556,7 +2556,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             VehicleManufacturer manufacturerInDatabase = await dbContext.VehicleManufacturers.Include(manufacturer => manufacturer.Vehicles)
                 .FirstWithIdAsync(existingManufacturer.Id);
 
-            manufacturerInDatabase.Vehicles.ShouldHaveCount(1);
+            manufacturerInDatabase.Vehicles.Should().HaveCount(1);
             manufacturerInDatabase.Vehicles.ElementAt(0).Should().BeOfType<Car>();
             manufacturerInDatabase.Vehicles.ElementAt(0).Id.Should().Be(existingManufacturer.Vehicles.ElementAt(1).Id);
         });
@@ -2598,7 +2598,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         string? chromeWheelId = existingBike.Wheels.ElementAt(0).StringId;
 
@@ -2643,7 +2643,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -2677,7 +2677,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);

@@ -64,7 +64,7 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Gone);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Gone);
@@ -80,7 +80,7 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
         responseDocument.Meta.Should().BeNull();
 
         IReadOnlyList<LogMessage> logMessages = loggerProvider.GetMessages();
-        logMessages.ShouldHaveCount(1);
+        logMessages.Should().HaveCount(1);
 
         logMessages[0].LogLevel.Should().Be(LogLevel.Warning);
         logMessages[0].Text.Should().Contain("Article with code 'X123' is no longer available.");
@@ -103,7 +103,7 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -151,7 +151,7 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.InternalServerError);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
@@ -169,7 +169,7 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
         responseDocument.Meta.Should().BeNull();
 
         IReadOnlyList<LogMessage> logMessages = loggerProvider.GetMessages();
-        logMessages.ShouldHaveCount(1);
+        logMessages.Should().HaveCount(1);
 
         logMessages[0].LogLevel.Should().Be(LogLevel.Error);
         logMessages[0].Text.Should().Contain("Exception has been thrown by the target of an invocation.");

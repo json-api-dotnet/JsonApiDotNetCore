@@ -34,7 +34,7 @@ public sealed class ResourceTypeCaptureStore<TResource, TId>
 
     internal void AssertRightTypes(params Type[] types)
     {
-        RightTypeNames.ShouldHaveCount(types.Length);
+        RightTypeNames.Should().HaveCount(types.Length);
 
         foreach (Type type in types)
         {

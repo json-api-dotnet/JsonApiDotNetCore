@@ -35,7 +35,7 @@ public sealed class PersonTests(NoLoggingWebApplicationFactory<Person> factory) 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
         responseDocument.Meta.Should().ContainTotal(2);
     }
@@ -52,7 +52,7 @@ public sealed class PersonTests(NoLoggingWebApplicationFactory<Person> factory) 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("firstName").With(value => value.Should().Be("Jane"));
 
         responseDocument.Meta.Should().ContainTotal(1);
@@ -70,7 +70,7 @@ public sealed class PersonTests(NoLoggingWebApplicationFactory<Person> factory) 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("firstName").With(value => value.Should().Be("John"));
 
         responseDocument.Meta.Should().ContainTotal(1);
@@ -88,7 +88,7 @@ public sealed class PersonTests(NoLoggingWebApplicationFactory<Person> factory) 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be("2");
         responseDocument.Data.ManyValue[1].Id.Should().Be("1");
     }
@@ -105,7 +105,7 @@ public sealed class PersonTests(NoLoggingWebApplicationFactory<Person> factory) 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be("1");
         responseDocument.Data.ManyValue[1].Id.Should().Be("2");
     }
@@ -122,7 +122,7 @@ public sealed class PersonTests(NoLoggingWebApplicationFactory<Person> factory) 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("firstName").With(value => value.Should().Be("Jane"));
 
         responseDocument.Meta.Should().ContainTotal(2);
@@ -188,7 +188,7 @@ public sealed class PersonTests(NoLoggingWebApplicationFactory<Person> factory) 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("description").With(value => value.Should().Be("Make homework"));
         responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("description").With(value => value.Should().Be("Check emails"));
 
@@ -207,7 +207,7 @@ public sealed class PersonTests(NoLoggingWebApplicationFactory<Person> factory) 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be("1");
 
         responseDocument.Meta.Should().ContainTotal(1);

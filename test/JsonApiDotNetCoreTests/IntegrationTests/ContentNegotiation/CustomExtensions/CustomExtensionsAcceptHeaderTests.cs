@@ -141,7 +141,7 @@ public sealed class CustomExtensionsAcceptHeaderTests : IClassFixture<Integratio
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotAcceptable);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         string detail = $"Include '{JsonApiMediaType.AtomicOperations}' or '{ServerTimeMediaTypes.AtomicOperationsWithServerTime}' or " +
             $"'{JsonApiMediaType.RelaxedAtomicOperations}' or '{ServerTimeMediaTypes.RelaxedAtomicOperationsWithRelaxedServerTime}' in the Accept header values.";

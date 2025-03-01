@@ -35,7 +35,7 @@ public sealed class ResourceTests(NoLoggingWebApplicationFactory<ResourceA> fact
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("nameA").With(value => value.Should().Be("SampleA"));
     }
 
@@ -51,7 +51,7 @@ public sealed class ResourceTests(NoLoggingWebApplicationFactory<ResourceA> fact
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("nameB").With(value => value.Should().Be("SampleB"));
     }
 

@@ -159,7 +159,7 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(DefaultPageSize);
+        responseDocument.Data.ManyValue.Should().HaveCount(DefaultPageSize);
 
         responseDocument.Links.ShouldNotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
@@ -190,7 +190,7 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(DefaultPageSize);
+        responseDocument.Data.ManyValue.Should().HaveCount(DefaultPageSize);
 
         responseDocument.Links.ShouldNotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");

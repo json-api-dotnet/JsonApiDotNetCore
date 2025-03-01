@@ -117,7 +117,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -217,7 +217,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -520,7 +520,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItems");
         responseDocument.Data.SingleValue.Id.Should().Be(existingWorkItem.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldHaveCount(2);
+        responseDocument.Data.SingleValue.Attributes.Should().HaveCount(2);
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(itemDescription));
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(existingWorkItem.Priority));
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
@@ -577,22 +577,22 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItems");
         responseDocument.Data.SingleValue.Id.Should().Be(existingWorkItem.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldHaveCount(2);
+        responseDocument.Data.SingleValue.Attributes.Should().HaveCount(2);
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(itemDescription));
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(existingWorkItem.Priority));
-        responseDocument.Data.SingleValue.Relationships.ShouldHaveCount(1);
+        responseDocument.Data.SingleValue.Relationships.Should().HaveCount(1);
 
         responseDocument.Data.SingleValue.Relationships.ShouldContainKey("tags").With(value =>
         {
             value.ShouldNotBeNull();
-            value.Data.ManyValue.ShouldHaveCount(1);
+            value.Data.ManyValue.Should().HaveCount(1);
             value.Data.ManyValue[0].Id.Should().Be(existingWorkItem.Tags.Single().StringId);
         });
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("workTags");
         responseDocument.Included[0].Id.Should().Be(existingWorkItem.Tags.Single().StringId);
-        responseDocument.Included[0].Attributes.ShouldHaveCount(1);
+        responseDocument.Included[0].Attributes.Should().HaveCount(1);
         responseDocument.Included[0].Attributes.ShouldContainKey("text").With(value => value.Should().Be(existingWorkItem.Tags.Single().Text));
         responseDocument.Included[0].Relationships.Should().BeNull();
 
@@ -667,7 +667,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -699,7 +699,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -737,7 +737,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -772,7 +772,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -815,7 +815,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -854,7 +854,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -894,7 +894,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -933,7 +933,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -999,7 +999,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -1038,7 +1038,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
@@ -1078,7 +1078,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
@@ -1122,7 +1122,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -1155,7 +1155,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -1198,7 +1198,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -1241,7 +1241,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -1288,7 +1288,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -1399,10 +1399,10 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
             workItemInDatabase.Assignee.ShouldNotBeNull();
             workItemInDatabase.Assignee.Id.Should().Be(existingUserAccounts[0].Id);
 
-            workItemInDatabase.Subscribers.ShouldHaveCount(1);
+            workItemInDatabase.Subscribers.Should().HaveCount(1);
             workItemInDatabase.Subscribers.Single().Id.Should().Be(existingUserAccounts[1].Id);
 
-            workItemInDatabase.Tags.ShouldHaveCount(1);
+            workItemInDatabase.Tags.Should().HaveCount(1);
             workItemInDatabase.Tags.Single().Id.Should().Be(existingTag.Id);
         });
     }
@@ -1492,13 +1492,13 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
             workItemInDatabase.Parent.ShouldNotBeNull();
             workItemInDatabase.Parent.Id.Should().Be(existingWorkItem.Id);
 
-            workItemInDatabase.Children.ShouldHaveCount(1);
+            workItemInDatabase.Children.Should().HaveCount(1);
             workItemInDatabase.Children.Single().Id.Should().Be(existingWorkItem.Id);
 
-            workItemInDatabase.RelatedFrom.ShouldHaveCount(1);
+            workItemInDatabase.RelatedFrom.Should().HaveCount(1);
             workItemInDatabase.RelatedFrom.Single().Id.Should().Be(existingWorkItem.Id);
 
-            workItemInDatabase.RelatedTo.ShouldHaveCount(1);
+            workItemInDatabase.RelatedTo.Should().HaveCount(1);
             workItemInDatabase.RelatedTo.Single().Id.Should().Be(existingWorkItem.Id);
         });
     }
@@ -1536,7 +1536,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);

@@ -83,7 +83,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(1);
+        responseDocument.Results.Should().HaveCount(1);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -98,7 +98,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         {
             MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.Performers).FirstWithIdAsync(newTrackId);
 
-            trackInDatabase.Performers.ShouldHaveCount(2);
+            trackInDatabase.Performers.Should().HaveCount(2);
             trackInDatabase.Performers.Should().ContainSingle(performer => performer.Id == existingPerformers[0].Id);
             trackInDatabase.Performers.Should().ContainSingle(performer => performer.Id == existingPerformers[1].Id);
         });
@@ -168,7 +168,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(1);
+        responseDocument.Results.Should().HaveCount(1);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -183,7 +183,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         {
             Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(newPlaylistId);
 
-            playlistInDatabase.Tracks.ShouldHaveCount(3);
+            playlistInDatabase.Tracks.Should().HaveCount(3);
             playlistInDatabase.Tracks.Should().ContainSingle(musicTrack => musicTrack.Id == existingTracks[0].Id);
             playlistInDatabase.Tracks.Should().ContainSingle(musicTrack => musicTrack.Id == existingTracks[1].Id);
             playlistInDatabase.Tracks.Should().ContainSingle(musicTrack => musicTrack.Id == existingTracks[2].Id);
@@ -230,7 +230,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -282,7 +282,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -333,7 +333,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -399,7 +399,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -459,7 +459,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
@@ -529,7 +529,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(1);
+        responseDocument.Results.Should().HaveCount(1);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -544,7 +544,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         {
             MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.Performers).FirstWithIdAsync(newTrackId);
 
-            trackInDatabase.Performers.ShouldHaveCount(1);
+            trackInDatabase.Performers.Should().HaveCount(1);
             trackInDatabase.Performers[0].Id.Should().Be(existingPerformer.Id);
         });
     }
@@ -582,7 +582,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -627,7 +627,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -674,7 +674,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -726,7 +726,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);

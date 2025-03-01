@@ -49,11 +49,11 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(post.StringId);
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(post.Caption));
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("webAccounts");
         responseDocument.Included[0].Id.Should().Be(post.Author.StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(post.Author.DisplayName));
@@ -84,7 +84,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("caption").With(value => value.Should().Be(post.Caption));
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("webAccounts");
         responseDocument.Included[0].Id.Should().Be(post.Author.StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(post.Author.DisplayName));
@@ -116,7 +116,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Data.SingleValue.Id.Should().Be(blog.Owner.StringId);
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(blog.Owner.DisplayName));
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(blog.Owner.Posts[0].StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(blog.Owner.Posts[0].Caption));
@@ -144,11 +144,11 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(blog.Posts[0].Caption));
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("webAccounts");
         responseDocument.Included[0].Id.Should().Be(blog.Posts[0].Author!.StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(blog.Posts[0].Author!.DisplayName));
@@ -180,7 +180,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Data.SingleValue.Id.Should().Be(comment.StringId);
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Text));
 
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
 
         responseDocument.Included[0].Type.Should().Be("webAccounts");
         responseDocument.Included[0].Id.Should().Be(comment.Author.StringId);
@@ -218,7 +218,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
         DateTime createdAt = post.Comments.Single().CreatedAt;
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("comments");
         responseDocument.Included[0].Id.Should().Be(post.Comments.Single().StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("createdAt").With(value => value.Should().Be(createdAt));
@@ -249,7 +249,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("caption").With(value => value.Should().Be(post.Caption));
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("labels");
         responseDocument.Included[0].Id.Should().Be(post.Labels.Single().StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be(post.Labels.Single().Name));
@@ -276,12 +276,12 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("labels");
         responseDocument.Data.ManyValue[0].Id.Should().Be(post.Labels.ElementAt(0).StringId);
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be(post.Labels.Single().Name));
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(post.StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(post.Caption));
@@ -314,7 +314,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Data.SingleValue.Id.Should().Be(comment.StringId);
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Text));
 
-        responseDocument.Included.ShouldHaveCount(3);
+        responseDocument.Included.Should().HaveCount(3);
 
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(comment.Parent.StringId);
@@ -357,7 +357,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Data.SingleValue.Id.Should().Be(blog.StringId);
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("title").With(value => value.Should().Be(blog.Title));
 
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
 
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(blog.Posts[0].StringId);
@@ -398,7 +398,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Data.SingleValue.Id.Should().Be(comment.StringId);
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Text));
 
-        responseDocument.Included.ShouldHaveCount(4);
+        responseDocument.Included.Should().HaveCount(4);
 
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(comment.Parent.StringId);
@@ -456,7 +456,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
             value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
         });
 
-        responseDocument.Included.ShouldHaveCount(7);
+        responseDocument.Included.Should().HaveCount(7);
 
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(blog.Posts[0].StringId);
@@ -588,7 +588,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
         responseDocument.Data.ManyValue[0].Type.Should().Be("blogPosts");
         responseDocument.Data.ManyValue[0].Id.Should().Be(post1.StringId);
@@ -628,7 +628,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
             value.Data.SingleValue.Id.Should().Be(person.StringId);
         });
 
-        responseDocument.Included.ShouldHaveCount(7);
+        responseDocument.Included.Should().HaveCount(7);
 
         responseDocument.Included[0].Type.Should().Be("webAccounts");
         responseDocument.Included[0].Id.Should().Be(author.StringId);
@@ -732,7 +732,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
             value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
         });
 
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
 
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(blog.Posts[0].StringId);
@@ -785,7 +785,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("caption").With(value => value.Should().Be(post.Caption));
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("webAccounts");
         responseDocument.Included[0].Id.Should().Be(account.StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("userName").With(value => value.Should().Be(account.UserName));
@@ -816,9 +816,9 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("webAccounts");
         responseDocument.Included[0].Id.Should().Be(account.StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("userName").With(value => value.Should().Be(account.UserName));
@@ -862,7 +862,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -885,7 +885,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -908,7 +908,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -931,7 +931,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -1015,7 +1015,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Data.SingleValue.Relationships.Should().NotContainKey("appointments");
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("appointments");
         responseDocument.Included[0].Id.Should().Be(calendar.MostRecentAppointment.StringId);
     }
@@ -1042,23 +1042,23 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
         responseDocument.Data.ManyValue.Should().OnlyContain(resource => resource.Relationships.ShouldContainKey("reviewer") != null);
 
         ResourceObject[] postWithReviewer = responseDocument.Data.ManyValue
             .Where(resource => resource.Relationships!.First(pair => pair.Key == "reviewer").Value!.Data.SingleValue != null).ToArray();
 
-        postWithReviewer.ShouldHaveCount(1);
+        postWithReviewer.Should().HaveCount(1);
         postWithReviewer[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(posts[0].Caption));
 
         ResourceObject[] postWithoutReviewer = responseDocument.Data.ManyValue
             .Where(resource => resource.Relationships!.First(pair => pair.Key == "reviewer").Value!.Data.SingleValue == null).ToArray();
 
-        postWithoutReviewer.ShouldHaveCount(1);
+        postWithoutReviewer.Should().HaveCount(1);
         postWithoutReviewer[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(posts[1].Caption));
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("webAccounts");
         responseDocument.Included[0].Id.Should().Be(posts[0].Reviewer!.StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("userName").With(value => value.Should().Be(posts[0].Reviewer!.UserName));
@@ -1104,7 +1104,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);

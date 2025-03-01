@@ -65,7 +65,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(1);
+        responseDocument.Results.Should().HaveCount(1);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -128,7 +128,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(elementCount);
+        responseDocument.Results.Should().HaveCount(elementCount);
 
         for (int index = 0; index < elementCount; index++)
         {
@@ -154,7 +154,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         {
             List<MusicTrack> tracksInDatabase = await dbContext.MusicTracks.Where(musicTrack => newTrackIds.Contains(musicTrack.Id)).ToListAsync();
 
-            tracksInDatabase.ShouldHaveCount(elementCount);
+            tracksInDatabase.Should().HaveCount(elementCount);
 
             for (int index = 0; index < elementCount; index++)
             {
@@ -201,7 +201,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(1);
+        responseDocument.Results.Should().HaveCount(1);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -256,7 +256,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -304,7 +304,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(1);
+        responseDocument.Results.Should().HaveCount(1);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -361,7 +361,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -419,7 +419,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(1);
+        responseDocument.Results.Should().HaveCount(1);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -473,7 +473,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -508,7 +508,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -546,7 +546,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -580,7 +580,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -615,7 +615,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -662,7 +662,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -702,7 +702,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -740,7 +740,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -785,7 +785,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -827,7 +827,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -911,7 +911,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(1);
+        responseDocument.Results.Should().HaveCount(1);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -944,7 +944,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
             trackInDatabase.OwnedBy.ShouldNotBeNull();
             trackInDatabase.OwnedBy.Id.Should().Be(existingCompany.Id);
 
-            trackInDatabase.Performers.ShouldHaveCount(1);
+            trackInDatabase.Performers.Should().HaveCount(1);
             trackInDatabase.Performers[0].Id.Should().Be(existingPerformer.Id);
         });
     }
@@ -980,7 +980,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);

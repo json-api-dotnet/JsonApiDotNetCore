@@ -80,7 +80,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(2);
+        responseDocument.Results.Should().HaveCount(2);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -177,7 +177,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(2);
+        responseDocument.Results.Should().HaveCount(2);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -203,7 +203,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
 
             trackInDatabase.Title.Should().Be(newTrackTitle);
 
-            trackInDatabase.Performers.ShouldHaveCount(1);
+            trackInDatabase.Performers.Should().HaveCount(1);
             trackInDatabase.Performers[0].Id.Should().Be(newPerformerId);
             trackInDatabase.Performers[0].ArtistName.Should().Be(newPerformer.ArtistName);
             trackInDatabase.Performers[0].BornAt.Should().Be(newPerformer.BornAt);
@@ -273,7 +273,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(2);
+        responseDocument.Results.Should().HaveCount(2);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -298,7 +298,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
 
             playlistInDatabase.Name.Should().Be(newPlaylistName);
 
-            playlistInDatabase.Tracks.ShouldHaveCount(1);
+            playlistInDatabase.Tracks.Should().HaveCount(1);
             playlistInDatabase.Tracks[0].Id.Should().Be(newTrackId);
             playlistInDatabase.Tracks[0].Title.Should().Be(newTrackTitle);
         });
@@ -360,7 +360,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -427,7 +427,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -487,7 +487,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(2);
+        responseDocument.Results.Should().HaveCount(2);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -607,7 +607,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(4);
+        responseDocument.Results.Should().HaveCount(4);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -654,7 +654,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
             trackInDatabase.OwnedBy.ShouldNotBeNull();
             trackInDatabase.OwnedBy.Id.Should().Be(newCompanyId);
 
-            trackInDatabase.Performers.ShouldHaveCount(1);
+            trackInDatabase.Performers.Should().HaveCount(1);
             trackInDatabase.Performers[0].Id.Should().Be(newPerformerId);
             trackInDatabase.Performers[0].ArtistName.Should().Be(newArtistName);
         });
@@ -726,7 +726,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(3);
+        responseDocument.Results.Should().HaveCount(3);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -828,7 +828,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(3);
+        responseDocument.Results.Should().HaveCount(3);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -855,7 +855,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
 
             trackInDatabase.Title.Should().Be(newTrackTitle);
 
-            trackInDatabase.Performers.ShouldHaveCount(1);
+            trackInDatabase.Performers.Should().HaveCount(1);
             trackInDatabase.Performers[0].Id.Should().Be(newPerformerId);
             trackInDatabase.Performers[0].ArtistName.Should().Be(newArtistName);
         });
@@ -930,7 +930,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(3);
+        responseDocument.Results.Should().HaveCount(3);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -957,7 +957,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
 
             playlistInDatabase.Name.Should().Be(newPlaylistName);
 
-            playlistInDatabase.Tracks.ShouldHaveCount(1);
+            playlistInDatabase.Tracks.Should().HaveCount(1);
             playlistInDatabase.Tracks[0].Id.Should().Be(newTrackId);
             playlistInDatabase.Tracks[0].Title.Should().Be(newTrackTitle);
         });
@@ -1054,7 +1054,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(3);
+        responseDocument.Results.Should().HaveCount(3);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -1081,7 +1081,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
 
             trackInDatabase.Title.Should().Be(newTrackTitle);
 
-            trackInDatabase.Performers.ShouldHaveCount(1);
+            trackInDatabase.Performers.Should().HaveCount(1);
             trackInDatabase.Performers[0].Id.Should().Be(newPerformerId);
             trackInDatabase.Performers[0].ArtistName.Should().Be(newArtistName);
         });
@@ -1178,7 +1178,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(3);
+        responseDocument.Results.Should().HaveCount(3);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -1205,7 +1205,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
 
             playlistInDatabase.Name.Should().Be(newPlaylistName);
 
-            playlistInDatabase.Tracks.ShouldHaveCount(1);
+            playlistInDatabase.Tracks.Should().HaveCount(1);
             playlistInDatabase.Tracks[0].Id.Should().Be(newTrackId);
             playlistInDatabase.Tracks[0].Title.Should().Be(newTrackTitle);
         });
@@ -1302,7 +1302,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(3);
+        responseDocument.Results.Should().HaveCount(3);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -1329,7 +1329,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
 
             trackInDatabase.Title.Should().Be(newTrackTitle);
 
-            trackInDatabase.Performers.ShouldHaveCount(2);
+            trackInDatabase.Performers.Should().HaveCount(2);
 
             trackInDatabase.Performers[0].Id.Should().Be(existingPerformer.Id);
             trackInDatabase.Performers[0].ArtistName.Should().Be(existingPerformer.ArtistName);
@@ -1448,7 +1448,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(4);
+        responseDocument.Results.Should().HaveCount(4);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -1477,7 +1477,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
 
             playlistInDatabase.Name.Should().Be(newPlaylistName);
 
-            playlistInDatabase.Tracks.ShouldHaveCount(3);
+            playlistInDatabase.Tracks.Should().HaveCount(3);
             playlistInDatabase.Tracks.Should().ContainSingle(musicTrack => musicTrack.Id == existingTracks[0].Id);
             playlistInDatabase.Tracks.Should().ContainSingle(musicTrack => musicTrack.Id == existingTracks[1].Id);
             playlistInDatabase.Tracks.Should().ContainSingle(musicTrack => musicTrack.Id == newTrackId);
@@ -1605,7 +1605,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(4);
+        responseDocument.Results.Should().HaveCount(4);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -1638,7 +1638,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
 
             trackInDatabase.Title.Should().Be(newTrackTitle);
 
-            trackInDatabase.Performers.ShouldHaveCount(1);
+            trackInDatabase.Performers.Should().HaveCount(1);
             trackInDatabase.Performers[0].Id.Should().Be(existingPerformer.Id);
             trackInDatabase.Performers[0].ArtistName.Should().Be(existingPerformer.ArtistName);
         });
@@ -1743,7 +1743,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(4);
+        responseDocument.Results.Should().HaveCount(4);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -1762,7 +1762,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         {
             Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(existingPlaylist.Id);
 
-            playlistInDatabase.Tracks.ShouldHaveCount(1);
+            playlistInDatabase.Tracks.Should().HaveCount(1);
             playlistInDatabase.Tracks[0].Id.Should().Be(existingPlaylist.Tracks[0].Id);
         });
     }
@@ -1812,7 +1812,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(2);
+        responseDocument.Results.Should().HaveCount(2);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -1870,7 +1870,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -1920,7 +1920,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -1984,7 +1984,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -2047,7 +2047,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -2113,7 +2113,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -2178,7 +2178,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -2242,7 +2242,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -2303,7 +2303,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -2384,7 +2384,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -2463,7 +2463,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -2539,7 +2539,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);

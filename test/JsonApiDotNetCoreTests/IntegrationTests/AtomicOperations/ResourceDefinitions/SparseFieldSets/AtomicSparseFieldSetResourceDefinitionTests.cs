@@ -86,7 +86,7 @@ public sealed class AtomicSparseFieldSetResourceDefinitionTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(2);
+        responseDocument.Results.Should().HaveCount(2);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -165,7 +165,7 @@ public sealed class AtomicSparseFieldSetResourceDefinitionTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(2);
+        responseDocument.Results.Should().HaveCount(2);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {

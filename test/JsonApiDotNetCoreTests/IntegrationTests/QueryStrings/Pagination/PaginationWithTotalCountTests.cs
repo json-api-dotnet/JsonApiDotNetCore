@@ -54,7 +54,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(posts[1].StringId);
 
         responseDocument.Links.ShouldNotBeNull();
@@ -85,7 +85,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -119,7 +119,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[2].StringId);
 
         responseDocument.Links.ShouldNotBeNull();
@@ -151,7 +151,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(account.LoginAttempts[1].StringId);
 
         responseDocument.Links.ShouldNotBeNull();
@@ -182,7 +182,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -215,8 +215,8 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
 
         responseDocument.Included[0].Id.Should().Be(blogs[0].Posts[1].StringId);
         responseDocument.Included[1].Id.Should().Be(blogs[1].Posts[1].StringId);
@@ -252,7 +252,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Id.Should().Be(blog.Owner.Posts[1].StringId);
 
         responseDocument.Links.ShouldNotBeNull();
@@ -284,7 +284,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[1].StringId);
 
         responseDocument.Links.ShouldNotBeNull();
@@ -316,7 +316,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(account.LoginAttempts[1].StringId);
 
         string basePath = $"{HostPrefix}/webAccounts/{account.StringId}/relationships/loginAttempts";
@@ -352,8 +352,8 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
 
         responseDocument.Included[0].Id.Should().Be(posts[0].Labels.ElementAt(1).StringId);
         responseDocument.Included[1].Id.Should().Be(posts[1].Labels.ElementAt(1).StringId);
@@ -388,7 +388,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(post.Labels.ElementAt(1).StringId);
 
         responseDocument.Links.ShouldNotBeNull();
@@ -424,10 +424,10 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
 
-        responseDocument.Included.ShouldHaveCount(3);
+        responseDocument.Included.Should().HaveCount(3);
 
         responseDocument.Included[0].Type.Should().Be("webAccounts");
         responseDocument.Included[0].Id.Should().Be(blogs[1].Owner!.StringId);
@@ -461,7 +461,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -484,7 +484,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -519,11 +519,11 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(blog.Posts[1].StringId);
 
-        responseDocument.Included.ShouldHaveCount(4);
+        responseDocument.Included.Should().HaveCount(4);
 
         responseDocument.Links.ShouldNotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
@@ -557,7 +557,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(25);
+        responseDocument.Data.ManyValue.Should().HaveCount(25);
 
         responseDocument.Links.ShouldNotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");

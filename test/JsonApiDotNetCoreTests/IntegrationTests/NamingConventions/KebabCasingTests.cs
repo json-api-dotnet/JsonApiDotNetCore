@@ -41,7 +41,7 @@ public sealed class KebabCasingTests : IClassFixture<IntegrationTestContext<Keba
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Type == "swimming-pools");
         responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Attributes.ShouldContainKey("is-indoor") != null);
         responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.ShouldContainKey("water-slides") != null);
@@ -49,7 +49,7 @@ public sealed class KebabCasingTests : IClassFixture<IntegrationTestContext<Keba
 
         decimal height = pools[1].DivingBoards[0].HeightInMeters;
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("diving-boards");
         responseDocument.Included[0].Id.Should().Be(pools[1].DivingBoards[0].StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("height-in-meters").With(value => value.As<decimal>().Should().BeApproximately(height));
@@ -83,10 +83,10 @@ public sealed class KebabCasingTests : IClassFixture<IntegrationTestContext<Keba
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("water-slides");
         responseDocument.Data.ManyValue[0].Id.Should().Be(pool.WaterSlides[1].StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue[0].Attributes.Should().HaveCount(1);
     }
 
     [Fact]
@@ -160,7 +160,7 @@ public sealed class KebabCasingTests : IClassFixture<IntegrationTestContext<Keba
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -201,7 +201,7 @@ public sealed class KebabCasingTests : IClassFixture<IntegrationTestContext<Keba
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);

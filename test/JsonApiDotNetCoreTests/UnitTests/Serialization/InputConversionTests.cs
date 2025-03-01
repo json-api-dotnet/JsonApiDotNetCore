@@ -137,7 +137,7 @@ public sealed class InputConversionTests : IDisposable
         model.ComplexObject.ShouldNotBeNull();
         model.ComplexObject.Value.Should().Be(complexObject.Value);
 
-        model.ComplexObjectList.ShouldHaveCount(2);
+        model.ComplexObjectList.Should().HaveCount(2);
         model.ComplexObjectList[0].Value.Should().Be(complexObjectList[0].Value);
         model.ComplexObjectList[1].Value.Should().Be(complexObjectList[1].Value);
     }

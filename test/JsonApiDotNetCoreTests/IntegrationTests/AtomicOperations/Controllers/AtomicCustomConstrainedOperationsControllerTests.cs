@@ -65,7 +65,7 @@ public sealed class AtomicCustomConstrainedOperationsControllerTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(2);
+        responseDocument.Results.Should().HaveCount(2);
     }
 
     [Fact]
@@ -98,7 +98,7 @@ public sealed class AtomicCustomConstrainedOperationsControllerTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -147,7 +147,7 @@ public sealed class AtomicCustomConstrainedOperationsControllerTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -203,7 +203,7 @@ public sealed class AtomicCustomConstrainedOperationsControllerTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);

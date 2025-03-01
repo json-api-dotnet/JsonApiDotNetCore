@@ -41,7 +41,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[1].StringId);
     }
 
@@ -58,7 +58,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -90,7 +90,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[1].StringId);
     }
 
@@ -106,7 +106,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -160,7 +160,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(account.Cards[0].StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(account.Cards[1].StringId);
     }
@@ -189,9 +189,9 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(account.StringId);
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Id.Should().Be(account.Cards[0].StringId);
-        responseDocument.Included[0].Attributes.ShouldHaveCount(1);
+        responseDocument.Included[0].Attributes.Should().HaveCount(1);
         responseDocument.Included[0].Relationships.Should().BeNull();
     }
 
@@ -216,7 +216,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(account.Cards[0].StringId);
     }
 
@@ -346,7 +346,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
 
             accountInDatabase.Iban.Should().Be(newIban);
 
-            accountInDatabase.Cards.ShouldHaveCount(1);
+            accountInDatabase.Cards.Should().HaveCount(1);
             accountInDatabase.Cards[0].Id.Should().Be(existingCard.Id);
             accountInDatabase.Cards[0].StringId.Should().Be(existingCard.StringId);
         });
@@ -394,7 +394,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         {
             BankAccount accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdAsync(existingAccount.Id);
 
-            accountInDatabase.Cards.ShouldHaveCount(2);
+            accountInDatabase.Cards.Should().HaveCount(2);
         });
     }
 
@@ -437,7 +437,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         {
             BankAccount accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdAsync(existingAccount.Id);
 
-            accountInDatabase.Cards.ShouldHaveCount(1);
+            accountInDatabase.Cards.Should().HaveCount(1);
         });
     }
 
@@ -487,7 +487,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);

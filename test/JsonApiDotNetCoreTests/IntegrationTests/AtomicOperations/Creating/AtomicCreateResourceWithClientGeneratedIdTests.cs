@@ -73,7 +73,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
 
         string isoCode = $"{newLanguage.IsoCode}{ImplicitlyChangingTextLanguageDefinition.Suffix}";
 
-        responseDocument.Results.ShouldHaveCount(1);
+        responseDocument.Results.Should().HaveCount(1);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -183,7 +183,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
 
         string isoCode = $"{newIsoCode}{ImplicitlyChangingTextLanguageDefinition.Suffix}";
 
-        responseDocument.Results.ShouldHaveCount(1);
+        responseDocument.Results.Should().HaveCount(1);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -239,7 +239,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -299,7 +299,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
@@ -348,7 +348,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -397,7 +397,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(1);
+        responseDocument.Results.Should().HaveCount(1);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
@@ -448,7 +448,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -493,7 +493,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);

@@ -191,7 +191,7 @@ public sealed class ResourceObjectConverterTests
         JsonApiException? exception = action.Should().ThrowExactly<NotSupportedException>().WithInnerExceptionExactly<JsonApiException>().Which;
 
         exception.StackTrace.Should().Contain(nameof(ExtensionAwareResourceObjectConverter));
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -232,7 +232,7 @@ public sealed class ResourceObjectConverterTests
         JsonApiException? exception = action.Should().ThrowExactly<NotSupportedException>().WithInnerExceptionExactly<JsonApiException>().Which;
 
         exception.StackTrace.Should().Contain(nameof(ExtensionAwareResourceObjectConverter));
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);

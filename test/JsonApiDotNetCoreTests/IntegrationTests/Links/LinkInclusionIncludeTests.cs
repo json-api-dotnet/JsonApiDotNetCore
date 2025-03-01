@@ -48,7 +48,7 @@ public sealed class LinkInclusionIncludeTests : IClassFixture<IntegrationTestCon
             value.Links.ShouldNotBeNull();
         });
 
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
 
         responseDocument.Included.Should().ContainSingle(resource => resource.Type == "photos").Subject.With(resource =>
         {

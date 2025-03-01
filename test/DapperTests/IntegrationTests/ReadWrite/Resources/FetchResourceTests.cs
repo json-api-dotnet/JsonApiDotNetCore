@@ -49,7 +49,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("todoItems"));
 
         responseDocument.Data.ManyValue[0].Id.Should().Be(todoItems[1].StringId);
@@ -70,7 +70,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(2);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -130,7 +130,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().BeNull();
 
-        store.SqlCommands.ShouldHaveCount(1);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
         {
@@ -140,7 +140,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", todoItem.Id);
         });
     }
@@ -162,7 +162,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -170,7 +170,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
         error.Detail.Should().Be($"Resource of type 'todoItems' with ID '{unknownTodoItemId}' does not exist.");
         error.Source.Should().BeNull();
 
-        store.SqlCommands.ShouldHaveCount(1);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
         {
@@ -180,7 +180,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", unknownTodoItemId);
         });
     }
@@ -211,7 +211,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("tags"));
 
         responseDocument.Data.ManyValue[0].Id.Should().Be(todoItem.Tags.ElementAt(0).StringId);
@@ -224,7 +224,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(2);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -235,7 +235,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
                 WHERE t2."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", todoItem.Id);
         });
 
@@ -249,7 +249,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
                 ORDER BY t2."Id"
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", todoItem.Id);
         });
     }
@@ -288,7 +288,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().BeNull();
 
-        store.SqlCommands.ShouldHaveCount(1);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
         {
@@ -299,7 +299,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", todoItem.Id);
         });
     }
@@ -332,7 +332,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().BeNull();
 
-        store.SqlCommands.ShouldHaveCount(1);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
         {
@@ -343,7 +343,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", todoItem.Id);
         });
     }

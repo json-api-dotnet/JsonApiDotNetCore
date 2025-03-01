@@ -30,7 +30,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -58,7 +58,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -86,7 +86,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -114,7 +114,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -142,7 +142,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);

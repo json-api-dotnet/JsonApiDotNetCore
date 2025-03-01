@@ -48,7 +48,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be("00000000-0000-0000-0000-000000000000");
 
         responseDocument.Data.ManyValue[0].With(resource =>
@@ -87,7 +87,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Links.Self.Should().Be("/maps/00000000-0000-0000-0000-000000000000");
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Id.Should().Be("0");
     }
 
@@ -396,7 +396,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
             Game gameInDatabase = await dbContext.Games.Include(game => game.Maps).FirstWithIdAsync(existingGame.Id);
 
             gameInDatabase.ShouldNotBeNull();
-            gameInDatabase.Maps.ShouldHaveCount(1);
+            gameInDatabase.Maps.Should().HaveCount(1);
             gameInDatabase.Maps.ElementAt(0).Id.Should().Be(Guid.Empty);
         });
     }
@@ -445,7 +445,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
             Game gameInDatabase = await dbContext.Games.Include(game => game.Maps).FirstWithIdAsync(existingGame.Id);
 
             gameInDatabase.ShouldNotBeNull();
-            gameInDatabase.Maps.ShouldHaveCount(1);
+            gameInDatabase.Maps.Should().HaveCount(1);
             gameInDatabase.Maps.ElementAt(0).Id.Should().Be(Guid.Empty);
         });
     }
@@ -494,7 +494,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
             Game gameInDatabase = await dbContext.Games.Include(game => game.Maps).FirstWithIdAsync(existingGame.Id);
 
             gameInDatabase.ShouldNotBeNull();
-            gameInDatabase.Maps.ShouldHaveCount(2);
+            gameInDatabase.Maps.Should().HaveCount(2);
             gameInDatabase.Maps.Should().ContainSingle(map => map.Id == Guid.Empty);
         });
     }
@@ -541,7 +541,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
             Game gameInDatabase = await dbContext.Games.Include(game => game.Maps).FirstWithIdAsync(existingGame.Id);
 
             gameInDatabase.ShouldNotBeNull();
-            gameInDatabase.Maps.ShouldHaveCount(1);
+            gameInDatabase.Maps.Should().HaveCount(1);
             gameInDatabase.Maps.Should().ContainSingle(map => map.Id != Guid.Empty);
         });
     }

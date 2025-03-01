@@ -202,7 +202,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotAcceptable);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotAcceptable);
@@ -249,7 +249,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotAcceptable);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotAcceptable);
@@ -295,7 +295,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotAcceptable);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotAcceptable);

@@ -62,7 +62,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -118,11 +118,11 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Subscribers).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Subscribers.ShouldHaveCount(1);
+            workItemInDatabase.Subscribers.Should().HaveCount(1);
             workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(1).Id);
 
             List<UserAccount> userAccountsInDatabase = await dbContext.UserAccounts.ToListAsync();
-            userAccountsInDatabase.ShouldHaveCount(3);
+            userAccountsInDatabase.Should().HaveCount(3);
         });
     }
 
@@ -165,17 +165,17 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
 
         responseDocument.Should().BeEmpty();
 
-        workItemDefinition.PreloadedSubscribers.ShouldHaveCount(1);
+        workItemDefinition.PreloadedSubscribers.Should().HaveCount(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Subscribers).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Subscribers.ShouldHaveCount(1);
+            workItemInDatabase.Subscribers.Should().HaveCount(1);
             workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(1).Id);
 
             List<UserAccount> userAccountsInDatabase = await dbContext.UserAccounts.ToListAsync();
-            userAccountsInDatabase.ShouldHaveCount(3);
+            userAccountsInDatabase.Should().HaveCount(3);
         });
     }
 
@@ -226,11 +226,11 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Tags).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Tags.ShouldHaveCount(1);
+            workItemInDatabase.Tags.Should().HaveCount(1);
             workItemInDatabase.Tags.Single().Id.Should().Be(existingWorkItem.Tags.ElementAt(0).Id);
 
             List<WorkTag> tagsInDatabase = await dbContext.WorkTags.ToListAsync();
-            tagsInDatabase.ShouldHaveCount(3);
+            tagsInDatabase.Should().HaveCount(3);
         });
     }
 
@@ -273,17 +273,17 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
 
         responseDocument.Should().BeEmpty();
 
-        workItemDefinition.PreloadedTags.ShouldHaveCount(1);
+        workItemDefinition.PreloadedTags.Should().HaveCount(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Tags).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Tags.ShouldHaveCount(1);
+            workItemInDatabase.Tags.Should().HaveCount(1);
             workItemInDatabase.Tags.Single().Id.Should().Be(existingWorkItem.Tags.ElementAt(0).Id);
 
             List<WorkTag> tagsInDatabase = await dbContext.WorkTags.ToListAsync();
-            tagsInDatabase.ShouldHaveCount(3);
+            tagsInDatabase.Should().HaveCount(3);
         });
     }
 
@@ -312,7 +312,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -344,7 +344,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -386,7 +386,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -429,7 +429,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -471,7 +471,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -522,7 +522,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -577,7 +577,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -662,7 +662,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -704,7 +704,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -746,7 +746,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -789,7 +789,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
@@ -844,7 +844,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Subscribers).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Subscribers.ShouldHaveCount(1);
+            workItemInDatabase.Subscribers.Should().HaveCount(1);
             workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(1).Id);
         });
     }
@@ -881,7 +881,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Subscribers).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Subscribers.ShouldHaveCount(1);
+            workItemInDatabase.Subscribers.Should().HaveCount(1);
             workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(0).Id);
         });
     }
@@ -910,7 +910,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -945,7 +945,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -983,7 +983,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -1036,7 +1036,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Children).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Children.ShouldHaveCount(1);
+            workItemInDatabase.Children.Should().HaveCount(1);
             workItemInDatabase.Children[0].Id.Should().Be(existingWorkItem.Children[0].Id);
         });
     }
@@ -1092,7 +1092,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
             // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
-            workItemInDatabase.RelatedFrom.ShouldHaveCount(1);
+            workItemInDatabase.RelatedFrom.Should().HaveCount(1);
             workItemInDatabase.RelatedFrom[0].Id.Should().Be(existingWorkItem.RelatedFrom[0].Id);
 
             workItemInDatabase.RelatedTo.Should().BeEmpty();
@@ -1131,7 +1131,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);

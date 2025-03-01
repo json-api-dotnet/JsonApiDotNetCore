@@ -139,7 +139,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Subscribers).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Subscribers.ShouldHaveCount(2);
+            workItemInDatabase.Subscribers.Should().HaveCount(2);
             workItemInDatabase.Subscribers.Should().ContainSingle(userAccount => userAccount.Id == existingWorkItem.Subscribers.ElementAt(1).Id);
             workItemInDatabase.Subscribers.Should().ContainSingle(userAccount => userAccount.Id == existingSubscriber.Id);
         });
@@ -197,7 +197,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Tags).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Tags.ShouldHaveCount(3);
+            workItemInDatabase.Tags.Should().HaveCount(3);
             workItemInDatabase.Tags.Should().ContainSingle(workTag => workTag.Id == existingWorkItem.Tags.ElementAt(0).Id);
             workItemInDatabase.Tags.Should().ContainSingle(workTag => workTag.Id == existingTags[0].Id);
             workItemInDatabase.Tags.Should().ContainSingle(workTag => workTag.Id == existingTags[1].Id);
@@ -229,7 +229,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -261,7 +261,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -302,7 +302,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -345,7 +345,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -387,7 +387,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -438,7 +438,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -495,7 +495,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -575,7 +575,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -617,7 +617,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -659,7 +659,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -702,7 +702,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
@@ -759,7 +759,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Subscribers).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Subscribers.ShouldHaveCount(1);
+            workItemInDatabase.Subscribers.Should().HaveCount(1);
             workItemInDatabase.Subscribers.Single().Id.Should().Be(existingSubscriber.Id);
         });
     }
@@ -788,7 +788,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -823,7 +823,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -861,7 +861,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -1000,7 +1000,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Children).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Children.ShouldHaveCount(1);
+            workItemInDatabase.Children.Should().HaveCount(1);
             workItemInDatabase.Children[0].Id.Should().Be(existingWorkItem.Id);
         });
     }
@@ -1052,10 +1052,10 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
             // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
-            workItemInDatabase.RelatedFrom.ShouldHaveCount(1);
+            workItemInDatabase.RelatedFrom.Should().HaveCount(1);
             workItemInDatabase.RelatedFrom[0].Id.Should().Be(existingWorkItem.Id);
 
-            workItemInDatabase.RelatedTo.ShouldHaveCount(1);
+            workItemInDatabase.RelatedTo.Should().HaveCount(1);
             workItemInDatabase.RelatedTo[0].Id.Should().Be(existingWorkItem.Id);
         });
     }
@@ -1092,7 +1092,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);

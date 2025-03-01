@@ -59,10 +59,10 @@ public sealed class DeleteResourceTests : IClassFixture<DapperTestContext>
 
             List<Tag> tags = await dbContext.Tags.Where(tag => tag.TodoItem == null).ToListAsync();
 
-            tags.ShouldHaveCount(1);
+            tags.Should().HaveCount(1);
         });
 
-        store.SqlCommands.ShouldHaveCount(1);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
         {
@@ -71,7 +71,7 @@ public sealed class DeleteResourceTests : IClassFixture<DapperTestContext>
                 WHERE "Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingTodoItem.Id);
         });
     }
@@ -93,7 +93,7 @@ public sealed class DeleteResourceTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -101,7 +101,7 @@ public sealed class DeleteResourceTests : IClassFixture<DapperTestContext>
         error.Detail.Should().Be($"Resource of type 'todoItems' with ID '{unknownTodoItemId}' does not exist.");
         error.Source.Should().BeNull();
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -110,7 +110,7 @@ public sealed class DeleteResourceTests : IClassFixture<DapperTestContext>
                 WHERE "Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", unknownTodoItemId);
         });
 
@@ -122,7 +122,7 @@ public sealed class DeleteResourceTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", unknownTodoItemId);
         });
     }

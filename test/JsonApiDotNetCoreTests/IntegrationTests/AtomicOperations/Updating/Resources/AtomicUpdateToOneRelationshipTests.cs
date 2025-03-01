@@ -73,7 +73,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
             lyricInDatabase.Track.Should().BeNull();
 
             List<MusicTrack> tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
-            tracksInDatabase.ShouldHaveCount(1);
+            tracksInDatabase.Should().HaveCount(1);
         });
     }
 
@@ -131,7 +131,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
             trackInDatabase.Lyric.Should().BeNull();
 
             List<Lyric> lyricsInDatabase = await dbContext.Lyrics.ToListAsync();
-            lyricsInDatabase.ShouldHaveCount(1);
+            lyricsInDatabase.Should().HaveCount(1);
         });
     }
 
@@ -189,7 +189,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
             trackInDatabase.OwnedBy.Should().BeNull();
 
             List<RecordCompany> companiesInDatabase = await dbContext.RecordCompanies.ToListAsync();
-            companiesInDatabase.ShouldHaveCount(1);
+            companiesInDatabase.Should().HaveCount(1);
         });
     }
 
@@ -431,7 +431,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
             lyricInDatabase.Track.Id.Should().Be(existingTrack.Id);
 
             List<MusicTrack> tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
-            tracksInDatabase.ShouldHaveCount(2);
+            tracksInDatabase.Should().HaveCount(2);
         });
     }
 
@@ -496,7 +496,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
             trackInDatabase.Lyric.Id.Should().Be(existingLyric.Id);
 
             List<Lyric> lyricsInDatabase = await dbContext.Lyrics.ToListAsync();
-            lyricsInDatabase.ShouldHaveCount(2);
+            lyricsInDatabase.Should().HaveCount(2);
         });
     }
 
@@ -561,7 +561,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
             trackInDatabase.OwnedBy.Id.Should().Be(existingCompany.Id);
 
             List<RecordCompany> companiesInDatabase = await dbContext.RecordCompanies.ToListAsync();
-            companiesInDatabase.ShouldHaveCount(2);
+            companiesInDatabase.Should().HaveCount(2);
         });
     }
 
@@ -605,7 +605,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -658,7 +658,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -719,7 +719,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -768,7 +768,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -818,7 +818,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -867,7 +867,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -918,7 +918,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -978,7 +978,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -1036,7 +1036,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
@@ -1094,7 +1094,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);

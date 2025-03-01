@@ -58,7 +58,7 @@ public sealed class SumFilterParseTests : BaseParseTests
         InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
         exception.ParameterName.Should().Be(parameterName);
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);

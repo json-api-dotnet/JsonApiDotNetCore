@@ -43,7 +43,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -78,7 +78,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -113,7 +113,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -153,7 +153,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -225,7 +225,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -265,7 +265,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(3);
+        responseDocument.Errors.Should().HaveCount(3);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -472,7 +472,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -522,7 +522,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -567,7 +567,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);

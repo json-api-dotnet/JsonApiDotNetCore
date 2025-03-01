@@ -270,7 +270,7 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         string detail = $"Use '{JsonApiMediaType.Default}' or '{ServerTimeMediaTypes.ServerTime}' or " +
             $"'{ServerTimeMediaTypes.RelaxedServerTime}' instead of '{contentType}' for the Content-Type header value.";
@@ -318,7 +318,7 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         string detail = $"Use '{JsonApiMediaType.AtomicOperations}' or '{ServerTimeMediaTypes.AtomicOperationsWithServerTime}' or " +
             $"'{JsonApiMediaType.RelaxedAtomicOperations}' or '{ServerTimeMediaTypes.RelaxedAtomicOperationsWithRelaxedServerTime}' " +

@@ -129,11 +129,11 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
             todoItemInDatabase.Owner.Id.Should().Be(existingPerson.Id);
             todoItemInDatabase.Assignee.ShouldNotBeNull();
             todoItemInDatabase.Assignee.Id.Should().Be(existingPerson.Id);
-            todoItemInDatabase.Tags.ShouldHaveCount(1);
+            todoItemInDatabase.Tags.Should().HaveCount(1);
             todoItemInDatabase.Tags.ElementAt(0).Id.Should().Be(existingTag.Id);
         });
 
-        store.SqlCommands.ShouldHaveCount(3);
+        store.SqlCommands.Should().HaveCount(3);
 
         store.SqlCommands[0].With(command =>
         {
@@ -143,7 +143,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
                 RETURNING "Id"
                 """));
 
-            command.Parameters.ShouldHaveCount(7);
+            command.Parameters.Should().HaveCount(7);
             command.Parameters.Should().Contain("@p1", newTodoItem.Description);
             command.Parameters.Should().Contain("@p2", newTodoItem.Priority);
             command.Parameters.Should().Contain("@p3", newTodoItem.DurationInHours);
@@ -161,7 +161,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
                 WHERE "Id" = @p2
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", newTodoItemId);
             command.Parameters.Should().Contain("@p2", existingTag.Id);
         });
@@ -174,7 +174,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", newTodoItemId);
         });
     }
@@ -265,7 +265,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
             todoItemInDatabase.Tags.Should().BeEmpty();
         });
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -275,7 +275,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
                 RETURNING "Id"
                 """));
 
-            command.Parameters.ShouldHaveCount(7);
+            command.Parameters.Should().HaveCount(7);
             command.Parameters.Should().Contain("@p1", newTodoItem.Description);
             command.Parameters.Should().Contain("@p2", newTodoItem.Priority);
             command.Parameters.Should().Contain("@p3", null);
@@ -293,7 +293,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", newTodoItemId);
         });
     }
@@ -324,7 +324,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(3);
+        responseDocument.Errors.Should().HaveCount(3);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -437,7 +437,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
             loginAccountInDatabase.Person.Id.Should().Be(existingPerson.Id);
         });
 
-        store.SqlCommands.ShouldHaveCount(4);
+        store.SqlCommands.Should().HaveCount(4);
 
         store.SqlCommands[0].With(command =>
         {
@@ -446,7 +446,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
                 WHERE "RecoveryId" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingAccountRecovery.Id);
         });
 
@@ -458,7 +458,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
                 RETURNING "Id"
                 """));
 
-            command.Parameters.ShouldHaveCount(3);
+            command.Parameters.Should().HaveCount(3);
             command.Parameters.Should().Contain("@p1", newUserName);
             command.Parameters.Should().Contain("@p2", null);
             command.Parameters.Should().Contain("@p3", existingAccountRecovery.Id);
@@ -472,7 +472,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
                 WHERE "Id" = @p2
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", newLoginAccountId);
             command.Parameters.Should().Contain("@p2", existingPerson.Id);
         });
@@ -485,7 +485,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", newLoginAccountId);
         });
     }
@@ -538,7 +538,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
             personInDatabase.DisplayName.Should().Be(newPerson.DisplayName);
         });
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -548,7 +548,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
                 RETURNING "Id"
                 """));
 
-            command.Parameters.ShouldHaveCount(3);
+            command.Parameters.Should().HaveCount(3);
             command.Parameters.Should().Contain("@p1", newPerson.FirstName);
             command.Parameters.Should().Contain("@p2", newPerson.LastName);
             command.Parameters.Should().Contain("@p3", null);
@@ -562,7 +562,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", newPersonId);
         });
     }
@@ -627,7 +627,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
             colorInDatabase.Tag.Id.Should().Be(existingTag.Id);
         });
 
-        store.SqlCommands.ShouldHaveCount(3);
+        store.SqlCommands.Should().HaveCount(3);
 
         store.SqlCommands[0].With(command =>
         {
@@ -636,7 +636,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
                 WHERE "TagId" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingTag.Id);
         });
 
@@ -648,7 +648,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
                 RETURNING "Id"
                 """, true));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", newColor.Id);
             command.Parameters.Should().Contain("@p2", existingTag.Id);
         });
@@ -661,7 +661,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", newColor.Id);
         });
     }
@@ -713,7 +713,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
@@ -721,7 +721,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
         error.Detail.Should().Be($"Another resource of type 'rgbColors' with ID '{existingColor.StringId}' already exists.");
         error.Source.Should().BeNull();
 
-        store.SqlCommands.ShouldHaveCount(3);
+        store.SqlCommands.Should().HaveCount(3);
 
         store.SqlCommands[0].With(command =>
         {
@@ -730,7 +730,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
                 WHERE "TagId" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingTag.Id);
         });
 
@@ -742,7 +742,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
                 RETURNING "Id"
                 """, true));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", existingColor.Id);
             command.Parameters.Should().Contain("@p2", existingTag.Id);
         });
@@ -755,7 +755,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingColor.Id);
         });
     }

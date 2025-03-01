@@ -51,7 +51,7 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -104,7 +104,7 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -168,7 +168,7 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(1);
+        responseDocument.Results.Should().HaveCount(1);
 
         long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().Id.ShouldNotBeNull());
 
@@ -176,7 +176,7 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         {
             Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(newPlaylistId);
 
-            playlistInDatabase.Tracks.ShouldHaveCount(1);
+            playlistInDatabase.Tracks.Should().HaveCount(1);
             playlistInDatabase.Tracks[0].Id.Should().Be(existingTrack.Id);
         });
     }
@@ -222,7 +222,7 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -348,7 +348,7 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         {
             Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(existingPlaylist.Id);
 
-            playlistInDatabase.Tracks.ShouldHaveCount(1);
+            playlistInDatabase.Tracks.Should().HaveCount(1);
             playlistInDatabase.Tracks[0].Id.Should().Be(existingTrack.Id);
         });
     }
@@ -459,7 +459,7 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         {
             Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(existingPlaylist.Id);
 
-            playlistInDatabase.Tracks.ShouldHaveCount(1);
+            playlistInDatabase.Tracks.Should().HaveCount(1);
             playlistInDatabase.Tracks[0].Id.Should().Be(existingTrack.Id);
         });
     }
@@ -509,7 +509,7 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -593,7 +593,7 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(3);
+        responseDocument.Errors.Should().HaveCount(3);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);

@@ -60,7 +60,7 @@ public sealed class AtomicResponseMetaTests : IClassFixture<IntegrationTestConte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Meta.ShouldHaveCount(3);
+        responseDocument.Meta.Should().HaveCount(3);
 
         responseDocument.Meta.ShouldContainKey("license").With(value =>
         {
@@ -79,7 +79,7 @@ public sealed class AtomicResponseMetaTests : IClassFixture<IntegrationTestConte
             JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
             string?[] versionArray = element.EnumerateArray().Select(arrayItem => arrayItem.GetString()).ToArray();
 
-            versionArray.ShouldHaveCount(4);
+            versionArray.Should().HaveCount(4);
             versionArray.Should().Contain("v4.0.0");
             versionArray.Should().Contain("v3.1.0");
             versionArray.Should().Contain("v2.5.2");
@@ -126,7 +126,7 @@ public sealed class AtomicResponseMetaTests : IClassFixture<IntegrationTestConte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Meta.ShouldHaveCount(3);
+        responseDocument.Meta.Should().HaveCount(3);
 
         responseDocument.Meta.ShouldContainKey("license").With(value =>
         {
@@ -145,7 +145,7 @@ public sealed class AtomicResponseMetaTests : IClassFixture<IntegrationTestConte
             JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
             string?[] versionArray = element.EnumerateArray().Select(arrayItem => arrayItem.GetString()).ToArray();
 
-            versionArray.ShouldHaveCount(4);
+            versionArray.Should().HaveCount(4);
             versionArray.Should().Contain("v4.0.0");
             versionArray.Should().Contain("v3.1.0");
             versionArray.Should().Contain("v2.5.2");

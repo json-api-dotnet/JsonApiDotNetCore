@@ -168,7 +168,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(7);
+        responseDocument.Results.Should().HaveCount(7);
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource => resource.Type.Should().Be("people"));
         responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource => resource.Type.Should().Be("people"));
@@ -206,11 +206,11 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
             todoItemInDatabase.Owner.ShouldNotBeNull();
             todoItemInDatabase.Owner.Id.Should().Be(newOwnerId);
             todoItemInDatabase.Assignee.Should().BeNull();
-            todoItemInDatabase.Tags.ShouldHaveCount(1);
+            todoItemInDatabase.Tags.Should().HaveCount(1);
             todoItemInDatabase.Tags.ElementAt(0).Id.Should().Be(newTagId);
         });
 
-        store.SqlCommands.ShouldHaveCount(15);
+        store.SqlCommands.Should().HaveCount(15);
 
         store.SqlCommands[0].With(command =>
         {
@@ -220,7 +220,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 RETURNING "Id"
                 """));
 
-            command.Parameters.ShouldHaveCount(3);
+            command.Parameters.Should().HaveCount(3);
             command.Parameters.Should().Contain("@p1", newOwner.FirstName);
             command.Parameters.Should().Contain("@p2", newOwner.LastName);
             command.Parameters.Should().Contain("@p3", null);
@@ -234,7 +234,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", newOwnerId);
         });
 
@@ -246,7 +246,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 RETURNING "Id"
                 """));
 
-            command.Parameters.ShouldHaveCount(3);
+            command.Parameters.Should().HaveCount(3);
             command.Parameters.Should().Contain("@p1", newAssignee.FirstName);
             command.Parameters.Should().Contain("@p2", newAssignee.LastName);
             command.Parameters.Should().Contain("@p3", null);
@@ -260,7 +260,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", newAssigneeId);
         });
 
@@ -272,7 +272,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 RETURNING "Id"
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", newTag.Name);
             command.Parameters.Should().Contain("@p2", null);
         });
@@ -285,7 +285,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", newTagId);
         });
 
@@ -297,7 +297,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 RETURNING "Id"
                 """));
 
-            command.Parameters.ShouldHaveCount(7);
+            command.Parameters.Should().HaveCount(7);
             command.Parameters.Should().Contain("@p1", newTodoItem.Description);
             command.Parameters.Should().Contain("@p2", newTodoItem.Priority);
             command.Parameters.Should().Contain("@p3", newTodoItem.DurationInHours);
@@ -315,7 +315,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", newTodoItemId);
         });
 
@@ -328,7 +328,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", newTodoItemId);
         });
 
@@ -340,7 +340,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 WHERE "Id" = @p2
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", newAssigneeId);
             command.Parameters.Should().Contain("@p2", newTodoItemId);
         });
@@ -354,7 +354,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", newTodoItemId);
         });
 
@@ -366,7 +366,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 WHERE "Id" = @p2
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", DapperTestContext.FrozenTime);
             command.Parameters.Should().Contain("@p2", newTodoItemId);
         });
@@ -379,7 +379,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 WHERE "Id" = @p2
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", newTodoItemId);
             command.Parameters.Should().Contain("@p2", newTagId);
         });
@@ -392,7 +392,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", newTodoItemId);
         });
 
@@ -403,7 +403,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 WHERE "Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", newAssigneeId);
         });
     }
@@ -469,7 +469,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -484,7 +484,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
             peopleInDatabase.Should().BeEmpty();
         });
 
-        store.SqlCommands.ShouldHaveCount(5);
+        store.SqlCommands.Should().HaveCount(5);
 
         store.SqlCommands[0].With(command =>
         {
@@ -494,7 +494,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 RETURNING "Id"
                 """));
 
-            command.Parameters.ShouldHaveCount(3);
+            command.Parameters.Should().HaveCount(3);
             command.Parameters.Should().Contain("@p1", null);
             command.Parameters.Should().Contain("@p2", newPerson.LastName);
             command.Parameters.Should().Contain("@p3", null);
@@ -508,7 +508,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.ShouldContainKey("@p1").With(value => value.ShouldNotBeNull());
         });
 
@@ -521,7 +521,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.ShouldContainKey("@p1").With(value => value.ShouldNotBeNull());
         });
 
@@ -533,7 +533,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 WHERE "Id" = @p2
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.ShouldContainKey("@p1").With(value => value.ShouldNotBeNull());
             command.Parameters.Should().Contain("@p2", unknownTodoItemId);
         });
@@ -546,7 +546,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", unknownTodoItemId);
         });
     }

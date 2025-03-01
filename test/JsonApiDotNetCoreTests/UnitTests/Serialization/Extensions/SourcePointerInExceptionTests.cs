@@ -47,7 +47,7 @@ public sealed class SourcePointerInExceptionTests
         JsonApiException? exception = (await action.Should().ThrowExactlyAsync<JsonApiException>()).Which;
 
         exception.StackTrace.Should().Contain(nameof(ThrowingResourceObjectConverter));
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -75,7 +75,7 @@ public sealed class SourcePointerInExceptionTests
         JsonApiException? exception = (await action.Should().ThrowExactlyAsync<JsonApiException>()).Which;
 
         exception.StackTrace.Should().Contain(nameof(ThrowingResourceObjectConverter));
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);

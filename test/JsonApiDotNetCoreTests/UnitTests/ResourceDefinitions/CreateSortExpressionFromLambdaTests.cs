@@ -120,7 +120,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
 
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
         exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         exception.Errors[0].Title.Should().StartWith("Invalid lambda expression for sorting from resource definition. It should ");
         exception.Errors[0].Detail.Should().StartWith("The lambda expression 'file => Convert(file.IsCompressed, Object)' is invalid. ");
@@ -142,7 +142,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
 
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
         exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         exception.Errors[0].Title.Should().StartWith("Invalid lambda expression for sorting from resource definition. It should ");
         exception.Errors[0].Detail.Should().StartWith("The lambda expression 'file => Convert(file.Content.Length, Object)' is invalid. ");
@@ -164,7 +164,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
 
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
         exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         exception.Errors[0].Title.Should().StartWith("Invalid lambda expression for sorting from resource definition. It should ");
         exception.Errors[0].Detail.Should().StartWith("The lambda expression 'file => file.ParentDirectory.Name' is invalid. ");
@@ -186,7 +186,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
 
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
         exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         exception.Errors[0].Title.Should().StartWith("Invalid lambda expression for sorting from resource definition. It should ");
         exception.Errors[0].Detail.Should().StartWith("The lambda expression 'entry => Convert(entry, FileEntry).Content' is invalid. ");
@@ -208,7 +208,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
 
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
         exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         exception.Errors[0].Title.Should().StartWith("Invalid lambda expression for sorting from resource definition. It should ");
         exception.Errors[0].Detail.Should().StartWith("The lambda expression 'directory => Convert(directory.Files.Count(_ => True), Object)' is invalid. ");
@@ -230,7 +230,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
 
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
         exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         exception.Errors[0].Title.Should().StartWith("Invalid lambda expression for sorting from resource definition. It should ");
         exception.Errors[0].Detail.Should().Be("The lambda expression '_ => null' is invalid. Unsupported expression body 'null'.");
@@ -251,7 +251,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
 
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
         exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         exception.Errors[0].Title.Should().StartWith("Invalid lambda expression for sorting from resource definition. It should ");
         exception.Errors[0].Detail.Should().Be("The lambda expression 'entry => entry' is invalid. Unsupported expression body 'entry'.");
@@ -273,7 +273,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
 
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
         exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         exception.Errors[0].Title.Should().StartWith("Invalid lambda expression for sorting from resource definition. It should ");
         exception.Errors[0].Detail.Should().Match("The lambda expression '*' is invalid. Unsupported expression body '*'.");
@@ -294,7 +294,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
 
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
         exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         exception.Errors[0].Title.Should().StartWith("Invalid lambda expression for sorting from resource definition. It should ");
         exception.Errors[0].Detail.Should().Match("The lambda expression '*' is invalid. Unsupported expression body '*'.");
@@ -321,7 +321,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
 
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
         exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         exception.Errors[0].Title.Should().StartWith("Invalid lambda expression for sorting from resource definition. It should ");
         exception.Errors[0].Detail.Should().Match("The lambda expression '*' is invalid. Unsupported expression body '*'.");

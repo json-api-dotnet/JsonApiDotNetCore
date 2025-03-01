@@ -50,13 +50,13 @@ public sealed class SortTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(3);
+        responseDocument.Data.ManyValue.Should().HaveCount(3);
         responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("todoItems"));
         responseDocument.Data.ManyValue[0].Id.Should().Be(todoItems[2].StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(todoItems[0].StringId);
         responseDocument.Data.ManyValue[2].Id.Should().Be(todoItems[1].StringId);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -113,18 +113,18 @@ public sealed class SortTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(3);
+        responseDocument.Data.ManyValue.Should().HaveCount(3);
         responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("todoItems"));
         responseDocument.Data.ManyValue[0].Id.Should().Be(person.OwnedTodoItems.ElementAt(2).StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(person.OwnedTodoItems.ElementAt(1).StringId);
         responseDocument.Data.ManyValue[2].Id.Should().Be(person.OwnedTodoItems.ElementAt(0).StringId);
 
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
         responseDocument.Included.Should().AllSatisfy(resource => resource.Type.Should().Be("tags"));
         responseDocument.Included[0].Id.Should().Be(person.OwnedTodoItems.ElementAt(1).Tags.ElementAt(1).StringId);
         responseDocument.Included[1].Id.Should().Be(person.OwnedTodoItems.ElementAt(1).Tags.ElementAt(0).StringId);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -135,7 +135,7 @@ public sealed class SortTests : IClassFixture<DapperTestContext>
                 WHERE t2."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", person.Id);
         });
 
@@ -150,7 +150,7 @@ public sealed class SortTests : IClassFixture<DapperTestContext>
                 ORDER BY t2."DurationInHours" DESC, t3."Name"
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", person.Id);
         });
     }
@@ -184,13 +184,13 @@ public sealed class SortTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(3);
+        responseDocument.Data.ManyValue.Should().HaveCount(3);
         responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("todoItems"));
         responseDocument.Data.ManyValue[0].Id.Should().Be(todoItems[2].StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(todoItems[0].StringId);
         responseDocument.Data.ManyValue[2].Id.Should().Be(todoItems[1].StringId);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -247,13 +247,13 @@ public sealed class SortTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(3);
+        responseDocument.Data.ManyValue.Should().HaveCount(3);
         responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("todoItems"));
         responseDocument.Data.ManyValue[0].Id.Should().Be(person.OwnedTodoItems.ElementAt(2).StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(person.OwnedTodoItems.ElementAt(0).StringId);
         responseDocument.Data.ManyValue[2].Id.Should().Be(person.OwnedTodoItems.ElementAt(1).StringId);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -264,7 +264,7 @@ public sealed class SortTests : IClassFixture<DapperTestContext>
                 WHERE t2."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", person.Id);
         });
 
@@ -282,7 +282,7 @@ public sealed class SortTests : IClassFixture<DapperTestContext>
                 ) DESC, t2."Id"
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", person.Id);
         });
     }
@@ -316,13 +316,13 @@ public sealed class SortTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(3);
+        responseDocument.Data.ManyValue.Should().HaveCount(3);
         responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("todoItems"));
         responseDocument.Data.ManyValue[0].Id.Should().Be(person.OwnedTodoItems.ElementAt(2).StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(person.OwnedTodoItems.ElementAt(0).StringId);
         responseDocument.Data.ManyValue[2].Id.Should().Be(person.OwnedTodoItems.ElementAt(1).StringId);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -333,7 +333,7 @@ public sealed class SortTests : IClassFixture<DapperTestContext>
                 WHERE t2."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", person.Id);
         });
 
@@ -352,7 +352,7 @@ public sealed class SortTests : IClassFixture<DapperTestContext>
                 ) DESC, t2."Id", t4."Id"
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", person.Id);
         });
     }
@@ -386,18 +386,18 @@ public sealed class SortTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("people");
         responseDocument.Data.ManyValue[0].Id.Should().Be(person.StringId);
 
-        responseDocument.Included.ShouldHaveCount(4);
+        responseDocument.Included.Should().HaveCount(4);
         responseDocument.Included.Should().AllSatisfy(resource => resource.Type.Should().Be("todoItems"));
         responseDocument.Included[0].Id.Should().Be(person.OwnedTodoItems.ElementAt(2).StringId);
         responseDocument.Included[1].Id.Should().Be(person.OwnedTodoItems.ElementAt(0).StringId);
         responseDocument.Included[2].Id.Should().Be(person.OwnedTodoItems.ElementAt(1).StringId);
         responseDocument.Included[3].Id.Should().Be(person.OwnedTodoItems.ElementAt(3).StringId);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {

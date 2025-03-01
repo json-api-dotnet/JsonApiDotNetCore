@@ -50,13 +50,13 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("tags");
         responseDocument.Data.ManyValue[0].Id.Should().Be(tags[1].StringId);
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -67,7 +67,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 WHERE t2."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", 0x00FF00);
         });
 
@@ -81,7 +81,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 ORDER BY t1."Id"
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", 0x00FF00);
         });
     }
@@ -115,13 +115,13 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("tags");
         responseDocument.Data.ManyValue[0].Id.Should().Be(tags[1].StringId);
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -132,7 +132,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 WHERE t2."Id" IN (@p1, @p2)
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", 0x00FF00);
             command.Parameters.Should().Contain("@p2", 0x11EE11);
         });
@@ -147,7 +147,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 ORDER BY t1."Id"
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", 0x00FF00);
             command.Parameters.Should().Contain("@p2", 0x11EE11);
         });
@@ -178,13 +178,13 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("todoItems");
         responseDocument.Data.ManyValue[0].Id.Should().Be(person.OwnedTodoItems.ElementAt(1).StringId);
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -196,7 +196,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 WHERE (t2."Id" = @p1) AND (t3."Id" IS NULL)
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", person.Id);
         });
 
@@ -215,7 +215,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 ORDER BY t4."Priority", t4."LastModifiedAt" DESC
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", person.Id);
         });
     }
@@ -245,13 +245,13 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("todoItems");
         responseDocument.Data.ManyValue[0].Id.Should().Be(person.OwnedTodoItems.ElementAt(1).StringId);
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -262,7 +262,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 WHERE (t2."Id" = @p1) AND (t1."DurationInHours" IS NULL)
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", person.Id);
         });
 
@@ -280,7 +280,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 ORDER BY t3."Priority", t3."LastModifiedAt" DESC
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", person.Id);
         });
     }
@@ -313,13 +313,13 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("todoItems");
         responseDocument.Data.ManyValue[0].Id.Should().Be(todoItems[1].StringId);
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -329,7 +329,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 WHERE t1."Priority" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", todoItems[1].Priority);
         });
 
@@ -342,7 +342,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 ORDER BY t1."Priority", t1."LastModifiedAt" DESC
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", todoItems[1].Priority);
         });
     }
@@ -375,13 +375,13 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("todoItems");
         responseDocument.Data.ManyValue[0].Id.Should().Be(person.AssignedTodoItems.ElementAt(1).StringId);
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -392,7 +392,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 WHERE (t2."Id" = @p1) AND (t1."Description" = @p2)
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", person.Id);
             command.Parameters.Should().Contain("@p2", person.AssignedTodoItems.ElementAt(1).Description);
         });
@@ -411,7 +411,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 ORDER BY t3."Priority", t3."LastModifiedAt" DESC
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", person.Id);
             command.Parameters.Should().Contain("@p2", person.AssignedTodoItems.ElementAt(1).Description);
         });
@@ -445,13 +445,13 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("todoItems");
         responseDocument.Data.ManyValue[0].Id.Should().Be(todoItems[1].StringId);
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -506,13 +506,13 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("todoItems");
         responseDocument.Data.ManyValue[0].Id.Should().Be(person.OwnedTodoItems.ElementAt(1).StringId);
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -523,7 +523,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 WHERE (t2."Id" = @p1) AND (t1."Priority" = @p2)
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", person.Id);
             command.Parameters.Should().Contain("@p2", TodoItemPriority.Medium);
         });
@@ -542,7 +542,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 ORDER BY t3."Priority", t3."LastModifiedAt" DESC
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", person.Id);
             command.Parameters.Should().Contain("@p2", TodoItemPriority.Medium);
         });
@@ -574,13 +574,13 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("todoItems");
         responseDocument.Data.ManyValue[0].Id.Should().Be(todoItem.StringId);
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -590,7 +590,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 WHERE t1."Description" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", "X");
         });
 
@@ -603,7 +603,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 ORDER BY t1."Priority", t1."LastModifiedAt" DESC
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", "X");
         });
     }
@@ -635,14 +635,14 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("people"));
         responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Id == people[1].StringId);
         responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Id == people[2].StringId);
 
         responseDocument.Meta.Should().ContainTotal(2);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -652,7 +652,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 WHERE (NOT (t1."FirstName" = @p1)) OR (t1."FirstName" IS NULL)
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", "X");
         });
 
@@ -665,7 +665,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 ORDER BY t1."Id"
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", "X");
         });
     }
@@ -699,13 +699,13 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("todoItems");
         responseDocument.Data.ManyValue[0].Id.Should().Be(todoItems[0].StringId);
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -716,7 +716,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 WHERE (NOT ((t2."FirstName" = @p1) AND (t2."LastName" = @p2))) OR (t2."FirstName" IS NULL) OR (t2."LastName" IS NULL)
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", "X");
             command.Parameters.Should().Contain("@p2", "Y");
         });
@@ -731,7 +731,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 ORDER BY t1."Priority", t1."LastModifiedAt" DESC
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", "X");
             command.Parameters.Should().Contain("@p2", "Y");
         });
@@ -768,13 +768,13 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("todoItems");
         responseDocument.Data.ManyValue[0].Id.Should().Be(todoItems[1].StringId);
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -785,7 +785,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 WHERE (t1."Description" LIKE 'T%') AND (NOT (t1."Description" IN (@p1, @p2))) AND (t2."FirstName" = @p3) AND (t1."Description" LIKE '%o%')
                 """));
 
-            command.Parameters.ShouldHaveCount(3);
+            command.Parameters.Should().HaveCount(3);
             command.Parameters.Should().Contain("@p1", "Four");
             command.Parameters.Should().Contain("@p2", "Three");
             command.Parameters.Should().Contain("@p3", "Jack");
@@ -801,7 +801,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 ORDER BY t1."Priority", t1."LastModifiedAt" DESC
                 """));
 
-            command.Parameters.ShouldHaveCount(3);
+            command.Parameters.Should().HaveCount(3);
             command.Parameters.Should().Contain("@p1", "Four");
             command.Parameters.Should().Contain("@p2", "Three");
             command.Parameters.Should().Contain("@p3", "Jack");
@@ -838,7 +838,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(5);
+        responseDocument.Data.ManyValue.Should().HaveCount(5);
         responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("tags"));
         responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Id == tags[0].StringId);
         responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Id == tags[1].StringId);
@@ -848,7 +848,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(5);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -903,14 +903,14 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("todoItems"));
         responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Id == todoItems[0].StringId);
         responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Id == todoItems[2].StringId);
 
         responseDocument.Meta.Should().ContainTotal(2);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -920,7 +920,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 WHERE (t1."DurationInHours" > @p1) OR (t1."DurationInHours" <= @p2)
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", 250);
             command.Parameters.Should().Contain("@p2", 100);
         });
@@ -934,7 +934,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 ORDER BY t1."Priority", t1."LastModifiedAt" DESC
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", 250);
             command.Parameters.Should().Contain("@p2", 100);
         });
@@ -968,13 +968,13 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("todoItems");
         responseDocument.Data.ManyValue[0].Id.Should().Be(todoItems[1].StringId);
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -990,7 +990,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 ) > @p1) AND (NOT (t4."Id" IS NULL))
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", 1);
         });
 
@@ -1009,7 +1009,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 ORDER BY t1."Priority", t1."LastModifiedAt" DESC
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", 1);
         });
     }
@@ -1052,13 +1052,13 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("todoItems");
         responseDocument.Data.ManyValue[0].Id.Should().Be(todoItems[1].StringId);
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -1078,7 +1078,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 )
                 """));
 
-            command.Parameters.ShouldHaveCount(3);
+            command.Parameters.Should().HaveCount(3);
             command.Parameters.Should().Contain("@p1", "Personal");
             command.Parameters.Should().Contain("@p2", "Smith");
             command.Parameters.Should().Contain("@p3", "Homework");
@@ -1103,7 +1103,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 ORDER BY t1."Priority", t1."LastModifiedAt" DESC
                 """));
 
-            command.Parameters.ShouldHaveCount(3);
+            command.Parameters.Should().HaveCount(3);
             command.Parameters.Should().Contain("@p1", "Personal");
             command.Parameters.Should().Contain("@p2", "Smith");
             command.Parameters.Should().Contain("@p3", "Homework");
@@ -1142,13 +1142,13 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("people");
         responseDocument.Data.ManyValue[0].Id.Should().Be(people[2].StringId);
 
         responseDocument.Meta.Should().ContainTotal(1);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -1229,7 +1229,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(3);
+        responseDocument.Data.ManyValue.Should().HaveCount(3);
         responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("todoItems"));
         responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Id == todoItems[2].StringId);
         responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Id == todoItems[3].StringId);
@@ -1237,7 +1237,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(3);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -1247,7 +1247,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 WHERE (t1."Description" = @p1) AND ((t1."Priority" = @p2) OR (t1."DurationInHours" = @p3))
                 """));
 
-            command.Parameters.ShouldHaveCount(3);
+            command.Parameters.Should().HaveCount(3);
             command.Parameters.Should().Contain("@p1", "1");
             command.Parameters.Should().Contain("@p2", TodoItemPriority.High);
             command.Parameters.Should().Contain("@p3", 1);
@@ -1262,7 +1262,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 ORDER BY t1."Priority", t1."LastModifiedAt" DESC
                 """));
 
-            command.Parameters.ShouldHaveCount(3);
+            command.Parameters.Should().HaveCount(3);
             command.Parameters.Should().Contain("@p1", "1");
             command.Parameters.Should().Contain("@p2", TodoItemPriority.High);
             command.Parameters.Should().Contain("@p3", 1);
@@ -1292,7 +1292,7 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);

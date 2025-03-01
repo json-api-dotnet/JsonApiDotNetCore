@@ -67,7 +67,7 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(SingleSpace);
 
         responseDocument.Data.ManyValue[0].With(resource =>
@@ -106,7 +106,7 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
         responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Links.Self.Should().Be("/players/%20");
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Id.Should().Be("0");
     }
 
@@ -415,7 +415,7 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
             Game gameInDatabase = await dbContext.Games.Include(game => game.ActivePlayers).FirstWithIdAsync(existingGame.Id);
 
             gameInDatabase.ShouldNotBeNull();
-            gameInDatabase.ActivePlayers.ShouldHaveCount(1);
+            gameInDatabase.ActivePlayers.Should().HaveCount(1);
             gameInDatabase.ActivePlayers.ElementAt(0).Id.Should().Be(SingleSpace);
         });
     }
@@ -464,7 +464,7 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
             Game gameInDatabase = await dbContext.Games.Include(game => game.ActivePlayers).FirstWithIdAsync(existingGame.Id);
 
             gameInDatabase.ShouldNotBeNull();
-            gameInDatabase.ActivePlayers.ShouldHaveCount(1);
+            gameInDatabase.ActivePlayers.Should().HaveCount(1);
             gameInDatabase.ActivePlayers.ElementAt(0).Id.Should().Be(SingleSpace);
         });
     }
@@ -513,7 +513,7 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
             Game gameInDatabase = await dbContext.Games.Include(game => game.ActivePlayers).FirstWithIdAsync(existingGame.Id);
 
             gameInDatabase.ShouldNotBeNull();
-            gameInDatabase.ActivePlayers.ShouldHaveCount(2);
+            gameInDatabase.ActivePlayers.Should().HaveCount(2);
             gameInDatabase.ActivePlayers.Should().ContainSingle(player => player.Id == SingleSpace);
         });
     }
@@ -560,7 +560,7 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
             Game gameInDatabase = await dbContext.Games.Include(game => game.ActivePlayers).FirstWithIdAsync(existingGame.Id);
 
             gameInDatabase.ShouldNotBeNull();
-            gameInDatabase.ActivePlayers.ShouldHaveCount(1);
+            gameInDatabase.ActivePlayers.Should().HaveCount(1);
             gameInDatabase.ActivePlayers.Should().ContainSingle(player => player.Id != SingleSpace);
         });
     }

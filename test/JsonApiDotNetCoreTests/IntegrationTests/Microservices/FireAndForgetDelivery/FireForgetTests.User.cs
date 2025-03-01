@@ -52,7 +52,7 @@ public sealed partial class FireForgetTests
             (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        messageBroker.SentMessages.ShouldHaveCount(1);
+        messageBroker.SentMessages.Should().HaveCount(1);
 
         Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
@@ -122,7 +122,7 @@ public sealed partial class FireForgetTests
             (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        messageBroker.SentMessages.ShouldHaveCount(2);
+        messageBroker.SentMessages.Should().HaveCount(2);
 
         Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
@@ -185,7 +185,7 @@ public sealed partial class FireForgetTests
             (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        messageBroker.SentMessages.ShouldHaveCount(2);
+        messageBroker.SentMessages.Should().HaveCount(2);
 
         var content1 = messageBroker.SentMessages[0].GetContentAs<UserLoginNameChangedContent>();
         content1.UserId.Should().Be(existingUser.Id);
@@ -254,7 +254,7 @@ public sealed partial class FireForgetTests
             (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        messageBroker.SentMessages.ShouldHaveCount(2);
+        messageBroker.SentMessages.Should().HaveCount(2);
 
         var content1 = messageBroker.SentMessages[0].GetContentAs<UserDisplayNameChangedContent>();
         content1.UserId.Should().Be(existingUser.Id);
@@ -326,7 +326,7 @@ public sealed partial class FireForgetTests
             (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        messageBroker.SentMessages.ShouldHaveCount(2);
+        messageBroker.SentMessages.Should().HaveCount(2);
 
         var content1 = messageBroker.SentMessages[0].GetContentAs<UserDisplayNameChangedContent>();
         content1.UserId.Should().Be(existingUser.Id);
@@ -400,7 +400,7 @@ public sealed partial class FireForgetTests
             (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        messageBroker.SentMessages.ShouldHaveCount(2);
+        messageBroker.SentMessages.Should().HaveCount(2);
 
         var content1 = messageBroker.SentMessages[0].GetContentAs<UserDisplayNameChangedContent>();
         content1.UserId.Should().Be(existingUser.Id);
@@ -444,7 +444,7 @@ public sealed partial class FireForgetTests
             (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        messageBroker.SentMessages.ShouldHaveCount(1);
+        messageBroker.SentMessages.Should().HaveCount(1);
 
         var content = messageBroker.SentMessages[0].GetContentAs<UserDeletedContent>();
         content.UserId.Should().Be(existingUser.Id);
@@ -482,7 +482,7 @@ public sealed partial class FireForgetTests
             (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        messageBroker.SentMessages.ShouldHaveCount(2);
+        messageBroker.SentMessages.Should().HaveCount(2);
 
         var content1 = messageBroker.SentMessages[0].GetContentAs<UserRemovedFromGroupContent>();
         content1.UserId.Should().Be(existingUser.Id);
@@ -531,7 +531,7 @@ public sealed partial class FireForgetTests
             (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        messageBroker.SentMessages.ShouldHaveCount(1);
+        messageBroker.SentMessages.Should().HaveCount(1);
 
         var content = messageBroker.SentMessages[0].GetContentAs<UserRemovedFromGroupContent>();
         content.UserId.Should().Be(existingUser.Id);
@@ -581,7 +581,7 @@ public sealed partial class FireForgetTests
             (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        messageBroker.SentMessages.ShouldHaveCount(1);
+        messageBroker.SentMessages.Should().HaveCount(1);
 
         var content = messageBroker.SentMessages[0].GetContentAs<UserAddedToGroupContent>();
         content.UserId.Should().Be(existingUser.Id);
@@ -633,7 +633,7 @@ public sealed partial class FireForgetTests
             (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        messageBroker.SentMessages.ShouldHaveCount(1);
+        messageBroker.SentMessages.Should().HaveCount(1);
 
         var content = messageBroker.SentMessages[0].GetContentAs<UserMovedToGroupContent>();
         content.UserId.Should().Be(existingUser.Id);

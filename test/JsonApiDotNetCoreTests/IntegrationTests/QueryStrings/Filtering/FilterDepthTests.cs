@@ -50,7 +50,7 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(posts[1].StringId);
     }
 
@@ -74,7 +74,7 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -107,7 +107,7 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[1].StringId);
     }
 
@@ -131,7 +131,7 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -166,11 +166,11 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue.Should().ContainSingle(post => post.Id == posts[1].StringId);
         responseDocument.Data.ManyValue.Should().ContainSingle(post => post.Id == posts[2].StringId);
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Id.Should().Be(posts[1].Author!.StringId);
     }
 
@@ -196,7 +196,7 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
     }
 
@@ -225,7 +225,7 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
     }
 
@@ -251,7 +251,7 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(posts[1].StringId);
     }
 
@@ -282,7 +282,7 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
     }
 
@@ -310,9 +310,9 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Id.Should().Be(blog.Posts[1].StringId);
     }
 
@@ -342,7 +342,7 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Id.Should().Be(blog.Owner.Posts[1].StringId);
     }
 
@@ -373,9 +373,9 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Id.Should().Be(posts[1].Labels.First().StringId);
     }
 
@@ -404,9 +404,9 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
 
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
 
         responseDocument.Included[0].Type.Should().Be("webAccounts");
         responseDocument.Included[0].Id.Should().Be(blog.Owner.StringId);
@@ -439,7 +439,7 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(posts[0].StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(posts[2].StringId);
     }
@@ -480,7 +480,7 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(posts[0].StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(posts[1].StringId);
     }
@@ -522,10 +522,10 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
 
-        responseDocument.Included.ShouldHaveCount(3);
+        responseDocument.Included.Should().HaveCount(3);
 
         responseDocument.Included[0].Type.Should().Be("webAccounts");
         responseDocument.Included[0].Id.Should().Be(blogs[1].Owner!.StringId);

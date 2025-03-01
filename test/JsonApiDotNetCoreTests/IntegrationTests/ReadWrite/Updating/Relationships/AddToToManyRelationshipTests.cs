@@ -51,7 +51,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -107,7 +107,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Subscribers).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Subscribers.ShouldHaveCount(3);
+            workItemInDatabase.Subscribers.Should().HaveCount(3);
             workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingWorkItem.Subscribers.ElementAt(0).Id);
             workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingWorkItem.Subscribers.ElementAt(1).Id);
             workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingSubscriber.Id);
@@ -164,13 +164,13 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
             int tagId1 = existingWorkItems[0].Tags.ElementAt(0).Id;
             int tagId2 = existingWorkItems[1].Tags.ElementAt(0).Id;
 
-            workItemInDatabase1.Tags.ShouldHaveCount(2);
+            workItemInDatabase1.Tags.Should().HaveCount(2);
             workItemInDatabase1.Tags.Should().ContainSingle(workTag => workTag.Id == tagId1);
             workItemInDatabase1.Tags.Should().ContainSingle(workTag => workTag.Id == tagId2);
 
             WorkItem workItemInDatabase2 = workItemsInDatabase.Single(workItem => workItem.Id == existingWorkItems[1].Id);
 
-            workItemInDatabase2.Tags.ShouldHaveCount(1);
+            workItemInDatabase2.Tags.Should().HaveCount(1);
             workItemInDatabase2.Tags.ElementAt(0).Id.Should().Be(tagId2);
         });
     }
@@ -200,7 +200,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -232,7 +232,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -273,7 +273,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -316,7 +316,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -358,7 +358,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -409,7 +409,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -464,7 +464,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -549,7 +549,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -591,7 +591,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -633,7 +633,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -676,7 +676,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
@@ -731,7 +731,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Subscribers).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Subscribers.ShouldHaveCount(1);
+            workItemInDatabase.Subscribers.Should().HaveCount(1);
             workItemInDatabase.Subscribers.Single().Id.Should().Be(existingSubscriber.Id);
         });
     }
@@ -767,7 +767,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Subscribers).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Subscribers.ShouldHaveCount(0);
+            workItemInDatabase.Subscribers.Should().HaveCount(0);
         });
     }
 
@@ -795,7 +795,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -830,7 +830,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -868,7 +868,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -918,7 +918,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Children).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Children.ShouldHaveCount(2);
+            workItemInDatabase.Children.Should().HaveCount(2);
             workItemInDatabase.Children.Should().ContainSingle(workItem => workItem.Id == existingWorkItem.Children[0].Id);
             workItemInDatabase.Children.Should().ContainSingle(workItem => workItem.Id == existingWorkItem.Id);
         });
@@ -972,10 +972,10 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
             // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
-            workItemInDatabase.RelatedFrom.ShouldHaveCount(1);
+            workItemInDatabase.RelatedFrom.Should().HaveCount(1);
             workItemInDatabase.RelatedFrom.Should().OnlyContain(workItem => workItem.Id == existingWorkItem.Id);
 
-            workItemInDatabase.RelatedTo.ShouldHaveCount(2);
+            workItemInDatabase.RelatedTo.Should().HaveCount(2);
             workItemInDatabase.RelatedTo.Should().ContainSingle(workItem => workItem.Id == existingWorkItem.Id);
             workItemInDatabase.RelatedTo.Should().ContainSingle(workItem => workItem.Id == existingWorkItem.RelatedTo[0].Id);
         });
@@ -1013,7 +1013,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);

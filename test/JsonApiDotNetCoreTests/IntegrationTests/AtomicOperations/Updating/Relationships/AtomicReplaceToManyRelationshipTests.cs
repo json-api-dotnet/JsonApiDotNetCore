@@ -68,7 +68,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
             trackInDatabase.Performers.Should().BeEmpty();
 
             List<Performer> performersInDatabase = await dbContext.Performers.ToListAsync();
-            performersInDatabase.ShouldHaveCount(2);
+            performersInDatabase.Should().HaveCount(2);
         });
     }
 
@@ -122,7 +122,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
 
             List<MusicTrack> tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
 
-            tracksInDatabase.ShouldHaveCount(2);
+            tracksInDatabase.Should().HaveCount(2);
         });
     }
 
@@ -187,12 +187,12 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         {
             MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.Performers).FirstWithIdAsync(existingTrack.Id);
 
-            trackInDatabase.Performers.ShouldHaveCount(2);
+            trackInDatabase.Performers.Should().HaveCount(2);
             trackInDatabase.Performers.Should().ContainSingle(performer => performer.Id == existingPerformers[0].Id);
             trackInDatabase.Performers.Should().ContainSingle(performer => performer.Id == existingPerformers[1].Id);
 
             List<Performer> performersInDatabase = await dbContext.Performers.ToListAsync();
-            performersInDatabase.ShouldHaveCount(3);
+            performersInDatabase.Should().HaveCount(3);
         });
     }
 
@@ -257,13 +257,13 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         {
             Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(existingPlaylist.Id);
 
-            playlistInDatabase.Tracks.ShouldHaveCount(2);
+            playlistInDatabase.Tracks.Should().HaveCount(2);
             playlistInDatabase.Tracks.Should().ContainSingle(musicTrack => musicTrack.Id == existingTracks[0].Id);
             playlistInDatabase.Tracks.Should().ContainSingle(musicTrack => musicTrack.Id == existingTracks[1].Id);
 
             List<MusicTrack> tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
 
-            tracksInDatabase.ShouldHaveCount(3);
+            tracksInDatabase.Should().HaveCount(3);
         });
     }
 
@@ -291,7 +291,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -330,7 +330,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -370,7 +370,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -409,7 +409,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -467,7 +467,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -525,7 +525,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -566,7 +566,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -606,7 +606,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -654,7 +654,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -703,7 +703,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -754,7 +754,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -801,7 +801,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -849,7 +849,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -896,7 +896,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -945,7 +945,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -1012,7 +1012,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -1074,7 +1074,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -1130,7 +1130,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
@@ -1183,7 +1183,7 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);

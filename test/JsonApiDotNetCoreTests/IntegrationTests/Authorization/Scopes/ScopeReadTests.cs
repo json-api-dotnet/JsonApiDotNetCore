@@ -34,7 +34,7 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -58,7 +58,7 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -92,7 +92,7 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("movies");
         responseDocument.Data.ManyValue[0].Id.Should().Be(movie.StringId);
         responseDocument.Data.ManyValue[0].Attributes.ShouldNotBeEmpty();
@@ -122,7 +122,7 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("genres");
         responseDocument.Data.ManyValue[0].Id.Should().Be(genre.StringId);
         responseDocument.Data.ManyValue[0].Attributes.ShouldNotBeEmpty();
@@ -152,7 +152,7 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("actors");
         responseDocument.Data.ManyValue[0].Id.Should().Be(actor.StringId);
         responseDocument.Data.ManyValue[0].Attributes.ShouldNotBeEmpty();
@@ -171,7 +171,7 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -193,7 +193,7 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -215,7 +215,7 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -237,7 +237,7 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -259,7 +259,7 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -283,7 +283,7 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -307,7 +307,7 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -331,7 +331,7 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);

@@ -347,7 +347,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(description));
         responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("userAccounts");
         responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("firstName").With(value => value.Should().Be(existingUserAccount.FirstName));
@@ -411,9 +411,9 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItems");
         responseDocument.Data.SingleValue.Id.Should().Be(existingWorkItem.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldHaveCount(1);
+        responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(description));
-        responseDocument.Data.SingleValue.Relationships.ShouldHaveCount(1);
+        responseDocument.Data.SingleValue.Relationships.Should().HaveCount(1);
 
         responseDocument.Data.SingleValue.Relationships.ShouldContainKey("assignee").With(value =>
         {
@@ -422,10 +422,10 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
             value.Data.SingleValue.Id.Should().Be(existingUserAccount.StringId);
         });
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("userAccounts");
         responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
-        responseDocument.Included[0].Attributes.ShouldHaveCount(1);
+        responseDocument.Included[0].Attributes.Should().HaveCount(1);
         responseDocument.Included[0].Attributes.ShouldContainKey("lastName").With(value => value.Should().Be(existingUserAccount.LastName));
         responseDocument.Included[0].Relationships.Should().BeNull();
 
@@ -472,7 +472,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -519,7 +519,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -574,7 +574,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -624,7 +624,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -675,7 +675,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -725,7 +725,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -778,7 +778,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -828,7 +828,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
@@ -979,7 +979,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);

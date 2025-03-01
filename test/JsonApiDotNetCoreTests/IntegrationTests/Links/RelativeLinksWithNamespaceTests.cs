@@ -104,7 +104,7 @@ public sealed class RelativeLinksWithNamespaceTests : IClassFixture<IntegrationT
         responseDocument.Links.Next.Should().BeNull();
         responseDocument.Links.DescribedBy.Should().BeNull();
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
 
         responseDocument.Data.ManyValue[0].With(resource =>
         {
@@ -122,7 +122,7 @@ public sealed class RelativeLinksWithNamespaceTests : IClassFixture<IntegrationT
             });
         });
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
 
         responseDocument.Included[0].With(resource =>
         {
@@ -216,7 +216,7 @@ public sealed class RelativeLinksWithNamespaceTests : IClassFixture<IntegrationT
         responseDocument.Links.Next.Should().BeNull();
         responseDocument.Links.DescribedBy.Should().BeNull();
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
 
         responseDocument.Data.ManyValue[0].With(resource =>
         {
@@ -300,7 +300,7 @@ public sealed class RelativeLinksWithNamespaceTests : IClassFixture<IntegrationT
         responseDocument.Links.Next.Should().BeNull();
         responseDocument.Links.DescribedBy.Should().BeNull();
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Links.Should().BeNull();
         responseDocument.Data.ManyValue[0].Relationships.Should().BeNull();
     }
@@ -377,7 +377,7 @@ public sealed class RelativeLinksWithNamespaceTests : IClassFixture<IntegrationT
             value.Links.Related.Should().Be($"{albumLink}/photos");
         });
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
 
         responseDocument.Included[0].With(resource =>
         {
@@ -462,7 +462,7 @@ public sealed class RelativeLinksWithNamespaceTests : IClassFixture<IntegrationT
             value.Links.Related.Should().Be($"{photoLink}/album");
         });
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
 
         responseDocument.Included[0].With(resource =>
         {

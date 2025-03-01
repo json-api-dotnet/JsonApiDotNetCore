@@ -61,7 +61,7 @@ public sealed class LinkInclusionTests : IClassFixture<IntegrationTestContext<Te
             value.Links.Should().BeNull();
         });
 
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
 
         responseDocument.Included[0].With(resource =>
         {

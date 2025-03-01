@@ -29,7 +29,7 @@ public sealed class ApiControllerAttributeTests : IClassFixture<IntegrationTestC
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.Links.ShouldNotBeNull();
@@ -61,7 +61,7 @@ public sealed class ApiControllerAttributeTests : IClassFixture<IntegrationTestC
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.BadRequest);

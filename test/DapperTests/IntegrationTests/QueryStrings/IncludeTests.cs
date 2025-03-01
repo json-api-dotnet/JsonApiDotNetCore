@@ -53,7 +53,7 @@ public sealed class IncludeTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("todoItems"));
 
         responseDocument.Data.ManyValue[0].Id.Should().Be(todoItems[0].StringId);
@@ -77,7 +77,7 @@ public sealed class IncludeTests : IClassFixture<DapperTestContext>
             relationships.ShouldContainKey("tags").With(value =>
             {
                 value.ShouldNotBeNull();
-                value.Data.ManyValue.ShouldHaveCount(2);
+                value.Data.ManyValue.Should().HaveCount(2);
                 value.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("tags"));
                 value.Data.ManyValue[0].Id.Should().Be(todoItems[0].Tags.ElementAt(0).StringId);
                 value.Data.ManyValue[1].Id.Should().Be(todoItems[0].Tags.ElementAt(1).StringId);
@@ -107,14 +107,14 @@ public sealed class IncludeTests : IClassFixture<DapperTestContext>
             relationships.ShouldContainKey("tags").With(value =>
             {
                 value.ShouldNotBeNull();
-                value.Data.ManyValue.ShouldHaveCount(2);
+                value.Data.ManyValue.Should().HaveCount(2);
                 value.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("tags"));
                 value.Data.ManyValue[0].Id.Should().Be(todoItems[1].Tags.ElementAt(0).StringId);
                 value.Data.ManyValue[1].Id.Should().Be(todoItems[1].Tags.ElementAt(1).StringId);
             });
         });
 
-        responseDocument.Included.ShouldHaveCount(6);
+        responseDocument.Included.Should().HaveCount(6);
 
         responseDocument.Included[0].Type.Should().Be("people");
         responseDocument.Included[0].Id.Should().Be(owner.StringId);
@@ -144,7 +144,7 @@ public sealed class IncludeTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().ContainTotal(2);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -199,7 +199,7 @@ public sealed class IncludeTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(25);
+        responseDocument.Data.ManyValue.Should().HaveCount(25);
 
         responseDocument.Data.ManyValue.ForEach(resource =>
         {
@@ -208,11 +208,11 @@ public sealed class IncludeTests : IClassFixture<DapperTestContext>
             resource.Relationships.ShouldOnlyContainKeys("owner", "assignee", "tags");
         });
 
-        responseDocument.Included.ShouldHaveCount(25 * 15 * 2);
+        responseDocument.Included.Should().HaveCount(25 * 15 * 2);
 
         responseDocument.Meta.Should().ContainTotal(25);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {

@@ -62,7 +62,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -144,11 +144,11 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         {
             MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.Performers).FirstWithIdAsync(existingTrack.Id);
 
-            trackInDatabase.Performers.ShouldHaveCount(1);
+            trackInDatabase.Performers.Should().HaveCount(1);
             trackInDatabase.Performers[0].Id.Should().Be(existingTrack.Performers[1].Id);
 
             List<Performer> performersInDatabase = await dbContext.Performers.ToListAsync();
-            performersInDatabase.ShouldHaveCount(3);
+            performersInDatabase.Should().HaveCount(3);
         });
     }
 
@@ -223,12 +223,12 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         {
             Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(existingPlaylist.Id);
 
-            playlistInDatabase.Tracks.ShouldHaveCount(1);
+            playlistInDatabase.Tracks.Should().HaveCount(1);
             playlistInDatabase.Tracks[0].Id.Should().Be(existingPlaylist.Tracks[1].Id);
 
             List<MusicTrack> tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
 
-            tracksInDatabase.ShouldHaveCount(3);
+            tracksInDatabase.Should().HaveCount(3);
         });
     }
 
@@ -256,7 +256,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -295,7 +295,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -335,7 +335,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -374,7 +374,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -432,7 +432,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -473,7 +473,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -513,7 +513,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -561,7 +561,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -610,7 +610,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -661,7 +661,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -708,7 +708,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -756,7 +756,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -803,7 +803,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -852,7 +852,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -919,7 +919,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -981,7 +981,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
@@ -1038,7 +1038,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         {
             MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.Performers).FirstWithIdAsync(existingTrack.Id);
 
-            trackInDatabase.Performers.ShouldHaveCount(1);
+            trackInDatabase.Performers.Should().HaveCount(1);
             trackInDatabase.Performers[0].Id.Should().Be(existingTrack.Performers[0].Id);
         });
     }
@@ -1085,7 +1085,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);

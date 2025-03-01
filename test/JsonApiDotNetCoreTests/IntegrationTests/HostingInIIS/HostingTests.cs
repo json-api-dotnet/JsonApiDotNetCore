@@ -51,7 +51,7 @@ public sealed class HostingTests : IClassFixture<IntegrationTestContext<HostingS
         responseDocument.Links.Prev.Should().BeNull();
         responseDocument.Links.Next.Should().BeNull();
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
 
         responseDocument.Data.ManyValue[0].With(resource =>
         {
@@ -71,7 +71,7 @@ public sealed class HostingTests : IClassFixture<IntegrationTestContext<HostingS
 
         string paintingLink = $"{HostPrefix}/iis-application-virtual-directory/custom/path/to/paintings-of-the-world/{gallery.Paintings.ElementAt(0).StringId}";
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
 
         responseDocument.Included[0].With(resource =>
         {
@@ -118,7 +118,7 @@ public sealed class HostingTests : IClassFixture<IntegrationTestContext<HostingS
         responseDocument.Links.Prev.Should().BeNull();
         responseDocument.Links.Next.Should().BeNull();
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
 
         responseDocument.Data.ManyValue[0].With(resource =>
         {
@@ -136,7 +136,7 @@ public sealed class HostingTests : IClassFixture<IntegrationTestContext<HostingS
             });
         });
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
 
         responseDocument.Included[0].With(resource =>
         {

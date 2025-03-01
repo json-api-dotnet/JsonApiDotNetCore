@@ -89,7 +89,7 @@ public sealed class PaginationParseTests : BaseParseTests
         InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
         exception.ParameterName.Should().Be("page[number]");
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -134,7 +134,7 @@ public sealed class PaginationParseTests : BaseParseTests
         InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
         exception.ParameterName.Should().Be("page[size]");
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);

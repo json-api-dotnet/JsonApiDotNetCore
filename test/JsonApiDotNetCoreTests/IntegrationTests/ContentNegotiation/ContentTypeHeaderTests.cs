@@ -138,7 +138,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
@@ -183,7 +183,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         string detail =
             $"Use '{JsonApiMediaType.AtomicOperations}' or '{JsonApiMediaType.RelaxedAtomicOperations}' instead of 'text/html' for the Content-Type header value.";
@@ -324,7 +324,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         string detail =
             $"Use '{JsonApiMediaType.AtomicOperations}' or '{JsonApiMediaType.RelaxedAtomicOperations}' instead of '{contentType}' for the Content-Type header value.";
@@ -404,7 +404,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
@@ -442,7 +442,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
@@ -480,7 +480,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
@@ -518,7 +518,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
@@ -556,7 +556,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
@@ -594,7 +594,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
@@ -639,7 +639,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         string detail =
             $"Use '{JsonApiMediaType.AtomicOperations}' or '{JsonApiMediaType.RelaxedAtomicOperations}' instead of '{contentType}' for the Content-Type header value.";

@@ -35,7 +35,7 @@ public sealed class ApiControllerAttributeLogTests : IntegrationTestContext<Test
 
         // Assert
         IReadOnlyList<string> logLines = _loggerProvider.GetLines();
-        logLines.ShouldHaveCount(1);
+        logLines.Should().HaveCount(1);
 
         logLines[0].Should().Be(
             $"[WARNING] Found JSON:API controller '{typeof(CiviliansController)}' with [ApiController]. Please remove this attribute for optimal JSON:API compliance.");
