@@ -95,8 +95,8 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("movies");
         responseDocument.Data.ManyValue[0].Id.Should().Be(movie.StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldNotBeEmpty();
-        responseDocument.Data.ManyValue[0].Relationships.ShouldNotBeEmpty();
+        responseDocument.Data.ManyValue[0].Attributes.Should().NotBeEmpty();
+        responseDocument.Data.ManyValue[0].Relationships.Should().NotBeEmpty();
     }
 
     [Fact]
@@ -125,8 +125,8 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("genres");
         responseDocument.Data.ManyValue[0].Id.Should().Be(genre.StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldNotBeEmpty();
-        responseDocument.Data.ManyValue[0].Relationships.ShouldNotBeEmpty();
+        responseDocument.Data.ManyValue[0].Attributes.Should().NotBeEmpty();
+        responseDocument.Data.ManyValue[0].Relationships.Should().NotBeEmpty();
     }
 
     [Fact]
@@ -155,8 +155,8 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("actors");
         responseDocument.Data.ManyValue[0].Id.Should().Be(actor.StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldNotBeEmpty();
-        responseDocument.Data.ManyValue[0].Relationships.ShouldNotBeEmpty();
+        responseDocument.Data.ManyValue[0].Attributes.Should().NotBeEmpty();
+        responseDocument.Data.ManyValue[0].Relationships.Should().NotBeEmpty();
     }
 
     [Fact]

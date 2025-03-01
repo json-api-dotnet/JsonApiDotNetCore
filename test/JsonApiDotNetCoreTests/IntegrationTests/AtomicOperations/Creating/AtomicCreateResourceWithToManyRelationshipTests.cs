@@ -88,8 +88,8 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
             resource.Type.Should().Be("musicTracks");
-            resource.Attributes.ShouldNotBeEmpty();
-            resource.Relationships.ShouldNotBeEmpty();
+            resource.Attributes.Should().NotBeEmpty();
+            resource.Relationships.Should().NotBeEmpty();
         });
 
         Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
@@ -173,8 +173,8 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
             resource.Type.Should().Be("playlists");
-            resource.Attributes.ShouldNotBeEmpty();
-            resource.Relationships.ShouldNotBeEmpty();
+            resource.Attributes.Should().NotBeEmpty();
+            resource.Relationships.Should().NotBeEmpty();
         });
 
         long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
@@ -238,7 +238,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/performers/data[0]");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -290,7 +290,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/performers/data[0]/type");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -341,7 +341,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/performers/data[0]");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -467,7 +467,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         error.Detail.Should().Be("Type 'playlists' is not convertible to type 'performers' of relationship 'performers'.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/performers/data[0]/type");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -534,8 +534,8 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
             resource.Type.Should().Be("musicTracks");
-            resource.Attributes.ShouldNotBeEmpty();
-            resource.Relationships.ShouldNotBeEmpty();
+            resource.Attributes.Should().NotBeEmpty();
+            resource.Relationships.Should().NotBeEmpty();
         });
 
         Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
@@ -590,7 +590,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/performers");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -635,7 +635,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/tracks/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -682,7 +682,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/tracks/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -734,6 +734,6 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         error.Detail.Should().Be("The relationship 'occursIn' on resource type 'musicTracks' cannot be assigned to.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/occursIn");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 }

@@ -663,8 +663,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("carbonWheels");
-        responseDocument.Data.SingleValue.Attributes.ShouldNotBeEmpty();
-        responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
+        responseDocument.Data.SingleValue.Attributes.Should().NotBeEmpty();
+        responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
         long newCarbonWheelId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
@@ -728,8 +728,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("vehicleManufacturers");
-        responseDocument.Data.SingleValue.Attributes.ShouldNotBeEmpty();
-        responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
+        responseDocument.Data.SingleValue.Attributes.Should().NotBeEmpty();
+        responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
         long newManufacturerId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 

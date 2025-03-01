@@ -82,7 +82,7 @@ public sealed class DisableQueryStringTests : IClassFixture<IntegrationTestConte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.ShouldNotBeEmpty();
+        responseDocument.Should().NotBeEmpty();
     }
 
     [Fact]

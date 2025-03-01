@@ -144,7 +144,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
                 resource.Attributes.ShouldContainKey("genre").With(value => value.Should().Be(newTracks[index].Genre));
                 resource.Attributes.ShouldContainKey("releasedAt").With(value => value.Should().Be(newTracks[index].ReleasedAt));
 
-                resource.Relationships.ShouldNotBeEmpty();
+                resource.Relationships.Should().NotBeEmpty();
             });
         }
 
@@ -264,7 +264,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Detail.Should().Be("Attribute 'doesNotExist' does not exist on resource type 'playlists'.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/doesNotExist");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -310,7 +310,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         {
             resource.Type.Should().Be("playlists");
             resource.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newName));
-            resource.Relationships.ShouldNotBeEmpty();
+            resource.Relationships.Should().NotBeEmpty();
         });
 
         long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
@@ -369,7 +369,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource type 'lyrics'.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/doesNotExist");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -424,8 +424,8 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
             resource.Type.Should().Be("lyrics");
-            resource.Attributes.ShouldNotBeEmpty();
-            resource.Relationships.ShouldNotBeEmpty();
+            resource.Attributes.Should().NotBeEmpty();
+            resource.Relationships.Should().NotBeEmpty();
         });
 
         long newLyricId = long.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
@@ -481,7 +481,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/id");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -516,7 +516,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/href");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -554,7 +554,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/ref");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -588,7 +588,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -623,7 +623,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -670,7 +670,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -710,7 +710,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -748,7 +748,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/type");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -793,7 +793,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Detail.Should().Be("Attribute 'isArchived' on resource type 'playlists' is read-only.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/isArchived");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -835,7 +835,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Detail.Should().Be("Failed to convert attribute 'bornAt' with value '12345' of type 'Number' to type 'DateTimeOffset'.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/bornAt");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -917,7 +917,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         {
             resource.Type.Should().Be("musicTracks");
             resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTitle));
-            resource.Relationships.ShouldNotBeEmpty();
+            resource.Relationships.Should().NotBeEmpty();
         });
 
         Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
@@ -988,6 +988,6 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.Detail.Should().Be("The attribute 'createdAt' on resource type 'lyrics' cannot be assigned to.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/createdAt");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 }

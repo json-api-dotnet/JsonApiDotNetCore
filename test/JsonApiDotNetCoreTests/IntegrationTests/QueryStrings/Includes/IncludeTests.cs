@@ -451,7 +451,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Data.SingleValue.Relationships.ShouldContainKey("posts").With(value =>
         {
             value.ShouldNotBeNull();
-            value.Data.ManyValue.ShouldNotBeEmpty();
+            value.Data.ManyValue.Should().NotBeEmpty();
             value.Data.ManyValue[0].Type.Should().Be("blogPosts");
             value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
         });
@@ -472,7 +472,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Included[0].Relationships.ShouldContainKey("comments").With(value =>
         {
             value.ShouldNotBeNull();
-            value.Data.ManyValue.ShouldNotBeEmpty();
+            value.Data.ManyValue.Should().NotBeEmpty();
             value.Data.ManyValue[0].Type.Should().Be("comments");
             value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).StringId);
         });
@@ -514,7 +514,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Included[4].Relationships.ShouldContainKey("posts").With(value =>
         {
             value.ShouldNotBeNull();
-            value.Data.ManyValue.ShouldNotBeEmpty();
+            value.Data.ManyValue.Should().NotBeEmpty();
             value.Data.ManyValue[0].Type.Should().Be("blogPosts");
             value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author!.Posts[0].StringId);
         });
@@ -662,7 +662,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Included[2].Relationships.ShouldContainKey("loginAttempts").With(value =>
         {
             value.ShouldNotBeNull();
-            value.Data.ManyValue.ShouldNotBeEmpty();
+            value.Data.ManyValue.Should().NotBeEmpty();
             value.Data.ManyValue[0].Type.Should().Be("loginAttempts");
             value.Data.ManyValue[0].Id.Should().Be(reviewer.LoginAttempts[0].StringId);
         });
@@ -684,7 +684,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Included[4].Relationships.ShouldContainKey("loginAttempts").With(value =>
         {
             value.ShouldNotBeNull();
-            value.Data.ManyValue.ShouldNotBeEmpty();
+            value.Data.ManyValue.Should().NotBeEmpty();
             value.Data.ManyValue[0].Type.Should().Be("loginAttempts");
             value.Data.ManyValue[0].Id.Should().Be(person.LoginAttempts[0].StringId);
         });
@@ -727,7 +727,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Data.SingleValue.Relationships.ShouldContainKey("posts").With(value =>
         {
             value.ShouldNotBeNull();
-            value.Data.ManyValue.ShouldNotBeEmpty();
+            value.Data.ManyValue.Should().NotBeEmpty();
             value.Data.ManyValue[0].Type.Should().Be("blogPosts");
             value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
         });
@@ -751,7 +751,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Included[1].Relationships.ShouldContainKey("posts").With(value =>
         {
             value.ShouldNotBeNull();
-            value.Data.ManyValue.ShouldNotBeEmpty();
+            value.Data.ManyValue.Should().NotBeEmpty();
             value.Data.ManyValue[0].Type.Should().Be("blogPosts");
             value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
         });
@@ -966,7 +966,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Data.SingleValue.Type.Should().Be("calendars");
         responseDocument.Data.SingleValue.Id.Should().Be(calendar.StringId);
 
-        responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
+        responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
         responseDocument.Data.SingleValue.Relationships.Should().NotContainKey("appointments");
 
         responseDocument.Included.Should().BeEmpty();

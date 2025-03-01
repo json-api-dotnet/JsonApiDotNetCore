@@ -121,7 +121,7 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
             JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
             IEnumerable<string?> stackTraceLines = element.EnumerateArray().Select(token => token.GetString());
 
-            stackTraceLines.ShouldNotBeEmpty();
+            stackTraceLines.Should().NotBeEmpty();
         });
 
         IReadOnlyList<LogMessage> logMessages = loggerProvider.GetMessages();

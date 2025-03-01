@@ -17,18 +17,6 @@ public static class NullabilityAssertionExtensions
     }
 
     [CustomAssertion]
-    public static void ShouldNotBeEmpty([SysNotNull] this string? subject)
-    {
-        subject.Should().NotBeEmpty();
-    }
-
-    [CustomAssertion]
-    public static void ShouldNotBeEmpty<T>([SysNotNull] this IEnumerable<T>? subject)
-    {
-        subject.Should().NotBeEmpty();
-    }
-
-    [CustomAssertion]
     public static void ShouldNotBeNullOrEmpty([SysNotNull] this string? subject)
     {
         subject.Should().NotBeNullOrEmpty();
