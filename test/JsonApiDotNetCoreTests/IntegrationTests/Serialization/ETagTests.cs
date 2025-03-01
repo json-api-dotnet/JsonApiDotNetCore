@@ -43,7 +43,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
 
         httpResponse.Headers.ETag.ShouldNotBeNull();
         httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
-        httpResponse.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
+        httpResponse.Headers.ETag.Tag.Should().NotBeNullOrEmpty();
 
         responseDocument.Should().BeEmpty();
     }
@@ -71,7 +71,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
 
         httpResponse.Headers.ETag.ShouldNotBeNull();
         httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
-        httpResponse.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
+        httpResponse.Headers.ETag.Tag.Should().NotBeNullOrEmpty();
 
         responseDocument.Should().NotBeEmpty();
     }
@@ -202,7 +202,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
 
         httpResponse2.Headers.ETag.ShouldNotBeNull();
         httpResponse2.Headers.ETag.IsWeak.Should().BeFalse();
-        httpResponse2.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
+        httpResponse2.Headers.ETag.Tag.Should().NotBeNullOrEmpty();
 
         responseDocument2.Should().BeEmpty();
     }
@@ -232,7 +232,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
 
         httpResponse.Headers.ETag.ShouldNotBeNull();
         httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
-        httpResponse.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
+        httpResponse.Headers.ETag.Tag.Should().NotBeNullOrEmpty();
 
         responseDocument.Should().NotBeEmpty();
     }

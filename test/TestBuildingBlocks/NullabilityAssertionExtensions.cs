@@ -17,12 +17,6 @@ public static class NullabilityAssertionExtensions
     }
 
     [CustomAssertion]
-    public static void ShouldNotBeNullOrEmpty([SysNotNull] this string? subject)
-    {
-        subject.Should().NotBeNullOrEmpty();
-    }
-
-    [CustomAssertion]
     public static TValue? ShouldContainKey<TKey, TValue>([SysNotNull] this IDictionary<TKey, TValue?>? subject, TKey expected)
     {
         subject.Should().ContainKey(expected);
