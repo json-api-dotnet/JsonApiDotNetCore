@@ -90,7 +90,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Attributes.ShouldContainKey("requiresDriverLicense").With(value => value.Should().Be(bike.RequiresDriverLicense));
             resource.Attributes.ShouldContainKey("gearCount").With(value => value.Should().Be(bike.GearCount));
 
-            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights");
+            resource.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights");
 
             foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
@@ -114,7 +114,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Attributes.ShouldContainKey("gearCount").With(value => value.Should().Be(tandem.GearCount));
             resource.Attributes.ShouldContainKey("passengerCount").With(value => value.Should().Be(tandem.PassengerCount));
 
-            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
+            resource.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
 
             foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
@@ -138,7 +138,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Attributes.ShouldContainKey("licensePlate").With(value => value.Should().Be(car.LicensePlate));
             resource.Attributes.ShouldContainKey("seatCount").With(value => value.Should().Be(car.SeatCount));
 
-            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "engine", "navigationSystem", "features");
+            resource.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "engine", "navigationSystem", "features");
 
             foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
@@ -162,7 +162,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Attributes.ShouldContainKey("licensePlate").With(value => value.Should().Be(truck.LicensePlate));
             resource.Attributes.ShouldContainKey("loadingCapacity").With(value => value.Should().Be(truck.LoadingCapacity));
 
-            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "engine", "navigationSystem", "sleepingArea", "features");
+            resource.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "engine", "navigationSystem", "sleepingArea", "features");
 
             foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
@@ -213,7 +213,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Attributes.ShouldContainKey("requiresDriverLicense").With(value => value.Should().Be(bike.RequiresDriverLicense));
             resource.Attributes.ShouldContainKey("gearCount").With(value => value.Should().Be(bike.GearCount));
 
-            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights");
+            resource.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights");
 
             foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
@@ -237,7 +237,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Attributes.ShouldContainKey("gearCount").With(value => value.Should().Be(tandem.GearCount));
             resource.Attributes.ShouldContainKey("passengerCount").With(value => value.Should().Be(tandem.PassengerCount));
 
-            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
+            resource.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
 
             foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
@@ -289,7 +289,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Attributes.ShouldContainKey("gearCount").With(value => value.Should().Be(tandem.GearCount));
             resource.Attributes.ShouldContainKey("passengerCount").With(value => value.Should().Be(tandem.PassengerCount));
 
-            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
+            resource.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
 
             foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
@@ -324,8 +324,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("tandems");
         responseDocument.Data.SingleValue.Id.Should().Be(tandem.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
-        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
+        responseDocument.Data.SingleValue.Attributes.Should().OnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
+        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
     }
 
     [Fact]
@@ -351,8 +351,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("tandems");
         responseDocument.Data.SingleValue.Id.Should().Be(tandem.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
-        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
+        responseDocument.Data.SingleValue.Attributes.Should().OnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
+        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
     }
 
     [Fact]
@@ -378,8 +378,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("tandems");
         responseDocument.Data.SingleValue.Id.Should().Be(tandem.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
-        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
+        responseDocument.Data.SingleValue.Attributes.Should().OnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
+        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
     }
 
     [Fact]
@@ -660,7 +660,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be($"/chromeWheels/{resource.Id}");
 
-            resource.Attributes.ShouldOnlyContainKeys("radius", "paintColor");
+            resource.Attributes.Should().OnlyContainKeys("radius", "paintColor");
         }
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue.Where(value => value.Type == "carbonWheels"))
@@ -668,7 +668,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be($"/carbonWheels/{resource.Id}");
 
-            resource.Attributes.ShouldOnlyContainKeys("radius", "hasTube");
+            resource.Attributes.Should().OnlyContainKeys("radius", "hasTube");
         }
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue)
@@ -728,7 +728,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be($"/chromeWheels/{resource.Id}");
 
-            resource.Attributes.ShouldOnlyContainKeys("radius", "paintColor");
+            resource.Attributes.Should().OnlyContainKeys("radius", "paintColor");
         }
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue.Where(value => value.Type == "carbonWheels"))
@@ -736,7 +736,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be($"/carbonWheels/{resource.Id}");
 
-            resource.Attributes.ShouldOnlyContainKeys("radius", "hasTube");
+            resource.Attributes.Should().OnlyContainKeys("radius", "hasTube");
         }
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue)
@@ -790,7 +790,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be($"/chromeWheels/{resource.Id}");
 
-            resource.Attributes.ShouldOnlyContainKeys("radius", "paintColor");
+            resource.Attributes.Should().OnlyContainKeys("radius", "paintColor");
         }
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue.Where(value => value.Type == "carbonWheels"))
@@ -798,7 +798,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be($"/carbonWheels/{resource.Id}");
 
-            resource.Attributes.ShouldOnlyContainKeys("radius", "hasTube");
+            resource.Attributes.Should().OnlyContainKeys("radius", "hasTube");
         }
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue)
@@ -1222,29 +1222,29 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "bikes").Subject.With(resource =>
         {
             resource.Id.Should().Be(bike.StringId);
-            resource.Attributes.ShouldOnlyContainKeys("weight", "gearCount");
-            resource.Relationships.ShouldOnlyContainKeys("lights");
+            resource.Attributes.Should().OnlyContainKeys("weight", "gearCount");
+            resource.Relationships.Should().OnlyContainKeys("lights");
         });
 
         responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "tandems").Subject.With(resource =>
         {
             resource.Id.Should().Be(tandem.StringId);
-            resource.Attributes.ShouldOnlyContainKeys("gearCount", "passengerCount");
-            resource.Relationships.ShouldOnlyContainKeys("cargoBox");
+            resource.Attributes.Should().OnlyContainKeys("gearCount", "passengerCount");
+            resource.Relationships.Should().OnlyContainKeys("cargoBox");
         });
 
         responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "cars").Subject.With(resource =>
         {
             resource.Id.Should().Be(car.StringId);
-            resource.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "seatCount");
-            resource.Relationships.ShouldOnlyContainKeys("engine");
+            resource.Attributes.Should().OnlyContainKeys("weight", "requiresDriverLicense", "seatCount");
+            resource.Relationships.Should().OnlyContainKeys("engine");
         });
 
         responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "trucks").Subject.With(resource =>
         {
             resource.Id.Should().Be(truck.StringId);
-            resource.Attributes.ShouldOnlyContainKeys("loadingCapacity");
-            resource.Relationships.ShouldOnlyContainKeys("sleepingArea");
+            resource.Attributes.Should().OnlyContainKeys("loadingCapacity");
+            resource.Relationships.Should().OnlyContainKeys("sleepingArea");
         });
     }
 
@@ -1285,29 +1285,29 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "bikes").Subject.With(resource =>
         {
             resource.Id.Should().Be(bike.StringId);
-            resource.Attributes.ShouldOnlyContainKeys("weight", "gearCount");
-            resource.Relationships.ShouldOnlyContainKeys("lights");
+            resource.Attributes.Should().OnlyContainKeys("weight", "gearCount");
+            resource.Relationships.Should().OnlyContainKeys("lights");
         });
 
         responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "tandems").Subject.With(resource =>
         {
             resource.Id.Should().Be(tandem.StringId);
-            resource.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
-            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "lights", "cargoBox", "foldingDimensions", "features");
+            resource.Attributes.Should().OnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
+            resource.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "lights", "cargoBox", "foldingDimensions", "features");
         });
 
         responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "cars").Subject.With(resource =>
         {
             resource.Id.Should().Be(car.StringId);
-            resource.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "seatCount");
-            resource.Relationships.ShouldOnlyContainKeys("engine");
+            resource.Attributes.Should().OnlyContainKeys("weight", "requiresDriverLicense", "seatCount");
+            resource.Relationships.Should().OnlyContainKeys("engine");
         });
 
         responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "trucks").Subject.With(resource =>
         {
             resource.Id.Should().Be(truck.StringId);
-            resource.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "licensePlate", "loadingCapacity");
-            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "engine", "navigationSystem", "sleepingArea", "features");
+            resource.Attributes.Should().OnlyContainKeys("weight", "requiresDriverLicense", "licensePlate", "loadingCapacity");
+            resource.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "engine", "navigationSystem", "sleepingArea", "features");
         });
     }
 
@@ -1342,16 +1342,16 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         {
             resource.Id.Should().Be(bike.StringId);
 
-            resource.Attributes.ShouldOnlyContainKeys("weight", "gearCount");
-            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "lights");
+            resource.Attributes.Should().OnlyContainKeys("weight", "gearCount");
+            resource.Relationships.Should().OnlyContainKeys("manufacturer", "lights");
         });
 
         responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "tandems").Subject.With(resource =>
         {
             resource.Id.Should().Be(tandem.StringId);
 
-            resource.Attributes.ShouldOnlyContainKeys("passengerCount");
-            resource.Relationships.ShouldOnlyContainKeys("cargoBox");
+            resource.Attributes.Should().OnlyContainKeys("passengerCount");
+            resource.Relationships.Should().OnlyContainKeys("cargoBox");
         });
     }
 
@@ -1385,16 +1385,16 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         {
             resource.Id.Should().Be(bike.StringId);
 
-            resource.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "gearCount");
-            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights");
+            resource.Attributes.Should().OnlyContainKeys("weight", "requiresDriverLicense", "gearCount");
+            resource.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights");
         });
 
         responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "tandems").Subject.With(resource =>
         {
             resource.Id.Should().Be(tandem.StringId);
 
-            resource.Attributes.ShouldOnlyContainKeys("passengerCount");
-            resource.Relationships.ShouldOnlyContainKeys("cargoBox");
+            resource.Attributes.Should().OnlyContainKeys("passengerCount");
+            resource.Relationships.Should().OnlyContainKeys("cargoBox");
         });
     }
 

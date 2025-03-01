@@ -141,7 +141,7 @@ public sealed class PersonTests(NoLoggingWebApplicationFactory<Person> factory) 
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().NotBeEmpty();
-        responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Attributes.ShouldOnlyContainKeys("lastName", "displayName"));
+        responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Attributes.Should().OnlyContainKeys("lastName", "displayName"));
     }
 
     [Fact]

@@ -13,7 +13,7 @@ public static class NullabilityAssertionExtensions
     public static T ShouldNotBeNull<T>([SysNotNull] this T? subject)
     {
         subject.Should().NotBeNull();
-        return subject!;
+        return subject;
     }
 
     [CustomAssertion]
@@ -22,13 +22,6 @@ public static class NullabilityAssertionExtensions
         subject.Should().ContainKey(expected);
 
         return subject![expected];
-    }
-
-    [CustomAssertion]
-    public static void ShouldOnlyContainKeys<TKey, TValue>([SysNotNull] this IDictionary<TKey, TValue>? subject, params TKey[] expected)
-    {
-        subject.Should().HaveCount(expected.Length);
-        subject.Should().ContainKeys(expected);
     }
 
     public static void With<T>(this T subject, [InstantHandle] Action<T> continuation)

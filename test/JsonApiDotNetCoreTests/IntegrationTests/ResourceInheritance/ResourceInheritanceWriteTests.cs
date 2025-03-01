@@ -194,8 +194,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("bikes");
-        responseDocument.Data.SingleValue.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "gearCount");
-        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights");
+        responseDocument.Data.SingleValue.Attributes.Should().OnlyContainKeys("weight", "requiresDriverLicense", "gearCount");
+        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights");
 
         long newBikeId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
@@ -335,8 +335,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("cars");
-        responseDocument.Data.SingleValue.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "licensePlate", "seatCount");
-        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "engine", "navigationSystem", "features");
+        responseDocument.Data.SingleValue.Attributes.Should().OnlyContainKeys("weight", "requiresDriverLicense", "licensePlate", "seatCount");
+        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "engine", "navigationSystem", "features");
 
         long newCarId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
@@ -485,8 +485,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("tandems");
-        responseDocument.Data.SingleValue.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
-        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
+        responseDocument.Data.SingleValue.Attributes.Should().OnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
+        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
 
         long newTandemId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 

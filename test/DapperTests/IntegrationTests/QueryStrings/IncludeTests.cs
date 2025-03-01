@@ -204,8 +204,8 @@ public sealed class IncludeTests : IClassFixture<DapperTestContext>
         responseDocument.Data.ManyValue.ForEach(resource =>
         {
             resource.Type.Should().Be("todoItems");
-            resource.Attributes.ShouldOnlyContainKeys("description", "priority", "durationInHours", "createdAt", "modifiedAt");
-            resource.Relationships.ShouldOnlyContainKeys("owner", "assignee", "tags");
+            resource.Attributes.Should().OnlyContainKeys("description", "priority", "durationInHours", "createdAt", "modifiedAt");
+            resource.Relationships.Should().OnlyContainKeys("owner", "assignee", "tags");
         });
 
         responseDocument.Included.Should().HaveCount(25 * 15 * 2);

@@ -141,7 +141,7 @@ public sealed class TodoItemTests(NoLoggingWebApplicationFactory<TodoItem> facto
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().NotBeEmpty();
-        responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Attributes.ShouldOnlyContainKeys("description", "priority"));
+        responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Attributes.Should().OnlyContainKeys("description", "priority"));
     }
 
     [Fact]

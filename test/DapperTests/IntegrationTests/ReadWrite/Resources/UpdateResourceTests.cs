@@ -151,7 +151,7 @@ public sealed class UpdateResourceTests : IClassFixture<DapperTestContext>
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("durationInHours").With(value => value.Should().Be(newDurationInHours));
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("createdAt").With(value => value.Should().Be(existingTodoItem.CreatedAt));
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("modifiedAt").With(value => value.Should().Be(DapperTestContext.FrozenTime));
-        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("owner", "assignee", "tags");
+        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("owner", "assignee", "tags");
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -308,7 +308,7 @@ public sealed class UpdateResourceTests : IClassFixture<DapperTestContext>
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("durationInHours").With(value => value.Should().Be(newTodoItem.DurationInHours));
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("createdAt").With(value => value.Should().Be(existingTodoItem.CreatedAt));
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("modifiedAt").With(value => value.Should().Be(DapperTestContext.FrozenTime));
-        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("owner", "assignee", "tags");
+        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("owner", "assignee", "tags");
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

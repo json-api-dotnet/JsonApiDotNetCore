@@ -100,7 +100,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("createdAt").With(value => value.Should().Be(DapperTestContext.FrozenTime));
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("modifiedAt").With(value => value.Should().BeNull());
 
-        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("owner", "assignee", "tags");
+        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("owner", "assignee", "tags");
 
         long newTodoItemId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
         httpResponse.Headers.Location.Should().Be($"/todoItems/{newTodoItemId}");
@@ -235,7 +235,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("durationInHours").With(value => value.Should().BeNull());
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("createdAt").With(value => value.Should().Be(DapperTestContext.FrozenTime));
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("modifiedAt").With(value => value.Should().BeNull());
-        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("owner", "assignee", "tags");
+        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("owner", "assignee", "tags");
 
         long newTodoItemId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
@@ -411,7 +411,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
         responseDocument.Data.SingleValue.Type.Should().Be("loginAccounts");
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("userName").With(value => value.Should().Be(newUserName));
         responseDocument.Data.SingleValue.Attributes.Should().NotContainKey("lastUsedAt");
-        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("recovery", "person");
+        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("recovery", "person");
 
         long newLoginAccountId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
@@ -525,7 +525,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("firstName").With(value => value.Should().Be(newPerson.FirstName));
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("lastName").With(value => value.Should().Be(newPerson.LastName));
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(newPerson.DisplayName));
-        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("account", "ownedTodoItems", "assignedTodoItems");
+        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("account", "ownedTodoItems", "assignedTodoItems");
 
         long newPersonId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 

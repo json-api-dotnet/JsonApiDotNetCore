@@ -144,7 +144,7 @@ public sealed class TagTests(NoLoggingWebApplicationFactory<Tag> factory) : Inte
 
         responseDocument.Data.ManyValue.Should().NotBeEmpty();
         responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Attributes.Should().BeNull());
-        responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Relationships.ShouldOnlyContainKeys("todoItems"));
+        responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Relationships.Should().OnlyContainKeys("todoItems"));
     }
 
     [Fact]
