@@ -86,9 +86,9 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.Self.Should().Be($"/bikes/{bike.StringId}");
 
             resource.Attributes.Should().HaveCount(3);
-            resource.Attributes.ShouldContainKey("weight").With(value => value.Should().Be(bike.Weight));
-            resource.Attributes.ShouldContainKey("requiresDriverLicense").With(value => value.Should().Be(bike.RequiresDriverLicense));
-            resource.Attributes.ShouldContainKey("gearCount").With(value => value.Should().Be(bike.GearCount));
+            resource.Attributes.Should().ContainKey("weight").WhoseValue.Should().Be(bike.Weight);
+            resource.Attributes.Should().ContainKey("requiresDriverLicense").WhoseValue.Should().Be(bike.RequiresDriverLicense);
+            resource.Attributes.Should().ContainKey("gearCount").WhoseValue.Should().Be(bike.GearCount);
 
             resource.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights");
 
@@ -109,10 +109,10 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.Self.Should().Be($"/tandems/{tandem.StringId}");
 
             resource.Attributes.Should().HaveCount(4);
-            resource.Attributes.ShouldContainKey("weight").With(value => value.Should().Be(tandem.Weight));
-            resource.Attributes.ShouldContainKey("requiresDriverLicense").With(value => value.Should().Be(tandem.RequiresDriverLicense));
-            resource.Attributes.ShouldContainKey("gearCount").With(value => value.Should().Be(tandem.GearCount));
-            resource.Attributes.ShouldContainKey("passengerCount").With(value => value.Should().Be(tandem.PassengerCount));
+            resource.Attributes.Should().ContainKey("weight").WhoseValue.Should().Be(tandem.Weight);
+            resource.Attributes.Should().ContainKey("requiresDriverLicense").WhoseValue.Should().Be(tandem.RequiresDriverLicense);
+            resource.Attributes.Should().ContainKey("gearCount").WhoseValue.Should().Be(tandem.GearCount);
+            resource.Attributes.Should().ContainKey("passengerCount").WhoseValue.Should().Be(tandem.PassengerCount);
 
             resource.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
 
@@ -133,10 +133,10 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.Self.Should().Be($"/cars/{car.StringId}");
 
             resource.Attributes.Should().HaveCount(4);
-            resource.Attributes.ShouldContainKey("weight").With(value => value.Should().Be(car.Weight));
-            resource.Attributes.ShouldContainKey("requiresDriverLicense").With(value => value.Should().Be(car.RequiresDriverLicense));
-            resource.Attributes.ShouldContainKey("licensePlate").With(value => value.Should().Be(car.LicensePlate));
-            resource.Attributes.ShouldContainKey("seatCount").With(value => value.Should().Be(car.SeatCount));
+            resource.Attributes.Should().ContainKey("weight").WhoseValue.Should().Be(car.Weight);
+            resource.Attributes.Should().ContainKey("requiresDriverLicense").WhoseValue.Should().Be(car.RequiresDriverLicense);
+            resource.Attributes.Should().ContainKey("licensePlate").WhoseValue.Should().Be(car.LicensePlate);
+            resource.Attributes.Should().ContainKey("seatCount").WhoseValue.Should().Be(car.SeatCount);
 
             resource.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "engine", "navigationSystem", "features");
 
@@ -157,10 +157,10 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.Self.Should().Be($"/trucks/{truck.StringId}");
 
             resource.Attributes.Should().HaveCount(4);
-            resource.Attributes.ShouldContainKey("weight").With(value => value.Should().Be(truck.Weight));
-            resource.Attributes.ShouldContainKey("requiresDriverLicense").With(value => value.Should().Be(truck.RequiresDriverLicense));
-            resource.Attributes.ShouldContainKey("licensePlate").With(value => value.Should().Be(truck.LicensePlate));
-            resource.Attributes.ShouldContainKey("loadingCapacity").With(value => value.Should().Be(truck.LoadingCapacity));
+            resource.Attributes.Should().ContainKey("weight").WhoseValue.Should().Be(truck.Weight);
+            resource.Attributes.Should().ContainKey("requiresDriverLicense").WhoseValue.Should().Be(truck.RequiresDriverLicense);
+            resource.Attributes.Should().ContainKey("licensePlate").WhoseValue.Should().Be(truck.LicensePlate);
+            resource.Attributes.Should().ContainKey("loadingCapacity").WhoseValue.Should().Be(truck.LoadingCapacity);
 
             resource.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "engine", "navigationSystem", "sleepingArea", "features");
 
@@ -209,9 +209,9 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.Self.Should().Be($"/bikes/{bike.StringId}");
 
             resource.Attributes.Should().HaveCount(3);
-            resource.Attributes.ShouldContainKey("weight").With(value => value.Should().Be(bike.Weight));
-            resource.Attributes.ShouldContainKey("requiresDriverLicense").With(value => value.Should().Be(bike.RequiresDriverLicense));
-            resource.Attributes.ShouldContainKey("gearCount").With(value => value.Should().Be(bike.GearCount));
+            resource.Attributes.Should().ContainKey("weight").WhoseValue.Should().Be(bike.Weight);
+            resource.Attributes.Should().ContainKey("requiresDriverLicense").WhoseValue.Should().Be(bike.RequiresDriverLicense);
+            resource.Attributes.Should().ContainKey("gearCount").WhoseValue.Should().Be(bike.GearCount);
 
             resource.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights");
 
@@ -232,10 +232,10 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.Self.Should().Be($"/tandems/{tandem.StringId}");
 
             resource.Attributes.Should().HaveCount(4);
-            resource.Attributes.ShouldContainKey("weight").With(value => value.Should().Be(tandem.Weight));
-            resource.Attributes.ShouldContainKey("requiresDriverLicense").With(value => value.Should().Be(tandem.RequiresDriverLicense));
-            resource.Attributes.ShouldContainKey("gearCount").With(value => value.Should().Be(tandem.GearCount));
-            resource.Attributes.ShouldContainKey("passengerCount").With(value => value.Should().Be(tandem.PassengerCount));
+            resource.Attributes.Should().ContainKey("weight").WhoseValue.Should().Be(tandem.Weight);
+            resource.Attributes.Should().ContainKey("requiresDriverLicense").WhoseValue.Should().Be(tandem.RequiresDriverLicense);
+            resource.Attributes.Should().ContainKey("gearCount").WhoseValue.Should().Be(tandem.GearCount);
+            resource.Attributes.Should().ContainKey("passengerCount").WhoseValue.Should().Be(tandem.PassengerCount);
 
             resource.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
 
@@ -284,10 +284,10 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.Self.Should().Be($"/tandems/{tandem.StringId}");
 
             resource.Attributes.Should().HaveCount(4);
-            resource.Attributes.ShouldContainKey("weight").With(value => value.Should().Be(tandem.Weight));
-            resource.Attributes.ShouldContainKey("requiresDriverLicense").With(value => value.Should().Be(tandem.RequiresDriverLicense));
-            resource.Attributes.ShouldContainKey("gearCount").With(value => value.Should().Be(tandem.GearCount));
-            resource.Attributes.ShouldContainKey("passengerCount").With(value => value.Should().Be(tandem.PassengerCount));
+            resource.Attributes.Should().ContainKey("weight").WhoseValue.Should().Be(tandem.Weight);
+            resource.Attributes.Should().ContainKey("requiresDriverLicense").WhoseValue.Should().Be(tandem.RequiresDriverLicense);
+            resource.Attributes.Should().ContainKey("gearCount").WhoseValue.Should().Be(tandem.GearCount);
+            resource.Attributes.Should().ContainKey("passengerCount").WhoseValue.Should().Be(tandem.PassengerCount);
 
             resource.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
 
@@ -461,14 +461,14 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         responseDocument.Data.SingleValue.Links.Self.Should().Be($"/gasolineEngines/{car.Engine.StringId}");
 
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(4);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("isHydrocarbonBased").With(value => value.Should().Be(car.Engine.IsHydrocarbonBased));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("capacity").With(value => value.Should().Be(car.Engine.Capacity));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("serialCode").With(value => value.Should().Be(((GasolineEngine)car.Engine).SerialCode));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("volatility").With(value => value.Should().Be(((GasolineEngine)car.Engine).Volatility));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("isHydrocarbonBased").WhoseValue.Should().Be(car.Engine.IsHydrocarbonBased);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("capacity").WhoseValue.Should().Be(car.Engine.Capacity);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("serialCode").WhoseValue.Should().Be(((GasolineEngine)car.Engine).SerialCode);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("volatility").WhoseValue.Should().Be(((GasolineEngine)car.Engine).Volatility);
 
         responseDocument.Data.SingleValue.Relationships.Should().HaveCount(1);
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("cylinders").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("cylinders").WhoseValue.With(value =>
         {
             value.ShouldNotBeNull();
             value.Links.ShouldNotBeNull();
@@ -508,9 +508,9 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         responseDocument.Data.SingleValue.Links.Should().BeNull();
 
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(3);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("width").With(value => value.Should().Be(tandem.CargoBox.Width));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("height").With(value => value.Should().Be(tandem.CargoBox.Height));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("depth").With(value => value.Should().Be(tandem.CargoBox.Depth));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("width").WhoseValue.Should().Be(tandem.CargoBox.Width);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("height").WhoseValue.Should().Be(tandem.CargoBox.Height);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("depth").WhoseValue.Should().Be(tandem.CargoBox.Depth);
 
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
     }
@@ -547,14 +547,14 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         responseDocument.Data.SingleValue.Links.Self.Should().Be($"/gasolineEngines/{car.Engine.StringId}");
 
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(4);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("isHydrocarbonBased").With(value => value.Should().Be(car.Engine.IsHydrocarbonBased));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("capacity").With(value => value.Should().Be(car.Engine.Capacity));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("serialCode").With(value => value.Should().Be(((GasolineEngine)car.Engine).SerialCode));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("volatility").With(value => value.Should().Be(((GasolineEngine)car.Engine).Volatility));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("isHydrocarbonBased").WhoseValue.Should().Be(car.Engine.IsHydrocarbonBased);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("capacity").WhoseValue.Should().Be(car.Engine.Capacity);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("serialCode").WhoseValue.Should().Be(((GasolineEngine)car.Engine).SerialCode);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("volatility").WhoseValue.Should().Be(((GasolineEngine)car.Engine).Volatility);
 
         responseDocument.Data.SingleValue.Relationships.Should().HaveCount(1);
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("cylinders").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("cylinders").WhoseValue.With(value =>
         {
             value.ShouldNotBeNull();
             value.Links.ShouldNotBeNull();
@@ -675,7 +675,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         {
             resource.Relationships.Should().HaveCount(1);
 
-            resource.Relationships.ShouldContainKey("vehicle").With(value =>
+            resource.Relationships.Should().ContainKey("vehicle").WhoseValue.With(value =>
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -743,7 +743,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         {
             resource.Relationships.Should().HaveCount(1);
 
-            resource.Relationships.ShouldContainKey("vehicle").With(value =>
+            resource.Relationships.Should().ContainKey("vehicle").WhoseValue.With(value =>
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -805,7 +805,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         {
             resource.Relationships.Should().HaveCount(1);
 
-            resource.Relationships.ShouldContainKey("vehicle").With(value =>
+            resource.Relationships.Should().ContainKey("vehicle").WhoseValue.With(value =>
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();

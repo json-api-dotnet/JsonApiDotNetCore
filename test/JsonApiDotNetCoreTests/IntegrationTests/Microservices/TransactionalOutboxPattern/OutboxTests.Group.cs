@@ -45,7 +45,7 @@ public sealed partial class OutboxTests
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newGroupName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.With(value => value.Should().Be(newGroupName));
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
@@ -127,7 +127,7 @@ public sealed partial class OutboxTests
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newGroupName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.With(value => value.Should().Be(newGroupName));
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {

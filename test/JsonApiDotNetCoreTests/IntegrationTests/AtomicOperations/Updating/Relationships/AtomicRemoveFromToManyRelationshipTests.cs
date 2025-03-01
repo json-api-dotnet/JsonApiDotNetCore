@@ -70,7 +70,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         error.Detail.Should().Be("Relationship 'ownedBy' is not a to-many relationship.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/ref/relationship");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -264,7 +264,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/href");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -303,7 +303,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/ref");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -343,7 +343,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/ref/type");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -382,7 +382,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/ref");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -481,7 +481,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/ref");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -521,7 +521,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'performers'.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/ref/relationship");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -569,7 +569,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -618,7 +618,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -669,7 +669,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -716,7 +716,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data[0]");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -764,7 +764,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data[0]/type");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -811,7 +811,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data[0]");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -860,7 +860,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data[0]");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -989,7 +989,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         error.Detail.Should().Be("Type 'playlists' is not convertible to type 'performers' of relationship 'performers'.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data[0]/type");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -1093,6 +1093,6 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         error.Detail.Should().Be("The relationship 'occursIn' on resource type 'musicTracks' cannot be removed from.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/ref/relationship");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 }

@@ -45,9 +45,9 @@ public sealed class BlobTests : IClassFixture<IntegrationTestContext<TestableSta
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("imageContainers");
         responseDocument.Data.SingleValue.Id.Should().Be(container.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("fileName").With(value => value.Should().Be(container.FileName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("data").As<byte[]>().With(value => value.Should().Equal(container.Data));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("thumbnail").As<byte[]>().With(value => value.Should().Equal(container.Thumbnail));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("fileName").WhoseValue.With(value => value.Should().Be(container.FileName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("data").WhoseValue.As<byte[]>().With(value => value.Should().Equal(container.Data));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("thumbnail").WhoseValue.As<byte[]>().With(value => value.Should().Equal(container.Thumbnail));
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
     }
 
@@ -81,9 +81,9 @@ public sealed class BlobTests : IClassFixture<IntegrationTestContext<TestableSta
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("imageContainers");
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("fileName").With(value => value.Should().Be(newContainer.FileName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("data").As<byte[]>().With(value => value.Should().Equal(newContainer.Data));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("thumbnail").As<byte[]>().With(value => value.Should().Equal(newContainer.Thumbnail));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("fileName").WhoseValue.With(value => value.Should().Be(newContainer.FileName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("data").WhoseValue.As<byte[]>().With(value => value.Should().Equal(newContainer.Data));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("thumbnail").WhoseValue.As<byte[]>().With(value => value.Should().Equal(newContainer.Thumbnail));
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
         long newContainerId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
@@ -138,9 +138,9 @@ public sealed class BlobTests : IClassFixture<IntegrationTestContext<TestableSta
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("imageContainers");
         responseDocument.Data.SingleValue.Id.Should().Be(existingContainer.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("fileName").With(value => value.Should().Be(existingContainer.FileName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("data").As<byte[]>().With(value => value.Should().Equal(newData));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("thumbnail").As<byte[]>().With(value => value.Should().Equal(newThumbnail));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("fileName").WhoseValue.With(value => value.Should().Be(existingContainer.FileName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("data").WhoseValue.As<byte[]>().With(value => value.Should().Equal(newData));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("thumbnail").WhoseValue.As<byte[]>().With(value => value.Should().Equal(newThumbnail));
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -189,8 +189,8 @@ public sealed class BlobTests : IClassFixture<IntegrationTestContext<TestableSta
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("imageContainers");
         responseDocument.Data.SingleValue.Id.Should().Be(existingContainer.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("fileName").With(value => value.Should().Be(existingContainer.FileName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("data").As<byte[]>().With(value => value.Should().BeEmpty());
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("fileName").WhoseValue.With(value => value.Should().Be(existingContainer.FileName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("data").WhoseValue.As<byte[]>().With(value => value.Should().BeEmpty());
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -238,8 +238,8 @@ public sealed class BlobTests : IClassFixture<IntegrationTestContext<TestableSta
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("imageContainers");
         responseDocument.Data.SingleValue.Id.Should().Be(existingContainer.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("fileName").With(value => value.Should().Be(existingContainer.FileName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("thumbnail").With(value => value.Should().BeNull());
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("fileName").WhoseValue.With(value => value.Should().Be(existingContainer.FileName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("thumbnail").WhoseValue.With(value => value.Should().BeNull());
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>

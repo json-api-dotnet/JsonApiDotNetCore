@@ -114,7 +114,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("isGivenLightBy").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("isGivenLightBy").WhoseValue.With(value =>
         {
             value.ShouldNotBeNull();
             value.Data.SingleValue.ShouldNotBeNull();
@@ -125,7 +125,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("stars");
         responseDocument.Included[0].Id.Should().Be(moon.IsGivenLightBy.StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be(moon.IsGivenLightBy.Name));
+        responseDocument.Included[0].Attributes.Should().ContainKey("name").WhoseValue.Should().Be(moon.IsGivenLightBy.Name);
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
@@ -176,11 +176,11 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
         responseDocument.Included[0].Type.Should().Be("moons");
         responseDocument.Included[0].Id.Should().Be(planet.Moons.ElementAt(0).StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be(planet.Moons.ElementAt(0).Name));
+        responseDocument.Included[0].Attributes.Should().ContainKey("name").WhoseValue.Should().Be(planet.Moons.ElementAt(0).Name);
 
         responseDocument.Included[1].Type.Should().Be("stars");
         responseDocument.Included[1].Id.Should().Be(planet.Moons.ElementAt(0).IsGivenLightBy!.StringId);
-        responseDocument.Included[1].Attributes.ShouldContainKey("name").With(value => value.Should().Be(planet.Moons.ElementAt(0).IsGivenLightBy!.Name));
+        responseDocument.Included[1].Attributes.Should().ContainKey("name").WhoseValue.Should().Be(planet.Moons.ElementAt(0).IsGivenLightBy!.Name);
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
@@ -579,8 +579,8 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(star.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(star.Name));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("kind").With(value => value.Should().Be(star.Kind));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(star.Name);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("kind").WhoseValue.Should().Be(star.Kind);
         responseDocument.Data.SingleValue.Relationships.ShouldNotBeNull();
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
@@ -620,8 +620,8 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(star.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(2);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(star.Name));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("solarRadius").With(value => value.Should().Be(star.SolarRadius));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(star.Name);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("solarRadius").WhoseValue.Should().Be(star.SolarRadius);
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
@@ -660,7 +660,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(star.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(star.Name));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(star.Name);
         responseDocument.Data.SingleValue.Attributes.Should().NotContainKey("isVisibleFromEarth");
         responseDocument.Data.SingleValue.Relationships.ShouldNotBeNull();
 
@@ -701,7 +701,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(star.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(star.Name));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(star.Name);
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]

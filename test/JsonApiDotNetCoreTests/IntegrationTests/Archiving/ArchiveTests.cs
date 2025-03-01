@@ -46,7 +46,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(broadcast.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("archivedAt").With(value => value.Should().Be(broadcast.ArchivedAt));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("archivedAt").WhoseValue.With(value => value.Should().Be(broadcast.ArchivedAt));
     }
 
     [Fact]
@@ -72,7 +72,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(broadcast.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("archivedAt").WhoseValue.With(value => value.Should().BeNull());
     }
 
     [Fact]
@@ -99,7 +99,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(broadcasts[1].StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("archivedAt").WhoseValue.With(value => value.Should().BeNull());
     }
 
     [Fact]
@@ -126,10 +126,10 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(broadcasts[0].StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().Be(broadcasts[0].ArchivedAt));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("archivedAt").WhoseValue.With(value => value.Should().Be(broadcasts[0].ArchivedAt));
 
         responseDocument.Data.ManyValue[1].Id.Should().Be(broadcasts[1].StringId);
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("archivedAt").WhoseValue.With(value => value.Should().BeNull());
     }
 
     [Fact]
@@ -159,7 +159,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
+        responseDocument.Included[0].Attributes.Should().ContainKey("archivedAt").WhoseValue.With(value => value.Should().BeNull());
     }
 
     [Fact]
@@ -189,9 +189,9 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Included.Should().HaveCount(2);
         responseDocument.Included[0].Id.Should().Be(station.Broadcasts.ElementAt(0).StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().Be(station.Broadcasts.ElementAt(0).ArchivedAt));
+        responseDocument.Included[0].Attributes.Should().ContainKey("archivedAt").WhoseValue.With(value => value.Should().Be(station.Broadcasts.ElementAt(0).ArchivedAt));
         responseDocument.Included[1].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
-        responseDocument.Included[1].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
+        responseDocument.Included[1].Attributes.Should().ContainKey("archivedAt").WhoseValue.With(value => value.Should().BeNull());
     }
 
     [Fact]
@@ -217,7 +217,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(comment.AppliesTo.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("archivedAt").With(value => value.Should().Be(comment.AppliesTo.ArchivedAt));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("archivedAt").WhoseValue.With(value => value.Should().Be(comment.AppliesTo.ArchivedAt));
     }
 
     [Fact]
@@ -244,7 +244,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("archivedAt").WhoseValue.With(value => value.Should().BeNull());
     }
 
     [Fact]
@@ -273,10 +273,10 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(station.Broadcasts.ElementAt(0).StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().Be(archivedAt0));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("archivedAt").WhoseValue.With(value => value.Should().Be(archivedAt0));
 
         responseDocument.Data.ManyValue[1].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("archivedAt").WhoseValue.With(value => value.Should().BeNull());
     }
 
     [Fact]
@@ -307,7 +307,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Id.Should().Be(network.Stations.ElementAt(0).Broadcasts.ElementAt(1).StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
+        responseDocument.Included[0].Attributes.Should().ContainKey("archivedAt").WhoseValue.With(value => value.Should().BeNull());
     }
 
     [Fact]
@@ -340,9 +340,9 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Included.Should().HaveCount(2);
         responseDocument.Included[0].Id.Should().Be(network.Stations.ElementAt(0).Broadcasts.ElementAt(0).StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().Be(archivedAt0));
+        responseDocument.Included[0].Attributes.Should().ContainKey("archivedAt").WhoseValue.With(value => value.Should().Be(archivedAt0));
         responseDocument.Included[1].Id.Should().Be(network.Stations.ElementAt(0).Broadcasts.ElementAt(1).StringId);
-        responseDocument.Included[1].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
+        responseDocument.Included[1].Attributes.Should().ContainKey("archivedAt").WhoseValue.With(value => value.Should().BeNull());
     }
 
     [Fact]
@@ -426,9 +426,9 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newBroadcast.Title));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("airedAt").With(value => value.Should().Be(newBroadcast.AiredAt));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("title").WhoseValue.With(value => value.Should().Be(newBroadcast.Title));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("airedAt").WhoseValue.With(value => value.Should().Be(newBroadcast.AiredAt));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("archivedAt").WhoseValue.With(value => value.Should().BeNull());
     }
 
     [Fact]

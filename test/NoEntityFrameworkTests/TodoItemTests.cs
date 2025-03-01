@@ -53,7 +53,7 @@ public sealed class TodoItemTests(NoLoggingWebApplicationFactory<TodoItem> facto
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("priority").With(value => value.Should().Be(TodoItemPriority.High));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("priority").WhoseValue.Should().Be(TodoItemPriority.High);
 
         responseDocument.Meta.Should().ContainTotal(1);
     }
@@ -123,7 +123,7 @@ public sealed class TodoItemTests(NoLoggingWebApplicationFactory<TodoItem> facto
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("description").With(value => value.Should().Be("Check emails"));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("description").WhoseValue.Should().Be("Check emails");
 
         responseDocument.Meta.Should().ContainTotal(4);
     }
@@ -209,8 +209,8 @@ public sealed class TodoItemTests(NoLoggingWebApplicationFactory<TodoItem> facto
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(2);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be("Personal"));
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("name").With(value => value.Should().Be("Family"));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("name").WhoseValue.Should().Be("Personal");
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("name").WhoseValue.Should().Be("Family");
 
         responseDocument.Meta.Should().ContainTotal(2);
     }
@@ -229,7 +229,7 @@ public sealed class TodoItemTests(NoLoggingWebApplicationFactory<TodoItem> facto
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("people");
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("firstName").With(value => value.Should().Be("Jane"));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("firstName").WhoseValue.Should().Be("Jane");
     }
 
     [Fact]

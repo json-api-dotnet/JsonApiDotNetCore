@@ -509,7 +509,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 """));
 
             command.Parameters.Should().HaveCount(1);
-            command.Parameters.ShouldContainKey("@p1").With(value => value.ShouldNotBeNull());
+            command.Parameters.Should().ContainKey("@p1").WhoseValue.ShouldNotBeNull();
         });
 
         store.SqlCommands[2].With(command =>
@@ -522,7 +522,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 """));
 
             command.Parameters.Should().HaveCount(1);
-            command.Parameters.ShouldContainKey("@p1").With(value => value.ShouldNotBeNull());
+            command.Parameters.Should().ContainKey("@p1").WhoseValue.ShouldNotBeNull();
         });
 
         store.SqlCommands[3].With(command =>
@@ -534,7 +534,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 """));
 
             command.Parameters.Should().HaveCount(2);
-            command.Parameters.ShouldContainKey("@p1").With(value => value.ShouldNotBeNull());
+            command.Parameters.Should().ContainKey("@p1").WhoseValue.ShouldNotBeNull();
             command.Parameters.Should().Contain("@p2", unknownTodoItemId);
         });
 

@@ -45,11 +45,11 @@ public sealed class CustomRouteTests : IClassFixture<IntegrationTestContext<Test
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("towns");
         responseDocument.Data.SingleValue.Id.Should().Be(town.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(town.Name));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("latitude").With(value => value.Should().Be(town.Latitude));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("longitude").With(value => value.Should().Be(town.Longitude));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(town.Name);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("latitude").WhoseValue.Should().Be(town.Latitude);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("longitude").WhoseValue.Should().Be(town.Longitude);
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("civilians").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("civilians").WhoseValue.With(value =>
         {
             value.ShouldNotBeNull();
             value.Links.ShouldNotBeNull();

@@ -198,8 +198,8 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("directoryName").With(value => value.Should().Be(newDirectory.Name));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("isCaseSensitive").With(value => value.Should().Be(newDirectory.IsCaseSensitive));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("directoryName").WhoseValue.With(value => value.Should().Be(newDirectory.Name));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("isCaseSensitive").WhoseValue.With(value => value.Should().Be(newDirectory.IsCaseSensitive));
     }
 
     [Fact]
@@ -360,8 +360,8 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("directoryName").With(value => value.Should().Be(newDirectory.Name));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("isCaseSensitive").With(value => value.Should().Be(newDirectory.IsCaseSensitive));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("directoryName").WhoseValue.With(value => value.Should().Be(newDirectory.Name));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("isCaseSensitive").WhoseValue.With(value => value.Should().Be(newDirectory.IsCaseSensitive));
     }
 
     [Fact]

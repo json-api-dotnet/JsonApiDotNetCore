@@ -60,7 +60,7 @@ public sealed class HostingTests : IClassFixture<IntegrationTestContext<HostingS
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be(galleryLink);
 
-            resource.Relationships.ShouldContainKey("paintings").With(value =>
+            resource.Relationships.Should().ContainKey("paintings").WhoseValue.With(value =>
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -78,7 +78,7 @@ public sealed class HostingTests : IClassFixture<IntegrationTestContext<HostingS
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be(paintingLink);
 
-            resource.Relationships.ShouldContainKey("exposedAt").With(value =>
+            resource.Relationships.Should().ContainKey("exposedAt").WhoseValue.With(value =>
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -127,7 +127,7 @@ public sealed class HostingTests : IClassFixture<IntegrationTestContext<HostingS
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be(paintingLink);
 
-            resource.Relationships.ShouldContainKey("exposedAt").With(value =>
+            resource.Relationships.Should().ContainKey("exposedAt").WhoseValue.With(value =>
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -145,7 +145,7 @@ public sealed class HostingTests : IClassFixture<IntegrationTestContext<HostingS
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be(galleryLink);
 
-            resource.Relationships.ShouldContainKey("paintings").With(value =>
+            resource.Relationships.Should().ContainKey("paintings").WhoseValue.With(value =>
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();

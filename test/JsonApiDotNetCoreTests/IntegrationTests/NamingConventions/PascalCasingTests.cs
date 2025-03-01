@@ -44,20 +44,20 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
 
         responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Type == "SwimmingPools");
-        responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Attributes.ShouldContainKey("IsIndoor") != null);
-        responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.ShouldContainKey("WaterSlides") != null);
-        responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.ShouldContainKey("DivingBoards") != null);
+        responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Attributes.Should().ContainKey("IsIndoor").WhoseValue != null);
+        responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.Should().ContainKey("WaterSlides").WhoseValue != null);
+        responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.Should().ContainKey("DivingBoards").WhoseValue != null);
 
         decimal height = pools[1].DivingBoards[0].HeightInMeters;
 
         responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("DivingBoards");
         responseDocument.Included[0].Id.Should().Be(pools[1].DivingBoards[0].StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("HeightInMeters").With(value => value.As<decimal>().Should().BeApproximately(height));
+        responseDocument.Included[0].Attributes.Should().ContainKey("HeightInMeters").WhoseValue.As<decimal>().Should().BeApproximately(height);
         responseDocument.Included[0].Relationships.Should().BeNull();
         responseDocument.Included[0].Links.ShouldNotBeNull().Self.Should().Be($"/PublicApi/DivingBoards/{pools[1].DivingBoards[0].StringId}");
 
-        responseDocument.Meta.ShouldContainKey("Total").With(value =>
+        responseDocument.Meta.Should().ContainKey("Total").WhoseValue.With(value =>
         {
             JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
             element.GetInt32().Should().Be(2);
@@ -121,12 +121,12 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("SwimmingPools");
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("IsIndoor").With(value => value.Should().Be(newPool.IsIndoor));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("IsIndoor").WhoseValue.Should().Be(newPool.IsIndoor);
 
         int newPoolId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
         string poolLink = $"{route}/{newPoolId}";
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("WaterSlides").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("WaterSlides").WhoseValue.With(value =>
         {
             value.ShouldNotBeNull();
             value.Links.ShouldNotBeNull();
@@ -134,7 +134,7 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
             value.Links.Related.Should().Be($"{poolLink}/WaterSlides");
         });
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("DivingBoards").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("DivingBoards").WhoseValue.With(value =>
         {
             value.ShouldNotBeNull();
             value.Links.ShouldNotBeNull();
@@ -169,7 +169,7 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body.");
-        error.Meta.ShouldContainKey("StackTrace");
+        error.Meta.Should().ContainKey("StackTrace");
     }
 
     [Fact]

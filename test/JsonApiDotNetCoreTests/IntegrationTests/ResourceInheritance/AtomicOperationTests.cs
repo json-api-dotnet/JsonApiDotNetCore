@@ -60,9 +60,9 @@ public sealed class AtomicOperationTests : IClassFixture<IntegrationTestContext<
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
             resource.Type.Should().Be("alwaysMovingTandems");
-            resource.Attributes.ShouldContainKey("weight").With(value => value.Should().Be(newMovingTandem.Weight));
-            resource.Attributes.ShouldContainKey("requiresDriverLicense").With(value => value.Should().Be(newMovingTandem.RequiresDriverLicense));
-            resource.Attributes.ShouldContainKey("gearCount").With(value => value.Should().Be(newMovingTandem.GearCount));
+            resource.Attributes.Should().ContainKey("weight").WhoseValue.Should().Be(newMovingTandem.Weight);
+            resource.Attributes.Should().ContainKey("requiresDriverLicense").WhoseValue.Should().Be(newMovingTandem.RequiresDriverLicense);
+            resource.Attributes.Should().ContainKey("gearCount").WhoseValue.Should().Be(newMovingTandem.GearCount);
             resource.Relationships.Should().BeNull();
         });
 

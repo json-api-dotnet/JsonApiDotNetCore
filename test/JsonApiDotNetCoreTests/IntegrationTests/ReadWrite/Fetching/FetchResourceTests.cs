@@ -45,16 +45,16 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Te
 
         ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItems[0].StringId);
         item1.Type.Should().Be("workItems");
-        item1.Attributes.ShouldContainKey("description").With(value => value.Should().Be(workItems[0].Description));
-        item1.Attributes.ShouldContainKey("dueAt").With(value => value.Should().Be(workItems[0].DueAt));
-        item1.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(workItems[0].Priority));
+        item1.Attributes.Should().ContainKey("description").WhoseValue.With(value => value.Should().Be(workItems[0].Description));
+        item1.Attributes.Should().ContainKey("dueAt").WhoseValue.With(value => value.Should().Be(workItems[0].DueAt));
+        item1.Attributes.Should().ContainKey("priority").WhoseValue.With(value => value.Should().Be(workItems[0].Priority));
         item1.Relationships.Should().NotBeEmpty();
 
         ResourceObject item2 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItems[1].StringId);
         item2.Type.Should().Be("workItems");
-        item2.Attributes.ShouldContainKey("description").With(value => value.Should().Be(workItems[1].Description));
-        item2.Attributes.ShouldContainKey("dueAt").With(value => value.Should().Be(workItems[1].DueAt));
-        item2.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(workItems[1].Priority));
+        item2.Attributes.Should().ContainKey("description").WhoseValue.With(value => value.Should().Be(workItems[1].Description));
+        item2.Attributes.Should().ContainKey("dueAt").WhoseValue.With(value => value.Should().Be(workItems[1].DueAt));
+        item2.Attributes.Should().ContainKey("priority").WhoseValue.With(value => value.Should().Be(workItems[1].Priority));
         item2.Relationships.Should().NotBeEmpty();
     }
 
@@ -96,9 +96,9 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Te
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItems");
         responseDocument.Data.SingleValue.Id.Should().Be(workItem.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(workItem.Description));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("dueAt").With(value => value.Should().Be(workItem.DueAt));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(workItem.Priority));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.With(value => value.Should().Be(workItem.Description));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("dueAt").WhoseValue.With(value => value.Should().Be(workItem.DueAt));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("priority").WhoseValue.With(value => value.Should().Be(workItem.Priority));
         responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
     }
 
@@ -163,8 +163,8 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Te
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("userAccounts");
         responseDocument.Data.SingleValue.Id.Should().Be(workItem.Assignee.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("firstName").With(value => value.Should().Be(workItem.Assignee.FirstName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("lastName").With(value => value.Should().Be(workItem.Assignee.LastName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("firstName").WhoseValue.With(value => value.Should().Be(workItem.Assignee.FirstName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("lastName").WhoseValue.With(value => value.Should().Be(workItem.Assignee.LastName));
         responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
     }
 
@@ -216,16 +216,16 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Te
 
         ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(0).StringId);
         item1.Type.Should().Be("workItems");
-        item1.Attributes.ShouldContainKey("description").With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(0).Description));
-        item1.Attributes.ShouldContainKey("dueAt").With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(0).DueAt));
-        item1.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(0).Priority));
+        item1.Attributes.Should().ContainKey("description").WhoseValue.With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(0).Description));
+        item1.Attributes.Should().ContainKey("dueAt").WhoseValue.With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(0).DueAt));
+        item1.Attributes.Should().ContainKey("priority").WhoseValue.With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(0).Priority));
         item1.Relationships.Should().NotBeEmpty();
 
         ResourceObject item2 = responseDocument.Data.ManyValue.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(1).StringId);
         item2.Type.Should().Be("workItems");
-        item2.Attributes.ShouldContainKey("description").With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(1).Description));
-        item2.Attributes.ShouldContainKey("dueAt").With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(1).DueAt));
-        item2.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(1).Priority));
+        item2.Attributes.Should().ContainKey("description").WhoseValue.With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(1).Description));
+        item2.Attributes.Should().ContainKey("dueAt").WhoseValue.With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(1).DueAt));
+        item2.Attributes.Should().ContainKey("priority").WhoseValue.With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(1).Priority));
         item2.Relationships.Should().NotBeEmpty();
     }
 
@@ -277,14 +277,14 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Te
 
         ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItem.Tags.ElementAt(0).StringId);
         item1.Type.Should().Be("workTags");
-        item1.Attributes.ShouldContainKey("text").With(value => value.Should().Be(workItem.Tags.ElementAt(0).Text));
-        item1.Attributes.ShouldContainKey("isBuiltIn").With(value => value.Should().Be(workItem.Tags.ElementAt(0).IsBuiltIn));
+        item1.Attributes.Should().ContainKey("text").WhoseValue.With(value => value.Should().Be(workItem.Tags.ElementAt(0).Text));
+        item1.Attributes.Should().ContainKey("isBuiltIn").WhoseValue.With(value => value.Should().Be(workItem.Tags.ElementAt(0).IsBuiltIn));
         item1.Relationships.Should().NotBeEmpty();
 
         ResourceObject item2 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItem.Tags.ElementAt(1).StringId);
         item2.Type.Should().Be("workTags");
-        item2.Attributes.ShouldContainKey("text").With(value => value.Should().Be(workItem.Tags.ElementAt(1).Text));
-        item2.Attributes.ShouldContainKey("isBuiltIn").With(value => value.Should().Be(workItem.Tags.ElementAt(1).IsBuiltIn));
+        item2.Attributes.Should().ContainKey("text").WhoseValue.With(value => value.Should().Be(workItem.Tags.ElementAt(1).Text));
+        item2.Attributes.Should().ContainKey("isBuiltIn").WhoseValue.With(value => value.Should().Be(workItem.Tags.ElementAt(1).IsBuiltIn));
         item2.Relationships.Should().NotBeEmpty();
     }
 

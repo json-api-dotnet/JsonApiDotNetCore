@@ -84,7 +84,7 @@ public sealed class AtomicRelativeLinksWithNamespaceTests
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be(languageLink);
 
-            resource.Relationships.ShouldContainKey("lyrics").With(value =>
+            resource.Relationships.Should().ContainKey("lyrics").WhoseValue.With(value =>
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -102,7 +102,7 @@ public sealed class AtomicRelativeLinksWithNamespaceTests
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be(companyLink);
 
-            resource.Relationships.ShouldContainKey("tracks").With(value =>
+            resource.Relationships.Should().ContainKey("tracks").WhoseValue.With(value =>
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();

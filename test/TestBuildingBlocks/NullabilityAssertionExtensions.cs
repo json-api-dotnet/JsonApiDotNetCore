@@ -16,14 +16,6 @@ public static class NullabilityAssertionExtensions
         return subject;
     }
 
-    [CustomAssertion]
-    public static TValue? ShouldContainKey<TKey, TValue>([SysNotNull] this IDictionary<TKey, TValue?>? subject, TKey expected)
-    {
-        subject.Should().ContainKey(expected);
-
-        return subject![expected];
-    }
-
     public static void With<T>(this T subject, [InstantHandle] Action<T> continuation)
     {
         continuation(subject);

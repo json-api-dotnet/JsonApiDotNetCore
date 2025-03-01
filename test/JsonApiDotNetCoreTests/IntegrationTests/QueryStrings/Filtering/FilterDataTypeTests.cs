@@ -72,7 +72,7 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey(attributeName).With(value => value.Should().Be(value));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey(attributeName).WhoseValue.With(value => value.Should().Be(value));
     }
 
     [Fact]
@@ -100,7 +100,7 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDecimal").With(value => value.Should().Be(resource.SomeDecimal));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someDecimal").WhoseValue.With(value => value.Should().Be(resource.SomeDecimal));
     }
 
     [Fact]
@@ -128,7 +128,7 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someGuid").With(value => value.Should().Be(resource.SomeGuid));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someGuid").WhoseValue.With(value => value.Should().Be(resource.SomeGuid));
     }
 
     [Fact]
@@ -157,7 +157,7 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
 
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDateTimeInLocalZone")
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someDateTimeInLocalZone").WhoseValue
             .With(value => value.Should().Be(resource.SomeDateTimeInLocalZone));
     }
 
@@ -187,7 +187,7 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
 
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDateTimeInUtcZone")
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someDateTimeInUtcZone").WhoseValue
             .With(value => value.Should().Be(resource.SomeDateTimeInUtcZone));
     }
 
@@ -216,7 +216,7 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDateTimeOffset").With(value => value.Should().Be(resource.SomeDateTimeOffset));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someDateTimeOffset").WhoseValue.With(value => value.Should().Be(resource.SomeDateTimeOffset));
     }
 
     [Fact]
@@ -244,7 +244,7 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someTimeSpan").With(value => value.Should().Be(resource.SomeTimeSpan));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someTimeSpan").WhoseValue.With(value => value.Should().Be(resource.SomeTimeSpan));
     }
 
     [Fact]
@@ -272,7 +272,7 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDateOnly").With(value => value.Should().Be(resource.SomeDateOnly));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someDateOnly").WhoseValue.With(value => value.Should().Be(resource.SomeDateOnly));
     }
 
     [Fact]
@@ -300,7 +300,7 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someTimeOnly").With(value => value.Should().Be(resource.SomeTimeOnly));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someTimeOnly").WhoseValue.With(value => value.Should().Be(resource.SomeTimeOnly));
     }
 
     [Fact]
@@ -393,7 +393,7 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey(attributeName).With(value => value.Should().BeNull());
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey(attributeName).WhoseValue.With(value => value.Should().BeNull());
     }
 
     [Theory]
@@ -447,6 +447,6 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey(attributeName).With(value => value.Should().NotBeNull());
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey(attributeName).WhoseValue.With(value => value.Should().NotBeNull());
     }
 }

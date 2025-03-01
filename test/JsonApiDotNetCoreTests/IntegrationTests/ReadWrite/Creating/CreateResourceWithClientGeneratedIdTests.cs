@@ -68,7 +68,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItemGroups");
         responseDocument.Data.SingleValue.Id.Should().Be(newGroup.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(groupName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.With(value => value.Should().Be(groupName));
         responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -122,7 +122,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         responseDocument.Data.SingleValue.Type.Should().Be("workItemGroups");
         responseDocument.Data.SingleValue.Id.Should().Be(newGroup.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(groupName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.With(value => value.Should().Be(groupName));
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -280,7 +280,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("rgbColors");
         responseDocument.Data.SingleValue.Id.Should().Be(defaultId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(defaultName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("displayName").WhoseValue.With(value => value.Should().Be(defaultName));
         responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -338,7 +338,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Theory]
@@ -381,7 +381,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Theory]
@@ -424,7 +424,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Theory]
@@ -519,7 +519,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Theory]
@@ -563,7 +563,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Theory]

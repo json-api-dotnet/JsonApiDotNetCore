@@ -53,19 +53,19 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
         responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("todoItems"));
 
         responseDocument.Data.ManyValue[0].Id.Should().Be(todoItems[1].StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("description").With(value => value.Should().Be(todoItems[1].Description));
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("priority").With(value => value.Should().Be(todoItems[1].Priority));
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("durationInHours").With(value => value.Should().Be(todoItems[1].DurationInHours));
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("createdAt").With(value => value.Should().Be(todoItems[1].CreatedAt));
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("modifiedAt").With(value => value.Should().Be(todoItems[1].LastModifiedAt));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("description").WhoseValue.With(value => value.Should().Be(todoItems[1].Description));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("priority").WhoseValue.With(value => value.Should().Be(todoItems[1].Priority));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("durationInHours").WhoseValue.With(value => value.Should().Be(todoItems[1].DurationInHours));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("createdAt").WhoseValue.With(value => value.Should().Be(todoItems[1].CreatedAt));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("modifiedAt").WhoseValue.With(value => value.Should().Be(todoItems[1].LastModifiedAt));
         responseDocument.Data.ManyValue[0].Relationships.Should().OnlyContainKeys("owner", "assignee", "tags");
 
         responseDocument.Data.ManyValue[1].Id.Should().Be(todoItems[0].StringId);
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("description").With(value => value.Should().Be(todoItems[0].Description));
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("priority").With(value => value.Should().Be(todoItems[0].Priority));
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("durationInHours").With(value => value.Should().Be(todoItems[0].DurationInHours));
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("createdAt").With(value => value.Should().Be(todoItems[0].CreatedAt));
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("modifiedAt").With(value => value.Should().Be(todoItems[0].LastModifiedAt));
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("description").WhoseValue.With(value => value.Should().Be(todoItems[0].Description));
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("priority").WhoseValue.With(value => value.Should().Be(todoItems[0].Priority));
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("durationInHours").WhoseValue.With(value => value.Should().Be(todoItems[0].DurationInHours));
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("createdAt").WhoseValue.With(value => value.Should().Be(todoItems[0].CreatedAt));
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("modifiedAt").WhoseValue.With(value => value.Should().Be(todoItems[0].LastModifiedAt));
         responseDocument.Data.ManyValue[1].Relationships.Should().OnlyContainKeys("owner", "assignee", "tags");
 
         responseDocument.Meta.Should().ContainTotal(2);
@@ -121,11 +121,11 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("todoItems");
         responseDocument.Data.SingleValue.Id.Should().Be(todoItem.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(todoItem.Description));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(todoItem.Priority));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("durationInHours").With(value => value.Should().Be(todoItem.DurationInHours));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("createdAt").With(value => value.Should().Be(todoItem.CreatedAt));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("modifiedAt").With(value => value.Should().Be(todoItem.LastModifiedAt));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.With(value => value.Should().Be(todoItem.Description));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("priority").WhoseValue.With(value => value.Should().Be(todoItem.Priority));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("durationInHours").WhoseValue.With(value => value.Should().Be(todoItem.DurationInHours));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("createdAt").WhoseValue.With(value => value.Should().Be(todoItem.CreatedAt));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("modifiedAt").WhoseValue.With(value => value.Should().Be(todoItem.LastModifiedAt));
         responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("owner", "assignee", "tags");
 
         responseDocument.Meta.Should().BeNull();
@@ -215,11 +215,11 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
         responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("tags"));
 
         responseDocument.Data.ManyValue[0].Id.Should().Be(todoItem.Tags.ElementAt(0).StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be(todoItem.Tags.ElementAt(0).Name));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("name").WhoseValue.With(value => value.Should().Be(todoItem.Tags.ElementAt(0).Name));
         responseDocument.Data.ManyValue[0].Relationships.Should().OnlyContainKeys("todoItem", "color");
 
         responseDocument.Data.ManyValue[1].Id.Should().Be(todoItem.Tags.ElementAt(1).StringId);
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("name").With(value => value.Should().Be(todoItem.Tags.ElementAt(1).Name));
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("name").WhoseValue.With(value => value.Should().Be(todoItem.Tags.ElementAt(1).Name));
         responseDocument.Data.ManyValue[1].Relationships.Should().OnlyContainKeys("todoItem", "color");
 
         responseDocument.Meta.Should().ContainTotal(2);
@@ -281,9 +281,9 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("people");
         responseDocument.Data.SingleValue.Id.Should().Be(todoItem.Owner.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("firstName").With(value => value.Should().Be(todoItem.Owner.FirstName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("lastName").With(value => value.Should().Be(todoItem.Owner.LastName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(todoItem.Owner.DisplayName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("firstName").WhoseValue.With(value => value.Should().Be(todoItem.Owner.FirstName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("lastName").WhoseValue.With(value => value.Should().Be(todoItem.Owner.LastName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("displayName").WhoseValue.With(value => value.Should().Be(todoItem.Owner.DisplayName));
         responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("account", "ownedTodoItems", "assignedTodoItems");
 
         responseDocument.Meta.Should().BeNull();

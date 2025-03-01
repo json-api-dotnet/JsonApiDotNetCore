@@ -53,7 +53,7 @@ public sealed class TagTests(NoLoggingWebApplicationFactory<Tag> factory) : Inte
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be("Personal"));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("name").WhoseValue.Should().Be("Personal");
 
         responseDocument.Meta.Should().ContainTotal(1);
     }
@@ -71,7 +71,7 @@ public sealed class TagTests(NoLoggingWebApplicationFactory<Tag> factory) : Inte
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be("Business"));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("name").WhoseValue.Should().Be("Business");
 
         responseDocument.Meta.Should().ContainTotal(1);
     }
@@ -125,7 +125,7 @@ public sealed class TagTests(NoLoggingWebApplicationFactory<Tag> factory) : Inte
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be("Family"));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("name").WhoseValue.Should().Be("Family");
 
         responseDocument.Meta.Should().ContainTotal(3);
     }
@@ -192,9 +192,9 @@ public sealed class TagTests(NoLoggingWebApplicationFactory<Tag> factory) : Inte
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(3);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("description").With(value => value.Should().Be("Make homework"));
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("description").With(value => value.Should().Be("Book vacation"));
-        responseDocument.Data.ManyValue[2].Attributes.ShouldContainKey("description").With(value => value.Should().Be("Cook dinner"));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("description").WhoseValue.Should().Be("Make homework");
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("description").WhoseValue.Should().Be("Book vacation");
+        responseDocument.Data.ManyValue[2].Attributes.Should().ContainKey("description").WhoseValue.Should().Be("Cook dinner");
 
         responseDocument.Meta.Should().ContainTotal(3);
     }

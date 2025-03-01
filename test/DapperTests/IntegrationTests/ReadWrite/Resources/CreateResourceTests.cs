@@ -94,11 +94,11 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("todoItems");
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(newTodoItem.Description));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(newTodoItem.Priority));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("durationInHours").With(value => value.Should().Be(newTodoItem.DurationInHours));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("createdAt").With(value => value.Should().Be(DapperTestContext.FrozenTime));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("modifiedAt").With(value => value.Should().BeNull());
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.With(value => value.Should().Be(newTodoItem.Description));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("priority").WhoseValue.With(value => value.Should().Be(newTodoItem.Priority));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("durationInHours").WhoseValue.With(value => value.Should().Be(newTodoItem.DurationInHours));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("createdAt").WhoseValue.With(value => value.Should().Be(DapperTestContext.FrozenTime));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("modifiedAt").WhoseValue.With(value => value.Should().BeNull());
 
         responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("owner", "assignee", "tags");
 
@@ -230,11 +230,11 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("todoItems");
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(newTodoItem.Description));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(newTodoItem.Priority));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("durationInHours").With(value => value.Should().BeNull());
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("createdAt").With(value => value.Should().Be(DapperTestContext.FrozenTime));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("modifiedAt").With(value => value.Should().BeNull());
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.With(value => value.Should().Be(newTodoItem.Description));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("priority").WhoseValue.With(value => value.Should().Be(newTodoItem.Priority));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("durationInHours").WhoseValue.With(value => value.Should().BeNull());
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("createdAt").WhoseValue.With(value => value.Should().Be(DapperTestContext.FrozenTime));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("modifiedAt").WhoseValue.With(value => value.Should().BeNull());
         responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("owner", "assignee", "tags");
 
         long newTodoItemId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
@@ -409,7 +409,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("loginAccounts");
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("userName").With(value => value.Should().Be(newUserName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("userName").WhoseValue.With(value => value.Should().Be(newUserName));
         responseDocument.Data.SingleValue.Attributes.Should().NotContainKey("lastUsedAt");
         responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("recovery", "person");
 
@@ -522,9 +522,9 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("people");
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("firstName").With(value => value.Should().Be(newPerson.FirstName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("lastName").With(value => value.Should().Be(newPerson.LastName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(newPerson.DisplayName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("firstName").WhoseValue.With(value => value.Should().Be(newPerson.FirstName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("lastName").WhoseValue.With(value => value.Should().Be(newPerson.LastName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("displayName").WhoseValue.With(value => value.Should().Be(newPerson.DisplayName));
         responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("account", "ownedTodoItems", "assignedTodoItems");
 
         long newPersonId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());

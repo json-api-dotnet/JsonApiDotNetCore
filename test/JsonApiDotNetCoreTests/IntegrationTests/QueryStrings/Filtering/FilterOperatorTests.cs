@@ -84,7 +84,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someString").With(value => value.Should().Be(resource.SomeString));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someString").WhoseValue.With(value => value.Should().Be(resource.SomeString));
 
         responseDocument.Links.ShouldNotBeNull();
         responseDocument.Links.Self.Should().Be("http://localhost/filterableResources?filter=equals(someString,'This%2c+that+%26+more+%2b+some')");
@@ -123,8 +123,8 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someInt32").With(value => value.Should().Be(resource.SomeInt32));
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("otherInt32").With(value => value.Should().Be(resource.OtherInt32));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someInt32").WhoseValue.With(value => value.Should().Be(resource.SomeInt32));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("otherInt32").WhoseValue.With(value => value.Should().Be(resource.OtherInt32));
     }
 
     [Fact]
@@ -159,8 +159,8 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someNullableInt32").With(value => value.Should().Be(resource.SomeNullableInt32));
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("otherNullableInt32").With(value => value.Should().Be(resource.OtherNullableInt32));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someNullableInt32").WhoseValue.With(value => value.Should().Be(resource.SomeNullableInt32));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("otherNullableInt32").WhoseValue.With(value => value.Should().Be(resource.OtherNullableInt32));
     }
 
     [Fact]
@@ -195,8 +195,8 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someInt32").With(value => value.Should().Be(resource.SomeInt32));
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someNullableInt32").With(value => value.Should().Be(resource.SomeNullableInt32));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someInt32").WhoseValue.With(value => value.Should().Be(resource.SomeInt32));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someNullableInt32").WhoseValue.With(value => value.Should().Be(resource.SomeNullableInt32));
     }
 
     [Fact]
@@ -231,8 +231,8 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someInt32").With(value => value.Should().Be(resource.SomeInt32));
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someNullableInt32").With(value => value.Should().Be(resource.SomeNullableInt32));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someInt32").WhoseValue.With(value => value.Should().Be(resource.SomeInt32));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someNullableInt32").WhoseValue.With(value => value.Should().Be(resource.SomeNullableInt32));
     }
 
     [Fact]
@@ -267,8 +267,8 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someInt32").With(value => value.Should().Be(resource.SomeInt32));
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someUnsignedInt64").With(value => value.Should().Be(resource.SomeUnsignedInt64));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someInt32").WhoseValue.With(value => value.Should().Be(resource.SomeInt32));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someUnsignedInt64").WhoseValue.With(value => value.Should().Be(resource.SomeUnsignedInt64));
     }
 
     [Fact]
@@ -331,7 +331,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someInt32").With(value => value.Should().Be(resource.SomeInt32));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someInt32").WhoseValue.With(value => value.Should().Be(resource.SomeInt32));
     }
 
     [Theory]
@@ -373,7 +373,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDouble").With(value => value.Should().Be(resource.SomeDouble));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someDouble").WhoseValue.With(value => value.Should().Be(resource.SomeDouble));
     }
 
     [Theory]
@@ -424,7 +424,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
 
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDateTimeInLocalZone")
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someDateTimeInLocalZone").WhoseValue
             .With(value => value.Should().Be(resource.SomeDateTimeInLocalZone));
     }
 
@@ -476,7 +476,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
 
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDateTimeInUtcZone")
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someDateTimeInUtcZone").WhoseValue
             .With(value => value.Should().Be(resource.SomeDateTimeInUtcZone));
     }
 
@@ -528,7 +528,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
 
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDateTimeOffset").With(value => value.Should().Be(resource.SomeDateTimeOffset));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someDateTimeOffset").WhoseValue.With(value => value.Should().Be(resource.SomeDateTimeOffset));
     }
 
     [Theory]
@@ -569,7 +569,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someTimeSpan").With(value => value.Should().Be(resource.SomeTimeSpan));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someTimeSpan").WhoseValue.With(value => value.Should().Be(resource.SomeTimeSpan));
     }
 
     [Theory]
@@ -618,7 +618,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDateOnly").With(value => value.Should().Be(resource.SomeDateOnly));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someDateOnly").WhoseValue.With(value => value.Should().Be(resource.SomeDateOnly));
     }
 
     [Theory]
@@ -659,7 +659,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someTimeOnly").With(value => value.Should().Be(resource.SomeTimeOnly));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someTimeOnly").WhoseValue.With(value => value.Should().Be(resource.SomeTimeOnly));
     }
 
     [Theory]
@@ -697,7 +697,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someString").With(value => value.Should().Be(resource.SomeString));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someString").WhoseValue.With(value => value.Should().Be(resource.SomeString));
     }
 
     [Fact]
@@ -779,7 +779,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someString").With(value => value.Should().Be(resource.SomeString));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("someString").WhoseValue.With(value => value.Should().Be(resource.SomeString));
     }
 
     [Fact]

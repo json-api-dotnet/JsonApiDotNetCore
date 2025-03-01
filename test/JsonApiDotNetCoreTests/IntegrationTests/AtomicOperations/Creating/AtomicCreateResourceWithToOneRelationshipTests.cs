@@ -232,7 +232,7 @@ public sealed class AtomicCreateResourceWithToOneRelationshipTests
             responseDocument.Results[index].Data.SingleValue.ShouldNotBeNull().With(resource =>
             {
                 resource.Type.Should().Be("musicTracks");
-                resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitles[index]));
+                resource.Attributes.Should().ContainKey("title").WhoseValue.With(value => value.Should().Be(newTrackTitles[index]));
             });
         }
 
@@ -304,7 +304,7 @@ public sealed class AtomicCreateResourceWithToOneRelationshipTests
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -348,7 +348,7 @@ public sealed class AtomicCreateResourceWithToOneRelationshipTests
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -400,7 +400,7 @@ public sealed class AtomicCreateResourceWithToOneRelationshipTests
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -448,7 +448,7 @@ public sealed class AtomicCreateResourceWithToOneRelationshipTests
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -497,7 +497,7 @@ public sealed class AtomicCreateResourceWithToOneRelationshipTests
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data/type");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -545,7 +545,7 @@ public sealed class AtomicCreateResourceWithToOneRelationshipTests
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -651,7 +651,7 @@ public sealed class AtomicCreateResourceWithToOneRelationshipTests
         error.Detail.Should().Be("Type 'playlists' is not convertible to type 'lyrics' of relationship 'lyric'.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data/type");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -781,6 +781,6 @@ public sealed class AtomicCreateResourceWithToOneRelationshipTests
         error.Detail.Should().Be("The relationship 'language' on resource type 'lyrics' cannot be assigned to.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/language");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 }

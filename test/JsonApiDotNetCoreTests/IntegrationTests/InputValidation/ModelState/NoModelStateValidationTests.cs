@@ -47,7 +47,7 @@ public sealed class NoModelStateValidationTests : IClassFixture<IntegrationTestC
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("directoryName").With(value => value.Should().Be("!@#$%^&*().-"));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("directoryName").WhoseValue.With(value => value.Should().Be("!@#$%^&*().-"));
     }
 
     [Fact]

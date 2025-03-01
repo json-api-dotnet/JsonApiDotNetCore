@@ -114,8 +114,7 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(ServerTimeMediaTypes.ServerTime.ToString());
 
-        responseDocument.Meta.ShouldContainKey("localServerTime").With(time =>
-            time.ShouldNotBeNull().ToString().Should().Be("2025-01-01T06:53:40.0000000+09:00"));
+        responseDocument.Meta.Should().ContainKey("localServerTime").WhoseValue.ShouldNotBeNull().ToString().Should().Be("2025-01-01T06:53:40.0000000+09:00");
     }
 
     [Fact]
@@ -150,7 +149,7 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(ServerTimeMediaTypes.RelaxedServerTime.ToString());
 
-        responseDocument.Meta.ShouldContainKey("utcServerTime").With(time => time.ShouldNotBeNull().ToString().Should().Be("2024-12-31T21:53:40.0000000Z"));
+        responseDocument.Meta.Should().ContainKey("utcServerTime").WhoseValue.ShouldNotBeNull().ToString().Should().Be("2024-12-31T21:53:40.0000000Z");
     }
 
     [Fact]
@@ -192,7 +191,7 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(ServerTimeMediaTypes.AtomicOperationsWithServerTime.ToString());
 
-        responseDocument.Meta.ShouldContainKey("utcServerTime").With(time => time.ShouldNotBeNull().ToString().Should().Be("2024-12-31T21:53:40.0000000Z"));
+        responseDocument.Meta.Should().ContainKey("utcServerTime").WhoseValue.ShouldNotBeNull().ToString().Should().Be("2024-12-31T21:53:40.0000000Z");
     }
 
     [Fact]
@@ -239,7 +238,7 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(ServerTimeMediaTypes.RelaxedAtomicOperationsWithRelaxedServerTime.ToString());
 
-        responseDocument.Meta.ShouldContainKey("localServerTime");
+        responseDocument.Meta.Should().ContainKey("localServerTime");
     }
 
     [Fact]

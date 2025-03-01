@@ -51,11 +51,11 @@ public sealed class SparseFieldSets : IClassFixture<DapperTestContext>
         responseDocument.Data.ManyValue[0].Type.Should().Be("todoItems");
         responseDocument.Data.ManyValue[0].Id.Should().Be(todoItem.StringId);
         responseDocument.Data.ManyValue[0].Attributes.Should().HaveCount(2);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("description").With(value => value.Should().Be(todoItem.Description));
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("durationInHours").With(value => value.Should().Be(todoItem.DurationInHours));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("description").WhoseValue.With(value => value.Should().Be(todoItem.Description));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("durationInHours").WhoseValue.With(value => value.Should().Be(todoItem.DurationInHours));
         responseDocument.Data.ManyValue[0].Relationships.Should().HaveCount(2);
 
-        responseDocument.Data.ManyValue[0].Relationships.ShouldContainKey("owner").With(value =>
+        responseDocument.Data.ManyValue[0].Relationships.Should().ContainKey("owner").WhoseValue.With(value =>
         {
             value.ShouldNotBeNull();
             value.Data.SingleValue.ShouldNotBeNull();
@@ -63,7 +63,7 @@ public sealed class SparseFieldSets : IClassFixture<DapperTestContext>
             value.Data.SingleValue.Id.Should().Be(todoItem.Owner.StringId);
         });
 
-        responseDocument.Data.ManyValue[0].Relationships.ShouldContainKey("assignee").With(value =>
+        responseDocument.Data.ManyValue[0].Relationships.Should().ContainKey("assignee").WhoseValue.With(value =>
         {
             value.ShouldNotBeNull();
             value.Data.SingleValue.ShouldNotBeNull();
@@ -76,12 +76,12 @@ public sealed class SparseFieldSets : IClassFixture<DapperTestContext>
 
         responseDocument.Included[0].Id.Should().Be(todoItem.Owner.StringId);
         responseDocument.Included[0].Attributes.Should().HaveCount(1);
-        responseDocument.Included[0].Attributes.ShouldContainKey("lastName").With(value => value.Should().Be(todoItem.Owner.LastName));
+        responseDocument.Included[0].Attributes.Should().ContainKey("lastName").WhoseValue.With(value => value.Should().Be(todoItem.Owner.LastName));
         responseDocument.Included[0].Relationships.Should().BeNull();
 
         responseDocument.Included[1].Id.Should().Be(todoItem.Assignee.StringId);
         responseDocument.Included[1].Attributes.Should().HaveCount(1);
-        responseDocument.Included[1].Attributes.ShouldContainKey("lastName").With(value => value.Should().Be(todoItem.Assignee.LastName));
+        responseDocument.Included[1].Attributes.Should().ContainKey("lastName").WhoseValue.With(value => value.Should().Be(todoItem.Assignee.LastName));
         responseDocument.Included[1].Relationships.Should().BeNull();
 
         store.SqlCommands.Should().HaveCount(2);
@@ -138,7 +138,7 @@ public sealed class SparseFieldSets : IClassFixture<DapperTestContext>
         responseDocument.Data.SingleValue.Type.Should().Be("todoItems");
         responseDocument.Data.SingleValue.Id.Should().Be(todoItem.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(todoItem.Description));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.With(value => value.Should().Be(todoItem.Description));
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
         store.SqlCommands.Should().HaveCount(1);
@@ -187,7 +187,7 @@ public sealed class SparseFieldSets : IClassFixture<DapperTestContext>
         responseDocument.Data.ManyValue[0].Attributes.Should().BeNull();
         responseDocument.Data.ManyValue[0].Relationships.Should().HaveCount(1);
 
-        responseDocument.Data.ManyValue[0].Relationships.ShouldContainKey("color").With(value =>
+        responseDocument.Data.ManyValue[0].Relationships.Should().ContainKey("color").WhoseValue.With(value =>
         {
             value.ShouldNotBeNull();
             value.Data.Value.Should().BeNull();
@@ -338,7 +338,7 @@ public sealed class SparseFieldSets : IClassFixture<DapperTestContext>
         responseDocument.Data.SingleValue.Type.Should().Be("people");
         responseDocument.Data.SingleValue.Id.Should().Be(person.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(person.DisplayName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("displayName").WhoseValue.With(value => value.Should().Be(person.DisplayName));
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
         store.SqlCommands.Should().HaveCount(1);
@@ -385,7 +385,7 @@ public sealed class SparseFieldSets : IClassFixture<DapperTestContext>
         responseDocument.Data.SingleValue.Type.Should().Be("todoItems");
         responseDocument.Data.SingleValue.Id.Should().Be(todoItem.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(todoItem.Description));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.With(value => value.Should().Be(todoItem.Description));
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
         responseDocument.Included.Should().HaveCount(2);

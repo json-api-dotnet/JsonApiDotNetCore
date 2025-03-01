@@ -55,10 +55,10 @@ public sealed class ResourceObjectConverterTests
         ResourceObject resourceObject = testContext.Converter.Read(ref reader, typeof(ResourceObject), testContext.SerializerReadOptions);
 
         // Assert
-        resourceObject.Attributes.ShouldContainKey("baseValue").Should().Be("baseAttribute");
-        resourceObject.Attributes.ShouldContainKey("derivedValue").Should().Be("derivedAttribute");
+        resourceObject.Attributes.Should().ContainKey("baseValue").WhoseValue.Should().Be("baseAttribute");
+        resourceObject.Attributes.Should().ContainKey("derivedValue").WhoseValue.Should().Be("derivedAttribute");
 
-        resourceObject.Relationships.ShouldContainKey("parent").With(value =>
+        resourceObject.Relationships.Should().ContainKey("parent").WhoseValue.With(value =>
         {
             value.ShouldNotBeNull();
             value.Data.SingleValue.ShouldNotBeNull();

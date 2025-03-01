@@ -78,7 +78,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
             resource.Type.Should().Be("textLanguages");
-            resource.Attributes.ShouldContainKey("isoCode").With(value => value.Should().Be(isoCode));
+            resource.Attributes.Should().ContainKey("isoCode").WhoseValue.With(value => value.Should().Be(isoCode));
             resource.Attributes.Should().NotContainKey("isRightToLeft");
             resource.Relationships.Should().NotBeEmpty();
         });
@@ -188,7 +188,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
             resource.Type.Should().Be("textLanguages");
-            resource.Attributes.ShouldContainKey("isoCode").With(value => value.Should().Be(isoCode));
+            resource.Attributes.Should().ContainKey("isoCode").WhoseValue.With(value => value.Should().Be(isoCode));
             resource.Relationships.Should().NotBeEmpty();
         });
 
@@ -247,7 +247,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Theory]
@@ -356,7 +356,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         error.Detail.Should().Be($"Failed to convert '{guid}' of type 'String' to type 'Int32'.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/id");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Theory]
@@ -402,7 +402,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
             resource.Type.Should().Be("musicTracks");
-            resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTitle));
+            resource.Attributes.Should().ContainKey("title").WhoseValue.With(value => value.Should().Be(newTitle));
             resource.Relationships.Should().BeNull();
         });
 
@@ -456,7 +456,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/lid");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Theory]
@@ -501,6 +501,6 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 }

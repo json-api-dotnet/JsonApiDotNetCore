@@ -90,13 +90,13 @@ public sealed class AtomicSparseFieldSetResourceDefinitionTests
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
-            resource.Attributes.ShouldContainKey("format").With(value => value.Should().Be(newLyrics[0].Format));
+            resource.Attributes.Should().ContainKey("format").WhoseValue.With(value => value.Should().Be(newLyrics[0].Format));
             resource.Attributes.Should().NotContainKey("text");
         });
 
         responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
-            resource.Attributes.ShouldContainKey("format").With(value => value.Should().Be(newLyrics[1].Format));
+            resource.Attributes.Should().ContainKey("format").WhoseValue.With(value => value.Should().Be(newLyrics[1].Format));
             resource.Attributes.Should().NotContainKey("text");
         });
 
@@ -169,13 +169,13 @@ public sealed class AtomicSparseFieldSetResourceDefinitionTests
 
         responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
-            resource.Attributes.ShouldContainKey("format").With(value => value.Should().Be(existingLyrics[0].Format));
+            resource.Attributes.Should().ContainKey("format").WhoseValue.With(value => value.Should().Be(existingLyrics[0].Format));
             resource.Attributes.Should().NotContainKey("text");
         });
 
         responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
-            resource.Attributes.ShouldContainKey("format").With(value => value.Should().Be(existingLyrics[1].Format));
+            resource.Attributes.Should().ContainKey("format").WhoseValue.With(value => value.Should().Be(existingLyrics[1].Format));
             resource.Attributes.Should().NotContainKey("text");
         });
 

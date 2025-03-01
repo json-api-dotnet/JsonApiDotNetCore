@@ -71,7 +71,7 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
         error.Title.Should().Be("The requested article is no longer available.");
         error.Detail.Should().Be("Article with code 'X123' is no longer available.");
 
-        error.Meta.ShouldContainKey("support").With(value =>
+        error.Meta.Should().ContainKey("support").WhoseValue.With(value =>
         {
             JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
             element.GetString().Should().Be("Please contact us for info about similar articles at company@email.com.");
@@ -110,13 +110,13 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
         error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
         error.Detail.Should().Be("Resource type '' does not exist.");
 
-        error.Meta.ShouldContainKey("requestBody").With(value =>
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value =>
         {
             JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
             element.GetString().Should().Be(requestBody);
         });
 
-        error.Meta.ShouldContainKey("stackTrace").With(value =>
+        error.Meta.Should().ContainKey("stackTrace").WhoseValue.With(value =>
         {
             JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
             IEnumerable<string?> stackTraceLines = element.EnumerateArray().Select(token => token.GetString());
@@ -158,7 +158,7 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
         error.Title.Should().Be("An unhandled error occurred while processing this request.");
         error.Detail.Should().Be("Exception has been thrown by the target of an invocation.");
 
-        error.Meta.ShouldContainKey("stackTrace").With(value =>
+        error.Meta.Should().ContainKey("stackTrace").WhoseValue.With(value =>
         {
             JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
             IEnumerable<string?> stackTraceLines = element.EnumerateArray().Select(token => token.GetString());

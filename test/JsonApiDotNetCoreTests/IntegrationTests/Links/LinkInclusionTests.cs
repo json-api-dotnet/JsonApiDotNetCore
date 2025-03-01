@@ -47,7 +47,7 @@ public sealed class LinkInclusionTests : IClassFixture<IntegrationTestContext<Te
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Links.Should().BeNull();
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("photo").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("photo").WhoseValue.With(value =>
         {
             value.ShouldNotBeNull();
             value.Links.ShouldNotBeNull();
@@ -55,7 +55,7 @@ public sealed class LinkInclusionTests : IClassFixture<IntegrationTestContext<Te
             value.Links.Related.ShouldNotBeNull();
         });
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("album").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("album").WhoseValue.With(value =>
         {
             value.ShouldNotBeNull();
             value.Links.Should().BeNull();
@@ -68,7 +68,7 @@ public sealed class LinkInclusionTests : IClassFixture<IntegrationTestContext<Te
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.ShouldNotBeNull();
 
-            resource.Relationships.ShouldContainKey("location").With(value =>
+            resource.Relationships.Should().ContainKey("location").WhoseValue.With(value =>
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -82,7 +82,7 @@ public sealed class LinkInclusionTests : IClassFixture<IntegrationTestContext<Te
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.ShouldNotBeNull();
 
-            resource.Relationships.ShouldContainKey("photos").With(value =>
+            resource.Relationships.Should().ContainKey("photos").WhoseValue.With(value =>
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -118,7 +118,7 @@ public sealed class LinkInclusionTests : IClassFixture<IntegrationTestContext<Te
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Links.Should().BeNull();
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("photo").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("photo").WhoseValue.With(value =>
         {
             value.ShouldNotBeNull();
             value.Links.ShouldNotBeNull();

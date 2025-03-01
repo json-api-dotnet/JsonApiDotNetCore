@@ -307,7 +307,7 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("url").With(value => value.Should().Be(newShopUrl));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("url").WhoseValue.Should().Be(newShopUrl);
         responseDocument.Data.SingleValue.Relationships.ShouldNotBeNull();
 
         int newShopId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
@@ -1025,7 +1025,7 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be(shopLink);
 
-            resource.Relationships.ShouldContainKey("products").With(value =>
+            resource.Relationships.Should().ContainKey("products").WhoseValue.With(value =>
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -1043,7 +1043,7 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be(productLink);
 
-            resource.Relationships.ShouldContainKey("shop").With(value =>
+            resource.Relationships.Should().ContainKey("shop").WhoseValue.With(value =>
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();

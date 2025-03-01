@@ -175,7 +175,7 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be("0");
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTitle));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("title").WhoseValue.Should().Be(newTitle);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

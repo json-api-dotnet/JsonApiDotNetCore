@@ -42,8 +42,8 @@ public sealed partial class FireForgetTests
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("loginName").With(value => value.Should().Be(newLoginName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(newDisplayName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("loginName").WhoseValue.With(value => value.Should().Be(newLoginName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("displayName").WhoseValue.With(value => value.Should().Be(newDisplayName));
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
@@ -111,8 +111,8 @@ public sealed partial class FireForgetTests
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("loginName").With(value => value.Should().Be(newLoginName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("displayName").With(value => value.Should().BeNull());
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("loginName").WhoseValue.With(value => value.Should().Be(newLoginName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("displayName").WhoseValue.With(value => value.Should().BeNull());
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {

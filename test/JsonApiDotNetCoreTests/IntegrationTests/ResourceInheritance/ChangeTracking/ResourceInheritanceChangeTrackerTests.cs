@@ -57,6 +57,6 @@ public sealed class ResourceInheritanceChangeTrackerTests
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("alwaysMovingTandems");
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("locationToken").With(value => value.Should().NotBe(existingMovingTandem.LocationToken));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("locationToken").WhoseValue.Should().NotBe(existingMovingTandem.LocationToken);
     }
 }

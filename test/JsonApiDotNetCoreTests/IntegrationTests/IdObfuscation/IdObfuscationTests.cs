@@ -266,8 +266,8 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("ownerName").With(value => value.Should().Be(newCard.OwnerName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("pinCode").With(value => value.Should().Be(newCard.PinCode));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("ownerName").WhoseValue.With(value => value.Should().Be(newCard.OwnerName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("pinCode").WhoseValue.With(value => value.Should().Be(newCard.PinCode));
 
         var codec = new HexadecimalCodec();
         int newCardId = codec.Decode(responseDocument.Data.SingleValue.Id);

@@ -64,7 +64,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Links.Self.Should().Be($"{HostPrefix}{route}");
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("photos").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("photos").WhoseValue.With(value =>
         {
             value.ShouldNotBeNull();
             value.Links.ShouldNotBeNull();
@@ -113,7 +113,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be(albumLink);
 
-            resource.Relationships.ShouldContainKey("photos").With(value =>
+            resource.Relationships.Should().ContainKey("photos").WhoseValue.With(value =>
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -131,7 +131,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be(photoLink);
 
-            resource.Relationships.ShouldContainKey("album").With(value =>
+            resource.Relationships.Should().ContainKey("album").WhoseValue.With(value =>
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -177,7 +177,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Links.Self.Should().Be(albumLink);
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("photos").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("photos").WhoseValue.With(value =>
         {
             value.ShouldNotBeNull();
             value.Links.ShouldNotBeNull();
@@ -225,7 +225,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be(photoLink);
 
-            resource.Relationships.ShouldContainKey("album").With(value =>
+            resource.Relationships.Should().ContainKey("album").WhoseValue.With(value =>
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -369,7 +369,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
 
         responseDocument.Data.SingleValue.Links.Self.Should().Be(albumLink);
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("photos").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("photos").WhoseValue.With(value =>
         {
             value.ShouldNotBeNull();
             value.Links.ShouldNotBeNull();
@@ -386,7 +386,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be(photoLink);
 
-            resource.Relationships.ShouldContainKey("album").With(value =>
+            resource.Relationships.Should().ContainKey("album").WhoseValue.With(value =>
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
@@ -454,7 +454,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Links.Self.Should().Be(photoLink);
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("album").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("album").WhoseValue.With(value =>
         {
             value.ShouldNotBeNull();
             value.Links.ShouldNotBeNull();
@@ -471,7 +471,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be(albumLink);
 
-            resource.Relationships.ShouldContainKey("photos").With(value =>
+            resource.Relationships.Should().ContainKey("photos").WhoseValue.With(value =>
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();

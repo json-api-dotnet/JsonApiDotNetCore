@@ -42,7 +42,7 @@ public sealed class LinkInclusionIncludeTests : IClassFixture<IntegrationTestCon
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("photo").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("photo").WhoseValue.With(value =>
         {
             value.ShouldNotBeNull();
             value.Links.ShouldNotBeNull();

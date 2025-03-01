@@ -89,7 +89,7 @@ public sealed class AtomicResourceMetaTests : IClassFixture<IntegrationTestConte
         {
             resource.Meta.Should().HaveCount(1);
 
-            resource.Meta.ShouldContainKey("copyright").With(value =>
+            resource.Meta.Should().ContainKey("copyright").WhoseValue.With(value =>
             {
                 JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
                 element.GetString().Should().Be("(C) 2018. All rights reserved.");
@@ -100,7 +100,7 @@ public sealed class AtomicResourceMetaTests : IClassFixture<IntegrationTestConte
         {
             resource.Meta.Should().HaveCount(1);
 
-            resource.Meta.ShouldContainKey("copyright").With(value =>
+            resource.Meta.Should().ContainKey("copyright").WhoseValue.With(value =>
             {
                 JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
                 element.GetString().Should().Be("(C) 1994. All rights reserved.");
@@ -161,7 +161,7 @@ public sealed class AtomicResourceMetaTests : IClassFixture<IntegrationTestConte
         {
             resource.Meta.Should().HaveCount(1);
 
-            resource.Meta.ShouldContainKey("notice").With(value =>
+            resource.Meta.Should().ContainKey("notice").WhoseValue.With(value =>
             {
                 JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
                 element.GetString().Should().Be(TextLanguageMetaDefinition.NoticeText);

@@ -98,8 +98,8 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItems");
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(newWorkItem.Description));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("dueAt").With(value => value.Should().Be(newWorkItem.DueAt));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.With(value => value.Should().Be(newWorkItem.Description));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("dueAt").WhoseValue.With(value => value.Should().Be(newWorkItem.DueAt));
         responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
         int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
@@ -146,8 +146,8 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("userAccounts");
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("firstName").With(value => value.Should().Be(newUserAccount.FirstName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("lastName").With(value => value.Should().Be(newUserAccount.LastName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("firstName").WhoseValue.With(value => value.Should().Be(newUserAccount.FirstName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("lastName").WhoseValue.With(value => value.Should().Be(newUserAccount.LastName));
         responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
         long newUserAccountId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
@@ -193,7 +193,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItemGroups");
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newGroup.Name));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.With(value => value.Should().Be(newGroup.Name));
         responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
         Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
@@ -238,8 +238,8 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItems");
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().BeNull());
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("dueAt").With(value => value.Should().BeNull());
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.With(value => value.Should().BeNull());
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("dueAt").WhoseValue.With(value => value.Should().BeNull());
         responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
         int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
@@ -288,7 +288,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Detail.Should().Be("Attribute 'doesNotExist' does not exist on resource type 'workItems'.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/doesNotExist");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -323,7 +323,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItems");
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(newWorkItem.Description));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.With(value => value.Should().Be(newWorkItem.Description));
         responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
         int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
@@ -375,7 +375,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource type 'workItems'.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/doesNotExist");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -460,7 +460,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/data/id");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -511,7 +511,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Title.Should().Be("Failed to deserialize request body: Expected an object, instead of 'null'.");
         error.Detail.Should().BeNull();
         error.Source.Should().BeNull();
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -541,7 +541,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
         error.Detail.Should().BeNull();
         error.Source.Should().BeNull();
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -569,7 +569,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Title.Should().Be("Failed to deserialize request body: Expected an object, instead of 'null'.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -603,7 +603,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -636,7 +636,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -670,7 +670,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/data/type");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -728,7 +728,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Detail.Should().Be("Type 'rgbColors' is not convertible to type 'workItems'.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/data/type");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -763,7 +763,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Detail.Should().Be("Attribute 'isDeprecated' on resource type 'workItemGroups' is read-only.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/isDeprecated");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -787,7 +787,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Title.Should().Be("Failed to deserialize request body.");
         error.Detail.Should().StartWith("'{' is invalid after a property name.");
         error.Source.Should().BeNull();
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -822,7 +822,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Detail.Should().Be("Failed to convert attribute 'dueAt' with value 'not-a-valid-time' of type 'String' to type 'Nullable<DateTimeOffset>'.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/dueAt");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 
     [Fact]
@@ -895,7 +895,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(newDescription));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.With(value => value.Should().Be(newDescription));
         responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
         int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
@@ -959,6 +959,6 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Detail.Should().Be("The attribute 'isImportant' on resource type 'workItems' cannot be assigned to.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/isImportant");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
     }
 }

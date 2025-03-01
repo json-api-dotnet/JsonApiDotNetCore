@@ -86,15 +86,15 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         {
             resource.Type.Should().Be("recordCompanies");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newCompany.Name));
-            resource.Attributes.ShouldContainKey("countryOfResidence").With(value => value.Should().Be(newCompany.CountryOfResidence));
+            resource.Attributes.Should().ContainKey("name").WhoseValue.With(value => value.Should().Be(newCompany.Name));
+            resource.Attributes.Should().ContainKey("countryOfResidence").WhoseValue.With(value => value.Should().Be(newCompany.CountryOfResidence));
         });
 
         responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
             resource.Type.Should().Be("musicTracks");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            resource.Attributes.Should().ContainKey("title").WhoseValue.With(value => value.Should().Be(newTrackTitle));
         });
 
         short newCompanyId = short.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
@@ -183,15 +183,15 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         {
             resource.Type.Should().Be("performers");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("artistName").With(value => value.Should().Be(newPerformer.ArtistName));
-            resource.Attributes.ShouldContainKey("bornAt").With(value => value.Should().Be(newPerformer.BornAt));
+            resource.Attributes.Should().ContainKey("artistName").WhoseValue.With(value => value.Should().Be(newPerformer.ArtistName));
+            resource.Attributes.Should().ContainKey("bornAt").WhoseValue.With(value => value.Should().Be(newPerformer.BornAt));
         });
 
         responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
             resource.Type.Should().Be("musicTracks");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            resource.Attributes.Should().ContainKey("title").WhoseValue.With(value => value.Should().Be(newTrackTitle));
         });
 
         int newPerformerId = int.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
@@ -279,14 +279,14 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         {
             resource.Type.Should().Be("musicTracks");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            resource.Attributes.Should().ContainKey("title").WhoseValue.With(value => value.Should().Be(newTrackTitle));
         });
 
         responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
             resource.Type.Should().Be("playlists");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newPlaylistName));
+            resource.Attributes.Should().ContainKey("name").WhoseValue.With(value => value.Should().Be(newPlaylistName));
         });
 
         Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
@@ -493,8 +493,8 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         {
             resource.Type.Should().Be("musicTracks");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
-            resource.Attributes.ShouldContainKey("genre").With(value => value.Should().BeNull());
+            resource.Attributes.Should().ContainKey("title").WhoseValue.With(value => value.Should().Be(newTrackTitle));
+            resource.Attributes.Should().ContainKey("genre").WhoseValue.With(value => value.Should().BeNull());
         });
 
         responseDocument.Results[1].Data.Value.Should().BeNull();
@@ -613,21 +613,21 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         {
             resource.Type.Should().Be("musicTracks");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            resource.Attributes.Should().ContainKey("title").WhoseValue.With(value => value.Should().Be(newTrackTitle));
         });
 
         responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
             resource.Type.Should().Be("performers");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("artistName").With(value => value.Should().Be(newArtistName));
+            resource.Attributes.Should().ContainKey("artistName").WhoseValue.With(value => value.Should().Be(newArtistName));
         });
 
         responseDocument.Results[2].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
             resource.Type.Should().Be("recordCompanies");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newCompanyName));
+            resource.Attributes.Should().ContainKey("name").WhoseValue.With(value => value.Should().Be(newCompanyName));
         });
 
         responseDocument.Results[3].Data.Value.Should().BeNull();
@@ -732,14 +732,14 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         {
             resource.Type.Should().Be("musicTracks");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            resource.Attributes.Should().ContainKey("title").WhoseValue.With(value => value.Should().Be(newTrackTitle));
         });
 
         responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
             resource.Type.Should().Be("recordCompanies");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newCompanyName));
+            resource.Attributes.Should().ContainKey("name").WhoseValue.With(value => value.Should().Be(newCompanyName));
         });
 
         responseDocument.Results[2].Data.Value.Should().BeNull();
@@ -834,14 +834,14 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         {
             resource.Type.Should().Be("musicTracks");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            resource.Attributes.Should().ContainKey("title").WhoseValue.With(value => value.Should().Be(newTrackTitle));
         });
 
         responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
             resource.Type.Should().Be("performers");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("artistName").With(value => value.Should().Be(newArtistName));
+            resource.Attributes.Should().ContainKey("artistName").WhoseValue.With(value => value.Should().Be(newArtistName));
         });
 
         responseDocument.Results[2].Data.Value.Should().BeNull();
@@ -936,14 +936,14 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         {
             resource.Type.Should().Be("playlists");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newPlaylistName));
+            resource.Attributes.Should().ContainKey("name").WhoseValue.With(value => value.Should().Be(newPlaylistName));
         });
 
         responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
             resource.Type.Should().Be("musicTracks");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            resource.Attributes.Should().ContainKey("title").WhoseValue.With(value => value.Should().Be(newTrackTitle));
         });
 
         responseDocument.Results[2].Data.Value.Should().BeNull();
@@ -1060,14 +1060,14 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         {
             resource.Type.Should().Be("musicTracks");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            resource.Attributes.Should().ContainKey("title").WhoseValue.With(value => value.Should().Be(newTrackTitle));
         });
 
         responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
             resource.Type.Should().Be("performers");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("artistName").With(value => value.Should().Be(newArtistName));
+            resource.Attributes.Should().ContainKey("artistName").WhoseValue.With(value => value.Should().Be(newArtistName));
         });
 
         responseDocument.Results[2].Data.Value.Should().BeNull();
@@ -1184,14 +1184,14 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         {
             resource.Type.Should().Be("playlists");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newPlaylistName));
+            resource.Attributes.Should().ContainKey("name").WhoseValue.With(value => value.Should().Be(newPlaylistName));
         });
 
         responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
             resource.Type.Should().Be("musicTracks");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            resource.Attributes.Should().ContainKey("title").WhoseValue.With(value => value.Should().Be(newTrackTitle));
         });
 
         responseDocument.Results[2].Data.Value.Should().BeNull();
@@ -1308,14 +1308,14 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         {
             resource.Type.Should().Be("musicTracks");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            resource.Attributes.Should().ContainKey("title").WhoseValue.With(value => value.Should().Be(newTrackTitle));
         });
 
         responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
             resource.Type.Should().Be("performers");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("artistName").With(value => value.Should().Be(newArtistName));
+            resource.Attributes.Should().ContainKey("artistName").WhoseValue.With(value => value.Should().Be(newArtistName));
         });
 
         responseDocument.Results[2].Data.Value.Should().BeNull();
@@ -1454,14 +1454,14 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         {
             resource.Type.Should().Be("playlists");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newPlaylistName));
+            resource.Attributes.Should().ContainKey("name").WhoseValue.With(value => value.Should().Be(newPlaylistName));
         });
 
         responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
             resource.Type.Should().Be("musicTracks");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            resource.Attributes.Should().ContainKey("title").WhoseValue.With(value => value.Should().Be(newTrackTitle));
         });
 
         responseDocument.Results[2].Data.Value.Should().BeNull();
@@ -1611,21 +1611,21 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         {
             resource.Type.Should().Be("performers");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("artistName").With(value => value.Should().Be(newArtistName1));
+            resource.Attributes.Should().ContainKey("artistName").WhoseValue.With(value => value.Should().Be(newArtistName1));
         });
 
         responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
             resource.Type.Should().Be("performers");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("artistName").With(value => value.Should().Be(newArtistName2));
+            resource.Attributes.Should().ContainKey("artistName").WhoseValue.With(value => value.Should().Be(newArtistName2));
         });
 
         responseDocument.Results[2].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
             resource.Type.Should().Be("musicTracks");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            resource.Attributes.Should().ContainKey("title").WhoseValue.With(value => value.Should().Be(newTrackTitle));
         });
 
         responseDocument.Results[3].Data.Value.Should().BeNull();
@@ -1749,7 +1749,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         {
             resource.Type.Should().Be("musicTracks");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            resource.Attributes.Should().ContainKey("title").WhoseValue.With(value => value.Should().Be(newTrackTitle));
         });
 
         responseDocument.Results[1].Data.Value.Should().BeNull();
@@ -1818,7 +1818,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         {
             resource.Type.Should().Be("musicTracks");
             resource.Lid.Should().BeNull();
-            resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            resource.Attributes.Should().ContainKey("title").WhoseValue.With(value => value.Should().Be(newTrackTitle));
         });
 
         responseDocument.Results[1].Data.Value.Should().BeNull();
