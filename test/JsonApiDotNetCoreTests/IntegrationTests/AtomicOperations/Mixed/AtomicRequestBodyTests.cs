@@ -64,7 +64,7 @@ public sealed class AtomicRequestBodyTests : IClassFixture<IntegrationTestContex
         error.Title.Should().Be("Failed to deserialize request body: Expected an object, instead of 'null'.");
         error.Detail.Should().BeNull();
         error.Source.Should().BeNull();
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -117,7 +117,7 @@ public sealed class AtomicRequestBodyTests : IClassFixture<IntegrationTestContex
         error.Title.Should().Be("Failed to deserialize request body: No operations found.");
         error.Detail.Should().BeNull();
         error.Source.Should().BeNull();
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -144,7 +144,7 @@ public sealed class AtomicRequestBodyTests : IClassFixture<IntegrationTestContex
         error.Title.Should().Be("Failed to deserialize request body: No operations found.");
         error.Detail.Should().BeNull();
         error.Source.Should().BeNull();
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -175,7 +175,7 @@ public sealed class AtomicRequestBodyTests : IClassFixture<IntegrationTestContex
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]

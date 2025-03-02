@@ -288,7 +288,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Detail.Should().Be("Attribute 'doesNotExist' does not exist on resource type 'workItems'.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/doesNotExist");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -375,7 +375,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource type 'workItems'.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/doesNotExist");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -460,7 +460,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/id");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -511,7 +511,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Title.Should().Be("Failed to deserialize request body: Expected an object, instead of 'null'.");
         error.Detail.Should().BeNull();
         error.Source.Should().BeNull();
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -541,7 +541,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
         error.Detail.Should().BeNull();
         error.Source.Should().BeNull();
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -569,7 +569,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Title.Should().Be("Failed to deserialize request body: Expected an object, instead of 'null'.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -603,7 +603,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -636,7 +636,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -670,7 +670,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/type");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -728,7 +728,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Detail.Should().Be("Type 'rgbColors' is not convertible to type 'workItems'.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/type");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -763,7 +763,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Detail.Should().Be("Attribute 'isDeprecated' on resource type 'workItemGroups' is read-only.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/isDeprecated");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -787,7 +787,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Title.Should().Be("Failed to deserialize request body.");
         error.Detail.Should().StartWith("'{' is invalid after a property name.");
         error.Source.Should().BeNull();
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -822,7 +822,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Detail.Should().Be("Failed to convert attribute 'dueAt' with value 'not-a-valid-time' of type 'String' to type 'Nullable<DateTimeOffset>'.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/dueAt");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -959,6 +959,6 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Detail.Should().Be("The attribute 'isImportant' on resource type 'workItems' cannot be assigned to.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/isImportant");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 }

@@ -6,11 +6,13 @@ using FluentAssertions.Collections;
 using FluentAssertions.Numeric;
 using FluentAssertions.Primitives;
 using JetBrains.Annotations;
+using SysNotNull = System.Diagnostics.CodeAnalysis.NotNullAttribute;
+
+// ReSharper disable UnusedMethodReturnValue.Global
 
 namespace TestBuildingBlocks;
 
-[PublicAPI]
-public static class ObjectAssertionsExtensions
+public static class FluentExtensions
 {
     private const decimal NumericPrecision = 0.00000000001M;
 
@@ -69,12 +71,40 @@ public static class ObjectAssertionsExtensions
         return Encoding.UTF8.GetString(stream.ToArray());
     }
 
-    /// <summary>
-    /// Asserts that a "meta" dictionary contains a single element named "total" with the specified value.
-    /// </summary>
-    [CustomAssertion]
-    public static void ContainTotal(this GenericDictionaryAssertions<IDictionary<string, object?>, string, object?> source, int expectedTotal)
+    // Workaround for source.Should().NotBeNull().And.Subject having declared type 'object'.
+    [System.Diagnostics.Contracts.Pure]
+    public static StrongReferenceTypeAssertions<T> RefShould<T>([SysNotNull] this T? actualValue)
+        where T : class
     {
-        source.ContainKey("total").WhoseValue.Should().BeOfType<JsonElement>().Subject.GetInt32().Should().Be(expectedTotal);
+        actualValue.Should().NotBeNull();
+        return new StrongReferenceTypeAssertions<T>(actualValue);
+    }
+
+    public static AndConstraint<TAssertions> OnlyContainKeys<TCollection, TKey, TValue, TAssertions>(
+        this GenericDictionaryAssertions<TCollection, TKey, TValue, TAssertions> source, params TKey[] expected)
+        where TCollection : IEnumerable<KeyValuePair<TKey, TValue>>
+        where TAssertions : GenericDictionaryAssertions<TCollection, TKey, TValue, TAssertions>
+    {
+        return source.HaveCount(expected.Length).And.ContainKeys(expected);
+    }
+
+    // Workaround for CS0854: An expression tree may not contain a call or invocation that uses optional arguments.
+    public static WhoseValueConstraint<TCollection, TKey, TValue, TAssertions> ContainKey2<TCollection, TKey, TValue, TAssertions>(
+        this GenericDictionaryAssertions<TCollection, TKey, TValue, TAssertions> source, TKey expected)
+        where TCollection : IEnumerable<KeyValuePair<TKey, TValue>>
+        where TAssertions : GenericDictionaryAssertions<TCollection, TKey, TValue, TAssertions>
+    {
+        return source.ContainKey(expected);
+    }
+
+    public static void With<T>(this T subject, [InstantHandle] Action<T> continuation)
+    {
+        continuation(subject);
+    }
+
+    public sealed class StrongReferenceTypeAssertions<TReference>(TReference subject)
+        : ReferenceTypeAssertions<TReference, StrongReferenceTypeAssertions<TReference>>(subject)
+    {
+        protected override string Identifier => "subject";
     }
 }

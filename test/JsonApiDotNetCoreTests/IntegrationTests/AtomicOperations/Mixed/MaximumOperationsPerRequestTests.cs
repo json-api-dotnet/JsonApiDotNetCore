@@ -73,7 +73,7 @@ public sealed class MaximumOperationsPerRequestTests : IClassFixture<Integration
         error.Detail.Should().Be("The number of operations in this request (3) is higher than the maximum of 2.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
