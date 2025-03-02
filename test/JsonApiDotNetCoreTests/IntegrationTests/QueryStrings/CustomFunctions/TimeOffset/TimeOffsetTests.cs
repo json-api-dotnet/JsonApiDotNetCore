@@ -72,7 +72,7 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         int[] matchingRowIndices = matchingRowsExpected.Split(',').Select(int.Parse).ToArray();
-        responseDocument.Data.ManyValue.ShouldHaveCount(matchingRowIndices.Length);
+        responseDocument.Data.ManyValue.Should().HaveCount(matchingRowIndices.Length);
 
         foreach (int rowIndex in matchingRowIndices)
         {
@@ -93,13 +93,13 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"Time offset between quotes expected. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
 
@@ -116,13 +116,13 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"Failed to convert '*' of type 'String' to type 'TimeSpan'. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
 
@@ -139,13 +139,13 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"The 'timeOffset' function can only be used at the right side of comparisons. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
 
@@ -162,13 +162,13 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"Value between quotes expected. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
 
@@ -185,13 +185,13 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"Attribute of type 'String' expected. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
 
@@ -225,7 +225,7 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
 
         responseDocument.Data.ManyValue[0].Id.Should().Be(calendar.Appointments.ElementAt(1).StringId);
     }

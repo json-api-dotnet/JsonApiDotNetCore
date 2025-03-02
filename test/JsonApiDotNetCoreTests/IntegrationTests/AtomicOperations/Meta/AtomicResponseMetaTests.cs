@@ -60,26 +60,26 @@ public sealed class AtomicResponseMetaTests : IClassFixture<IntegrationTestConte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Meta.ShouldHaveCount(3);
+        responseDocument.Meta.Should().HaveCount(3);
 
-        responseDocument.Meta.ShouldContainKey("license").With(value =>
+        responseDocument.Meta.Should().ContainKey("license").WhoseValue.With(value =>
         {
             JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
             element.GetString().Should().Be("MIT");
         });
 
-        responseDocument.Meta.ShouldContainKey("projectUrl").With(value =>
+        responseDocument.Meta.Should().ContainKey("projectUrl").WhoseValue.With(value =>
         {
             JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
             element.GetString().Should().Be("https://github.com/json-api-dotnet/JsonApiDotNetCore/");
         });
 
-        responseDocument.Meta.ShouldContainKey("versions").With(value =>
+        responseDocument.Meta.Should().ContainKey("versions").WhoseValue.With(value =>
         {
             JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
             string?[] versionArray = element.EnumerateArray().Select(arrayItem => arrayItem.GetString()).ToArray();
 
-            versionArray.ShouldHaveCount(4);
+            versionArray.Should().HaveCount(4);
             versionArray.Should().Contain("v4.0.0");
             versionArray.Should().Contain("v3.1.0");
             versionArray.Should().Contain("v2.5.2");
@@ -126,26 +126,26 @@ public sealed class AtomicResponseMetaTests : IClassFixture<IntegrationTestConte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Meta.ShouldHaveCount(3);
+        responseDocument.Meta.Should().HaveCount(3);
 
-        responseDocument.Meta.ShouldContainKey("license").With(value =>
+        responseDocument.Meta.Should().ContainKey("license").WhoseValue.With(value =>
         {
             JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
             element.GetString().Should().Be("MIT");
         });
 
-        responseDocument.Meta.ShouldContainKey("projectUrl").With(value =>
+        responseDocument.Meta.Should().ContainKey("projectUrl").WhoseValue.With(value =>
         {
             JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
             element.GetString().Should().Be("https://github.com/json-api-dotnet/JsonApiDotNetCore/");
         });
 
-        responseDocument.Meta.ShouldContainKey("versions").With(value =>
+        responseDocument.Meta.Should().ContainKey("versions").WhoseValue.With(value =>
         {
             JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
             string?[] versionArray = element.EnumerateArray().Select(arrayItem => arrayItem.GetString()).ToArray();
 
-            versionArray.ShouldHaveCount(4);
+            versionArray.Should().HaveCount(4);
             versionArray.Should().Contain("v4.0.0");
             versionArray.Should().Contain("v3.1.0");
             versionArray.Should().Contain("v2.5.2");

@@ -83,24 +83,24 @@ public sealed class AtomicResourceMetaTests : IClassFixture<IntegrationTestConte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(2);
+        responseDocument.Results.Should().HaveCount(2);
 
-        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
-            resource.Meta.ShouldHaveCount(1);
+            resource.Meta.Should().HaveCount(1);
 
-            resource.Meta.ShouldContainKey("copyright").With(value =>
+            resource.Meta.Should().ContainKey("copyright").WhoseValue.With(value =>
             {
                 JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
                 element.GetString().Should().Be("(C) 2018. All rights reserved.");
             });
         });
 
-        responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[1].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
-            resource.Meta.ShouldHaveCount(1);
+            resource.Meta.Should().HaveCount(1);
 
-            resource.Meta.ShouldContainKey("copyright").With(value =>
+            resource.Meta.Should().ContainKey("copyright").WhoseValue.With(value =>
             {
                 JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
                 element.GetString().Should().Be("(C) 1994. All rights reserved.");
@@ -155,13 +155,13 @@ public sealed class AtomicResourceMetaTests : IClassFixture<IntegrationTestConte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(1);
+        responseDocument.Results.Should().HaveCount(1);
 
-        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
-            resource.Meta.ShouldHaveCount(1);
+            resource.Meta.Should().HaveCount(1);
 
-            resource.Meta.ShouldContainKey("notice").With(value =>
+            resource.Meta.Should().ContainKey("notice").WhoseValue.With(value =>
             {
                 JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
                 element.GetString().Should().Be(TextLanguageMetaDefinition.NoticeText);

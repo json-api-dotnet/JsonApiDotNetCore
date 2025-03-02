@@ -10,7 +10,6 @@ using JsonApiDotNetCore.Serialization.JsonConverters;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Request.Adapters;
 using Microsoft.Extensions.Logging.Abstractions;
-using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Serialization;
@@ -109,7 +108,7 @@ public sealed class InputConversionTests : IDisposable
         var model = (ResourceWithVariousDataTypes?)documentAdapter.Convert(document);
 
         // Assert
-        model.ShouldNotBeNull();
+        model.Should().NotBeNull();
 
         model.Boolean.Should().Be(booleanValue);
         model.NullableBoolean.Should().Be(nullableBooleanValue);
@@ -134,10 +133,10 @@ public sealed class InputConversionTests : IDisposable
         model.Enum.Should().Be(enumValue);
         model.NullableEnum.Should().Be(nullableEnumValue);
 
-        model.ComplexObject.ShouldNotBeNull();
+        model.ComplexObject.Should().NotBeNull();
         model.ComplexObject.Value.Should().Be(complexObject.Value);
 
-        model.ComplexObjectList.ShouldHaveCount(2);
+        model.ComplexObjectList.Should().HaveCount(2);
         model.ComplexObjectList[0].Value.Should().Be(complexObjectList[0].Value);
         model.ComplexObjectList[1].Value.Should().Be(complexObjectList[1].Value);
     }
@@ -215,7 +214,7 @@ public sealed class InputConversionTests : IDisposable
         var model = (ResourceWithVariousDataTypes?)documentAdapter.Convert(document);
 
         // Assert
-        model.ShouldNotBeNull();
+        model.Should().NotBeNull();
 
         model.Boolean.Should().Be(booleanValue);
         model.NullableBoolean.Should().Be(nullableBooleanValue);

@@ -51,12 +51,12 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(building.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("number").With(value => value.Should().Be(building.Number));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("windowCount").With(value => value.Should().Be(4));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("primaryDoorColor").With(value => value.Should().Be(building.PrimaryDoor.Color));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("secondaryDoorColor").With(value => value.Should().Be(building.SecondaryDoor.Color));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("number").WhoseValue.Should().Be(building.Number);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("windowCount").WhoseValue.Should().Be(4);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("primaryDoorColor").WhoseValue.Should().Be(building.PrimaryDoor.Color);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("secondaryDoorColor").WhoseValue.Should().Be(building.SecondaryDoor.Color);
     }
 
     [Fact]
@@ -87,12 +87,12 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(street.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(street.Name));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("buildingCount").With(value => value.Should().Be(2));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("doorTotalCount").With(value => value.Should().Be(3));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("windowTotalCount").With(value => value.Should().Be(5));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(street.Name);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("buildingCount").WhoseValue.Should().Be(2);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("doorTotalCount").WhoseValue.Should().Be(3);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("windowTotalCount").WhoseValue.Should().Be(5);
     }
 
     [Fact]
@@ -118,10 +118,10 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(street.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldHaveCount(1);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("windowTotalCount").With(value => value.Should().Be(3));
+        responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("windowTotalCount").WhoseValue.Should().Be(3);
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
     }
 
@@ -150,21 +150,21 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(state.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(state.Name));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(state.Name);
 
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
 
         responseDocument.Included[0].Type.Should().Be("cities");
         responseDocument.Included[0].Id.Should().Be(state.Cities[0].StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be(state.Cities[0].Name));
+        responseDocument.Included[0].Attributes.Should().ContainKey("name").WhoseValue.Should().Be(state.Cities[0].Name);
 
         responseDocument.Included[1].Type.Should().Be("streets");
         responseDocument.Included[1].Id.Should().Be(state.Cities[0].Streets[0].StringId);
-        responseDocument.Included[1].Attributes.ShouldContainKey("buildingCount").With(value => value.Should().Be(1));
-        responseDocument.Included[1].Attributes.ShouldContainKey("doorTotalCount").With(value => value.Should().Be(1));
-        responseDocument.Included[1].Attributes.ShouldContainKey("windowTotalCount").With(value => value.Should().Be(3));
+        responseDocument.Included[1].Attributes.Should().ContainKey("buildingCount").WhoseValue.Should().Be(1);
+        responseDocument.Included[1].Attributes.Should().ContainKey("doorTotalCount").WhoseValue.Should().Be(1);
+        responseDocument.Included[1].Attributes.Should().ContainKey("windowTotalCount").WhoseValue.Should().Be(3);
     }
 
     [Fact]
@@ -193,18 +193,18 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(state.Cities[0].StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldHaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be(state.Cities[0].Name));
+        responseDocument.Data.ManyValue[0].Attributes.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("name").WhoseValue.Should().Be(state.Cities[0].Name);
         responseDocument.Data.ManyValue[0].Relationships.Should().BeNull();
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("streets");
         responseDocument.Included[0].Id.Should().Be(state.Cities[0].Streets[0].StringId);
-        responseDocument.Included[0].Attributes.ShouldHaveCount(2);
-        responseDocument.Included[0].Attributes.ShouldContainKey("doorTotalCount").With(value => value.Should().Be(2));
-        responseDocument.Included[0].Attributes.ShouldContainKey("windowTotalCount").With(value => value.Should().Be(1));
+        responseDocument.Included[0].Attributes.Should().HaveCount(2);
+        responseDocument.Included[0].Attributes.Should().ContainKey("doorTotalCount").WhoseValue.Should().Be(2);
+        responseDocument.Included[0].Attributes.Should().ContainKey("windowTotalCount").WhoseValue.Should().Be(1);
         responseDocument.Included[0].Relationships.Should().BeNull();
     }
 
@@ -234,13 +234,13 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("number").With(value => value.Should().Be(newBuilding.Number));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("windowCount").With(value => value.Should().Be(0));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("primaryDoorColor").With(value => value.Should().Be("(unspecified)"));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("secondaryDoorColor").With(value => value.Should().BeNull());
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("number").WhoseValue.Should().Be(newBuilding.Number);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("windowCount").WhoseValue.Should().Be(0);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("primaryDoorColor").WhoseValue.Should().Be("(unspecified)");
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("secondaryDoorColor").WhoseValue.Should().BeNull();
 
-        int newBuildingId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        int newBuildingId = int.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -256,9 +256,9 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
             // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
-            buildingInDatabase.ShouldNotBeNull();
+            buildingInDatabase.Should().NotBeNull();
             buildingInDatabase.Number.Should().Be(newBuilding.Number);
-            buildingInDatabase.PrimaryDoor.ShouldNotBeNull();
+            buildingInDatabase.PrimaryDoor.Should().NotBeNull();
             buildingInDatabase.PrimaryDoor.Color.Should().Be("(unspecified)");
             buildingInDatabase.SecondaryDoor.Should().BeNull();
             buildingInDatabase.Windows.Should().BeEmpty();
@@ -321,12 +321,12 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
             // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
-            buildingInDatabase.ShouldNotBeNull();
+            buildingInDatabase.Should().NotBeNull();
             buildingInDatabase.Number.Should().Be(newBuildingNumber);
-            buildingInDatabase.PrimaryDoor.ShouldNotBeNull();
+            buildingInDatabase.PrimaryDoor.Should().NotBeNull();
             buildingInDatabase.PrimaryDoor.Color.Should().Be(newPrimaryDoorColor);
-            buildingInDatabase.SecondaryDoor.ShouldNotBeNull();
-            buildingInDatabase.Windows.ShouldHaveCount(2);
+            buildingInDatabase.SecondaryDoor.Should().NotBeNull();
+            buildingInDatabase.Windows.Should().HaveCount(2);
         });
     }
 
@@ -364,13 +364,13 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Input validation failed.");
         error.Detail.Should().Be("The PrimaryDoorColor field is required.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/primaryDoorColor");
     }
 

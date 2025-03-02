@@ -43,13 +43,13 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Input validation failed.");
         error.Detail.Should().Be("The Name field is required.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/directoryName");
     }
 
@@ -78,13 +78,13 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Input validation failed.");
         error.Detail.Should().Be("The Name field is required.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/directoryName");
     }
 
@@ -113,13 +113,13 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Input validation failed.");
         error.Detail.Should().Be(@"The field Name must match the regular expression '^[\w\s]+$'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/directoryName");
     }
 
@@ -153,20 +153,20 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error1.Title.Should().Be("Input validation failed.");
         error1.Detail.Should().StartWith("The field CreatedAt must be between ");
-        error1.Source.ShouldNotBeNull();
+        error1.Source.Should().NotBeNull();
         error1.Source.Pointer.Should().Be("/data/attributes/createdAt");
 
         ErrorObject error2 = responseDocument.Errors[1];
         error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error2.Title.Should().Be("Input validation failed.");
         error2.Detail.Should().StartWith("The field CreatedOn must be between ");
-        error2.Source.ShouldNotBeNull();
+        error2.Source.Should().NotBeNull();
         error2.Source.Pointer.Should().Be("/data/attributes/createdOn");
     }
 
@@ -197,9 +197,9 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("directoryName").With(value => value.Should().Be(newDirectory.Name));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("isCaseSensitive").With(value => value.Should().Be(newDirectory.IsCaseSensitive));
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("directoryName").WhoseValue.Should().Be(newDirectory.Name);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("isCaseSensitive").WhoseValue.Should().Be(newDirectory.IsCaseSensitive);
     }
 
     [Fact]
@@ -225,20 +225,20 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error1.Title.Should().Be("Input validation failed.");
         error1.Detail.Should().Be("The Name field is required.");
-        error1.Source.ShouldNotBeNull();
+        error1.Source.Should().NotBeNull();
         error1.Source.Pointer.Should().Be("/data/attributes/directoryName");
 
         ErrorObject error2 = responseDocument.Errors[1];
         error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error2.Title.Should().Be("Input validation failed.");
         error2.Detail.Should().Be("The IsCaseSensitive field is required.");
-        error2.Source.ShouldNotBeNull();
+        error2.Source.Should().NotBeNull();
         error2.Source.Pointer.Should().Be("/data/attributes/isCaseSensitive");
     }
 
@@ -265,7 +265,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(3);
+        responseDocument.Errors.Should().HaveCount(3);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -277,14 +277,14 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error2.Title.Should().Be("Input validation failed.");
         error2.Detail.Should().Be("The FileName field is required.");
-        error2.Source.ShouldNotBeNull();
+        error2.Source.Should().NotBeNull();
         error2.Source.Pointer.Should().Be("/data/attributes/fileName");
 
         ErrorObject error3 = responseDocument.Errors[2];
         error3.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error3.Title.Should().Be("Input validation failed.");
         error3.Detail.Should().Be("The Attributes field is required.");
-        error3.Source.ShouldNotBeNull();
+        error3.Source.Should().NotBeNull();
         error3.Source.Pointer.Should().Be("/data/attributes/attributes");
     }
 
@@ -359,9 +359,9 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("directoryName").With(value => value.Should().Be(newDirectory.Name));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("isCaseSensitive").With(value => value.Should().Be(newDirectory.IsCaseSensitive));
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("directoryName").WhoseValue.Should().Be(newDirectory.Name);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("isCaseSensitive").WhoseValue.Should().Be(newDirectory.IsCaseSensitive);
     }
 
     [Fact]
@@ -472,20 +472,20 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error1.Title.Should().Be("Input validation failed.");
         error1.Detail.Should().Be("The Name field is required.");
-        error1.Source.ShouldNotBeNull();
+        error1.Source.Should().NotBeNull();
         error1.Source.Pointer.Should().Be("/data/attributes/directoryName");
 
         ErrorObject error2 = responseDocument.Errors[1];
         error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error2.Title.Should().Be("Input validation failed.");
         error2.Detail.Should().Be("The IsCaseSensitive field is required.");
-        error2.Source.ShouldNotBeNull();
+        error2.Source.Should().NotBeNull();
         error2.Source.Pointer.Should().Be("/data/attributes/isCaseSensitive");
     }
 
@@ -522,13 +522,13 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Input validation failed.");
         error.Detail.Should().Be(@"The field Name must match the regular expression '^[\w\s]+$'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/directoryName");
     }
 
@@ -567,20 +567,20 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error1.Title.Should().Be("Input validation failed.");
         error1.Detail.Should().Be("The field Id must match the regular expression '^[0-9]+$'.");
-        error1.Source.ShouldNotBeNull();
+        error1.Source.Should().NotBeNull();
         error1.Source.Pointer.Should().Be("/data/id");
 
         ErrorObject error2 = responseDocument.Errors[1];
         error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error2.Title.Should().Be("Input validation failed.");
         error2.Detail.Should().Be("The field Id must match the regular expression '^[0-9]+$'.");
-        error2.Source.ShouldNotBeNull();
+        error2.Source.Should().NotBeNull();
         error2.Source.Pointer.Should().Be("/data/relationships/subdirectories/data[0]/id");
     }
 

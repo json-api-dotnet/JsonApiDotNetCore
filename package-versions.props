@@ -11,7 +11,7 @@
     <CodeAnalysisVersion>4.12.*</CodeAnalysisVersion>
     <CoverletVersion>6.0.*</CoverletVersion>
     <DapperVersion>2.1.*</DapperVersion>
-    <FluentAssertionsVersion>7.0.*</FluentAssertionsVersion>
+    <FluentAssertionsVersion>7.2.*</FluentAssertionsVersion>
     <GitHubActionsTestLoggerVersion>2.4.*</GitHubActionsTestLoggerVersion>
     <InheritDocVersion>2.0.*</InheritDocVersion>
     <SystemTextJsonVersion>9.0.*</SystemTextJsonVersion>

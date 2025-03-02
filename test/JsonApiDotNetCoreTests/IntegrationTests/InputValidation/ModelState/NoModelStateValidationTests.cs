@@ -46,8 +46,8 @@ public sealed class NoModelStateValidationTests : IClassFixture<IntegrationTestC
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("directoryName").With(value => value.Should().Be("!@#$%^&*().-"));
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("directoryName").WhoseValue.Should().Be("!@#$%^&*().-");
     }
 
     [Fact]
@@ -123,7 +123,7 @@ public sealed class NoModelStateValidationTests : IClassFixture<IntegrationTestC
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);

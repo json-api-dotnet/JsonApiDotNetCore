@@ -47,7 +47,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(3);
+        responseDocument.Data.ManyValue.Should().HaveCount(3);
         responseDocument.Data.ManyValue[0].Id.Should().Be(posts[1].StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(posts[0].StringId);
         responseDocument.Data.ManyValue[2].Id.Should().Be(posts[2].StringId);
@@ -73,13 +73,13 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
         error.Detail.Should().Be($"{CollectionErrorMessage} Failed at position 1: ^sort");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("sort");
     }
 
@@ -107,7 +107,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(3);
+        responseDocument.Data.ManyValue.Should().HaveCount(3);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[1].StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(blog.Posts[0].StringId);
         responseDocument.Data.ManyValue[2].Id.Should().Be(blog.Posts[2].StringId);
@@ -133,13 +133,13 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
         error.Detail.Should().Be($"{CollectionErrorMessage} Failed at position 1: ^sort");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("sort");
     }
 
@@ -166,7 +166,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(blogs[0].StringId);
     }
@@ -194,7 +194,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(posts[1].StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(posts[0].StringId);
     }
@@ -223,10 +223,10 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(account.StringId);
 
-        responseDocument.Included.ShouldHaveCount(3);
+        responseDocument.Included.Should().HaveCount(3);
         responseDocument.Included[0].Id.Should().Be(account.Posts[1].StringId);
         responseDocument.Included[1].Id.Should().Be(account.Posts[0].StringId);
         responseDocument.Included[2].Id.Should().Be(account.Posts[2].StringId);
@@ -257,10 +257,10 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(blog.Owner.StringId);
 
-        responseDocument.Included.ShouldHaveCount(3);
+        responseDocument.Included.Should().HaveCount(3);
         responseDocument.Included[0].Id.Should().Be(blog.Owner.Posts[1].StringId);
         responseDocument.Included[1].Id.Should().Be(blog.Owner.Posts[0].StringId);
         responseDocument.Included[2].Id.Should().Be(blog.Owner.Posts[2].StringId);
@@ -290,10 +290,10 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
 
-        responseDocument.Included.ShouldHaveCount(3);
+        responseDocument.Included.Should().HaveCount(3);
         responseDocument.Included[0].Id.Should().Be(post.Labels.ElementAt(1).StringId);
         responseDocument.Included[1].Id.Should().Be(post.Labels.ElementAt(0).StringId);
         responseDocument.Included[2].Id.Should().Be(post.Labels.ElementAt(2).StringId);
@@ -337,11 +337,11 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(blogs[0].StringId);
 
-        responseDocument.Included.ShouldHaveCount(7);
+        responseDocument.Included.Should().HaveCount(7);
 
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(blogs[0].Posts[2].StringId);
@@ -391,7 +391,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(posts[1].StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(posts[0].StringId);
     }
@@ -428,11 +428,11 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(blogs[0].StringId);
 
-        responseDocument.Included.ShouldHaveCount(5);
+        responseDocument.Included.Should().HaveCount(5);
 
         responseDocument.Included[0].Type.Should().Be("webAccounts");
         responseDocument.Included[0].Id.Should().Be(blogs[1].Owner!.StringId);
@@ -463,13 +463,13 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
         error.Detail.Should().Be($"Field '{Unknown.Relationship}' does not exist on resource type 'webAccounts'. {parameterName}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be(parameterName.Text);
     }
 
@@ -486,13 +486,13 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
         error.Detail.Should().Be($"Field '{Unknown.Relationship}' does not exist on resource type 'blogPosts'. {parameterName}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be(parameterName.Text);
     }
 
@@ -509,13 +509,13 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
         error.Detail.Should().Be($"Sorting on attribute 'dateOfBirth' is not allowed. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("sort");
     }
 
@@ -547,7 +547,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(3);
+        responseDocument.Data.ManyValue.Should().HaveCount(3);
         responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[1].StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(accounts[2].StringId);
         responseDocument.Data.ManyValue[2].Id.Should().Be(accounts[0].StringId);
@@ -578,7 +578,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(4);
+        responseDocument.Data.ManyValue.Should().HaveCount(4);
         responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[2].StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(accounts[1].StringId);
         responseDocument.Data.ManyValue[2].Id.Should().Be(accounts[0].StringId);

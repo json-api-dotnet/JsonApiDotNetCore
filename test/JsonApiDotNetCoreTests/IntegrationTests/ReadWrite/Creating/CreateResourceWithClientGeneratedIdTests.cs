@@ -65,11 +65,11 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
 
         string groupName = $"{newGroup.Name}{ImplicitlyChangingWorkItemGroupDefinition.Suffix}";
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItemGroups");
         responseDocument.Data.SingleValue.Id.Should().Be(newGroup.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(groupName));
-        responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(groupName);
+        responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -79,7 +79,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         });
 
         PropertyInfo? property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable<object>.Id));
-        property.ShouldNotBeNull();
+        property.Should().NotBeNull();
         property.PropertyType.Should().Be<Guid>();
     }
 
@@ -118,11 +118,11 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
 
         string groupName = $"{newGroup.Name}{ImplicitlyChangingWorkItemGroupDefinition.Suffix}";
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItemGroups");
         responseDocument.Data.SingleValue.Id.Should().Be(newGroup.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldHaveCount(1);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(groupName));
+        responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(groupName);
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -133,7 +133,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         });
 
         PropertyInfo? property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable<object>.Id));
-        property.ShouldNotBeNull();
+        property.Should().NotBeNull();
         property.PropertyType.Should().Be<Guid>();
     }
 
@@ -184,7 +184,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         });
 
         PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
-        property.ShouldNotBeNull();
+        property.Should().NotBeNull();
         property.PropertyType.Should().Be<string>();
     }
 
@@ -235,7 +235,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         });
 
         PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
-        property.ShouldNotBeNull();
+        property.Should().NotBeNull();
         property.PropertyType.Should().Be<string>();
     }
 
@@ -277,11 +277,11 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         const string defaultId = AssignIdToRgbColorDefinition.DefaultId;
         const string defaultName = AssignIdToRgbColorDefinition.DefaultName;
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("rgbColors");
         responseDocument.Data.SingleValue.Id.Should().Be(defaultId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(defaultName));
-        responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("displayName").WhoseValue.Should().Be(defaultName);
+        responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -291,7 +291,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         });
 
         PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
-        property.ShouldNotBeNull();
+        property.Should().NotBeNull();
         property.PropertyType.Should().Be<string>();
     }
 
@@ -330,15 +330,15 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'id' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Theory]
@@ -373,15 +373,15 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'id' element is invalid.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Theory]
@@ -416,15 +416,15 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'id' element is invalid.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Theory]
@@ -474,7 +474,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         });
 
         PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
-        property.ShouldNotBeNull();
+        property.Should().NotBeNull();
         property.PropertyType.Should().Be<string>();
     }
 
@@ -511,15 +511,15 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'id' element is invalid.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Theory]
@@ -555,15 +555,15 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'id' element is invalid.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Theory]
@@ -608,7 +608,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);

@@ -65,7 +65,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
             loginAccountInDatabase.Person.Should().BeNull();
         });
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -76,7 +76,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingPerson.Id);
         });
 
@@ -88,7 +88,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE "Id" = @p2
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", null);
             command.Parameters.Should().Contain("@p2", existingPerson.Id);
         });
@@ -137,7 +137,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
             personInDatabase.Account.Should().BeNull();
         });
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -148,7 +148,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingLoginAccount.Id);
         });
 
@@ -160,7 +160,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE "Id" = @p2
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", null);
             command.Parameters.Should().Contain("@p2", existingLoginAccount.Person.Id);
         });
@@ -196,7 +196,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
 
         responseDocument.Should().BeEmpty();
 
-        store.SqlCommands.ShouldHaveCount(1);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
         {
@@ -207,7 +207,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingLoginAccount.Id);
         });
     }
@@ -240,7 +240,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -248,7 +248,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         error.Detail.Should().Be("The relationship 'recovery' on resource type 'loginAccounts' cannot be cleared because it is a required relationship.");
         error.Source.Should().BeNull();
 
-        store.SqlCommands.ShouldHaveCount(1);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
         {
@@ -259,7 +259,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingLoginAccount.Id);
         });
     }
@@ -292,7 +292,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -300,7 +300,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         error.Detail.Should().Be("The relationship 'account' on resource type 'accountRecoveries' cannot be cleared because it is a required relationship.");
         error.Source.Should().BeNull();
 
-        store.SqlCommands.ShouldHaveCount(1);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
         {
@@ -311,7 +311,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingAccountRecovery.Id);
         });
     }
@@ -354,7 +354,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
             todoItemInDatabase.Assignee.Should().BeNull();
         });
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -365,7 +365,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingTodoItem.Id);
         });
 
@@ -377,7 +377,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE "Id" = @p2
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", null);
             command.Parameters.Should().Contain("@p2", existingTodoItem.Id);
         });
@@ -411,7 +411,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -419,7 +419,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         error.Detail.Should().Be("The relationship 'owner' on resource type 'todoItems' cannot be cleared because it is a required relationship.");
         error.Source.Should().BeNull();
 
-        store.SqlCommands.ShouldHaveCount(1);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
         {
@@ -430,7 +430,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingTodoItem.Id);
         });
     }
@@ -475,11 +475,11 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         {
             Person personInDatabase = await dbContext.People.Include(person => person.Account).FirstWithIdAsync(existingPerson.Id);
 
-            personInDatabase.Account.ShouldNotBeNull();
+            personInDatabase.Account.Should().NotBeNull();
             personInDatabase.Account.Id.Should().Be(existingLoginAccount.Id);
         });
 
-        store.SqlCommands.ShouldHaveCount(3);
+        store.SqlCommands.Should().HaveCount(3);
 
         store.SqlCommands[0].With(command =>
         {
@@ -490,7 +490,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingPerson.Id);
         });
 
@@ -502,7 +502,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE "AccountId" = @p2
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", null);
             command.Parameters.Should().Contain("@p2", existingLoginAccount.Id);
         });
@@ -515,7 +515,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE "Id" = @p2
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", existingLoginAccount.Id);
             command.Parameters.Should().Contain("@p2", existingPerson.Id);
         });
@@ -562,11 +562,11 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
             LoginAccount loginAccountInDatabase =
                 await dbContext.LoginAccounts.Include(loginAccount => loginAccount.Person).FirstWithIdAsync(existingLoginAccount.Id);
 
-            loginAccountInDatabase.Person.ShouldNotBeNull();
+            loginAccountInDatabase.Person.Should().NotBeNull();
             loginAccountInDatabase.Person.Id.Should().Be(existingPerson.Id);
         });
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -577,7 +577,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingLoginAccount.Id);
         });
 
@@ -589,7 +589,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE "Id" = @p2
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", existingLoginAccount.Id);
             command.Parameters.Should().Contain("@p2", existingPerson.Id);
         });
@@ -635,11 +635,11 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         {
             TodoItem todoItemInDatabase = await dbContext.TodoItems.Include(todoItem => todoItem.Assignee).FirstWithIdAsync(existingTodoItem.Id);
 
-            todoItemInDatabase.Assignee.ShouldNotBeNull();
+            todoItemInDatabase.Assignee.Should().NotBeNull();
             todoItemInDatabase.Assignee.Id.Should().Be(existingPerson.Id);
         });
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -650,7 +650,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingTodoItem.Id);
         });
 
@@ -662,7 +662,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE "Id" = @p2
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", existingPerson.Id);
             command.Parameters.Should().Contain("@p2", existingTodoItem.Id);
         });
@@ -711,7 +711,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         {
             Person personInDatabase1 = await dbContext.People.Include(person => person.Account).FirstWithIdAsync(existingPerson1.Id);
 
-            personInDatabase1.Account.ShouldNotBeNull();
+            personInDatabase1.Account.Should().NotBeNull();
             personInDatabase1.Account.Id.Should().Be(existingPerson2.Account.Id);
 
             Person personInDatabase2 = await dbContext.People.Include(person => person.Account).FirstWithIdAsync(existingPerson2.Id);
@@ -719,7 +719,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
             personInDatabase2.Account.Should().BeNull();
         });
 
-        store.SqlCommands.ShouldHaveCount(3);
+        store.SqlCommands.Should().HaveCount(3);
 
         store.SqlCommands[0].With(command =>
         {
@@ -730,7 +730,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingPerson1.Id);
         });
 
@@ -742,7 +742,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE "AccountId" = @p2
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", null);
             command.Parameters.Should().Contain("@p2", existingPerson2.Account.Id);
         });
@@ -755,7 +755,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE "Id" = @p2
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", existingPerson2.Account.Id);
             command.Parameters.Should().Contain("@p2", existingPerson1.Id);
         });
@@ -805,7 +805,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
             LoginAccount loginAccountInDatabase1 =
                 await dbContext.LoginAccounts.Include(loginAccount => loginAccount.Person).FirstWithIdAsync(existingLoginAccount1.Id);
 
-            loginAccountInDatabase1.Person.ShouldNotBeNull();
+            loginAccountInDatabase1.Person.Should().NotBeNull();
             loginAccountInDatabase1.Person.Id.Should().Be(existingLoginAccount2.Person.Id);
 
             LoginAccount loginAccountInDatabase2 =
@@ -814,7 +814,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
             loginAccountInDatabase2.Person.Should().BeNull();
         });
 
-        store.SqlCommands.ShouldHaveCount(3);
+        store.SqlCommands.Should().HaveCount(3);
 
         store.SqlCommands[0].With(command =>
         {
@@ -825,7 +825,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingLoginAccount1.Id);
         });
 
@@ -837,7 +837,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE "Id" = @p2
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", null);
             command.Parameters.Should().Contain("@p2", existingLoginAccount1.Person.Id);
         });
@@ -850,7 +850,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE "Id" = @p2
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", existingLoginAccount1.Id);
             command.Parameters.Should().Contain("@p2", existingLoginAccount2.Person.Id);
         });
@@ -898,7 +898,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
             LoginAccount loginAccountInDatabase1 =
                 await dbContext.LoginAccounts.Include(loginAccount => loginAccount.Recovery).FirstWithIdAsync(existingLoginAccount1.Id);
 
-            loginAccountInDatabase1.Recovery.ShouldNotBeNull();
+            loginAccountInDatabase1.Recovery.Should().NotBeNull();
             loginAccountInDatabase1.Recovery.Id.Should().Be(existingLoginAccount2.Recovery.Id);
 
             LoginAccount? loginAccountInDatabase2 = await dbContext.LoginAccounts.Include(loginAccount => loginAccount.Recovery)
@@ -907,7 +907,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
             loginAccountInDatabase2.Should().BeNull();
         });
 
-        store.SqlCommands.ShouldHaveCount(3);
+        store.SqlCommands.Should().HaveCount(3);
 
         store.SqlCommands[0].With(command =>
         {
@@ -918,7 +918,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingLoginAccount1.Id);
         });
 
@@ -929,7 +929,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE "RecoveryId" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingLoginAccount2.Recovery.Id);
         });
 
@@ -941,7 +941,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE "Id" = @p2
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", existingLoginAccount2.Recovery.Id);
             command.Parameters.Should().Contain("@p2", existingLoginAccount1.Id);
         });
@@ -989,7 +989,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
             AccountRecovery accountRecoveryInDatabase1 =
                 await dbContext.AccountRecoveries.Include(recovery => recovery.Account).FirstWithIdAsync(existingAccountRecovery1.Id);
 
-            accountRecoveryInDatabase1.Account.ShouldNotBeNull();
+            accountRecoveryInDatabase1.Account.Should().NotBeNull();
             accountRecoveryInDatabase1.Account.Id.Should().Be(existingAccountRecovery2.Account.Id);
 
             AccountRecovery accountRecoveryInDatabase2 =
@@ -998,7 +998,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
             accountRecoveryInDatabase2.Account.Should().BeNull();
         });
 
-        store.SqlCommands.ShouldHaveCount(3);
+        store.SqlCommands.Should().HaveCount(3);
 
         store.SqlCommands[0].With(command =>
         {
@@ -1009,7 +1009,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingAccountRecovery1.Id);
         });
 
@@ -1020,7 +1020,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE "Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingAccountRecovery1.Account.Id);
         });
 
@@ -1032,7 +1032,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE "Id" = @p2
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", existingAccountRecovery1.Id);
             command.Parameters.Should().Contain("@p2", existingAccountRecovery2.Account.Id);
         });
@@ -1081,11 +1081,11 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         {
             TodoItem todoItemInDatabase1 = await dbContext.TodoItems.Include(todoItem => todoItem.Assignee).FirstWithIdAsync(existingTodoItem1.Id);
 
-            todoItemInDatabase1.Assignee.ShouldNotBeNull();
+            todoItemInDatabase1.Assignee.Should().NotBeNull();
             todoItemInDatabase1.Assignee.Id.Should().Be(existingTodoItem2.Assignee.Id);
         });
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -1096,7 +1096,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingTodoItem1.Id);
         });
 
@@ -1108,7 +1108,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE "Id" = @p2
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", existingTodoItem2.Assignee.Id);
             command.Parameters.Should().Contain("@p2", existingTodoItem1.Id);
         });
@@ -1155,11 +1155,11 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         {
             TodoItem todoItemInDatabase1 = await dbContext.TodoItems.Include(todoItem => todoItem.Owner).FirstWithIdAsync(existingTodoItem1.Id);
 
-            todoItemInDatabase1.Owner.ShouldNotBeNull();
+            todoItemInDatabase1.Owner.Should().NotBeNull();
             todoItemInDatabase1.Owner.Id.Should().Be(existingTodoItem2.Owner.Id);
         });
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -1170,7 +1170,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", existingTodoItem1.Id);
         });
 
@@ -1182,7 +1182,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
                 WHERE "Id" = @p2
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", existingTodoItem2.Owner.Id);
             command.Parameters.Should().Contain("@p2", existingTodoItem1.Id);
         });

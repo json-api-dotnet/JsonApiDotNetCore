@@ -565,9 +565,9 @@ public sealed class ResponseModelAdapterTests
         Document document = responseModelAdapter.Convert(articles);
 
         // Assert
-        document.Included.ShouldHaveCount(1);
+        document.Included.Should().HaveCount(1);
 
-        document.Included[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be(person.Name));
+        document.Included[0].Attributes.Should().ContainKey("name").WhoseValue.Should().Be(person.Name);
         document.Included[0].Id.Should().Be(person.StringId);
     }
 

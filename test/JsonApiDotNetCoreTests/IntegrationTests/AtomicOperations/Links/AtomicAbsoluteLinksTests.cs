@@ -80,37 +80,37 @@ public sealed class AtomicAbsoluteLinksTests : IClassFixture<IntegrationTestCont
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(2);
+        responseDocument.Results.Should().HaveCount(2);
 
-        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
             string languageLink = $"{HostPrefix}/textLanguages/{existingLanguage.StringId}";
 
-            resource.ShouldNotBeNull();
-            resource.Links.ShouldNotBeNull();
+            resource.Should().NotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be(languageLink);
 
-            resource.Relationships.ShouldContainKey("lyrics").With(value =>
+            resource.Relationships.Should().ContainKey("lyrics").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"{languageLink}/relationships/lyrics");
                 value.Links.Related.Should().Be($"{languageLink}/lyrics");
             });
         });
 
-        responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[1].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
             string companyLink = $"{HostPrefix}/recordCompanies/{existingCompany.StringId}";
 
-            resource.ShouldNotBeNull();
-            resource.Links.ShouldNotBeNull();
+            resource.Should().NotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be(companyLink);
 
-            resource.Relationships.ShouldContainKey("tracks").With(value =>
+            resource.Relationships.Should().ContainKey("tracks").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"{companyLink}/relationships/tracks");
                 value.Links.Related.Should().Be($"{companyLink}/tracks");
             });
@@ -156,11 +156,11 @@ public sealed class AtomicAbsoluteLinksTests : IClassFixture<IntegrationTestCont
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(1);
+        responseDocument.Results.Should().HaveCount(1);
 
-        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
-            resource.ShouldNotBeNull();
+            resource.Should().NotBeNull();
             resource.Links.Should().BeNull();
             resource.Relationships.Should().BeNull();
         });

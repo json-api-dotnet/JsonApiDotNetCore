@@ -40,7 +40,7 @@ public sealed class DocumentDescriptionLinkTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.DescribedBy.Should().Be("http://localhost/description/json-schema?version=v1.0");
     }
 
@@ -62,7 +62,7 @@ public sealed class DocumentDescriptionLinkTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.DescribedBy.Should().Be("description/json-schema?version=v1.0");
     }
 
@@ -84,7 +84,7 @@ public sealed class DocumentDescriptionLinkTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.DescribedBy.Should().Be("https://docs.api.com/description/json-schema?version=v1.0");
     }
 

@@ -39,8 +39,8 @@ public sealed partial class FireForgetTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newGroupName));
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(newGroupName);
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
@@ -49,9 +49,9 @@ public sealed partial class FireForgetTests
             (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        messageBroker.SentMessages.ShouldHaveCount(1);
+        messageBroker.SentMessages.Should().HaveCount(1);
 
-        Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         var content = messageBroker.SentMessages[0].GetContentAs<GroupCreatedContent>();
         content.GroupId.Should().Be(newGroupId);
@@ -117,8 +117,8 @@ public sealed partial class FireForgetTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newGroupName));
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(newGroupName);
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
@@ -128,9 +128,9 @@ public sealed partial class FireForgetTests
             (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        messageBroker.SentMessages.ShouldHaveCount(3);
+        messageBroker.SentMessages.Should().HaveCount(3);
 
-        Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         var content1 = messageBroker.SentMessages[0].GetContentAs<GroupCreatedContent>();
         content1.GroupId.Should().Be(newGroupId);
@@ -193,7 +193,7 @@ public sealed partial class FireForgetTests
             (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        messageBroker.SentMessages.ShouldHaveCount(1);
+        messageBroker.SentMessages.Should().HaveCount(1);
 
         var content = messageBroker.SentMessages[0].GetContentAs<GroupRenamedContent>();
         content.GroupId.Should().Be(existingGroup.StringId);
@@ -278,7 +278,7 @@ public sealed partial class FireForgetTests
             (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        messageBroker.SentMessages.ShouldHaveCount(3);
+        messageBroker.SentMessages.Should().HaveCount(3);
 
         var content1 = messageBroker.SentMessages[0].GetContentAs<UserAddedToGroupContent>();
         content1.UserId.Should().Be(existingUserWithoutGroup.Id);
@@ -325,7 +325,7 @@ public sealed partial class FireForgetTests
             (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        messageBroker.SentMessages.ShouldHaveCount(1);
+        messageBroker.SentMessages.Should().HaveCount(1);
 
         var content = messageBroker.SentMessages[0].GetContentAs<GroupDeletedContent>();
         content.GroupId.Should().Be(existingGroup.StringId);
@@ -363,7 +363,7 @@ public sealed partial class FireForgetTests
             (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        messageBroker.SentMessages.ShouldHaveCount(2);
+        messageBroker.SentMessages.Should().HaveCount(2);
 
         var content1 = messageBroker.SentMessages[0].GetContentAs<UserRemovedFromGroupContent>();
         content1.UserId.Should().Be(existingGroup.Users.ElementAt(0).Id);
@@ -439,7 +439,7 @@ public sealed partial class FireForgetTests
             (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        messageBroker.SentMessages.ShouldHaveCount(3);
+        messageBroker.SentMessages.Should().HaveCount(3);
 
         var content1 = messageBroker.SentMessages[0].GetContentAs<UserAddedToGroupContent>();
         content1.UserId.Should().Be(existingUserWithoutGroup.Id);
@@ -512,7 +512,7 @@ public sealed partial class FireForgetTests
             (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        messageBroker.SentMessages.ShouldHaveCount(2);
+        messageBroker.SentMessages.Should().HaveCount(2);
 
         var content1 = messageBroker.SentMessages[0].GetContentAs<UserAddedToGroupContent>();
         content1.UserId.Should().Be(existingUserWithoutGroup.Id);
@@ -575,7 +575,7 @@ public sealed partial class FireForgetTests
             (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        messageBroker.SentMessages.ShouldHaveCount(1);
+        messageBroker.SentMessages.Should().HaveCount(1);
 
         var content = messageBroker.SentMessages[0].GetContentAs<UserRemovedFromGroupContent>();
         content.UserId.Should().Be(existingUserWithSameGroup2.Id);

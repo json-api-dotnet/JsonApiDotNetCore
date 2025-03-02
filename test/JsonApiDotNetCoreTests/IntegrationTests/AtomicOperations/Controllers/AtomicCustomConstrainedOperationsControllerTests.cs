@@ -65,7 +65,7 @@ public sealed class AtomicCustomConstrainedOperationsControllerTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(2);
+        responseDocument.Results.Should().HaveCount(2);
     }
 
     [Fact]
@@ -98,13 +98,13 @@ public sealed class AtomicCustomConstrainedOperationsControllerTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         error.Title.Should().Be("The requested operation is not accessible.");
         error.Detail.Should().Be("The 'add' resource operation is not accessible for resource type 'performers'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]");
     }
 
@@ -147,13 +147,13 @@ public sealed class AtomicCustomConstrainedOperationsControllerTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         error.Title.Should().Be("The requested operation is not accessible.");
         error.Detail.Should().Be("The 'update' resource operation is not accessible for resource type 'musicTracks'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]");
     }
 
@@ -203,13 +203,13 @@ public sealed class AtomicCustomConstrainedOperationsControllerTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         error.Title.Should().Be("The requested operation is not accessible.");
         error.Detail.Should().Be("The 'add' relationship operation is not accessible for relationship 'performers' on resource type 'musicTracks'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]");
     }
 }
