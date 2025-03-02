@@ -12,7 +12,7 @@ The following code generators are supported, though you may try others as well:
 
 # [NSwag](#tab/nswag)
 
-For C# clients, we provide an additional package that provides workarounds for bugs in NSwag and enables using partial PATCH/POST requests.
+For C# clients, we provide an additional package that provides workarounds for bugs in NSwag and enables using partial POST/PATCH requests.
 
 To add it to your project, run the following command:
 ```
@@ -146,16 +146,36 @@ From here, continue from step 3 in the list of steps for Visual Studio.
 
 # [Kiota](#tab/kiota)
 
-To generate your C# client, install the Kiota tool by following the steps at https://learn.microsoft.com/en-us/openapi/kiota/install#install-as-net-tool.
-
-Next, generate client code by running the [command line tool](https://learn.microsoft.com/en-us/openapi/kiota/using#client-generation). For example:
+To generate your C# client, first add the Kiota tool to your solution:
 
 ```
-dotnet kiota generate --language CSharp --class-name ExampleApiClient --output ./GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --openapi http://localhost:14140/swagger/v1/swagger.json
+dotnet tool install microsoft.openapi.kiota
 ```
+
+After adding the `JsonApiDotNetCore.OpenApi.Client.Kiota` package to your project, add a `KiotaReference` element
+to your project file to import your OpenAPI file. For example:
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <KiotaReference Include="path/to/openapi.json">
+      <NamespaceName>$(MSBuildProjectName).GeneratedCode</NamespaceName>
+      <ClassName>ExampleApiClient</ClassName>
+      <OutputPath>./GeneratedCode</OutputPath>
+      <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
+    </KiotaReference>
+  </ItemGroup>
+</Project>
+```
+
+> [!NOTE]
+> The `ExtraArguments` parameter is required for compatibility with JSON:API.
+
+Next, build your project. It runs the kiota command-line tool, which generates files in the `GeneratedCode` subdirectory.
 
 > [!CAUTION]
-> The `--backing-store` switch is needed for JSON:API partial PATCH/POST requests to work correctly.
+> If you're not using `<KiotaReference>`, at least make sure you're passing the `--backing-store` switch to the command-line tool,
+> which is needed for JSON:API partial POST/PATCH requests to work correctly.
 
 Kiota is pretty young and therefore still rough around the edges. At the time of writing, there are various bugs, for which we have workarounds
 in place. For a full example, see the [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/openapi/src/Examples/OpenApiKiotaClientExample).
