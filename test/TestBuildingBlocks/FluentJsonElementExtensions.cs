@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 
 namespace TestBuildingBlocks;
 
-public static class JsonElementAssertionExtensions
+public static class FluentJsonElementExtensions
 {
     private const string ComponentSchemaPrefix = "#/components/schemas/";
 
