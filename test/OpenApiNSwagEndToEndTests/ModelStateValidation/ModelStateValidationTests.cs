@@ -58,7 +58,7 @@ public sealed class ModelStateValidationTests
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        document.Errors.ShouldHaveCount(1);
+        document.Errors.Should().HaveCount(1);
 
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
@@ -95,7 +95,7 @@ public sealed class ModelStateValidationTests
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        document.Errors.ShouldHaveCount(1);
+        document.Errors.Should().HaveCount(1);
 
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
@@ -130,7 +130,7 @@ public sealed class ModelStateValidationTests
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        document.Errors.ShouldHaveCount(1);
+        document.Errors.Should().HaveCount(1);
 
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
@@ -165,7 +165,7 @@ public sealed class ModelStateValidationTests
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        document.Errors.ShouldHaveCount(1);
+        document.Errors.Should().HaveCount(1);
 
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
@@ -200,7 +200,7 @@ public sealed class ModelStateValidationTests
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        document.Errors.ShouldHaveCount(1);
+        document.Errors.Should().HaveCount(1);
 
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
@@ -236,7 +236,7 @@ public sealed class ModelStateValidationTests
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        document.Errors.ShouldHaveCount(1);
+        document.Errors.Should().HaveCount(1);
 
         const int minCharsInBase64 = SocialMediaAccount.MinPasswordCharsInBase64;
 
@@ -273,7 +273,7 @@ public sealed class ModelStateValidationTests
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        document.Errors.ShouldHaveCount(1);
+        document.Errors.Should().HaveCount(1);
 
         const int maxCharsInBase64 = SocialMediaAccount.MaxPasswordCharsInBase64;
 
@@ -314,7 +314,7 @@ public sealed class ModelStateValidationTests
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        document.Errors.ShouldHaveCount(1);
+        document.Errors.Should().HaveCount(1);
 
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
@@ -349,7 +349,7 @@ public sealed class ModelStateValidationTests
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        document.Errors.ShouldHaveCount(1);
+        document.Errors.Should().HaveCount(1);
 
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
@@ -386,7 +386,7 @@ public sealed class ModelStateValidationTests
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        document.Errors.ShouldHaveCount(1);
+        document.Errors.Should().HaveCount(1);
 
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
@@ -421,7 +421,7 @@ public sealed class ModelStateValidationTests
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        document.Errors.ShouldHaveCount(1);
+        document.Errors.Should().HaveCount(1);
 
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
@@ -456,7 +456,7 @@ public sealed class ModelStateValidationTests
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        document.Errors.ShouldHaveCount(1);
+        document.Errors.Should().HaveCount(1);
 
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
@@ -491,7 +491,7 @@ public sealed class ModelStateValidationTests
 
         // Assert
         ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        document.Errors.ShouldHaveCount(1);
+        document.Errors.Should().HaveCount(1);
 
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");

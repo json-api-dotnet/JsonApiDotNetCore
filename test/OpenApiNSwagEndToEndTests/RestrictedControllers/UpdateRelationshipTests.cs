@@ -383,7 +383,7 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
         exception.Message.Should().Be("HTTP 404: The writeOnlyChannel or a related resource does not exist.");
-        exception.Result.Errors.ShouldHaveCount(2);
+        exception.Result.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = exception.Result.Errors.ElementAt(0);
         error1.Status.Should().Be("404");

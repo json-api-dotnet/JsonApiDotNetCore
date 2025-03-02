@@ -57,7 +57,7 @@ public sealed class ClientIdGenerationModesTests
         ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
         exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.UnprocessableEntity);
         exception.Message.Should().Be($"Exception of type '{typeof(ErrorResponseDocument).FullName}' was thrown.");
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Errors[0];
         error.Status.Should().Be("422");
@@ -219,7 +219,7 @@ public sealed class ClientIdGenerationModesTests
         ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
         exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.Conflict);
         exception.Message.Should().Be($"Exception of type '{typeof(ErrorResponseDocument).FullName}' was thrown.");
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Errors.ElementAt(0);
         error.Status.Should().Be("409");

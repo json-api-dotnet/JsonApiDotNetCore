@@ -174,7 +174,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
         // Assert
         response.ShouldNotBeNull();
 
-        response.AtomicResults.ShouldHaveCount(7);
+        response.AtomicResults.Should().HaveCount(7);
 
         TeacherDataInResponse teacherInResponse = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<TeacherDataInResponse>().Which;
         teacherInResponse.Attributes.ShouldNotBeNull();

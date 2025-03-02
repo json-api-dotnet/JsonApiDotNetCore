@@ -55,7 +55,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         response.Result.ShouldNotBeNull();
 
         string[] locationHeaderValues = response.Headers.Should().ContainKey(HeaderNames.Location).WhoseValue.ToArray();
-        locationHeaderValues.ShouldHaveCount(1);
+        locationHeaderValues.Should().HaveCount(1);
         locationHeaderValues[0].Should().Be($"/countries/{response.Result.Data.Id}");
     }
 
@@ -82,7 +82,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
         string[] contentLengthHeaderValues = response.Headers.Should().ContainKey(HeaderNames.ContentLength).WhoseValue.ToArray();
-        contentLengthHeaderValues.ShouldHaveCount(1);
+        contentLengthHeaderValues.Should().HaveCount(1);
         long.Parse(contentLengthHeaderValues[0]).Should().BeGreaterThan(0);
     }
 
@@ -108,7 +108,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
         string[] contentLengthHeaderValues = response.Headers.Should().ContainKey(HeaderNames.ContentLength).WhoseValue.ToArray();
-        contentLengthHeaderValues.ShouldHaveCount(1);
+        contentLengthHeaderValues.Should().HaveCount(1);
         long.Parse(contentLengthHeaderValues[0]).Should().BeGreaterThan(0);
     }
 
@@ -135,7 +135,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
         string[] contentLengthHeaderValues = response.Headers.Should().ContainKey(HeaderNames.ContentLength).WhoseValue.ToArray();
-        contentLengthHeaderValues.ShouldHaveCount(1);
+        contentLengthHeaderValues.Should().HaveCount(1);
         long.Parse(contentLengthHeaderValues[0]).Should().BeGreaterThan(0);
     }
 
@@ -162,7 +162,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
         string[] contentLengthHeaderValues = response.Headers.Should().ContainKey(HeaderNames.ContentLength).WhoseValue.ToArray();
-        contentLengthHeaderValues.ShouldHaveCount(1);
+        contentLengthHeaderValues.Should().HaveCount(1);
         long.Parse(contentLengthHeaderValues[0]).Should().BeGreaterThan(0);
     }
 

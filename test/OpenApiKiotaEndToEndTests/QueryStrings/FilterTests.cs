@@ -55,7 +55,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
 
             // Assert
             response.ShouldNotBeNull();
-            response.Data.ShouldHaveCount(1);
+            response.Data.Should().HaveCount(1);
             response.Data.ElementAt(0).Id.Should().Be(nodes[1].StringId);
 
             response.Data.ElementAt(0).Attributes.ShouldNotBeNull().With(attributes =>
@@ -100,7 +100,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
 
             // Assert
             response.ShouldNotBeNull();
-            response.Data.ShouldHaveCount(1);
+            response.Data.Should().HaveCount(1);
             response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
 
             response.Data.ElementAt(0).Attributes.ShouldNotBeNull().With(attributes =>
@@ -145,7 +145,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
 
             // Assert
             response.ShouldNotBeNull();
-            response.Data.ShouldHaveCount(1);
+            response.Data.Should().HaveCount(1);
             response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
             response.Meta.ShouldNotBeNull();
             response.Meta.AdditionalData.ShouldContainKey("total").With(total => total.Should().Be(1));
@@ -177,7 +177,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
             exception.Message.Should().Be($"Exception of type '{typeof(ErrorResponseDocument).FullName}' was thrown.");
             exception.Links.ShouldNotBeNull();
             exception.Links.Describedby.Should().Be("/swagger/v1/swagger.json");
-            exception.Errors.ShouldHaveCount(1);
+            exception.Errors.Should().HaveCount(1);
 
             ErrorObject error = exception.Errors[0];
             error.Status.Should().Be("400");

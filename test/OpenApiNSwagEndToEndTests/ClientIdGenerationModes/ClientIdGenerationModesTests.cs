@@ -55,7 +55,7 @@ public sealed class ClientIdGenerationModesTests
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.UnprocessableEntity);
         exception.Message.Should().Be("HTTP 422: Validation of the request body failed.");
-        exception.Result.Errors.ShouldHaveCount(1);
+        exception.Result.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Result.Errors.ElementAt(0);
         error.Status.Should().Be("422");
@@ -211,7 +211,7 @@ public sealed class ClientIdGenerationModesTests
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.Conflict);
         exception.Message.Should().Be("HTTP 409: The request body contains conflicting information or another resource with the same ID already exists.");
-        exception.Result.Errors.ShouldHaveCount(1);
+        exception.Result.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Result.Errors.ElementAt(0);
         error.Status.Should().Be("409");

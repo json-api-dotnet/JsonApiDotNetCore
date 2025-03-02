@@ -60,7 +60,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         response.ShouldNotBeNull();
 
-        response.Atomic_results.ShouldHaveCount(1);
+        response.Atomic_results.Should().HaveCount(1);
         TeacherDataInResponse teacherDataInResponse = response.Atomic_results.ElementAt(0).Data.Should().BeOfType<TeacherDataInResponse>().Which;
 
         teacherDataInResponse.Attributes.ShouldNotBeNull();
@@ -135,7 +135,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         response.ShouldNotBeNull();
 
-        response.Atomic_results.ShouldHaveCount(1);
+        response.Atomic_results.Should().HaveCount(1);
         EnrollmentDataInResponse enrollmentDataInResponse = response.Atomic_results.ElementAt(0).Data.Should().BeOfType<EnrollmentDataInResponse>().Which;
 
         enrollmentDataInResponse.Attributes.ShouldNotBeNull();

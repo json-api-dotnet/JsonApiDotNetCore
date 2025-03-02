@@ -98,10 +98,10 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
         response.Data.Relationships.VideoStream.Data.Id.Should().Be(existingVideoStream.StringId);
         response.Data.Relationships.UltraHighDefinitionVideoStream.Should().BeNull();
         response.Data.Relationships.AudioStreams.ShouldNotBeNull();
-        response.Data.Relationships.AudioStreams.Data.ShouldHaveCount(1);
+        response.Data.Relationships.AudioStreams.Data.Should().HaveCount(1);
         response.Data.Relationships.AudioStreams.Data.ElementAt(0).Id.Should().Be(existingAudioStream.StringId);
 
-        response.Included.ShouldHaveCount(2);
+        response.Included.Should().HaveCount(2);
 
         response.Included.OfType<DataStreamDataInResponse>().Should().ContainSingle(streamData => streamData.Id == existingVideoStream.StringId).Subject.With(
             streamData =>
@@ -139,7 +139,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
             channelInDatabase.VideoStream.ShouldNotBeNull();
             channelInDatabase.VideoStream.Id.Should().Be(existingVideoStream.Id);
 
-            channelInDatabase.AudioStreams.ShouldHaveCount(1);
+            channelInDatabase.AudioStreams.Should().HaveCount(1);
             channelInDatabase.AudioStreams.ElementAt(0).Id.Should().Be(existingAudioStream.Id);
         });
     }
@@ -199,7 +199,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
         exception.Message.Should().Be("HTTP 404: A related resource does not exist.");
-        exception.Result.Errors.ShouldHaveCount(1);
+        exception.Result.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Result.Errors.ElementAt(0);
         error.Status.Should().Be("404");

@@ -77,7 +77,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         response.ShouldNotBeNull();
 
-        response.AtomicResults.ShouldHaveCount(1);
+        response.AtomicResults.Should().HaveCount(1);
         StudentDataInResponse studentDataInResponse = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<StudentDataInResponse>().Which;
 
         studentDataInResponse.Id.Should().Be(existingStudent.StringId);
@@ -141,7 +141,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         response.ShouldNotBeNull();
 
-        response.AtomicResults.ShouldHaveCount(1);
+        response.AtomicResults.Should().HaveCount(1);
         StudentDataInResponse studentDataInResponse = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<StudentDataInResponse>().Which;
 
         studentDataInResponse.Id.Should().Be(existingStudent.StringId);
@@ -224,7 +224,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         response.ShouldNotBeNull();
 
-        response.AtomicResults.ShouldHaveCount(1);
+        response.AtomicResults.Should().HaveCount(1);
         EnrollmentDataInResponse enrollmentDataInResponse = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<EnrollmentDataInResponse>().Which;
 
         enrollmentDataInResponse.Id.Should().Be(existingEnrollment.StringId);

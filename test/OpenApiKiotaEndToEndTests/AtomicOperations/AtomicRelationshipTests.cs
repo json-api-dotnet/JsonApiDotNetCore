@@ -142,7 +142,7 @@ public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestConte
         {
             Teacher teacherInDatabase = await dbContext.Teachers.Include(teacher => teacher.Teaches).FirstWithIdAsync(existingTeacher.Id);
 
-            teacherInDatabase.Teaches.ShouldHaveCount(2);
+            teacherInDatabase.Teaches.Should().HaveCount(2);
             teacherInDatabase.Teaches.Should().ContainSingle(course => course.Id == existingCourses.ElementAt(0).Id);
             teacherInDatabase.Teaches.Should().ContainSingle(course => course.Id == existingCourses.ElementAt(1).Id);
         });
@@ -206,7 +206,7 @@ public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestConte
         {
             Teacher teacherInDatabase = await dbContext.Teachers.Include(teacher => teacher.Teaches).FirstWithIdAsync(existingTeacher.Id);
 
-            teacherInDatabase.Teaches.ShouldHaveCount(3);
+            teacherInDatabase.Teaches.Should().HaveCount(3);
             teacherInDatabase.Teaches.Should().ContainSingle(course => course.Id == existingTeacher.Teaches.ElementAt(0).Id);
             teacherInDatabase.Teaches.Should().ContainSingle(course => course.Id == existingCourses.ElementAt(0).Id);
             teacherInDatabase.Teaches.Should().ContainSingle(course => course.Id == existingCourses.ElementAt(1).Id);
@@ -269,7 +269,7 @@ public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestConte
         {
             Teacher teacherInDatabase = await dbContext.Teachers.Include(teacher => teacher.Teaches).FirstWithIdAsync(existingTeacher.Id);
 
-            teacherInDatabase.Teaches.ShouldHaveCount(1);
+            teacherInDatabase.Teaches.Should().HaveCount(1);
             teacherInDatabase.Teaches.ElementAt(0).Id.Should().Be(existingTeacher.Teaches.ElementAt(1).Id);
         });
     }

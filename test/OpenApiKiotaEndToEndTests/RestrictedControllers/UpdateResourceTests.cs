@@ -113,7 +113,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
             response.Data.Relationships.AudioStreams.ShouldNotBeNull();
             response.Data.Relationships.AudioStreams.Data.Should().BeEmpty();
 
-            response.Included.ShouldHaveCount(1);
+            response.Included.Should().HaveCount(1);
             response.Included.OfType<DataStreamDataInResponse>().Should().ContainSingle(streamData => streamData.Id == existingVideoStream.StringId);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -301,7 +301,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
         exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.NotFound);
         exception.Message.Should().Be($"Exception of type '{typeof(ErrorResponseDocument).FullName}' was thrown.");
-        exception.Errors.ShouldHaveCount(2);
+        exception.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = exception.Errors.ElementAt(0);
         error1.Status.Should().Be("404");

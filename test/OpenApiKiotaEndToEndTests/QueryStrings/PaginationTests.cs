@@ -54,7 +54,7 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
 
             // Assert
             response.ShouldNotBeNull();
-            response.Data.ShouldHaveCount(1);
+            response.Data.Should().HaveCount(1);
             response.Data.ElementAt(0).Id.Should().Be(nodes[1].StringId);
             response.Meta.ShouldNotBeNull();
             response.Meta.AdditionalData.ShouldContainKey("total").With(total => total.Should().Be(3));
@@ -91,7 +91,7 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
 
             // Assert
             response.ShouldNotBeNull();
-            response.Data.ShouldHaveCount(2);
+            response.Data.Should().HaveCount(2);
             response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(0).StringId);
             response.Data.ElementAt(1).Id.Should().Be(node.Children.ElementAt(1).StringId);
             response.Meta.ShouldNotBeNull();
@@ -129,7 +129,7 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
 
             // Assert
             response.ShouldNotBeNull();
-            response.Data.ShouldHaveCount(1);
+            response.Data.Should().HaveCount(1);
             response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(2).StringId);
             response.Meta.ShouldNotBeNull();
             response.Meta.AdditionalData.ShouldContainKey("total").With(total => total.Should().Be(3));
@@ -157,7 +157,7 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
             ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
             exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.BadRequest);
             exception.Message.Should().Be($"Exception of type '{typeof(ErrorResponseDocument).FullName}' was thrown.");
-            exception.Errors.ShouldHaveCount(1);
+            exception.Errors.Should().HaveCount(1);
 
             ErrorObject error = exception.Errors.ElementAt(0);
             error.Status.Should().Be("400");
@@ -189,7 +189,7 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
             ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
             exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.BadRequest);
             exception.Message.Should().Be($"Exception of type '{typeof(ErrorResponseDocument).FullName}' was thrown.");
-            exception.Errors.ShouldHaveCount(1);
+            exception.Errors.Should().HaveCount(1);
 
             ErrorObject error = exception.Errors.ElementAt(0);
             error.Status.Should().Be("400");

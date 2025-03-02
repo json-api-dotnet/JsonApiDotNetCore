@@ -51,7 +51,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         NodeCollectionResponseDocument response = await apiClient.GetNodeCollectionAsync(queryString);
 
         // Assert
-        response.Data.ShouldHaveCount(1);
+        response.Data.Should().HaveCount(1);
         response.Data.ElementAt(0).Id.Should().Be(nodes[1].StringId);
 
         response.Data.ElementAt(0).Attributes.ShouldNotBeNull().With(attributes =>
@@ -92,7 +92,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         NodeCollectionResponseDocument response = await apiClient.GetNodeChildrenAsync(node.StringId!, queryString);
 
         // Assert
-        response.Data.ShouldHaveCount(1);
+        response.Data.Should().HaveCount(1);
         response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
 
         response.Data.ElementAt(0).Attributes.ShouldNotBeNull().With(attributes =>
@@ -133,7 +133,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         NodeIdentifierCollectionResponseDocument response = await apiClient.GetNodeChildrenRelationshipAsync(node.StringId!, queryString);
 
         // Assert
-        response.Data.ShouldHaveCount(1);
+        response.Data.Should().HaveCount(1);
         response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
         response.Meta.ShouldNotBeNull();
         response.Meta.ShouldContainKey("total").With(total => total.Should().Be(1));
@@ -162,7 +162,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         exception.Message.Should().Be("HTTP 400: The query string is invalid.");
         exception.Result.Links.ShouldNotBeNull();
         exception.Result.Links.Describedby.Should().Be("/swagger/v1/swagger.json");
-        exception.Result.Errors.ShouldHaveCount(1);
+        exception.Result.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Result.Errors.ElementAt(0);
         error.Status.Should().Be("400");

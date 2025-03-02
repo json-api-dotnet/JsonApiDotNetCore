@@ -386,7 +386,7 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
         ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
         exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.NotFound);
         exception.Message.Should().Be($"Exception of type '{typeof(ErrorResponseDocument).FullName}' was thrown.");
-        exception.Errors.ShouldHaveCount(2);
+        exception.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = exception.Errors.ElementAt(0);
         error1.Status.Should().Be("404");

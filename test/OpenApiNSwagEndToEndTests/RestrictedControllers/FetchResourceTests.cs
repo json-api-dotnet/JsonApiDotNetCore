@@ -46,7 +46,7 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Op
         ReadOnlyChannelCollectionResponseDocument response = await apiClient.GetReadOnlyChannelCollectionAsync();
 
         // Assert
-        response.Data.ShouldHaveCount(2);
+        response.Data.Should().HaveCount(2);
 
         ReadOnlyChannelDataInResponse channel1 = response.Data.Single(channel => channel.Id == channels.ElementAt(0).StringId);
         channel1.Attributes.ShouldNotBeNull();
@@ -126,7 +126,7 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Op
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
         exception.Message.Should().Be("HTTP 404: The readOnlyChannel does not exist.");
-        exception.Result.Errors.ShouldHaveCount(1);
+        exception.Result.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Result.Errors.ElementAt(0);
         error.Status.Should().Be("404");
@@ -204,7 +204,7 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Op
         DataStreamCollectionResponseDocument response = await apiClient.GetReadOnlyChannelAudioStreamsAsync(channel.StringId!);
 
         // Assert
-        response.Data.ShouldHaveCount(2);
+        response.Data.Should().HaveCount(2);
 
         DataStreamDataInResponse audioStream1 = response.Data.Single(autoStream => autoStream.Id == channel.AudioStreams.ElementAt(0).StringId);
         audioStream1.Attributes.ShouldNotBeNull();
@@ -235,7 +235,7 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Op
         DataStreamCollectionResponseDocument response = await apiClient.GetReadOnlyChannelAudioStreamsAsync(channel.StringId!);
 
         // Assert
-        response.Data.ShouldHaveCount(0);
+        response.Data.Should().HaveCount(0);
     }
 
     [Fact]
@@ -254,7 +254,7 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Op
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
         exception.Message.Should().Be("HTTP 404: The readOnlyChannel does not exist.");
-        exception.Result.Errors.ShouldHaveCount(1);
+        exception.Result.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Result.Errors.ElementAt(0);
         error.Status.Should().Be("404");

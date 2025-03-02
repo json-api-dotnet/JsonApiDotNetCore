@@ -48,7 +48,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
         string[] eTagHeaderValues = response.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
-        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues.Should().HaveCount(1);
         eTagHeaderValues[0].Should().Match("\"*\"");
     }
 
@@ -75,7 +75,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
         string[] eTagHeaderValues = response.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
-        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues.Should().HaveCount(1);
         eTagHeaderValues[0].Should().Match("\"*\"");
 
         response.Result.ShouldNotBeNull();
@@ -98,7 +98,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
         exception.Message.Should().Be("HTTP 404: The country does not exist.");
         exception.Headers.Should().NotContainKey(HeaderNames.ETag);
-        exception.Result.Errors.ShouldHaveCount(1);
+        exception.Result.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Result.Errors.ElementAt(0);
         error.Status.Should().Be("404");
@@ -166,7 +166,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         response2.StatusCode.Should().Be((int)HttpStatusCode.NotModified);
 
         string[] eTagHeaderValues = response2.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
-        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues.Should().HaveCount(1);
         eTagHeaderValues[0].Should().Be(responseETag);
 
         response2.Result.Should().BeNull();
@@ -196,7 +196,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
         string[] eTagHeaderValues = response.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
-        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues.Should().HaveCount(1);
         eTagHeaderValues[0].Should().Match("\"*\"");
 
         response.Result.ShouldNotBeNull();

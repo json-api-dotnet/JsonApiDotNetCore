@@ -53,7 +53,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
 
             // Assert
             response.ShouldNotBeNull();
-            response.Data.ShouldHaveCount(1);
+            response.Data.Should().HaveCount(1);
             response.Data.ElementAt(0).Id.Should().Be(node.StringId);
 
             response.Data.ElementAt(0).Attributes.ShouldNotBeNull().With(attributes =>
@@ -133,7 +133,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
 
             // Assert
             response.ShouldNotBeNull();
-            response.Data.ShouldHaveCount(1);
+            response.Data.Should().HaveCount(1);
             response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(0).StringId);
 
             response.Data.ElementAt(0).Attributes.ShouldNotBeNull().With(attributes =>
