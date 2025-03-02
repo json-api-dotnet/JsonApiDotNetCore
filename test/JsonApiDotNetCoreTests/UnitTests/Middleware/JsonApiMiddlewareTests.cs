@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Logging.Abstractions;
-using TestBuildingBlocks;
 using Xunit;
 
 #pragma warning disable AV1561 // Signature contains too many parameters
@@ -89,7 +88,7 @@ public sealed class JsonApiMiddlewareTests
         }
         else
         {
-            request.PrimaryResourceType.ShouldNotBeNull();
+            request.PrimaryResourceType.Should().NotBeNull();
             request.PrimaryResourceType.PublicName.Should().Be(expectPrimaryResourceType);
         }
 
@@ -99,7 +98,7 @@ public sealed class JsonApiMiddlewareTests
         }
         else
         {
-            request.SecondaryResourceType.ShouldNotBeNull();
+            request.SecondaryResourceType.Should().NotBeNull();
             request.SecondaryResourceType.PublicName.Should().Be(expectSecondaryResourceType);
         }
 
@@ -109,7 +108,7 @@ public sealed class JsonApiMiddlewareTests
         }
         else
         {
-            request.Relationship.ShouldNotBeNull();
+            request.Relationship.Should().NotBeNull();
             request.Relationship.PublicName.Should().Be(expectRelationshipName);
         }
 

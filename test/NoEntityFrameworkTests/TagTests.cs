@@ -35,7 +35,7 @@ public sealed class TagTests(NoLoggingWebApplicationFactory<Tag> factory) : Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(3);
+        responseDocument.Data.ManyValue.Should().HaveCount(3);
 
         responseDocument.Meta.Should().ContainTotal(3);
     }
@@ -52,8 +52,8 @@ public sealed class TagTests(NoLoggingWebApplicationFactory<Tag> factory) : Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be("Personal"));
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("name").WhoseValue.Should().Be("Personal");
 
         responseDocument.Meta.Should().ContainTotal(1);
     }
@@ -70,8 +70,8 @@ public sealed class TagTests(NoLoggingWebApplicationFactory<Tag> factory) : Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be("Business"));
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("name").WhoseValue.Should().Be("Business");
 
         responseDocument.Meta.Should().ContainTotal(1);
     }
@@ -88,7 +88,7 @@ public sealed class TagTests(NoLoggingWebApplicationFactory<Tag> factory) : Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(3);
+        responseDocument.Data.ManyValue.Should().HaveCount(3);
         responseDocument.Data.ManyValue[0].Id.Should().Be("3");
         responseDocument.Data.ManyValue[1].Id.Should().Be("2");
         responseDocument.Data.ManyValue[2].Id.Should().Be("1");
@@ -106,7 +106,7 @@ public sealed class TagTests(NoLoggingWebApplicationFactory<Tag> factory) : Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(3);
+        responseDocument.Data.ManyValue.Should().HaveCount(3);
         responseDocument.Data.ManyValue[0].Id.Should().Be("1");
         responseDocument.Data.ManyValue[1].Id.Should().Be("2");
         responseDocument.Data.ManyValue[2].Id.Should().Be("3");
@@ -124,8 +124,8 @@ public sealed class TagTests(NoLoggingWebApplicationFactory<Tag> factory) : Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be("Family"));
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("name").WhoseValue.Should().Be("Family");
 
         responseDocument.Meta.Should().ContainTotal(3);
     }
@@ -142,9 +142,9 @@ public sealed class TagTests(NoLoggingWebApplicationFactory<Tag> factory) : Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldNotBeEmpty();
+        responseDocument.Data.ManyValue.Should().NotBeEmpty();
         responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Attributes.Should().BeNull());
-        responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Relationships.ShouldOnlyContainKeys("todoItems"));
+        responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Relationships.Should().OnlyContainKeys("todoItems"));
     }
 
     [Fact]
@@ -175,7 +175,7 @@ public sealed class TagTests(NoLoggingWebApplicationFactory<Tag> factory) : Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be("1");
     }
 
@@ -191,10 +191,10 @@ public sealed class TagTests(NoLoggingWebApplicationFactory<Tag> factory) : Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(3);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("description").With(value => value.Should().Be("Make homework"));
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("description").With(value => value.Should().Be("Book vacation"));
-        responseDocument.Data.ManyValue[2].Attributes.ShouldContainKey("description").With(value => value.Should().Be("Cook dinner"));
+        responseDocument.Data.ManyValue.Should().HaveCount(3);
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("description").WhoseValue.Should().Be("Make homework");
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("description").WhoseValue.Should().Be("Book vacation");
+        responseDocument.Data.ManyValue[2].Attributes.Should().ContainKey("description").WhoseValue.Should().Be("Cook dinner");
 
         responseDocument.Meta.Should().ContainTotal(3);
     }
@@ -211,7 +211,7 @@ public sealed class TagTests(NoLoggingWebApplicationFactory<Tag> factory) : Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be("3");
 
         responseDocument.Meta.Should().ContainTotal(1);

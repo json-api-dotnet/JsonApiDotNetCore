@@ -55,18 +55,18 @@ public sealed class AtomicOperationTests : IClassFixture<IntegrationTestContext<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(1);
+        responseDocument.Results.Should().HaveCount(1);
 
-        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
             resource.Type.Should().Be("alwaysMovingTandems");
-            resource.Attributes.ShouldContainKey("weight").With(value => value.Should().Be(newMovingTandem.Weight));
-            resource.Attributes.ShouldContainKey("requiresDriverLicense").With(value => value.Should().Be(newMovingTandem.RequiresDriverLicense));
-            resource.Attributes.ShouldContainKey("gearCount").With(value => value.Should().Be(newMovingTandem.GearCount));
+            resource.Attributes.Should().ContainKey("weight").WhoseValue.Should().Be(newMovingTandem.Weight);
+            resource.Attributes.Should().ContainKey("requiresDriverLicense").WhoseValue.Should().Be(newMovingTandem.RequiresDriverLicense);
+            resource.Attributes.Should().ContainKey("gearCount").WhoseValue.Should().Be(newMovingTandem.GearCount);
             resource.Relationships.Should().BeNull();
         });
 
-        long newMovingTandemId = long.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
+        long newMovingTandemId = long.Parse(responseDocument.Results[0].Data.SingleValue!.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

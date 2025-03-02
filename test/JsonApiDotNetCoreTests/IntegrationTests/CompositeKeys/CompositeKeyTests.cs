@@ -49,7 +49,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(car.StringId);
     }
 
@@ -74,7 +74,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(car.StringId);
     }
 
@@ -99,7 +99,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(car.StringId);
     }
 
@@ -124,7 +124,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(car.StringId);
     }
 
@@ -181,7 +181,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         {
             Car? carInDatabase = await dbContext.Cars.FirstOrDefaultAsync(car => car.RegionId == newCar.RegionId && car.LicensePlate == newCar.LicensePlate);
 
-            carInDatabase.ShouldNotBeNull();
+            carInDatabase.Should().NotBeNull();
             carInDatabase.Id.Should().Be($"{newCar.RegionId}:{newCar.LicensePlate}");
         });
     }
@@ -234,7 +234,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         {
             Engine engineInDatabase = await dbContext.Engines.Include(engine => engine.Car).FirstWithIdAsync(existingEngine.Id);
 
-            engineInDatabase.Car.ShouldNotBeNull();
+            engineInDatabase.Car.Should().NotBeNull();
             engineInDatabase.Car.Id.Should().Be(existingCar.StringId);
         });
     }
@@ -327,7 +327,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         {
             Dealership dealershipInDatabase = await dbContext.Dealerships.Include(dealership => dealership.Inventory).FirstWithIdAsync(existingDealership.Id);
 
-            dealershipInDatabase.Inventory.ShouldHaveCount(1);
+            dealershipInDatabase.Inventory.Should().HaveCount(1);
             dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingDealership.Inventory.ElementAt(1).Id);
         });
     }
@@ -372,7 +372,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         {
             Dealership dealershipInDatabase = await dbContext.Dealerships.Include(dealership => dealership.Inventory).FirstWithIdAsync(existingDealership.Id);
 
-            dealershipInDatabase.Inventory.ShouldHaveCount(1);
+            dealershipInDatabase.Inventory.Should().HaveCount(1);
             dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingCar.Id);
         });
     }
@@ -424,7 +424,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         {
             Dealership dealershipInDatabase = await dbContext.Dealerships.Include(dealership => dealership.Inventory).FirstWithIdAsync(existingDealership.Id);
 
-            dealershipInDatabase.Inventory.ShouldHaveCount(2);
+            dealershipInDatabase.Inventory.Should().HaveCount(2);
             dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingCar.Id);
             dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingDealership.Inventory.ElementAt(0).Id);
         });
@@ -465,7 +465,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -545,11 +545,11 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         {
             Dealership dealershipInDatabase = await dbContext.Dealerships.Include(dealership => dealership.SoldCars).FirstWithIdAsync(existingDealership.Id);
 
-            dealershipInDatabase.SoldCars.ShouldHaveCount(1);
+            dealershipInDatabase.SoldCars.Should().HaveCount(1);
             dealershipInDatabase.SoldCars.Single().Id.Should().Be(existingDealership.SoldCars.ElementAt(0).Id);
 
             List<Car> carsInDatabase = await dbContext.Cars.ToListAsync();
-            carsInDatabase.ShouldHaveCount(2);
+            carsInDatabase.Should().HaveCount(2);
         });
     }
 }

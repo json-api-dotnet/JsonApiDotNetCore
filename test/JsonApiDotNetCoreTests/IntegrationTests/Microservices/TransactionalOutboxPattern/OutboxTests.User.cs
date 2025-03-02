@@ -46,9 +46,9 @@ public sealed partial class OutboxTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("loginName").With(value => value.Should().Be(newLoginName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(newDisplayName));
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("loginName").WhoseValue.Should().Be(newLoginName);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("displayName").WhoseValue.Should().Be(newDisplayName);
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
@@ -57,12 +57,12 @@ public sealed partial class OutboxTests
             (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-            messages.ShouldHaveCount(1);
+            messages.Should().HaveCount(1);
 
             var content = messages[0].GetContentAs<UserCreatedContent>();
             content.UserId.Should().Be(newUserId);
@@ -119,9 +119,9 @@ public sealed partial class OutboxTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("loginName").With(value => value.Should().Be(newLoginName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("displayName").With(value => value.Should().BeNull());
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("loginName").WhoseValue.Should().Be(newLoginName);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("displayName").WhoseValue.Should().BeNull();
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
@@ -131,12 +131,12 @@ public sealed partial class OutboxTests
             (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-            messages.ShouldHaveCount(2);
+            messages.Should().HaveCount(2);
 
             var content1 = messages[0].GetContentAs<UserCreatedContent>();
             content1.UserId.Should().Be(newUserId);
@@ -201,7 +201,7 @@ public sealed partial class OutboxTests
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-            messages.ShouldHaveCount(2);
+            messages.Should().HaveCount(2);
 
             var content1 = messages[0].GetContentAs<UserLoginNameChangedContent>();
             content1.UserId.Should().Be(existingUser.Id);
@@ -274,7 +274,7 @@ public sealed partial class OutboxTests
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-            messages.ShouldHaveCount(2);
+            messages.Should().HaveCount(2);
 
             var content1 = messages[0].GetContentAs<UserDisplayNameChangedContent>();
             content1.UserId.Should().Be(existingUser.Id);
@@ -350,7 +350,7 @@ public sealed partial class OutboxTests
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-            messages.ShouldHaveCount(2);
+            messages.Should().HaveCount(2);
 
             var content1 = messages[0].GetContentAs<UserDisplayNameChangedContent>();
             content1.UserId.Should().Be(existingUser.Id);
@@ -428,7 +428,7 @@ public sealed partial class OutboxTests
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-            messages.ShouldHaveCount(2);
+            messages.Should().HaveCount(2);
 
             var content1 = messages[0].GetContentAs<UserDisplayNameChangedContent>();
             content1.UserId.Should().Be(existingUser.Id);
@@ -476,7 +476,7 @@ public sealed partial class OutboxTests
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-            messages.ShouldHaveCount(1);
+            messages.Should().HaveCount(1);
 
             var content = messages[0].GetContentAs<UserDeletedContent>();
             content.UserId.Should().Be(existingUser.Id);
@@ -518,7 +518,7 @@ public sealed partial class OutboxTests
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-            messages.ShouldHaveCount(2);
+            messages.Should().HaveCount(2);
 
             var content1 = messages[0].GetContentAs<UserRemovedFromGroupContent>();
             content1.UserId.Should().Be(existingUser.Id);
@@ -571,7 +571,7 @@ public sealed partial class OutboxTests
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-            messages.ShouldHaveCount(1);
+            messages.Should().HaveCount(1);
 
             var content = messages[0].GetContentAs<UserRemovedFromGroupContent>();
             content.UserId.Should().Be(existingUser.Id);
@@ -625,7 +625,7 @@ public sealed partial class OutboxTests
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-            messages.ShouldHaveCount(1);
+            messages.Should().HaveCount(1);
 
             var content = messages[0].GetContentAs<UserAddedToGroupContent>();
             content.UserId.Should().Be(existingUser.Id);
@@ -681,7 +681,7 @@ public sealed partial class OutboxTests
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-            messages.ShouldHaveCount(1);
+            messages.Should().HaveCount(1);
 
             var content = messages[0].GetContentAs<UserMovedToGroupContent>();
             content.UserId.Should().Be(existingUser.Id);

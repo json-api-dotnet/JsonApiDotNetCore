@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using TestBuildingBlocks;
 using Xunit;
 
 namespace DiscoveryTests;
@@ -37,10 +36,10 @@ public sealed class ServiceDiscoveryFacadeTests
         var resourceGraph = serviceProvider.GetRequiredService<IResourceGraph>();
 
         ResourceType? personType = resourceGraph.FindResourceType(typeof(Person));
-        personType.ShouldNotBeNull();
+        personType.Should().NotBeNull();
 
         ResourceType? todoItemType = resourceGraph.FindResourceType(typeof(TodoItem));
-        todoItemType.ShouldNotBeNull();
+        todoItemType.Should().NotBeNull();
     }
 
     [Fact]
@@ -57,7 +56,7 @@ public sealed class ServiceDiscoveryFacadeTests
         var resourceGraph = serviceProvider.GetRequiredService<IResourceGraph>();
 
         ResourceType? resourceType = resourceGraph.FindResourceType(typeof(PrivateResource));
-        resourceType.ShouldNotBeNull();
+        resourceType.Should().NotBeNull();
     }
 
     [Fact]

@@ -53,20 +53,20 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error1.Title.Should().Be("Input validation failed.");
         error1.Detail.Should().Be("The Customer field is required.");
-        error1.Source.ShouldNotBeNull();
+        error1.Source.Should().NotBeNull();
         error1.Source.Pointer.Should().Be("/data/relationships/customer/data");
 
         ErrorObject error2 = responseDocument.Errors[1];
         error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error2.Title.Should().Be("Input validation failed.");
         error2.Detail.Should().Be("The Shipment field is required.");
-        error2.Source.ShouldNotBeNull();
+        error2.Source.Should().NotBeNull();
         error2.Source.Pointer.Should().Be("/data/relationships/shipment/data");
     }
 
@@ -96,13 +96,13 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Input validation failed.");
         error.Detail.Should().Be("The Order field is required.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/order/data");
     }
 
@@ -172,7 +172,7 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
             shipmentInDatabase.Should().BeNull();
 
             Customer? customerInDatabase = await dbContext.Customers.FirstWithIdOrDefaultAsync(existingOrder.Customer.Id);
-            customerInDatabase.ShouldNotBeNull();
+            customerInDatabase.Should().NotBeNull();
         });
     }
 
@@ -214,13 +214,13 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Input validation failed.");
         error.Detail.Should().Be("The Customer field is required.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/customer/data");
     }
 
@@ -251,7 +251,7 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);

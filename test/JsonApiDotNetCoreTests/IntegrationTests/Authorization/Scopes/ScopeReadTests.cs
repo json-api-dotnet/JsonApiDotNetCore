@@ -34,13 +34,13 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: read:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -58,13 +58,13 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: read:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -92,11 +92,11 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("movies");
         responseDocument.Data.ManyValue[0].Id.Should().Be(movie.StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldNotBeEmpty();
-        responseDocument.Data.ManyValue[0].Relationships.ShouldNotBeEmpty();
+        responseDocument.Data.ManyValue[0].Attributes.Should().NotBeEmpty();
+        responseDocument.Data.ManyValue[0].Relationships.Should().NotBeEmpty();
     }
 
     [Fact]
@@ -122,11 +122,11 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("genres");
         responseDocument.Data.ManyValue[0].Id.Should().Be(genre.StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldNotBeEmpty();
-        responseDocument.Data.ManyValue[0].Relationships.ShouldNotBeEmpty();
+        responseDocument.Data.ManyValue[0].Attributes.Should().NotBeEmpty();
+        responseDocument.Data.ManyValue[0].Relationships.Should().NotBeEmpty();
     }
 
     [Fact]
@@ -152,11 +152,11 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("actors");
         responseDocument.Data.ManyValue[0].Id.Should().Be(actor.StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldNotBeEmpty();
-        responseDocument.Data.ManyValue[0].Relationships.ShouldNotBeEmpty();
+        responseDocument.Data.ManyValue[0].Attributes.Should().NotBeEmpty();
+        responseDocument.Data.ManyValue[0].Relationships.Should().NotBeEmpty();
     }
 
     [Fact]
@@ -171,13 +171,13 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: read:actors.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -193,13 +193,13 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: read:genres read:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -215,13 +215,13 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: read:genres read:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -237,13 +237,13 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: read:genres read:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -259,13 +259,13 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: read:genres read:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -283,13 +283,13 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: read:actors read:genres read:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -307,13 +307,13 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: read:actors read:genres read:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -331,13 +331,13 @@ public sealed class ScopeReadTests : IClassFixture<IntegrationTestContext<Scopes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: read:actors read:genres read:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 }

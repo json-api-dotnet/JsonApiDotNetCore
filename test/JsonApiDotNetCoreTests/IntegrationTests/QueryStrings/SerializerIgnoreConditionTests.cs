@@ -53,13 +53,13 @@ public sealed class SerializerIgnoreConditionTests : IntegrationTestContext<Test
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Included.Should().HaveCount(1);
 
         if (expectNullValueInDocument)
         {
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("timeZone");
-            responseDocument.Included[0].Attributes.ShouldContainKey("description");
+            responseDocument.Data.SingleValue.Attributes.Should().ContainKey("timeZone");
+            responseDocument.Included[0].Attributes.Should().ContainKey("description");
         }
         else
         {
@@ -69,8 +69,8 @@ public sealed class SerializerIgnoreConditionTests : IntegrationTestContext<Test
 
         if (expectDefaultValueInDocument)
         {
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("defaultAppointmentDurationInMinutes");
-            responseDocument.Included[0].Attributes.ShouldContainKey("startTime");
+            responseDocument.Data.SingleValue.Attributes.Should().ContainKey("defaultAppointmentDurationInMinutes");
+            responseDocument.Included[0].Attributes.Should().ContainKey("startTime");
         }
         else
         {

@@ -10,7 +10,6 @@ using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Response;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Links;
@@ -116,11 +115,11 @@ public sealed class LinkInclusionTests
         }
         else
         {
-            topLevelLinks.ShouldNotBeNull();
+            topLevelLinks.Should().NotBeNull();
 
             if (expected.HasFlag(LinkTypes.Self))
             {
-                topLevelLinks.Self.ShouldNotBeNull();
+                topLevelLinks.Self.Should().NotBeNull();
             }
             else
             {
@@ -129,7 +128,7 @@ public sealed class LinkInclusionTests
 
             if (expected.HasFlag(LinkTypes.Related))
             {
-                topLevelLinks.Related.ShouldNotBeNull();
+                topLevelLinks.Related.Should().NotBeNull();
             }
             else
             {
@@ -138,10 +137,10 @@ public sealed class LinkInclusionTests
 
             if (expected.HasFlag(LinkTypes.Pagination))
             {
-                topLevelLinks.First.ShouldNotBeNull();
-                topLevelLinks.Last.ShouldNotBeNull();
-                topLevelLinks.Prev.ShouldNotBeNull();
-                topLevelLinks.Next.ShouldNotBeNull();
+                topLevelLinks.First.Should().NotBeNull();
+                topLevelLinks.Last.Should().NotBeNull();
+                topLevelLinks.Prev.Should().NotBeNull();
+                topLevelLinks.Next.Should().NotBeNull();
             }
             else
             {
@@ -198,8 +197,8 @@ public sealed class LinkInclusionTests
         // Assert
         if (expected == LinkTypes.Self)
         {
-            resourceLinks.ShouldNotBeNull();
-            resourceLinks.Self.ShouldNotBeNull();
+            resourceLinks.Should().NotBeNull();
+            resourceLinks.Self.Should().NotBeNull();
         }
         else
         {
@@ -372,11 +371,11 @@ public sealed class LinkInclusionTests
         }
         else
         {
-            relationshipLinks.ShouldNotBeNull();
+            relationshipLinks.Should().NotBeNull();
 
             if (expected.HasFlag(LinkTypes.Self))
             {
-                relationshipLinks.Self.ShouldNotBeNull();
+                relationshipLinks.Self.Should().NotBeNull();
             }
             else
             {
@@ -385,7 +384,7 @@ public sealed class LinkInclusionTests
 
             if (expected.HasFlag(LinkTypes.Related))
             {
-                relationshipLinks.Related.ShouldNotBeNull();
+                relationshipLinks.Related.Should().NotBeNull();
             }
             else
             {

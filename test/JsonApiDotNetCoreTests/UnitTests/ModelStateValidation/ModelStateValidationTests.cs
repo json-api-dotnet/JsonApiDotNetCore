@@ -46,7 +46,7 @@ public sealed class ModelStateValidationTests
         var exception = new InvalidModelStateException(modelState, typeof(Parent), false, resourceGraph);
 
         // Assert
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
 
         if (expectedJsonPath == null)
         {
@@ -54,7 +54,7 @@ public sealed class ModelStateValidationTests
         }
         else
         {
-            exception.Errors[0].Source.ShouldNotBeNull().With(value => value.Pointer.Should().Be(expectedJsonPath));
+            exception.Errors[0].Source.RefShould().NotBeNull().And.Subject.Pointer.Should().Be(expectedJsonPath);
         }
     }
 
@@ -94,7 +94,7 @@ public sealed class ModelStateValidationTests
         var exception = new InvalidModelStateException(modelState, typeof(IList<OperationContainer>), false, resourceGraph, getOperationTypeCallback);
 
         // Assert
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
 
         if (expectedJsonPath == null)
         {
@@ -102,7 +102,7 @@ public sealed class ModelStateValidationTests
         }
         else
         {
-            exception.Errors[0].Source.ShouldNotBeNull().With(value => value.Pointer.Should().Be(expectedJsonPath));
+            exception.Errors[0].Source.RefShould().NotBeNull().And.Subject.Pointer.Should().Be(expectedJsonPath);
         }
     }
 

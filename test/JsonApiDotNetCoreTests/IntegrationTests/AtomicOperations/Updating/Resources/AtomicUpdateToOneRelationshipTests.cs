@@ -73,7 +73,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
             lyricInDatabase.Track.Should().BeNull();
 
             List<MusicTrack> tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
-            tracksInDatabase.ShouldHaveCount(1);
+            tracksInDatabase.Should().HaveCount(1);
         });
     }
 
@@ -131,7 +131,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
             trackInDatabase.Lyric.Should().BeNull();
 
             List<Lyric> lyricsInDatabase = await dbContext.Lyrics.ToListAsync();
-            lyricsInDatabase.ShouldHaveCount(1);
+            lyricsInDatabase.Should().HaveCount(1);
         });
     }
 
@@ -189,7 +189,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
             trackInDatabase.OwnedBy.Should().BeNull();
 
             List<RecordCompany> companiesInDatabase = await dbContext.RecordCompanies.ToListAsync();
-            companiesInDatabase.ShouldHaveCount(1);
+            companiesInDatabase.Should().HaveCount(1);
         });
     }
 
@@ -247,7 +247,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         {
             Lyric lyricInDatabase = await dbContext.Lyrics.Include(lyric => lyric.Track).FirstWithIdAsync(existingLyric.Id);
 
-            lyricInDatabase.Track.ShouldNotBeNull();
+            lyricInDatabase.Track.Should().NotBeNull();
             lyricInDatabase.Track.Id.Should().Be(existingTrack.Id);
         });
     }
@@ -306,7 +306,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         {
             MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.Lyric).FirstWithIdAsync(existingTrack.Id);
 
-            trackInDatabase.Lyric.ShouldNotBeNull();
+            trackInDatabase.Lyric.Should().NotBeNull();
             trackInDatabase.Lyric.Id.Should().Be(existingLyric.Id);
         });
     }
@@ -365,7 +365,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         {
             MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.OwnedBy).FirstWithIdAsync(existingTrack.Id);
 
-            trackInDatabase.OwnedBy.ShouldNotBeNull();
+            trackInDatabase.OwnedBy.Should().NotBeNull();
             trackInDatabase.OwnedBy.Id.Should().Be(existingCompany.Id);
         });
     }
@@ -427,11 +427,11 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         {
             Lyric lyricInDatabase = await dbContext.Lyrics.Include(lyric => lyric.Track).FirstWithIdAsync(existingLyric.Id);
 
-            lyricInDatabase.Track.ShouldNotBeNull();
+            lyricInDatabase.Track.Should().NotBeNull();
             lyricInDatabase.Track.Id.Should().Be(existingTrack.Id);
 
             List<MusicTrack> tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
-            tracksInDatabase.ShouldHaveCount(2);
+            tracksInDatabase.Should().HaveCount(2);
         });
     }
 
@@ -492,11 +492,11 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         {
             MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.Lyric).FirstWithIdAsync(existingTrack.Id);
 
-            trackInDatabase.Lyric.ShouldNotBeNull();
+            trackInDatabase.Lyric.Should().NotBeNull();
             trackInDatabase.Lyric.Id.Should().Be(existingLyric.Id);
 
             List<Lyric> lyricsInDatabase = await dbContext.Lyrics.ToListAsync();
-            lyricsInDatabase.ShouldHaveCount(2);
+            lyricsInDatabase.Should().HaveCount(2);
         });
     }
 
@@ -557,11 +557,11 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         {
             MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.OwnedBy).FirstWithIdAsync(existingTrack.Id);
 
-            trackInDatabase.OwnedBy.ShouldNotBeNull();
+            trackInDatabase.OwnedBy.Should().NotBeNull();
             trackInDatabase.OwnedBy.Id.Should().Be(existingCompany.Id);
 
             List<RecordCompany> companiesInDatabase = await dbContext.RecordCompanies.ToListAsync();
-            companiesInDatabase.ShouldHaveCount(2);
+            companiesInDatabase.Should().HaveCount(2);
         });
     }
 
@@ -605,15 +605,15 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Expected an object, instead of 'null'.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -658,15 +658,15 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -719,15 +719,15 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Expected an object or 'null', instead of an array.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -768,15 +768,15 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/track/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -818,15 +818,15 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data/type");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -867,15 +867,15 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'id' or 'lid' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -918,15 +918,15 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'id' and 'lid' element are mutually exclusive.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -978,13 +978,13 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
         error.Title.Should().Be("A related resource does not exist.");
         error.Detail.Should().Be($"Related resource of type 'lyrics' with ID '{lyricId}' in relationship 'lyric' does not exist.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]");
         error.Meta.Should().NotContainKey("requestBody");
     }
@@ -1036,15 +1036,15 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
         error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
         error.Detail.Should().Be("Type 'playlists' is not convertible to type 'lyrics' of relationship 'lyric'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data/type");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -1094,14 +1094,14 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Relationship cannot be assigned.");
         error.Detail.Should().Be("The relationship 'language' on resource type 'lyrics' cannot be assigned to.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/language");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 }

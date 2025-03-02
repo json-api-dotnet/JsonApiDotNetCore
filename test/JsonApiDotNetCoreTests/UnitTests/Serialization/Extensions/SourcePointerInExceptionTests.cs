@@ -10,7 +10,6 @@ using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Request;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging.Abstractions;
-using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Extensions;
@@ -47,12 +46,12 @@ public sealed class SourcePointerInExceptionTests
         JsonApiException? exception = (await action.Should().ThrowExactlyAsync<JsonApiException>()).Which;
 
         exception.StackTrace.Should().Contain(nameof(ThrowingResourceObjectConverter));
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Extension error");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data");
     }
 
@@ -75,12 +74,12 @@ public sealed class SourcePointerInExceptionTests
         JsonApiException? exception = (await action.Should().ThrowExactlyAsync<JsonApiException>()).Which;
 
         exception.StackTrace.Should().Contain(nameof(ThrowingResourceObjectConverter));
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Extension error");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relative/path");
     }
 
