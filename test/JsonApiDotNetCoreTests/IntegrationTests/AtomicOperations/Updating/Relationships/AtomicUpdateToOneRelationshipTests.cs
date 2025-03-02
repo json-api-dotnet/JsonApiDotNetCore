@@ -552,7 +552,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/href");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -591,7 +591,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/ref");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -631,7 +631,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/ref/type");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -670,7 +670,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/ref");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -778,7 +778,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().Be("Failed to convert 'invalid-guid' of type 'String' to type 'Guid'.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/ref/id");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -819,7 +819,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/ref");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -859,7 +859,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'performers'.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/ref/relationship");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -907,7 +907,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -963,7 +963,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1007,7 +1007,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1052,7 +1052,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/type");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1096,7 +1096,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1142,7 +1142,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1250,7 +1250,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().Be("Failed to convert 'invalid-guid' of type 'String' to type 'Guid'.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/id");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1303,7 +1303,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().Be("Type 'playlists' is not convertible to type 'lyrics' of relationship 'lyric'.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/type");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1356,6 +1356,6 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().Be("The relationship 'language' on resource type 'lyrics' cannot be assigned to.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/ref/relationship");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 }

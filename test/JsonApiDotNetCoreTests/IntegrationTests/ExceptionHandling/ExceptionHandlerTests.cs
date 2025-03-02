@@ -109,20 +109,8 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
         error.Detail.Should().Be("Resource type '' does not exist.");
-
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value =>
-        {
-            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
-            element.GetString().Should().Be(requestBody);
-        });
-
-        error.Meta.Should().ContainKey("stackTrace").WhoseValue.With(value =>
-        {
-            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
-            IEnumerable<string?> stackTraceLines = element.EnumerateArray().Select(token => token.GetString());
-
-            stackTraceLines.Should().NotBeEmpty();
-        });
+        error.Meta.Should().ContainRequestBody(requestBody);
+        error.Meta.Should().HaveStackTrace();
 
         IReadOnlyList<LogMessage> logMessages = loggerProvider.GetMessages();
         logMessages.Should().BeEmpty();
@@ -157,14 +145,7 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
         error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         error.Title.Should().Be("An unhandled error occurred while processing this request.");
         error.Detail.Should().Be("Exception has been thrown by the target of an invocation.");
-
-        error.Meta.Should().ContainKey("stackTrace").WhoseValue.With(value =>
-        {
-            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
-            IEnumerable<string?> stackTraceLines = element.EnumerateArray().Select(token => token.GetString());
-
-            stackTraceLines.Should().ContainMatch("*ThrowingArticle*");
-        });
+        error.Meta.Should().HaveInStackTrace("*ThrowingArticle*");
 
         responseDocument.Meta.Should().BeNull();
 
