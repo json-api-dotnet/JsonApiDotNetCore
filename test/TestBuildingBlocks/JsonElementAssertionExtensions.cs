@@ -32,7 +32,7 @@ public static class JsonElementAssertionExtensions
         string? jsonElementValue = source.GetString();
         jsonElementValue.Should().StartWith(ComponentSchemaPrefix);
 
-        return jsonElementValue![ComponentSchemaPrefix.Length..];
+        return jsonElementValue[ComponentSchemaPrefix.Length..];
     }
 
     [CustomAssertion]
