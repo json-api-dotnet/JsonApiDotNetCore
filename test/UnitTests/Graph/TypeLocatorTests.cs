@@ -1,7 +1,6 @@
 using System.Reflection;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
-using TestBuildingBlocks;
 using Xunit;
 
 namespace UnitTests.Graph;
@@ -22,7 +21,7 @@ public sealed class TypeLocatorTests
         (Type implementationType, Type serviceInterface)? result = typeLocator.GetContainerRegistrationFromAssembly(assembly, unboundInterface, typeArgument);
 
         // Assert
-        result.ShouldNotBeNull();
+        result.Should().NotBeNull();
         result.Value.implementationType.Should().Be<Implementation>();
         result.Value.serviceInterface.Should().Be<IGenericInterface<int>>();
     }
@@ -69,7 +68,7 @@ public sealed class TypeLocatorTests
         ResourceDescriptor? descriptor = typeLocator.ResolveResourceDescriptor(resourceClrType);
 
         // Assert
-        descriptor.ShouldNotBeNull();
+        descriptor.Should().NotBeNull();
         descriptor.ResourceClrType.Should().Be(resourceClrType);
         descriptor.IdClrType.Should().Be<int>();
     }

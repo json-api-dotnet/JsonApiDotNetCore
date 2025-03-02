@@ -54,7 +54,7 @@ public sealed class ScopeWriteTests : IClassFixture<IntegrationTestContext<Scope
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: write:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -114,7 +114,7 @@ public sealed class ScopeWriteTests : IClassFixture<IntegrationTestContext<Scope
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: write:actors write:genres write:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -177,7 +177,7 @@ public sealed class ScopeWriteTests : IClassFixture<IntegrationTestContext<Scope
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: write:actors write:genres write:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -214,7 +214,7 @@ public sealed class ScopeWriteTests : IClassFixture<IntegrationTestContext<Scope
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: write:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -273,7 +273,7 @@ public sealed class ScopeWriteTests : IClassFixture<IntegrationTestContext<Scope
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: write:actors write:genres write:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -295,7 +295,7 @@ public sealed class ScopeWriteTests : IClassFixture<IntegrationTestContext<Scope
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: write:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -326,7 +326,7 @@ public sealed class ScopeWriteTests : IClassFixture<IntegrationTestContext<Scope
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: write:genres write:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -360,7 +360,7 @@ public sealed class ScopeWriteTests : IClassFixture<IntegrationTestContext<Scope
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: write:actors write:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -394,7 +394,7 @@ public sealed class ScopeWriteTests : IClassFixture<IntegrationTestContext<Scope
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: write:actors write:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -428,7 +428,7 @@ public sealed class ScopeWriteTests : IClassFixture<IntegrationTestContext<Scope
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: write:actors write:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 }

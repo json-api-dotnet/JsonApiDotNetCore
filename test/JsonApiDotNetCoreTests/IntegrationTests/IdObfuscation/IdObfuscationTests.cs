@@ -64,7 +64,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"The value 'not-a-hex-value' is not a valid hexadecimal value. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
 
@@ -135,7 +135,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(card.StringId);
     }
 
@@ -186,7 +186,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(account.StringId);
 
         responseDocument.Included.Should().HaveCount(1);
@@ -265,9 +265,9 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("ownerName").WhoseValue.With(value => value.Should().Be(newCard.OwnerName));
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("pinCode").WhoseValue.With(value => value.Should().Be(newCard.PinCode));
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("ownerName").WhoseValue.Should().Be(newCard.OwnerName);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("pinCode").WhoseValue.Should().Be(newCard.PinCode);
 
         var codec = new HexadecimalCodec();
         int newCardId = codec.Decode(responseDocument.Data.SingleValue.Id);
@@ -279,7 +279,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
             cardInDatabase.OwnerName.Should().Be(newCard.OwnerName);
             cardInDatabase.PinCode.Should().Be(newCard.PinCode);
 
-            cardInDatabase.Account.ShouldNotBeNull();
+            cardInDatabase.Account.Should().NotBeNull();
             cardInDatabase.Account.Id.Should().Be(existingAccount.Id);
             cardInDatabase.Account.StringId.Should().Be(existingAccount.StringId);
         });

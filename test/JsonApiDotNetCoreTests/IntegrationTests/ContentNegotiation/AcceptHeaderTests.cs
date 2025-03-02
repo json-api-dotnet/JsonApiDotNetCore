@@ -38,7 +38,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
     }
 
@@ -60,7 +60,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
     }
 
@@ -85,7 +85,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
     }
 
@@ -131,7 +131,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.AtomicOperations.ToString());
     }
 
@@ -177,7 +177,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.RelaxedAtomicOperations.ToString());
     }
 
@@ -208,7 +208,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
         error.StatusCode.Should().Be(HttpStatusCode.NotAcceptable);
         error.Title.Should().Be("The specified Accept header value does not contain any supported media types.");
         error.Detail.Should().Be($"Include '{JsonApiMediaType.Default}' in the Accept header values.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be("Accept");
     }
 
@@ -255,7 +255,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
         error.StatusCode.Should().Be(HttpStatusCode.NotAcceptable);
         error.Title.Should().Be("The specified Accept header value does not contain any supported media types.");
         error.Detail.Should().Be($"Include '{JsonApiMediaType.AtomicOperations}' or '{JsonApiMediaType.RelaxedAtomicOperations}' in the Accept header values.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be("Accept");
     }
 
@@ -301,7 +301,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
         error.StatusCode.Should().Be(HttpStatusCode.NotAcceptable);
         error.Title.Should().Be("The specified Accept header value does not contain any supported media types.");
         error.Detail.Should().Be($"Include '{JsonApiMediaType.AtomicOperations}' or '{JsonApiMediaType.RelaxedAtomicOperations}' in the Accept header values.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be("Accept");
     }
 }

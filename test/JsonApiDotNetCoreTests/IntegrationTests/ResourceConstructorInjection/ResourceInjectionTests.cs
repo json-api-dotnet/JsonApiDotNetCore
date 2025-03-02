@@ -55,7 +55,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(certificate.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("issueDate").WhoseValue.Should().Be(certificate.IssueDate);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("hasExpired").WhoseValue.Should().Be(false);
@@ -115,7 +115,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(certificate.Issuer.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("isOpen").WhoseValue.Should().Be(true);
@@ -169,14 +169,14 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("issueDate").WhoseValue.Should().Be(newIssueDate);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("hasExpired").WhoseValue.Should().Be(true);
 
         responseDocument.Data.SingleValue.Relationships.Should().ContainKey("issuer").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Id.Should().Be(existingOffice.StringId);
         });
 
@@ -189,7 +189,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
             resource.Attributes.Should().ContainKey("isOpen").WhoseValue.Should().Be(false);
         });
 
-        int newCertificateId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        int newCertificateId = int.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -198,7 +198,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
 
             certificateInDatabase.IssueDate.Should().Be(newIssueDate);
 
-            certificateInDatabase.Issuer.ShouldNotBeNull();
+            certificateInDatabase.Issuer.Should().NotBeNull();
             certificateInDatabase.Issuer.Id.Should().Be(existingOffice.Id);
         });
     }

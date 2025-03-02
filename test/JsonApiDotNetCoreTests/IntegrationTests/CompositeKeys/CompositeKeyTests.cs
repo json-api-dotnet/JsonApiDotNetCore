@@ -74,7 +74,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(car.StringId);
     }
 
@@ -181,7 +181,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         {
             Car? carInDatabase = await dbContext.Cars.FirstOrDefaultAsync(car => car.RegionId == newCar.RegionId && car.LicensePlate == newCar.LicensePlate);
 
-            carInDatabase.ShouldNotBeNull();
+            carInDatabase.Should().NotBeNull();
             carInDatabase.Id.Should().Be($"{newCar.RegionId}:{newCar.LicensePlate}");
         });
     }
@@ -234,7 +234,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         {
             Engine engineInDatabase = await dbContext.Engines.Include(engine => engine.Car).FirstWithIdAsync(existingEngine.Id);
 
-            engineInDatabase.Car.ShouldNotBeNull();
+            engineInDatabase.Car.Should().NotBeNull();
             engineInDatabase.Car.Id.Should().Be(existingCar.StringId);
         });
     }

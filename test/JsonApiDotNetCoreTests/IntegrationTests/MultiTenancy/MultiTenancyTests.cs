@@ -306,11 +306,11 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("url").WhoseValue.Should().Be(newShopUrl);
-        responseDocument.Data.SingleValue.Relationships.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Relationships.Should().NotBeNull();
 
-        int newShopId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        int newShopId = int.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1008,7 +1008,7 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be(route);
         responseDocument.Links.Related.Should().BeNull();
         responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
@@ -1022,13 +1022,13 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
         {
             string shopLink = $"/nld/shops/{shop.StringId}";
 
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be(shopLink);
 
             resource.Relationships.Should().ContainKey("products").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"{shopLink}/relationships/products");
                 value.Links.Related.Should().Be($"{shopLink}/products");
             });
@@ -1040,13 +1040,13 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
         {
             string productLink = $"/nld/products/{shop.Products[0].StringId}";
 
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be(productLink);
 
             resource.Relationships.Should().ContainKey("shop").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"{productLink}/relationships/shop");
                 value.Links.Related.Should().Be($"{productLink}/shop");
             });

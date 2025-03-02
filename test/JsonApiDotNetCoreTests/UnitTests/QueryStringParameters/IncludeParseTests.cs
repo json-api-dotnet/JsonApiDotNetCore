@@ -80,7 +80,7 @@ public sealed class IncludeParseTests : BaseParseTests
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified include is invalid.");
         error.Detail.Should().Be($"{errorMessage} {parameterValueSource}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be(parameterName);
     }
 

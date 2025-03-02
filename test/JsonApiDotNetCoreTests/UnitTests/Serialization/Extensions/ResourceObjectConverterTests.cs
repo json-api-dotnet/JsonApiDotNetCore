@@ -60,8 +60,8 @@ public sealed class ResourceObjectConverterTests
 
         resourceObject.Relationships.Should().ContainKey("parent").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("baseTypes");
             value.Data.SingleValue.Id.Should().Be("1");
         });
@@ -159,8 +159,8 @@ public sealed class ResourceObjectConverterTests
         ResourceObject resourceObject = testContext.Converter.Read(ref reader, typeof(ResourceObject), testContext.SerializerReadOptions);
 
         // Assert
-        resourceObject.Attributes.ShouldNotBeNull();
-        resourceObject.Relationships.ShouldNotBeNull();
+        resourceObject.Attributes.Should().NotBeNull();
+        resourceObject.Relationships.Should().NotBeNull();
     }
 
     [Fact]
@@ -196,7 +196,7 @@ public sealed class ResourceObjectConverterTests
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("Failure requested from attributes.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("attributes/type-info:fail");
     }
 
@@ -237,7 +237,7 @@ public sealed class ResourceObjectConverterTests
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("Failure requested from relationships.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("relationships/type-info:fail");
     }
 

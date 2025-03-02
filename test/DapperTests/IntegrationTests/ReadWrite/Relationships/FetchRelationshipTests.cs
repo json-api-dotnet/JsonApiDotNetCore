@@ -46,7 +46,7 @@ public sealed class FetchRelationshipTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("people");
         responseDocument.Data.SingleValue.Id.Should().Be(todoItem.Owner.StringId);
 

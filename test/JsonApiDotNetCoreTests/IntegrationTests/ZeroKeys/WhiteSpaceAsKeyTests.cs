@@ -72,7 +72,7 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
 
         responseDocument.Data.ManyValue[0].With(resource =>
         {
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be("/players/%20");
         });
     }
@@ -101,9 +101,9 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(SingleSpace);
-        responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Links.Should().NotBeNull();
         responseDocument.Data.SingleValue.Links.Self.Should().Be("/players/%20");
 
         responseDocument.Included.Should().HaveCount(1);
@@ -150,7 +150,7 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
         {
             Player playerInDatabase = await dbContext.Players.FirstWithIdAsync((string?)SingleSpace);
 
-            playerInDatabase.ShouldNotBeNull();
+            playerInDatabase.Should().NotBeNull();
             playerInDatabase.EmailAddress.Should().Be(newEmailAddress);
         });
     }
@@ -198,7 +198,7 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
         {
             Player playerInDatabase = await dbContext.Players.FirstWithIdAsync((string?)SingleSpace);
 
-            playerInDatabase.ShouldNotBeNull();
+            playerInDatabase.Should().NotBeNull();
             playerInDatabase.EmailAddress.Should().Be(newEmailAddress);
         });
     }
@@ -237,7 +237,7 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
         {
             Game gameInDatabase = await dbContext.Games.Include(game => game.Host).FirstWithIdAsync(existingGame.Id);
 
-            gameInDatabase.ShouldNotBeNull();
+            gameInDatabase.Should().NotBeNull();
             gameInDatabase.Host.Should().BeNull();
         });
     }
@@ -281,8 +281,8 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
         {
             Game gameInDatabase = await dbContext.Games.Include(game => game.Host).FirstWithIdAsync(existingGame.Id);
 
-            gameInDatabase.ShouldNotBeNull();
-            gameInDatabase.Host.ShouldNotBeNull();
+            gameInDatabase.Should().NotBeNull();
+            gameInDatabase.Host.Should().NotBeNull();
             gameInDatabase.Host.Id.Should().Be(SingleSpace);
         });
     }
@@ -327,8 +327,8 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
         {
             Game gameInDatabase = await dbContext.Games.Include(game => game.Host).FirstWithIdAsync(existingGame.Id);
 
-            gameInDatabase.ShouldNotBeNull();
-            gameInDatabase.Host.ShouldNotBeNull();
+            gameInDatabase.Should().NotBeNull();
+            gameInDatabase.Host.Should().NotBeNull();
             gameInDatabase.Host.Id.Should().Be(SingleSpace);
         });
     }
@@ -367,7 +367,7 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
         {
             Game gameInDatabase = await dbContext.Games.Include(game => game.ActivePlayers).FirstWithIdAsync(existingGame.Id);
 
-            gameInDatabase.ShouldNotBeNull();
+            gameInDatabase.Should().NotBeNull();
             gameInDatabase.ActivePlayers.Should().BeEmpty();
         });
     }
@@ -414,7 +414,7 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
         {
             Game gameInDatabase = await dbContext.Games.Include(game => game.ActivePlayers).FirstWithIdAsync(existingGame.Id);
 
-            gameInDatabase.ShouldNotBeNull();
+            gameInDatabase.Should().NotBeNull();
             gameInDatabase.ActivePlayers.Should().HaveCount(1);
             gameInDatabase.ActivePlayers.ElementAt(0).Id.Should().Be(SingleSpace);
         });
@@ -463,7 +463,7 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
         {
             Game gameInDatabase = await dbContext.Games.Include(game => game.ActivePlayers).FirstWithIdAsync(existingGame.Id);
 
-            gameInDatabase.ShouldNotBeNull();
+            gameInDatabase.Should().NotBeNull();
             gameInDatabase.ActivePlayers.Should().HaveCount(1);
             gameInDatabase.ActivePlayers.ElementAt(0).Id.Should().Be(SingleSpace);
         });
@@ -512,7 +512,7 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
         {
             Game gameInDatabase = await dbContext.Games.Include(game => game.ActivePlayers).FirstWithIdAsync(existingGame.Id);
 
-            gameInDatabase.ShouldNotBeNull();
+            gameInDatabase.Should().NotBeNull();
             gameInDatabase.ActivePlayers.Should().HaveCount(2);
             gameInDatabase.ActivePlayers.Should().ContainSingle(player => player.Id == SingleSpace);
         });
@@ -559,7 +559,7 @@ public sealed class WhiteSpaceAsKeyTests : IClassFixture<IntegrationTestContext<
         {
             Game gameInDatabase = await dbContext.Games.Include(game => game.ActivePlayers).FirstWithIdAsync(existingGame.Id);
 
-            gameInDatabase.ShouldNotBeNull();
+            gameInDatabase.Should().NotBeNull();
             gameInDatabase.ActivePlayers.Should().HaveCount(1);
             gameInDatabase.ActivePlayers.Should().ContainSingle(player => player.Id != SingleSpace);
         });

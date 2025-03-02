@@ -112,12 +112,12 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
         responseDocument.Data.SingleValue.Relationships.Should().ContainKey("isGivenLightBy").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("stars");
             value.Data.SingleValue.Id.Should().Be(moon.IsGivenLightBy.StringId);
         });
@@ -170,7 +170,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
         responseDocument.Included.Should().HaveCount(2);
 
@@ -577,11 +577,11 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(star.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(star.Name);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("kind").WhoseValue.Should().Be(star.Kind);
-        responseDocument.Data.SingleValue.Relationships.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Relationships.Should().NotBeNull();
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
@@ -617,7 +617,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(star.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(2);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(star.Name);
@@ -658,11 +658,11 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(star.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(star.Name);
         responseDocument.Data.SingleValue.Attributes.Should().NotContainKey("isVisibleFromEarth");
-        responseDocument.Data.SingleValue.Relationships.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Relationships.Should().NotBeNull();
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
@@ -698,7 +698,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(star.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(star.Name);
@@ -849,7 +849,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("Custom query string parameters cannot be used on nested resource endpoints.");
         error.Detail.Should().Be("Query string parameter 'isLargerThanTheSun' cannot be used on a nested resource endpoint.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("isLargerThanTheSun");
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]

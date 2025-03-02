@@ -32,7 +32,7 @@ public sealed class ApiControllerAttributeTests : IClassFixture<IntegrationTestC
         responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
-        error.Links.ShouldNotBeNull();
+        error.Links.Should().NotBeNull();
         error.Links.About.Should().StartWith("https://tools.ietf.org/html/rfc");
     }
 
@@ -65,7 +65,7 @@ public sealed class ApiControllerAttributeTests : IClassFixture<IntegrationTestC
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error1.Links.ShouldNotBeNull();
+        error1.Links.Should().NotBeNull();
         error1.Links.About.Should().StartWith("https://tools.ietf.org/html/rfc");
         error1.Title.Should().Be("One or more validation errors occurred.");
         error1.Detail.Should().Be("The Name field is required.");
@@ -73,7 +73,7 @@ public sealed class ApiControllerAttributeTests : IClassFixture<IntegrationTestC
 
         ErrorObject error2 = responseDocument.Errors[1];
         error2.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error2.Links.ShouldNotBeNull();
+        error2.Links.Should().NotBeNull();
         error2.Links.About.Should().StartWith("https://tools.ietf.org/html/rfc");
         error2.Title.Should().Be("One or more validation errors occurred.");
         error2.Detail.Should().Be("The field YearOfBirth must be between 1900 and 2050.");

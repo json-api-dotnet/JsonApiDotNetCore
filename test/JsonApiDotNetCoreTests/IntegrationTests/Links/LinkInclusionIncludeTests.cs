@@ -40,12 +40,12 @@ public sealed class LinkInclusionIncludeTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
         responseDocument.Data.SingleValue.Relationships.Should().ContainKey("photo").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Links.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Links.Should().NotBeNull();
         });
 
         responseDocument.Included.Should().HaveCount(2);

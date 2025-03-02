@@ -45,7 +45,7 @@ public sealed class RangeValidationTests : IClassFixture<IntegrationTestContext<
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
         error.Detail.Should().Be($"Page number cannot be negative or zero. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
     }
 
@@ -68,7 +68,7 @@ public sealed class RangeValidationTests : IClassFixture<IntegrationTestContext<
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
         error.Detail.Should().Be($"Page number cannot be negative or zero. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
     }
 
@@ -128,7 +128,7 @@ public sealed class RangeValidationTests : IClassFixture<IntegrationTestContext<
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
         error.Detail.Should().Be($"Page size cannot be negative. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("page[size]");
     }
 

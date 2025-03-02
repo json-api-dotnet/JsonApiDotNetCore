@@ -73,7 +73,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be(route);
 
         responseDocument.Data.ManyValue.Should().HaveCount(4);
@@ -82,7 +82,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         {
             resource.Id.Should().Be(bike.StringId);
 
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be($"/bikes/{bike.StringId}");
 
             resource.Attributes.Should().HaveCount(3);
@@ -94,8 +94,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
             foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"/bikes/{bike.StringId}/relationships/{name}");
                 value.Links.Related.Should().Be($"/bikes/{bike.StringId}/{name}");
             }
@@ -105,7 +105,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         {
             resource.Id.Should().Be(tandem.StringId);
 
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be($"/tandems/{tandem.StringId}");
 
             resource.Attributes.Should().HaveCount(4);
@@ -118,8 +118,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
             foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"/tandems/{tandem.StringId}/relationships/{name}");
                 value.Links.Related.Should().Be($"/tandems/{tandem.StringId}/{name}");
             }
@@ -129,7 +129,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         {
             resource.Id.Should().Be(car.StringId);
 
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be($"/cars/{car.StringId}");
 
             resource.Attributes.Should().HaveCount(4);
@@ -142,8 +142,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
             foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"/cars/{car.StringId}/relationships/{name}");
                 value.Links.Related.Should().Be($"/cars/{car.StringId}/{name}");
             }
@@ -153,7 +153,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         {
             resource.Id.Should().Be(truck.StringId);
 
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be($"/trucks/{truck.StringId}");
 
             resource.Attributes.Should().HaveCount(4);
@@ -166,8 +166,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
             foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"/trucks/{truck.StringId}/relationships/{name}");
                 value.Links.Related.Should().Be($"/trucks/{truck.StringId}/{name}");
             }
@@ -196,7 +196,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be(route);
 
         responseDocument.Data.ManyValue.Should().HaveCount(2);
@@ -205,7 +205,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         {
             resource.Id.Should().Be(bike.StringId);
 
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be($"/bikes/{bike.StringId}");
 
             resource.Attributes.Should().HaveCount(3);
@@ -217,8 +217,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
             foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"/bikes/{bike.StringId}/relationships/{name}");
                 value.Links.Related.Should().Be($"/bikes/{bike.StringId}/{name}");
             }
@@ -228,7 +228,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         {
             resource.Id.Should().Be(tandem.StringId);
 
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be($"/tandems/{tandem.StringId}");
 
             resource.Attributes.Should().HaveCount(4);
@@ -241,8 +241,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
             foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"/tandems/{tandem.StringId}/relationships/{name}");
                 value.Links.Related.Should().Be($"/tandems/{tandem.StringId}/{name}");
             }
@@ -271,7 +271,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be(route);
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
@@ -280,7 +280,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         {
             resource.Id.Should().Be(tandem.StringId);
 
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be($"/tandems/{tandem.StringId}");
 
             resource.Attributes.Should().HaveCount(4);
@@ -293,8 +293,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
             foreach ((string name, RelationshipObject? value) in resource.Relationships)
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"/tandems/{tandem.StringId}/relationships/{name}");
                 value.Links.Related.Should().Be($"/tandems/{tandem.StringId}/{name}");
             }
@@ -321,11 +321,13 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("tandems");
         responseDocument.Data.SingleValue.Id.Should().Be(tandem.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().OnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
-        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
+
+        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys(
+            "manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
     }
 
     [Fact]
@@ -348,11 +350,13 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("tandems");
         responseDocument.Data.SingleValue.Id.Should().Be(tandem.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().OnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
-        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
+
+        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys(
+            "manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
     }
 
     [Fact]
@@ -375,11 +379,13 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("tandems");
         responseDocument.Data.SingleValue.Id.Should().Be(tandem.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().OnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
-        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
+
+        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys(
+            "manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
     }
 
     [Fact]
@@ -420,11 +426,11 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("vehicleManufacturers");
         responseDocument.Data.SingleValue.Id.Should().Be(manufacturer.StringId);
 
-        responseDocument.Included.ShouldNotBeNull();
+        responseDocument.Included.Should().NotBeNull();
         responseDocument.Included.Where(include => include.Type == "bicycleLights").Should().HaveCount(10);
         responseDocument.Included.Where(include => include.Type == "genericFeatures").Should().HaveCount(10 * 3);
     }
@@ -450,14 +456,14 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be(route);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("gasolineEngines");
         responseDocument.Data.SingleValue.Id.Should().Be(car.Engine.StringId);
 
-        responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Links.Should().NotBeNull();
         responseDocument.Data.SingleValue.Links.Self.Should().Be($"/gasolineEngines/{car.Engine.StringId}");
 
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(4);
@@ -470,8 +476,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
         responseDocument.Data.SingleValue.Relationships.Should().ContainKey("cylinders").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Links.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Links.Should().NotBeNull();
             value.Links.Self.Should().Be($"/gasolineEngines/{car.Engine.StringId}/relationships/cylinders");
             value.Links.Related.Should().Be($"/gasolineEngines/{car.Engine.StringId}/cylinders");
         });
@@ -498,10 +504,10 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be(route);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("boxes");
         responseDocument.Data.SingleValue.Id.Should().Be(tandem.CargoBox.StringId);
 
@@ -536,14 +542,14 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be(route);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("gasolineEngines");
         responseDocument.Data.SingleValue.Id.Should().Be(car.Engine.StringId);
 
-        responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Links.Should().NotBeNull();
         responseDocument.Data.SingleValue.Links.Self.Should().Be($"/gasolineEngines/{car.Engine.StringId}");
 
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(4);
@@ -556,8 +562,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
         responseDocument.Data.SingleValue.Relationships.Should().ContainKey("cylinders").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Links.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Links.Should().NotBeNull();
             value.Links.Self.Should().Be($"/gasolineEngines/{car.Engine.StringId}/relationships/cylinders");
             value.Links.Related.Should().Be($"/gasolineEngines/{car.Engine.StringId}/cylinders");
         });
@@ -645,7 +651,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be(route);
 
         responseDocument.Data.ManyValue.Should().HaveCount(4);
@@ -657,7 +663,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue.Where(value => value.Type == "chromeWheels"))
         {
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be($"/chromeWheels/{resource.Id}");
 
             resource.Attributes.Should().OnlyContainKeys("radius", "paintColor");
@@ -665,7 +671,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue.Where(value => value.Type == "carbonWheels"))
         {
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be($"/carbonWheels/{resource.Id}");
 
             resource.Attributes.Should().OnlyContainKeys("radius", "hasTube");
@@ -677,8 +683,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
             resource.Relationships.Should().ContainKey("vehicle").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"/{resource.Type}/{resource.Id}/relationships/vehicle");
                 value.Links.Related.Should().Be($"/{resource.Type}/{resource.Id}/vehicle");
             });
@@ -706,7 +712,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be(route);
 
         responseDocument.Data.ManyValue.Should().HaveCount(4);
@@ -725,7 +731,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue.Where(value => value.Type == "chromeWheels"))
         {
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be($"/chromeWheels/{resource.Id}");
 
             resource.Attributes.Should().OnlyContainKeys("radius", "paintColor");
@@ -733,7 +739,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue.Where(value => value.Type == "carbonWheels"))
         {
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be($"/carbonWheels/{resource.Id}");
 
             resource.Attributes.Should().OnlyContainKeys("radius", "hasTube");
@@ -745,8 +751,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
             resource.Relationships.Should().ContainKey("vehicle").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"/{resource.Type}/{resource.Id}/relationships/vehicle");
                 value.Links.Related.Should().Be($"/{resource.Type}/{resource.Id}/vehicle");
             });
@@ -775,7 +781,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be(route);
 
         responseDocument.Data.ManyValue.Should().HaveCount(4);
@@ -787,7 +793,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue.Where(value => value.Type == "chromeWheels"))
         {
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be($"/chromeWheels/{resource.Id}");
 
             resource.Attributes.Should().OnlyContainKeys("radius", "paintColor");
@@ -795,7 +801,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue.Where(value => value.Type == "carbonWheels"))
         {
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be($"/carbonWheels/{resource.Id}");
 
             resource.Attributes.Should().OnlyContainKeys("radius", "hasTube");
@@ -807,8 +813,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
             resource.Relationships.Should().ContainKey("vehicle").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"/{resource.Type}/{resource.Id}/relationships/vehicle");
                 value.Links.Related.Should().Be($"/{resource.Type}/{resource.Id}/vehicle");
             });
@@ -897,11 +903,11 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be(route);
         responseDocument.Links.Related.Should().Be($"/motorVehicles/{car.StringId}/engine");
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("gasolineEngines");
         responseDocument.Data.SingleValue.Id.Should().Be(car.Engine.StringId);
         responseDocument.Data.SingleValue.Links.Should().BeNull();
@@ -928,11 +934,11 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be(route);
         responseDocument.Links.Related.Should().Be($"/bikes/{tandem.StringId}/cargoBox");
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("boxes");
         responseDocument.Data.SingleValue.Id.Should().Be(tandem.CargoBox.StringId);
         responseDocument.Data.SingleValue.Links.Should().BeNull();
@@ -959,11 +965,11 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be(route);
         responseDocument.Links.Related.Should().Be($"/cars/{car.StringId}/engine");
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("gasolineEngines");
         responseDocument.Data.SingleValue.Id.Should().Be(car.Engine.StringId);
         responseDocument.Data.SingleValue.Links.Should().BeNull();
@@ -1021,7 +1027,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be(route);
         responseDocument.Links.Related.Should().Be($"/vehicles/{car.StringId}/wheels");
 
@@ -1059,7 +1065,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be(route);
         responseDocument.Links.Related.Should().Be($"/bikes/{tandem.StringId}/wheels");
 
@@ -1105,7 +1111,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be(route);
         responseDocument.Links.Related.Should().Be($"/cars/{car.StringId}/wheels");
 
@@ -2463,7 +2469,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
         error.Detail.Should().Be($"Field 'serialCode' is defined on multiple types that derive from resource type 'engines'. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("sort");
     }
 
@@ -2486,7 +2492,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
         error.Detail.Should().Be($"Field 'features' is defined on multiple types that derive from resource type 'vehicles'. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("sort");
     }
 

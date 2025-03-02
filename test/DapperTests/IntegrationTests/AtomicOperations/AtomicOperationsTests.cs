@@ -170,18 +170,18 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
 
         responseDocument.Results.Should().HaveCount(7);
 
-        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource => resource.Type.Should().Be("people"));
-        responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource => resource.Type.Should().Be("people"));
-        responseDocument.Results[2].Data.SingleValue.ShouldNotBeNull().With(resource => resource.Type.Should().Be("tags"));
-        responseDocument.Results[3].Data.SingleValue.ShouldNotBeNull().With(resource => resource.Type.Should().Be("todoItems"));
+        responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.Type.Should().Be("people");
+        responseDocument.Results[1].Data.SingleValue.RefShould().NotBeNull().And.Subject.Type.Should().Be("people");
+        responseDocument.Results[2].Data.SingleValue.RefShould().NotBeNull().And.Subject.Type.Should().Be("tags");
+        responseDocument.Results[3].Data.SingleValue.RefShould().NotBeNull().And.Subject.Type.Should().Be("todoItems");
         responseDocument.Results[4].Data.Value.Should().BeNull();
-        responseDocument.Results[5].Data.SingleValue.ShouldNotBeNull().With(resource => resource.Type.Should().Be("todoItems"));
+        responseDocument.Results[5].Data.SingleValue.RefShould().NotBeNull().And.Subject.Type.Should().Be("todoItems");
         responseDocument.Results[6].Data.Value.Should().BeNull();
 
-        long newOwnerId = long.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
-        long newAssigneeId = long.Parse(responseDocument.Results[1].Data.SingleValue!.Id.ShouldNotBeNull());
-        long newTagId = long.Parse(responseDocument.Results[2].Data.SingleValue!.Id.ShouldNotBeNull());
-        long newTodoItemId = long.Parse(responseDocument.Results[3].Data.SingleValue!.Id.ShouldNotBeNull());
+        long newOwnerId = long.Parse(responseDocument.Results[0].Data.SingleValue!.Id.Should().NotBeNull().And.Subject);
+        long newAssigneeId = long.Parse(responseDocument.Results[1].Data.SingleValue!.Id.Should().NotBeNull().And.Subject);
+        long newTagId = long.Parse(responseDocument.Results[2].Data.SingleValue!.Id.Should().NotBeNull().And.Subject);
+        long newTodoItemId = long.Parse(responseDocument.Results[3].Data.SingleValue!.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -203,7 +203,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
             todoItemInDatabase.CreatedAt.Should().Be(DapperTestContext.FrozenTime);
             todoItemInDatabase.LastModifiedAt.Should().Be(DapperTestContext.FrozenTime);
 
-            todoItemInDatabase.Owner.ShouldNotBeNull();
+            todoItemInDatabase.Owner.Should().NotBeNull();
             todoItemInDatabase.Owner.Id.Should().Be(newOwnerId);
             todoItemInDatabase.Assignee.Should().BeNull();
             todoItemInDatabase.Tags.Should().HaveCount(1);
@@ -475,7 +475,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
         error.Title.Should().Be("A related resource does not exist.");
         error.Detail.Should().Be($"Related resource of type 'todoItems' with ID '{unknownTodoItemId}' in relationship 'assignedTodoItems' does not exist.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[1]");
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -509,7 +509,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 """));
 
             command.Parameters.Should().HaveCount(1);
-            command.Parameters.Should().ContainKey("@p1").WhoseValue.ShouldNotBeNull();
+            command.Parameters.Should().ContainKey("@p1").WhoseValue.Should().NotBeNull();
         });
 
         store.SqlCommands[2].With(command =>
@@ -522,7 +522,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 """));
 
             command.Parameters.Should().HaveCount(1);
-            command.Parameters.Should().ContainKey("@p1").WhoseValue.ShouldNotBeNull();
+            command.Parameters.Should().ContainKey("@p1").WhoseValue.Should().NotBeNull();
         });
 
         store.SqlCommands[3].With(command =>
@@ -534,7 +534,7 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
                 """));
 
             command.Parameters.Should().HaveCount(2);
-            command.Parameters.Should().ContainKey("@p1").WhoseValue.ShouldNotBeNull();
+            command.Parameters.Should().ContainKey("@p1").WhoseValue.Should().NotBeNull();
             command.Parameters.Should().Contain("@p2", unknownTodoItemId);
         });
 

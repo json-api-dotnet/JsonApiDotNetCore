@@ -80,7 +80,7 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"{CollectionErrorMessage} Failed at position 1: ^filter");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
 
@@ -137,7 +137,7 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"{CollectionErrorMessage} Failed at position 1: ^filter");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
 
@@ -340,7 +340,7 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
         responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Id.Should().Be(blog.Owner.Posts[1].StringId);

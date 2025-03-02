@@ -95,7 +95,7 @@ public sealed class PaginationParseTests : BaseParseTests
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
         error.Detail.Should().Be($"{errorMessage} {parameterValueSource}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
     }
 
@@ -140,7 +140,7 @@ public sealed class PaginationParseTests : BaseParseTests
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
         error.Detail.Should().Be($"{errorMessage} {parameterValueSource}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("page[size]");
     }
 

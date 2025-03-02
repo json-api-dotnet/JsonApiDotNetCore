@@ -99,7 +99,7 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"Time offset between quotes expected. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
 
@@ -122,7 +122,7 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"Failed to convert '*' of type 'String' to type 'TimeSpan'. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
 
@@ -145,7 +145,7 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"The 'timeOffset' function can only be used at the right side of comparisons. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
 
@@ -168,7 +168,7 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"Value between quotes expected. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
 
@@ -191,7 +191,7 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"Attribute of type 'String' expected. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
 

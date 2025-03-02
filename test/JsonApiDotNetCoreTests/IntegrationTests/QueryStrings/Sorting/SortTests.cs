@@ -79,7 +79,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
         error.Detail.Should().Be($"{CollectionErrorMessage} Failed at position 1: ^sort");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("sort");
     }
 
@@ -139,7 +139,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
         error.Detail.Should().Be($"{CollectionErrorMessage} Failed at position 1: ^sort");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("sort");
     }
 
@@ -223,7 +223,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(account.StringId);
 
         responseDocument.Included.Should().HaveCount(3);
@@ -257,7 +257,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(blog.Owner.StringId);
 
         responseDocument.Included.Should().HaveCount(3);
@@ -290,7 +290,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
 
         responseDocument.Included.Should().HaveCount(3);
@@ -469,7 +469,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
         error.Detail.Should().Be($"Field '{Unknown.Relationship}' does not exist on resource type 'webAccounts'. {parameterName}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be(parameterName.Text);
     }
 
@@ -492,7 +492,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
         error.Detail.Should().Be($"Field '{Unknown.Relationship}' does not exist on resource type 'blogPosts'. {parameterName}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be(parameterName.Text);
     }
 
@@ -515,7 +515,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
         error.Detail.Should().Be($"Sorting on attribute 'dateOfBirth' is not allowed. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("sort");
     }
 

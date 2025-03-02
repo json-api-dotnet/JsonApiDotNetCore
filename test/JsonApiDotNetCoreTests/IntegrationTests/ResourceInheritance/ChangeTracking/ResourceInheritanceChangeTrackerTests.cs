@@ -55,7 +55,7 @@ public sealed class ResourceInheritanceChangeTrackerTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("alwaysMovingTandems");
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("locationToken").WhoseValue.Should().NotBe(existingMovingTandem.LocationToken);
     }

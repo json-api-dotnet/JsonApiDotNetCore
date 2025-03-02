@@ -175,7 +175,7 @@ public sealed class TagTests(NoLoggingWebApplicationFactory<Tag> factory) : Inte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be("1");
     }
 

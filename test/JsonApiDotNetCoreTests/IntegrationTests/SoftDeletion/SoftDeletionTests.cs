@@ -1002,7 +1002,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
             Company companyInDatabase = await dbContext.Companies.IgnoreQueryFilters().FirstWithIdAsync(existingCompany.Id);
 
             companyInDatabase.Name.Should().Be(existingCompany.Name);
-            companyInDatabase.SoftDeletedAt.ShouldNotBeNull();
+            companyInDatabase.SoftDeletedAt.Should().NotBeNull();
         });
     }
 

@@ -123,9 +123,9 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Unknown attribute found.");
         error.Detail.Should().Be("Attribute 'doesNotExist' does not exist on resource type 'userAccounts'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/doesNotExist");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -223,9 +223,9 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Unknown relationship found.");
         error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource type 'userAccounts'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/doesNotExist");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -310,7 +310,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
 
         string groupName = $"{newName}{ImplicitlyChangingWorkItemGroupDefinition.Suffix}";
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItemGroups");
         responseDocument.Data.SingleValue.Id.Should().Be(existingGroup.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(groupName);
@@ -326,7 +326,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         });
 
         PropertyInfo? property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable<object>.Id));
-        property.ShouldNotBeNull();
+        property.Should().NotBeNull();
         property.PropertyType.Should().Be<Guid>();
     }
 
@@ -374,7 +374,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         });
 
         PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
-        property.ShouldNotBeNull();
+        property.Should().NotBeNull();
         property.PropertyType.Should().Be<string>();
     }
 
@@ -461,7 +461,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
 
         string itemDescription = $"{newDescription}{ImplicitlyChangingWorkItemDefinition.Suffix}";
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItems");
         responseDocument.Data.SingleValue.Id.Should().Be(existingWorkItem.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.Should().Be(itemDescription);
@@ -517,7 +517,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
 
         string itemDescription = $"{newDescription}{ImplicitlyChangingWorkItemDefinition.Suffix}";
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItems");
         responseDocument.Data.SingleValue.Id.Should().Be(existingWorkItem.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(2);
@@ -574,7 +574,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
 
         string itemDescription = $"{newDescription}{ImplicitlyChangingWorkItemDefinition.Suffix}";
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItems");
         responseDocument.Data.SingleValue.Id.Should().Be(existingWorkItem.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(2);
@@ -584,7 +584,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Data.SingleValue.Relationships.Should().ContainKey("tags").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.ManyValue.Should().HaveCount(1);
             value.Data.ManyValue[0].Id.Should().Be(existingWorkItem.Tags.Single().StringId);
         });
@@ -636,9 +636,9 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
-        responseDocument.Data.SingleValue.Relationships.Values.Should().OnlyContain(value => value.ShouldNotBeNull().Data.Value == null);
+        responseDocument.Data.SingleValue.Relationships.Values.Should().OnlyContain(value => value != null && value.Data.Value == null);
         responseDocument.Included.Should().BeNull();
     }
 
@@ -664,7 +664,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
 
         responseDocument.Errors.Should().HaveCount(1);
@@ -706,7 +706,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Title.Should().Be("Failed to deserialize request body: Expected an object, instead of 'null'.");
         error.Detail.Should().BeNull();
         error.Source.Should().BeNull();
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -744,7 +744,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
         error.Detail.Should().BeNull();
         error.Source.Should().BeNull();
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -778,9 +778,9 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Expected an object, instead of 'null'.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -821,9 +821,9 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Expected an object, instead of an array.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -860,9 +860,9 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -900,9 +900,9 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/type");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -939,9 +939,9 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'id' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -1044,9 +1044,9 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
         error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
         error.Detail.Should().Be("Type 'rgbColors' is not convertible to type 'workItems'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/type");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -1084,9 +1084,9 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
         error.Title.Should().Be("Failed to deserialize request body: Conflicting 'id' values found.");
         error.Detail.Should().Be($"Expected '{existingWorkItems[1].StringId}' instead of '{existingWorkItems[0].StringId}'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/id");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -1128,9 +1128,9 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
         error.Detail.Should().Be("Attribute 'isDeprecated' on resource type 'workItemGroups' is read-only.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/isDeprecated");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -1162,7 +1162,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Title.Should().Be("Failed to deserialize request body.");
         error.Detail.Should().StartWith("Expected end of string, but instead reached end of data.");
         error.Source.Should().BeNull();
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -1204,9 +1204,9 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Resource ID is read-only.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/id");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -1248,7 +1248,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         error.Title.Should().Be("Failed to deserialize request body.");
         error.Detail.Should().Be($"Failed to convert ID '{existingWorkItem.Id}' of type 'Number' to type 'String'.");
         error.Source.Should().BeNull();
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -1294,9 +1294,9 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Incompatible attribute value found.");
         error.Detail.Should().Match("Failed to convert attribute 'dueAt' with value '*start*end*' of type 'Object' to type 'Nullable<DateTimeOffset>'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/dueAt");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -1376,7 +1376,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
 
         string itemDescription = $"{newDescription}{ImplicitlyChangingWorkItemDefinition.Suffix}";
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.Should().Be(itemDescription);
         responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
@@ -1396,7 +1396,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
 
             workItemInDatabase.Description.Should().Be(itemDescription);
 
-            workItemInDatabase.Assignee.ShouldNotBeNull();
+            workItemInDatabase.Assignee.Should().NotBeNull();
             workItemInDatabase.Assignee.Id.Should().Be(existingUserAccounts[0].Id);
 
             workItemInDatabase.Subscribers.Should().HaveCount(1);
@@ -1472,7 +1472,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1489,7 +1489,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
             // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
-            workItemInDatabase.Parent.ShouldNotBeNull();
+            workItemInDatabase.Parent.Should().NotBeNull();
             workItemInDatabase.Parent.Id.Should().Be(existingWorkItem.Id);
 
             workItemInDatabase.Children.Should().HaveCount(1);
@@ -1542,8 +1542,8 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Attribute value cannot be assigned when updating resource.");
         error.Detail.Should().Be("The attribute 'isImportant' on resource type 'workItems' cannot be assigned to.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/isImportant");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 }

@@ -43,7 +43,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"Field '{Unknown.Relationship}' does not exist on resource type 'webAccounts'. {parameterName}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be(parameterName.Text);
     }
 
@@ -66,7 +66,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"Field '{Unknown.Relationship}' does not exist on resource type 'blogPosts'. {parameterName}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be(parameterName.Text);
     }
 
@@ -89,7 +89,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"Filtering on attribute 'dateOfBirth' is not allowed. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
 
@@ -112,7 +112,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"Filtering on relationship 'appointments' is not allowed. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
 
@@ -139,6 +139,6 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
 
         responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[0].StringId);
-        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("userName").WhoseValue.With(value => value.Should().Be(accounts[0].UserName));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("userName").WhoseValue.Should().Be(accounts[0].UserName);
     }
 }

@@ -69,7 +69,7 @@ public sealed class UpdateResourceTests : IClassFixture<DapperTestContext>
             Tag tagInDatabase = await dbContext.Tags.Include(tag => tag.Color).FirstWithIdAsync(existingTag.Id);
 
             tagInDatabase.Name.Should().Be(existingTag.Name);
-            tagInDatabase.Color.ShouldNotBeNull();
+            tagInDatabase.Color.Should().NotBeNull();
             tagInDatabase.Color.Id.Should().Be(existingTag.Color.Id);
         });
 
@@ -143,14 +143,14 @@ public sealed class UpdateResourceTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("todoItems");
         responseDocument.Data.SingleValue.Id.Should().Be(existingTodoItem.StringId);
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.With(value => value.Should().Be(newDescription));
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("priority").WhoseValue.With(value => value.Should().Be(existingTodoItem.Priority));
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("durationInHours").WhoseValue.With(value => value.Should().Be(newDurationInHours));
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("createdAt").WhoseValue.With(value => value.Should().Be(existingTodoItem.CreatedAt));
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("modifiedAt").WhoseValue.With(value => value.Should().Be(DapperTestContext.FrozenTime));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.Should().Be(newDescription);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("priority").WhoseValue.Should().Be(existingTodoItem.Priority);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("durationInHours").WhoseValue.Should().Be(newDurationInHours);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("createdAt").WhoseValue.Should().Be(existingTodoItem.CreatedAt);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("modifiedAt").WhoseValue.Should().Be(DapperTestContext.FrozenTime);
         responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("owner", "assignee", "tags");
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -173,9 +173,9 @@ public sealed class UpdateResourceTests : IClassFixture<DapperTestContext>
             todoItemInDatabase.CreatedAt.Should().Be(existingTodoItem.CreatedAt);
             todoItemInDatabase.LastModifiedAt.Should().Be(DapperTestContext.FrozenTime);
 
-            todoItemInDatabase.Owner.ShouldNotBeNull();
+            todoItemInDatabase.Owner.Should().NotBeNull();
             todoItemInDatabase.Owner.Id.Should().Be(existingTodoItem.Owner.Id);
-            todoItemInDatabase.Assignee.ShouldNotBeNull();
+            todoItemInDatabase.Assignee.Should().NotBeNull();
             todoItemInDatabase.Assignee.Id.Should().Be(existingTodoItem.Assignee.Id);
             todoItemInDatabase.Tags.Should().HaveCount(1);
             todoItemInDatabase.Tags.ElementAt(0).Id.Should().Be(existingTodoItem.Tags.ElementAt(0).Id);
@@ -300,14 +300,14 @@ public sealed class UpdateResourceTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("todoItems");
         responseDocument.Data.SingleValue.Id.Should().Be(existingTodoItem.StringId);
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.With(value => value.Should().Be(newTodoItem.Description));
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("priority").WhoseValue.With(value => value.Should().Be(newTodoItem.Priority));
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("durationInHours").WhoseValue.With(value => value.Should().Be(newTodoItem.DurationInHours));
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("createdAt").WhoseValue.With(value => value.Should().Be(existingTodoItem.CreatedAt));
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("modifiedAt").WhoseValue.With(value => value.Should().Be(DapperTestContext.FrozenTime));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.Should().Be(newTodoItem.Description);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("priority").WhoseValue.Should().Be(newTodoItem.Priority);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("durationInHours").WhoseValue.Should().Be(newTodoItem.DurationInHours);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("createdAt").WhoseValue.Should().Be(existingTodoItem.CreatedAt);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("modifiedAt").WhoseValue.Should().Be(DapperTestContext.FrozenTime);
         responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("owner", "assignee", "tags");
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -330,9 +330,9 @@ public sealed class UpdateResourceTests : IClassFixture<DapperTestContext>
             todoItemInDatabase.CreatedAt.Should().Be(existingTodoItem.CreatedAt);
             todoItemInDatabase.LastModifiedAt.Should().Be(DapperTestContext.FrozenTime);
 
-            todoItemInDatabase.Owner.ShouldNotBeNull();
+            todoItemInDatabase.Owner.Should().NotBeNull();
             todoItemInDatabase.Owner.Id.Should().Be(existingPerson1.Id);
-            todoItemInDatabase.Assignee.ShouldNotBeNull();
+            todoItemInDatabase.Assignee.Should().NotBeNull();
             todoItemInDatabase.Assignee.Id.Should().Be(existingPerson2.Id);
             todoItemInDatabase.Tags.Should().HaveCount(1);
             todoItemInDatabase.Tags.ElementAt(0).Id.Should().Be(existingTag.Id);

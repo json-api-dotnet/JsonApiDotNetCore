@@ -85,7 +85,7 @@ public sealed class AtomicResourceMetaTests : IClassFixture<IntegrationTestConte
 
         responseDocument.Results.Should().HaveCount(2);
 
-        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
             resource.Meta.Should().HaveCount(1);
 
@@ -96,7 +96,7 @@ public sealed class AtomicResourceMetaTests : IClassFixture<IntegrationTestConte
             });
         });
 
-        responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[1].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
             resource.Meta.Should().HaveCount(1);
 
@@ -157,7 +157,7 @@ public sealed class AtomicResourceMetaTests : IClassFixture<IntegrationTestConte
 
         responseDocument.Results.Should().HaveCount(1);
 
-        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
             resource.Meta.Should().HaveCount(1);
 

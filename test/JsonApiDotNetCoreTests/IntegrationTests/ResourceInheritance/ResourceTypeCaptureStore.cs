@@ -2,7 +2,6 @@
 
 using FluentAssertions;
 using JsonApiDotNetCore.Middleware;
-using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance;
 
@@ -26,8 +25,8 @@ public sealed class ResourceTypeCaptureStore<TResource, TId>
         LeftDeclaredType.Should().Be<TLeft>();
         LeftReflectedTypeName.Should().Be(typeof(TLeft).Name);
 
-        Request.ShouldNotBeNull();
-        Request.PrimaryResourceType.ShouldNotBeNull();
+        Request.Should().NotBeNull();
+        Request.PrimaryResourceType.Should().NotBeNull();
         Request.PrimaryResourceType.ClrType.Should().Be<TLeft>();
         Request.Relationship?.LeftType.ClrType.Should().Be<TLeft>();
     }

@@ -141,7 +141,7 @@ public sealed class DeleteResourceTests : IClassFixture<IntegrationTestContext<T
 
             RgbColor? colorInDatabase = await dbContext.RgbColors.FirstWithIdOrDefaultAsync(existingGroup.Color.Id);
 
-            colorInDatabase.ShouldNotBeNull();
+            colorInDatabase.Should().NotBeNull();
             colorInDatabase.Group.Should().BeNull();
         });
     }
@@ -213,7 +213,7 @@ public sealed class DeleteResourceTests : IClassFixture<IntegrationTestContext<T
 
             WorkTag? tagInDatabase = await dbContext.WorkTags.FirstWithIdOrDefaultAsync(existingWorkItem.Tags.ElementAt(0).Id);
 
-            tagInDatabase.ShouldNotBeNull();
+            tagInDatabase.Should().NotBeNull();
         });
     }
 }

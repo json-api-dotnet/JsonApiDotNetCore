@@ -68,12 +68,12 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Attributes.Should().NotBeEmpty();
         responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
         responseDocument.Included.Should().BeNull();
 
-        int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -132,7 +132,7 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Attributes.Should().NotBeEmpty();
         responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
@@ -140,11 +140,11 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         responseDocument.Included.Should().OnlyContain(resource => resource.Type == "userAccounts");
         responseDocument.Included.Should().ContainSingle(resource => resource.Id == existingUserAccounts[0].StringId);
         responseDocument.Included.Should().ContainSingle(resource => resource.Id == existingUserAccounts[1].StringId);
-        responseDocument.Included.Should().OnlyContain(resource => resource.Attributes.Should().ContainKey("firstName").WhoseValue != null);
-        responseDocument.Included.Should().OnlyContain(resource => resource.Attributes.Should().ContainKey("lastName").WhoseValue != null);
-        responseDocument.Included.Should().OnlyContain(resource => resource.Relationships.ShouldNotBeNull().Count > 0);
+        responseDocument.Included.Should().OnlyContain(resource => resource.Attributes.Should().ContainKey2("firstName").WhoseValue != null);
+        responseDocument.Included.Should().OnlyContain(resource => resource.Attributes.Should().ContainKey2("lastName").WhoseValue != null);
+        responseDocument.Included.Should().OnlyContain(resource => resource.Relationships != null && resource.Relationships.Count > 0);
 
-        int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -203,7 +203,7 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Attributes.Should().NotBeEmpty();
         responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
@@ -211,11 +211,11 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         responseDocument.Included.Should().OnlyContain(resource => resource.Type == "userAccounts");
         responseDocument.Included.Should().ContainSingle(resource => resource.Id == existingUserAccounts[0].StringId);
         responseDocument.Included.Should().ContainSingle(resource => resource.Id == existingUserAccounts[1].StringId);
-        responseDocument.Included.Should().OnlyContain(resource => resource.Attributes.ShouldNotBeNull().Count == 1);
-        responseDocument.Included.Should().OnlyContain(resource => resource.Attributes.Should().ContainKey("firstName").WhoseValue != null);
+        responseDocument.Included.Should().OnlyContain(resource => resource.Attributes != null && resource.Attributes.Count == 1);
+        responseDocument.Included.Should().OnlyContain(resource => resource.Attributes.Should().ContainKey2("firstName").WhoseValue != null);
         responseDocument.Included.Should().OnlyContain(resource => resource.Relationships == null);
 
-        int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -285,14 +285,14 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("priority").WhoseValue.Should().Be(newWorkItem.Priority);
         responseDocument.Data.SingleValue.Relationships.Should().HaveCount(1);
 
         responseDocument.Data.SingleValue.Relationships.Should().ContainKey("tags").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.ManyValue.Should().HaveCount(3);
             value.Data.ManyValue[0].Id.Should().Be(existingTags[0].StringId);
             value.Data.ManyValue[1].Id.Should().Be(existingTags[1].StringId);
@@ -304,11 +304,11 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         responseDocument.Included.Should().ContainSingle(resource => resource.Id == existingTags[0].StringId);
         responseDocument.Included.Should().ContainSingle(resource => resource.Id == existingTags[1].StringId);
         responseDocument.Included.Should().ContainSingle(resource => resource.Id == existingTags[2].StringId);
-        responseDocument.Included.Should().OnlyContain(resource => resource.Attributes.ShouldNotBeNull().Count == 1);
-        responseDocument.Included.Should().OnlyContain(resource => resource.Attributes.Should().ContainKey("text").WhoseValue != null);
+        responseDocument.Included.Should().OnlyContain(resource => resource.Attributes != null && resource.Attributes.Count == 1);
+        responseDocument.Included.Should().OnlyContain(resource => resource.Attributes.Should().ContainKey2("text").WhoseValue != null);
         responseDocument.Included.Should().OnlyContain(resource => resource.Relationships == null);
 
-        int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -360,9 +360,9 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/subscribers/data[0]");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -405,9 +405,9 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/subscribers/data[0]/type");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -449,9 +449,9 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'id' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/subscribers/data[0]");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -558,9 +558,9 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
         error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
         error.Detail.Should().Be("Type 'rgbColors' is not convertible to type 'userAccounts' of relationship 'subscribers'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/subscribers/data[0]/type");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -610,7 +610,7 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Attributes.Should().NotBeEmpty();
         responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
@@ -618,7 +618,7 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         responseDocument.Included[0].Type.Should().Be("userAccounts");
         responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
 
-        int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -661,9 +661,9 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/subscribers");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -699,9 +699,9 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Expected an array, instead of 'null'.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/tags/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -739,9 +739,9 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Expected an array, instead of an object.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/tags/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -787,9 +787,9 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'lid' element is not supported at this endpoint.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/lid");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -832,8 +832,8 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Relationship cannot be assigned.");
         error.Detail.Should().Be("The relationship 'items' on resource type 'workItemGroups' cannot be assigned to.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/items");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.ShouldNotBeNull().ToString().Should().NotBeEmpty();
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 }

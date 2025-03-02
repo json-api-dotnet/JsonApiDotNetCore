@@ -74,7 +74,7 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
     }
 
@@ -111,10 +111,11 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(ServerTimeMediaTypes.ServerTime.ToString());
 
-        responseDocument.Meta.Should().ContainKey("localServerTime").WhoseValue.ShouldNotBeNull().ToString().Should().Be("2025-01-01T06:53:40.0000000+09:00");
+        responseDocument.Meta.Should().ContainKey("localServerTime").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should()
+            .Be("2025-01-01T06:53:40.0000000+09:00");
     }
 
     [Fact]
@@ -146,10 +147,11 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(ServerTimeMediaTypes.RelaxedServerTime.ToString());
 
-        responseDocument.Meta.Should().ContainKey("utcServerTime").WhoseValue.ShouldNotBeNull().ToString().Should().Be("2024-12-31T21:53:40.0000000Z");
+        responseDocument.Meta.Should().ContainKey("utcServerTime").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should()
+            .Be("2024-12-31T21:53:40.0000000Z");
     }
 
     [Fact]
@@ -188,10 +190,11 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(ServerTimeMediaTypes.AtomicOperationsWithServerTime.ToString());
 
-        responseDocument.Meta.Should().ContainKey("utcServerTime").WhoseValue.ShouldNotBeNull().ToString().Should().Be("2024-12-31T21:53:40.0000000Z");
+        responseDocument.Meta.Should().ContainKey("utcServerTime").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should()
+            .Be("2024-12-31T21:53:40.0000000Z");
     }
 
     [Fact]
@@ -235,7 +238,7 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(ServerTimeMediaTypes.RelaxedAtomicOperationsWithRelaxedServerTime.ToString());
 
         responseDocument.Meta.Should().ContainKey("localServerTime");
@@ -266,7 +269,7 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
-        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
 
         responseDocument.Errors.Should().HaveCount(1);
@@ -278,7 +281,7 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
         error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         error.Title.Should().Be("The specified Content-Type header value is not supported.");
         error.Detail.Should().Be(detail);
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be("Content-Type");
     }
 
@@ -314,7 +317,7 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
-        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
 
         responseDocument.Errors.Should().HaveCount(1);
@@ -327,7 +330,7 @@ public sealed class CustomExtensionsContentTypeTests : IClassFixture<Integration
         error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         error.Title.Should().Be("The specified Content-Type header value is not supported.");
         error.Detail.Should().Be(detail);
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be("Content-Type");
     }
 }

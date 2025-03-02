@@ -103,7 +103,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Abstract resource type found.");
         error.Detail.Should().Be("Resource type 'vehicles' is abstract.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/type");
     }
 
@@ -192,12 +192,12 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("bikes");
         responseDocument.Data.SingleValue.Attributes.Should().OnlyContainKeys("weight", "requiresDriverLicense", "gearCount");
         responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights");
 
-        long newBikeId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        long newBikeId = long.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -219,14 +219,14 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             bikeInDatabase.RequiresDriverLicense.Should().Be(newBike.RequiresDriverLicense);
             bikeInDatabase.GearCount.Should().Be(newBike.GearCount);
 
-            bikeInDatabase.Manufacturer.ShouldNotBeNull();
+            bikeInDatabase.Manufacturer.Should().NotBeNull();
             bikeInDatabase.Manufacturer.Id.Should().Be(existingManufacturer.Id);
 
             bikeInDatabase.Wheels.Should().HaveCount(1);
             bikeInDatabase.Wheels.ElementAt(0).Should().BeOfType<ChromeWheel>();
             bikeInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingChromeWheel.Id);
 
-            bikeInDatabase.CargoBox.ShouldNotBeNull();
+            bikeInDatabase.CargoBox.Should().NotBeNull();
             bikeInDatabase.CargoBox.Id.Should().Be(existingBox.Id);
 
             bikeInDatabase.Lights.Should().HaveCount(1);
@@ -333,12 +333,12 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("cars");
         responseDocument.Data.SingleValue.Attributes.Should().OnlyContainKeys("weight", "requiresDriverLicense", "licensePlate", "seatCount");
         responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "engine", "navigationSystem", "features");
 
-        long newCarId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        long newCarId = long.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -362,18 +362,18 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             carInDatabase.LicensePlate.Should().Be(newCar.LicensePlate);
             carInDatabase.SeatCount.Should().Be(newCar.SeatCount);
 
-            carInDatabase.Manufacturer.ShouldNotBeNull();
+            carInDatabase.Manufacturer.Should().NotBeNull();
             carInDatabase.Manufacturer.Id.Should().Be(existingManufacturer.Id);
 
             carInDatabase.Wheels.Should().HaveCount(1);
             carInDatabase.Wheels.ElementAt(0).Should().BeOfType<CarbonWheel>();
             carInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingCarbonWheel.Id);
 
-            carInDatabase.Engine.ShouldNotBeNull();
+            carInDatabase.Engine.Should().NotBeNull();
             carInDatabase.Engine.Should().BeOfType<GasolineEngine>();
             carInDatabase.Engine.Id.Should().Be(existingGasolineEngine.Id);
 
-            carInDatabase.NavigationSystem.ShouldNotBeNull();
+            carInDatabase.NavigationSystem.Should().NotBeNull();
             carInDatabase.NavigationSystem.Id.Should().Be(existingNavigationSystem.Id);
 
             carInDatabase.Features.Should().HaveCount(1);
@@ -483,12 +483,14 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("tandems");
         responseDocument.Data.SingleValue.Attributes.Should().OnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
-        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
 
-        long newTandemId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys(
+            "manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
+
+        long newTandemId = long.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -512,14 +514,14 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             tandemInDatabase.GearCount.Should().Be(newTandem.GearCount);
             tandemInDatabase.PassengerCount.Should().Be(newTandem.PassengerCount);
 
-            tandemInDatabase.Manufacturer.ShouldNotBeNull();
+            tandemInDatabase.Manufacturer.Should().NotBeNull();
             tandemInDatabase.Manufacturer.Id.Should().Be(existingManufacturer.Id);
 
             tandemInDatabase.Wheels.Should().HaveCount(1);
             tandemInDatabase.Wheels.ElementAt(0).Should().BeOfType<ChromeWheel>();
             tandemInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingChromeWheel.Id);
 
-            tandemInDatabase.CargoBox.ShouldNotBeNull();
+            tandemInDatabase.CargoBox.Should().NotBeNull();
             tandemInDatabase.CargoBox.Id.Should().Be(existingBox.Id);
 
             tandemInDatabase.Lights.Should().HaveCount(1);
@@ -567,7 +569,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
         error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
         error.Detail.Should().Be("Type 'bikes' is not convertible to type 'tandems'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/type");
     }
 
@@ -616,7 +618,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Abstract resource type found.");
         error.Detail.Should().Be("Resource type 'engines' is abstract.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/engine/data/type");
     }
 
@@ -661,19 +663,19 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("carbonWheels");
         responseDocument.Data.SingleValue.Attributes.Should().NotBeEmpty();
         responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-        long newCarbonWheelId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        long newCarbonWheelId = long.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             CarbonWheel carbonWheelInDatabase = await dbContext.CarbonWheels.Include(wheel => wheel.Vehicle).FirstWithIdAsync(newCarbonWheelId);
 
             carbonWheelInDatabase.Should().BeOfType<CarbonWheel>();
-            carbonWheelInDatabase.Vehicle.ShouldNotBeNull();
+            carbonWheelInDatabase.Vehicle.Should().NotBeNull();
             carbonWheelInDatabase.Vehicle.Should().BeOfType<Tandem>();
             carbonWheelInDatabase.Vehicle.Id.Should().Be(existingTandem.Id);
         });
@@ -726,12 +728,12 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("vehicleManufacturers");
         responseDocument.Data.SingleValue.Attributes.Should().NotBeEmpty();
         responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-        long newManufacturerId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        long newManufacturerId = long.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -975,7 +977,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Abstract resource type found.");
         error.Detail.Should().Be("Resource type 'vehicles' is abstract.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/type");
     }
 
@@ -1090,14 +1092,14 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             bikeInDatabase.RequiresDriverLicense.Should().Be(newBike.RequiresDriverLicense);
             bikeInDatabase.GearCount.Should().Be(newBike.GearCount);
 
-            bikeInDatabase.Manufacturer.ShouldNotBeNull();
+            bikeInDatabase.Manufacturer.Should().NotBeNull();
             bikeInDatabase.Manufacturer.Id.Should().Be(existingManufacturer.Id);
 
             bikeInDatabase.Wheels.Should().HaveCount(1);
             bikeInDatabase.Wheels.ElementAt(0).Should().BeOfType<ChromeWheel>();
             bikeInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingChromeWheel.Id);
 
-            bikeInDatabase.CargoBox.ShouldNotBeNull();
+            bikeInDatabase.CargoBox.Should().NotBeNull();
             bikeInDatabase.CargoBox.Id.Should().Be(existingBox.Id);
 
             bikeInDatabase.Lights.Should().HaveCount(1);
@@ -1219,14 +1221,14 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             tandemInDatabase.RequiresDriverLicense.Should().Be(newBike.RequiresDriverLicense);
             tandemInDatabase.GearCount.Should().Be(newBike.GearCount);
 
-            tandemInDatabase.Manufacturer.ShouldNotBeNull();
+            tandemInDatabase.Manufacturer.Should().NotBeNull();
             tandemInDatabase.Manufacturer.Id.Should().Be(existingManufacturer.Id);
 
             tandemInDatabase.Wheels.Should().HaveCount(1);
             tandemInDatabase.Wheels.ElementAt(0).Should().BeOfType<ChromeWheel>();
             tandemInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingChromeWheel.Id);
 
-            tandemInDatabase.CargoBox.ShouldNotBeNull();
+            tandemInDatabase.CargoBox.Should().NotBeNull();
             tandemInDatabase.CargoBox.Id.Should().Be(existingBox.Id);
 
             tandemInDatabase.Lights.Should().HaveCount(1);
@@ -1278,7 +1280,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
         error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
         error.Detail.Should().Be("Type 'bikes' is not convertible to type 'tandems'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/type");
     }
 
@@ -1332,7 +1334,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Abstract resource type found.");
         error.Detail.Should().Be("Resource type 'engines' is abstract.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/engine/data/type");
     }
 
@@ -1388,7 +1390,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             CarbonWheel carbonWheelInDatabase = await dbContext.CarbonWheels.Include(wheel => wheel.Vehicle).FirstWithIdAsync(existingCarbonWheel.Id);
 
             carbonWheelInDatabase.Should().BeOfType<CarbonWheel>();
-            carbonWheelInDatabase.Vehicle.ShouldNotBeNull();
+            carbonWheelInDatabase.Vehicle.Should().NotBeNull();
             carbonWheelInDatabase.Vehicle.Should().BeOfType<Tandem>();
             carbonWheelInDatabase.Vehicle.Id.Should().Be(existingTandem.Id);
         });
@@ -1780,7 +1782,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
             wheelInDatabase.Should().BeOfType<CarbonWheel>();
 
-            wheelInDatabase.Vehicle.ShouldNotBeNull();
+            wheelInDatabase.Vehicle.Should().NotBeNull();
             wheelInDatabase.Vehicle.Should().BeOfType<Tandem>();
             wheelInDatabase.Vehicle.Id.Should().Be(existingTandem.Id);
         });
@@ -1885,7 +1887,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
             wheelInDatabase.Should().BeOfType<CarbonWheel>();
 
-            wheelInDatabase.Vehicle.ShouldNotBeNull();
+            wheelInDatabase.Vehicle.Should().NotBeNull();
             wheelInDatabase.Vehicle.Should().BeOfType<Tandem>();
             wheelInDatabase.Vehicle.Id.Should().Be(existingTandem.Id);
         });

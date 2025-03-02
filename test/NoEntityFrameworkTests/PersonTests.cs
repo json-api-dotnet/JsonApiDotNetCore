@@ -172,7 +172,7 @@ public sealed class PersonTests(NoLoggingWebApplicationFactory<Person> factory) 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be("1");
     }
 

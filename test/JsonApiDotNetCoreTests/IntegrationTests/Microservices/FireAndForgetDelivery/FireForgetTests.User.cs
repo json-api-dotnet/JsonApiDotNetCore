@@ -41,9 +41,9 @@ public sealed partial class FireForgetTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("loginName").WhoseValue.With(value => value.Should().Be(newLoginName));
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("displayName").WhoseValue.With(value => value.Should().Be(newDisplayName));
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("loginName").WhoseValue.Should().Be(newLoginName);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("displayName").WhoseValue.Should().Be(newDisplayName);
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
@@ -54,7 +54,7 @@ public sealed partial class FireForgetTests
 
         messageBroker.SentMessages.Should().HaveCount(1);
 
-        Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         var content = messageBroker.SentMessages[0].GetContentAs<UserCreatedContent>();
         content.UserId.Should().Be(newUserId);
@@ -110,9 +110,9 @@ public sealed partial class FireForgetTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("loginName").WhoseValue.With(value => value.Should().Be(newLoginName));
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("displayName").WhoseValue.With(value => value.Should().BeNull());
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("loginName").WhoseValue.Should().Be(newLoginName);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("displayName").WhoseValue.Should().BeNull();
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
@@ -124,7 +124,7 @@ public sealed partial class FireForgetTests
 
         messageBroker.SentMessages.Should().HaveCount(2);
 
-        Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         var content1 = messageBroker.SentMessages[0].GetContentAs<UserCreatedContent>();
         content1.UserId.Should().Be(newUserId);

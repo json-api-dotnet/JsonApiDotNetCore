@@ -62,21 +62,21 @@ public sealed class IncludeTests : IClassFixture<DapperTestContext>
         {
             relationships.Should().ContainKey("owner").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Data.SingleValue.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Data.SingleValue.Should().NotBeNull();
                 value.Data.SingleValue.Type.Should().Be("people");
                 value.Data.SingleValue.Id.Should().Be(todoItems[0].Owner.StringId);
             });
 
             relationships.Should().ContainKey("assignee").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
+                value.Should().NotBeNull();
                 value.Data.SingleValue.Should().BeNull();
             });
 
             relationships.Should().ContainKey("tags").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
+                value.Should().NotBeNull();
                 value.Data.ManyValue.Should().HaveCount(2);
                 value.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("tags"));
                 value.Data.ManyValue[0].Id.Should().Be(todoItems[0].Tags.ElementAt(0).StringId);
@@ -90,23 +90,23 @@ public sealed class IncludeTests : IClassFixture<DapperTestContext>
         {
             relationships.Should().ContainKey("owner").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Data.SingleValue.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Data.SingleValue.Should().NotBeNull();
                 value.Data.SingleValue.Type.Should().Be("people");
                 value.Data.SingleValue.Id.Should().Be(todoItems[1].Owner.StringId);
             });
 
             relationships.Should().ContainKey("assignee").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Data.SingleValue.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Data.SingleValue.Should().NotBeNull();
                 value.Data.SingleValue.Type.Should().Be("people");
                 value.Data.SingleValue.Id.Should().Be(todoItems[1].Assignee!.StringId);
             });
 
             relationships.Should().ContainKey("tags").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
+                value.Should().NotBeNull();
                 value.Data.ManyValue.Should().HaveCount(2);
                 value.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("tags"));
                 value.Data.ManyValue[0].Id.Should().Be(todoItems[1].Tags.ElementAt(0).StringId);

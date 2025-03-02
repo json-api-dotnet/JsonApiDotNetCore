@@ -53,7 +53,7 @@ public sealed class SerializerIgnoreConditionTests : IntegrationTestContext<Test
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Included.Should().HaveCount(1);
 
         if (expectNullValueInDocument)

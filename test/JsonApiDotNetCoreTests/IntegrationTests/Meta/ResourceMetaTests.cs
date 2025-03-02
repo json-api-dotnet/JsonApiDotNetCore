@@ -94,7 +94,7 @@ public sealed class ResourceMetaTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Meta.Should().ContainKey("hasHighPriority");
 

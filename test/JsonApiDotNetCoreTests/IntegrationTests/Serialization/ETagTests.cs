@@ -41,7 +41,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        httpResponse.Headers.ETag.ShouldNotBeNull();
+        httpResponse.Headers.ETag.Should().NotBeNull();
         httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
         httpResponse.Headers.ETag.Tag.Should().NotBeNullOrEmpty();
 
@@ -69,7 +69,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        httpResponse.Headers.ETag.ShouldNotBeNull();
+        httpResponse.Headers.ETag.Should().NotBeNull();
         httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
         httpResponse.Headers.ETag.Tag.Should().NotBeNullOrEmpty();
 
@@ -169,7 +169,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
         error.StatusCode.Should().Be(HttpStatusCode.PreconditionFailed);
         error.Title.Should().Be("Detection of mid-air edit collisions using ETags is not supported.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be("If-Match");
     }
 
@@ -200,7 +200,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse2.ShouldHaveStatusCode(HttpStatusCode.NotModified);
 
-        httpResponse2.Headers.ETag.ShouldNotBeNull();
+        httpResponse2.Headers.ETag.Should().NotBeNull();
         httpResponse2.Headers.ETag.IsWeak.Should().BeFalse();
         httpResponse2.Headers.ETag.Tag.Should().NotBeNullOrEmpty();
 
@@ -230,7 +230,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        httpResponse.Headers.ETag.ShouldNotBeNull();
+        httpResponse.Headers.ETag.Should().NotBeNull();
         httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
         httpResponse.Headers.ETag.Tag.Should().NotBeNullOrEmpty();
 

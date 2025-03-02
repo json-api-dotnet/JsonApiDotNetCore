@@ -57,7 +57,7 @@ public sealed class AtomicOperationTests : IClassFixture<IntegrationTestContext<
 
         responseDocument.Results.Should().HaveCount(1);
 
-        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
             resource.Type.Should().Be("alwaysMovingTandems");
             resource.Attributes.Should().ContainKey("weight").WhoseValue.Should().Be(newMovingTandem.Weight);
@@ -66,7 +66,7 @@ public sealed class AtomicOperationTests : IClassFixture<IntegrationTestContext<
             resource.Relationships.Should().BeNull();
         });
 
-        long newMovingTandemId = long.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
+        long newMovingTandemId = long.Parse(responseDocument.Results[0].Data.SingleValue!.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

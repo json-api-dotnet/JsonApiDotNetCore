@@ -1,7 +1,6 @@
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
-using TestBuildingBlocks;
 using Xunit;
 
 namespace UnitTests.Graph;

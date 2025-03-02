@@ -75,37 +75,37 @@ public sealed class AtomicRelativeLinksWithNamespaceTests
 
         responseDocument.Results.Should().HaveCount(2);
 
-        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
 
-        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
-            string languageLink = $"/api/textLanguages/{Guid.Parse(resource.Id.ShouldNotBeNull())}";
+            string languageLink = $"/api/textLanguages/{Guid.Parse(resource.Id.Should().NotBeNull().And.Subject)}";
 
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be(languageLink);
 
             resource.Relationships.Should().ContainKey("lyrics").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"{languageLink}/relationships/lyrics");
                 value.Links.Related.Should().Be($"{languageLink}/lyrics");
             });
         });
 
-        responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
 
-        responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[1].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
-            string companyLink = $"/api/recordCompanies/{short.Parse(resource.Id.ShouldNotBeNull())}";
+            string companyLink = $"/api/recordCompanies/{short.Parse(resource.Id.Should().NotBeNull().And.Subject)}";
 
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be(companyLink);
 
             resource.Relationships.Should().ContainKey("tracks").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"{companyLink}/relationships/tracks");
                 value.Links.Related.Should().Be($"{companyLink}/tracks");
             });

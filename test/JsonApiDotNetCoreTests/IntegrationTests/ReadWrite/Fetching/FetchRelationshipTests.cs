@@ -39,7 +39,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("userAccounts");
         responseDocument.Data.SingleValue.Id.Should().Be(workItem.Assignee.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().BeNull();

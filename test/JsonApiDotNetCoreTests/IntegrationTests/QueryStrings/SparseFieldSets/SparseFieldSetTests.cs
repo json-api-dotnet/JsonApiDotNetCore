@@ -64,11 +64,11 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Data.ManyValue[0].Relationships.Should().ContainKey("author").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
-            value.Links.ShouldNotBeNull();
-            value.Links.Self.ShouldNotBeNull();
-            value.Links.Related.ShouldNotBeNull();
+            value.Links.Should().NotBeNull();
+            value.Links.Self.Should().NotBeNull();
+            value.Links.Related.Should().NotBeNull();
         });
 
         var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).Which;
@@ -142,11 +142,11 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Data.ManyValue[0].Relationships.Should().ContainKey("author").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
-            value.Links.ShouldNotBeNull();
-            value.Links.Self.ShouldNotBeNull();
-            value.Links.Related.ShouldNotBeNull();
+            value.Links.Should().NotBeNull();
+            value.Links.Self.Should().NotBeNull();
+            value.Links.Related.Should().NotBeNull();
         });
 
         var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).Which;
@@ -186,11 +186,11 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Data.ManyValue[0].Relationships.Should().ContainKey("labels").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
-            value.Links.ShouldNotBeNull();
-            value.Links.Self.ShouldNotBeNull();
-            value.Links.Related.ShouldNotBeNull();
+            value.Links.Should().NotBeNull();
+            value.Links.Self.Should().NotBeNull();
+            value.Links.Related.Should().NotBeNull();
         });
 
         var blogCaptured = (Blog)store.Resources.Should().ContainSingle(resource => resource is Blog).Which;
@@ -225,7 +225,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("url").WhoseValue.Should().Be(post.Url);
@@ -233,11 +233,11 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Data.SingleValue.Relationships.Should().ContainKey("author").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
-            value.Links.ShouldNotBeNull();
-            value.Links.Self.ShouldNotBeNull();
-            value.Links.Related.ShouldNotBeNull();
+            value.Links.Should().NotBeNull();
+            value.Links.Self.Should().NotBeNull();
+            value.Links.Related.Should().NotBeNull();
         });
 
         var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).Which;
@@ -269,19 +269,19 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(post.Caption);
 
         responseDocument.Data.SingleValue.Relationships.Should().ContainKey("author").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Id.Should().Be(post.Author.StringId);
-            value.ShouldNotBeNull();
-            value.Links.ShouldNotBeNull();
-            value.Links.Self.ShouldNotBeNull();
-            value.Links.Related.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Links.Should().NotBeNull();
+            value.Links.Self.Should().NotBeNull();
+            value.Links.Related.Should().NotBeNull();
         });
 
         responseDocument.Included.Should().HaveCount(1);
@@ -292,18 +292,18 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Included[0].Relationships.Should().ContainKey("preferences").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
-            value.Links.ShouldNotBeNull();
-            value.Links.Self.ShouldNotBeNull();
-            value.Links.Related.ShouldNotBeNull();
+            value.Links.Should().NotBeNull();
+            value.Links.Self.Should().NotBeNull();
+            value.Links.Related.Should().NotBeNull();
         });
 
         var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).Which;
         postCaptured.Id.Should().Be(post.Id);
         postCaptured.Caption.Should().Be(post.Caption);
 
-        postCaptured.Author.ShouldNotBeNull();
+        postCaptured.Author.Should().NotBeNull();
         postCaptured.Author.DisplayName.Should().Be(post.Author.DisplayName);
         postCaptured.Author.EmailAddress.Should().Be(post.Author.EmailAddress);
         postCaptured.Author.UserName.Should().BeNull();
@@ -333,18 +333,18 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(account.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("displayName").WhoseValue.Should().Be(account.DisplayName);
 
         responseDocument.Data.SingleValue.Relationships.Should().ContainKey("posts").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.ManyValue.Should().HaveCount(1);
             value.Data.ManyValue[0].Id.Should().Be(account.Posts[0].StringId);
-            value.Links.ShouldNotBeNull();
-            value.Links.Self.ShouldNotBeNull();
-            value.Links.Related.ShouldNotBeNull();
+            value.Links.Should().NotBeNull();
+            value.Links.Self.Should().NotBeNull();
+            value.Links.Related.Should().NotBeNull();
         });
 
         responseDocument.Included.Should().HaveCount(1);
@@ -354,11 +354,11 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Included[0].Relationships.Should().ContainKey("labels").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
-            value.Links.ShouldNotBeNull();
-            value.Links.Self.ShouldNotBeNull();
-            value.Links.Related.ShouldNotBeNull();
+            value.Links.Should().NotBeNull();
+            value.Links.Self.Should().NotBeNull();
+            value.Links.Related.Should().NotBeNull();
         });
 
         var accountCaptured = (WebAccount)store.Resources.Should().ContainSingle(resource => resource is WebAccount).Which;
@@ -395,18 +395,18 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(blog.Owner.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("displayName").WhoseValue.Should().Be(blog.Owner.DisplayName);
 
         responseDocument.Data.SingleValue.Relationships.Should().ContainKey("posts").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.ManyValue.Should().HaveCount(1);
             value.Data.ManyValue[0].Id.Should().Be(blog.Owner.Posts[0].StringId);
-            value.Links.ShouldNotBeNull();
-            value.Links.Self.ShouldNotBeNull();
-            value.Links.Related.ShouldNotBeNull();
+            value.Links.Should().NotBeNull();
+            value.Links.Self.Should().NotBeNull();
+            value.Links.Related.Should().NotBeNull();
         });
 
         responseDocument.Included.Should().HaveCount(1);
@@ -416,16 +416,16 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Included[0].Relationships.Should().ContainKey("comments").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
-            value.Links.ShouldNotBeNull();
-            value.Links.Self.ShouldNotBeNull();
-            value.Links.Related.ShouldNotBeNull();
+            value.Links.Should().NotBeNull();
+            value.Links.Self.Should().NotBeNull();
+            value.Links.Related.Should().NotBeNull();
         });
 
         var blogCaptured = (Blog)store.Resources.Should().ContainSingle(resource => resource is Blog).Which;
         blogCaptured.Id.Should().Be(blog.Id);
-        blogCaptured.Owner.ShouldNotBeNull();
+        blogCaptured.Owner.Should().NotBeNull();
         blogCaptured.Owner.DisplayName.Should().Be(blog.Owner.DisplayName);
 
         blogCaptured.Owner.Posts.Should().HaveCount(1);
@@ -457,18 +457,18 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(post.Caption);
 
         responseDocument.Data.SingleValue.Relationships.Should().ContainKey("labels").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.ManyValue.Should().HaveCount(1);
             value.Data.ManyValue[0].Id.Should().Be(post.Labels.ElementAt(0).StringId);
-            value.Links.ShouldNotBeNull();
-            value.Links.Self.ShouldNotBeNull();
-            value.Links.Related.ShouldNotBeNull();
+            value.Links.Should().NotBeNull();
+            value.Links.Self.Should().NotBeNull();
+            value.Links.Related.Should().NotBeNull();
         });
 
         responseDocument.Included.Should().HaveCount(1);
@@ -510,7 +510,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("blogs");
         responseDocument.Data.SingleValue.Id.Should().Be(blog.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
@@ -571,7 +571,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("blogs");
         responseDocument.Data.SingleValue.Id.Should().Be(blog.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
@@ -580,12 +580,12 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Data.SingleValue.Relationships.Should().ContainKey("owner").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Id.Should().Be(blog.Owner.StringId);
-            value.Links.ShouldNotBeNull();
-            value.Links.Self.ShouldNotBeNull();
-            value.Links.Related.ShouldNotBeNull();
+            value.Links.Should().NotBeNull();
+            value.Links.Self.Should().NotBeNull();
+            value.Links.Related.Should().NotBeNull();
         });
 
         responseDocument.Included.Should().HaveCount(2);
@@ -598,12 +598,12 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Included[0].Relationships.Should().ContainKey("posts").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.ManyValue.Should().HaveCount(1);
             value.Data.ManyValue[0].Id.Should().Be(blog.Owner.Posts[0].StringId);
-            value.Links.ShouldNotBeNull();
-            value.Links.Self.ShouldNotBeNull();
-            value.Links.Related.ShouldNotBeNull();
+            value.Links.Should().NotBeNull();
+            value.Links.Self.Should().NotBeNull();
+            value.Links.Related.Should().NotBeNull();
         });
 
         responseDocument.Included[1].Type.Should().Be("blogPosts");
@@ -613,11 +613,11 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Included[1].Relationships.Should().ContainKey("labels").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
-            value.Links.ShouldNotBeNull();
-            value.Links.Self.ShouldNotBeNull();
-            value.Links.Related.ShouldNotBeNull();
+            value.Links.Should().NotBeNull();
+            value.Links.Self.Should().NotBeNull();
+            value.Links.Related.Should().NotBeNull();
         });
 
         var blogCaptured = (Blog)store.Resources.Should().ContainSingle(resource => resource is Blog).Which;
@@ -715,7 +715,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified fieldset is invalid.");
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist. {parameterName}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be(parameterName.Text);
     }
 
@@ -740,7 +740,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified fieldset is invalid.");
         error.Detail.Should().Be($"Retrieving the attribute 'password' is not allowed. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("fields[webAccounts]");
     }
 
@@ -765,7 +765,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified fieldset is invalid.");
         error.Detail.Should().Be($"Retrieving the relationship 'person' is not allowed. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("fields[webAccounts]");
     }
 
@@ -790,7 +790,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified fieldset is invalid.");
         error.Detail.Should().Be($"Retrieving the relationship 'appointments' is not allowed. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("fields[calendars]");
     }
 
@@ -818,7 +818,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(blog.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("showAdvertisements").WhoseValue.Should().Be(blog.ShowAdvertisements);
@@ -853,7 +853,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().HaveCount(2);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(post.Caption);
@@ -862,11 +862,11 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Data.SingleValue.Relationships.Should().ContainKey("author").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
-            value.Links.ShouldNotBeNull();
-            value.Links.Self.ShouldNotBeNull();
-            value.Links.Related.ShouldNotBeNull();
+            value.Links.Should().NotBeNull();
+            value.Links.Self.Should().NotBeNull();
+            value.Links.Related.Should().NotBeNull();
         });
 
         var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).Which;
@@ -896,11 +896,11 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(account.StringId);
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
         responseDocument.Included.Should().HaveCount(2);
-        responseDocument.Included.Should().OnlyContain(resourceObject => resourceObject.Type == "blogPosts");
+        responseDocument.Included.Should().OnlyContain(resource => resource.Type == "blogPosts");
     }
 }

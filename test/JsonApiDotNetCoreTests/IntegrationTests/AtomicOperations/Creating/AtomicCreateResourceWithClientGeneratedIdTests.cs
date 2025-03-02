@@ -75,10 +75,10 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
 
         responseDocument.Results.Should().HaveCount(1);
 
-        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
             resource.Type.Should().Be("textLanguages");
-            resource.Attributes.Should().ContainKey("isoCode").WhoseValue.With(value => value.Should().Be(isoCode));
+            resource.Attributes.Should().ContainKey("isoCode").WhoseValue.Should().Be(isoCode);
             resource.Attributes.Should().NotContainKey("isRightToLeft");
             resource.Relationships.Should().NotBeEmpty();
         });
@@ -185,14 +185,14 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
 
         responseDocument.Results.Should().HaveCount(1);
 
-        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
             resource.Type.Should().Be("textLanguages");
-            resource.Attributes.Should().ContainKey("isoCode").WhoseValue.With(value => value.Should().Be(isoCode));
+            resource.Attributes.Should().ContainKey("isoCode").WhoseValue.Should().Be(isoCode);
             resource.Relationships.Should().NotBeEmpty();
         });
 
-        Guid newLanguageId = Guid.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
+        Guid newLanguageId = Guid.Parse(responseDocument.Results[0].Data.SingleValue!.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -245,9 +245,9 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'id' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Theory]
@@ -305,7 +305,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
         error.Title.Should().Be("Another resource with the specified ID already exists.");
         error.Detail.Should().Be($"Another resource of type 'textLanguages' with ID '{languageToCreate.StringId}' already exists.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]");
         error.Meta.Should().NotContainKey("requestBody");
     }
@@ -354,9 +354,9 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Incompatible 'id' value found.");
         error.Detail.Should().Be($"Failed to convert '{guid}' of type 'String' to type 'Int32'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/id");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Theory]
@@ -399,14 +399,14 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
 
         responseDocument.Results.Should().HaveCount(1);
 
-        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
             resource.Type.Should().Be("musicTracks");
-            resource.Attributes.Should().ContainKey("title").WhoseValue.With(value => value.Should().Be(newTitle));
+            resource.Attributes.Should().ContainKey("title").WhoseValue.Should().Be(newTitle);
             resource.Relationships.Should().BeNull();
         });
 
-        Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
+        Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue!.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -454,9 +454,9 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'lid' element cannot be used because a client-generated ID is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/lid");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Theory]
@@ -499,8 +499,8 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'id' and 'lid' element are mutually exclusive.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 }

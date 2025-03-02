@@ -67,15 +67,15 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
 
         responseDocument.Results.Should().HaveCount(1);
 
-        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
             resource.Type.Should().Be("performers");
-            resource.Attributes.Should().ContainKey("artistName").WhoseValue.With(value => value.Should().Be(newArtistName));
-            resource.Attributes.Should().ContainKey("bornAt").WhoseValue.With(value => value.Should().Be(newBornAt));
+            resource.Attributes.Should().ContainKey("artistName").WhoseValue.Should().Be(newArtistName);
+            resource.Attributes.Should().ContainKey("bornAt").WhoseValue.Should().Be(newBornAt);
             resource.Relationships.Should().BeNull();
         });
 
-        int newPerformerId = int.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
+        int newPerformerId = int.Parse(responseDocument.Results[0].Data.SingleValue!.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -132,23 +132,20 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
 
         for (int index = 0; index < elementCount; index++)
         {
-            responseDocument.Results[index].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            responseDocument.Results[index].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
             {
-                resource.ShouldNotBeNull();
+                resource.Should().NotBeNull();
                 resource.Type.Should().Be("musicTracks");
-                resource.Attributes.Should().ContainKey("title").WhoseValue.With(value => value.Should().Be(newTracks[index].Title));
-
-                resource.Attributes.Should().ContainKey("lengthInSeconds").WhoseValue
-                    .With(value => value.As<decimal?>().Should().BeApproximately(newTracks[index].LengthInSeconds));
-
-                resource.Attributes.Should().ContainKey("genre").WhoseValue.With(value => value.Should().Be(newTracks[index].Genre));
-                resource.Attributes.Should().ContainKey("releasedAt").WhoseValue.With(value => value.Should().Be(newTracks[index].ReleasedAt));
+                resource.Attributes.Should().ContainKey("title").WhoseValue.Should().Be(newTracks[index].Title);
+                resource.Attributes.Should().ContainKey("lengthInSeconds").WhoseValue.As<decimal?>().Should().BeApproximately(newTracks[index].LengthInSeconds);
+                resource.Attributes.Should().ContainKey("genre").WhoseValue.Should().Be(newTracks[index].Genre);
+                resource.Attributes.Should().ContainKey("releasedAt").WhoseValue.Should().Be(newTracks[index].ReleasedAt);
 
                 resource.Relationships.Should().NotBeEmpty();
             });
         }
 
-        Guid[] newTrackIds = responseDocument.Results.Select(result => Guid.Parse(result.Data.SingleValue!.Id.ShouldNotBeNull())).ToArray();
+        Guid[] newTrackIds = responseDocument.Results.Select(result => Guid.Parse(result.Data.SingleValue!.Id.Should().NotBeNull().And.Subject)).ToArray();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -203,15 +200,15 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
 
         responseDocument.Results.Should().HaveCount(1);
 
-        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
             resource.Type.Should().Be("performers");
-            resource.Attributes.Should().ContainKey("artistName").WhoseValue.With(value => value.Should().BeNull());
-            resource.Attributes.Should().ContainKey("bornAt").WhoseValue.With(value => value.Should().Be(default(DateTimeOffset)));
+            resource.Attributes.Should().ContainKey("artistName").WhoseValue.Should().BeNull();
+            resource.Attributes.Should().ContainKey("bornAt").WhoseValue.Should().Be(default(DateTimeOffset));
             resource.Relationships.Should().BeNull();
         });
 
-        int newPerformerId = int.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
+        int newPerformerId = int.Parse(responseDocument.Results[0].Data.SingleValue!.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -262,9 +259,9 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Unknown attribute found.");
         error.Detail.Should().Be("Attribute 'doesNotExist' does not exist on resource type 'playlists'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/doesNotExist");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -306,14 +303,14 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
 
         responseDocument.Results.Should().HaveCount(1);
 
-        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
             resource.Type.Should().Be("playlists");
-            resource.Attributes.Should().ContainKey("name").WhoseValue.With(value => value.Should().Be(newName));
+            resource.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(newName);
             resource.Relationships.Should().NotBeEmpty();
         });
 
-        long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
+        long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue!.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -367,9 +364,9 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Unknown relationship found.");
         error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource type 'lyrics'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/doesNotExist");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -421,20 +418,20 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
 
         responseDocument.Results.Should().HaveCount(1);
 
-        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
             resource.Type.Should().Be("lyrics");
             resource.Attributes.Should().NotBeEmpty();
             resource.Relationships.Should().NotBeEmpty();
         });
 
-        long newLyricId = long.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
+        long newLyricId = long.Parse(responseDocument.Results[0].Data.SingleValue!.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             Lyric lyricInDatabase = await dbContext.Lyrics.FirstWithIdAsync(newLyricId);
 
-            lyricInDatabase.ShouldNotBeNull();
+            lyricInDatabase.Should().NotBeNull();
         });
     }
 
@@ -479,9 +476,9 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         error.Title.Should().Be("Failed to deserialize request body: The use of client-generated IDs is disabled.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/id");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -514,9 +511,9 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'href' element is not supported.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/href");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -552,9 +549,9 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'relationship' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/ref");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -586,9 +583,9 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -621,9 +618,9 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Expected an object, instead of 'null'.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -668,9 +665,9 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Expected an object, instead of an array.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -708,9 +705,9 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -746,9 +743,9 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/type");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -791,9 +788,9 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
         error.Detail.Should().Be("Attribute 'isArchived' on resource type 'playlists' is read-only.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/isArchived");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -833,9 +830,9 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Incompatible attribute value found.");
         error.Detail.Should().Be("Failed to convert attribute 'bornAt' with value '12345' of type 'Number' to type 'DateTimeOffset'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/bornAt");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 
     [Fact]
@@ -913,14 +910,14 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
 
         responseDocument.Results.Should().HaveCount(1);
 
-        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
             resource.Type.Should().Be("musicTracks");
-            resource.Attributes.Should().ContainKey("title").WhoseValue.With(value => value.Should().Be(newTitle));
+            resource.Attributes.Should().ContainKey("title").WhoseValue.Should().Be(newTitle);
             resource.Relationships.Should().NotBeEmpty();
         });
 
-        Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
+        Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue!.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -938,10 +935,10 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
 
             trackInDatabase.Title.Should().Be(newTitle);
 
-            trackInDatabase.Lyric.ShouldNotBeNull();
+            trackInDatabase.Lyric.Should().NotBeNull();
             trackInDatabase.Lyric.Id.Should().Be(existingLyric.Id);
 
-            trackInDatabase.OwnedBy.ShouldNotBeNull();
+            trackInDatabase.OwnedBy.Should().NotBeNull();
             trackInDatabase.OwnedBy.Id.Should().Be(existingCompany.Id);
 
             trackInDatabase.Performers.Should().HaveCount(1);
@@ -986,8 +983,8 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Attribute value cannot be assigned when creating resource.");
         error.Detail.Should().Be("The attribute 'createdAt' on resource type 'lyrics' cannot be assigned to.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/createdAt");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.With(value => value.ShouldNotBeNull().ToString().Should().NotBeEmpty());
+        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
     }
 }

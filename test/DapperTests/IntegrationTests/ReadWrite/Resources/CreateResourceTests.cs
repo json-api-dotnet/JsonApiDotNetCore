@@ -92,17 +92,17 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("todoItems");
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.With(value => value.Should().Be(newTodoItem.Description));
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("priority").WhoseValue.With(value => value.Should().Be(newTodoItem.Priority));
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("durationInHours").WhoseValue.With(value => value.Should().Be(newTodoItem.DurationInHours));
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("createdAt").WhoseValue.With(value => value.Should().Be(DapperTestContext.FrozenTime));
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("modifiedAt").WhoseValue.With(value => value.Should().BeNull());
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.Should().Be(newTodoItem.Description);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("priority").WhoseValue.Should().Be(newTodoItem.Priority);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("durationInHours").WhoseValue.Should().Be(newTodoItem.DurationInHours);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("createdAt").WhoseValue.Should().Be(DapperTestContext.FrozenTime);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("modifiedAt").WhoseValue.Should().BeNull();
 
         responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("owner", "assignee", "tags");
 
-        long newTodoItemId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        long newTodoItemId = long.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
         httpResponse.Headers.Location.Should().Be($"/todoItems/{newTodoItemId}");
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -125,9 +125,9 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
             todoItemInDatabase.CreatedAt.Should().Be(DapperTestContext.FrozenTime);
             todoItemInDatabase.LastModifiedAt.Should().BeNull();
 
-            todoItemInDatabase.Owner.ShouldNotBeNull();
+            todoItemInDatabase.Owner.Should().NotBeNull();
             todoItemInDatabase.Owner.Id.Should().Be(existingPerson.Id);
-            todoItemInDatabase.Assignee.ShouldNotBeNull();
+            todoItemInDatabase.Assignee.Should().NotBeNull();
             todoItemInDatabase.Assignee.Id.Should().Be(existingPerson.Id);
             todoItemInDatabase.Tags.Should().HaveCount(1);
             todoItemInDatabase.Tags.ElementAt(0).Id.Should().Be(existingTag.Id);
@@ -228,16 +228,16 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("todoItems");
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.With(value => value.Should().Be(newTodoItem.Description));
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("priority").WhoseValue.With(value => value.Should().Be(newTodoItem.Priority));
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("durationInHours").WhoseValue.With(value => value.Should().BeNull());
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("createdAt").WhoseValue.With(value => value.Should().Be(DapperTestContext.FrozenTime));
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("modifiedAt").WhoseValue.With(value => value.Should().BeNull());
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.Should().Be(newTodoItem.Description);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("priority").WhoseValue.Should().Be(newTodoItem.Priority);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("durationInHours").WhoseValue.Should().BeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("createdAt").WhoseValue.Should().Be(DapperTestContext.FrozenTime);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("modifiedAt").WhoseValue.Should().BeNull();
         responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("owner", "assignee", "tags");
 
-        long newTodoItemId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        long newTodoItemId = long.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -259,7 +259,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
             todoItemInDatabase.CreatedAt.Should().Be(DapperTestContext.FrozenTime);
             todoItemInDatabase.LastModifiedAt.Should().BeNull();
 
-            todoItemInDatabase.Owner.ShouldNotBeNull();
+            todoItemInDatabase.Owner.Should().NotBeNull();
             todoItemInDatabase.Owner.Id.Should().Be(existingPerson.Id);
             todoItemInDatabase.Assignee.Should().BeNull();
             todoItemInDatabase.Tags.Should().BeEmpty();
@@ -330,21 +330,21 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
         error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error1.Title.Should().Be("Input validation failed.");
         error1.Detail.Should().Be("The Owner field is required.");
-        error1.Source.ShouldNotBeNull();
+        error1.Source.Should().NotBeNull();
         error1.Source.Pointer.Should().Be("/data/relationships/owner/data");
 
         ErrorObject error2 = responseDocument.Errors[1];
         error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error2.Title.Should().Be("Input validation failed.");
         error2.Detail.Should().Be("The Priority field is required.");
-        error2.Source.ShouldNotBeNull();
+        error2.Source.Should().NotBeNull();
         error2.Source.Pointer.Should().Be("/data/attributes/priority");
 
         ErrorObject error3 = responseDocument.Errors[2];
         error3.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error3.Title.Should().Be("Input validation failed.");
         error3.Detail.Should().Be("The Description field is required.");
-        error3.Source.ShouldNotBeNull();
+        error3.Source.Should().NotBeNull();
         error3.Source.Pointer.Should().Be("/data/attributes/description");
 
         store.SqlCommands.Should().BeEmpty();
@@ -407,13 +407,13 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("loginAccounts");
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("userName").WhoseValue.With(value => value.Should().Be(newUserName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("userName").WhoseValue.Should().Be(newUserName);
         responseDocument.Data.SingleValue.Attributes.Should().NotContainKey("lastUsedAt");
         responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("recovery", "person");
 
-        long newLoginAccountId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        long newLoginAccountId = long.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -431,9 +431,9 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
             loginAccountInDatabase.UserName.Should().Be(newUserName);
             loginAccountInDatabase.LastUsedAt.Should().BeNull();
 
-            loginAccountInDatabase.Recovery.ShouldNotBeNull();
+            loginAccountInDatabase.Recovery.Should().NotBeNull();
             loginAccountInDatabase.Recovery.Id.Should().Be(existingAccountRecovery.Id);
-            loginAccountInDatabase.Person.ShouldNotBeNull();
+            loginAccountInDatabase.Person.Should().NotBeNull();
             loginAccountInDatabase.Person.Id.Should().Be(existingPerson.Id);
         });
 
@@ -520,14 +520,14 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("people");
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("firstName").WhoseValue.With(value => value.Should().Be(newPerson.FirstName));
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("lastName").WhoseValue.With(value => value.Should().Be(newPerson.LastName));
-        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("displayName").WhoseValue.With(value => value.Should().Be(newPerson.DisplayName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("firstName").WhoseValue.Should().Be(newPerson.FirstName);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("lastName").WhoseValue.Should().Be(newPerson.LastName);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("displayName").WhoseValue.Should().Be(newPerson.DisplayName);
         responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("account", "ownedTodoItems", "assignedTodoItems");
 
-        long newPersonId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        long newPersonId = long.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -623,7 +623,7 @@ public sealed class CreateResourceTests : IClassFixture<DapperTestContext>
             colorInDatabase.Green.Should().Be(newColor.Green);
             colorInDatabase.Blue.Should().Be(newColor.Blue);
 
-            colorInDatabase.Tag.ShouldNotBeNull();
+            colorInDatabase.Tag.Should().NotBeNull();
             colorInDatabase.Tag.Id.Should().Be(existingTag.Id);
         });
 

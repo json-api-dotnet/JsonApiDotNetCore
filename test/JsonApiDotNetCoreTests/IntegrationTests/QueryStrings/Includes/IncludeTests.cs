@@ -80,7 +80,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(post.Caption);
 
@@ -112,7 +112,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(blog.Owner.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("displayName").WhoseValue.Should().Be(blog.Owner.DisplayName);
 
@@ -176,7 +176,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(comment.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("text").WhoseValue.Should().Be(comment.Text);
 
@@ -212,7 +212,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(post.Caption);
 
@@ -245,7 +245,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(post.Caption);
 
@@ -310,7 +310,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(comment.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("text").WhoseValue.Should().Be(comment.Text);
 
@@ -353,7 +353,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(blog.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("title").WhoseValue.Should().Be(blog.Title);
 
@@ -394,7 +394,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(comment.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("text").WhoseValue.Should().Be(comment.Text);
 
@@ -445,12 +445,12 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(blog.StringId);
 
         responseDocument.Data.SingleValue.Relationships.Should().ContainKey("posts").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.ManyValue.Should().NotBeEmpty();
             value.Data.ManyValue[0].Type.Should().Be("blogPosts");
             value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
@@ -463,15 +463,15 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Included[0].Relationships.Should().ContainKey("author").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("webAccounts");
             value.Data.SingleValue.Id.Should().Be(blog.Posts[0].Author!.StringId);
         });
 
         responseDocument.Included[0].Relationships.Should().ContainKey("comments").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.ManyValue.Should().NotBeEmpty();
             value.Data.ManyValue[0].Type.Should().Be("comments");
             value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).StringId);
@@ -482,15 +482,15 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Included[1].Relationships.Should().ContainKey("preferences").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("accountPreferences");
             value.Data.SingleValue.Id.Should().Be(blog.Posts[0].Author!.Preferences!.StringId);
         });
 
         responseDocument.Included[1].Relationships.Should().ContainKey("posts").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
         });
 
@@ -502,8 +502,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Included[3].Relationships.Should().ContainKey("author").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("webAccounts");
             value.Data.SingleValue.Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author!.StringId);
         });
@@ -513,7 +513,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Included[4].Relationships.Should().ContainKey("posts").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.ManyValue.Should().NotBeEmpty();
             value.Data.ManyValue[0].Type.Should().Be("blogPosts");
             value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author!.Posts[0].StringId);
@@ -521,7 +521,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Included[4].Relationships.Should().ContainKey("preferences").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
         });
 
@@ -530,13 +530,13 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Included[5].Relationships.Should().ContainKey("author").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
         });
 
         responseDocument.Included[5].Relationships.Should().ContainKey("comments").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
         });
 
@@ -545,7 +545,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Included[5].Relationships.Should().ContainKey("author").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
         });
     }
@@ -595,16 +595,16 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Data.ManyValue[0].Relationships.Should().ContainKey("author").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("webAccounts");
             value.Data.SingleValue.Id.Should().Be(author.StringId);
         });
 
         responseDocument.Data.ManyValue[0].Relationships.Should().ContainKey("reviewer").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("webAccounts");
             value.Data.SingleValue.Id.Should().Be(reviewer.StringId);
         });
@@ -614,16 +614,16 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Data.ManyValue[1].Relationships.Should().ContainKey("author").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("webAccounts");
             value.Data.SingleValue.Id.Should().Be(person.StringId);
         });
 
         responseDocument.Data.ManyValue[1].Relationships.Should().ContainKey("reviewer").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("webAccounts");
             value.Data.SingleValue.Id.Should().Be(person.StringId);
         });
@@ -635,15 +635,15 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Included[0].Relationships.Should().ContainKey("preferences").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("accountPreferences");
             value.Data.SingleValue.Id.Should().Be(author.Preferences.StringId);
         });
 
         responseDocument.Included[0].Relationships.Should().ContainKey("loginAttempts").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
         });
 
@@ -655,13 +655,13 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Included[2].Relationships.Should().ContainKey("preferences").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
         });
 
         responseDocument.Included[2].Relationships.Should().ContainKey("loginAttempts").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.ManyValue.Should().NotBeEmpty();
             value.Data.ManyValue[0].Type.Should().Be("loginAttempts");
             value.Data.ManyValue[0].Id.Should().Be(reviewer.LoginAttempts[0].StringId);
@@ -675,15 +675,15 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Included[4].Relationships.Should().ContainKey("preferences").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("accountPreferences");
             value.Data.SingleValue.Id.Should().Be(person.Preferences.StringId);
         });
 
         responseDocument.Included[4].Relationships.Should().ContainKey("loginAttempts").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.ManyValue.Should().NotBeEmpty();
             value.Data.ManyValue[0].Type.Should().Be("loginAttempts");
             value.Data.ManyValue[0].Id.Should().Be(person.LoginAttempts[0].StringId);
@@ -720,13 +720,13 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("blogs");
         responseDocument.Data.SingleValue.Id.Should().Be(blog.StringId);
 
         responseDocument.Data.SingleValue.Relationships.Should().ContainKey("posts").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.ManyValue.Should().NotBeEmpty();
             value.Data.ManyValue[0].Type.Should().Be("blogPosts");
             value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
@@ -739,8 +739,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Included[0].Relationships.Should().ContainKey("author").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("webAccounts");
             value.Data.SingleValue.Id.Should().Be(blog.Posts[0].Author!.StringId);
         });
@@ -750,7 +750,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Included[1].Relationships.Should().ContainKey("posts").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.ManyValue.Should().NotBeEmpty();
             value.Data.ManyValue[0].Type.Should().Be("blogPosts");
             value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
@@ -781,7 +781,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(post.Caption);
 
@@ -844,7 +844,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
         responseDocument.Included.Should().BeEmpty();
     }
@@ -868,7 +868,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified include is invalid.");
         error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'webAccounts'. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("include");
     }
 
@@ -891,7 +891,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified include is invalid.");
         error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'blogPosts'. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("include");
     }
 
@@ -914,7 +914,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified include is invalid.");
         error.Detail.Should().Be($"Including the relationship 'parent' on 'blogPosts' is not allowed. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("include");
     }
 
@@ -937,7 +937,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified include is invalid.");
         error.Detail.Should().Be($"Including the relationship 'parent' on 'blogPosts' is not allowed. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("include");
     }
 
@@ -962,7 +962,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("calendars");
         responseDocument.Data.SingleValue.Id.Should().Be(calendar.StringId);
 
@@ -1001,14 +1001,14 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("calendars");
         responseDocument.Data.SingleValue.Id.Should().Be(calendar.StringId);
 
         responseDocument.Data.SingleValue.Relationships.Should().ContainKey("mostRecentAppointment").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("appointments");
             value.Data.SingleValue.Id.Should().Be(calendar.MostRecentAppointment.StringId);
         });
@@ -1044,7 +1044,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Data.ManyValue.Should().HaveCount(2);
 
-        responseDocument.Data.ManyValue.Should().OnlyContain(resource => resource.Relationships.Should().ContainKey("reviewer").WhoseValue != null);
+        responseDocument.Data.ManyValue.Should().OnlyContain(resource => resource.Relationships.Should().ContainKey2("reviewer").WhoseValue != null);
 
         ResourceObject[] postWithReviewer = responseDocument.Data.ManyValue
             .Where(resource => resource.Relationships!.First(pair => pair.Key == "reviewer").Value!.Data.SingleValue != null).ToArray();
@@ -1110,7 +1110,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified include is invalid.");
         error.Detail.Should().Be($"Including 'posts.comments' exceeds the maximum inclusion depth of 1. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("include");
     }
 }

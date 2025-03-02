@@ -43,7 +43,7 @@ public sealed class QueryStringTests : IClassFixture<IntegrationTestContext<Test
         error.Detail.Should().Be("Query string parameter 'foo' is unknown. " +
             "Set 'AllowUnknownQueryStringParameters' to 'true' in options to ignore unknown parameters.");
 
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("foo");
     }
 
@@ -106,7 +106,7 @@ public sealed class QueryStringTests : IClassFixture<IntegrationTestContext<Test
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("Missing query string parameter value.");
         error.Detail.Should().Be($"Missing value for '{parameterName}' query string parameter.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be(parameterName);
     }
 }

@@ -475,7 +475,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         {
             Person personInDatabase = await dbContext.People.Include(person => person.Account).FirstWithIdAsync(existingPerson.Id);
 
-            personInDatabase.Account.ShouldNotBeNull();
+            personInDatabase.Account.Should().NotBeNull();
             personInDatabase.Account.Id.Should().Be(existingLoginAccount.Id);
         });
 
@@ -562,7 +562,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
             LoginAccount loginAccountInDatabase =
                 await dbContext.LoginAccounts.Include(loginAccount => loginAccount.Person).FirstWithIdAsync(existingLoginAccount.Id);
 
-            loginAccountInDatabase.Person.ShouldNotBeNull();
+            loginAccountInDatabase.Person.Should().NotBeNull();
             loginAccountInDatabase.Person.Id.Should().Be(existingPerson.Id);
         });
 
@@ -635,7 +635,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         {
             TodoItem todoItemInDatabase = await dbContext.TodoItems.Include(todoItem => todoItem.Assignee).FirstWithIdAsync(existingTodoItem.Id);
 
-            todoItemInDatabase.Assignee.ShouldNotBeNull();
+            todoItemInDatabase.Assignee.Should().NotBeNull();
             todoItemInDatabase.Assignee.Id.Should().Be(existingPerson.Id);
         });
 
@@ -711,7 +711,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         {
             Person personInDatabase1 = await dbContext.People.Include(person => person.Account).FirstWithIdAsync(existingPerson1.Id);
 
-            personInDatabase1.Account.ShouldNotBeNull();
+            personInDatabase1.Account.Should().NotBeNull();
             personInDatabase1.Account.Id.Should().Be(existingPerson2.Account.Id);
 
             Person personInDatabase2 = await dbContext.People.Include(person => person.Account).FirstWithIdAsync(existingPerson2.Id);
@@ -805,7 +805,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
             LoginAccount loginAccountInDatabase1 =
                 await dbContext.LoginAccounts.Include(loginAccount => loginAccount.Person).FirstWithIdAsync(existingLoginAccount1.Id);
 
-            loginAccountInDatabase1.Person.ShouldNotBeNull();
+            loginAccountInDatabase1.Person.Should().NotBeNull();
             loginAccountInDatabase1.Person.Id.Should().Be(existingLoginAccount2.Person.Id);
 
             LoginAccount loginAccountInDatabase2 =
@@ -898,7 +898,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
             LoginAccount loginAccountInDatabase1 =
                 await dbContext.LoginAccounts.Include(loginAccount => loginAccount.Recovery).FirstWithIdAsync(existingLoginAccount1.Id);
 
-            loginAccountInDatabase1.Recovery.ShouldNotBeNull();
+            loginAccountInDatabase1.Recovery.Should().NotBeNull();
             loginAccountInDatabase1.Recovery.Id.Should().Be(existingLoginAccount2.Recovery.Id);
 
             LoginAccount? loginAccountInDatabase2 = await dbContext.LoginAccounts.Include(loginAccount => loginAccount.Recovery)
@@ -989,7 +989,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
             AccountRecovery accountRecoveryInDatabase1 =
                 await dbContext.AccountRecoveries.Include(recovery => recovery.Account).FirstWithIdAsync(existingAccountRecovery1.Id);
 
-            accountRecoveryInDatabase1.Account.ShouldNotBeNull();
+            accountRecoveryInDatabase1.Account.Should().NotBeNull();
             accountRecoveryInDatabase1.Account.Id.Should().Be(existingAccountRecovery2.Account.Id);
 
             AccountRecovery accountRecoveryInDatabase2 =
@@ -1081,7 +1081,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         {
             TodoItem todoItemInDatabase1 = await dbContext.TodoItems.Include(todoItem => todoItem.Assignee).FirstWithIdAsync(existingTodoItem1.Id);
 
-            todoItemInDatabase1.Assignee.ShouldNotBeNull();
+            todoItemInDatabase1.Assignee.Should().NotBeNull();
             todoItemInDatabase1.Assignee.Id.Should().Be(existingTodoItem2.Assignee.Id);
         });
 
@@ -1155,7 +1155,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<DapperTestConte
         {
             TodoItem todoItemInDatabase1 = await dbContext.TodoItems.Include(todoItem => todoItem.Owner).FirstWithIdAsync(existingTodoItem1.Id);
 
-            todoItemInDatabase1.Owner.ShouldNotBeNull();
+            todoItemInDatabase1.Owner.Should().NotBeNull();
             todoItemInDatabase1.Owner.Id.Should().Be(existingTodoItem2.Owner.Id);
         });
 
