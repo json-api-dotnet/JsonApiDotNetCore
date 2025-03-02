@@ -62,7 +62,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -125,7 +125,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
             colorInDatabase1.Group.Should().BeNull();
 
             RgbColor colorInDatabase2 = colorsInDatabase.Single(color => color.Id == existingColor.Id);
-            colorInDatabase2.Group.ShouldNotBeNull();
+            colorInDatabase2.Group.Should().NotBeNull();
             colorInDatabase2.Group.Id.Should().Be(existingGroup.Id);
         });
     }
@@ -182,17 +182,17 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
             groupInDatabase1.Color.Should().BeNull();
 
             WorkItemGroup groupInDatabase2 = groupsInDatabase.Single(group => group.Id == existingGroups[1].Id);
-            groupInDatabase2.Color.ShouldNotBeNull();
+            groupInDatabase2.Color.Should().NotBeNull();
             groupInDatabase2.Color.Id.Should().Be(existingGroups[0].Color!.Id);
 
             List<RgbColor> colorsInDatabase = await dbContext.RgbColors.Include(color => color.Group).ToListAsync();
 
             RgbColor colorInDatabase1 = colorsInDatabase.Single(color => color.Id == existingGroups[0].Color!.Id);
-            colorInDatabase1.Group.ShouldNotBeNull();
+            colorInDatabase1.Group.Should().NotBeNull();
             colorInDatabase1.Group.Id.Should().Be(existingGroups[1].Id);
 
             RgbColor? colorInDatabase2 = colorsInDatabase.SingleOrDefault(color => color.Id == existingGroups[1].Color!.Id);
-            colorInDatabase2.ShouldNotBeNull();
+            colorInDatabase2.Should().NotBeNull();
             colorInDatabase2.Group.Should().BeNull();
         });
     }
@@ -285,7 +285,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -293,7 +293,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
 
             WorkItem workItemInDatabase2 = await dbContext.WorkItems.Include(workItem => workItem.Assignee).FirstWithIdAsync(workItemId);
 
-            workItemInDatabase2.Assignee.ShouldNotBeNull();
+            workItemInDatabase2.Assignee.Should().NotBeNull();
             workItemInDatabase2.Assignee.Id.Should().Be(existingUserAccounts[1].Id);
         });
     }
@@ -341,24 +341,24 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
 
         string description = $"{existingWorkItem.Description}{ImplicitlyChangingWorkItemDefinition.Suffix}";
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItems");
         responseDocument.Data.SingleValue.Id.Should().Be(existingWorkItem.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(description));
-        responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.Should().Be(description);
+        responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("userAccounts");
         responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("firstName").With(value => value.Should().Be(existingUserAccount.FirstName));
-        responseDocument.Included[0].Attributes.ShouldContainKey("lastName").With(value => value.Should().Be(existingUserAccount.LastName));
-        responseDocument.Included[0].Relationships.ShouldNotBeEmpty();
+        responseDocument.Included[0].Attributes.Should().ContainKey("firstName").WhoseValue.Should().Be(existingUserAccount.FirstName);
+        responseDocument.Included[0].Attributes.Should().ContainKey("lastName").WhoseValue.Should().Be(existingUserAccount.LastName);
+        responseDocument.Included[0].Relationships.Should().NotBeEmpty();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Assignee).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Assignee.ShouldNotBeNull();
+            workItemInDatabase.Assignee.Should().NotBeNull();
             workItemInDatabase.Assignee.Id.Should().Be(existingUserAccount.Id);
         });
     }
@@ -408,32 +408,32 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
 
         string description = $"{existingWorkItem.Description}{ImplicitlyChangingWorkItemDefinition.Suffix}";
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItems");
         responseDocument.Data.SingleValue.Id.Should().Be(existingWorkItem.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldHaveCount(1);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(description));
-        responseDocument.Data.SingleValue.Relationships.ShouldHaveCount(1);
+        responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.Should().Be(description);
+        responseDocument.Data.SingleValue.Relationships.Should().HaveCount(1);
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("assignee").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("assignee").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Id.Should().Be(existingUserAccount.StringId);
         });
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("userAccounts");
         responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
-        responseDocument.Included[0].Attributes.ShouldHaveCount(1);
-        responseDocument.Included[0].Attributes.ShouldContainKey("lastName").With(value => value.Should().Be(existingUserAccount.LastName));
+        responseDocument.Included[0].Attributes.Should().HaveCount(1);
+        responseDocument.Included[0].Attributes.Should().ContainKey("lastName").WhoseValue.Should().Be(existingUserAccount.LastName);
         responseDocument.Included[0].Relationships.Should().BeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Assignee).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Assignee.ShouldNotBeNull();
+            workItemInDatabase.Assignee.Should().NotBeNull();
             workItemInDatabase.Assignee.Id.Should().Be(existingUserAccount.Id);
         });
     }
@@ -472,15 +472,15 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Expected an object, instead of 'null'.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/assignee");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -519,15 +519,15 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/assignee");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -574,15 +574,15 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Expected an object or 'null', instead of an array.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/assignee/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -624,15 +624,15 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/assignee/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -675,15 +675,15 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/assignee/data/type");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -725,15 +725,15 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'id' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/assignee/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -778,7 +778,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -828,15 +828,15 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
         error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
         error.Detail.Should().Be("Type 'rgbColors' is not convertible to type 'userAccounts' of relationship 'assignee'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/assignee/data/type");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -878,7 +878,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -928,13 +928,13 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Parent).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Parent.ShouldNotBeNull();
+            workItemInDatabase.Parent.Should().NotBeNull();
             workItemInDatabase.Parent.Id.Should().Be(existingWorkItem.Id);
         });
     }
@@ -979,14 +979,14 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Relationship cannot be assigned.");
         error.Detail.Should().Be("The relationship 'group' on resource type 'workItems' cannot be assigned to.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/group");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 }

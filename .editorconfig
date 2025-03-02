@@ -113,6 +113,12 @@ csharp_style_expression_bodied_properties = true:silent
 # IDE0025: Use expression body for properties
 dotnet_diagnostic.IDE0025.severity = silent
 
+# Member preferences (these analyzers are unreliable)
+# IDE0051: Remove unused private member
+dotnet_diagnostic.IDE0051.severity = silent
+# IDE0052: Remove unread private member
+dotnet_diagnostic.IDE0052.severity = silent
+
 # Code-block preferences
 csharp_prefer_braces = true:silent
 # IDE0011: Add braces
@@ -142,11 +148,13 @@ dotnet_diagnostic.IDE0047.severity = silent
 # IDE0048: Add parentheses for clarity
 dotnet_diagnostic.IDE0048.severity = silent
 
+# Switch preferences
 # IDE0010: Add missing cases to switch statement
 dotnet_diagnostic.IDE0010.severity = silent
 # IDE0072: Add missing cases to switch expression
 dotnet_diagnostic.IDE0072.severity = silent
 
+# Null check preferences
 # IDE0029: Null check can be simplified
 dotnet_diagnostic.IDE0029.severity = silent
 # IDE0030: Null check can be simplified

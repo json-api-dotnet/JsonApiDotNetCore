@@ -69,7 +69,7 @@ public sealed class DeleteResourceTests : IClassFixture<IntegrationTestContext<O
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
         exception.Message.Should().Be("HTTP 404: The writeOnlyChannel does not exist.");
-        exception.Result.Errors.ShouldHaveCount(1);
+        exception.Result.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Result.Errors.ElementAt(0);
         error.Status.Should().Be("404");

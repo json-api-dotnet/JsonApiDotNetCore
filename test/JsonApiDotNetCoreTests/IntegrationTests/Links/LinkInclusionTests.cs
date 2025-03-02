@@ -44,50 +44,50 @@ public sealed class LinkInclusionTests : IClassFixture<IntegrationTestContext<Te
 
         responseDocument.Links.Should().BeNull();
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Links.Should().BeNull();
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("photo").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("photo").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Links.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Links.Should().NotBeNull();
             value.Links.Self.Should().BeNull();
-            value.Links.Related.ShouldNotBeNull();
+            value.Links.Related.Should().NotBeNull();
         });
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("album").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("album").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Links.Should().BeNull();
         });
 
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
 
         responseDocument.Included[0].With(resource =>
         {
-            resource.Links.ShouldNotBeNull();
-            resource.Links.Self.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
+            resource.Links.Self.Should().NotBeNull();
 
-            resource.Relationships.ShouldContainKey("location").With(value =>
+            resource.Relationships.Should().ContainKey("location").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
-                value.Links.Self.ShouldNotBeNull();
-                value.Links.Related.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
+                value.Links.Self.Should().NotBeNull();
+                value.Links.Related.Should().NotBeNull();
             });
         });
 
         responseDocument.Included[1].With(resource =>
         {
-            resource.Links.ShouldNotBeNull();
-            resource.Links.Self.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
+            resource.Links.Self.Should().NotBeNull();
 
-            resource.Relationships.ShouldContainKey("photos").With(value =>
+            resource.Relationships.Should().ContainKey("photos").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
-                value.Links.Self.ShouldNotBeNull();
-                value.Links.Related.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
+                value.Links.Self.Should().NotBeNull();
+                value.Links.Related.Should().NotBeNull();
             });
         });
     }
@@ -115,15 +115,15 @@ public sealed class LinkInclusionTests : IClassFixture<IntegrationTestContext<Te
 
         responseDocument.Links.Should().BeNull();
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Links.Should().BeNull();
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("photo").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("photo").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Links.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Links.Should().NotBeNull();
             value.Links.Self.Should().BeNull();
-            value.Links.Related.ShouldNotBeNull();
+            value.Links.Related.Should().NotBeNull();
         });
 
         responseDocument.Data.SingleValue.Relationships.Should().NotContainKey("album");

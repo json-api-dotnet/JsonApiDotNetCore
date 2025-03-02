@@ -265,7 +265,7 @@ public sealed class ResourceGraphBuilderTests
 
         // Assert
         IReadOnlyList<string> logLines = loggerProvider.GetLines();
-        logLines.ShouldHaveCount(1);
+        logLines.Should().HaveCount(1);
 
         logLines[0].Should().Be(
             $"[WARNING] Skipping: Type '{typeof(NonResource)}' does not implement 'IIdentifiable'. Add [NoResource] to suppress this warning.");
@@ -302,7 +302,7 @@ public sealed class ResourceGraphBuilderTests
 
         // Assert
         IReadOnlyList<string> logLines = loggerProvider.GetLines();
-        logLines.ShouldHaveCount(1);
+        logLines.Should().HaveCount(1);
 
         logLines[0].Should().Be($"[WARNING] Type '{typeof(ResourceWithHasOneRelationship)}' does not contain any attributes.");
     }
@@ -321,7 +321,7 @@ public sealed class ResourceGraphBuilderTests
 
         // Assert
         IReadOnlyList<string> logLines = loggerProvider.GetLines();
-        logLines.ShouldHaveCount(1);
+        logLines.Should().HaveCount(1);
 
         logLines[0].Should().Be("[WARNING] The resource graph is empty.");
     }

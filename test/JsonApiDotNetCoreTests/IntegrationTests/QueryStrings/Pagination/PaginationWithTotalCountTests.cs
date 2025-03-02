@@ -54,10 +54,10 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(posts[1].StringId);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().Be($"{HostPrefix}/blogPosts?page%5Bsize%5D=1");
         responseDocument.Links.Last.Should().Be($"{HostPrefix}/blogPosts?page%5Bnumber%5D=2&page%5Bsize%5D=1");
@@ -85,13 +85,13 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
         error.Detail.Should().Be($"{CollectionErrorMessage} Failed at position 1: ^page[number]");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
     }
 
@@ -119,10 +119,10 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[2].StringId);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/posts?page%5Bsize%5D=1");
         responseDocument.Links.Last.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/posts?page%5Bnumber%5D=5&page%5Bsize%5D=1");
@@ -151,10 +151,10 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(account.LoginAttempts[1].StringId);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().Be($"{HostPrefix}/webAccounts/{account.StringId}/loginAttempts?page%5Bsize%5D=1");
         responseDocument.Links.Last.Should().BeNull();
@@ -182,13 +182,13 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
         error.Detail.Should().Be($"{CollectionErrorMessage} Failed at position 1: ^page[size]");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("page[size]");
     }
 
@@ -215,13 +215,13 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
 
         responseDocument.Included[0].Id.Should().Be(blogs[0].Posts[1].StringId);
         responseDocument.Included[1].Id.Should().Be(blogs[1].Posts[1].StringId);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().Be($"{HostPrefix}/blogs?include=posts&page%5Bsize%5D=2,posts%3A1");
         responseDocument.Links.Last.Should().Be($"{HostPrefix}/blogs?include=posts&page%5Bnumber%5D=2&page%5Bsize%5D=2,posts%3A1");
@@ -251,11 +251,11 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Id.Should().Be(blog.Owner.Posts[1].StringId);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().BeNull();
         responseDocument.Links.Last.Should().BeNull();
@@ -284,10 +284,10 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[1].StringId);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/relationships/posts?page%5Bsize%5D=1");
         responseDocument.Links.Last.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/relationships/posts?page%5Bnumber%5D=4&page%5Bsize%5D=1");
@@ -316,12 +316,12 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(account.LoginAttempts[1].StringId);
 
         string basePath = $"{HostPrefix}/webAccounts/{account.StringId}/relationships/loginAttempts";
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().Be(basePath + "?page%5Bsize%5D=1");
         responseDocument.Links.Last.Should().BeNull();
@@ -352,13 +352,13 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
 
         responseDocument.Included[0].Id.Should().Be(posts[0].Labels.ElementAt(1).StringId);
         responseDocument.Included[1].Id.Should().Be(posts[1].Labels.ElementAt(1).StringId);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().Be($"{HostPrefix}/blogPosts?include=labels&page%5Bsize%5D=labels%3A1");
         responseDocument.Links.Last.Should().Be(responseDocument.Links.First);
@@ -388,10 +388,10 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(post.Labels.ElementAt(1).StringId);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().Be($"{HostPrefix}/blogPosts/{post.StringId}/relationships/labels?page%5Bsize%5D=1");
         responseDocument.Links.Last.Should().Be($"{HostPrefix}/blogPosts/{post.StringId}/relationships/labels?page%5Bnumber%5D=4&page%5Bsize%5D=1");
@@ -424,10 +424,10 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
 
-        responseDocument.Included.ShouldHaveCount(3);
+        responseDocument.Included.Should().HaveCount(3);
 
         responseDocument.Included[0].Type.Should().Be("webAccounts");
         responseDocument.Included[0].Id.Should().Be(blogs[1].Owner!.StringId);
@@ -440,7 +440,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
 
         const string linkPrefix = $"{HostPrefix}/blogs?include=owner.posts.comments";
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().Be($"{linkPrefix}&page%5Bsize%5D=1,owner.posts%3A1,owner.posts.comments%3A1");
         responseDocument.Links.Last.Should().Be($"{linkPrefix}&page%5Bsize%5D=1,owner.posts%3A1,owner.posts.comments%3A1&page%5Bnumber%5D=2");
@@ -461,13 +461,13 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
         error.Detail.Should().Be($"Field '{Unknown.Relationship}' does not exist on resource type 'webAccounts'. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
     }
 
@@ -484,13 +484,13 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
         error.Detail.Should().Be($"Field '{Unknown.Relationship}' does not exist on resource type 'blogPosts'. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("page[size]");
     }
 
@@ -519,13 +519,13 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(blog.Posts[1].StringId);
 
-        responseDocument.Included.ShouldHaveCount(4);
+        responseDocument.Included.Should().HaveCount(4);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
         responseDocument.Links.Last.Should().Be($"{responseDocument.Links.Self}&page%5Bnumber%5D=2");
@@ -557,9 +557,9 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(25);
+        responseDocument.Data.ManyValue.Should().HaveCount(25);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().BeNull();
         responseDocument.Links.Last.Should().BeNull();
@@ -603,8 +603,8 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.ShouldNotBeNull();
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Should().NotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
 
         if (firstLink != null)

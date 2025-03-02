@@ -62,7 +62,7 @@ public sealed class LinksDisabledTests : IClassFixture<OpenApiTestContext<OpenAp
             {
                 string[] linkPropertyNames = propertiesElement.EnumerateObject().Select(propertyElement => propertyElement.Name).ToArray();
 
-                linkPropertyNames.ShouldHaveCount(2);
+                linkPropertyNames.Should().HaveCount(2);
                 linkPropertyNames[0].Should().Be("about");
                 linkPropertyNames[1].Should().Be("type");
             });

@@ -64,13 +64,13 @@ public sealed class AtomicTransactionConsistencyTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Unsupported resource type in atomic:operations request.");
         error.Detail.Should().Be("Operations on resources of type 'performers' cannot be used because transaction support is unavailable.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]");
     }
 
@@ -107,13 +107,13 @@ public sealed class AtomicTransactionConsistencyTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Unsupported combination of resource types in atomic:operations request.");
         error.Detail.Should().Be("All operations need to participate in a single shared transaction, which is not the case for this request.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]");
     }
 
@@ -150,13 +150,13 @@ public sealed class AtomicTransactionConsistencyTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Unsupported combination of resource types in atomic:operations request.");
         error.Detail.Should().Be("All operations need to participate in a single shared transaction, which is not the case for this request.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]");
     }
 

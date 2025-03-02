@@ -64,14 +64,14 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Gone);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Gone);
         error.Title.Should().Be("The requested article is no longer available.");
         error.Detail.Should().Be("Article with code 'X123' is no longer available.");
 
-        error.Meta.ShouldContainKey("support").With(value =>
+        error.Meta.Should().ContainKey("support").WhoseValue.With(value =>
         {
             JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
             element.GetString().Should().Be("Please contact us for info about similar articles at company@email.com.");
@@ -80,7 +80,7 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
         responseDocument.Meta.Should().BeNull();
 
         IReadOnlyList<LogMessage> logMessages = loggerProvider.GetMessages();
-        logMessages.ShouldHaveCount(1);
+        logMessages.Should().HaveCount(1);
 
         logMessages[0].LogLevel.Should().Be(LogLevel.Warning);
         logMessages[0].Text.Should().Contain("Article with code 'X123' is no longer available.");
@@ -103,26 +103,14 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
         error.Detail.Should().Be("Resource type '' does not exist.");
-
-        error.Meta.ShouldContainKey("requestBody").With(value =>
-        {
-            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
-            element.GetString().Should().Be(requestBody);
-        });
-
-        error.Meta.ShouldContainKey("stackTrace").With(value =>
-        {
-            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
-            IEnumerable<string?> stackTraceLines = element.EnumerateArray().Select(token => token.GetString());
-
-            stackTraceLines.ShouldNotBeEmpty();
-        });
+        error.Meta.Should().ContainRequestBody(requestBody);
+        error.Meta.Should().HaveStackTrace();
 
         IReadOnlyList<LogMessage> logMessages = loggerProvider.GetMessages();
         logMessages.Should().BeEmpty();
@@ -151,25 +139,18 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.InternalServerError);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         error.Title.Should().Be("An unhandled error occurred while processing this request.");
         error.Detail.Should().Be("Exception has been thrown by the target of an invocation.");
-
-        error.Meta.ShouldContainKey("stackTrace").With(value =>
-        {
-            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
-            IEnumerable<string?> stackTraceLines = element.EnumerateArray().Select(token => token.GetString());
-
-            stackTraceLines.Should().ContainMatch("*ThrowingArticle*");
-        });
+        error.Meta.Should().HaveInStackTrace("*ThrowingArticle*");
 
         responseDocument.Meta.Should().BeNull();
 
         IReadOnlyList<LogMessage> logMessages = loggerProvider.GetMessages();
-        logMessages.ShouldHaveCount(1);
+        logMessages.Should().HaveCount(1);
 
         logMessages[0].LogLevel.Should().Be(LogLevel.Error);
         logMessages[0].Text.Should().Contain("Exception has been thrown by the target of an invocation.");

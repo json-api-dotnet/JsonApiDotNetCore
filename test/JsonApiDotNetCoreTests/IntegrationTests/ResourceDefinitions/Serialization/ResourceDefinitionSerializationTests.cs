@@ -59,19 +59,19 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(students[0].SocialSecurityNumber);
         });
 
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(students[1].SocialSecurityNumber);
@@ -110,37 +110,37 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
-        responseDocument.Included.ShouldHaveCount(4);
+        responseDocument.Included.Should().HaveCount(4);
 
-        responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Included[0].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(scholarships[0].Participants[0].SocialSecurityNumber);
         });
 
-        responseDocument.Included[1].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Included[1].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(scholarships[0].Participants[1].SocialSecurityNumber);
         });
 
-        responseDocument.Included[2].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Included[2].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(scholarships[1].Participants[0].SocialSecurityNumber);
         });
 
-        responseDocument.Included[3].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Included[3].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(scholarships[1].Participants[1].SocialSecurityNumber);
@@ -178,11 +178,11 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(student.SocialSecurityNumber);
@@ -218,19 +218,19 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(scholarship.Participants[0].SocialSecurityNumber);
         });
 
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(scholarship.Participants[1].SocialSecurityNumber);
@@ -267,11 +267,11 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(scholarship.PrimaryContact.SocialSecurityNumber);
@@ -307,13 +307,13 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
 
-        responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Included[0].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(scholarship.PrimaryContact.SocialSecurityNumber);
@@ -356,17 +356,17 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(newSocialSecurityNumber);
         });
 
-        int newStudentId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        int newStudentId = int.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -432,13 +432,13 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
 
-        responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Included[0].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(existingStudent.SocialSecurityNumber);
@@ -488,11 +488,11 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(newSocialSecurityNumber);
@@ -570,21 +570,21 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
 
-        responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Included[0].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(existingScholarship.Participants[0].SocialSecurityNumber);
         });
 
-        responseDocument.Included[1].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Included[1].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(existingScholarship.Participants[2].SocialSecurityNumber);
@@ -620,7 +620,7 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(scholarship.PrimaryContact.StringId);
 
         hitCounter.HitExtensibilityPoints.Should().BeEmpty();
@@ -649,7 +649,7 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(scholarship.Participants[0].StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(scholarship.Participants[1].StringId);
 

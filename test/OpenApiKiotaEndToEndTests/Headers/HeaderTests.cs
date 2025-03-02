@@ -58,11 +58,11 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
             await apiClient.Countries.PostAsync(requestBody, configuration => configuration.Options.Add(headerInspector));
 
         // Assert
-        response.ShouldNotBeNull();
-        response.Data.ShouldNotBeNull();
+        response.Should().NotBeNull();
+        response.Data.Should().NotBeNull();
 
         string[] locationHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.Location).WhoseValue.ToArray();
-        locationHeaderValues.ShouldHaveCount(1);
+        locationHeaderValues.Should().HaveCount(1);
         locationHeaderValues[0].Should().Be($"/countries/{response.Data.Id}");
     }
 
@@ -92,7 +92,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
 
         // Assert
         string[] contentLengthHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ContentLength).WhoseValue.ToArray();
-        contentLengthHeaderValues.ShouldHaveCount(1);
+        contentLengthHeaderValues.Should().HaveCount(1);
         long.Parse(contentLengthHeaderValues[0]).Should().BeGreaterThan(0);
     }
 
@@ -121,7 +121,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
 
         // Assert
         string[] contentLengthHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ContentLength).WhoseValue.ToArray();
-        contentLengthHeaderValues.ShouldHaveCount(1);
+        contentLengthHeaderValues.Should().HaveCount(1);
         long.Parse(contentLengthHeaderValues[0]).Should().BeGreaterThan(0);
     }
 
@@ -151,7 +151,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
 
         // Assert
         string[] contentLengthHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ContentLength).WhoseValue.ToArray();
-        contentLengthHeaderValues.ShouldHaveCount(1);
+        contentLengthHeaderValues.Should().HaveCount(1);
         long.Parse(contentLengthHeaderValues[0]).Should().BeGreaterThan(0);
     }
 
@@ -181,7 +181,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
 
         // Assert
         string[] contentLengthHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ContentLength).WhoseValue.ToArray();
-        contentLengthHeaderValues.ShouldHaveCount(1);
+        contentLengthHeaderValues.Should().HaveCount(1);
         long.Parse(contentLengthHeaderValues[0]).Should().BeGreaterThan(0);
     }
 

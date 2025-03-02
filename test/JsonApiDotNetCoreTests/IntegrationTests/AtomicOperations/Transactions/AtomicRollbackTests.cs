@@ -88,13 +88,13 @@ public sealed class AtomicRollbackTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
         error.Title.Should().Be("A related resource does not exist.");
         error.Detail.Should().Be($"Related resource of type 'performers' with ID '{unknownPerformerId}' in relationship 'performers' does not exist.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[1]");
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -168,13 +168,13 @@ public sealed class AtomicRollbackTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
         error.Title.Should().Be("A related resource does not exist.");
         error.Detail.Should().Be($"Related resource of type 'performers' with ID '{unknownPerformerId}' in relationship 'performers' does not exist.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[1]");
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>

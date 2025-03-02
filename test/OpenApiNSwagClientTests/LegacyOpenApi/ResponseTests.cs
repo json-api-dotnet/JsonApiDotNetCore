@@ -3,7 +3,6 @@ using System.Net;
 using FluentAssertions;
 using JsonApiDotNetCore.OpenApi.Client.NSwag;
 using OpenApiNSwagClientTests.LegacyOpenApi.GeneratedCode;
-using TestBuildingBlocks;
 using Xunit;
 
 namespace OpenApiNSwagClientTests.LegacyOpenApi;
@@ -226,10 +225,10 @@ public sealed class ResponseTests
         // Assert
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
-        exception.Result.Links.ShouldNotBeNull();
+        exception.Result.Links.Should().NotBeNull();
         exception.Result.Links.Self.Should().Be("http://localhost/api/flights/ZvuH1");
         exception.Result.Links.Describedby.Should().Be("/swagger/v1/swagger.json");
-        exception.Result.Errors.ShouldHaveCount(1);
+        exception.Result.Errors.Should().HaveCount(1);
 
         ErrorObject? error = exception.Result.Errors.ElementAt(0);
         error.Id.Should().Be("f1a520ac-02a0-466b-94ea-86cbaa86f02f");
@@ -317,7 +316,7 @@ public sealed class ResponseTests
 
         // Assert
         document.Data.Attributes.Should().BeNull();
-        document.Data.Relationships.Purser.Data.ShouldNotBeNull();
+        document.Data.Relationships.Purser.Data.Should().NotBeNull();
         document.Data.Relationships.Purser.Data.Id.Should().Be(flightAttendantId);
         document.Data.Relationships.CabinCrewMembers.Data.Should().HaveCount(1);
         document.Data.Relationships.CabinCrewMembers.Data.First().Id.Should().Be(flightAttendantId);
@@ -456,7 +455,7 @@ public sealed class ResponseTests
         FlightAttendantSecondaryResponseDocument document = await apiClient.GetFlightPurserAsync(flightId, null, null);
 
         // Assert
-        document.Data.ShouldNotBeNull();
+        document.Data.Should().NotBeNull();
         document.Data.Id.Should().Be(purserId);
         document.Data.Attributes.EmailAddress.Should().Be(emailAddress);
         document.Data.Attributes.Age.Should().Be(int.Parse(age));
@@ -570,7 +569,7 @@ public sealed class ResponseTests
         FlightAttendantIdentifierResponseDocument document = await apiClient.GetFlightPurserRelationshipAsync(flightId, null, null);
 
         // Assert
-        document.Data.ShouldNotBeNull();
+        document.Data.Should().NotBeNull();
         document.Data.Id.Should().Be(purserId);
         document.Data.Type.Should().Be(FlightAttendantResourceType.FlightAttendants);
     }

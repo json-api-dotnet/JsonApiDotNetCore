@@ -55,13 +55,13 @@ public sealed class ClientIdGenerationModesTests
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.UnprocessableEntity);
         exception.Message.Should().Be("HTTP 422: Validation of the request body failed.");
-        exception.Result.Errors.ShouldHaveCount(1);
+        exception.Result.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Result.Errors.ElementAt(0);
         error.Status.Should().Be("422");
         error.Title.Should().Be("Failed to deserialize request body: The 'id' element is invalid.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data");
     }
 
@@ -126,7 +126,7 @@ public sealed class ClientIdGenerationModesTests
         GamePrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PostGameAsync(requestBody));
 
         // Assert
-        document.ShouldNotBeNull();
+        document.Should().NotBeNull();
         document.Data.Id.Should().NotBe(Guid.Empty);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -211,7 +211,7 @@ public sealed class ClientIdGenerationModesTests
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.Conflict);
         exception.Message.Should().Be("HTTP 409: The request body contains conflicting information or another resource with the same ID already exists.");
-        exception.Result.Errors.ShouldHaveCount(1);
+        exception.Result.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Result.Errors.ElementAt(0);
         error.Status.Should().Be("409");
@@ -243,8 +243,8 @@ public sealed class ClientIdGenerationModesTests
         PlayerGroupPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PostPlayerGroupAsync(requestBody));
 
         // Assert
-        document.ShouldNotBeNull();
-        document.Data.Id.ShouldNotBeNullOrEmpty();
+        document.Should().NotBeNull();
+        document.Data.Id.Should().NotBeNullOrEmpty();
 
         long newPlayerGroupId = long.Parse(document.Data.Id);
 

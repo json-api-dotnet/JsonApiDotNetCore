@@ -45,7 +45,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         DataStreamIdentifierResponseDocument response = await apiClient.GetReadOnlyChannelVideoStreamRelationshipAsync(channel.StringId!);
 
         // Assert
-        response.Data.ShouldNotBeNull();
+        response.Data.Should().NotBeNull();
         response.Data.Id.Should().Be(channel.VideoStream.StringId);
     }
 
@@ -94,7 +94,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         DataStreamIdentifierCollectionResponseDocument response = await apiClient.GetReadOnlyChannelAudioStreamsRelationshipAsync(channel.StringId!);
 
         // Assert
-        response.Data.ShouldHaveCount(2);
+        response.Data.Should().HaveCount(2);
         response.Data.Should().ContainSingle(autoStream => autoStream.Id == channel.AudioStreams.ElementAt(0).StringId);
         response.Data.Should().ContainSingle(autoStream => autoStream.Id == channel.AudioStreams.ElementAt(1).StringId);
     }
@@ -119,7 +119,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         DataStreamIdentifierCollectionResponseDocument response = await apiClient.GetReadOnlyChannelAudioStreamsRelationshipAsync(channel.StringId!);
 
         // Assert
-        response.Data.ShouldHaveCount(0);
+        response.Data.Should().HaveCount(0);
     }
 
     [Fact]
@@ -138,7 +138,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
         exception.Message.Should().Be("HTTP 404: The readOnlyChannel does not exist.");
-        exception.Result.Errors.ShouldHaveCount(1);
+        exception.Result.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Result.Errors.ElementAt(0);
         error.Status.Should().Be("404");

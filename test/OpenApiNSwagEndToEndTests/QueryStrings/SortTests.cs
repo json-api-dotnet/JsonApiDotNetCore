@@ -51,7 +51,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         NodeCollectionResponseDocument response = await apiClient.GetNodeCollectionAsync(queryString);
 
         // Assert
-        response.Data.ShouldHaveCount(2);
+        response.Data.Should().HaveCount(2);
         response.Data.ElementAt(0).Id.Should().Be(nodes[1].StringId);
         response.Data.ElementAt(1).Id.Should().Be(nodes[0].StringId);
     }
@@ -84,7 +84,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         NodeCollectionResponseDocument response = await apiClient.GetNodeChildrenAsync(node.StringId!, queryString);
 
         // Assert
-        response.Data.ShouldHaveCount(2);
+        response.Data.Should().HaveCount(2);
         response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
         response.Data.ElementAt(1).Id.Should().Be(node.Children.ElementAt(0).StringId);
     }
@@ -117,7 +117,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         NodeIdentifierCollectionResponseDocument response = await apiClient.GetNodeChildrenRelationshipAsync(node.StringId!, queryString);
 
         // Assert
-        response.Data.ShouldHaveCount(2);
+        response.Data.Should().HaveCount(2);
         response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(0).StringId);
         response.Data.ElementAt(1).Id.Should().Be(node.Children.ElementAt(1).StringId);
     }
@@ -141,13 +141,13 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
         exception.Message.Should().Be("HTTP 400: The query string is invalid.");
-        exception.Result.Errors.ShouldHaveCount(1);
+        exception.Result.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Result.Errors.ElementAt(0);
         error.Status.Should().Be("400");
         error.Title.Should().Be("Missing query string parameter value.");
         error.Detail.Should().Be("Missing value for 'sort' query string parameter.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("sort");
     }
 

@@ -51,20 +51,20 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error1.Title.Should().Be("Input validation failed.");
         error1.Detail.Should().Be("The Title field is required.");
-        error1.Source.ShouldNotBeNull();
+        error1.Source.Should().NotBeNull();
         error1.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/title");
 
         ErrorObject error2 = responseDocument.Errors[1];
         error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error2.Title.Should().Be("Input validation failed.");
         error2.Detail.Should().Be("The field LengthInSeconds must be between 1 and 1440.");
-        error2.Source.ShouldNotBeNull();
+        error2.Source.Should().NotBeNull();
         error2.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/lengthInSeconds");
     }
 
@@ -104,13 +104,13 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Input validation failed.");
         error.Detail.Should().Be("ReleasedAt must be in the past.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/releasedAt");
     }
 
@@ -168,15 +168,15 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(1);
+        responseDocument.Results.Should().HaveCount(1);
 
-        long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().Id.ShouldNotBeNull());
+        long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(newPlaylistId);
 
-            playlistInDatabase.Tracks.ShouldHaveCount(1);
+            playlistInDatabase.Tracks.Should().HaveCount(1);
             playlistInDatabase.Tracks[0].Id.Should().Be(existingTrack.Id);
         });
     }
@@ -222,20 +222,20 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error1.Title.Should().Be("Input validation failed.");
         error1.Detail.Should().Be("The Title field is required.");
-        error1.Source.ShouldNotBeNull();
+        error1.Source.Should().NotBeNull();
         error1.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/title");
 
         ErrorObject error2 = responseDocument.Errors[1];
         error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error2.Title.Should().Be("Input validation failed.");
         error2.Detail.Should().Be("The field LengthInSeconds must be between 1 and 1440.");
-        error2.Source.ShouldNotBeNull();
+        error2.Source.Should().NotBeNull();
         error2.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/lengthInSeconds");
     }
 
@@ -348,7 +348,7 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         {
             Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(existingPlaylist.Id);
 
-            playlistInDatabase.Tracks.ShouldHaveCount(1);
+            playlistInDatabase.Tracks.Should().HaveCount(1);
             playlistInDatabase.Tracks[0].Id.Should().Be(existingTrack.Id);
         });
     }
@@ -402,7 +402,7 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         {
             MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.OwnedBy).FirstWithIdAsync(existingTrack.Id);
 
-            trackInDatabase.OwnedBy.ShouldNotBeNull();
+            trackInDatabase.OwnedBy.Should().NotBeNull();
             trackInDatabase.OwnedBy.Id.Should().Be(existingCompany.Id);
         });
     }
@@ -459,7 +459,7 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         {
             Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(existingPlaylist.Id);
 
-            playlistInDatabase.Tracks.ShouldHaveCount(1);
+            playlistInDatabase.Tracks.Should().HaveCount(1);
             playlistInDatabase.Tracks[0].Id.Should().Be(existingTrack.Id);
         });
     }
@@ -509,20 +509,20 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error1.Title.Should().Be("Input validation failed.");
         error1.Detail.Should().Be("The Name field is required.");
-        error1.Source.ShouldNotBeNull();
+        error1.Source.Should().NotBeNull();
         error1.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/name");
 
         ErrorObject error2 = responseDocument.Errors[1];
         error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error2.Title.Should().Be("Input validation failed.");
         error2.Detail.Should().Be("The field LengthInSeconds must be between 1 and 1440.");
-        error2.Source.ShouldNotBeNull();
+        error2.Source.Should().NotBeNull();
         error2.Source.Pointer.Should().Be("/atomic:operations[1]/data/attributes/lengthInSeconds");
     }
 
@@ -593,7 +593,7 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(3);
+        responseDocument.Errors.Should().HaveCount(3);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -605,14 +605,14 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error2.Title.Should().Be("Input validation failed.");
         error2.Detail.Should().Be("The Name field is required.");
-        error2.Source.ShouldNotBeNull();
+        error2.Source.Should().NotBeNull();
         error2.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/name");
 
         ErrorObject error3 = responseDocument.Errors[2];
         error3.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error3.Title.Should().Be("Input validation failed.");
         error3.Detail.Should().Be("The Name field is required.");
-        error3.Source.ShouldNotBeNull();
+        error3.Source.Should().NotBeNull();
         error3.Source.Pointer.Should().Be("/atomic:operations[1]/data/attributes/name");
     }
 }

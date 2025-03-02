@@ -41,9 +41,9 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        httpResponse.Headers.ETag.ShouldNotBeNull();
+        httpResponse.Headers.ETag.Should().NotBeNull();
         httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
-        httpResponse.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
+        httpResponse.Headers.ETag.Tag.Should().NotBeNullOrEmpty();
 
         responseDocument.Should().BeEmpty();
     }
@@ -69,11 +69,11 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        httpResponse.Headers.ETag.ShouldNotBeNull();
+        httpResponse.Headers.ETag.Should().NotBeNull();
         httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
-        httpResponse.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
+        httpResponse.Headers.ETag.Tag.Should().NotBeNullOrEmpty();
 
-        responseDocument.ShouldNotBeEmpty();
+        responseDocument.Should().NotBeEmpty();
     }
 
     [Fact]
@@ -90,7 +90,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
 
         httpResponse.Headers.ETag.Should().BeNull();
 
-        responseDocument.ShouldNotBeEmpty();
+        responseDocument.Should().NotBeEmpty();
     }
 
     [Fact]
@@ -123,7 +123,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
 
         httpResponse.Headers.ETag.Should().BeNull();
 
-        responseDocument.ShouldNotBeEmpty();
+        responseDocument.Should().NotBeEmpty();
     }
 
     [Fact]
@@ -163,13 +163,13 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.PreconditionFailed);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.PreconditionFailed);
         error.Title.Should().Be("Detection of mid-air edit collisions using ETags is not supported.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be("If-Match");
     }
 
@@ -200,9 +200,9 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse2.ShouldHaveStatusCode(HttpStatusCode.NotModified);
 
-        httpResponse2.Headers.ETag.ShouldNotBeNull();
+        httpResponse2.Headers.ETag.Should().NotBeNull();
         httpResponse2.Headers.ETag.IsWeak.Should().BeFalse();
-        httpResponse2.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
+        httpResponse2.Headers.ETag.Tag.Should().NotBeNullOrEmpty();
 
         responseDocument2.Should().BeEmpty();
     }
@@ -230,10 +230,10 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        httpResponse.Headers.ETag.ShouldNotBeNull();
+        httpResponse.Headers.ETag.Should().NotBeNull();
         httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
-        httpResponse.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
+        httpResponse.Headers.ETag.Tag.Should().NotBeNullOrEmpty();
 
-        responseDocument.ShouldNotBeEmpty();
+        responseDocument.Should().NotBeEmpty();
     }
 }

@@ -44,7 +44,7 @@ public sealed class WorkflowTests : IClassFixture<IntegrationTestContext<Testabl
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
     }
 
     [Fact]
@@ -71,13 +71,13 @@ public sealed class WorkflowTests : IClassFixture<IntegrationTestContext<Testabl
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Invalid workflow stage.");
         error.Detail.Should().Be("Initial stage of workflow must be 'Created'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/stage");
     }
 
@@ -117,13 +117,13 @@ public sealed class WorkflowTests : IClassFixture<IntegrationTestContext<Testabl
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Invalid workflow stage.");
         error.Detail.Should().Be("Cannot transition from 'OnHold' to 'Succeeded'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/stage");
     }
 

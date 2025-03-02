@@ -1,7 +1,6 @@
 using System.Reflection;
 using FluentAssertions;
 using OpenApiNSwagClientTests.ResourceFieldValidation.NullableReferenceTypesOff.ModelStateValidationOff.GeneratedCode;
-using TestBuildingBlocks;
 using Xunit;
 
 namespace OpenApiNSwagClientTests.ResourceFieldValidation.NullableReferenceTypesOff.ModelStateValidationOff;
@@ -21,7 +20,7 @@ public sealed class NullabilityTests
         PropertyInfo? property = typeof(AttributesInCreateResourceRequest).GetProperty(propertyName);
 
         // Assert
-        property.ShouldNotBeNull();
+        property.Should().NotBeNull();
         property.Should().HaveNullabilityState(expectedState);
     }
 
@@ -36,10 +35,10 @@ public sealed class NullabilityTests
         PropertyInfo? relationshipProperty = typeof(RelationshipsInCreateResourceRequest).GetProperty(propertyName);
 
         // Assert
-        relationshipProperty.ShouldNotBeNull();
+        relationshipProperty.Should().NotBeNull();
 
         PropertyInfo? dataProperty = relationshipProperty.PropertyType.GetProperty("Data");
-        dataProperty.ShouldNotBeNull();
+        dataProperty.Should().NotBeNull();
         dataProperty.Should().HaveNullabilityState(expectedState);
     }
 }

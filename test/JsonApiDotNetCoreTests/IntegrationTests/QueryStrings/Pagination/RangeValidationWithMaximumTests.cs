@@ -68,13 +68,13 @@ public sealed class RangeValidationWithMaximumTests : IClassFixture<IntegrationT
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
         error.Detail.Should().Be($"Page number cannot be higher than {MaximumPageNumber}. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
     }
 
@@ -91,13 +91,13 @@ public sealed class RangeValidationWithMaximumTests : IClassFixture<IntegrationT
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
         error.Detail.Should().Be($"Page size cannot be unconstrained. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("page[size]");
     }
 
@@ -143,13 +143,13 @@ public sealed class RangeValidationWithMaximumTests : IClassFixture<IntegrationT
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
         error.Detail.Should().Be($"Page size cannot be higher than {MaximumPageSize}. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("page[size]");
     }
 }

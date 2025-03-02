@@ -56,10 +56,10 @@ public sealed class ResourceMetaTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(3);
-        responseDocument.Data.ManyValue[0].Meta.ShouldContainKey("hasHighPriority");
+        responseDocument.Data.ManyValue.Should().HaveCount(3);
+        responseDocument.Data.ManyValue[0].Meta.Should().ContainKey("hasHighPriority");
         responseDocument.Data.ManyValue[1].Meta.Should().BeNull();
-        responseDocument.Data.ManyValue[2].Meta.ShouldContainKey("hasHighPriority");
+        responseDocument.Data.ManyValue[2].Meta.Should().ContainKey("hasHighPriority");
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
@@ -94,9 +94,9 @@ public sealed class ResourceMetaTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Included.ShouldHaveCount(1);
-        responseDocument.Included[0].Meta.ShouldContainKey("hasHighPriority");
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Included.Should().HaveCount(1);
+        responseDocument.Included[0].Meta.Should().ContainKey("hasHighPriority");
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {

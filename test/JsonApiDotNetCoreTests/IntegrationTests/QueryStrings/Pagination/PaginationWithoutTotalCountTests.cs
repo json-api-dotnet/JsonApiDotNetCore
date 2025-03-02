@@ -44,7 +44,7 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().BeNull();
         responseDocument.Links.Last.Should().BeNull();
@@ -73,7 +73,7 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().Be($"{HostPrefix}/blogPosts?page%5Bsize%5D=8&foo=bar");
         responseDocument.Links.Last.Should().BeNull();
@@ -99,7 +99,7 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().Be($"{HostPrefix}/blogPosts?foo=bar");
         responseDocument.Links.Last.Should().BeNull();
@@ -130,7 +130,7 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
 
         responseDocument.Data.ManyValue.Should().HaveCountLessThan(DefaultPageSize);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().Be($"{HostPrefix}/blogPosts?foo=bar");
         responseDocument.Links.Last.Should().BeNull();
@@ -159,9 +159,9 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(DefaultPageSize);
+        responseDocument.Data.ManyValue.Should().HaveCount(DefaultPageSize);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().Be($"{HostPrefix}/blogPosts?foo=bar");
         responseDocument.Links.Last.Should().BeNull();
@@ -190,9 +190,9 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(DefaultPageSize);
+        responseDocument.Data.ManyValue.Should().HaveCount(DefaultPageSize);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().Be($"{HostPrefix}/webAccounts/{account.StringId}/posts?foo=bar");
         responseDocument.Links.Last.Should().BeNull();

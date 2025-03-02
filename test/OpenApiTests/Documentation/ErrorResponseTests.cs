@@ -34,7 +34,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             skyscrapersElement.Should().ContainPath("get.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.ShouldHaveCount(1);
+                errorStatusCodeProperties.Should().HaveCount(1);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
 
@@ -45,7 +45,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             skyscrapersElement.Should().ContainPath("head.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.ShouldHaveCount(1);
+                errorStatusCodeProperties.Should().HaveCount(1);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
 
@@ -55,7 +55,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             skyscrapersElement.Should().ContainPath("post.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.ShouldHaveCount(4);
+                errorStatusCodeProperties.Should().HaveCount(4);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
                 errorStatusCodeProperties[1].Name.Should().Be("404");
@@ -72,7 +72,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             idElement.Should().ContainPath("get.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.ShouldHaveCount(2);
+                errorStatusCodeProperties.Should().HaveCount(2);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
                 errorStatusCodeProperties[1].Name.Should().Be("404");
@@ -84,7 +84,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             idElement.Should().ContainPath("head.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.ShouldHaveCount(2);
+                errorStatusCodeProperties.Should().HaveCount(2);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
                 errorStatusCodeProperties[1].Name.Should().Be("404");
@@ -95,7 +95,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             idElement.Should().ContainPath("patch.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.ShouldHaveCount(4);
+                errorStatusCodeProperties.Should().HaveCount(4);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
                 errorStatusCodeProperties[1].Name.Should().Be("404");
@@ -109,7 +109,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             idElement.Should().ContainPath("delete.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.ShouldHaveCount(1);
+                errorStatusCodeProperties.Should().HaveCount(1);
 
                 errorStatusCodeProperties[0].Name.Should().Be("404");
 
@@ -123,7 +123,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             elevatorElement.Should().ContainPath("get.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.ShouldHaveCount(2);
+                errorStatusCodeProperties.Should().HaveCount(2);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
                 errorStatusCodeProperties[1].Name.Should().Be("404");
@@ -135,7 +135,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             elevatorElement.Should().ContainPath("head.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.ShouldHaveCount(2);
+                errorStatusCodeProperties.Should().HaveCount(2);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
                 errorStatusCodeProperties[1].Name.Should().Be("404");
@@ -149,7 +149,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             elevatorElement.Should().ContainPath("get.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.ShouldHaveCount(2);
+                errorStatusCodeProperties.Should().HaveCount(2);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
                 errorStatusCodeProperties[1].Name.Should().Be("404");
@@ -161,7 +161,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             elevatorElement.Should().ContainPath("head.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.ShouldHaveCount(2);
+                errorStatusCodeProperties.Should().HaveCount(2);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
                 errorStatusCodeProperties[1].Name.Should().Be("404");
@@ -172,7 +172,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             elevatorElement.Should().ContainPath("patch.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.ShouldHaveCount(3);
+                errorStatusCodeProperties.Should().HaveCount(3);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
                 errorStatusCodeProperties[1].Name.Should().Be("404");
@@ -188,7 +188,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             spacesElement.Should().ContainPath("get.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.ShouldHaveCount(2);
+                errorStatusCodeProperties.Should().HaveCount(2);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
                 errorStatusCodeProperties[1].Name.Should().Be("404");
@@ -200,7 +200,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             spacesElement.Should().ContainPath("head.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.ShouldHaveCount(2);
+                errorStatusCodeProperties.Should().HaveCount(2);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
                 errorStatusCodeProperties[1].Name.Should().Be("404");
@@ -214,7 +214,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             spacesElement.Should().ContainPath("get.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.ShouldHaveCount(2);
+                errorStatusCodeProperties.Should().HaveCount(2);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
                 errorStatusCodeProperties[1].Name.Should().Be("404");
@@ -226,7 +226,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             spacesElement.Should().ContainPath("head.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.ShouldHaveCount(2);
+                errorStatusCodeProperties.Should().HaveCount(2);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
                 errorStatusCodeProperties[1].Name.Should().Be("404");
@@ -237,7 +237,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             spacesElement.Should().ContainPath("post.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.ShouldHaveCount(3);
+                errorStatusCodeProperties.Should().HaveCount(3);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
                 errorStatusCodeProperties[1].Name.Should().Be("404");
@@ -250,7 +250,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             spacesElement.Should().ContainPath("patch.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.ShouldHaveCount(3);
+                errorStatusCodeProperties.Should().HaveCount(3);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
                 errorStatusCodeProperties[1].Name.Should().Be("404");
@@ -263,7 +263,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             spacesElement.Should().ContainPath("delete.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.ShouldHaveCount(3);
+                errorStatusCodeProperties.Should().HaveCount(3);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
                 errorStatusCodeProperties[1].Name.Should().Be("404");
@@ -279,7 +279,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             skyscrapersElement.Should().ContainPath("post.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.ShouldHaveCount(5);
+                errorStatusCodeProperties.Should().HaveCount(5);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
                 errorStatusCodeProperties[1].Name.Should().Be("403");
@@ -304,7 +304,7 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
         document.Should().ContainPath("paths./elevators.post.responses").With(responsesElement =>
         {
             JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-            errorStatusCodeProperties.ShouldHaveCount(5);
+            errorStatusCodeProperties.Should().HaveCount(5);
 
             errorStatusCodeProperties[0].Name.Should().Be("400");
             errorStatusCodeProperties[1].Name.Should().Be("403");

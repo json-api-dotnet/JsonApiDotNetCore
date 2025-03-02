@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 
 namespace TestBuildingBlocks;
 
-public static class JsonElementAssertionExtensions
+public static class FluentJsonElementExtensions
 {
     private const string ComponentSchemaPrefix = "#/components/schemas/";
 
@@ -32,7 +32,7 @@ public static class JsonElementAssertionExtensions
         string? jsonElementValue = source.GetString();
         jsonElementValue.Should().StartWith(ComponentSchemaPrefix);
 
-        return jsonElementValue![ComponentSchemaPrefix.Length..];
+        return jsonElementValue[ComponentSchemaPrefix.Length..];
     }
 
     [CustomAssertion]

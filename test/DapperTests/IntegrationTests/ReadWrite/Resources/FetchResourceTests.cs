@@ -49,28 +49,28 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("todoItems"));
 
         responseDocument.Data.ManyValue[0].Id.Should().Be(todoItems[1].StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("description").With(value => value.Should().Be(todoItems[1].Description));
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("priority").With(value => value.Should().Be(todoItems[1].Priority));
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("durationInHours").With(value => value.Should().Be(todoItems[1].DurationInHours));
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("createdAt").With(value => value.Should().Be(todoItems[1].CreatedAt));
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("modifiedAt").With(value => value.Should().Be(todoItems[1].LastModifiedAt));
-        responseDocument.Data.ManyValue[0].Relationships.ShouldOnlyContainKeys("owner", "assignee", "tags");
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("description").WhoseValue.Should().Be(todoItems[1].Description);
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("priority").WhoseValue.Should().Be(todoItems[1].Priority);
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("durationInHours").WhoseValue.Should().Be(todoItems[1].DurationInHours);
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("createdAt").WhoseValue.Should().Be(todoItems[1].CreatedAt);
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("modifiedAt").WhoseValue.Should().Be(todoItems[1].LastModifiedAt);
+        responseDocument.Data.ManyValue[0].Relationships.Should().OnlyContainKeys("owner", "assignee", "tags");
 
         responseDocument.Data.ManyValue[1].Id.Should().Be(todoItems[0].StringId);
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("description").With(value => value.Should().Be(todoItems[0].Description));
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("priority").With(value => value.Should().Be(todoItems[0].Priority));
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("durationInHours").With(value => value.Should().Be(todoItems[0].DurationInHours));
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("createdAt").With(value => value.Should().Be(todoItems[0].CreatedAt));
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("modifiedAt").With(value => value.Should().Be(todoItems[0].LastModifiedAt));
-        responseDocument.Data.ManyValue[1].Relationships.ShouldOnlyContainKeys("owner", "assignee", "tags");
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("description").WhoseValue.Should().Be(todoItems[0].Description);
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("priority").WhoseValue.Should().Be(todoItems[0].Priority);
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("durationInHours").WhoseValue.Should().Be(todoItems[0].DurationInHours);
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("createdAt").WhoseValue.Should().Be(todoItems[0].CreatedAt);
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("modifiedAt").WhoseValue.Should().Be(todoItems[0].LastModifiedAt);
+        responseDocument.Data.ManyValue[1].Relationships.Should().OnlyContainKeys("owner", "assignee", "tags");
 
         responseDocument.Meta.Should().ContainTotal(2);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -118,19 +118,19 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("todoItems");
         responseDocument.Data.SingleValue.Id.Should().Be(todoItem.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(todoItem.Description));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(todoItem.Priority));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("durationInHours").With(value => value.Should().Be(todoItem.DurationInHours));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("createdAt").With(value => value.Should().Be(todoItem.CreatedAt));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("modifiedAt").With(value => value.Should().Be(todoItem.LastModifiedAt));
-        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("owner", "assignee", "tags");
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("description").WhoseValue.Should().Be(todoItem.Description);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("priority").WhoseValue.Should().Be(todoItem.Priority);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("durationInHours").WhoseValue.Should().Be(todoItem.DurationInHours);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("createdAt").WhoseValue.Should().Be(todoItem.CreatedAt);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("modifiedAt").WhoseValue.Should().Be(todoItem.LastModifiedAt);
+        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("owner", "assignee", "tags");
 
         responseDocument.Meta.Should().BeNull();
 
-        store.SqlCommands.ShouldHaveCount(1);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
         {
@@ -140,7 +140,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", todoItem.Id);
         });
     }
@@ -162,7 +162,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -170,7 +170,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
         error.Detail.Should().Be($"Resource of type 'todoItems' with ID '{unknownTodoItemId}' does not exist.");
         error.Source.Should().BeNull();
 
-        store.SqlCommands.ShouldHaveCount(1);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
         {
@@ -180,7 +180,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", unknownTodoItemId);
         });
     }
@@ -211,20 +211,20 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue.Should().AllSatisfy(resource => resource.Type.Should().Be("tags"));
 
         responseDocument.Data.ManyValue[0].Id.Should().Be(todoItem.Tags.ElementAt(0).StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be(todoItem.Tags.ElementAt(0).Name));
-        responseDocument.Data.ManyValue[0].Relationships.ShouldOnlyContainKeys("todoItem", "color");
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("name").WhoseValue.Should().Be(todoItem.Tags.ElementAt(0).Name);
+        responseDocument.Data.ManyValue[0].Relationships.Should().OnlyContainKeys("todoItem", "color");
 
         responseDocument.Data.ManyValue[1].Id.Should().Be(todoItem.Tags.ElementAt(1).StringId);
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("name").With(value => value.Should().Be(todoItem.Tags.ElementAt(1).Name));
-        responseDocument.Data.ManyValue[1].Relationships.ShouldOnlyContainKeys("todoItem", "color");
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("name").WhoseValue.Should().Be(todoItem.Tags.ElementAt(1).Name);
+        responseDocument.Data.ManyValue[1].Relationships.Should().OnlyContainKeys("todoItem", "color");
 
         responseDocument.Meta.Should().ContainTotal(2);
 
-        store.SqlCommands.ShouldHaveCount(2);
+        store.SqlCommands.Should().HaveCount(2);
 
         store.SqlCommands[0].With(command =>
         {
@@ -235,7 +235,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
                 WHERE t2."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", todoItem.Id);
         });
 
@@ -249,7 +249,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
                 ORDER BY t2."Id"
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", todoItem.Id);
         });
     }
@@ -278,17 +278,17 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("people");
         responseDocument.Data.SingleValue.Id.Should().Be(todoItem.Owner.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("firstName").With(value => value.Should().Be(todoItem.Owner.FirstName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("lastName").With(value => value.Should().Be(todoItem.Owner.LastName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(todoItem.Owner.DisplayName));
-        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("account", "ownedTodoItems", "assignedTodoItems");
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("firstName").WhoseValue.Should().Be(todoItem.Owner.FirstName);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("lastName").WhoseValue.Should().Be(todoItem.Owner.LastName);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("displayName").WhoseValue.Should().Be(todoItem.Owner.DisplayName);
+        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("account", "ownedTodoItems", "assignedTodoItems");
 
         responseDocument.Meta.Should().BeNull();
 
-        store.SqlCommands.ShouldHaveCount(1);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
         {
@@ -299,7 +299,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", todoItem.Id);
         });
     }
@@ -332,7 +332,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
 
         responseDocument.Meta.Should().BeNull();
 
-        store.SqlCommands.ShouldHaveCount(1);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
         {
@@ -343,7 +343,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(1);
+            command.Parameters.Should().HaveCount(1);
             command.Parameters.Should().Contain("@p1", todoItem.Id);
         });
     }

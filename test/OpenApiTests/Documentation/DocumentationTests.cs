@@ -1,4 +1,5 @@
 using System.Text.Json;
+using FluentAssertions;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -68,7 +69,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 getElement.Should().ContainPath("parameters").With(parametersElement =>
                 {
-                    parametersElement.EnumerateArray().ShouldHaveCount(2);
+                    parametersElement.EnumerateArray().Should().HaveCount(2);
                     parametersElement.Should().HaveProperty("[0].in", "query");
                     parametersElement.Should().HaveProperty("[0].description", ResourceTextQueryString);
                     parametersElement.Should().HaveProperty("[1].name", "If-None-Match");
@@ -78,7 +79,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 getElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().ShouldHaveCount(3);
+                    responsesElement.EnumerateObject().Should().HaveCount(3);
                     responsesElement.Should().HaveProperty("200.description", "Successfully returns the found skyscrapers, or an empty array if none were found.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
@@ -94,7 +95,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 headElement.Should().ContainPath("parameters").With(parametersElement =>
                 {
-                    parametersElement.EnumerateArray().ShouldHaveCount(2);
+                    parametersElement.EnumerateArray().Should().HaveCount(2);
                     parametersElement.Should().HaveProperty("[0].in", "query");
                     parametersElement.Should().HaveProperty("[0].description", ResourceTextQueryString);
                     parametersElement.Should().HaveProperty("[1].name", "If-None-Match");
@@ -104,7 +105,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 headElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().ShouldHaveCount(3);
+                    responsesElement.EnumerateObject().Should().HaveCount(3);
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the HTTP response body, in bytes.");
@@ -120,7 +121,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 postElement.Should().ContainPath("parameters").With(parametersElement =>
                 {
-                    parametersElement.EnumerateArray().ShouldHaveCount(1);
+                    parametersElement.EnumerateArray().Should().HaveCount(1);
                     parametersElement.Should().HaveProperty("[0].in", "query");
                     parametersElement.Should().HaveProperty("[0].description", ResourceTextQueryString);
                 });
@@ -129,7 +130,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 postElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().ShouldHaveCount(6);
+                    responsesElement.EnumerateObject().Should().HaveCount(6);
                     responsesElement.Should().HaveProperty("201.description", "The skyscraper was successfully created, which resulted in additional changes. The newly created skyscraper is returned.");
                     responsesElement.Should().HaveProperty("201.headers.Location.description", "The URL at which the newly created skyscraper can be retrieved.");
                     responsesElement.Should().HaveProperty("204.description", "The skyscraper was successfully created, which did not result in additional changes.");
@@ -149,7 +150,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 getElement.Should().ContainPath("parameters").With(parametersElement =>
                 {
-                    parametersElement.EnumerateArray().ShouldHaveCount(3);
+                    parametersElement.EnumerateArray().Should().HaveCount(3);
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
@@ -161,7 +162,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 getElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().ShouldHaveCount(4);
+                    responsesElement.EnumerateObject().Should().HaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "Successfully returns the found skyscraper.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
@@ -178,7 +179,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 headElement.Should().ContainPath("parameters").With(parametersElement =>
                 {
-                    parametersElement.EnumerateArray().ShouldHaveCount(3);
+                    parametersElement.EnumerateArray().Should().HaveCount(3);
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
@@ -190,7 +191,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 headElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().ShouldHaveCount(4);
+                    responsesElement.EnumerateObject().Should().HaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the HTTP response body, in bytes.");
@@ -207,7 +208,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 patchElement.Should().ContainPath("parameters").With(parametersElement =>
                 {
-                    parametersElement.EnumerateArray().ShouldHaveCount(2);
+                    parametersElement.EnumerateArray().Should().HaveCount(2);
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper to update.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
@@ -218,7 +219,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 patchElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().ShouldHaveCount(6);
+                    responsesElement.EnumerateObject().Should().HaveCount(6);
                     responsesElement.Should().HaveProperty("200.description", "The skyscraper was successfully updated, which resulted in additional changes. The updated skyscraper is returned.");
                     responsesElement.Should().HaveProperty("204.description", "The skyscraper was successfully updated, which did not result in additional changes.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid or the request body is missing or malformed.");
@@ -234,14 +235,14 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 deleteElement.Should().ContainPath("parameters").With(parametersElement =>
                 {
-                    parametersElement.EnumerateArray().ShouldHaveCount(1);
+                    parametersElement.EnumerateArray().Should().HaveCount(1);
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper to delete.");
                 });
 
                 deleteElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().ShouldHaveCount(2);
+                    responsesElement.EnumerateObject().Should().HaveCount(2);
                     responsesElement.Should().HaveProperty("204.description", "The skyscraper was successfully deleted.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
@@ -256,7 +257,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 getElement.Should().ContainPath("parameters").With(parametersElement =>
                 {
-                    parametersElement.EnumerateArray().ShouldHaveCount(3);
+                    parametersElement.EnumerateArray().Should().HaveCount(3);
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related elevator to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
@@ -268,7 +269,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 getElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().ShouldHaveCount(4);
+                    responsesElement.EnumerateObject().Should().HaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "Successfully returns the found elevator, or `null` if it was not found.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
@@ -285,7 +286,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 headElement.Should().ContainPath("parameters").With(parametersElement =>
                 {
-                    parametersElement.EnumerateArray().ShouldHaveCount(3);
+                    parametersElement.EnumerateArray().Should().HaveCount(3);
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related elevator to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
@@ -297,7 +298,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 headElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().ShouldHaveCount(4);
+                    responsesElement.EnumerateObject().Should().HaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the HTTP response body, in bytes.");
@@ -317,7 +318,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 getElement.Should().ContainPath("parameters").With(parametersElement =>
                 {
-                    parametersElement.EnumerateArray().ShouldHaveCount(3);
+                    parametersElement.EnumerateArray().Should().HaveCount(3);
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related elevator identity to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
@@ -329,7 +330,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 getElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().ShouldHaveCount(4);
+                    responsesElement.EnumerateObject().Should().HaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "Successfully returns the found elevator identity, or `null` if it was not found.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
@@ -346,7 +347,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 headElement.Should().ContainPath("parameters").With(parametersElement =>
                 {
-                    parametersElement.EnumerateArray().ShouldHaveCount(3);
+                    parametersElement.EnumerateArray().Should().HaveCount(3);
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related elevator identity to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
@@ -358,7 +359,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 headElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().ShouldHaveCount(4);
+                    responsesElement.EnumerateObject().Should().HaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the HTTP response body, in bytes.");
@@ -375,7 +376,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 patchElement.Should().ContainPath("parameters").With(parametersElement =>
                 {
-                    parametersElement.EnumerateArray().ShouldHaveCount(1);
+                    parametersElement.EnumerateArray().Should().HaveCount(1);
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose elevator relationship to assign or clear.");
                 });
@@ -384,7 +385,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 patchElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().ShouldHaveCount(4);
+                    responsesElement.EnumerateObject().Should().HaveCount(4);
                     responsesElement.Should().HaveProperty("204.description", "The elevator relationship was successfully updated, which did not result in additional changes.");
                     responsesElement.Should().HaveProperty("400.description", "The request body is missing or malformed.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper or a related resource does not exist.");
@@ -401,7 +402,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 getElement.Should().ContainPath("parameters").With(parametersElement =>
                 {
-                    parametersElement.EnumerateArray().ShouldHaveCount(3);
+                    parametersElement.EnumerateArray().Should().HaveCount(3);
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related spaces to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
@@ -413,7 +414,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 getElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().ShouldHaveCount(4);
+                    responsesElement.EnumerateObject().Should().HaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "Successfully returns the found spaces, or an empty array if none were found.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
@@ -430,7 +431,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 headElement.Should().ContainPath("parameters").With(parametersElement =>
                 {
-                    parametersElement.EnumerateArray().ShouldHaveCount(3);
+                    parametersElement.EnumerateArray().Should().HaveCount(3);
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related spaces to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
@@ -442,7 +443,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 headElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().ShouldHaveCount(4);
+                    responsesElement.EnumerateObject().Should().HaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the HTTP response body, in bytes.");
@@ -462,7 +463,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 getElement.Should().ContainPath("parameters").With(parametersElement =>
                 {
-                    parametersElement.EnumerateArray().ShouldHaveCount(3);
+                    parametersElement.EnumerateArray().Should().HaveCount(3);
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related space identities to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
@@ -474,7 +475,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 getElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().ShouldHaveCount(4);
+                    responsesElement.EnumerateObject().Should().HaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "Successfully returns the found space identities, or an empty array if none were found.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
@@ -491,7 +492,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 headElement.Should().ContainPath("parameters").With(parametersElement =>
                 {
-                    parametersElement.EnumerateArray().ShouldHaveCount(3);
+                    parametersElement.EnumerateArray().Should().HaveCount(3);
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related space identities to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
@@ -503,7 +504,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 headElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().ShouldHaveCount(4);
+                    responsesElement.EnumerateObject().Should().HaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the HTTP response body, in bytes.");
@@ -520,7 +521,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 postElement.Should().ContainPath("parameters").With(parametersElement =>
                 {
-                    parametersElement.EnumerateArray().ShouldHaveCount(1);
+                    parametersElement.EnumerateArray().Should().HaveCount(1);
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper to add spaces to.");
                 });
@@ -529,7 +530,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 postElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().ShouldHaveCount(4);
+                    responsesElement.EnumerateObject().Should().HaveCount(4);
                     responsesElement.Should().HaveProperty("204.description", "The spaces were successfully added, which did not result in additional changes.");
                     responsesElement.Should().HaveProperty("400.description", "The request body is missing or malformed.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper or a related resource does not exist.");
@@ -543,7 +544,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 patchElement.Should().ContainPath("parameters").With(parametersElement =>
                 {
-                    parametersElement.EnumerateArray().ShouldHaveCount(1);
+                    parametersElement.EnumerateArray().Should().HaveCount(1);
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose spaces relationship to assign.");
                 });
@@ -552,7 +553,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 patchElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().ShouldHaveCount(4);
+                    responsesElement.EnumerateObject().Should().HaveCount(4);
                     responsesElement.Should().HaveProperty("204.description", "The spaces relationship was successfully updated, which did not result in additional changes.");
                     responsesElement.Should().HaveProperty("400.description", "The request body is missing or malformed.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper or a related resource does not exist.");
@@ -566,7 +567,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 deleteElement.Should().ContainPath("parameters").With(parametersElement =>
                 {
-                    parametersElement.EnumerateArray().ShouldHaveCount(1);
+                    parametersElement.EnumerateArray().Should().HaveCount(1);
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper to remove spaces from.");
                 });
@@ -575,7 +576,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 deleteElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().ShouldHaveCount(4);
+                    responsesElement.EnumerateObject().Should().HaveCount(4);
                     responsesElement.Should().HaveProperty("204.description", "The spaces were successfully removed, which did not result in additional changes.");
                     responsesElement.Should().HaveProperty("400.description", "The request body is missing or malformed.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper or a related resource does not exist.");
@@ -594,7 +595,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 postElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().ShouldHaveCount(7);
+                    responsesElement.EnumerateObject().Should().HaveCount(7);
                     responsesElement.Should().HaveProperty("200.description", "All operations were successfully applied, which resulted in additional changes.");
                     responsesElement.Should().HaveProperty("204.description", "All operations were successfully applied, which did not result in additional changes.");
                     responsesElement.Should().HaveProperty("400.description", "The request body is missing or malformed.");

@@ -46,8 +46,8 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         DataStreamIdentifierResponseDocument? response = await apiClient.ReadOnlyChannels[channel.StringId!].Relationships.VideoStream.GetAsync();
 
         // Assert
-        response.ShouldNotBeNull();
-        response.Data.ShouldNotBeNull();
+        response.Should().NotBeNull();
+        response.Data.Should().NotBeNull();
         response.Data.Id.Should().Be(channel.VideoStream.StringId);
     }
 
@@ -72,7 +72,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
             await apiClient.ReadOnlyChannels[channel.StringId!].Relationships.UltraHighDefinitionVideoStream.GetAsync();
 
         // Assert
-        response.ShouldNotBeNull();
+        response.Should().NotBeNull();
         response.Data.Should().BeNull();
     }
 
@@ -97,8 +97,8 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         DataStreamIdentifierCollectionResponseDocument? response = await apiClient.ReadOnlyChannels[channel.StringId!].Relationships.AudioStreams.GetAsync();
 
         // Assert
-        response.ShouldNotBeNull();
-        response.Data.ShouldHaveCount(2);
+        response.Should().NotBeNull();
+        response.Data.Should().HaveCount(2);
         response.Data.Should().ContainSingle(autoStream => autoStream.Id == channel.AudioStreams.ElementAt(0).StringId);
         response.Data.Should().ContainSingle(autoStream => autoStream.Id == channel.AudioStreams.ElementAt(1).StringId);
     }
@@ -123,8 +123,8 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         DataStreamIdentifierCollectionResponseDocument? response = await apiClient.ReadOnlyChannels[channel.StringId!].Relationships.AudioStreams.GetAsync();
 
         // Assert
-        response.ShouldNotBeNull();
-        response.Data.ShouldHaveCount(0);
+        response.Should().NotBeNull();
+        response.Data.Should().HaveCount(0);
     }
 
     [Fact]
@@ -143,7 +143,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
         exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.NotFound);
         exception.Message.Should().Be($"Exception of type '{typeof(ErrorResponseDocument).FullName}' was thrown.");
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Errors.ElementAt(0);
         error.Status.Should().Be("404");

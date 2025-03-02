@@ -1,7 +1,6 @@
 using FluentAssertions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.ResourceGraph;
@@ -79,7 +78,7 @@ public sealed class HasManyAttributeTests
         attribute.SetValue(resource, children);
 
         // Assert
-        attribute.GetValue(resource).Should().BeOfType<List<TestResource>>().Subject.ShouldHaveCount(1);
+        attribute.GetValue(resource).Should().BeOfType<List<TestResource>>().Subject.Should().HaveCount(1);
     }
 
     [Fact]
@@ -154,7 +153,7 @@ public sealed class HasManyAttributeTests
 
         // Assert
         List<TestResource> collection = attribute.GetValue(resource).Should().BeOfType<List<TestResource>>().Subject!;
-        collection.ShouldHaveCount(2);
+        collection.Should().HaveCount(2);
     }
 
     [Fact]
@@ -181,7 +180,7 @@ public sealed class HasManyAttributeTests
 
         // Assert
         List<TestResource> collection = attribute.GetValue(resource).Should().BeOfType<List<TestResource>>().Subject!;
-        collection.ShouldHaveCount(1);
+        collection.Should().HaveCount(1);
     }
 
     [Fact]
@@ -208,7 +207,7 @@ public sealed class HasManyAttributeTests
 
         // Assert
         HashSet<TestResource> collection = attribute.GetValue(resource).Should().BeOfType<HashSet<TestResource>>().Subject!;
-        collection.ShouldHaveCount(2);
+        collection.Should().HaveCount(2);
     }
 
     [Fact]
@@ -235,7 +234,7 @@ public sealed class HasManyAttributeTests
 
         // Assert
         HashSet<TestResource> collection = attribute.GetValue(resource).Should().BeOfType<HashSet<TestResource>>().Subject!;
-        collection.ShouldHaveCount(1);
+        collection.Should().HaveCount(1);
     }
 
     [Fact]
@@ -259,7 +258,7 @@ public sealed class HasManyAttributeTests
 
         // Assert
         HashSet<TestResource> collection = attribute.GetValue(resource).Should().BeOfType<HashSet<TestResource>>().Subject!;
-        collection.ShouldHaveCount(1);
+        collection.Should().HaveCount(1);
     }
 
     public sealed class TestResource : Identifiable<long>

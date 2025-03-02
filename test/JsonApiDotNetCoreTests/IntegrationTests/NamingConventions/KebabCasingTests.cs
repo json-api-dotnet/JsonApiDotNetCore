@@ -41,20 +41,21 @@ public sealed class KebabCasingTests : IClassFixture<IntegrationTestContext<Keba
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
-        responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Type == "swimming-pools");
-        responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Attributes.ShouldContainKey("is-indoor") != null);
-        responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.ShouldContainKey("water-slides") != null);
-        responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.ShouldContainKey("diving-boards") != null);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
+        responseDocument.Data.ManyValue.Should().OnlyContain(resource => resource.Type == "swimming-pools");
+        responseDocument.Data.ManyValue.Should().OnlyContain(resource => resource.Attributes.Should().ContainKey2("is-indoor").WhoseValue != null);
+        responseDocument.Data.ManyValue.Should().OnlyContain(resource => resource.Relationships.Should().ContainKey2("water-slides").WhoseValue != null);
+        responseDocument.Data.ManyValue.Should().OnlyContain(resource => resource.Relationships.Should().ContainKey2("diving-boards").WhoseValue != null);
 
         decimal height = pools[1].DivingBoards[0].HeightInMeters;
+        string link = $"/public-api/diving-boards/{pools[1].DivingBoards[0].StringId}";
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("diving-boards");
         responseDocument.Included[0].Id.Should().Be(pools[1].DivingBoards[0].StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("height-in-meters").With(value => value.As<decimal>().Should().BeApproximately(height));
+        responseDocument.Included[0].Attributes.Should().ContainKey("height-in-meters").WhoseValue.As<decimal>().Should().BeApproximately(height);
         responseDocument.Included[0].Relationships.Should().BeNull();
-        responseDocument.Included[0].Links.ShouldNotBeNull().Self.Should().Be($"/public-api/diving-boards/{pools[1].DivingBoards[0].StringId}");
+        responseDocument.Included[0].Links.RefShould().NotBeNull().And.Subject.Self.Should().Be(link);
 
         responseDocument.Meta.Should().ContainTotal(2);
     }
@@ -83,10 +84,10 @@ public sealed class KebabCasingTests : IClassFixture<IntegrationTestContext<Keba
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("water-slides");
         responseDocument.Data.ManyValue[0].Id.Should().Be(pool.WaterSlides[1].StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue[0].Attributes.Should().HaveCount(1);
     }
 
     [Fact]
@@ -115,25 +116,25 @@ public sealed class KebabCasingTests : IClassFixture<IntegrationTestContext<Keba
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("swimming-pools");
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("is-indoor").With(value => value.Should().Be(newPool.IsIndoor));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("is-indoor").WhoseValue.Should().Be(newPool.IsIndoor);
 
-        int newPoolId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        int newPoolId = int.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
         string poolLink = $"{route}/{newPoolId}";
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("water-slides").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("water-slides").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Links.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Links.Should().NotBeNull();
             value.Links.Self.Should().Be($"{poolLink}/relationships/water-slides");
             value.Links.Related.Should().Be($"{poolLink}/water-slides");
         });
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("diving-boards").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("diving-boards").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Links.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Links.Should().NotBeNull();
             value.Links.Self.Should().Be($"{poolLink}/relationships/diving-boards");
             value.Links.Related.Should().Be($"{poolLink}/diving-boards");
         });
@@ -160,12 +161,12 @@ public sealed class KebabCasingTests : IClassFixture<IntegrationTestContext<Keba
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body.");
-        error.Meta.ShouldContainKey("stack-trace");
+        error.Meta.Should().ContainKey("stack-trace");
     }
 
     [Fact]
@@ -201,13 +202,13 @@ public sealed class KebabCasingTests : IClassFixture<IntegrationTestContext<Keba
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Input validation failed.");
         error.Detail.Should().Be("The field HeightInMeters must be between 1 and 20.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/height-in-meters");
     }
 }

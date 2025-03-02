@@ -57,7 +57,7 @@ public sealed class SumFilterTests : IClassFixture<IntegrationTestContext<Testab
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("blogPosts");
         responseDocument.Data.ManyValue[0].Id.Should().Be(posts[1].StringId);
     }
@@ -95,7 +95,7 @@ public sealed class SumFilterTests : IClassFixture<IntegrationTestContext<Testab
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("blogPosts");
         responseDocument.Data.ManyValue[0].Id.Should().Be(posts[1].StringId);
     }
@@ -130,11 +130,11 @@ public sealed class SumFilterTests : IClassFixture<IntegrationTestContext<Testab
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("blogs");
         responseDocument.Data.ManyValue[0].Id.Should().Be(blog.StringId);
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(blog.Posts[1].StringId);
     }

@@ -38,13 +38,13 @@ public sealed class DisableQueryStringTests : IClassFixture<IntegrationTestConte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
         error.Detail.Should().Be("The parameter 'sort' cannot be used at this endpoint.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("sort");
     }
 
@@ -60,13 +60,13 @@ public sealed class DisableQueryStringTests : IClassFixture<IntegrationTestConte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
         error.Detail.Should().Be("The parameter 'page[number]' cannot be used at this endpoint.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
     }
 
@@ -82,7 +82,7 @@ public sealed class DisableQueryStringTests : IClassFixture<IntegrationTestConte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.ShouldNotBeEmpty();
+        responseDocument.Should().NotBeEmpty();
     }
 
     [Fact]
@@ -97,13 +97,13 @@ public sealed class DisableQueryStringTests : IClassFixture<IntegrationTestConte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
         error.Detail.Should().Be("The parameter 'skipCache' cannot be used at this endpoint.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("skipCache");
     }
 }

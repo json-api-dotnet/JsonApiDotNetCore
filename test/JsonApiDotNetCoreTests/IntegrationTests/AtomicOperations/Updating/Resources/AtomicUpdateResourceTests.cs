@@ -89,7 +89,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         {
             List<MusicTrack> tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
 
-            tracksInDatabase.ShouldHaveCount(elementCount);
+            tracksInDatabase.Should().HaveCount(elementCount);
 
             for (int index = 0; index < elementCount; index++)
             {
@@ -153,7 +153,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
             trackInDatabase.Title.Should().Be(existingTrack.Title);
             trackInDatabase.Genre.Should().Be(existingTrack.Genre);
 
-            trackInDatabase.OwnedBy.ShouldNotBeNull();
+            trackInDatabase.OwnedBy.Should().NotBeNull();
             trackInDatabase.OwnedBy.Id.Should().Be(existingTrack.OwnedBy.Id);
         });
     }
@@ -200,15 +200,15 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Unknown attribute found.");
         error.Detail.Should().Be("Attribute 'doesNotExist' does not exist on resource type 'musicTracks'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/doesNotExist");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -313,15 +313,15 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Unknown relationship found.");
         error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource type 'musicTracks'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/doesNotExist");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -431,7 +431,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
             trackInDatabase.Genre.Should().Be(newGenre);
             trackInDatabase.ReleasedAt.Should().Be(existingTrack.ReleasedAt);
 
-            trackInDatabase.OwnedBy.ShouldNotBeNull();
+            trackInDatabase.OwnedBy.Should().NotBeNull();
             trackInDatabase.OwnedBy.Id.Should().Be(existingTrack.OwnedBy.Id);
         });
     }
@@ -496,7 +496,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
             trackInDatabase.Genre.Should().Be(newGenre);
             trackInDatabase.ReleasedAt.Should().Be(newReleasedAt);
 
-            trackInDatabase.OwnedBy.ShouldNotBeNull();
+            trackInDatabase.OwnedBy.Should().NotBeNull();
             trackInDatabase.OwnedBy.Id.Should().Be(existingTrack.OwnedBy.Id);
         });
     }
@@ -542,16 +542,16 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(1);
+        responseDocument.Results.Should().HaveCount(1);
 
         string isoCode = $"{newIsoCode}{ImplicitlyChangingTextLanguageDefinition.Suffix}";
 
-        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
             resource.Type.Should().Be("textLanguages");
-            resource.Attributes.ShouldContainKey("isoCode").With(value => value.Should().Be(isoCode));
+            resource.Attributes.Should().ContainKey("isoCode").WhoseValue.Should().Be(isoCode);
             resource.Attributes.Should().NotContainKey("isRightToLeft");
-            resource.Relationships.ShouldNotBeEmpty();
+            resource.Relationships.Should().NotBeEmpty();
         });
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -598,11 +598,11 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Results.ShouldHaveCount(1);
+        responseDocument.Results.Should().HaveCount(1);
 
-        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject.With(resource =>
         {
-            resource.Relationships.ShouldNotBeEmpty();
+            resource.Relationships.Should().NotBeEmpty();
             resource.Relationships.Values.Should().OnlyContain(value => value != null && value.Data.Value == null);
         });
     }
@@ -631,15 +631,15 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'href' element is not supported.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/href");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -737,15 +737,15 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/ref");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -786,15 +786,15 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'id' or 'lid' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/ref");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -837,15 +837,15 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'id' and 'lid' element are mutually exclusive.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/ref");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -871,15 +871,15 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -906,15 +906,15 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Expected an object, instead of 'null'.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -960,15 +960,15 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Expected an object, instead of an array.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1004,15 +1004,15 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1048,15 +1048,15 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'id' or 'lid' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1094,15 +1094,15 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'id' and 'lid' element are mutually exclusive.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1144,15 +1144,15 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
         error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
         error.Detail.Should().Be("Type 'playlists' is not convertible to type 'performers'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/type");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1197,15 +1197,15 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
         error.Title.Should().Be("Failed to deserialize request body: Conflicting 'id' values found.");
         error.Detail.Should().Be($"Expected '{performerId1}' instead of '{performerId2}'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/id");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1247,15 +1247,15 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
         error.Title.Should().Be("Failed to deserialize request body: Conflicting 'lid' values found.");
         error.Detail.Should().Be("Expected 'local-1' instead of 'local-2'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/lid");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1299,15 +1299,15 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'id' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1351,15 +1351,15 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'lid' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1396,15 +1396,15 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/type");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1443,13 +1443,13 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
         error.Title.Should().Be("The requested resource does not exist.");
         error.Detail.Should().Be($"Resource of type 'performers' with ID '{performerId}' does not exist.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]");
         error.Meta.Should().NotContainKey("requestBody");
     }
@@ -1492,15 +1492,15 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Incompatible 'id' value found.");
         error.Detail.Should().Be($"Failed to convert '{guid}' of type 'String' to type 'Int32'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/ref/id");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1543,15 +1543,15 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
         error.Detail.Should().Be("Attribute 'isArchived' on resource type 'playlists' is read-only.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/isArchived");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1594,15 +1594,15 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Resource ID is read-only.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/id");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1645,15 +1645,15 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Incompatible attribute value found.");
         error.Detail.Should().Be("Failed to convert attribute 'bornAt' with value '123.45' of type 'Number' to type 'DateTimeOffset'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/bornAt");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1754,13 +1754,13 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
             trackInDatabase.Title.Should().Be(existingTrack.Title);
             trackInDatabase.Genre.Should().Be(newGenre);
 
-            trackInDatabase.Lyric.ShouldNotBeNull();
+            trackInDatabase.Lyric.Should().NotBeNull();
             trackInDatabase.Lyric.Id.Should().Be(existingLyric.Id);
 
-            trackInDatabase.OwnedBy.ShouldNotBeNull();
+            trackInDatabase.OwnedBy.Should().NotBeNull();
             trackInDatabase.OwnedBy.Id.Should().Be(existingCompany.Id);
 
-            trackInDatabase.Performers.ShouldHaveCount(1);
+            trackInDatabase.Performers.Should().HaveCount(1);
             trackInDatabase.Performers[0].Id.Should().Be(existingPerformer.Id);
         });
     }
@@ -1805,14 +1805,14 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Attribute value cannot be assigned when updating resource.");
         error.Detail.Should().Be("The attribute 'createdAt' on resource type 'lyrics' cannot be assigned to.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/createdAt");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 }

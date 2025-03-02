@@ -54,7 +54,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
 
         // Assert
         string[] eTagHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
-        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues.Should().HaveCount(1);
         eTagHeaderValues[0].Should().Match("\"*\"");
     }
 
@@ -83,10 +83,10 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         CountryCollectionResponseDocument? response = await apiClient.Countries.GetAsync(configuration => configuration.Options.Add(headerInspector));
 
         // Assert
-        response.ShouldNotBeNull();
+        response.Should().NotBeNull();
 
         string[] eTagHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
-        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues.Should().HaveCount(1);
         eTagHeaderValues[0].Should().Match("\"*\"");
     }
 
@@ -111,7 +111,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
         exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.NotFound);
         exception.Message.Should().Be($"Exception of type '{typeof(ErrorResponseDocument).FullName}' was thrown.");
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Errors.ElementAt(0);
         error.Status.Should().Be("404");
@@ -153,7 +153,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
             await apiClient.Countries.PostAsync(requestBody, configuration => configuration.Options.Add(headerInspector));
 
         // Assert
-        response.ShouldNotBeNull();
+        response.Should().NotBeNull();
 
         headerInspector.ResponseHeaders.Should().NotContainKey(HeaderNames.ETag);
     }
@@ -197,7 +197,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.NotModified);
 
         string[] eTagHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
-        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues.Should().HaveCount(1);
         eTagHeaderValues[0].Should().Be(responseETag);
     }
 
@@ -230,10 +230,10 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         });
 
         // Assert
-        response.ShouldNotBeNull();
+        response.Should().NotBeNull();
 
         string[] eTagHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
-        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues.Should().HaveCount(1);
         eTagHeaderValues[0].Should().Match("\"*\"");
     }
 

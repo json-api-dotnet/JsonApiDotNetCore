@@ -91,39 +91,39 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
             // Act
             WriteOnlyChannelPrimaryResponseDocument? response = await apiClient.WriteOnlyChannels.PostAsync(requestBody);
 
-            response.ShouldNotBeNull();
+            response.Should().NotBeNull();
 
-            response.Data.ShouldNotBeNull();
-            response.Data.Attributes.ShouldNotBeNull();
+            response.Data.Should().NotBeNull();
+            response.Data.Attributes.Should().NotBeNull();
             response.Data.Attributes.Name.Should().Be(newChannel.Name);
             response.Data.Attributes.IsCommercial.Should().BeNull();
             response.Data.Attributes.IsAdultOnly.Should().BeNull();
-            response.Data.Relationships.ShouldNotBeNull();
-            response.Data.Relationships.VideoStream.ShouldNotBeNull();
-            response.Data.Relationships.VideoStream.Data.ShouldNotBeNull();
+            response.Data.Relationships.Should().NotBeNull();
+            response.Data.Relationships.VideoStream.Should().NotBeNull();
+            response.Data.Relationships.VideoStream.Data.Should().NotBeNull();
             response.Data.Relationships.VideoStream.Data.Id.Should().Be(existingVideoStream.StringId);
             response.Data.Relationships.UltraHighDefinitionVideoStream.Should().BeNull();
-            response.Data.Relationships.AudioStreams.ShouldNotBeNull();
-            response.Data.Relationships.AudioStreams.Data.ShouldHaveCount(1);
+            response.Data.Relationships.AudioStreams.Should().NotBeNull();
+            response.Data.Relationships.AudioStreams.Data.Should().HaveCount(1);
             response.Data.Relationships.AudioStreams.Data.ElementAt(0).Id.Should().Be(existingAudioStream.StringId);
 
-            response.Included.ShouldHaveCount(2);
+            response.Included.Should().HaveCount(2);
 
             response.Included.OfType<DataStreamDataInResponse>().Should().ContainSingle(streamData => streamData.Id == existingVideoStream.StringId).Subject
                 .With(streamData =>
                 {
-                    streamData.Attributes.ShouldNotBeNull();
+                    streamData.Attributes.Should().NotBeNull();
                     streamData.Attributes.BytesTransmitted.Should().Be((long?)existingVideoStream.BytesTransmitted);
                 });
 
             response.Included.OfType<DataStreamDataInResponse>().Should().ContainSingle(streamData => streamData.Id == existingAudioStream.StringId).Subject
                 .With(streamData =>
                 {
-                    streamData.Attributes.ShouldNotBeNull();
+                    streamData.Attributes.Should().NotBeNull();
                     streamData.Attributes.BytesTransmitted.Should().Be((long?)existingAudioStream.BytesTransmitted);
                 });
 
-            long newChannelId = long.Parse(response.Data.Id.ShouldNotBeNull());
+            long newChannelId = long.Parse(response.Data.Id.Should().NotBeNull().And.Subject);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -142,10 +142,10 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
                 channelInDatabase.IsCommercial.Should().BeNull();
                 channelInDatabase.IsAdultOnly.Should().Be(newChannel.IsAdultOnly);
 
-                channelInDatabase.VideoStream.ShouldNotBeNull();
+                channelInDatabase.VideoStream.Should().NotBeNull();
                 channelInDatabase.VideoStream.Id.Should().Be(existingVideoStream.Id);
 
-                channelInDatabase.AudioStreams.ShouldHaveCount(1);
+                channelInDatabase.AudioStreams.Should().HaveCount(1);
                 channelInDatabase.AudioStreams.ElementAt(0).Id.Should().Be(existingAudioStream.Id);
             });
         }
@@ -208,7 +208,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
         ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
         exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.NotFound);
         exception.Message.Should().Be($"Exception of type '{typeof(ErrorResponseDocument).FullName}' was thrown.");
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Errors.ElementAt(0);
         error.Status.Should().Be("404");
