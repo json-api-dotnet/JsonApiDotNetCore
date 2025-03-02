@@ -1,5 +1,4 @@
 using System.Net;
-using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
@@ -58,11 +57,7 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
         responseDocument.Included[0].Relationships.Should().BeNull();
         responseDocument.Included[0].Links.RefShould().NotBeNull().And.Subject.Self.Should().Be(link);
 
-        responseDocument.Meta.Should().ContainKey("Total").WhoseValue.With(value =>
-        {
-            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
-            element.GetInt32().Should().Be(2);
-        });
+        responseDocument.Meta.Should().ContainTotal(2, "Total");
     }
 
     [Fact]

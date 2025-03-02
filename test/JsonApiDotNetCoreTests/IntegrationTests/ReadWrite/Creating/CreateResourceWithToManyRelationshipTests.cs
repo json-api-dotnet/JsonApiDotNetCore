@@ -362,7 +362,7 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/subscribers/data[0]");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -407,7 +407,7 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/subscribers/data[0]/type");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -451,7 +451,7 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/subscribers/data[0]");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -560,7 +560,7 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         error.Detail.Should().Be("Type 'rgbColors' is not convertible to type 'userAccounts' of relationship 'subscribers'.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/subscribers/data[0]/type");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -663,7 +663,7 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/subscribers");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -701,7 +701,7 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/tags/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -741,7 +741,7 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/tags/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -789,7 +789,7 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/lid");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -834,6 +834,6 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         error.Detail.Should().Be("The relationship 'items' on resource type 'workItemGroups' cannot be assigned to.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/items");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 }

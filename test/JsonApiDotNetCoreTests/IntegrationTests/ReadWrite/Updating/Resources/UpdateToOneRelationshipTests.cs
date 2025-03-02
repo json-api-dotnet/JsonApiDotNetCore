@@ -480,7 +480,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/assignee");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -527,7 +527,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/assignee");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -582,7 +582,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/assignee/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -632,7 +632,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/assignee/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -683,7 +683,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/assignee/data/type");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -733,7 +733,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/assignee/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -836,7 +836,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         error.Detail.Should().Be("Type 'rgbColors' is not convertible to type 'userAccounts' of relationship 'assignee'.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/assignee/data/type");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -987,6 +987,6 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         error.Detail.Should().Be("The relationship 'group' on resource type 'workItems' cannot be assigned to.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/group");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 }

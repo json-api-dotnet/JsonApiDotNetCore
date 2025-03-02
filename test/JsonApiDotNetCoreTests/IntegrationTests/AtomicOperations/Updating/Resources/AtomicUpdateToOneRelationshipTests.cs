@@ -613,7 +613,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -666,7 +666,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -727,7 +727,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -776,7 +776,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/track/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -826,7 +826,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data/type");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -875,7 +875,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -926,7 +926,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1044,7 +1044,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().Be("Type 'playlists' is not convertible to type 'lyrics' of relationship 'lyric'.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data/type");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
@@ -1102,6 +1102,6 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         error.Detail.Should().Be("The relationship 'language' on resource type 'lyrics' cannot be assigned to.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/language");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 }

@@ -247,7 +247,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Theory]
@@ -356,7 +356,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         error.Detail.Should().Be($"Failed to convert '{guid}' of type 'String' to type 'Int32'.");
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/id");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Theory]
@@ -456,7 +456,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data/lid");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Theory]
@@ -501,6 +501,6 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
         error.Detail.Should().BeNull();
         error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        error.Meta.Should().ContainKey("requestBody").WhoseValue.Should().NotBeNull().And.Subject.ToString().Should().NotBeEmpty();
+        error.Meta.Should().HaveRequestBody();
     }
 }
