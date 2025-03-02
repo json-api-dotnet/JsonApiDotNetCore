@@ -172,12 +172,12 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
         OperationsResponseDocument? response = await apiClient.Operations.PostAsync(requestBody);
 
         // Assert
-        response.ShouldNotBeNull();
+        response.Should().NotBeNull();
 
         response.AtomicResults.Should().HaveCount(7);
 
         TeacherDataInResponse teacherInResponse = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<TeacherDataInResponse>().Which;
-        teacherInResponse.Attributes.ShouldNotBeNull();
+        teacherInResponse.Attributes.Should().NotBeNull();
         teacherInResponse.Attributes.Name.Should().Be(newTeacher.Name);
         teacherInResponse.Attributes.EmailAddress.Should().Be(newTeacher.EmailAddress);
         long newTeacherId = long.Parse(teacherInResponse.Id!);
@@ -186,13 +186,13 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
         response.AtomicResults.ElementAt(2).Data.Should().BeNull();
 
         StudentDataInResponse studentInResponse = response.AtomicResults.ElementAt(3).Data.Should().BeOfType<StudentDataInResponse>().Which;
-        studentInResponse.Attributes.ShouldNotBeNull();
+        studentInResponse.Attributes.Should().NotBeNull();
         studentInResponse.Attributes.Name.Should().Be(newStudent.Name);
         studentInResponse.Attributes.EmailAddress.Should().Be(newStudent.EmailAddress);
         long newStudentId = long.Parse(studentInResponse.Id!);
 
         EnrollmentDataInResponse enrollmentInResponse = response.AtomicResults.ElementAt(4).Data.Should().BeOfType<EnrollmentDataInResponse>().Which;
-        enrollmentInResponse.Attributes.ShouldNotBeNull();
+        enrollmentInResponse.Attributes.Should().NotBeNull();
         enrollmentInResponse.Attributes.EnrolledAt.Should().Be((Date)newEnrolledAt);
         long newEnrollmentId = long.Parse(enrollmentInResponse.Id!);
 
@@ -226,7 +226,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
             // @formatter:wrap_chained_method_calls restore
 
             enrollmentInDatabase.EnrolledAt.Should().Be(newEnrolledAt);
-            enrollmentInDatabase.Course.ShouldNotBeNull();
+            enrollmentInDatabase.Course.Should().NotBeNull();
             enrollmentInDatabase.Course.Id.Should().Be(newCourse.Id);
             enrollmentInDatabase.Student.Id.Should().Be(newStudentId);
         });

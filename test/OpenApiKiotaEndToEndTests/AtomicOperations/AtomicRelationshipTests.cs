@@ -79,7 +79,7 @@ public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestConte
         {
             Enrollment enrollmentInDatabase = await dbContext.Enrollments.Include(enrollment => enrollment.Student).FirstWithIdAsync(existingEnrollment.Id);
 
-            enrollmentInDatabase.Student.ShouldNotBeNull();
+            enrollmentInDatabase.Student.Should().NotBeNull();
             enrollmentInDatabase.Student.Id.Should().Be(existingStudent.Id);
         });
     }

@@ -52,7 +52,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.Created);
 
-        response.Result.ShouldNotBeNull();
+        response.Result.Should().NotBeNull();
 
         string[] locationHeaderValues = response.Headers.Should().ContainKey(HeaderNames.Location).WhoseValue.ToArray();
         locationHeaderValues.Should().HaveCount(1);

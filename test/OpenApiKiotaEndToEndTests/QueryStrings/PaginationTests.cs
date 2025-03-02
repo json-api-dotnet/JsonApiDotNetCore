@@ -53,10 +53,10 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
             NodeCollectionResponseDocument? response = await apiClient.Nodes.GetAsync();
 
             // Assert
-            response.ShouldNotBeNull();
+            response.Should().NotBeNull();
             response.Data.Should().HaveCount(1);
             response.Data.ElementAt(0).Id.Should().Be(nodes[1].StringId);
-            response.Meta.ShouldNotBeNull();
+            response.Meta.Should().NotBeNull();
             response.Meta.AdditionalData.Should().ContainKey("total").WhoseValue.Should().Be(3);
         }
     }
@@ -90,11 +90,11 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
             NodeCollectionResponseDocument? response = await apiClient.Nodes[node.StringId!].Children.GetAsync();
 
             // Assert
-            response.ShouldNotBeNull();
+            response.Should().NotBeNull();
             response.Data.Should().HaveCount(2);
             response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(0).StringId);
             response.Data.ElementAt(1).Id.Should().Be(node.Children.ElementAt(1).StringId);
-            response.Meta.ShouldNotBeNull();
+            response.Meta.Should().NotBeNull();
             response.Meta.AdditionalData.Should().ContainKey("total").WhoseValue.Should().Be(3);
         }
     }
@@ -128,10 +128,10 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
             NodeIdentifierCollectionResponseDocument? response = await apiClient.Nodes[node.StringId!].Relationships.Children.GetAsync();
 
             // Assert
-            response.ShouldNotBeNull();
+            response.Should().NotBeNull();
             response.Data.Should().HaveCount(1);
             response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(2).StringId);
-            response.Meta.ShouldNotBeNull();
+            response.Meta.Should().NotBeNull();
             response.Meta.AdditionalData.Should().ContainKey("total").WhoseValue.Should().Be(3);
         }
     }
@@ -163,7 +163,7 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
             error.Status.Should().Be("400");
             error.Title.Should().Be("Missing query string parameter value.");
             error.Detail.Should().Be("Missing value for 'page[size]' query string parameter.");
-            error.Source.ShouldNotBeNull();
+            error.Source.Should().NotBeNull();
             error.Source.Parameter.Should().Be("page[size]");
         }
     }
@@ -195,7 +195,7 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
             error.Status.Should().Be("400");
             error.Title.Should().Be("Missing query string parameter value.");
             error.Detail.Should().Be("Missing value for 'page[number]' query string parameter.");
-            error.Source.ShouldNotBeNull();
+            error.Source.Should().NotBeNull();
             error.Source.Parameter.Should().Be("page[number]");
         }
     }

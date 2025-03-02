@@ -153,14 +153,14 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         NullableNodeSecondaryResponseDocument response = await apiClient.GetNodeParentAsync(node.StringId!, queryString);
 
         // Assert
-        response.Data.ShouldNotBeNull();
+        response.Data.Should().NotBeNull();
         response.Data.Id.Should().Be(node.Parent.StringId);
 
         response.Included.Should().HaveCount(1);
 
         response.Included.OfType<NodeDataInResponse>().Should().ContainSingle(nodeData => nodeData.Id == node.Parent.Parent.StringId).Subject.With(nodeData =>
         {
-            nodeData.Attributes.ShouldNotBeNull();
+            nodeData.Attributes.Should().NotBeNull();
             nodeData.Attributes.Name.Should().Be(node.Parent.Parent.Name);
         });
     }

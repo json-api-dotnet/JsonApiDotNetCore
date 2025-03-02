@@ -49,29 +49,29 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Op
         response.Data.Should().HaveCount(2);
 
         ReadOnlyChannelDataInResponse channel1 = response.Data.Single(channel => channel.Id == channels.ElementAt(0).StringId);
-        channel1.Attributes.ShouldNotBeNull();
+        channel1.Attributes.Should().NotBeNull();
         channel1.Attributes.Name.Should().Be(channels[0].Name);
         channel1.Attributes.IsCommercial.Should().Be(channels[0].IsCommercial);
         channel1.Attributes.IsAdultOnly.Should().Be(channels[0].IsAdultOnly);
-        channel1.Relationships.ShouldNotBeNull();
-        channel1.Relationships.VideoStream.ShouldNotBeNull();
+        channel1.Relationships.Should().NotBeNull();
+        channel1.Relationships.VideoStream.Should().NotBeNull();
         channel1.Relationships.VideoStream.Data.Should().BeNull();
-        channel1.Relationships.UltraHighDefinitionVideoStream.ShouldNotBeNull();
+        channel1.Relationships.UltraHighDefinitionVideoStream.Should().NotBeNull();
         channel1.Relationships.UltraHighDefinitionVideoStream.Data.Should().BeNull();
-        channel1.Relationships.AudioStreams.ShouldNotBeNull();
+        channel1.Relationships.AudioStreams.Should().NotBeNull();
         channel1.Relationships.AudioStreams.Data.Should().BeNull();
 
         ReadOnlyChannelDataInResponse channel2 = response.Data.Single(channel => channel.Id == channels.ElementAt(1).StringId);
-        channel2.Attributes.ShouldNotBeNull();
+        channel2.Attributes.Should().NotBeNull();
         channel2.Attributes.Name.Should().Be(channels[1].Name);
         channel2.Attributes.IsCommercial.Should().Be(channels[1].IsCommercial);
         channel2.Attributes.IsAdultOnly.Should().Be(channels[1].IsAdultOnly);
-        channel2.Relationships.ShouldNotBeNull();
-        channel2.Relationships.VideoStream.ShouldNotBeNull();
+        channel2.Relationships.Should().NotBeNull();
+        channel2.Relationships.VideoStream.Should().NotBeNull();
         channel2.Relationships.VideoStream.Data.Should().BeNull();
-        channel2.Relationships.UltraHighDefinitionVideoStream.ShouldNotBeNull();
+        channel2.Relationships.UltraHighDefinitionVideoStream.Should().NotBeNull();
         channel2.Relationships.UltraHighDefinitionVideoStream.Data.Should().BeNull();
-        channel2.Relationships.AudioStreams.ShouldNotBeNull();
+        channel2.Relationships.AudioStreams.Should().NotBeNull();
         channel2.Relationships.AudioStreams.Data.Should().BeNull();
     }
 
@@ -95,18 +95,18 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Op
         ReadOnlyChannelPrimaryResponseDocument response = await apiClient.GetReadOnlyChannelAsync(channel.StringId!);
 
         // Assert
-        response.Data.ShouldNotBeNull();
+        response.Data.Should().NotBeNull();
         response.Data.Id.Should().Be(channel.StringId);
-        response.Data.Attributes.ShouldNotBeNull();
+        response.Data.Attributes.Should().NotBeNull();
         response.Data.Attributes.Name.Should().Be(channel.Name);
         response.Data.Attributes.IsCommercial.Should().Be(channel.IsCommercial);
         response.Data.Attributes.IsAdultOnly.Should().Be(channel.IsAdultOnly);
-        response.Data.Relationships.ShouldNotBeNull();
-        response.Data.Relationships.VideoStream.ShouldNotBeNull();
+        response.Data.Relationships.Should().NotBeNull();
+        response.Data.Relationships.VideoStream.Should().NotBeNull();
         response.Data.Relationships.VideoStream.Data.Should().BeNull();
-        response.Data.Relationships.UltraHighDefinitionVideoStream.ShouldNotBeNull();
+        response.Data.Relationships.UltraHighDefinitionVideoStream.Should().NotBeNull();
         response.Data.Relationships.UltraHighDefinitionVideoStream.Data.Should().BeNull();
-        response.Data.Relationships.AudioStreams.ShouldNotBeNull();
+        response.Data.Relationships.AudioStreams.Should().NotBeNull();
         response.Data.Relationships.AudioStreams.Data.Should().BeNull();
     }
 
@@ -154,9 +154,9 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Op
         DataStreamSecondaryResponseDocument response = await apiClient.GetReadOnlyChannelVideoStreamAsync(channel.StringId!);
 
         // Assert
-        response.Data.ShouldNotBeNull();
+        response.Data.Should().NotBeNull();
         response.Data.Id.Should().Be(channel.VideoStream.StringId);
-        response.Data.Attributes.ShouldNotBeNull();
+        response.Data.Attributes.Should().NotBeNull();
         response.Data.Attributes.BytesTransmitted.Should().Be((long?)channel.VideoStream.BytesTransmitted);
     }
 
@@ -207,11 +207,11 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Op
         response.Data.Should().HaveCount(2);
 
         DataStreamDataInResponse audioStream1 = response.Data.Single(autoStream => autoStream.Id == channel.AudioStreams.ElementAt(0).StringId);
-        audioStream1.Attributes.ShouldNotBeNull();
+        audioStream1.Attributes.Should().NotBeNull();
         audioStream1.Attributes.BytesTransmitted.Should().Be((long?)channel.AudioStreams.ElementAt(0).BytesTransmitted);
 
         DataStreamDataInResponse audioStream2 = response.Data.Single(autoStream => autoStream.Id == channel.AudioStreams.ElementAt(1).StringId);
-        audioStream2.Attributes.ShouldNotBeNull();
+        audioStream2.Attributes.Should().NotBeNull();
         audioStream2.Attributes.BytesTransmitted.Should().Be((long?)channel.AudioStreams.ElementAt(1).BytesTransmitted);
     }
 

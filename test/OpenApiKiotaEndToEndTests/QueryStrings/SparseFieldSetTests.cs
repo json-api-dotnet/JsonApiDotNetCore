@@ -52,11 +52,11 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
             NodeCollectionResponseDocument? response = await apiClient.Nodes.GetAsync();
 
             // Assert
-            response.ShouldNotBeNull();
+            response.Should().NotBeNull();
             response.Data.Should().HaveCount(1);
             response.Data.ElementAt(0).Id.Should().Be(node.StringId);
 
-            response.Data.ElementAt(0).Attributes.ShouldNotBeNull().With(attributes =>
+            response.Data.ElementAt(0).Attributes.RefShould().NotBeNull().And.Subject.With(attributes =>
             {
                 attributes.Name.Should().Be(node.Name);
                 attributes.Comment.Should().BeNull();
@@ -92,14 +92,14 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
             NodePrimaryResponseDocument? response = await apiClient.Nodes[node.StringId!].GetAsync();
 
             // Assert
-            response.ShouldNotBeNull();
-            response.Data.ShouldNotBeNull();
+            response.Should().NotBeNull();
+            response.Data.Should().NotBeNull();
             response.Data.Id.Should().Be(node.StringId);
-            response.Data.Attributes.ShouldNotBeNull();
+            response.Data.Attributes.Should().NotBeNull();
             response.Data.Attributes.Name.Should().BeNull();
             response.Data.Attributes.Comment.Should().Be(node.Comment);
-            response.Data.Relationships.ShouldNotBeNull();
-            response.Data.Relationships.Parent.ShouldNotBeNull();
+            response.Data.Relationships.Should().NotBeNull();
+            response.Data.Relationships.Parent.Should().NotBeNull();
             response.Data.Relationships.Children.Should().BeNull();
         }
     }
@@ -132,20 +132,20 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
             NodeCollectionResponseDocument? response = await apiClient.Nodes[node.StringId!].Children.GetAsync();
 
             // Assert
-            response.ShouldNotBeNull();
+            response.Should().NotBeNull();
             response.Data.Should().HaveCount(1);
             response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(0).StringId);
 
-            response.Data.ElementAt(0).Attributes.ShouldNotBeNull().With(attributes =>
+            response.Data.ElementAt(0).Attributes.RefShould().NotBeNull().And.Subject.With(attributes =>
             {
                 attributes.Name.Should().BeNull();
                 attributes.Comment.Should().Be(node.Children.ElementAt(0).Comment);
             });
 
-            response.Data.ElementAt(0).Relationships.ShouldNotBeNull().With(relationships =>
+            response.Data.ElementAt(0).Relationships.RefShould().NotBeNull().And.Subject.With(relationships =>
             {
                 relationships.Parent.Should().BeNull();
-                relationships.Children.ShouldNotBeNull();
+                relationships.Children.Should().NotBeNull();
             });
         }
     }
@@ -177,15 +177,15 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
             NullableNodeSecondaryResponseDocument? response = await apiClient.Nodes[node.StringId!].Parent.GetAsync();
 
             // Assert
-            response.ShouldNotBeNull();
-            response.Data.ShouldNotBeNull();
+            response.Should().NotBeNull();
+            response.Data.Should().NotBeNull();
             response.Data.Id.Should().Be(node.Parent.StringId);
-            response.Data.Attributes.ShouldNotBeNull();
+            response.Data.Attributes.Should().NotBeNull();
             response.Data.Attributes.Name.Should().BeNull();
             response.Data.Attributes.Comment.Should().Be(node.Parent.Comment);
-            response.Data.Relationships.ShouldNotBeNull();
+            response.Data.Relationships.Should().NotBeNull();
             response.Data.Relationships.Parent.Should().BeNull();
-            response.Data.Relationships.Children.ShouldNotBeNull();
+            response.Data.Relationships.Children.Should().NotBeNull();
         }
     }
 
@@ -215,8 +215,8 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
             NodePrimaryResponseDocument? response = await apiClient.Nodes[node.StringId!].GetAsync();
 
             // Assert
-            response.ShouldNotBeNull();
-            response.Data.ShouldNotBeNull();
+            response.Should().NotBeNull();
+            response.Data.Should().NotBeNull();
             response.Data.Id.Should().Be(node.StringId);
             response.Data.Attributes.Should().BeNull();
         }

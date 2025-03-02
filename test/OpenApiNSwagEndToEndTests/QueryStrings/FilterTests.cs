@@ -54,13 +54,13 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         response.Data.Should().HaveCount(1);
         response.Data.ElementAt(0).Id.Should().Be(nodes[1].StringId);
 
-        response.Data.ElementAt(0).Attributes.ShouldNotBeNull().With(attributes =>
+        response.Data.ElementAt(0).Attributes.RefShould().NotBeNull().And.Subject.With(attributes =>
         {
             attributes.Name.Should().Be(nodes[1].Name);
             attributes.Comment.Should().Be(nodes[1].Comment);
         });
 
-        response.Meta.ShouldNotBeNull();
+        response.Meta.Should().NotBeNull();
         response.Meta.Should().ContainKey("total").WhoseValue.Should().Be(1);
     }
 
@@ -95,13 +95,13 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         response.Data.Should().HaveCount(1);
         response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
 
-        response.Data.ElementAt(0).Attributes.ShouldNotBeNull().With(attributes =>
+        response.Data.ElementAt(0).Attributes.RefShould().NotBeNull().And.Subject.With(attributes =>
         {
             attributes.Name.Should().Be(node.Children.ElementAt(1).Name);
             attributes.Comment.Should().Be(node.Children.ElementAt(1).Comment);
         });
 
-        response.Meta.ShouldNotBeNull();
+        response.Meta.Should().NotBeNull();
         response.Meta.Should().ContainKey("total").WhoseValue.Should().Be(1);
     }
 
@@ -135,9 +135,9 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         // Assert
         response.Data.Should().HaveCount(1);
         response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
-        response.Meta.ShouldNotBeNull();
+        response.Meta.Should().NotBeNull();
         response.Meta.Should().ContainKey("total").WhoseValue.Should().Be(1);
-        response.Links.ShouldNotBeNull();
+        response.Links.Should().NotBeNull();
         response.Links.Describedby.Should().Be("/swagger/v1/swagger.json");
     }
 
@@ -160,7 +160,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
         exception.Message.Should().Be("HTTP 400: The query string is invalid.");
-        exception.Result.Links.ShouldNotBeNull();
+        exception.Result.Links.Should().NotBeNull();
         exception.Result.Links.Describedby.Should().Be("/swagger/v1/swagger.json");
         exception.Result.Errors.Should().HaveCount(1);
 
@@ -168,7 +168,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         error.Status.Should().Be("400");
         error.Title.Should().Be("Missing query string parameter value.");
         error.Detail.Should().Be("Missing value for 'filter' query string parameter.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
 

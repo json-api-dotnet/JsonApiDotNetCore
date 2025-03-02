@@ -147,7 +147,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         error.Status.Should().Be("400");
         error.Title.Should().Be("Missing query string parameter value.");
         error.Detail.Should().Be("Missing value for 'sort' query string parameter.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("sort");
     }
 

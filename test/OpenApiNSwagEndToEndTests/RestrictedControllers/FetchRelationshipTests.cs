@@ -45,7 +45,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         DataStreamIdentifierResponseDocument response = await apiClient.GetReadOnlyChannelVideoStreamRelationshipAsync(channel.StringId!);
 
         // Assert
-        response.Data.ShouldNotBeNull();
+        response.Data.Should().NotBeNull();
         response.Data.Id.Should().Be(channel.VideoStream.StringId);
     }
 

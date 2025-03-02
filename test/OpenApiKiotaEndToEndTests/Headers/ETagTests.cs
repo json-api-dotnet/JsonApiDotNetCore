@@ -83,7 +83,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         CountryCollectionResponseDocument? response = await apiClient.Countries.GetAsync(configuration => configuration.Options.Add(headerInspector));
 
         // Assert
-        response.ShouldNotBeNull();
+        response.Should().NotBeNull();
 
         string[] eTagHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
         eTagHeaderValues.Should().HaveCount(1);
@@ -153,7 +153,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
             await apiClient.Countries.PostAsync(requestBody, configuration => configuration.Options.Add(headerInspector));
 
         // Assert
-        response.ShouldNotBeNull();
+        response.Should().NotBeNull();
 
         headerInspector.ResponseHeaders.Should().NotContainKey(HeaderNames.ETag);
     }
@@ -230,7 +230,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         });
 
         // Assert
-        response.ShouldNotBeNull();
+        response.Should().NotBeNull();
 
         string[] eTagHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
         eTagHeaderValues.Should().HaveCount(1);

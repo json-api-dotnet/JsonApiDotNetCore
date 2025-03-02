@@ -61,12 +61,12 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         OperationsResponseDocument? response = await apiClient.Operations.PostAsync(requestBody);
 
         // Assert
-        response.ShouldNotBeNull();
+        response.Should().NotBeNull();
 
         response.AtomicResults.Should().HaveCount(1);
         TeacherDataInResponse teacherDataInResponse = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<TeacherDataInResponse>().Which;
 
-        teacherDataInResponse.Attributes.ShouldNotBeNull();
+        teacherDataInResponse.Attributes.Should().NotBeNull();
         teacherDataInResponse.Attributes.Name.Should().Be(newTeacher.Name);
         teacherDataInResponse.Attributes.EmailAddress.Should().Be(newTeacher.EmailAddress);
 
@@ -140,12 +140,12 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         OperationsResponseDocument? response = await apiClient.Operations.PostAsync(requestBody);
 
         // Assert
-        response.ShouldNotBeNull();
+        response.Should().NotBeNull();
 
         response.AtomicResults.Should().HaveCount(1);
         EnrollmentDataInResponse enrollmentDataInResponse = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<EnrollmentDataInResponse>().Which;
 
-        enrollmentDataInResponse.Attributes.ShouldNotBeNull();
+        enrollmentDataInResponse.Attributes.Should().NotBeNull();
         enrollmentDataInResponse.Attributes.EnrolledAt.Should().Be((Date)newEnrollment.EnrolledAt);
         enrollmentDataInResponse.Attributes.GraduatedAt.Should().BeNull();
         enrollmentDataInResponse.Attributes.HasGraduated.Should().BeFalse();

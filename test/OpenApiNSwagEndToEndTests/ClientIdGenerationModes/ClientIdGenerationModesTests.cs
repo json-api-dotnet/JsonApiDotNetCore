@@ -61,7 +61,7 @@ public sealed class ClientIdGenerationModesTests
         error.Status.Should().Be("422");
         error.Title.Should().Be("Failed to deserialize request body: The 'id' element is invalid.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data");
     }
 
@@ -126,7 +126,7 @@ public sealed class ClientIdGenerationModesTests
         GamePrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PostGameAsync(requestBody));
 
         // Assert
-        document.ShouldNotBeNull();
+        document.Should().NotBeNull();
         document.Data.Id.Should().NotBe(Guid.Empty);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -243,7 +243,7 @@ public sealed class ClientIdGenerationModesTests
         PlayerGroupPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PostPlayerGroupAsync(requestBody));
 
         // Assert
-        document.ShouldNotBeNull();
+        document.Should().NotBeNull();
         document.Data.Id.Should().NotBeNullOrEmpty();
 
         long newPlayerGroupId = long.Parse(document.Data.Id);

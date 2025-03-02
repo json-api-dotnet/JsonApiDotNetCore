@@ -75,13 +75,13 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         OperationsResponseDocument? response = await apiClient.Operations.PostAsync(requestBody);
 
         // Assert
-        response.ShouldNotBeNull();
+        response.Should().NotBeNull();
 
         response.AtomicResults.Should().HaveCount(1);
         StudentDataInResponse studentDataInResponse = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<StudentDataInResponse>().Which;
 
         studentDataInResponse.Id.Should().Be(existingStudent.StringId);
-        studentDataInResponse.Attributes.ShouldNotBeNull();
+        studentDataInResponse.Attributes.Should().NotBeNull();
         studentDataInResponse.Attributes.Name.Should().Be(newName);
         studentDataInResponse.Attributes.EmailAddress.Should().Be(newEmailAddress);
 
@@ -139,13 +139,13 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         OperationsResponseDocument? response = await apiClient.Operations.PostAsync(requestBody);
 
         // Assert
-        response.ShouldNotBeNull();
+        response.Should().NotBeNull();
 
         response.AtomicResults.Should().HaveCount(1);
         StudentDataInResponse studentDataInResponse = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<StudentDataInResponse>().Which;
 
         studentDataInResponse.Id.Should().Be(existingStudent.StringId);
-        studentDataInResponse.Attributes.ShouldNotBeNull();
+        studentDataInResponse.Attributes.Should().NotBeNull();
         studentDataInResponse.Attributes.Name.Should().Be(existingStudent.Name);
         studentDataInResponse.Attributes.EmailAddress.Should().Be(newEmailAddress);
 
@@ -222,13 +222,13 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         OperationsResponseDocument? response = await apiClient.Operations.PostAsync(requestBody);
 
         // Assert
-        response.ShouldNotBeNull();
+        response.Should().NotBeNull();
 
         response.AtomicResults.Should().HaveCount(1);
         EnrollmentDataInResponse enrollmentDataInResponse = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<EnrollmentDataInResponse>().Which;
 
         enrollmentDataInResponse.Id.Should().Be(existingEnrollment.StringId);
-        enrollmentDataInResponse.Attributes.ShouldNotBeNull();
+        enrollmentDataInResponse.Attributes.Should().NotBeNull();
         enrollmentDataInResponse.Attributes.EnrolledAt.Should().Be((Date)newEnrolledAt);
         enrollmentDataInResponse.Attributes.GraduatedAt.Should().Be((Date)existingEnrollment.GraduatedAt!.Value);
         enrollmentDataInResponse.Attributes.HasGraduated.Should().Be(existingEnrollment.HasGraduated);
@@ -250,10 +250,10 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
             enrollmentInDatabase.GraduatedAt.Should().Be(existingEnrollment.GraduatedAt);
             enrollmentInDatabase.HasGraduated.Should().Be(existingEnrollment.HasGraduated);
 
-            enrollmentInDatabase.Student.ShouldNotBeNull();
+            enrollmentInDatabase.Student.Should().NotBeNull();
             enrollmentInDatabase.Student.Id.Should().Be(existingStudent.Id);
 
-            enrollmentInDatabase.Course.ShouldNotBeNull();
+            enrollmentInDatabase.Course.Should().NotBeNull();
             enrollmentInDatabase.Course.Id.Should().Be(existingCourse.Id);
         });
     }

@@ -97,20 +97,20 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
             // Act
             WriteOnlyChannelPrimaryResponseDocument? response = await apiClient.WriteOnlyChannels[existingChannel.StringId!].PatchAsync(requestBody);
 
-            response.ShouldNotBeNull();
+            response.Should().NotBeNull();
 
-            response.Data.ShouldNotBeNull();
+            response.Data.Should().NotBeNull();
             response.Data.Id.Should().Be(existingChannel.StringId);
-            response.Data.Attributes.ShouldNotBeNull();
+            response.Data.Attributes.Should().NotBeNull();
             response.Data.Attributes.Name.Should().Be(newChannelName);
             response.Data.Attributes.IsCommercial.Should().Be(existingChannel.IsCommercial);
             response.Data.Attributes.IsAdultOnly.Should().BeNull();
-            response.Data.Relationships.ShouldNotBeNull();
-            response.Data.Relationships.VideoStream.ShouldNotBeNull();
-            response.Data.Relationships.VideoStream.Data.ShouldNotBeNull();
+            response.Data.Relationships.Should().NotBeNull();
+            response.Data.Relationships.VideoStream.Should().NotBeNull();
+            response.Data.Relationships.VideoStream.Data.Should().NotBeNull();
             response.Data.Relationships.VideoStream.Data.Id.Should().Be(existingVideoStream.StringId);
             response.Data.Relationships.UltraHighDefinitionVideoStream.Should().BeNull();
-            response.Data.Relationships.AudioStreams.ShouldNotBeNull();
+            response.Data.Relationships.AudioStreams.Should().NotBeNull();
             response.Data.Relationships.AudioStreams.Data.Should().BeEmpty();
 
             response.Included.Should().HaveCount(1);
@@ -134,7 +134,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
                 channelInDatabase.IsCommercial.Should().Be(existingChannel.IsCommercial);
                 channelInDatabase.IsAdultOnly.Should().Be(existingChannel.IsAdultOnly);
 
-                channelInDatabase.VideoStream.ShouldNotBeNull();
+                channelInDatabase.VideoStream.Should().NotBeNull();
                 channelInDatabase.VideoStream.Id.Should().Be(existingVideoStream.Id);
 
                 channelInDatabase.UltraHighDefinitionVideoStream.Should().BeNull();
@@ -176,20 +176,20 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         // Act
         WriteOnlyChannelPrimaryResponseDocument? response = await apiClient.WriteOnlyChannels[existingChannel.StringId!].PatchAsync(requestBody);
 
-        response.ShouldNotBeNull();
+        response.Should().NotBeNull();
 
-        response.Data.ShouldNotBeNull();
+        response.Data.Should().NotBeNull();
         response.Data.Id.Should().Be(existingChannel.StringId);
-        response.Data.Attributes.ShouldNotBeNull();
+        response.Data.Attributes.Should().NotBeNull();
         response.Data.Attributes.Name.Should().Be(existingChannel.Name);
         response.Data.Attributes.IsCommercial.Should().Be(existingChannel.IsCommercial);
         response.Data.Attributes.IsAdultOnly.Should().Be(existingChannel.IsAdultOnly);
-        response.Data.Relationships.ShouldNotBeNull();
-        response.Data.Relationships.VideoStream.ShouldNotBeNull();
+        response.Data.Relationships.Should().NotBeNull();
+        response.Data.Relationships.VideoStream.Should().NotBeNull();
         response.Data.Relationships.VideoStream.Data.Should().BeNull();
-        response.Data.Relationships.UltraHighDefinitionVideoStream.ShouldNotBeNull();
+        response.Data.Relationships.UltraHighDefinitionVideoStream.Should().NotBeNull();
         response.Data.Relationships.UltraHighDefinitionVideoStream.Data.Should().BeNull();
-        response.Data.Relationships.AudioStreams.ShouldNotBeNull();
+        response.Data.Relationships.AudioStreams.Should().NotBeNull();
         response.Data.Relationships.AudioStreams.Data.Should().BeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -210,10 +210,10 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
             channelInDatabase.IsCommercial.Should().Be(existingChannel.IsCommercial);
             channelInDatabase.IsAdultOnly.Should().Be(existingChannel.IsAdultOnly);
 
-            channelInDatabase.VideoStream.ShouldNotBeNull();
+            channelInDatabase.VideoStream.Should().NotBeNull();
             channelInDatabase.VideoStream.Id.Should().Be(existingChannel.VideoStream.Id);
 
-            channelInDatabase.UltraHighDefinitionVideoStream.ShouldNotBeNull();
+            channelInDatabase.UltraHighDefinitionVideoStream.Should().NotBeNull();
             channelInDatabase.UltraHighDefinitionVideoStream.Id.Should().Be(existingChannel.UltraHighDefinitionVideoStream.Id);
 
             channelInDatabase.AudioStreams.Should().HaveCount(2);

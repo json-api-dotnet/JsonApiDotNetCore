@@ -63,7 +63,7 @@ public sealed class ModelStateValidationTests
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
         errorObject.Detail.Should().Be("The field FirstName must be a string or collection type with a minimum length of '2' and maximum length of '20'.");
-        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Should().NotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/firstName");
     }
 
@@ -100,7 +100,7 @@ public sealed class ModelStateValidationTests
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
         errorObject.Detail.Should().Be("The field UserName must be a string with a minimum length of 3 and a maximum length of 18.");
-        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Should().NotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/userName");
     }
 
@@ -135,7 +135,7 @@ public sealed class ModelStateValidationTests
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
         errorObject.Detail.Should().Be("Only letters are allowed.");
-        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Should().NotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/userName");
     }
 
@@ -170,7 +170,7 @@ public sealed class ModelStateValidationTests
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
         errorObject.Detail.Should().Be("The CreditCard field is not a valid credit card number.");
-        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Should().NotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/creditCard");
     }
 
@@ -205,7 +205,7 @@ public sealed class ModelStateValidationTests
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
         errorObject.Detail.Should().Be("The Email field is not a valid e-mail address.");
-        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Should().NotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/email");
     }
 
@@ -243,7 +243,7 @@ public sealed class ModelStateValidationTests
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
         errorObject.Detail.Should().Be($"The field Password must be a string or array type with a minimum length of '{minCharsInBase64}'.");
-        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Should().NotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/password");
     }
 
@@ -280,7 +280,7 @@ public sealed class ModelStateValidationTests
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
         errorObject.Detail.Should().Be($"The field Password must be a string or array type with a maximum length of '{maxCharsInBase64}'.");
-        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Should().NotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/password");
     }
 
@@ -319,7 +319,7 @@ public sealed class ModelStateValidationTests
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
         errorObject.Detail.Should().Be($"The field Age must be between {0.1} exclusive and {122.9} exclusive.");
-        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Should().NotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/age");
     }
 
@@ -354,7 +354,7 @@ public sealed class ModelStateValidationTests
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
         errorObject.Detail.Should().Be("The BackgroundPicture field is not a valid fully-qualified http, https, or ftp URL.");
-        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Should().NotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/backgroundPicture");
     }
 
@@ -391,7 +391,7 @@ public sealed class ModelStateValidationTests
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
         errorObject.Detail.Should().Be("The field Tags must be a string or collection type with a minimum length of '1' and maximum length of '10'.");
-        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Should().NotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/tags");
     }
 
@@ -426,7 +426,7 @@ public sealed class ModelStateValidationTests
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
         errorObject.Detail.Should().Be("The CountryCode field does not equal any of the values specified in AllowedValuesAttribute.");
-        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Should().NotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/countryCode");
     }
 
@@ -461,7 +461,7 @@ public sealed class ModelStateValidationTests
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
         errorObject.Detail.Should().Be("The Planet field equals one of the values specified in DeniedValuesAttribute.");
-        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Should().NotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/planet");
     }
 
@@ -496,7 +496,7 @@ public sealed class ModelStateValidationTests
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
         errorObject.Detail.Should().Be("The field NextRevalidation must be between 01:00:00 and 05:00:00.");
-        errorObject.Source.ShouldNotBeNull();
+        errorObject.Source.Should().NotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/nextRevalidation");
     }
 

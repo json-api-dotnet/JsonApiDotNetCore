@@ -71,7 +71,7 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
             // @formatter:keep_existing_linebreaks restore
             // @formatter:wrap_chained_method_calls restore
 
-            channelInDatabase.UltraHighDefinitionVideoStream.ShouldNotBeNull();
+            channelInDatabase.UltraHighDefinitionVideoStream.Should().NotBeNull();
             channelInDatabase.UltraHighDefinitionVideoStream.Id.Should().Be(existingVideoStream.Id);
         });
     }

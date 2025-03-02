@@ -78,7 +78,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         eTagHeaderValues.Should().HaveCount(1);
         eTagHeaderValues[0].Should().Match("\"*\"");
 
-        response.Result.ShouldNotBeNull();
+        response.Result.Should().NotBeNull();
     }
 
     [Fact]
@@ -135,7 +135,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
 
         response.Headers.Should().NotContainKey(HeaderNames.ETag);
 
-        response.Result.ShouldNotBeNull();
+        response.Result.Should().NotBeNull();
     }
 
     [Fact]
@@ -199,7 +199,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         eTagHeaderValues.Should().HaveCount(1);
         eTagHeaderValues[0].Should().Match("\"*\"");
 
-        response.Result.ShouldNotBeNull();
+        response.Result.Should().NotBeNull();
     }
 
     public void Dispose()

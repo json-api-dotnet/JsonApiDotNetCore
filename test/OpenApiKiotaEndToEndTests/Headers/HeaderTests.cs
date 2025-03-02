@@ -58,8 +58,8 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
             await apiClient.Countries.PostAsync(requestBody, configuration => configuration.Options.Add(headerInspector));
 
         // Assert
-        response.ShouldNotBeNull();
-        response.Data.ShouldNotBeNull();
+        response.Should().NotBeNull();
+        response.Data.Should().NotBeNull();
 
         string[] locationHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.Location).WhoseValue.ToArray();
         locationHeaderValues.Should().HaveCount(1);
