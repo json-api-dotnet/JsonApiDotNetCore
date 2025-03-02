@@ -244,7 +244,7 @@ public sealed class ClientIdGenerationModesTests
 
         // Assert
         document.ShouldNotBeNull();
-        document.Data.Id.ShouldNotBeNullOrEmpty();
+        document.Data.Id.Should().NotBeNullOrEmpty();
 
         long newPlayerGroupId = long.Parse(document.Data.Id);
 
