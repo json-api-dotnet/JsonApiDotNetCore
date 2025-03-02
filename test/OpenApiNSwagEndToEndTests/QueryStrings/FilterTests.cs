@@ -61,7 +61,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         });
 
         response.Meta.ShouldNotBeNull();
-        response.Meta.ShouldContainKey("total").With(total => total.Should().Be(1));
+        response.Meta.Should().ContainKey("total").WhoseValue.Should().Be(1);
     }
 
     [Fact]
@@ -102,7 +102,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         });
 
         response.Meta.ShouldNotBeNull();
-        response.Meta.ShouldContainKey("total").With(total => total.Should().Be(1));
+        response.Meta.Should().ContainKey("total").WhoseValue.Should().Be(1);
     }
 
     [Fact]
@@ -136,7 +136,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         response.Data.Should().HaveCount(1);
         response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
         response.Meta.ShouldNotBeNull();
-        response.Meta.ShouldContainKey("total").With(total => total.Should().Be(1));
+        response.Meta.Should().ContainKey("total").WhoseValue.Should().Be(1);
         response.Links.ShouldNotBeNull();
         response.Links.Describedby.Should().Be("/swagger/v1/swagger.json");
     }

@@ -57,7 +57,7 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
             response.Data.Should().HaveCount(1);
             response.Data.ElementAt(0).Id.Should().Be(nodes[1].StringId);
             response.Meta.ShouldNotBeNull();
-            response.Meta.AdditionalData.ShouldContainKey("total").With(total => total.Should().Be(3));
+            response.Meta.AdditionalData.Should().ContainKey("total").WhoseValue.Should().Be(3);
         }
     }
 
@@ -95,7 +95,7 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
             response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(0).StringId);
             response.Data.ElementAt(1).Id.Should().Be(node.Children.ElementAt(1).StringId);
             response.Meta.ShouldNotBeNull();
-            response.Meta.AdditionalData.ShouldContainKey("total").With(total => total.Should().Be(3));
+            response.Meta.AdditionalData.Should().ContainKey("total").WhoseValue.Should().Be(3);
         }
     }
 
@@ -132,7 +132,7 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
             response.Data.Should().HaveCount(1);
             response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(2).StringId);
             response.Meta.ShouldNotBeNull();
-            response.Meta.AdditionalData.ShouldContainKey("total").With(total => total.Should().Be(3));
+            response.Meta.AdditionalData.Should().ContainKey("total").WhoseValue.Should().Be(3);
         }
     }
 
