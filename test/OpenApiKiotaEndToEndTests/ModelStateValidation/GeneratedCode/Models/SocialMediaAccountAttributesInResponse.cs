@@ -83,9 +83,9 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models
         }
 
         /// <summary>The password property</summary>
-        public string? Password
+        public byte[]? Password
         {
-            get { return BackingStore?.Get<string?>("password"); }
+            get { return BackingStore?.Get<byte[]?>("password"); }
             set { BackingStore?.Set("password", value); }
         }
 
@@ -181,7 +181,7 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models
                 { "firstName", n => { FirstName = n.GetStringValue(); } },
                 { "lastName", n => { LastName = n.GetStringValue(); } },
                 { "nextRevalidation", n => { NextRevalidation = n.GetStringValue(); } },
-                { "password", n => { Password = n.GetStringValue(); } },
+                { "password", n => { Password = n.GetByteArrayValue(); } },
                 { "phone", n => { Phone = n.GetStringValue(); } },
                 { "planet", n => { Planet = n.GetStringValue(); } },
                 { "profilePicture", n => { ProfilePicture = n.GetStringValue(); } },
@@ -209,7 +209,7 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models
             writer.WriteStringValue("firstName", FirstName);
             writer.WriteStringValue("lastName", LastName);
             writer.WriteStringValue("nextRevalidation", NextRevalidation);
-            writer.WriteStringValue("password", Password);
+            writer.WriteByteArrayValue("password", Password);
             writer.WriteStringValue("phone", Phone);
             writer.WriteStringValue("planet", Planet);
             writer.WriteStringValue("profilePicture", ProfilePicture);

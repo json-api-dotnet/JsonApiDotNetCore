@@ -22,7 +22,7 @@
     <MicrosoftApiServerVersion>9.0.*</MicrosoftApiServerVersion>
     <NSwagApiClientVersion>14.2.*</NSwagApiClientVersion>
     <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
-    <ScalarAspNetCoreVersion>1.2.*</ScalarAspNetCoreVersion>
+    <ScalarAspNetCoreVersion>2.0.*</ScalarAspNetCoreVersion>
     <SwashbuckleVersion>7.*-*</SwashbuckleVersion>
     <SystemTextJsonVersion>9.0.*</SystemTextJsonVersion>
     <TestSdkVersion>17.12.*</TestSdkVersion>

@@ -233,7 +233,7 @@ public sealed class ModelStateValidationTests
                 {
                     LastName = newAccount.LastName,
                     // Using -3 instead of -1 to compensate for base64 padding.
-                    Password = Convert.ToBase64String(Enumerable.Repeat((byte)'X', SocialMediaAccount.MinPasswordChars - 3).ToArray())
+                    Password = Enumerable.Repeat((byte)'X', SocialMediaAccount.MinPasswordChars - 3).ToArray()
                 }
             }
         };
@@ -271,7 +271,7 @@ public sealed class ModelStateValidationTests
                 Attributes = new AttributesInCreateSocialMediaAccountRequest
                 {
                     LastName = newAccount.LastName,
-                    Password = Convert.ToBase64String(Enumerable.Repeat((byte)'X', SocialMediaAccount.MaxPasswordChars + 1).ToArray())
+                    Password = Enumerable.Repeat((byte)'X', SocialMediaAccount.MaxPasswordChars + 1).ToArray()
                 }
             }
         };
@@ -288,42 +288,6 @@ public sealed class ModelStateValidationTests
         ErrorObject errorObject = document.Errors.First();
         errorObject.Title.Should().Be("Input validation failed.");
         errorObject.Detail.Should().Be($"The field Password must be a string or array type with a maximum length of '{maxCharsInBase64}'.");
-        errorObject.Source.Should().NotBeNull();
-        errorObject.Source.Pointer.Should().Be("/data/attributes/password");
-    }
-
-    [Fact]
-    public async Task Cannot_use_invalid_base64()
-    {
-        // Arrange
-        SocialMediaAccount newAccount = _fakers.SocialMediaAccount.GenerateOne();
-
-        using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
-        ModelStateValidationClient apiClient = new(requestAdapter);
-
-        var requestBody = new CreateSocialMediaAccountRequestDocument
-        {
-            Data = new DataInCreateSocialMediaAccountRequest
-            {
-                Type = SocialMediaAccountResourceType.SocialMediaAccounts,
-                Attributes = new AttributesInCreateSocialMediaAccountRequest
-                {
-                    LastName = newAccount.LastName,
-                    Password = "not-a-valid-base64-string"
-                }
-            }
-        };
-
-        // Act
-        Func<Task> action = () => apiClient.SocialMediaAccounts.PostAsync(requestBody);
-
-        // Assert
-        ErrorResponseDocument document = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
-        document.Errors.Should().HaveCount(1);
-
-        ErrorObject errorObject = document.Errors.First();
-        errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be("The Password field is not a valid Base64 encoding.");
         errorObject.Source.Should().NotBeNull();
         errorObject.Source.Pointer.Should().Be("/data/attributes/password");
     }
@@ -572,7 +536,7 @@ public sealed class ModelStateValidationTests
                     UserName = newAccount.UserName,
                     CreditCard = newAccount.CreditCard,
                     Email = newAccount.Email,
-                    Password = newAccount.Password,
+                    Password = Convert.FromBase64String(newAccount.Password!),
                     Phone = newAccount.Phone,
                     Age = newAccount.Age,
                     ProfilePicture = newAccount.ProfilePicture!.ToString(),
