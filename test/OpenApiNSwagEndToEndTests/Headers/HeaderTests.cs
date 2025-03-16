@@ -76,7 +76,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         var apiClient = new HeadersClient(httpClient);
 
         // Act
-        ApiResponse response = await ApiResponse.TranslateAsync(async () => await apiClient.HeadCountryCollectionAsync());
+        ApiResponse response = await apiClient.HeadCountryCollectionAsync();
 
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
@@ -102,7 +102,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         var apiClient = new HeadersClient(httpClient);
 
         // Act
-        ApiResponse response = await ApiResponse.TranslateAsync(async () => await apiClient.HeadCountryAsync(existingCountry.Id));
+        ApiResponse response = await apiClient.HeadCountryAsync(existingCountry.Id);
 
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
@@ -129,7 +129,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         var apiClient = new HeadersClient(httpClient);
 
         // Act
-        ApiResponse response = await ApiResponse.TranslateAsync(async () => await apiClient.HeadCountryLanguagesAsync(existingCountry.Id));
+        ApiResponse response = await apiClient.HeadCountryLanguagesAsync(existingCountry.Id);
 
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
@@ -156,7 +156,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         var apiClient = new HeadersClient(httpClient);
 
         // Act
-        ApiResponse response = await ApiResponse.TranslateAsync(async () => await apiClient.HeadCountryLanguagesRelationshipAsync(existingCountry.Id));
+        ApiResponse response = await apiClient.HeadCountryLanguagesRelationshipAsync(existingCountry.Id);
 
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
