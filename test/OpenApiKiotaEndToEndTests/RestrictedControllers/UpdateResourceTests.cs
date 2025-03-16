@@ -85,63 +85,60 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
             }
         };
 
-        var queryString = new Dictionary<string, string?>
+        using IDisposable scope = _requestAdapterFactory.WithQueryString(new Dictionary<string, string?>
         {
             ["include"] = "videoStream,audioStreams",
             ["fields[writeOnlyChannels]"] = "name,isCommercial,videoStream,audioStreams",
             ["fields[dataStreams]"] = "bytesTransmitted"
-        };
+        });
 
-        using (_requestAdapterFactory.WithQueryString(queryString))
+        // Act
+        WriteOnlyChannelPrimaryResponseDocument? response = await apiClient.WriteOnlyChannels[existingChannel.StringId!].PatchAsync(requestBody);
+
+        // Assert
+        response.Should().NotBeNull();
+        response.Data.Should().NotBeNull();
+        response.Data.Id.Should().Be(existingChannel.StringId);
+        response.Data.Attributes.Should().NotBeNull();
+        response.Data.Attributes.Name.Should().Be(newChannelName);
+        response.Data.Attributes.IsCommercial.Should().Be(existingChannel.IsCommercial);
+        response.Data.Attributes.IsAdultOnly.Should().BeNull();
+        response.Data.Relationships.Should().NotBeNull();
+        response.Data.Relationships.VideoStream.Should().NotBeNull();
+        response.Data.Relationships.VideoStream.Data.Should().NotBeNull();
+        response.Data.Relationships.VideoStream.Data.Id.Should().Be(existingVideoStream.StringId);
+        response.Data.Relationships.UltraHighDefinitionVideoStream.Should().BeNull();
+        response.Data.Relationships.AudioStreams.Should().NotBeNull();
+        response.Data.Relationships.AudioStreams.Data.Should().BeEmpty();
+
+        response.Included.Should().HaveCount(1);
+        response.Included.OfType<DataStreamDataInResponse>().Should().ContainSingle(streamData => streamData.Id == existingVideoStream.StringId);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Act
-            WriteOnlyChannelPrimaryResponseDocument? response = await apiClient.WriteOnlyChannels[existingChannel.StringId!].PatchAsync(requestBody);
+            // @formatter:wrap_chained_method_calls chop_always
+            // @formatter:keep_existing_linebreaks true
 
-            response.Should().NotBeNull();
+            WriteOnlyChannel channelInDatabase = await dbContext.WriteOnlyChannels
+                .Include(channel => channel.VideoStream)
+                .Include(channel => channel.UltraHighDefinitionVideoStream)
+                .Include(channel => channel.AudioStreams)
+                .FirstWithIdAsync(existingChannel.Id);
 
-            response.Data.Should().NotBeNull();
-            response.Data.Id.Should().Be(existingChannel.StringId);
-            response.Data.Attributes.Should().NotBeNull();
-            response.Data.Attributes.Name.Should().Be(newChannelName);
-            response.Data.Attributes.IsCommercial.Should().Be(existingChannel.IsCommercial);
-            response.Data.Attributes.IsAdultOnly.Should().BeNull();
-            response.Data.Relationships.Should().NotBeNull();
-            response.Data.Relationships.VideoStream.Should().NotBeNull();
-            response.Data.Relationships.VideoStream.Data.Should().NotBeNull();
-            response.Data.Relationships.VideoStream.Data.Id.Should().Be(existingVideoStream.StringId);
-            response.Data.Relationships.UltraHighDefinitionVideoStream.Should().BeNull();
-            response.Data.Relationships.AudioStreams.Should().NotBeNull();
-            response.Data.Relationships.AudioStreams.Data.Should().BeEmpty();
+            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_chained_method_calls restore
 
-            response.Included.Should().HaveCount(1);
-            response.Included.OfType<DataStreamDataInResponse>().Should().ContainSingle(streamData => streamData.Id == existingVideoStream.StringId);
+            channelInDatabase.Name.Should().Be(newChannelName);
+            channelInDatabase.IsCommercial.Should().Be(existingChannel.IsCommercial);
+            channelInDatabase.IsAdultOnly.Should().Be(existingChannel.IsAdultOnly);
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                // @formatter:wrap_chained_method_calls chop_always
-                // @formatter:keep_existing_linebreaks true
+            channelInDatabase.VideoStream.Should().NotBeNull();
+            channelInDatabase.VideoStream.Id.Should().Be(existingVideoStream.Id);
 
-                WriteOnlyChannel channelInDatabase = await dbContext.WriteOnlyChannels
-                    .Include(channel => channel.VideoStream)
-                    .Include(channel => channel.UltraHighDefinitionVideoStream)
-                    .Include(channel => channel.AudioStreams)
-                    .FirstWithIdAsync(existingChannel.Id);
+            channelInDatabase.UltraHighDefinitionVideoStream.Should().BeNull();
 
-                // @formatter:keep_existing_linebreaks restore
-                // @formatter:wrap_chained_method_calls restore
-
-                channelInDatabase.Name.Should().Be(newChannelName);
-                channelInDatabase.IsCommercial.Should().Be(existingChannel.IsCommercial);
-                channelInDatabase.IsAdultOnly.Should().Be(existingChannel.IsAdultOnly);
-
-                channelInDatabase.VideoStream.Should().NotBeNull();
-                channelInDatabase.VideoStream.Id.Should().Be(existingVideoStream.Id);
-
-                channelInDatabase.UltraHighDefinitionVideoStream.Should().BeNull();
-
-                channelInDatabase.AudioStreams.Should().BeEmpty();
-            });
-        }
+            channelInDatabase.AudioStreams.Should().BeEmpty();
+        });
     }
 
     [Fact]
@@ -176,8 +173,8 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         // Act
         WriteOnlyChannelPrimaryResponseDocument? response = await apiClient.WriteOnlyChannels[existingChannel.StringId!].PatchAsync(requestBody);
 
+        // Assert
         response.Should().NotBeNull();
-
         response.Data.Should().NotBeNull();
         response.Data.Id.Should().Be(existingChannel.StringId);
         response.Data.Attributes.Should().NotBeNull();

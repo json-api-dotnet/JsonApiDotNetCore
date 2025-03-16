@@ -43,22 +43,19 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new QueryStringsClient(requestAdapter);
 
-        var queryString = new Dictionary<string, string?>
+        using IDisposable scope = _requestAdapterFactory.WithQueryString(new Dictionary<string, string?>
         {
             ["sort"] = "-name"
-        };
+        });
 
-        using (_requestAdapterFactory.WithQueryString(queryString))
-        {
-            // Act
-            NodeCollectionResponseDocument? response = await apiClient.Nodes.GetAsync();
+        // Act
+        NodeCollectionResponseDocument? response = await apiClient.Nodes.GetAsync();
 
-            // Assert
-            response.Should().NotBeNull();
-            response.Data.Should().HaveCount(2);
-            response.Data.ElementAt(0).Id.Should().Be(nodes[1].StringId);
-            response.Data.ElementAt(1).Id.Should().Be(nodes[0].StringId);
-        }
+        // Assert
+        response.Should().NotBeNull();
+        response.Data.Should().HaveCount(2);
+        response.Data.ElementAt(0).Id.Should().Be(nodes[1].StringId);
+        response.Data.ElementAt(1).Id.Should().Be(nodes[0].StringId);
     }
 
     [Fact]
@@ -80,22 +77,19 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new QueryStringsClient(requestAdapter);
 
-        var queryString = new Dictionary<string, string?>
+        using IDisposable scope = _requestAdapterFactory.WithQueryString(new Dictionary<string, string?>
         {
             ["sort"] = "name"
-        };
+        });
 
-        using (_requestAdapterFactory.WithQueryString(queryString))
-        {
-            // Act
-            NodeCollectionResponseDocument? response = await apiClient.Nodes[node.StringId!].Children.GetAsync();
+        // Act
+        NodeCollectionResponseDocument? response = await apiClient.Nodes[node.StringId!].Children.GetAsync();
 
-            // Assert
-            response.Should().NotBeNull();
-            response.Data.Should().HaveCount(2);
-            response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
-            response.Data.ElementAt(1).Id.Should().Be(node.Children.ElementAt(0).StringId);
-        }
+        // Assert
+        response.Should().NotBeNull();
+        response.Data.Should().HaveCount(2);
+        response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
+        response.Data.ElementAt(1).Id.Should().Be(node.Children.ElementAt(0).StringId);
     }
 
     [Fact]
@@ -117,22 +111,19 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new QueryStringsClient(requestAdapter);
 
-        var queryString = new Dictionary<string, string?>
+        using IDisposable scope = _requestAdapterFactory.WithQueryString(new Dictionary<string, string?>
         {
             ["sort"] = "count(children)"
-        };
+        });
 
-        using (_requestAdapterFactory.WithQueryString(queryString))
-        {
-            // Act
-            NodeIdentifierCollectionResponseDocument? response = await apiClient.Nodes[node.StringId!].Relationships.Children.GetAsync();
+        // Act
+        NodeIdentifierCollectionResponseDocument? response = await apiClient.Nodes[node.StringId!].Relationships.Children.GetAsync();
 
-            // Assert
-            response.Should().NotBeNull();
-            response.Data.Should().HaveCount(2);
-            response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(0).StringId);
-            response.Data.ElementAt(1).Id.Should().Be(node.Children.ElementAt(1).StringId);
-        }
+        // Assert
+        response.Should().NotBeNull();
+        response.Data.Should().HaveCount(2);
+        response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(0).StringId);
+        response.Data.ElementAt(1).Id.Should().Be(node.Children.ElementAt(1).StringId);
     }
 
     [Fact]
@@ -142,29 +133,26 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new QueryStringsClient(requestAdapter);
 
-        var queryString = new Dictionary<string, string?>
+        using IDisposable scope = _requestAdapterFactory.WithQueryString(new Dictionary<string, string?>
         {
             ["sort"] = null
-        };
+        });
 
-        using (_requestAdapterFactory.WithQueryString(queryString))
-        {
-            // Act
-            Func<Task> action = async () => _ = await apiClient.Nodes[Unknown.StringId.Int64].GetAsync();
+        // Act
+        Func<Task> action = async () => _ = await apiClient.Nodes[Unknown.StringId.Int64].GetAsync();
 
-            // Assert
-            ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
-            exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.BadRequest);
-            exception.Message.Should().Be($"Exception of type '{typeof(ErrorResponseDocument).FullName}' was thrown.");
-            exception.Errors.Should().HaveCount(1);
+        // Assert
+        ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
+        exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.BadRequest);
+        exception.Message.Should().Be($"Exception of type '{typeof(ErrorResponseDocument).FullName}' was thrown.");
+        exception.Errors.Should().HaveCount(1);
 
-            ErrorObject error = exception.Errors.ElementAt(0);
-            error.Status.Should().Be("400");
-            error.Title.Should().Be("Missing query string parameter value.");
-            error.Detail.Should().Be("Missing value for 'sort' query string parameter.");
-            error.Source.Should().NotBeNull();
-            error.Source.Parameter.Should().Be("sort");
-        }
+        ErrorObject error = exception.Errors.ElementAt(0);
+        error.Status.Should().Be("400");
+        error.Title.Should().Be("Missing query string parameter value.");
+        error.Detail.Should().Be("Missing value for 'sort' query string parameter.");
+        error.Source.Should().NotBeNull();
+        error.Source.Parameter.Should().Be("sort");
     }
 
     public void Dispose()

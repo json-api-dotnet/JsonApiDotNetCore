@@ -43,30 +43,27 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new QueryStringsClient(requestAdapter);
 
-        var queryString = new Dictionary<string, string?>
+        using IDisposable scope = _requestAdapterFactory.WithQueryString(new Dictionary<string, string?>
         {
             ["filter"] = "equals(name,'Brian O''Quote')"
-        };
+        });
 
-        using (_requestAdapterFactory.WithQueryString(queryString))
+        // Act
+        NodeCollectionResponseDocument? response = await apiClient.Nodes.GetAsync();
+
+        // Assert
+        response.Should().NotBeNull();
+        response.Data.Should().HaveCount(1);
+        response.Data.ElementAt(0).Id.Should().Be(nodes[1].StringId);
+
+        response.Data.ElementAt(0).Attributes.RefShould().NotBeNull().And.Subject.With(attributes =>
         {
-            // Act
-            NodeCollectionResponseDocument? response = await apiClient.Nodes.GetAsync();
+            attributes.Name.Should().Be(nodes[1].Name);
+            attributes.Comment.Should().Be(nodes[1].Comment);
+        });
 
-            // Assert
-            response.Should().NotBeNull();
-            response.Data.Should().HaveCount(1);
-            response.Data.ElementAt(0).Id.Should().Be(nodes[1].StringId);
-
-            response.Data.ElementAt(0).Attributes.RefShould().NotBeNull().And.Subject.With(attributes =>
-            {
-                attributes.Name.Should().Be(nodes[1].Name);
-                attributes.Comment.Should().Be(nodes[1].Comment);
-            });
-
-            response.Meta.Should().NotBeNull();
-            response.Meta.AdditionalData.Should().ContainKey("total").WhoseValue.Should().Be(1);
-        }
+        response.Meta.Should().NotBeNull();
+        response.Meta.AdditionalData.Should().ContainKey("total").WhoseValue.Should().Be(1);
     }
 
     [Fact]
@@ -88,30 +85,27 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new QueryStringsClient(requestAdapter);
 
-        var queryString = new Dictionary<string, string?>
+        using IDisposable scope = _requestAdapterFactory.WithQueryString(new Dictionary<string, string?>
         {
             ["filter"] = "and(startsWith(comment,'Discount:'),contains(comment,'%'))"
-        };
+        });
 
-        using (_requestAdapterFactory.WithQueryString(queryString))
+        // Act
+        NodeCollectionResponseDocument? response = await apiClient.Nodes[node.StringId!].Children.GetAsync();
+
+        // Assert
+        response.Should().NotBeNull();
+        response.Data.Should().HaveCount(1);
+        response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
+
+        response.Data.ElementAt(0).Attributes.RefShould().NotBeNull().And.Subject.With(attributes =>
         {
-            // Act
-            NodeCollectionResponseDocument? response = await apiClient.Nodes[node.StringId!].Children.GetAsync();
+            attributes.Name.Should().Be(node.Children.ElementAt(1).Name);
+            attributes.Comment.Should().Be(node.Children.ElementAt(1).Comment);
+        });
 
-            // Assert
-            response.Should().NotBeNull();
-            response.Data.Should().HaveCount(1);
-            response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
-
-            response.Data.ElementAt(0).Attributes.RefShould().NotBeNull().And.Subject.With(attributes =>
-            {
-                attributes.Name.Should().Be(node.Children.ElementAt(1).Name);
-                attributes.Comment.Should().Be(node.Children.ElementAt(1).Comment);
-            });
-
-            response.Meta.Should().NotBeNull();
-            response.Meta.AdditionalData.Should().ContainKey("total").WhoseValue.Should().Be(1);
-        }
+        response.Meta.Should().NotBeNull();
+        response.Meta.AdditionalData.Should().ContainKey("total").WhoseValue.Should().Be(1);
     }
 
     [Fact]
@@ -133,25 +127,22 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new QueryStringsClient(requestAdapter);
 
-        var queryString = new Dictionary<string, string?>
+        using IDisposable scope = _requestAdapterFactory.WithQueryString(new Dictionary<string, string?>
         {
             ["filter"] = "greaterThan(count(children),'1')"
-        };
+        });
 
-        using (_requestAdapterFactory.WithQueryString(queryString))
-        {
-            // Act
-            NodeIdentifierCollectionResponseDocument? response = await apiClient.Nodes[node.StringId!].Relationships.Children.GetAsync();
+        // Act
+        NodeIdentifierCollectionResponseDocument? response = await apiClient.Nodes[node.StringId!].Relationships.Children.GetAsync();
 
-            // Assert
-            response.Should().NotBeNull();
-            response.Data.Should().HaveCount(1);
-            response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
-            response.Meta.Should().NotBeNull();
-            response.Meta.AdditionalData.Should().ContainKey("total").WhoseValue.Should().Be(1);
-            response.Links.Should().NotBeNull();
-            response.Links.Describedby.Should().Be("/swagger/v1/swagger.json");
-        }
+        // Assert
+        response.Should().NotBeNull();
+        response.Data.Should().HaveCount(1);
+        response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
+        response.Meta.Should().NotBeNull();
+        response.Meta.AdditionalData.Should().ContainKey("total").WhoseValue.Should().Be(1);
+        response.Links.Should().NotBeNull();
+        response.Links.Describedby.Should().Be("/swagger/v1/swagger.json");
     }
 
     [Fact]
@@ -161,31 +152,28 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new QueryStringsClient(requestAdapter);
 
-        var queryString = new Dictionary<string, string?>
+        using IDisposable scope = _requestAdapterFactory.WithQueryString(new Dictionary<string, string?>
         {
             ["filter"] = null
-        };
+        });
 
-        using (_requestAdapterFactory.WithQueryString(queryString))
-        {
-            // Act
-            Func<Task> action = async () => _ = await apiClient.Nodes[Unknown.StringId.Int64].GetAsync();
+        // Act
+        Func<Task> action = async () => _ = await apiClient.Nodes[Unknown.StringId.Int64].GetAsync();
 
-            // Assert
-            ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
-            exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.BadRequest);
-            exception.Message.Should().Be($"Exception of type '{typeof(ErrorResponseDocument).FullName}' was thrown.");
-            exception.Links.Should().NotBeNull();
-            exception.Links.Describedby.Should().Be("/swagger/v1/swagger.json");
-            exception.Errors.Should().HaveCount(1);
+        // Assert
+        ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
+        exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.BadRequest);
+        exception.Message.Should().Be($"Exception of type '{typeof(ErrorResponseDocument).FullName}' was thrown.");
+        exception.Links.Should().NotBeNull();
+        exception.Links.Describedby.Should().Be("/swagger/v1/swagger.json");
+        exception.Errors.Should().HaveCount(1);
 
-            ErrorObject error = exception.Errors[0];
-            error.Status.Should().Be("400");
-            error.Title.Should().Be("Missing query string parameter value.");
-            error.Detail.Should().Be("Missing value for 'filter' query string parameter.");
-            error.Source.Should().NotBeNull();
-            error.Source.Parameter.Should().Be("filter");
-        }
+        ErrorObject error = exception.Errors[0];
+        error.Status.Should().Be("400");
+        error.Title.Should().Be("Missing query string parameter value.");
+        error.Detail.Should().Be("Missing value for 'filter' query string parameter.");
+        error.Source.Should().NotBeNull();
+        error.Source.Parameter.Should().Be("filter");
     }
 
     public void Dispose()
