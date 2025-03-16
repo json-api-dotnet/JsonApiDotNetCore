@@ -1,4 +1,5 @@
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -29,8 +30,17 @@ internal sealed class ResourceTypeSchemaGenerator
         var fullSchema = new OpenApiSchema
         {
             Type = "string",
-            Enum = [new OpenApiString(resourceType.PublicName)]
+            Enum = resourceType.ClrType.IsAbstract ? [] : [new OpenApiString(resourceType.PublicName)],
+            Extensions =
+            {
+                [StringEnumOrderingFilter.RequiresSortKey] = new OpenApiBoolean(true)
+            }
         };
+
+        foreach (ResourceType derivedType in resourceType.GetAllConcreteDerivedTypes())
+        {
+            fullSchema.Enum.Add(new OpenApiString(derivedType.PublicName));
+        }
 
         string schemaId = _schemaIdSelector.GetResourceTypeSchemaId(resourceType);
 
@@ -38,5 +48,33 @@ internal sealed class ResourceTypeSchemaGenerator
         schemaRepository.RegisterType(resourceType.ClrType, schemaId);
 
         return referenceSchema;
+    }
+
+    public OpenApiSchema GenerateSchema(SchemaRepository schemaRepository)
+    {
+        string schemaId = _schemaIdSelector.GetResourceTypeSchemaId(null);
+
+        if (schemaRepository.Schemas.ContainsKey(schemaId))
+        {
+            return new OpenApiSchema
+            {
+                Reference = new OpenApiReference
+                {
+                    Id = schemaId,
+                    Type = ReferenceType.Schema
+                }
+            };
+        }
+
+        var fullSchema = new OpenApiSchema
+        {
+            Type = "string",
+            Extensions =
+            {
+                [StringEnumOrderingFilter.RequiresSortKey] = new OpenApiBoolean(true)
+            }
+        };
+
+        return schemaRepository.AddDefinition(schemaId, fullSchema);
     }
 }

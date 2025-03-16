@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 internal sealed class ResourceFieldSchemaBuilder
 {
     private readonly SchemaGenerator _defaultSchemaGenerator;
-    private readonly ResourceIdentifierSchemaGenerator _resourceIdentifierSchemaGenerator;
+    private readonly DataSchemaGenerator _dataSchemaGenerator;
     private readonly LinksVisibilitySchemaGenerator _linksVisibilitySchemaGenerator;
     private readonly ResourceSchemaType _resourceSchemaType;
     private readonly ResourceFieldValidationMetadataProvider _resourceFieldValidationMetadataProvider;
@@ -22,19 +22,19 @@ internal sealed class ResourceFieldSchemaBuilder
     private readonly ResourceDocumentationReader _resourceDocumentationReader = new();
     private readonly IDictionary<string, OpenApiSchema> _schemasForResourceFields;
 
-    public ResourceFieldSchemaBuilder(SchemaGenerator defaultSchemaGenerator, ResourceIdentifierSchemaGenerator resourceIdentifierSchemaGenerator,
+    public ResourceFieldSchemaBuilder(SchemaGenerator defaultSchemaGenerator, DataSchemaGenerator dataSchemaGenerator,
         LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider,
         RelationshipTypeFactory relationshipTypeFactory, ResourceSchemaType resourceSchemaType)
     {
         ArgumentNullException.ThrowIfNull(defaultSchemaGenerator);
-        ArgumentNullException.ThrowIfNull(resourceIdentifierSchemaGenerator);
+        ArgumentNullException.ThrowIfNull(dataSchemaGenerator);
         ArgumentNullException.ThrowIfNull(linksVisibilitySchemaGenerator);
         ArgumentNullException.ThrowIfNull(resourceSchemaType);
         ArgumentNullException.ThrowIfNull(resourceFieldValidationMetadataProvider);
         ArgumentNullException.ThrowIfNull(relationshipTypeFactory);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
-        _resourceIdentifierSchemaGenerator = resourceIdentifierSchemaGenerator;
+        _dataSchemaGenerator = dataSchemaGenerator;
         _linksVisibilitySchemaGenerator = linksVisibilitySchemaGenerator;
         _resourceSchemaType = resourceSchemaType;
         _resourceFieldValidationMetadataProvider = resourceFieldValidationMetadataProvider;
@@ -50,8 +50,8 @@ internal sealed class ResourceFieldSchemaBuilder
             referenceSchemaForResource = _defaultSchemaGenerator.GenerateSchema(_resourceSchemaType.ResourceType.ClrType, _resourceSchemaRepository);
         }
 
-        OpenApiSchema fullSchemaForResource = _resourceSchemaRepository.Schemas[referenceSchemaForResource.Reference.Id];
-        return fullSchemaForResource.Properties;
+        OpenApiSchema inlineSchemaForResource = _resourceSchemaRepository.Schemas[referenceSchemaForResource.Reference.Id].UnwrapLastExtendedSchema();
+        return inlineSchemaForResource.Properties;
     }
 
     public void SetMembersOfAttributes(OpenApiSchema fullSchemaForAttributes, bool forRequestSchema, SchemaRepository schemaRepository)
@@ -108,9 +108,9 @@ internal sealed class ResourceFieldSchemaBuilder
 
     private static AttrCapabilities GetRequiredCapabilityForAttributes(Type resourceDataOpenType)
     {
-        return resourceDataOpenType == typeof(ResourceDataInResponse<>) ? AttrCapabilities.AllowView :
-            resourceDataOpenType == typeof(DataInCreateResourceRequest<>) ? AttrCapabilities.AllowCreate :
-            resourceDataOpenType == typeof(DataInUpdateResourceRequest<>) ? AttrCapabilities.AllowChange : throw new UnreachableException();
+        return resourceDataOpenType == typeof(DataInResponse<>) ? AttrCapabilities.AllowView :
+            resourceDataOpenType == typeof(DataInCreateRequest<>) ? AttrCapabilities.AllowCreate :
+            resourceDataOpenType == typeof(DataInUpdateRequest<>) ? AttrCapabilities.AllowChange : throw new UnreachableException();
     }
 
     private void EnsureAttributeSchemaIsExposed(OpenApiSchema referenceSchemaForAttribute, AttrAttribute attribute, SchemaRepository schemaRepository)
@@ -145,7 +145,7 @@ internal sealed class ResourceFieldSchemaBuilder
 
     private bool IsFieldRequired(ResourceFieldAttribute field)
     {
-        bool isCreateResourceSchemaType = _resourceSchemaType.SchemaOpenType == typeof(DataInCreateResourceRequest<>);
+        bool isCreateResourceSchemaType = _resourceSchemaType.SchemaOpenType == typeof(DataInCreateRequest<>);
         return isCreateResourceSchemaType && _resourceFieldValidationMetadataProvider.IsRequired(field);
     }
 
@@ -161,7 +161,10 @@ internal sealed class ResourceFieldSchemaBuilder
 
             if (matchingRelationship != null)
             {
-                _ = _resourceIdentifierSchemaGenerator.GenerateSchema(matchingRelationship.RightType, forRequestSchema, schemaRepository);
+                Type identifierSchemaOpenType = forRequestSchema ? typeof(IdentifierInRequest<>) : typeof(IdentifierInResponse<>);
+                Type identifierSchemaConstructedType = identifierSchemaOpenType.MakeGenericType(matchingRelationship.RightType.ClrType);
+
+                _ = _dataSchemaGenerator.GenerateSchema(identifierSchemaConstructedType, forRequestSchema, schemaRepository);
                 AddRelationshipSchemaToResourceData(matchingRelationship, fullSchemaForRelationships, schemaRepository);
             }
         }
@@ -188,7 +191,7 @@ internal sealed class ResourceFieldSchemaBuilder
 
     private Type GetRelationshipSchemaType(RelationshipAttribute relationship, Type openSchemaType)
     {
-        bool isResponseSchemaType = openSchemaType.IsAssignableTo(typeof(ResourceDataInResponse<>));
+        bool isResponseSchemaType = openSchemaType.IsAssignableTo(typeof(DataInResponse<>));
         return isResponseSchemaType ? _relationshipTypeFactory.GetForResponse(relationship) : _relationshipTypeFactory.GetForRequest(relationship);
     }
 

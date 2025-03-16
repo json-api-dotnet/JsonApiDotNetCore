@@ -2,7 +2,6 @@ using System.Net;
 using FluentAssertions;
 using FluentAssertions.Common;
 using FluentAssertions.Extensions;
-using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.Client.NSwag;
 using Microsoft.Net.Http.Headers;
 using OpenApiNSwagClientTests.LegacyOpenApi.GeneratedCode;
@@ -13,6 +12,7 @@ namespace OpenApiNSwagClientTests.LegacyOpenApi;
 
 public sealed class RequestTests
 {
+    private const string OpenApiMediaType = "application/vnd.api+json; ext=openapi";
     private const string HostPrefix = "http://localhost/api/";
 
     [Fact]
@@ -27,7 +27,7 @@ public sealed class RequestTests
 
         // Assert
         wrapper.Request.Should().NotBeNull();
-        wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(JsonApiMediaType.Default.ToString());
+        wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(OpenApiMediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Get);
         wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights");
         wrapper.RequestBody.Should().BeNull();
@@ -47,7 +47,7 @@ public sealed class RequestTests
 
         // Assert
         wrapper.Request.Should().NotBeNull();
-        wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(JsonApiMediaType.Default.ToString());
+        wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(OpenApiMediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Get);
         wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}");
         wrapper.RequestBody.Should().BeNull();
@@ -89,18 +89,19 @@ public sealed class RequestTests
 
         // Assert
         wrapper.Request.Should().NotBeNull();
-        wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(JsonApiMediaType.Default.ToString());
+        wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(OpenApiMediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Post);
         wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights");
         wrapper.Request.Content.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
-        wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(JsonApiMediaType.Default.ToString());
+        wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(OpenApiMediaType);
 
         wrapper.RequestBody.Should().BeJson("""
             {
               "data": {
                 "type": "flights",
                 "relationships": {
+                  "openapi:discriminator": "flights",
                   "purser": {
                     "data": {
                       "type": "flight-attendants",
@@ -160,18 +161,19 @@ public sealed class RequestTests
 
         // Assert
         wrapper.Request.Should().NotBeNull();
-        wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(JsonApiMediaType.Default.ToString());
+        wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(OpenApiMediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Post);
         wrapper.Request.RequestUri.Should().Be($"{HostPrefix}airplanes");
         wrapper.Request.Content.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
-        wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(JsonApiMediaType.Default.ToString());
+        wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(OpenApiMediaType);
 
         wrapper.RequestBody.Should().BeJson($$"""
             {
               "data": {
                 "type": "airplanes",
                 "attributes": {
+                  "openapi:discriminator": "airplanes",
                   "name": "{{name}}",
                   "serial-number": null,
                   "airtime-in-hours": 800
@@ -214,12 +216,12 @@ public sealed class RequestTests
 
         // Assert
         wrapper.Request.Should().NotBeNull();
-        wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(JsonApiMediaType.Default.ToString());
+        wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(OpenApiMediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Patch);
         wrapper.Request.RequestUri.Should().Be($"{HostPrefix}airplanes/{airplaneId}");
         wrapper.Request.Content.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
-        wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(JsonApiMediaType.Default.ToString());
+        wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(OpenApiMediaType);
 
         wrapper.RequestBody.Should().BeJson("""
             {
@@ -227,6 +229,7 @@ public sealed class RequestTests
                 "type": "airplanes",
                 "id": "XUuiP",
                 "attributes": {
+                  "openapi:discriminator": "airplanes",
                   "serial-number": null,
                   "airtime-in-hours": null,
                   "last-serviced-at": "2021-01-01T15:23:05.033+04:00",
@@ -270,7 +273,7 @@ public sealed class RequestTests
 
         // Assert
         wrapper.Request.Should().NotBeNull();
-        wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(JsonApiMediaType.Default.ToString());
+        wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(OpenApiMediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Get);
         wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}/purser");
         wrapper.RequestBody.Should().BeNull();
@@ -290,7 +293,7 @@ public sealed class RequestTests
 
         // Assert
         wrapper.Request.Should().NotBeNull();
-        wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(JsonApiMediaType.Default.ToString());
+        wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(OpenApiMediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Get);
         wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}/cabin-crew-members");
         wrapper.RequestBody.Should().BeNull();
@@ -310,7 +313,7 @@ public sealed class RequestTests
 
         // Assert
         wrapper.Request.Should().NotBeNull();
-        wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(JsonApiMediaType.Default.ToString());
+        wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(OpenApiMediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Get);
         wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}/relationships/purser");
         wrapper.RequestBody.Should().BeNull();
@@ -342,7 +345,7 @@ public sealed class RequestTests
         wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}/relationships/purser");
         wrapper.Request.Content.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
-        wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(JsonApiMediaType.Default.ToString());
+        wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(OpenApiMediaType);
 
         wrapper.RequestBody.Should().BeJson("""
             {
@@ -368,7 +371,7 @@ public sealed class RequestTests
 
         // Assert
         wrapper.Request.Should().NotBeNull();
-        wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(JsonApiMediaType.Default.ToString());
+        wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(OpenApiMediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Get);
         wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}/relationships/cabin-crew-members");
         wrapper.RequestBody.Should().BeNull();
@@ -407,7 +410,7 @@ public sealed class RequestTests
         wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}/relationships/cabin-crew-members");
         wrapper.Request.Content.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
-        wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(JsonApiMediaType.Default.ToString());
+        wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(OpenApiMediaType);
 
         wrapper.RequestBody.Should().BeJson("""
             {
@@ -458,7 +461,7 @@ public sealed class RequestTests
         wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}/relationships/cabin-crew-members");
         wrapper.Request.Content.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
-        wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(JsonApiMediaType.Default.ToString());
+        wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(OpenApiMediaType);
 
         wrapper.RequestBody.Should().BeJson("""
             {
@@ -509,7 +512,7 @@ public sealed class RequestTests
         wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}/relationships/cabin-crew-members");
         wrapper.Request.Content.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
-        wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(JsonApiMediaType.Default.ToString());
+        wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(OpenApiMediaType);
 
         wrapper.RequestBody.Should().BeJson("""
             {

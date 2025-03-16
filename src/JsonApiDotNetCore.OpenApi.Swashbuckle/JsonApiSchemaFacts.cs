@@ -9,27 +9,27 @@ internal static class JsonApiSchemaFacts
 {
     private static readonly Type[] RequestBodySchemaTypes =
     [
-        typeof(CreateResourceRequestDocument<>),
-        typeof(UpdateResourceRequestDocument<>),
-        typeof(ToOneRelationshipInRequest<>),
-        typeof(NullableToOneRelationshipInRequest<>),
-        typeof(ToManyRelationshipInRequest<>),
+        typeof(CreateRequestDocument<>),
+        typeof(UpdateRequestDocument<>),
+        typeof(ToOneInRequest<>),
+        typeof(NullableToOneInRequest<>),
+        typeof(ToManyInRequest<>),
         typeof(OperationsRequestDocument)
     ];
 
     private static readonly Type[] SchemaTypesHavingNullableDataProperty =
     [
-        typeof(NullableToOneRelationshipInRequest<>),
-        typeof(NullableToOneRelationshipInResponse<>),
-        typeof(NullableSecondaryResourceResponseDocument<>),
-        typeof(NullableResourceIdentifierResponseDocument<>)
+        typeof(NullableToOneInRequest<>),
+        typeof(NullableToOneInResponse<>),
+        typeof(NullableSecondaryResponseDocument<>),
+        typeof(NullableIdentifierResponseDocument<>)
     ];
 
     private static readonly Type[] RelationshipInResponseSchemaTypes =
     [
-        typeof(ToOneRelationshipInResponse<>),
-        typeof(ToManyRelationshipInResponse<>),
-        typeof(NullableToOneRelationshipInResponse<>)
+        typeof(ToOneInResponse<>),
+        typeof(ToManyInResponse<>),
+        typeof(NullableToOneInResponse<>)
     ];
 
     public static bool IsRequestBodySchemaType(Type schemaType)

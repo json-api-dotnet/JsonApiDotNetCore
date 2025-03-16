@@ -6,14 +6,14 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata;
 
 internal sealed class NonPrimaryDocumentTypeFactory
 {
-    private static readonly DocumentOpenTypes SecondaryResponseDocumentOpenTypes = new(typeof(ResourceCollectionResponseDocument<>),
-        typeof(NullableSecondaryResourceResponseDocument<>), typeof(SecondaryResourceResponseDocument<>));
+    private static readonly DocumentOpenTypes SecondaryResponseDocumentOpenTypes = new(typeof(CollectionResponseDocument<>),
+        typeof(NullableSecondaryResponseDocument<>), typeof(SecondaryResponseDocument<>));
 
-    private static readonly DocumentOpenTypes RelationshipRequestDocumentOpenTypes = new(typeof(ToManyRelationshipInRequest<>),
-        typeof(NullableToOneRelationshipInRequest<>), typeof(ToOneRelationshipInRequest<>));
+    private static readonly DocumentOpenTypes RelationshipRequestDocumentOpenTypes = new(typeof(ToManyInRequest<>),
+        typeof(NullableToOneInRequest<>), typeof(ToOneInRequest<>));
 
-    private static readonly DocumentOpenTypes RelationshipResponseDocumentOpenTypes = new(typeof(ResourceIdentifierCollectionResponseDocument<>),
-        typeof(NullableResourceIdentifierResponseDocument<>), typeof(ResourceIdentifierResponseDocument<>));
+    private static readonly DocumentOpenTypes RelationshipResponseDocumentOpenTypes = new(typeof(IdentifierCollectionResponseDocument<>),
+        typeof(NullableIdentifierResponseDocument<>), typeof(IdentifierResponseDocument<>));
 
     private readonly ResourceFieldValidationMetadataProvider _resourceFieldValidationMetadataProvider;
 

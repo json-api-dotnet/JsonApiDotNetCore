@@ -50,6 +50,7 @@ public sealed class SerializerChangeTrackingTests
                 "type": "resources",
                 "id": "{{resourceId}}",
                 "attributes": {
+                  "openapi:discriminator": "resources",
                   "requiredNonNullableReferenceType": "other",
                   "nullableReferenceType": null,
                   "valueType": 0,
@@ -90,6 +91,7 @@ public sealed class SerializerChangeTrackingTests
                 "type": "resources",
                 "id": "{{resourceId}}",
                 "attributes": {
+                  "openapi:discriminator": "resources",
                   "requiredNonNullableReferenceType": "other"
                 }
               }
@@ -137,6 +139,7 @@ public sealed class SerializerChangeTrackingTests
                 "type": "resources",
                 "id": "{{resourceId}}",
                 "attributes": {
+                  "openapi:discriminator": "resources",
                   "nullableReferenceType": null,
                   "valueType": 0,
                   "nullableValueType": null
@@ -189,6 +192,7 @@ public sealed class SerializerChangeTrackingTests
                 "type": "resources",
                 "id": "{{resourceId}}",
                 "attributes": {
+                  "openapi:discriminator": "resources",
                   "valueType": 1,
                   "requiredValueType": 2,
                   "requiredNullableValueType": 3
@@ -241,6 +245,7 @@ public sealed class SerializerChangeTrackingTests
                 "type": "resources",
                 "id": "{{resourceId}}",
                 "attributes": {
+                  "openapi:discriminator": "resources",
                   "nullableReferenceType": null,
                   "valueType": 0,
                   "nullableValueType": null
@@ -296,6 +301,7 @@ public sealed class SerializerChangeTrackingTests
                 "type": "resources",
                 "id": "{{resourceId}}",
                 "attributes": {
+                  "openapi:discriminator": "resources",
                   "valueType": 1,
                   "requiredValueType": 2,
                   "requiredNullableValueType": 3
@@ -336,6 +342,7 @@ public sealed class SerializerChangeTrackingTests
                 "type": "resources",
                 "id": "{{resourceId}}",
                 "attributes": {
+                  "openapi:discriminator": "resources",
                   "requiredNonNullableReferenceType": "other"
                 }
               }
@@ -380,6 +387,7 @@ public sealed class SerializerChangeTrackingTests
                 "type": "resources",
                 "id": "{{resourceId}}",
                 "attributes": {
+                  "openapi:discriminator": "resources",
                   "nullableReferenceType": null,
                   "valueType": 0,
                   "nullableValueType": null
@@ -479,6 +487,7 @@ public sealed class SerializerChangeTrackingTests
                 "type": "resources",
                 "id": "{{resourceId}}",
                 "attributes": {
+                  "openapi:discriminator": "resources",
                   "nullableReferenceType": null,
                   "nullableValueType": null
                 }
@@ -537,6 +546,7 @@ public sealed class SerializerChangeTrackingTests
                 "type": "resources",
                 "id": "{{resourceId}}",
                 "attributes": {
+                  "openapi:discriminator": "resources",
                   "nullableReferenceType": null,
                   "nullableValueType": null
                 }
@@ -598,6 +608,7 @@ public sealed class SerializerChangeTrackingTests
                 "type": "resources",
                 "id": "{{resourceId}}",
                 "attributes": {
+                  "openapi:discriminator": "resources",
                   "nullableReferenceType": null,
                   "nullableValueType": null
                 }
@@ -656,6 +667,7 @@ public sealed class SerializerChangeTrackingTests
                 "type": "resources",
                 "id": "{{resourceId}}",
                 "attributes": {
+                  "openapi:discriminator": "resources",
                   "requiredNonNullableReferenceType": "other",
                   "nullableReferenceType": null,
                   "nullableValueType": null
@@ -744,6 +756,7 @@ public sealed class SerializerChangeTrackingTests
                   "data": {
                     "type": "staffMembers",
                     "attributes": {
+                      "openapi:discriminator": "staffMembers",
                       "age": null
                     }
                   }
@@ -754,6 +767,7 @@ public sealed class SerializerChangeTrackingTests
                   "data": {
                     "type": "staffMembers",
                     "attributes": {
+                      "openapi:discriminator": "staffMembers",
                       "name": "new-name"
                     }
                   }
@@ -764,6 +778,7 @@ public sealed class SerializerChangeTrackingTests
                   "data": {
                     "type": "supermarkets",
                     "attributes": {
+                      "openapi:discriminator": "supermarkets",
                       "nameOfCity": "new-name-of-city"
                     }
                   }
@@ -774,6 +789,7 @@ public sealed class SerializerChangeTrackingTests
                   "data": {
                     "type": "supermarkets",
                     "attributes": {
+                      "openapi:discriminator": "supermarkets",
                       "kind": null
                     }
                   }

@@ -15,22 +15,22 @@ internal sealed class ResourceOrRelationshipBodySchemaGenerator : BodySchemaGene
 {
     private static readonly Type[] RequestBodySchemaTypes =
     [
-        typeof(CreateResourceRequestDocument<>),
-        typeof(UpdateResourceRequestDocument<>),
-        typeof(ToOneRelationshipInRequest<>),
-        typeof(NullableToOneRelationshipInRequest<>),
-        typeof(ToManyRelationshipInRequest<>)
+        typeof(CreateRequestDocument<>),
+        typeof(UpdateRequestDocument<>),
+        typeof(ToOneInRequest<>),
+        typeof(NullableToOneInRequest<>),
+        typeof(ToManyInRequest<>)
     ];
 
     private static readonly Type[] ResponseBodySchemaTypes =
     [
-        typeof(ResourceCollectionResponseDocument<>),
-        typeof(PrimaryResourceResponseDocument<>),
-        typeof(SecondaryResourceResponseDocument<>),
-        typeof(NullableSecondaryResourceResponseDocument<>),
-        typeof(ResourceIdentifierResponseDocument<>),
-        typeof(NullableResourceIdentifierResponseDocument<>),
-        typeof(ResourceIdentifierCollectionResponseDocument<>)
+        typeof(CollectionResponseDocument<>),
+        typeof(PrimaryResponseDocument<>),
+        typeof(SecondaryResponseDocument<>),
+        typeof(NullableSecondaryResponseDocument<>),
+        typeof(IdentifierResponseDocument<>),
+        typeof(NullableIdentifierResponseDocument<>),
+        typeof(IdentifierCollectionResponseDocument<>)
     ];
 
     private readonly SchemaGenerator _defaultSchemaGenerator;
@@ -70,14 +70,14 @@ internal sealed class ResourceOrRelationshipBodySchemaGenerator : BodySchemaGene
         var resourceSchemaType = ResourceSchemaType.Create(bodyType, _resourceGraph);
         bool isRequestSchema = RequestBodySchemaTypes.Contains(resourceSchemaType.SchemaOpenType);
 
-        _ = _dataContainerSchemaGenerator.GenerateSchema(bodyType, resourceSchemaType.ResourceType, isRequestSchema, schemaRepository);
+        _ = _dataContainerSchemaGenerator.GenerateSchema(bodyType, resourceSchemaType.ResourceType, isRequestSchema, !isRequestSchema, schemaRepository);
 
         referenceSchemaForBody = _defaultSchemaGenerator.GenerateSchema(bodyType, schemaRepository);
-        OpenApiSchema fullSchemaForBody = schemaRepository.Schemas[referenceSchemaForBody.Reference.Id].UnwrapLastExtendedSchema();
+        OpenApiSchema inlineSchemaForBody = schemaRepository.Schemas[referenceSchemaForBody.Reference.Id].UnwrapLastExtendedSchema();
 
         if (JsonApiSchemaFacts.HasNullableDataProperty(resourceSchemaType.SchemaOpenType))
         {
-            fullSchemaForBody.Properties[JsonApiPropertyName.Data].Nullable = true;
+            inlineSchemaForBody.Properties[JsonApiPropertyName.Data].Nullable = true;
         }
 
         return referenceSchemaForBody;

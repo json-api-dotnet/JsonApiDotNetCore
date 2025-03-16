@@ -26,7 +26,7 @@ internal sealed class PeopleMessageFormatter
         var builder = new StringBuilder();
         builder.AppendLine($"Found {peopleResponse.Data!.Count} people:");
 
-        foreach (PersonDataInResponse person in peopleResponse.Data)
+        foreach (DataInPersonResponse person in peopleResponse.Data)
         {
             WritePerson(person, peopleResponse.Included ?? [], builder);
         }
@@ -34,7 +34,7 @@ internal sealed class PeopleMessageFormatter
         return builder.ToString();
     }
 
-    private static void WritePerson(PersonDataInResponse person, List<DataInResponse> includes, StringBuilder builder)
+    private static void WritePerson(DataInPersonResponse person, List<ResourceInResponse> includes, StringBuilder builder)
     {
         List<TodoItemIdentifierInResponse> assignedTodoItems = person.Relationships?.AssignedTodoItems?.Data ?? [];
 
@@ -42,11 +42,11 @@ internal sealed class PeopleMessageFormatter
         WriteRelatedTodoItems(assignedTodoItems, includes, builder);
     }
 
-    private static void WriteRelatedTodoItems(List<TodoItemIdentifierInResponse> todoItemIdentifiers, List<DataInResponse> includes, StringBuilder builder)
+    private static void WriteRelatedTodoItems(List<TodoItemIdentifierInResponse> todoItemIdentifiers, List<ResourceInResponse> includes, StringBuilder builder)
     {
         foreach (TodoItemIdentifierInResponse todoItemIdentifier in todoItemIdentifiers)
         {
-            TodoItemDataInResponse includedTodoItem = includes.OfType<TodoItemDataInResponse>().Single(include => include.Id == todoItemIdentifier.Id);
+            DataInTodoItemResponse includedTodoItem = includes.OfType<DataInTodoItemResponse>().Single(include => include.Id == todoItemIdentifier.Id);
             List<TagIdentifierInResponse> tags = includedTodoItem.Relationships?.Tags?.Data ?? [];
 
             builder.AppendLine($"    TodoItem {includedTodoItem.Id}: {includedTodoItem.Attributes?.Description} with {tags.Count} tags:");
@@ -54,11 +54,11 @@ internal sealed class PeopleMessageFormatter
         }
     }
 
-    private static void WriteRelatedTags(List<TagIdentifierInResponse> tagIdentifiers, List<DataInResponse> includes, StringBuilder builder)
+    private static void WriteRelatedTags(List<TagIdentifierInResponse> tagIdentifiers, List<ResourceInResponse> includes, StringBuilder builder)
     {
         foreach (TagIdentifierInResponse tagIdentifier in tagIdentifiers)
         {
-            TagDataInResponse includedTag = includes.OfType<TagDataInResponse>().Single(include => include.Id == tagIdentifier.Id);
+            DataInTagResponse includedTag = includes.OfType<DataInTagResponse>().Single(include => include.Id == tagIdentifier.Id);
             builder.AppendLine($"      Tag {includedTag.Id}: {includedTag.Attributes?.Name}");
         }
     }

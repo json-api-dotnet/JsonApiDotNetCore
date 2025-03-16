@@ -68,14 +68,14 @@ internal sealed class JsonApiEndpointMetadataProvider
 
     private static PrimaryRequestMetadata GetPostResourceRequestMetadata(Type resourceClrType)
     {
-        Type documentType = typeof(CreateResourceRequestDocument<>).MakeGenericType(resourceClrType);
+        Type documentType = typeof(CreateRequestDocument<>).MakeGenericType(resourceClrType);
 
         return new PrimaryRequestMetadata(documentType);
     }
 
     private static PrimaryRequestMetadata GetPatchResourceRequestMetadata(Type resourceClrType)
     {
-        Type documentType = typeof(UpdateResourceRequestDocument<>).MakeGenericType(resourceClrType);
+        Type documentType = typeof(UpdateRequestDocument<>).MakeGenericType(resourceClrType);
 
         return new PrimaryRequestMetadata(documentType);
     }
@@ -104,7 +104,7 @@ internal sealed class JsonApiEndpointMetadataProvider
 
     private static PrimaryResponseMetadata GetPrimaryResponseMetadata(Type resourceClrType, bool endpointReturnsCollection)
     {
-        Type documentOpenType = endpointReturnsCollection ? typeof(ResourceCollectionResponseDocument<>) : typeof(PrimaryResourceResponseDocument<>);
+        Type documentOpenType = endpointReturnsCollection ? typeof(CollectionResponseDocument<>) : typeof(PrimaryResponseDocument<>);
         Type documentType = documentOpenType.MakeGenericType(resourceClrType);
 
         return new PrimaryResponseMetadata(documentType);

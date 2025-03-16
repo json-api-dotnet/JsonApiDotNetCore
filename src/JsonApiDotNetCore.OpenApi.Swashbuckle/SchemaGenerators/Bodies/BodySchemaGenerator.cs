@@ -5,6 +5,8 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Bodies;
 
+// TODO: Rename to DocumentSchemaGenerator, for consistency?
+
 /// <summary>
 /// Generates the OpenAPI component schema for a request and/or response body.
 /// </summary>
@@ -26,8 +28,10 @@ internal abstract class BodySchemaGenerator
         _options = options;
     }
 
+    // TODO: Rename to schemaType everywhere (search for: Type modelType)
     public abstract bool CanGenerate(Type modelType);
 
+    // TODO: Verify consistency in GenerateSchema() parameters/variables for xxxSchema[Open|Constructed]Type
     public OpenApiSchema GenerateSchema(Type bodyType, SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(bodyType);

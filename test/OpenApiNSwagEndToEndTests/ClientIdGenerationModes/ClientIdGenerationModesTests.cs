@@ -88,7 +88,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        PlayerPrimaryResponseDocument? response = await ApiResponse.TranslateAsync(async () => await apiClient.PostPlayerAsync(requestBody));
+        PrimaryPlayerResponseDocument? response = await ApiResponse.TranslateAsync(async () => await apiClient.PostPlayerAsync(requestBody));
 
         // Assert
         response.Should().BeNull();
@@ -123,7 +123,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        GamePrimaryResponseDocument? response = await ApiResponse.TranslateAsync(async () => await apiClient.PostGameAsync(requestBody));
+        PrimaryGameResponseDocument? response = await ApiResponse.TranslateAsync(async () => await apiClient.PostGameAsync(requestBody));
 
         // Assert
         response.Should().NotBeNull();
@@ -162,7 +162,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        GamePrimaryResponseDocument? response = await ApiResponse.TranslateAsync(async () => await apiClient.PostGameAsync(requestBody));
+        PrimaryGameResponseDocument? response = await ApiResponse.TranslateAsync(async () => await apiClient.PostGameAsync(requestBody));
 
         // Assert
         response.Should().BeNull();
@@ -240,7 +240,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        PlayerGroupPrimaryResponseDocument? response = await ApiResponse.TranslateAsync(async () => await apiClient.PostPlayerGroupAsync(requestBody));
+        PrimaryPlayerGroupResponseDocument? response = await ApiResponse.TranslateAsync(async () => await apiClient.PostPlayerGroupAsync(requestBody));
 
         // Assert
         response.Should().NotBeNull();

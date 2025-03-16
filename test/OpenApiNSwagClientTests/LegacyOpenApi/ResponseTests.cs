@@ -108,7 +108,7 @@ public sealed class ResponseTests
         response.Links.Last.Should().Be(topLevelLink);
         response.Data.Should().HaveCount(1);
 
-        FlightDataInResponse flight = response.Data.First();
+        DataInFlightResponse flight = response.Data.First();
         flight.Id.Should().Be(flightId);
         flight.Links.Self.Should().Be(flightResourceLink);
         flight.Meta.Should().HaveCount(1);
@@ -178,7 +178,7 @@ public sealed class ResponseTests
         var apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
-        FlightPrimaryResponseDocument response = await apiClient.GetFlightAsync(flightId, null, null);
+        PrimaryFlightResponseDocument response = await apiClient.GetFlightAsync(flightId, null, null);
 
         // Assert
         response.Jsonapi.Should().BeNull();
@@ -230,7 +230,7 @@ public sealed class ResponseTests
         exception.Result.Links.Describedby.Should().Be("/swagger/v1/swagger.json");
         exception.Result.Errors.Should().HaveCount(1);
 
-        ErrorObject? error = exception.Result.Errors.ElementAt(0);
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
         error.Id.Should().Be("f1a520ac-02a0-466b-94ea-86cbaa86f02f");
         error.Status.Should().Be("404");
         error.Title.Should().Be("The requested resource does not exist.");
@@ -312,7 +312,7 @@ public sealed class ResponseTests
         };
 
         // Act
-        FlightPrimaryResponseDocument response = await apiClient.PostFlightAsync(null, requestBody);
+        PrimaryFlightResponseDocument response = await apiClient.PostFlightAsync(null, requestBody);
 
         // Assert
         response.Data.Attributes.Should().BeNull();
@@ -357,7 +357,7 @@ public sealed class ResponseTests
         };
 
         // Act
-        FlightPrimaryResponseDocument response = await apiClient.PatchFlightAsync(flightId, null, requestBody);
+        PrimaryFlightResponseDocument response = await apiClient.PatchFlightAsync(flightId, null, requestBody);
 
         // Assert
         response.Data.Attributes.Should().BeNull();
@@ -373,7 +373,7 @@ public sealed class ResponseTests
         var apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
-        FlightPrimaryResponseDocument? response = await ApiResponse.TranslateAsync(async () => await apiClient.PatchFlightAsync(flightId, null,
+        PrimaryFlightResponseDocument? response = await ApiResponse.TranslateAsync(async () => await apiClient.PatchFlightAsync(flightId, null,
             new UpdateFlightRequestDocument
             {
                 Data = new DataInUpdateFlightRequest
@@ -452,7 +452,7 @@ public sealed class ResponseTests
         var apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
-        FlightAttendantSecondaryResponseDocument response = await apiClient.GetFlightPurserAsync(flightId, null, null);
+        SecondaryFlightAttendantResponseDocument response = await apiClient.GetFlightPurserAsync(flightId, null, null);
 
         // Assert
         response.Data.Should().NotBeNull();
@@ -484,7 +484,7 @@ public sealed class ResponseTests
         var apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
-        NullableFlightAttendantSecondaryResponseDocument response = await apiClient.GetFlightBackupPurserAsync(flightId, null, null);
+        NullableSecondaryFlightAttendantResponseDocument response = await apiClient.GetFlightBackupPurserAsync(flightId, null, null);
 
         // Assert
         response.Data.Should().BeNull();

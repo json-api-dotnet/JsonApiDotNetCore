@@ -144,7 +144,7 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
 
     private JsonApiMediaType GetMediaTypeForEndpoint(JsonApiEndpointWrapper endpoint)
     {
-        return endpoint.IsAtomicOperationsEndpoint ? JsonApiMediaType.RelaxedAtomicOperations : JsonApiMediaType.Default;
+        return endpoint.IsAtomicOperationsEndpoint ? OpenApiMediaTypes.RelaxedAtomicOperationsWithRelaxedOpenApi : OpenApiMediaTypes.RelaxedOpenApi;
     }
 
     private static HttpStatusCode[] GetSuccessStatusCodesForEndpoint(JsonApiEndpointWrapper endpoint)

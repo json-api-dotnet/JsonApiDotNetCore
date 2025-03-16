@@ -22,19 +22,19 @@ internal sealed class OpenApiOperationIdSelector
 
     private static readonly Dictionary<Type, string> SchemaOpenTypeToOpenApiOperationIdTemplateMap = new()
     {
-        [typeof(ResourceCollectionResponseDocument<>)] = ResourceCollectionIdTemplate,
-        [typeof(PrimaryResourceResponseDocument<>)] = ResourceIdTemplate,
-        [typeof(CreateResourceRequestDocument<>)] = ResourceIdTemplate,
-        [typeof(UpdateResourceRequestDocument<>)] = ResourceIdTemplate,
+        [typeof(CollectionResponseDocument<>)] = ResourceCollectionIdTemplate,
+        [typeof(PrimaryResponseDocument<>)] = ResourceIdTemplate,
+        [typeof(CreateRequestDocument<>)] = ResourceIdTemplate,
+        [typeof(UpdateRequestDocument<>)] = ResourceIdTemplate,
         [typeof(void)] = ResourceIdTemplate,
-        [typeof(SecondaryResourceResponseDocument<>)] = SecondaryResourceIdTemplate,
-        [typeof(NullableSecondaryResourceResponseDocument<>)] = SecondaryResourceIdTemplate,
-        [typeof(ResourceIdentifierCollectionResponseDocument<>)] = RelationshipIdTemplate,
-        [typeof(ResourceIdentifierResponseDocument<>)] = RelationshipIdTemplate,
-        [typeof(NullableResourceIdentifierResponseDocument<>)] = RelationshipIdTemplate,
-        [typeof(ToOneRelationshipInRequest<>)] = RelationshipIdTemplate,
-        [typeof(NullableToOneRelationshipInRequest<>)] = RelationshipIdTemplate,
-        [typeof(ToManyRelationshipInRequest<>)] = RelationshipIdTemplate,
+        [typeof(SecondaryResponseDocument<>)] = SecondaryResourceIdTemplate,
+        [typeof(NullableSecondaryResponseDocument<>)] = SecondaryResourceIdTemplate,
+        [typeof(IdentifierCollectionResponseDocument<>)] = RelationshipIdTemplate,
+        [typeof(IdentifierResponseDocument<>)] = RelationshipIdTemplate,
+        [typeof(NullableIdentifierResponseDocument<>)] = RelationshipIdTemplate,
+        [typeof(ToOneInRequest<>)] = RelationshipIdTemplate,
+        [typeof(NullableToOneInRequest<>)] = RelationshipIdTemplate,
+        [typeof(ToManyInRequest<>)] = RelationshipIdTemplate,
         [typeof(OperationsRequestDocument)] = AtomicOperationsIdTemplate
     };
 
@@ -85,9 +85,9 @@ internal sealed class OpenApiOperationIdSelector
         ControllerParameterDescriptor? requestBodyDescriptor = endpoint.ActionDescriptor.GetBodyParameterDescriptor();
         Type bodyType = (requestBodyDescriptor?.ParameterType ?? producesResponseTypeAttribute.Type).ConstructedToOpenType();
 
-        if (bodyType == typeof(ResourceCollectionResponseDocument<>) && endpoint.ParameterDescriptions.Count > 0)
+        if (bodyType == typeof(CollectionResponseDocument<>) && endpoint.ParameterDescriptions.Count > 0)
         {
-            bodyType = typeof(SecondaryResourceResponseDocument<>);
+            bodyType = typeof(SecondaryResponseDocument<>);
         }
 
         return bodyType;

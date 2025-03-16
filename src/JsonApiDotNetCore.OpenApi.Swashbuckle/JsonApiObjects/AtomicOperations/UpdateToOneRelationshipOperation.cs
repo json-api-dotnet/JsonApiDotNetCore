@@ -21,5 +21,5 @@ internal sealed class UpdateToOneRelationshipOperation<TResource> : AtomicOperat
     [Required]
     [JsonPropertyName("data")]
     // Nullability of this property is determined based on the nullability of the to-one relationship.
-    public ResourceIdentifierInRequest<TResource>? Data { get; set; }
+    public IdentifierInRequest<TResource>? Data { get; set; }
 }

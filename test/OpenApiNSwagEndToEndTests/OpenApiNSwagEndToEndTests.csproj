@@ -71,5 +71,29 @@
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
     </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\ResourceInheritance\OnlyRelationships\GeneratedSwagger\swagger.g.json">
+      <Name>OnlyRelationshipsInheritance</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\ResourceInheritance\SubsetOfVarious\GeneratedSwagger\swagger.g.json">
+      <Name>SubsetOfVariousInheritance</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\ResourceInheritance\SubsetOfOperations\GeneratedSwagger\swagger.g.json">
+      <Name>SubsetOfOperationsInheritance</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\ResourceInheritance\NoOperations\GeneratedSwagger\swagger.g.json">
+      <Name>NoOperationsInheritance</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
   </ItemGroup>
 </Project>

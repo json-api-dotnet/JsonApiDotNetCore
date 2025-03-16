@@ -43,7 +43,7 @@ public sealed class AlternateOpenApiRouteTests : IClassFixture<IntegrationTestCo
         });
 
         // Act
-        ExcursionPrimaryResponseDocument response = await apiClient.GetExcursionAsync(excursion.StringId!);
+        PrimaryExcursionResponseDocument response = await apiClient.GetExcursionAsync(excursion.StringId!);
 
         // Assert
         response.Links.Describedby.Should().Be("/api-docs/v1/swagger.yaml");

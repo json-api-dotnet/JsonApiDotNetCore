@@ -54,7 +54,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                     Op = AddOperationCode.Add,
                     Data = new DataInCreateTeacherRequest
                     {
-                        Type = TeacherResourceType.Teachers,
+                        Type = ResourceType.Teachers,
                         Lid = teacherLocalId,
                         Attributes = new AttributesInCreateTeacherRequest
                         {
@@ -68,7 +68,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                     Op = AddOperationCode.Add,
                     Data = new DataInCreateCourseRequest
                     {
-                        Type = CourseResourceType.Courses,
+                        Type = ResourceType.Courses,
                         Id = newCourse.Id,
                         Attributes = new AttributesInCreateCourseRequest
                         {
@@ -90,7 +90,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                     [
                         new CourseIdentifierInRequest
                         {
-                            Type = CourseResourceType.Courses,
+                            Type = ResourceType.Courses,
                             Id = newCourse.Id
                         }
                     ]
@@ -100,7 +100,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                     Op = AddOperationCode.Add,
                     Data = new DataInCreateStudentRequest
                     {
-                        Type = StudentResourceType.Students,
+                        Type = ResourceType.Students,
                         Lid = studentLocalId,
                         Attributes = new AttributesInCreateStudentRequest
                         {
@@ -114,7 +114,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                     Op = AddOperationCode.Add,
                     Data = new DataInCreateEnrollmentRequest
                     {
-                        Type = EnrollmentResourceType.Enrollments,
+                        Type = ResourceType.Enrollments,
                         Lid = enrollmentLocalId,
                         Attributes = new AttributesInCreateEnrollmentRequest
                         {
@@ -126,7 +126,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                             {
                                 Data = new CourseIdentifierInRequest
                                 {
-                                    Type = CourseResourceType.Courses,
+                                    Type = ResourceType.Courses,
                                     Id = newCourse.Id
                                 }
                             },
@@ -134,7 +134,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                             {
                                 Data = new StudentIdentifierInRequest
                                 {
-                                    Type = StudentResourceType.Students,
+                                    Type = ResourceType.Students,
                                     Lid = studentLocalId
                                 }
                             }
@@ -152,7 +152,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                     },
                     Data = new TeacherIdentifierInRequest
                     {
-                        Type = TeacherResourceType.Teachers,
+                        Type = ResourceType.Teachers,
                         Lid = teacherLocalId
                     }
                 },
@@ -161,7 +161,7 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
                     Op = RemoveOperationCode.Remove,
                     Ref = new TeacherIdentifierInRequest
                     {
-                        Type = TeacherResourceType.Teachers,
+                        Type = ResourceType.Teachers,
                         Lid = teacherLocalId
                     }
                 }
@@ -176,25 +176,25 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Op
 
         response.AtomicResults.Should().HaveCount(7);
 
-        TeacherDataInResponse teacherInResponse = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<TeacherDataInResponse>().Which;
-        teacherInResponse.Attributes.Should().NotBeNull();
-        teacherInResponse.Attributes.Name.Should().Be(newTeacher.Name);
-        teacherInResponse.Attributes.EmailAddress.Should().Be(newTeacher.EmailAddress);
-        long newTeacherId = long.Parse(teacherInResponse.Id!);
+        DataInTeacherResponse teacherData = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<DataInTeacherResponse>().Which;
+        teacherData.Attributes.Should().NotBeNull();
+        teacherData.Attributes.Name.Should().Be(newTeacher.Name);
+        teacherData.Attributes.EmailAddress.Should().Be(newTeacher.EmailAddress);
+        long newTeacherId = long.Parse(teacherData.Id!);
 
         response.AtomicResults.ElementAt(1).Data.Should().BeNull();
         response.AtomicResults.ElementAt(2).Data.Should().BeNull();
 
-        StudentDataInResponse studentInResponse = response.AtomicResults.ElementAt(3).Data.Should().BeOfType<StudentDataInResponse>().Which;
-        studentInResponse.Attributes.Should().NotBeNull();
-        studentInResponse.Attributes.Name.Should().Be(newStudent.Name);
-        studentInResponse.Attributes.EmailAddress.Should().Be(newStudent.EmailAddress);
-        long newStudentId = long.Parse(studentInResponse.Id!);
+        DataInStudentResponse studentData = response.AtomicResults.ElementAt(3).Data.Should().BeOfType<DataInStudentResponse>().Which;
+        studentData.Attributes.Should().NotBeNull();
+        studentData.Attributes.Name.Should().Be(newStudent.Name);
+        studentData.Attributes.EmailAddress.Should().Be(newStudent.EmailAddress);
+        long newStudentId = long.Parse(studentData.Id!);
 
-        EnrollmentDataInResponse enrollmentInResponse = response.AtomicResults.ElementAt(4).Data.Should().BeOfType<EnrollmentDataInResponse>().Which;
-        enrollmentInResponse.Attributes.Should().NotBeNull();
-        enrollmentInResponse.Attributes.EnrolledAt.Should().Be((Date)newEnrolledAt);
-        long newEnrollmentId = long.Parse(enrollmentInResponse.Id!);
+        DataInEnrollmentResponse enrollmentData = response.AtomicResults.ElementAt(4).Data.Should().BeOfType<DataInEnrollmentResponse>().Which;
+        enrollmentData.Attributes.Should().NotBeNull();
+        enrollmentData.Attributes.EnrolledAt.Should().Be((Date)newEnrolledAt);
+        long newEnrollmentId = long.Parse(enrollmentData.Id!);
 
         response.AtomicResults.ElementAt(5).Data.Should().BeNull();
         response.AtomicResults.ElementAt(6).Data.Should().BeNull();

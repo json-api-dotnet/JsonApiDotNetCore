@@ -7,8 +7,8 @@ namespace OpenApiTests.Documentation;
 
 public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<DocumentationStartup<DocumentationDbContext>, DocumentationDbContext>>
 {
-    private const string EscapedJsonApiMediaType = "['application/vnd.api+json']";
-    private const string EscapedOperationsMediaType = "['application/vnd.api+json; ext=atomic']";
+    private const string EscapedJsonApiMediaType = "['application/vnd.api+json; ext=openapi']";
+    private const string EscapedOperationsMediaType = "['application/vnd.api+json; ext=atomic; ext=openapi']";
 
     private readonly OpenApiTestContext<DocumentationStartup<DocumentationDbContext>, DocumentationDbContext> _testContext;
 

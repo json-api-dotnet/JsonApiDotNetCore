@@ -57,7 +57,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         {
             Data = new DataInUpdateWriteOnlyChannelRequest
             {
-                Type = WriteOnlyChannelResourceType.WriteOnlyChannels,
+                Type = ResourceType.WriteOnlyChannels,
                 Id = existingChannel.StringId!,
                 Attributes = new AttributesInUpdateWriteOnlyChannelRequest
                 {
@@ -69,7 +69,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
                     {
                         Data = new DataStreamIdentifierInRequest
                         {
-                            Type = DataStreamResourceType.DataStreams,
+                            Type = ResourceType.DataStreams,
                             Id = existingVideoStream.StringId!
                         }
                     },
@@ -93,7 +93,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         });
 
         // Act
-        WriteOnlyChannelPrimaryResponseDocument? response = await apiClient.WriteOnlyChannels[existingChannel.StringId!].PatchAsync(requestBody);
+        PrimaryWriteOnlyChannelResponseDocument? response = await apiClient.WriteOnlyChannels[existingChannel.StringId!].PatchAsync(requestBody);
 
         // Assert
         response.Should().NotBeNull();
@@ -112,7 +112,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         response.Data.Relationships.AudioStreams.Data.Should().BeEmpty();
 
         response.Included.Should().HaveCount(1);
-        response.Included.OfType<DataStreamDataInResponse>().Should().ContainSingle(streamData => streamData.Id == existingVideoStream.StringId);
+        response.Included.OfType<DataInDataStreamResponse>().Should().ContainSingle(include => include.Id == existingVideoStream.StringId);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -163,7 +163,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         {
             Data = new DataInUpdateWriteOnlyChannelRequest
             {
-                Type = WriteOnlyChannelResourceType.WriteOnlyChannels,
+                Type = ResourceType.WriteOnlyChannels,
                 Id = existingChannel.StringId!,
                 Attributes = new AttributesInUpdateWriteOnlyChannelRequest(),
                 Relationships = new RelationshipsInUpdateWriteOnlyChannelRequest()
@@ -171,7 +171,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         };
 
         // Act
-        WriteOnlyChannelPrimaryResponseDocument? response = await apiClient.WriteOnlyChannels[existingChannel.StringId!].PatchAsync(requestBody);
+        PrimaryWriteOnlyChannelResponseDocument? response = await apiClient.WriteOnlyChannels[existingChannel.StringId!].PatchAsync(requestBody);
 
         // Assert
         response.Should().NotBeNull();
@@ -264,7 +264,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         {
             Data = new DataInUpdateWriteOnlyChannelRequest
             {
-                Type = WriteOnlyChannelResourceType.WriteOnlyChannels,
+                Type = ResourceType.WriteOnlyChannels,
                 Id = existingChannel.StringId!,
                 Relationships = new RelationshipsInUpdateWriteOnlyChannelRequest
                 {
@@ -272,7 +272,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
                     {
                         Data = new DataStreamIdentifierInRequest
                         {
-                            Type = DataStreamResourceType.DataStreams,
+                            Type = ResourceType.DataStreams,
                             Id = unknownDataStreamId
                         }
                     },
@@ -282,7 +282,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
                         [
                             new DataStreamIdentifierInRequest
                             {
-                                Type = DataStreamResourceType.DataStreams,
+                                Type = ResourceType.DataStreams,
                                 Id = unknownDataStreamId
                             }
                         ]

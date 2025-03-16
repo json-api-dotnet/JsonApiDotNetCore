@@ -90,7 +90,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         };
 
         // Act
-        WriteOnlyChannelPrimaryResponseDocument? response = await ApiResponse.TranslateAsync(async () =>
+        PrimaryWriteOnlyChannelResponseDocument? response = await ApiResponse.TranslateAsync(async () =>
             await apiClient.PatchWriteOnlyChannelAsync(existingChannel.StringId!, requestBody, queryString));
 
         response.Should().NotBeNull();
@@ -109,7 +109,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         response.Data.Relationships.AudioStreams.Data.Should().BeEmpty();
 
         response.Included.Should().HaveCount(1);
-        response.Included.OfType<DataStreamDataInResponse>().Should().ContainSingle(streamData => streamData.Id == existingVideoStream.StringId);
+        response.Included.OfType<DataInDataStreamResponse>().Should().ContainSingle(include => include.Id == existingVideoStream.StringId);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -167,7 +167,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<O
         };
 
         // Act
-        WriteOnlyChannelPrimaryResponseDocument? response =
+        PrimaryWriteOnlyChannelResponseDocument? response =
             await ApiResponse.TranslateAsync(async () => await apiClient.PatchWriteOnlyChannelAsync(existingChannel.StringId!, requestBody));
 
         response.Should().NotBeNull();
