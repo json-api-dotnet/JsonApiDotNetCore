@@ -9,11 +9,7 @@ using Microsoft.Kiota.Serialization.Form;
 using Microsoft.Kiota.Serialization.Json;
 using Microsoft.Kiota.Serialization.Multipart;
 using Microsoft.Kiota.Serialization.Text;
-using OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Courses;
-using OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Enrollments;
 using OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Operations;
-using OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Students;
-using OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Teachers;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -26,34 +22,10 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     public partial class AtomicOperationsClient : BaseRequestBuilder
     {
-        /// <summary>The courses property</summary>
-        public global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Courses.CoursesRequestBuilder Courses
-        {
-            get => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Courses.CoursesRequestBuilder(PathParameters, RequestAdapter);
-        }
-
-        /// <summary>The enrollments property</summary>
-        public global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Enrollments.EnrollmentsRequestBuilder Enrollments
-        {
-            get => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Enrollments.EnrollmentsRequestBuilder(PathParameters, RequestAdapter);
-        }
-
         /// <summary>The operations property</summary>
         public global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Operations.OperationsRequestBuilder Operations
         {
             get => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Operations.OperationsRequestBuilder(PathParameters, RequestAdapter);
-        }
-
-        /// <summary>The students property</summary>
-        public global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Students.StudentsRequestBuilder Students
-        {
-            get => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Students.StudentsRequestBuilder(PathParameters, RequestAdapter);
-        }
-
-        /// <summary>The teachers property</summary>
-        public global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Teachers.TeachersRequestBuilder Teachers
-        {
-            get => new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Teachers.TeachersRequestBuilder(PathParameters, RequestAdapter);
         }
 
         /// <summary>

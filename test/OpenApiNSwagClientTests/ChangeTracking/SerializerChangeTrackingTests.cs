@@ -21,7 +21,7 @@ public sealed class SerializerChangeTrackingTests
 
         string resourceId = Unknown.StringId.Int32;
 
-        var requestDocument = new UpdateResourceRequestDocument
+        var requestBody = new UpdateResourceRequestDocument
         {
             Data = new DataInUpdateResourceRequest
             {
@@ -38,10 +38,10 @@ public sealed class SerializerChangeTrackingTests
             }
         };
 
-        requestDocument.Data.Attributes.RequiredNonNullableReferenceType = "other";
+        requestBody.Data.Attributes.RequiredNonNullableReferenceType = "other";
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestDocument));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestBody));
 
         // Assert
         wrapper.RequestBody.Should().BeJson($$"""
@@ -69,7 +69,7 @@ public sealed class SerializerChangeTrackingTests
 
         string resourceId = Unknown.StringId.Int32;
 
-        var requestDocument = new UpdateResourceRequestDocument
+        var requestBody = new UpdateResourceRequestDocument
         {
             Data = new DataInUpdateResourceRequest
             {
@@ -78,10 +78,10 @@ public sealed class SerializerChangeTrackingTests
             }
         };
 
-        requestDocument.Data.Attributes.RequiredNonNullableReferenceType = "other";
+        requestBody.Data.Attributes.RequiredNonNullableReferenceType = "other";
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestDocument));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestBody));
 
         // Assert
         wrapper.RequestBody.Should().BeJson($$"""
@@ -106,7 +106,7 @@ public sealed class SerializerChangeTrackingTests
 
         string resourceId = Unknown.StringId.Int32;
 
-        var requestDocument = new UpdateResourceRequestDocument
+        var requestBody = new UpdateResourceRequestDocument
         {
             Data = new DataInUpdateResourceRequest
             {
@@ -123,12 +123,12 @@ public sealed class SerializerChangeTrackingTests
             }
         };
 
-        requestDocument.Data.Attributes.ValueType = 0;
-        requestDocument.Data.Attributes.NullableValueType = null;
-        requestDocument.Data.Attributes.NullableReferenceType = null;
+        requestBody.Data.Attributes.ValueType = 0;
+        requestBody.Data.Attributes.NullableValueType = null;
+        requestBody.Data.Attributes.NullableReferenceType = null;
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestDocument));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestBody));
 
         // Assert
         wrapper.RequestBody.Should().BeJson($$"""
@@ -155,7 +155,7 @@ public sealed class SerializerChangeTrackingTests
 
         string resourceId = Unknown.StringId.Int32;
 
-        var requestDocument = new UpdateResourceRequestDocument
+        var requestBody = new UpdateResourceRequestDocument
         {
             Data = new DataInUpdateResourceRequest
             {
@@ -172,15 +172,15 @@ public sealed class SerializerChangeTrackingTests
             }
         };
 
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestDocument));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestBody));
         wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
 
-        requestDocument.Data.Attributes.ValueType = 1;
-        requestDocument.Data.Attributes.RequiredValueType = 2;
-        requestDocument.Data.Attributes.RequiredNullableValueType = 3;
+        requestBody.Data.Attributes.ValueType = 1;
+        requestBody.Data.Attributes.RequiredValueType = 2;
+        requestBody.Data.Attributes.RequiredNullableValueType = 3;
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestDocument));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestBody));
 
         // Assert
         wrapper.RequestBody.Should().BeJson($$"""
@@ -211,7 +211,7 @@ public sealed class SerializerChangeTrackingTests
 
         string resourceId = Unknown.StringId.Int32;
 
-        var requestDocument = new UpdateResourceRequestDocument
+        var requestBody = new UpdateResourceRequestDocument
         {
             Data = new DataInUpdateResourceRequest
             {
@@ -228,11 +228,11 @@ public sealed class SerializerChangeTrackingTests
             }
         };
 
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestDocument));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestBody));
         wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestDocument));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestBody));
 
         // Assert
         wrapper.RequestBody.Should().BeJson($$"""
@@ -263,7 +263,7 @@ public sealed class SerializerChangeTrackingTests
 
         string resourceId = Unknown.StringId.Int32;
 
-        var requestDocument = new UpdateResourceRequestDocument
+        var requestBody = new UpdateResourceRequestDocument
         {
             Data = new DataInUpdateResourceRequest
             {
@@ -282,12 +282,12 @@ public sealed class SerializerChangeTrackingTests
 
         apiClient.ClearAllTracked();
 
-        requestDocument.Data.Attributes.ValueType = 1;
-        requestDocument.Data.Attributes.RequiredValueType = 2;
-        requestDocument.Data.Attributes.RequiredNullableValueType = 3;
+        requestBody.Data.Attributes.ValueType = 1;
+        requestBody.Data.Attributes.RequiredValueType = 2;
+        requestBody.Data.Attributes.RequiredNullableValueType = 3;
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestDocument));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestBody));
 
         // Assert
         wrapper.RequestBody.Should().BeJson($$"""
@@ -314,7 +314,7 @@ public sealed class SerializerChangeTrackingTests
 
         string resourceId = Unknown.StringId.Int32;
 
-        var requestDocument = new UpdateResourceRequestDocument
+        var requestBody = new UpdateResourceRequestDocument
         {
             Data = new DataInUpdateResourceRequest
             {
@@ -323,11 +323,11 @@ public sealed class SerializerChangeTrackingTests
             }
         };
 
-        apiClient.MarkAsTracked(requestDocument.Data.Attributes);
-        requestDocument.Data.Attributes.RequiredNonNullableReferenceType = "other";
+        apiClient.MarkAsTracked(requestBody.Data.Attributes);
+        requestBody.Data.Attributes.RequiredNonNullableReferenceType = "other";
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestDocument));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestBody));
 
         // Assert
         wrapper.RequestBody.Should().BeJson($$"""
@@ -352,7 +352,7 @@ public sealed class SerializerChangeTrackingTests
 
         string resourceId = Unknown.StringId.Int32;
 
-        var requestDocument = new UpdateResourceRequestDocument
+        var requestBody = new UpdateResourceRequestDocument
         {
             Data = new DataInUpdateResourceRequest
             {
@@ -368,10 +368,10 @@ public sealed class SerializerChangeTrackingTests
             nameof(AttributesInUpdateResourceRequest.NullableReferenceType)
         ];
 
-        apiClient.MarkAsTracked(requestDocument.Data.Attributes, propertyNamesToTrack);
+        apiClient.MarkAsTracked(requestBody.Data.Attributes, propertyNamesToTrack);
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestDocument));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestBody));
 
         // Assert
         wrapper.RequestBody.Should().BeJson($$"""
@@ -453,7 +453,7 @@ public sealed class SerializerChangeTrackingTests
             }
         };
 
-        var requestDocument = new UpdateResourceRequestDocument
+        var requestBody = new UpdateResourceRequestDocument
         {
             Data = new DataInUpdateResourceRequest
             {
@@ -470,7 +470,7 @@ public sealed class SerializerChangeTrackingTests
         };
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestDocument));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestBody));
 
         // Assert
         wrapper.RequestBody.Should().BeJson($$"""
@@ -496,7 +496,7 @@ public sealed class SerializerChangeTrackingTests
 
         string resourceId = Unknown.StringId.Int32;
 
-        var requestDocument = new UpdateResourceRequestDocument
+        var requestBody = new UpdateResourceRequestDocument
         {
             Data = new DataInUpdateResourceRequest
             {
@@ -528,7 +528,7 @@ public sealed class SerializerChangeTrackingTests
         };
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestDocument));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestBody));
 
         // Assert
         wrapper.RequestBody.Should().BeJson($$"""
@@ -554,7 +554,7 @@ public sealed class SerializerChangeTrackingTests
 
         string resourceId = Unknown.StringId.Int32;
 
-        var requestDocument1 = new UpdateResourceRequestDocument
+        var requestBody1 = new UpdateResourceRequestDocument
         {
             Data = new DataInUpdateResourceRequest
             {
@@ -569,10 +569,10 @@ public sealed class SerializerChangeTrackingTests
             }
         };
 
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestDocument1));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestBody1));
         wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
 
-        var requestDocument2 = new UpdateResourceRequestDocument
+        var requestBody2 = new UpdateResourceRequestDocument
         {
             Data = new DataInUpdateResourceRequest
             {
@@ -589,7 +589,7 @@ public sealed class SerializerChangeTrackingTests
         };
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestDocument2));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestBody2));
 
         // Assert
         wrapper.RequestBody.Should().BeJson($$"""
@@ -615,7 +615,7 @@ public sealed class SerializerChangeTrackingTests
 
         string resourceId = Unknown.StringId.Int32;
 
-        var requestDocument = new UpdateResourceRequestDocument
+        var requestBody = new UpdateResourceRequestDocument
         {
             Data = new DataInUpdateResourceRequest
             {
@@ -631,12 +631,12 @@ public sealed class SerializerChangeTrackingTests
             }
         };
 
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestDocument));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestBody));
         wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
 
-        requestDocument.Data.Attributes.NullableValueType = null;
-        requestDocument.Data.Attributes.NullableReferenceType = null;
-        requestDocument.Data.Attributes.RequiredNonNullableReferenceType = "other";
+        requestBody.Data.Attributes.NullableValueType = null;
+        requestBody.Data.Attributes.NullableReferenceType = null;
+        requestBody.Data.Attributes.RequiredNonNullableReferenceType = "other";
 
         string[] propertyNamesToTrack =
         [
@@ -644,10 +644,10 @@ public sealed class SerializerChangeTrackingTests
             nameof(AttributesInUpdateResourceRequest.NullableReferenceType)
         ];
 
-        apiClient.MarkAsTracked(requestDocument.Data.Attributes, propertyNamesToTrack);
+        apiClient.MarkAsTracked(requestBody.Data.Attributes, propertyNamesToTrack);
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestDocument));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(resourceId, null, requestBody));
 
         // Assert
         wrapper.RequestBody.Should().BeJson($$"""
@@ -672,7 +672,7 @@ public sealed class SerializerChangeTrackingTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new CamelCaseClient(wrapper.HttpClient);
 
-        var requestDocument = new OperationsRequestDocument
+        var requestBody = new OperationsRequestDocument
         {
             Atomic_operations =
             [
@@ -732,7 +732,7 @@ public sealed class SerializerChangeTrackingTests
         };
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostOperationsAsync(requestDocument));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostOperationsAsync(requestBody));
 
         // Assert
         wrapper.RequestBody.Should().BeJson("""

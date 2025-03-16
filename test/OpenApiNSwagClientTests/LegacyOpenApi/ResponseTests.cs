@@ -97,18 +97,18 @@ public sealed class ResponseTests
         var apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
-        FlightCollectionResponseDocument document = await apiClient.GetFlightCollectionAsync(null, null);
+        FlightCollectionResponseDocument response = await apiClient.GetFlightCollectionAsync(null, null);
 
         // Assert
-        document.Jsonapi.Should().BeNull();
-        document.Meta.Should().HaveCount(1);
-        document.Meta["total-resources"].Should().Be(documentMetaValue);
-        document.Links.Self.Should().Be(topLevelLink);
-        document.Links.First.Should().Be(topLevelLink);
-        document.Links.Last.Should().Be(topLevelLink);
-        document.Data.Should().HaveCount(1);
+        response.Jsonapi.Should().BeNull();
+        response.Meta.Should().HaveCount(1);
+        response.Meta["total-resources"].Should().Be(documentMetaValue);
+        response.Links.Self.Should().Be(topLevelLink);
+        response.Links.First.Should().Be(topLevelLink);
+        response.Links.Last.Should().Be(topLevelLink);
+        response.Data.Should().HaveCount(1);
 
-        FlightDataInResponse flight = document.Data.First();
+        FlightDataInResponse flight = response.Data.First();
         flight.Id.Should().Be(flightId);
         flight.Links.Self.Should().Be(flightResourceLink);
         flight.Meta.Should().HaveCount(1);
@@ -178,19 +178,19 @@ public sealed class ResponseTests
         var apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
-        FlightPrimaryResponseDocument document = await apiClient.GetFlightAsync(flightId, null, null);
+        FlightPrimaryResponseDocument response = await apiClient.GetFlightAsync(flightId, null, null);
 
         // Assert
-        document.Jsonapi.Should().BeNull();
-        document.Meta.Should().BeNull();
-        document.Data.Meta.Should().BeNull();
-        document.Data.Relationships.Should().BeNull();
-        document.Data.Attributes.DepartsAt.Should().Be(DateTimeOffset.Parse(departsAtInZuluTime));
-        document.Data.Attributes.ArrivesAt.Should().Be(DateTimeOffset.Parse(arrivesAtWithUtcOffset));
-        document.Data.Attributes.ServicesOnBoard.Should().Contain(flightServiceOnBoard);
-        document.Data.Attributes.FinalDestination.Should().Be(flightDestination);
-        document.Data.Attributes.StopOverDestination.Should().BeNull();
-        document.Data.Attributes.OperatedBy.Should().Be(default);
+        response.Jsonapi.Should().BeNull();
+        response.Meta.Should().BeNull();
+        response.Data.Meta.Should().BeNull();
+        response.Data.Relationships.Should().BeNull();
+        response.Data.Attributes.DepartsAt.Should().Be(DateTimeOffset.Parse(departsAtInZuluTime));
+        response.Data.Attributes.ArrivesAt.Should().Be(DateTimeOffset.Parse(arrivesAtWithUtcOffset));
+        response.Data.Attributes.ServicesOnBoard.Should().Contain(flightServiceOnBoard);
+        response.Data.Attributes.FinalDestination.Should().Be(flightDestination);
+        response.Data.Attributes.StopOverDestination.Should().BeNull();
+        response.Data.Attributes.OperatedBy.Should().Be(default);
     }
 
     [Fact]
@@ -312,16 +312,16 @@ public sealed class ResponseTests
         };
 
         // Act
-        FlightPrimaryResponseDocument document = await apiClient.PostFlightAsync(null, requestBody);
+        FlightPrimaryResponseDocument response = await apiClient.PostFlightAsync(null, requestBody);
 
         // Assert
-        document.Data.Attributes.Should().BeNull();
-        document.Data.Relationships.Purser.Data.Should().NotBeNull();
-        document.Data.Relationships.Purser.Data.Id.Should().Be(flightAttendantId);
-        document.Data.Relationships.CabinCrewMembers.Data.Should().HaveCount(1);
-        document.Data.Relationships.CabinCrewMembers.Data.First().Id.Should().Be(flightAttendantId);
-        document.Data.Relationships.CabinCrewMembers.Data.First().Type.Should().Be(FlightAttendantResourceType.FlightAttendants);
-        document.Data.Relationships.Passengers.Data.Should().BeEmpty();
+        response.Data.Attributes.Should().BeNull();
+        response.Data.Relationships.Purser.Data.Should().NotBeNull();
+        response.Data.Relationships.Purser.Data.Id.Should().Be(flightAttendantId);
+        response.Data.Relationships.CabinCrewMembers.Data.Should().HaveCount(1);
+        response.Data.Relationships.CabinCrewMembers.Data.First().Id.Should().Be(flightAttendantId);
+        response.Data.Relationships.CabinCrewMembers.Data.First().Type.Should().Be(FlightAttendantResourceType.FlightAttendants);
+        response.Data.Relationships.Passengers.Data.Should().BeEmpty();
     }
 
     [Fact]
@@ -357,11 +357,11 @@ public sealed class ResponseTests
         };
 
         // Act
-        FlightPrimaryResponseDocument document = await apiClient.PatchFlightAsync(flightId, null, requestBody);
+        FlightPrimaryResponseDocument response = await apiClient.PatchFlightAsync(flightId, null, requestBody);
 
         // Assert
-        document.Data.Attributes.Should().BeNull();
-        document.Data.Relationships.Should().BeNull();
+        response.Data.Attributes.Should().BeNull();
+        response.Data.Relationships.Should().BeNull();
     }
 
     [Fact]
@@ -373,7 +373,7 @@ public sealed class ResponseTests
         var apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
-        FlightPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PatchFlightAsync(flightId, null,
+        FlightPrimaryResponseDocument? response = await ApiResponse.TranslateAsync(async () => await apiClient.PatchFlightAsync(flightId, null,
             new UpdateFlightRequestDocument
             {
                 Data = new DataInUpdateFlightRequest
@@ -383,7 +383,7 @@ public sealed class ResponseTests
             }));
 
         // Assert
-        document.Should().BeNull();
+        response.Should().BeNull();
     }
 
     [Fact]
@@ -452,15 +452,15 @@ public sealed class ResponseTests
         var apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
-        FlightAttendantSecondaryResponseDocument document = await apiClient.GetFlightPurserAsync(flightId, null, null);
+        FlightAttendantSecondaryResponseDocument response = await apiClient.GetFlightPurserAsync(flightId, null, null);
 
         // Assert
-        document.Data.Should().NotBeNull();
-        document.Data.Id.Should().Be(purserId);
-        document.Data.Attributes.EmailAddress.Should().Be(emailAddress);
-        document.Data.Attributes.Age.Should().Be(int.Parse(age));
-        document.Data.Attributes.ProfileImageUrl.Should().Be(profileImageUrl);
-        document.Data.Attributes.DistanceTraveledInKilometers.Should().Be(int.Parse(distanceTraveledInKilometer));
+        response.Data.Should().NotBeNull();
+        response.Data.Id.Should().Be(purserId);
+        response.Data.Attributes.EmailAddress.Should().Be(emailAddress);
+        response.Data.Attributes.Age.Should().Be(int.Parse(age));
+        response.Data.Attributes.ProfileImageUrl.Should().Be(profileImageUrl);
+        response.Data.Attributes.DistanceTraveledInKilometers.Should().Be(int.Parse(distanceTraveledInKilometer));
     }
 
     [Fact]
@@ -484,10 +484,10 @@ public sealed class ResponseTests
         var apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
-        NullableFlightAttendantSecondaryResponseDocument document = await apiClient.GetFlightBackupPurserAsync(flightId, null, null);
+        NullableFlightAttendantSecondaryResponseDocument response = await apiClient.GetFlightBackupPurserAsync(flightId, null, null);
 
         // Assert
-        document.Data.Should().BeNull();
+        response.Data.Should().BeNull();
     }
 
     [Fact]
@@ -510,10 +510,10 @@ public sealed class ResponseTests
         var apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
-        FlightAttendantCollectionResponseDocument document = await apiClient.GetFlightCabinCrewMembersAsync(flightId, null, null);
+        FlightAttendantCollectionResponseDocument response = await apiClient.GetFlightCabinCrewMembersAsync(flightId, null, null);
 
         // Assert
-        document.Data.Should().BeEmpty();
+        response.Data.Should().BeEmpty();
     }
 
     [Fact]
@@ -536,10 +536,10 @@ public sealed class ResponseTests
         var apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
-        NullableFlightAttendantIdentifierResponseDocument document = await apiClient.GetFlightBackupPurserRelationshipAsync(flightId, null, null);
+        NullableFlightAttendantIdentifierResponseDocument response = await apiClient.GetFlightBackupPurserRelationshipAsync(flightId, null, null);
 
         // Assert
-        document.Data.Should().BeNull();
+        response.Data.Should().BeNull();
     }
 
     [Fact]
@@ -566,12 +566,12 @@ public sealed class ResponseTests
         var apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
-        FlightAttendantIdentifierResponseDocument document = await apiClient.GetFlightPurserRelationshipAsync(flightId, null, null);
+        FlightAttendantIdentifierResponseDocument response = await apiClient.GetFlightPurserRelationshipAsync(flightId, null, null);
 
         // Assert
-        document.Data.Should().NotBeNull();
-        document.Data.Id.Should().Be(purserId);
-        document.Data.Type.Should().Be(FlightAttendantResourceType.FlightAttendants);
+        response.Data.Should().NotBeNull();
+        response.Data.Id.Should().Be(purserId);
+        response.Data.Type.Should().Be(FlightAttendantResourceType.FlightAttendants);
     }
 
     [Fact]
@@ -623,14 +623,14 @@ public sealed class ResponseTests
         var apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
-        FlightAttendantIdentifierCollectionResponseDocument document = await apiClient.GetFlightCabinCrewMembersRelationshipAsync(flightId, null, null);
+        FlightAttendantIdentifierCollectionResponseDocument response = await apiClient.GetFlightCabinCrewMembersRelationshipAsync(flightId, null, null);
 
         // Assert
-        document.Data.Should().HaveCount(2);
-        document.Data.First().Id.Should().Be(flightAttendantId1);
-        document.Data.First().Type.Should().Be(FlightAttendantResourceType.FlightAttendants);
-        document.Data.Last().Id.Should().Be(flightAttendantId2);
-        document.Data.Last().Type.Should().Be(FlightAttendantResourceType.FlightAttendants);
+        response.Data.Should().HaveCount(2);
+        response.Data.First().Id.Should().Be(flightAttendantId1);
+        response.Data.First().Type.Should().Be(FlightAttendantResourceType.FlightAttendants);
+        response.Data.Last().Id.Should().Be(flightAttendantId2);
+        response.Data.Last().Type.Should().Be(FlightAttendantResourceType.FlightAttendants);
     }
 
     [Fact]

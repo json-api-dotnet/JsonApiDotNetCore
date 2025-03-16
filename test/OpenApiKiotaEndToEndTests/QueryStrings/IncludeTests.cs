@@ -42,25 +42,22 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new QueryStringsClient(requestAdapter);
 
-        var queryString = new Dictionary<string, string?>
+        using IDisposable scope = _requestAdapterFactory.WithQueryString(new Dictionary<string, string?>
         {
             ["include"] = "values.owner"
-        };
+        });
 
-        using (_requestAdapterFactory.WithQueryString(queryString))
-        {
-            // Act
-            NodeCollectionResponseDocument? response = await apiClient.Nodes.GetAsync();
+        // Act
+        NodeCollectionResponseDocument? response = await apiClient.Nodes.GetAsync();
 
-            // Assert
-            response.Should().NotBeNull();
-            response.Data.Should().HaveCount(1);
-            response.Data.ElementAt(0).Id.Should().Be(node.StringId);
+        // Assert
+        response.Should().NotBeNull();
+        response.Data.Should().HaveCount(1);
+        response.Data.ElementAt(0).Id.Should().Be(node.StringId);
 
-            response.Included.Should().HaveCount(2);
-            response.Included.OfType<NameValuePairDataInResponse>().Should().ContainSingle(include => include.Id == node.Values.ElementAt(0).StringId);
-            response.Included.OfType<NameValuePairDataInResponse>().Should().ContainSingle(include => include.Id == node.Values.ElementAt(1).StringId);
-        }
+        response.Included.Should().HaveCount(2);
+        response.Included.OfType<NameValuePairDataInResponse>().Should().ContainSingle(include => include.Id == node.Values.ElementAt(0).StringId);
+        response.Included.OfType<NameValuePairDataInResponse>().Should().ContainSingle(include => include.Id == node.Values.ElementAt(1).StringId);
     }
 
     [Fact]
@@ -81,26 +78,23 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new QueryStringsClient(requestAdapter);
 
-        var queryString = new Dictionary<string, string?>
+        using IDisposable scope = _requestAdapterFactory.WithQueryString(new Dictionary<string, string?>
         {
             ["include"] = "children.parent,values"
-        };
+        });
 
-        using (_requestAdapterFactory.WithQueryString(queryString))
-        {
-            // Act
-            NodePrimaryResponseDocument? response = await apiClient.Nodes[node.StringId!].GetAsync();
+        // Act
+        NodePrimaryResponseDocument? response = await apiClient.Nodes[node.StringId!].GetAsync();
 
-            // Assert
-            response.Should().NotBeNull();
-            response.Data.Should().NotBeNull();
-            response.Data.Id.Should().Be(node.StringId);
+        // Assert
+        response.Should().NotBeNull();
+        response.Data.Should().NotBeNull();
+        response.Data.Id.Should().Be(node.StringId);
 
-            response.Included.Should().HaveCount(3);
-            response.Included.OfType<NodeDataInResponse>().Should().ContainSingle(include => include.Id == node.Children.ElementAt(0).StringId);
-            response.Included.OfType<NodeDataInResponse>().Should().ContainSingle(include => include.Id == node.Children.ElementAt(1).StringId);
-            response.Included.OfType<NameValuePairDataInResponse>().Should().ContainSingle(include => include.Id == node.Values[0].StringId);
-        }
+        response.Included.Should().HaveCount(3);
+        response.Included.OfType<NodeDataInResponse>().Should().ContainSingle(include => include.Id == node.Children.ElementAt(0).StringId);
+        response.Included.OfType<NodeDataInResponse>().Should().ContainSingle(include => include.Id == node.Children.ElementAt(1).StringId);
+        response.Included.OfType<NameValuePairDataInResponse>().Should().ContainSingle(include => include.Id == node.Values[0].StringId);
     }
 
     [Fact]
@@ -121,24 +115,21 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new QueryStringsClient(requestAdapter);
 
-        var queryString = new Dictionary<string, string?>
+        using IDisposable scope = _requestAdapterFactory.WithQueryString(new Dictionary<string, string?>
         {
             ["include"] = "owner.parent,owner.values"
-        };
+        });
 
-        using (_requestAdapterFactory.WithQueryString(queryString))
-        {
-            // Act
-            NameValuePairCollectionResponseDocument? response = await apiClient.Nodes[node.StringId!].Values.GetAsync();
+        // Act
+        NameValuePairCollectionResponseDocument? response = await apiClient.Nodes[node.StringId!].Values.GetAsync();
 
-            // Assert
-            response.Should().NotBeNull();
-            response.Data.Should().HaveCount(2);
+        // Assert
+        response.Should().NotBeNull();
+        response.Data.Should().HaveCount(2);
 
-            response.Included.Should().HaveCount(2);
-            response.Included.OfType<NodeDataInResponse>().Should().ContainSingle(include => include.Id == node.StringId);
-            response.Included.OfType<NodeDataInResponse>().Should().ContainSingle(include => include.Id == node.Parent.StringId);
-        }
+        response.Included.Should().HaveCount(2);
+        response.Included.OfType<NodeDataInResponse>().Should().ContainSingle(include => include.Id == node.StringId);
+        response.Included.OfType<NodeDataInResponse>().Should().ContainSingle(include => include.Id == node.Parent.StringId);
     }
 
     [Fact]
@@ -159,30 +150,26 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new QueryStringsClient(requestAdapter);
 
-        var queryString = new Dictionary<string, string?>
+        using IDisposable scope = _requestAdapterFactory.WithQueryString(new Dictionary<string, string?>
         {
             ["include"] = "parent.parent"
-        };
+        });
 
-        using (_requestAdapterFactory.WithQueryString(queryString))
+        // Act
+        NullableNodeSecondaryResponseDocument? response = await apiClient.Nodes[node.StringId!].Parent.GetAsync();
+
+        // Assert
+        response.Should().NotBeNull();
+        response.Data.Should().NotBeNull();
+        response.Data.Id.Should().Be(node.Parent.StringId);
+
+        response.Included.Should().HaveCount(1);
+
+        response.Included.OfType<NodeDataInResponse>().Should().ContainSingle(nodeData => nodeData.Id == node.Parent.Parent.StringId).Subject.With(nodeData =>
         {
-            // Act
-            NullableNodeSecondaryResponseDocument? response = await apiClient.Nodes[node.StringId!].Parent.GetAsync();
-
-            // Assert
-            response.Should().NotBeNull();
-            response.Data.Should().NotBeNull();
-            response.Data.Id.Should().Be(node.Parent.StringId);
-
-            response.Included.Should().HaveCount(1);
-
-            response.Included.OfType<NodeDataInResponse>().Should().ContainSingle(nodeData => nodeData.Id == node.Parent.Parent.StringId).Subject.With(
-                nodeData =>
-                {
-                    nodeData.Attributes.Should().NotBeNull();
-                    nodeData.Attributes.Name.Should().Be(node.Parent.Parent.Name);
-                });
-        }
+            nodeData.Attributes.Should().NotBeNull();
+            nodeData.Attributes.Name.Should().Be(node.Parent.Parent.Name);
+        });
     }
 
     [Fact]
@@ -200,23 +187,20 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
         var apiClient = new QueryStringsClient(requestAdapter);
 
-        var queryString = new Dictionary<string, string?>
+        using IDisposable scope = _requestAdapterFactory.WithQueryString(new Dictionary<string, string?>
         {
             ["include"] = null
-        };
+        });
 
-        using (_requestAdapterFactory.WithQueryString(queryString))
-        {
-            // Act
-            NodePrimaryResponseDocument? response = await apiClient.Nodes[node.StringId!].GetAsync();
+        // Act
+        NodePrimaryResponseDocument? response = await apiClient.Nodes[node.StringId!].GetAsync();
 
-            // Assert
-            response.Should().NotBeNull();
-            response.Data.Should().NotBeNull();
-            response.Data.Id.Should().Be(node.StringId);
+        // Assert
+        response.Should().NotBeNull();
+        response.Data.Should().NotBeNull();
+        response.Data.Id.Should().Be(node.StringId);
 
-            response.Included.Should().BeEmpty();
-        }
+        response.Included.Should().BeEmpty();
     }
 
     public void Dispose()

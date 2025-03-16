@@ -91,10 +91,10 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        PlayerPrimaryResponseDocument? document = await apiClient.Players.PostAsync(requestBody);
+        PlayerPrimaryResponseDocument? response = await apiClient.Players.PostAsync(requestBody);
 
         // Assert
-        document.Should().BeNull();
+        response.Should().BeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -127,17 +127,17 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        GamePrimaryResponseDocument? document = await apiClient.Games.PostAsync(requestBody);
+        GamePrimaryResponseDocument? response = await apiClient.Games.PostAsync(requestBody);
 
         // Assert
-        document.Should().NotBeNull();
-        document.Data.Should().NotBeNull();
-        document.Data.Id.Should().NotBeNull();
-        document.Data.Id.Value.Should().NotBe(Guid.Empty);
+        response.Should().NotBeNull();
+        response.Data.Should().NotBeNull();
+        response.Data.Id.Should().NotBeNull();
+        response.Data.Id.Value.Should().NotBe(Guid.Empty);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            Game gameInDatabase = await dbContext.Games.FirstWithIdAsync(document.Data.Id.Value);
+            Game gameInDatabase = await dbContext.Games.FirstWithIdAsync(response.Data.Id.Value);
 
             gameInDatabase.Title.Should().Be(newGame.Title);
             gameInDatabase.PurchasePrice.Should().Be(newGame.PurchasePrice);
@@ -169,10 +169,10 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        GamePrimaryResponseDocument? document = await apiClient.Games.PostAsync(requestBody);
+        GamePrimaryResponseDocument? response = await apiClient.Games.PostAsync(requestBody);
 
         // Assert
-        document.Should().BeNull();
+        response.Should().BeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -249,14 +249,14 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        PlayerGroupPrimaryResponseDocument? document = await apiClient.PlayerGroups.PostAsync(requestBody);
+        PlayerGroupPrimaryResponseDocument? response = await apiClient.PlayerGroups.PostAsync(requestBody);
 
         // Assert
-        document.Should().NotBeNull();
-        document.Data.Should().NotBeNull();
-        document.Data.Id.Should().NotBeNullOrEmpty();
+        response.Should().NotBeNull();
+        response.Data.Should().NotBeNull();
+        response.Data.Id.Should().NotBeNullOrEmpty();
 
-        long newPlayerGroupId = long.Parse(document.Data.Id);
+        long newPlayerGroupId = long.Parse(response.Data.Id);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

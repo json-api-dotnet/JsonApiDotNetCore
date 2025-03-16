@@ -46,6 +46,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.Relatio
         /// <exception cref="global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
         /// <exception cref="global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
         /// <exception cref="global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 409 status code</exception>
+        /// <exception cref="global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 422 status code</exception>
         public async Task DeleteAsync(global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ToManyLanguageInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -55,6 +56,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.Relatio
                 { "400", global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
                 { "404", global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
                 { "409", global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "422", global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
             await RequestAdapter.SendNoContentAsync(requestInfo, errorMapping, cancellationToken).ConfigureAwait(false);
         }
@@ -98,6 +100,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.Relatio
         /// <exception cref="global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
         /// <exception cref="global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
         /// <exception cref="global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 409 status code</exception>
+        /// <exception cref="global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 422 status code</exception>
         public async Task PatchAsync(global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ToManyLanguageInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -107,6 +110,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.Relatio
                 { "400", global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
                 { "404", global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
                 { "409", global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "422", global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
             await RequestAdapter.SendNoContentAsync(requestInfo, errorMapping, cancellationToken).ConfigureAwait(false);
         }
@@ -120,6 +124,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.Relatio
         /// <exception cref="global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
         /// <exception cref="global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
         /// <exception cref="global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 409 status code</exception>
+        /// <exception cref="global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 422 status code</exception>
         public async Task PostAsync(global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ToManyLanguageInRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -129,6 +134,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.Item.Relatio
                 { "400", global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
                 { "404", global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
                 { "409", global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
+                { "422", global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
             await RequestAdapter.SendNoContentAsync(requestInfo, errorMapping, cancellationToken).ConfigureAwait(false);
         }

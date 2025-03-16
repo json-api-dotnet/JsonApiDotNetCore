@@ -235,7 +235,8 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
             [
                 HttpStatusCode.BadRequest,
                 HttpStatusCode.NotFound,
-                HttpStatusCode.Conflict
+                HttpStatusCode.Conflict,
+                HttpStatusCode.UnprocessableEntity
             ],
             _ => throw new UnreachableException()
         };

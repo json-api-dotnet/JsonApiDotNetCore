@@ -42,7 +42,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         var apiClient = new HeadersClient(httpClient);
 
         // Act
-        ApiResponse response = await ApiResponse.TranslateAsync(async () => await apiClient.HeadCountryCollectionAsync());
+        ApiResponse response = await apiClient.HeadCountryCollectionAsync();
 
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
@@ -69,7 +69,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         var apiClient = new HeadersClient(httpClient);
 
         // Act
-        ApiResponse<CountryCollectionResponseDocument?> response = await ApiResponse.TranslateAsync(async () => await apiClient.GetCountryCollectionAsync());
+        ApiResponse<CountryCollectionResponseDocument> response = await apiClient.GetCountryCollectionAsync();
 
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
@@ -91,7 +91,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         var apiClient = new HeadersClient(httpClient);
 
         // Act
-        Func<Task> action = async () => await ApiResponse.TranslateAsync(async () => await apiClient.GetCountryAsync(unknownCountryId));
+        Func<Task> action = async () => await apiClient.GetCountryAsync(unknownCountryId);
 
         // Assert
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
@@ -154,7 +154,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new HeadersClient(httpClient);
 
-        ApiResponse<CountryCollectionResponseDocument?> response1 = await ApiResponse.TranslateAsync(async () => await apiClient.GetCountryCollectionAsync());
+        ApiResponse<CountryCollectionResponseDocument> response1 = await apiClient.GetCountryCollectionAsync();
 
         string responseETag = response1.Headers[HeaderNames.ETag].Single();
 
@@ -189,8 +189,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         var apiClient = new HeadersClient(httpClient);
 
         // Act
-        ApiResponse<CountryCollectionResponseDocument?> response =
-            await ApiResponse.TranslateAsync(async () => await apiClient.GetCountryCollectionAsync(null, "\"Not-a-matching-value\""));
+        ApiResponse<CountryCollectionResponseDocument> response = await apiClient.GetCountryCollectionAsync(null, "\"Not-a-matching-value\"");
 
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);

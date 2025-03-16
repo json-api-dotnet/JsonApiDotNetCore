@@ -52,7 +52,7 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
         _hostApplicationLifetime.StopApplication();
     }
 
-    private async Task<(PersonCollectionResponseDocument? response, string? eTag)> GetPeopleAsync(ExampleApiClient apiClient, string? ifNoneMatch,
+    private static async Task<(PersonCollectionResponseDocument? response, string? eTag)> GetPeopleAsync(ExampleApiClient apiClient, string? ifNoneMatch,
         CancellationToken cancellationToken)
     {
         try
@@ -62,7 +62,7 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
                 InspectResponseHeaders = true
             };
 
-            PersonCollectionResponseDocument? responseDocument = await apiClient.Api.People.GetAsync(configuration =>
+            PersonCollectionResponseDocument? response = await apiClient.Api.People.GetAsync(configuration =>
             {
                 if (!string.IsNullOrEmpty(ifNoneMatch))
                 {
@@ -74,7 +74,7 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
 
             string eTag = headerInspector.ResponseHeaders["ETag"].Single();
 
-            return (responseDocument, eTag);
+            return (response, eTag);
         }
         // Workaround for https://github.com/microsoft/kiota/issues/4190.
         catch (ApiException exception) when (exception.ResponseStatusCode == (int)HttpStatusCode.NotModified)

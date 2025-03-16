@@ -14,10 +14,6 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
     {
         _testContext = testContext;
 
-        testContext.UseController<CoursesController>();
-        testContext.UseController<TeachersController>();
-        testContext.UseController<StudentsController>();
-        testContext.UseController<EnrollmentsController>();
         testContext.UseController<OperationsController>();
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();

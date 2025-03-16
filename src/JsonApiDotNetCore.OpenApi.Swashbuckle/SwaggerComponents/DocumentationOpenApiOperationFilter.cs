@@ -382,6 +382,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextRequestBodyBad);
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} or a related resource does not exist.");
         SetResponseDescription(operation.Responses, HttpStatusCode.Conflict, TextConflict);
+        SetResponseDescription(operation.Responses, HttpStatusCode.UnprocessableEntity, TextRequestBodyValidationFailed);
     }
 
     private void ApplyPatchRelationship(OpenApiOperation operation, RelationshipAttribute relationship)
@@ -415,6 +416,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextRequestBodyBad);
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} or a related resource does not exist.");
         SetResponseDescription(operation.Responses, HttpStatusCode.Conflict, TextConflict);
+        SetResponseDescription(operation.Responses, HttpStatusCode.UnprocessableEntity, TextRequestBodyValidationFailed);
     }
 
     private void ApplyDeleteRelationship(OpenApiOperation operation, RelationshipAttribute relationship)
@@ -432,6 +434,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextRequestBodyBad);
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} or a related resource does not exist.");
         SetResponseDescription(operation.Responses, HttpStatusCode.Conflict, TextConflict);
+        SetResponseDescription(operation.Responses, HttpStatusCode.UnprocessableEntity, TextRequestBodyValidationFailed);
     }
 
     private static RelationshipAttribute GetRelationshipFromRoute(ApiDescription apiDescription, ResourceType resourceType)

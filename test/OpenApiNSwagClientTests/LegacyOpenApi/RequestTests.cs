@@ -60,7 +60,7 @@ public sealed class RequestTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new LegacyClient(wrapper.HttpClient);
 
-        var requestDocument = new CreateFlightRequestDocument
+        var requestBody = new CreateFlightRequestDocument
         {
             Data = new DataInCreateFlightRequest
             {
@@ -85,7 +85,7 @@ public sealed class RequestTests
         };
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostFlightAsync(null, requestDocument));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostFlightAsync(null, requestBody));
 
         // Assert
         wrapper.Request.Should().NotBeNull();
@@ -139,7 +139,7 @@ public sealed class RequestTests
 
         string name = $"anAirplaneName {specialCharacters}";
 
-        var requestDocument = new CreateAirplaneRequestDocument
+        var requestBody = new CreateAirplaneRequestDocument
         {
             Data = new DataInCreateAirplaneRequest
             {
@@ -156,7 +156,7 @@ public sealed class RequestTests
         };
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostAirplaneAsync(null, requestDocument));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostAirplaneAsync(null, requestBody));
 
         // Assert
         wrapper.Request.Should().NotBeNull();
@@ -191,7 +191,7 @@ public sealed class RequestTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new LegacyClient(wrapper.HttpClient);
 
-        var requestDocument = new UpdateAirplaneRequestDocument
+        var requestBody = new UpdateAirplaneRequestDocument
         {
             Data = new DataInUpdateAirplaneRequest
             {
@@ -210,7 +210,7 @@ public sealed class RequestTests
         };
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, null, requestBody));
 
         // Assert
         wrapper.Request.Should().NotBeNull();
@@ -325,7 +325,7 @@ public sealed class RequestTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new LegacyClient(wrapper.HttpClient);
 
-        var requestDocument = new ToOneFlightAttendantInRequest
+        var requestBody = new ToOneFlightAttendantInRequest
         {
             Data = new FlightAttendantIdentifierInRequest
             {
@@ -334,7 +334,7 @@ public sealed class RequestTests
         };
 
         // Act
-        await apiClient.PatchFlightPurserRelationshipAsync(flightId, requestDocument);
+        await apiClient.PatchFlightPurserRelationshipAsync(flightId, requestBody);
 
         // Assert
         wrapper.Request.Should().NotBeNull();
@@ -383,7 +383,7 @@ public sealed class RequestTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new LegacyClient(wrapper.HttpClient);
 
-        var requestDocument = new ToManyFlightAttendantInRequest
+        var requestBody = new ToManyFlightAttendantInRequest
         {
             Data =
             [
@@ -399,7 +399,7 @@ public sealed class RequestTests
         };
 
         // Act
-        await apiClient.PostFlightCabinCrewMembersRelationshipAsync(flightId, requestDocument);
+        await apiClient.PostFlightCabinCrewMembersRelationshipAsync(flightId, requestBody);
 
         // Assert
         wrapper.Request.Should().NotBeNull();
@@ -434,7 +434,7 @@ public sealed class RequestTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new LegacyClient(wrapper.HttpClient);
 
-        var requestDocument = new ToManyFlightAttendantInRequest
+        var requestBody = new ToManyFlightAttendantInRequest
         {
             Data =
             [
@@ -450,7 +450,7 @@ public sealed class RequestTests
         };
 
         // Act
-        await apiClient.PatchFlightCabinCrewMembersRelationshipAsync(flightId, requestDocument);
+        await apiClient.PatchFlightCabinCrewMembersRelationshipAsync(flightId, requestBody);
 
         // Assert
         wrapper.Request.Should().NotBeNull();
@@ -485,7 +485,7 @@ public sealed class RequestTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new LegacyClient(wrapper.HttpClient);
 
-        var requestDocument = new ToManyFlightAttendantInRequest
+        var requestBody = new ToManyFlightAttendantInRequest
         {
             Data =
             [
@@ -501,7 +501,7 @@ public sealed class RequestTests
         };
 
         // Act
-        await apiClient.DeleteFlightCabinCrewMembersRelationshipAsync(flightId, requestDocument);
+        await apiClient.DeleteFlightCabinCrewMembersRelationshipAsync(flightId, requestBody);
 
         // Assert
         wrapper.Request.Should().NotBeNull();
