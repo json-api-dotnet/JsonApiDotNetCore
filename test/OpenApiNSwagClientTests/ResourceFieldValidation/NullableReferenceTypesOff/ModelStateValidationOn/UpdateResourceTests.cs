@@ -18,7 +18,7 @@ public sealed class UpdateResourceTests : BaseOpenApiNSwagClientTests
     public async Task Cannot_omit_Id()
     {
         // Arrange
-        var requestDocument = new UpdateResourceRequestDocument
+        var requestBody = new UpdateResourceRequestDocument
         {
             Data = new DataInUpdateResourceRequest
             {
@@ -37,7 +37,7 @@ public sealed class UpdateResourceTests : BaseOpenApiNSwagClientTests
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
         // Act
-        Func<Task> action = async () => await apiClient.PatchResourceAsync(Unknown.StringId.Int32, null, requestDocument);
+        Func<Task> action = async () => await apiClient.PatchResourceAsync(Unknown.StringId.Int32, null, requestBody);
 
         // Assert
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
@@ -55,7 +55,7 @@ public sealed class UpdateResourceTests : BaseOpenApiNSwagClientTests
     public async Task Can_omit_attribute(string attributePropertyName, string jsonPropertyName)
     {
         // Arrange
-        var requestDocument = new UpdateResourceRequestDocument
+        var requestBody = new UpdateResourceRequestDocument
         {
             Data = new DataInUpdateResourceRequest
             {
@@ -74,11 +74,11 @@ public sealed class UpdateResourceTests : BaseOpenApiNSwagClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
-        SetPropertyToInitialValue(requestDocument.Data.Attributes, attributePropertyName);
-        apiClient.MarkAsTracked(requestDocument.Data.Attributes);
+        SetPropertyToInitialValue(requestBody.Data.Attributes, attributePropertyName);
+        apiClient.MarkAsTracked(requestBody.Data.Attributes);
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(requestDocument.Data.Id, null, requestDocument));
+        await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(requestBody.Data.Id, null, requestBody));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
@@ -97,7 +97,7 @@ public sealed class UpdateResourceTests : BaseOpenApiNSwagClientTests
     public async Task Can_omit_relationship(string relationshipPropertyName, string jsonPropertyName)
     {
         // Arrange
-        var requestDocument = new UpdateResourceRequestDocument
+        var requestBody = new UpdateResourceRequestDocument
         {
             Data = new DataInUpdateResourceRequest
             {
@@ -116,11 +116,11 @@ public sealed class UpdateResourceTests : BaseOpenApiNSwagClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
-        SetPropertyToInitialValue(requestDocument.Data.Relationships, relationshipPropertyName);
-        apiClient.MarkAsTracked(requestDocument.Data.Relationships);
+        SetPropertyToInitialValue(requestBody.Data.Relationships, relationshipPropertyName);
+        apiClient.MarkAsTracked(requestBody.Data.Relationships);
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(requestDocument.Data.Id, null, requestDocument));
+        await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(requestBody.Data.Id, null, requestBody));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();

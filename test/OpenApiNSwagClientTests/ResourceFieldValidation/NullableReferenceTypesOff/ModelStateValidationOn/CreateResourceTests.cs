@@ -23,7 +23,7 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
     public async Task Can_set_attribute_to_default_value(string attributePropertyName, string jsonPropertyName)
     {
         // Arrange
-        var requestDocument = new CreateResourceRequestDocument
+        var requestBody = new CreateResourceRequestDocument
         {
             Data = new DataInCreateResourceRequest
             {
@@ -41,11 +41,11 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
-        object? defaultValue = SetPropertyToDefaultValue(requestDocument.Data.Attributes, attributePropertyName);
-        apiClient.MarkAsTracked(requestDocument.Data.Attributes, attributePropertyName);
+        object? defaultValue = SetPropertyToDefaultValue(requestBody.Data.Attributes, attributePropertyName);
+        apiClient.MarkAsTracked(requestBody.Data.Attributes, attributePropertyName);
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(null, requestDocument));
+        await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(null, requestBody));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
@@ -61,7 +61,7 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
     public async Task Cannot_set_attribute_to_default_value(string attributePropertyName, string jsonPropertyName)
     {
         // Arrange
-        var requestDocument = new CreateResourceRequestDocument
+        var requestBody = new CreateResourceRequestDocument
         {
             Data = new DataInCreateResourceRequest
             {
@@ -79,11 +79,11 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
-        SetPropertyToDefaultValue(requestDocument.Data.Attributes, attributePropertyName);
-        apiClient.MarkAsTracked(requestDocument.Data.Attributes, attributePropertyName);
+        SetPropertyToDefaultValue(requestBody.Data.Attributes, attributePropertyName);
+        apiClient.MarkAsTracked(requestBody.Data.Attributes, attributePropertyName);
 
         // Act
-        Func<Task> action = async () => await apiClient.PostResourceAsync(null, requestDocument);
+        Func<Task> action = async () => await apiClient.PostResourceAsync(null, requestBody);
 
         // Assert
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
@@ -99,7 +99,7 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
     public async Task Can_omit_attribute(string attributePropertyName, string jsonPropertyName)
     {
         // Arrange
-        var requestDocument = new CreateResourceRequestDocument
+        var requestBody = new CreateResourceRequestDocument
         {
             Data = new DataInCreateResourceRequest
             {
@@ -117,11 +117,11 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
-        SetPropertyToInitialValue(requestDocument.Data.Attributes, attributePropertyName);
-        apiClient.MarkAsTracked(requestDocument.Data.Attributes);
+        SetPropertyToInitialValue(requestBody.Data.Attributes, attributePropertyName);
+        apiClient.MarkAsTracked(requestBody.Data.Attributes);
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(null, requestDocument));
+        await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(null, requestBody));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
@@ -138,7 +138,7 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
     public async Task Cannot_omit_attribute(string attributePropertyName, string jsonPropertyName)
     {
         // Arrange
-        var requestDocument = new CreateResourceRequestDocument
+        var requestBody = new CreateResourceRequestDocument
         {
             Data = new DataInCreateResourceRequest
             {
@@ -156,11 +156,11 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
-        SetPropertyToInitialValue(requestDocument.Data.Attributes, attributePropertyName);
-        apiClient.MarkAsTracked(requestDocument.Data.Attributes);
+        SetPropertyToInitialValue(requestBody.Data.Attributes, attributePropertyName);
+        apiClient.MarkAsTracked(requestBody.Data.Attributes);
 
         // Act
-        Func<Task> action = async () => await apiClient.PostResourceAsync(null, requestDocument);
+        Func<Task> action = async () => await apiClient.PostResourceAsync(null, requestBody);
 
         // Assert
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
@@ -174,7 +174,7 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
     public async Task Can_clear_relationship(string relationshipPropertyName, string jsonPropertyName)
     {
         // Arrange
-        var requestDocument = new CreateResourceRequestDocument
+        var requestBody = new CreateResourceRequestDocument
         {
             Data = new DataInCreateResourceRequest
             {
@@ -192,11 +192,11 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
-        SetDataPropertyToNull(requestDocument.Data.Relationships, relationshipPropertyName);
-        apiClient.MarkAsTracked(requestDocument.Data.Relationships, relationshipPropertyName);
+        SetDataPropertyToNull(requestBody.Data.Relationships, relationshipPropertyName);
+        apiClient.MarkAsTracked(requestBody.Data.Relationships, relationshipPropertyName);
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(null, requestDocument));
+        await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(null, requestBody));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
@@ -214,7 +214,7 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
     public async Task Cannot_clear_relationship(string relationshipPropertyName, string jsonPropertyName)
     {
         // Arrange
-        var requestDocument = new CreateResourceRequestDocument
+        var requestBody = new CreateResourceRequestDocument
         {
             Data = new DataInCreateResourceRequest
             {
@@ -232,11 +232,11 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
-        SetDataPropertyToNull(requestDocument.Data.Relationships, relationshipPropertyName);
-        apiClient.MarkAsTracked(requestDocument.Data.Relationships, relationshipPropertyName);
+        SetDataPropertyToNull(requestBody.Data.Relationships, relationshipPropertyName);
+        apiClient.MarkAsTracked(requestBody.Data.Relationships, relationshipPropertyName);
 
         // Act
-        Func<Task> action = async () => await apiClient.PostResourceAsync(null, requestDocument);
+        Func<Task> action = async () => await apiClient.PostResourceAsync(null, requestBody);
 
         // Assert
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
@@ -252,7 +252,7 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
     public async Task Can_omit_relationship(string relationshipPropertyName, string jsonPropertyName)
     {
         // Arrange
-        var requestDocument = new CreateResourceRequestDocument
+        var requestBody = new CreateResourceRequestDocument
         {
             Data = new DataInCreateResourceRequest
             {
@@ -270,11 +270,11 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
-        SetPropertyToInitialValue(requestDocument.Data.Relationships, relationshipPropertyName);
-        apiClient.MarkAsTracked(requestDocument.Data.Relationships);
+        SetPropertyToInitialValue(requestBody.Data.Relationships, relationshipPropertyName);
+        apiClient.MarkAsTracked(requestBody.Data.Relationships);
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(null, requestDocument));
+        await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(null, requestBody));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
@@ -290,7 +290,7 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
     public async Task Cannot_omit_relationship(string relationshipPropertyName, string jsonPropertyName)
     {
         // Arrange
-        var requestDocument = new CreateResourceRequestDocument
+        var requestBody = new CreateResourceRequestDocument
         {
             Data = new DataInCreateResourceRequest
             {
@@ -308,11 +308,11 @@ public sealed class CreateResourceTests : BaseOpenApiNSwagClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
-        SetPropertyToInitialValue(requestDocument.Data.Relationships, relationshipPropertyName);
-        apiClient.MarkAsTracked(requestDocument.Data.Relationships);
+        SetPropertyToInitialValue(requestBody.Data.Relationships, relationshipPropertyName);
+        apiClient.MarkAsTracked(requestBody.Data.Relationships);
 
         // Act
-        Func<Task> action = async () => await apiClient.PostResourceAsync(null, requestDocument);
+        Func<Task> action = async () => await apiClient.PostResourceAsync(null, requestBody);
 
         // Assert
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
