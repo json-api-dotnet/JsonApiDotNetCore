@@ -1663,6 +1663,16 @@
                 }
               }
             }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       }
@@ -2089,6 +2099,16 @@
                 }
               }
             }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -2159,6 +2179,16 @@
                 }
               }
             }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -2222,6 +2252,16 @@
           },
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2648,6 +2688,16 @@
           },
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {

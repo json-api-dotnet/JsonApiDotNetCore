@@ -172,11 +172,12 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             elevatorElement.Should().ContainPath("patch.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.Should().HaveCount(3);
+                errorStatusCodeProperties.Should().HaveCount(4);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
                 errorStatusCodeProperties[1].Name.Should().Be("404");
                 errorStatusCodeProperties[2].Name.Should().Be("409");
+                errorStatusCodeProperties[3].Name.Should().Be("422");
 
                 errorStatusCodeProperties.Should().AllSatisfy(property =>
                     property.Value.Should().ContainPath($"content.{EscapedJsonApiMediaType}.schema.$ref").ShouldBeSchemaReferenceId("errorResponseDocument"));
@@ -237,11 +238,12 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             spacesElement.Should().ContainPath("post.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.Should().HaveCount(3);
+                errorStatusCodeProperties.Should().HaveCount(4);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
                 errorStatusCodeProperties[1].Name.Should().Be("404");
                 errorStatusCodeProperties[2].Name.Should().Be("409");
+                errorStatusCodeProperties[3].Name.Should().Be("422");
 
                 errorStatusCodeProperties.Should().AllSatisfy(property =>
                     property.Value.Should().ContainPath($"content.{EscapedJsonApiMediaType}.schema.$ref").ShouldBeSchemaReferenceId("errorResponseDocument"));
@@ -250,11 +252,12 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             spacesElement.Should().ContainPath("patch.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.Should().HaveCount(3);
+                errorStatusCodeProperties.Should().HaveCount(4);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
                 errorStatusCodeProperties[1].Name.Should().Be("404");
                 errorStatusCodeProperties[2].Name.Should().Be("409");
+                errorStatusCodeProperties[3].Name.Should().Be("422");
 
                 errorStatusCodeProperties.Should().AllSatisfy(property =>
                     property.Value.Should().ContainPath($"content.{EscapedJsonApiMediaType}.schema.$ref").ShouldBeSchemaReferenceId("errorResponseDocument"));
@@ -263,11 +266,12 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
             spacesElement.Should().ContainPath("delete.responses").With(responsesElement =>
             {
                 JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
-                errorStatusCodeProperties.Should().HaveCount(3);
+                errorStatusCodeProperties.Should().HaveCount(4);
 
                 errorStatusCodeProperties[0].Name.Should().Be("400");
                 errorStatusCodeProperties[1].Name.Should().Be("404");
                 errorStatusCodeProperties[2].Name.Should().Be("409");
+                errorStatusCodeProperties[3].Name.Should().Be("422");
 
                 errorStatusCodeProperties.Should().AllSatisfy(property =>
                     property.Value.Should().ContainPath($"content.{EscapedJsonApiMediaType}.schema.$ref").ShouldBeSchemaReferenceId("errorResponseDocument"));

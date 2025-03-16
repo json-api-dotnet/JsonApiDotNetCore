@@ -385,11 +385,12 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 patchElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().Should().HaveCount(4);
+                    responsesElement.EnumerateObject().Should().HaveCount(5);
                     responsesElement.Should().HaveProperty("204.description", "The elevator relationship was successfully updated, which did not result in additional changes.");
                     responsesElement.Should().HaveProperty("400.description", "The request body is missing or malformed.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper or a related resource does not exist.");
                     responsesElement.Should().HaveProperty("409.description", "The request body contains conflicting information or another resource with the same ID already exists.");
+                    responsesElement.Should().HaveProperty("422.description", "Validation of the request body failed.");
                 });
             });
         });
@@ -530,11 +531,12 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 postElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().Should().HaveCount(4);
+                    responsesElement.EnumerateObject().Should().HaveCount(5);
                     responsesElement.Should().HaveProperty("204.description", "The spaces were successfully added, which did not result in additional changes.");
                     responsesElement.Should().HaveProperty("400.description", "The request body is missing or malformed.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper or a related resource does not exist.");
                     responsesElement.Should().HaveProperty("409.description", "The request body contains conflicting information or another resource with the same ID already exists.");
+                    responsesElement.Should().HaveProperty("422.description", "Validation of the request body failed.");
                 });
             });
 
@@ -553,11 +555,12 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 patchElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().Should().HaveCount(4);
+                    responsesElement.EnumerateObject().Should().HaveCount(5);
                     responsesElement.Should().HaveProperty("204.description", "The spaces relationship was successfully updated, which did not result in additional changes.");
                     responsesElement.Should().HaveProperty("400.description", "The request body is missing or malformed.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper or a related resource does not exist.");
                     responsesElement.Should().HaveProperty("409.description", "The request body contains conflicting information or another resource with the same ID already exists.");
+                    responsesElement.Should().HaveProperty("422.description", "Validation of the request body failed.");
                 });
             });
 
@@ -576,11 +579,12 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
                 deleteElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responsesElement.EnumerateObject().Should().HaveCount(4);
+                    responsesElement.EnumerateObject().Should().HaveCount(5);
                     responsesElement.Should().HaveProperty("204.description", "The spaces were successfully removed, which did not result in additional changes.");
                     responsesElement.Should().HaveProperty("400.description", "The request body is missing or malformed.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper or a related resource does not exist.");
                     responsesElement.Should().HaveProperty("409.description", "The request body contains conflicting information or another resource with the same ID already exists.");
+                    responsesElement.Should().HaveProperty("422.description", "Validation of the request body failed.");
                 });
             });
         });
