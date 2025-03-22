@@ -1,0 +1,37 @@
+{
+  "descriptionHash": "A97763502718F5062870C53EBD7FF426E267E9D68820C8268297AB50A34C42F34033703FCB6C8EE4DE0967055086726285A30115FC9EAFE45830AFB0ECF5DFE6",
+  "descriptionLocation": "../../../OpenApiTests/QueryStrings/GeneratedSwagger/swagger.g.json",
+  "lockFileVersion": "1.0.0",
+  "kiotaVersion": "1.24.1",
+  "clientClassName": "QueryStringsClient",
+  "typeAccessModifier": "Public",
+  "clientNamespaceName": "OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode",
+  "language": "CSharp",
+  "usesBackingStore": true,
+  "excludeBackwardCompatible": true,
+  "includeAdditionalData": true,
+  "disableSSLValidation": false,
+  "serializers": [
+    "Microsoft.Kiota.Serialization.Json.JsonSerializationWriterFactory",
+    "Microsoft.Kiota.Serialization.Text.TextSerializationWriterFactory",
+    "Microsoft.Kiota.Serialization.Form.FormSerializationWriterFactory",
+    "Microsoft.Kiota.Serialization.Multipart.MultipartSerializationWriterFactory"
+  ],
+  "deserializers": [
+    "Microsoft.Kiota.Serialization.Json.JsonParseNodeFactory",
+    "Microsoft.Kiota.Serialization.Text.TextParseNodeFactory",
+    "Microsoft.Kiota.Serialization.Form.FormParseNodeFactory"
+  ],
+  "structuredMimeTypes": [
+    "application/json",
+    "text/plain;q=0.9",
+    "application/x-www-form-urlencoded;q=0.2",
+    "multipart/form-data;q=0.1"
+  ],
+  "includePatterns": [],
+  "excludePatterns": [],
+  "disabledValidationRules": [
+    "KnownAndNotSupportedFormats",
+    "InconsistentTypeFormatPair"
+  ]
+}

@@ -3,6 +3,7 @@
 	<s:Int64 x:Key="/Default/CodeEditing/NullCheckPatterns/PatternTypeNamesToPriority/=JetBrains_002EReSharper_002EFeature_002EServices_002ECSharp_002ENullChecking_002EIfThenThrowPattern/@EntryIndexedValue">2000</s:Int64>
 	<s:Int64 x:Key="/Default/CodeEditing/NullCheckPatterns/PatternTypeNamesToPriority/=JetBrains_002EReSharper_002EFeature_002EServices_002ECSharp_002ENullChecking_002EThrowExpressionNullCheckPattern/@EntryIndexedValue">3000</s:Int64>
 	<s:Boolean x:Key="/Default/CodeInspection/CodeAnnotations/PropagateAnnotations/@EntryValue">False</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/ExcludedFiles/FileMasksToSkip/=kiota_002Dlock_002Ejson/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/ExcludedFiles/FileMasksToSkip/=swagger_002Ejson/@EntryIndexedValue">True</s:Boolean>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=71287D6F_002D6C3B_002D44B4_002D9FCA_002DE78FE3F02289_002Ff_003ASchemaGenerator_002Ecs/@EntryIndexedValue">71287D6F-6C3B-44B4-9FCA-E78FE3F02289/f:SchemaGenerator.cs</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=83FF097C_002DC8C6_002D477B_002D9FAB_002DDF99B84978B5_002Ff_003AReadOnlySet_002Ecs/@EntryIndexedValue">83FF097C-C8C6-477B-9FAB-DF99B84978B5/f:ReadOnlySet.cs</s:String>
