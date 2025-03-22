@@ -4,7 +4,7 @@
     <CodeAnalysisFrozenVersion>4.1.0</CodeAnalysisFrozenVersion>
     <DemystifierFrozenVersion>0.4.1</DemystifierFrozenVersion>
     <HumanizerFrozenVersion>2.14.1</HumanizerFrozenVersion>
-    <SwashbuckleFrozenVersion>7.2.0</SwashbuckleFrozenVersion>
+    <SwashbuckleFrozenVersion>8.0.0</SwashbuckleFrozenVersion>
     <NewtonsoftJsonFrozenVersion>13.0.3</NewtonsoftJsonFrozenVersion>
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
@@ -22,8 +22,8 @@
     <MicrosoftApiServerVersion>9.0.*</MicrosoftApiServerVersion>
     <NSwagApiClientVersion>14.2.*</NSwagApiClientVersion>
     <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
-    <ScalarAspNetCoreVersion>2.0.*</ScalarAspNetCoreVersion>
-    <SwashbuckleVersion>7.*-*</SwashbuckleVersion>
+    <ScalarAspNetCoreVersion>2.1.*</ScalarAspNetCoreVersion>
+    <SwashbuckleVersion>8.*-*</SwashbuckleVersion>
     <SystemTextJsonVersion>9.0.*</SystemTextJsonVersion>
     <TestSdkVersion>17.12.*</TestSdkVersion>
     <XunitVersion>2.9.*</XunitVersion>
