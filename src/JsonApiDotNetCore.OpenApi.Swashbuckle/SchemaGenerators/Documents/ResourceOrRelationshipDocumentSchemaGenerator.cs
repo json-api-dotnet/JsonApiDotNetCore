@@ -6,14 +6,14 @@ using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Bodies;
+namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
 
 /// <summary>
-/// Generates the OpenAPI component schema for a resource/relationship request/response body.
+/// Generates the OpenAPI component schema for a resource/relationship request/response document.
 /// </summary>
-internal sealed class ResourceOrRelationshipBodySchemaGenerator : BodySchemaGenerator
+internal sealed class ResourceOrRelationshipDocumentSchemaGenerator : DocumentSchemaGenerator
 {
-    private static readonly Type[] RequestBodySchemaTypes =
+    private static readonly Type[] RequestDocumentSchemaTypes =
     [
         typeof(CreateRequestDocument<>),
         typeof(UpdateRequestDocument<>),
@@ -22,7 +22,7 @@ internal sealed class ResourceOrRelationshipBodySchemaGenerator : BodySchemaGene
         typeof(ToManyInRequest<>)
     ];
 
-    private static readonly Type[] ResponseBodySchemaTypes =
+    private static readonly Type[] ResponseDocumentSchemaTypes =
     [
         typeof(CollectionResponseDocument<>),
         typeof(PrimaryResponseDocument<>),
@@ -37,7 +37,7 @@ internal sealed class ResourceOrRelationshipBodySchemaGenerator : BodySchemaGene
     private readonly DataContainerSchemaGenerator _dataContainerSchemaGenerator;
     private readonly IResourceGraph _resourceGraph;
 
-    public ResourceOrRelationshipBodySchemaGenerator(SchemaGenerator defaultSchemaGenerator, DataContainerSchemaGenerator dataContainerSchemaGenerator,
+    public ResourceOrRelationshipDocumentSchemaGenerator(SchemaGenerator defaultSchemaGenerator, DataContainerSchemaGenerator dataContainerSchemaGenerator,
         MetaSchemaGenerator metaSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, IJsonApiOptions options,
         IResourceGraph resourceGraph)
         : base(metaSchemaGenerator, linksVisibilitySchemaGenerator, options)
@@ -51,35 +51,35 @@ internal sealed class ResourceOrRelationshipBodySchemaGenerator : BodySchemaGene
         _resourceGraph = resourceGraph;
     }
 
-    public override bool CanGenerate(Type modelType)
+    public override bool CanGenerate(Type schemaType)
     {
-        Type modelOpenType = modelType.ConstructedToOpenType();
-        return RequestBodySchemaTypes.Contains(modelOpenType) || ResponseBodySchemaTypes.Contains(modelOpenType);
+        Type schemaOpenType = schemaType.ConstructedToOpenType();
+        return RequestDocumentSchemaTypes.Contains(schemaOpenType) || ResponseDocumentSchemaTypes.Contains(schemaOpenType);
     }
 
-    protected override OpenApiSchema GenerateBodySchema(Type bodyType, SchemaRepository schemaRepository)
+    protected override OpenApiSchema GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository)
     {
-        ArgumentNullException.ThrowIfNull(bodyType);
+        ArgumentNullException.ThrowIfNull(schemaType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        if (schemaRepository.TryLookupByType(bodyType, out OpenApiSchema? referenceSchemaForBody))
+        if (schemaRepository.TryLookupByType(schemaType, out OpenApiSchema? referenceSchemaForDocument))
         {
-            return referenceSchemaForBody;
+            return referenceSchemaForDocument;
         }
 
-        var resourceSchemaType = ResourceSchemaType.Create(bodyType, _resourceGraph);
-        bool isRequestSchema = RequestBodySchemaTypes.Contains(resourceSchemaType.SchemaOpenType);
+        var resourceSchemaType = ResourceSchemaType.Create(schemaType, _resourceGraph);
+        bool isRequestSchema = RequestDocumentSchemaTypes.Contains(resourceSchemaType.SchemaOpenType);
 
-        _ = _dataContainerSchemaGenerator.GenerateSchema(bodyType, resourceSchemaType.ResourceType, isRequestSchema, !isRequestSchema, schemaRepository);
+        _ = _dataContainerSchemaGenerator.GenerateSchema(schemaType, resourceSchemaType.ResourceType, isRequestSchema, !isRequestSchema, schemaRepository);
 
-        referenceSchemaForBody = _defaultSchemaGenerator.GenerateSchema(bodyType, schemaRepository);
-        OpenApiSchema inlineSchemaForBody = schemaRepository.Schemas[referenceSchemaForBody.Reference.Id].UnwrapLastExtendedSchema();
+        referenceSchemaForDocument = _defaultSchemaGenerator.GenerateSchema(schemaType, schemaRepository);
+        OpenApiSchema inlineSchemaForDocument = schemaRepository.Schemas[referenceSchemaForDocument.Reference.Id].UnwrapLastExtendedSchema();
 
         if (JsonApiSchemaFacts.HasNullableDataProperty(resourceSchemaType.SchemaOpenType))
         {
-            inlineSchemaForBody.Properties[JsonApiPropertyName.Data].Nullable = true;
+            inlineSchemaForDocument.Properties[JsonApiPropertyName.Data].Nullable = true;
         }
 
-        return referenceSchemaForBody;
+        return referenceSchemaForDocument;
     }
 }

@@ -3,18 +3,18 @@ using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Bodies;
+namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
 
 /// <summary>
-/// Generates the OpenAPI component schema for a request and/or response body.
+/// Generates the OpenAPI component schema for a request and/or response document.
 /// </summary>
-internal abstract class BodySchemaGenerator
+internal abstract class DocumentSchemaGenerator
 {
     private readonly MetaSchemaGenerator _metaSchemaGenerator;
     private readonly LinksVisibilitySchemaGenerator _linksVisibilitySchemaGenerator;
     private readonly IJsonApiOptions _options;
 
-    protected BodySchemaGenerator(MetaSchemaGenerator metaSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator,
+    protected DocumentSchemaGenerator(MetaSchemaGenerator metaSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator,
         IJsonApiOptions options)
     {
         ArgumentNullException.ThrowIfNull(metaSchemaGenerator);
@@ -26,31 +26,31 @@ internal abstract class BodySchemaGenerator
         _options = options;
     }
 
-    public abstract bool CanGenerate(Type modelType);
+    public abstract bool CanGenerate(Type schemaType);
 
-    public OpenApiSchema GenerateSchema(Type bodyType, SchemaRepository schemaRepository)
+    public OpenApiSchema GenerateSchema(Type schemaType, SchemaRepository schemaRepository)
     {
-        ArgumentNullException.ThrowIfNull(bodyType);
+        ArgumentNullException.ThrowIfNull(schemaType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        if (schemaRepository.TryLookupByType(bodyType, out OpenApiSchema? referenceSchema))
+        if (schemaRepository.TryLookupByType(schemaType, out OpenApiSchema? referenceSchema))
         {
             return referenceSchema;
         }
 
         _metaSchemaGenerator.GenerateSchema(schemaRepository);
 
-        referenceSchema = GenerateBodySchema(bodyType, schemaRepository);
+        referenceSchema = GenerateDocumentSchema(schemaType, schemaRepository);
         OpenApiSchema fullSchema = schemaRepository.Schemas[referenceSchema.Reference.Id];
 
-        _linksVisibilitySchemaGenerator.UpdateSchemaForTopLevel(bodyType, fullSchema, schemaRepository);
+        _linksVisibilitySchemaGenerator.UpdateSchemaForTopLevel(schemaType, fullSchema, schemaRepository);
 
         SetJsonApiVersion(fullSchema, schemaRepository);
 
         return referenceSchema;
     }
 
-    protected abstract OpenApiSchema GenerateBodySchema(Type bodyType, SchemaRepository schemaRepository);
+    protected abstract OpenApiSchema GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository);
 
     private void SetJsonApiVersion(OpenApiSchema fullSchema, SchemaRepository schemaRepository)
     {

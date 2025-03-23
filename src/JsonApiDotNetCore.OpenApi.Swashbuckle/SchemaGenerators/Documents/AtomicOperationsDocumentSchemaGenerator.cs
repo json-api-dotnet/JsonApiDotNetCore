@@ -12,12 +12,12 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Bodies;
+namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
 
 /// <summary>
-/// Generates the OpenAPI component schema for an atomic:operations request/response body.
+/// Generates the OpenAPI component schema for an atomic:operations request/response document.
 /// </summary>
-internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
+internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGenerator
 {
     private static readonly Type AtomicOperationAbstractType = typeof(AtomicOperation);
 
@@ -32,11 +32,12 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
     private readonly ResourceFieldValidationMetadataProvider _resourceFieldValidationMetadataProvider;
     private readonly IResourceGraph _resourceGraph;
 
-    public AtomicOperationsBodySchemaGenerator(SchemaGenerator defaultSchemaGenerator, AtomicOperationCodeSchemaGenerator atomicOperationCodeSchemaGenerator,
-        DataSchemaGenerator dataSchemaGenerator, RelationshipIdentifierSchemaGenerator relationshipIdentifierSchemaGenerator,
-        DataContainerSchemaGenerator dataContainerSchemaGenerator, MetaSchemaGenerator metaSchemaGenerator,
-        LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, IAtomicOperationFilter atomicOperationFilter, JsonApiSchemaIdSelector schemaIdSelector,
-        ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider, IJsonApiOptions options, IResourceGraph resourceGraph)
+    public AtomicOperationsDocumentSchemaGenerator(SchemaGenerator defaultSchemaGenerator,
+        AtomicOperationCodeSchemaGenerator atomicOperationCodeSchemaGenerator, DataSchemaGenerator dataSchemaGenerator,
+        RelationshipIdentifierSchemaGenerator relationshipIdentifierSchemaGenerator, DataContainerSchemaGenerator dataContainerSchemaGenerator,
+        MetaSchemaGenerator metaSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, IAtomicOperationFilter atomicOperationFilter,
+        JsonApiSchemaIdSelector schemaIdSelector, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider, IJsonApiOptions options,
+        IResourceGraph resourceGraph)
         : base(metaSchemaGenerator, linksVisibilitySchemaGenerator, options)
     {
         ArgumentNullException.ThrowIfNull(defaultSchemaGenerator);
@@ -61,28 +62,28 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
         _resourceGraph = resourceGraph;
     }
 
-    public override bool CanGenerate(Type modelType)
+    public override bool CanGenerate(Type schemaType)
     {
-        return modelType == typeof(OperationsRequestDocument) || modelType == typeof(OperationsResponseDocument);
+        return schemaType == typeof(OperationsRequestDocument) || schemaType == typeof(OperationsResponseDocument);
     }
 
-    protected override OpenApiSchema GenerateBodySchema(Type bodyType, SchemaRepository schemaRepository)
+    protected override OpenApiSchema GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository)
     {
-        bool isRequestSchema = bodyType == typeof(OperationsRequestDocument);
+        bool isRequestSchema = schemaType == typeof(OperationsRequestDocument);
 
         if (isRequestSchema)
         {
-            GenerateSchemasForRequestBody(schemaRepository);
+            GenerateSchemasForRequestDocument(schemaRepository);
         }
         else
         {
-            GenerateSchemasForResponseBody(schemaRepository);
+            GenerateSchemasForResponseDocument(schemaRepository);
         }
 
-        return _defaultSchemaGenerator.GenerateSchema(bodyType, schemaRepository);
+        return _defaultSchemaGenerator.GenerateSchema(schemaType, schemaRepository);
     }
 
-    private void GenerateSchemasForRequestBody(SchemaRepository schemaRepository)
+    private void GenerateSchemasForRequestDocument(SchemaRepository schemaRepository)
     {
         _ = GenerateSchemaForAbstractOperation(schemaRepository);
 
@@ -412,7 +413,7 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
         return null;
     }
 
-    private void GenerateSchemasForResponseBody(SchemaRepository schemaRepository)
+    private void GenerateSchemasForResponseDocument(SchemaRepository schemaRepository)
     {
         _ = _dataContainerSchemaGenerator.GenerateSchemaForCommonResourceDataInResponse(schemaRepository);
 

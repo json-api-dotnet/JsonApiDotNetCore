@@ -3,8 +3,8 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators;
-using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Bodies;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
+using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 using JsonApiDotNetCore.Serialization.Response;
 using Microsoft.AspNetCore.Mvc;
@@ -95,9 +95,9 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<SchemaGenerator>();
         services.TryAddSingleton<ISchemaGenerator, JsonApiSchemaGenerator>();
 
-        services.TryAddEnumerable(ServiceDescriptor.Singleton<BodySchemaGenerator, ResourceOrRelationshipBodySchemaGenerator>());
-        services.TryAddEnumerable(ServiceDescriptor.Singleton<BodySchemaGenerator, AtomicOperationsBodySchemaGenerator>());
-        services.TryAddEnumerable(ServiceDescriptor.Singleton<BodySchemaGenerator, ErrorResponseBodySchemaGenerator>());
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<DocumentSchemaGenerator, ResourceOrRelationshipDocumentSchemaGenerator>());
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<DocumentSchemaGenerator, AtomicOperationsDocumentSchemaGenerator>());
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<DocumentSchemaGenerator, ErrorResponseDocumentSchemaGenerator>());
 
         services.TryAddSingleton<AtomicOperationCodeSchemaGenerator>();
         services.TryAddSingleton<ResourceTypeSchemaGenerator>();

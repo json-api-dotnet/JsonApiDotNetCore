@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using System.Reflection;
 using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Bodies;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
+using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -12,15 +12,15 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators;
 internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
 {
     private readonly ResourceIdSchemaGenerator _resourceIdSchemaGenerator;
-    private readonly BodySchemaGenerator[] _bodySchemaGenerators;
+    private readonly DocumentSchemaGenerator[] _documentSchemaGenerators;
 
-    public JsonApiSchemaGenerator(ResourceIdSchemaGenerator resourceIdSchemaGenerator, IEnumerable<BodySchemaGenerator> bodySchemaGenerators)
+    public JsonApiSchemaGenerator(ResourceIdSchemaGenerator resourceIdSchemaGenerator, IEnumerable<DocumentSchemaGenerator> documentSchemaGenerators)
     {
         ArgumentNullException.ThrowIfNull(resourceIdSchemaGenerator);
-        ArgumentNullException.ThrowIfNull(bodySchemaGenerators);
+        ArgumentNullException.ThrowIfNull(documentSchemaGenerators);
 
         _resourceIdSchemaGenerator = resourceIdSchemaGenerator;
-        _bodySchemaGenerators = bodySchemaGenerators as BodySchemaGenerator[] ?? bodySchemaGenerators.ToArray();
+        _documentSchemaGenerators = documentSchemaGenerators as DocumentSchemaGenerator[] ?? documentSchemaGenerators.ToArray();
     }
 
     public OpenApiSchema GenerateSchema(Type modelType, SchemaRepository schemaRepository, MemberInfo? memberInfo = null, ParameterInfo? parameterInfo = null,
@@ -34,7 +34,7 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
             return _resourceIdSchemaGenerator.GenerateSchema(modelType, schemaRepository);
         }
 
-        BodySchemaGenerator schemaGenerator = GetBodySchemaGenerator(modelType);
+        DocumentSchemaGenerator schemaGenerator = GetDocumentSchemaGenerator(modelType);
         OpenApiSchema referenceSchema = schemaGenerator.GenerateSchema(modelType, schemaRepository);
 
         if (memberInfo != null || parameterInfo != null)
@@ -52,13 +52,13 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         return parameter.Member.DeclaringType != null && parameter.Member.DeclaringType.IsAssignableTo(typeof(CoreJsonApiController));
     }
 
-    private BodySchemaGenerator GetBodySchemaGenerator(Type modelType)
+    private DocumentSchemaGenerator GetDocumentSchemaGenerator(Type modelType)
     {
-        foreach (BodySchemaGenerator bodySchemaGenerator in _bodySchemaGenerators)
+        foreach (DocumentSchemaGenerator documentSchemaGenerator in _documentSchemaGenerators)
         {
-            if (bodySchemaGenerator.CanGenerate(modelType))
+            if (documentSchemaGenerator.CanGenerate(modelType))
             {
-                return bodySchemaGenerator;
+                return documentSchemaGenerator;
             }
         }
 

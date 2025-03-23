@@ -5,17 +5,17 @@ using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Bodies;
+namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
 
 /// <summary>
 /// Generates the OpenAPI component schema for an error document.
 /// </summary>
-internal sealed class ErrorResponseBodySchemaGenerator : BodySchemaGenerator
+internal sealed class ErrorResponseDocumentSchemaGenerator : DocumentSchemaGenerator
 {
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly MetaSchemaGenerator _metaSchemaGenerator;
 
-    public ErrorResponseBodySchemaGenerator(SchemaGenerator defaultSchemaGenerator, MetaSchemaGenerator metaSchemaGenerator,
+    public ErrorResponseDocumentSchemaGenerator(SchemaGenerator defaultSchemaGenerator, MetaSchemaGenerator metaSchemaGenerator,
         LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, IJsonApiOptions options)
         : base(metaSchemaGenerator, linksVisibilitySchemaGenerator, options)
     {
@@ -25,12 +25,12 @@ internal sealed class ErrorResponseBodySchemaGenerator : BodySchemaGenerator
         _metaSchemaGenerator = metaSchemaGenerator;
     }
 
-    public override bool CanGenerate(Type modelType)
+    public override bool CanGenerate(Type schemaType)
     {
-        return modelType == typeof(ErrorResponseDocument);
+        return schemaType == typeof(ErrorResponseDocument);
     }
 
-    protected override OpenApiSchema GenerateBodySchema(Type bodyType, SchemaRepository schemaRepository)
+    protected override OpenApiSchema GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository)
     {
         OpenApiSchema referenceSchemaForErrorObject = _defaultSchemaGenerator.GenerateSchema(typeof(ErrorObject), schemaRepository);
         OpenApiSchema fullSchemaForErrorObject = schemaRepository.Schemas[referenceSchemaForErrorObject.Reference.Id];
@@ -38,6 +38,6 @@ internal sealed class ErrorResponseBodySchemaGenerator : BodySchemaGenerator
         OpenApiSchema referenceSchemaForMeta = _metaSchemaGenerator.GenerateSchema(schemaRepository);
         fullSchemaForErrorObject.Properties[JsonApiPropertyName.Meta] = referenceSchemaForMeta.WrapInExtendedSchema();
 
-        return _defaultSchemaGenerator.GenerateSchema(bodyType, schemaRepository);
+        return _defaultSchemaGenerator.GenerateSchema(schemaType, schemaRepository);
     }
 }
