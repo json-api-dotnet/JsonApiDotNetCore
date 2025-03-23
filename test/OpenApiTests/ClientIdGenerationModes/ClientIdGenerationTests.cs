@@ -26,7 +26,7 @@ public sealed class ClientIdGenerationTests : IClassFixture<OpenApiTestContext<O
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath("components.schemas.dataInCreatePlayerRequest").With(dataElement =>
+        document.Should().ContainPath("components.schemas.dataInCreatePlayerRequest.allOf[1]").With(dataElement =>
         {
             dataElement.Should().ContainPath("required").With(requiredElement =>
             {
@@ -45,15 +45,9 @@ public sealed class ClientIdGenerationTests : IClassFixture<OpenApiTestContext<O
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath("components.schemas.dataInCreateGameRequest").With(dataElement =>
+        document.Should().ContainPath("components.schemas.dataInCreateGameRequest.allOf[1]").With(dataElement =>
         {
-            dataElement.Should().ContainPath("required").With(requiredElement =>
-            {
-                requiredElement.Should().NotContainArrayElement("id");
-                requiredElement.Should().NotContainArrayElement("lid");
-            });
-
-            dataElement.Should().ContainPath("properties.id");
+            dataElement.Should().NotContainPath("required");
         });
     }
 
@@ -64,15 +58,9 @@ public sealed class ClientIdGenerationTests : IClassFixture<OpenApiTestContext<O
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath("components.schemas.dataInCreatePlayerGroupRequest").With(dataElement =>
+        document.Should().ContainPath("components.schemas.dataInCreatePlayerGroupRequest.allOf[1]").With(dataElement =>
         {
-            dataElement.Should().ContainPath("required").With(requiredElement =>
-            {
-                requiredElement.Should().NotContainArrayElement("id");
-                requiredElement.Should().NotContainArrayElement("lid");
-            });
-
-            dataElement.Should().NotContainPath("properties.id");
+            dataElement.Should().NotContainPath("required");
         });
     }
 }

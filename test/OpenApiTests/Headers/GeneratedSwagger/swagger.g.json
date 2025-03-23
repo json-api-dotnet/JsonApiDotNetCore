@@ -53,7 +53,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/countryCollectionResponseDocument"
                 }
@@ -75,7 +75,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -176,7 +176,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the country to create.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -202,7 +202,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryCountryResponseDocument"
                 }
@@ -215,7 +215,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -225,7 +225,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -235,7 +235,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -245,7 +245,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -255,7 +255,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -319,7 +319,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryCountryResponseDocument"
                 }
@@ -341,7 +341,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -351,7 +351,7 @@
           "404": {
             "description": "The country does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -477,7 +477,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the country to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -493,7 +493,7 @@
           "200": {
             "description": "The country was successfully updated, which resulted in additional changes. The updated country is returned.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryCountryResponseDocument"
                 }
@@ -506,7 +506,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -516,7 +516,7 @@
           "404": {
             "description": "The country or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -526,7 +526,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -536,7 +536,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -571,7 +571,7 @@
           "404": {
             "description": "The country does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -635,7 +635,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/languageCollectionResponseDocument"
                 }
@@ -657,7 +657,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -667,7 +667,7 @@
           "404": {
             "description": "The country does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -813,7 +813,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/languageIdentifierCollectionResponseDocument"
                 }
@@ -835,7 +835,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -845,7 +845,7 @@
           "404": {
             "description": "The country does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -958,7 +958,7 @@
         "requestBody": {
           "description": "The identities of the languages to add to the languages relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -977,7 +977,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -987,7 +987,7 @@
           "404": {
             "description": "The country or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -997,7 +997,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1007,7 +1007,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1038,7 +1038,7 @@
         "requestBody": {
           "description": "The identities of the languages to assign to the languages relationship, or an empty array to clear the relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -1057,7 +1057,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1067,7 +1067,7 @@
           "404": {
             "description": "The country or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1077,7 +1077,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1087,7 +1087,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1118,7 +1118,7 @@
         "requestBody": {
           "description": "The identities of the languages to remove from the languages relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -1137,7 +1137,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1147,7 +1147,7 @@
           "404": {
             "description": "The country or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1157,7 +1157,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1167,7 +1167,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1181,58 +1181,160 @@
   "components": {
     "schemas": {
       "attributesInCountryResponse": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
           },
-          "population": {
-            "type": "integer",
-            "format": "int64"
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "population": {
+                "type": "integer",
+                "format": "int64"
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "attributesInCreateCountryRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRequest"
+          },
+          {
+            "required": [
+              "name"
+            ],
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "population": {
+                "type": "integer",
+                "format": "int64"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInCreateRequest": {
         "required": [
-          "name"
+          "openapi:discriminator"
         ],
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string"
-          },
-          "population": {
-            "type": "integer",
-            "format": "int64"
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "countries": "#/components/schemas/attributesInCreateCountryRequest"
+          }
+        },
+        "x-abstract": true
       },
       "attributesInLanguageResponse": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
           },
-          "name": {
-            "type": "string"
+          {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
-      "attributesInUpdateCountryRequest": {
+      "attributesInResponse": {
+        "required": [
+          "openapi:discriminator"
+        ],
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string"
-          },
-          "population": {
-            "type": "integer",
-            "format": "int64"
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "countries": "#/components/schemas/attributesInCountryResponse",
+            "languages": "#/components/schemas/attributesInLanguageResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInUpdateCountryRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "population": {
+                "type": "integer",
+                "format": "int64"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
+      },
+      "attributesInUpdateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "countries": "#/components/schemas/attributesInUpdateCountryRequest"
+          }
+        },
+        "x-abstract": true
       },
       "countryCollectionResponseDocument": {
         "required": [
@@ -1269,12 +1371,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "countryResourceType": {
-        "enum": [
-          "countries"
-        ],
-        "type": "string"
       },
       "createCountryRequestDocument": {
         "required": [
@@ -1343,40 +1439,32 @@
         "additionalProperties": false
       },
       "dataInCreateCountryRequest": {
-        "required": [
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/countryResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInCreateRequest"
           },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInCreateCountryRequest"
+          {
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCreateCountryRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInCreateCountryRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationshipsInCreateCountryRequest"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "dataInLanguageResponse": {
@@ -1416,46 +1504,40 @@
         "additionalProperties": false
       },
       "dataInUpdateCountryRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/countryResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInUpdateRequest"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "uuid"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInUpdateCountryRequest"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "uuid"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInUpdateCountryRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInUpdateCountryRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationshipsInUpdateCountryRequest"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "errorLinks": {
@@ -1580,6 +1662,36 @@
         },
         "additionalProperties": false
       },
+      "identifierInRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "languages": "#/components/schemas/languageIdentifierInRequest"
+          }
+        },
+        "x-abstract": true
+      },
       "languageCollectionResponseDocument": {
         "required": [
           "data",
@@ -1647,32 +1759,26 @@
         "additionalProperties": false
       },
       "languageIdentifierInRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/languageResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/identifierInRequest"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "uuid"
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "uuid"
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "languageIdentifierInResponse": {
@@ -1766,43 +1872,136 @@
         "additionalProperties": false
       },
       "relationshipsInCountryResponse": {
-        "type": "object",
-        "properties": {
-          "languages": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyLanguageInResponse"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "languages": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyLanguageInResponse"
+                  }
+                ]
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "relationshipsInCreateCountryRequest": {
-        "type": "object",
-        "properties": {
-          "languages": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyLanguageInRequest"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInCreateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "languages": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyLanguageInRequest"
+                  }
+                ]
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
-      "relationshipsInUpdateCountryRequest": {
+      "relationshipsInCreateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
         "type": "object",
         "properties": {
-          "languages": {
+          "openapi:discriminator": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/toManyLanguageInRequest"
+                "$ref": "#/components/schemas/resourceType"
               }
             ]
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "countries": "#/components/schemas/relationshipsInCreateCountryRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInResponse": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "countries": "#/components/schemas/relationshipsInCountryResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInUpdateCountryRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "languages": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyLanguageInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
+      },
+      "relationshipsInUpdateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "countries": "#/components/schemas/relationshipsInUpdateCountryRequest"
+          }
+        },
+        "x-abstract": true
       },
       "resourceCollectionTopLevelLinks": {
         "type": "object",
@@ -1855,6 +2054,36 @@
         },
         "additionalProperties": false
       },
+      "resourceInCreateRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "countries": "#/components/schemas/dataInCreateCountryRequest"
+          }
+        },
+        "x-abstract": true
+      },
       "resourceInResponse": {
         "required": [
           "type"
@@ -1882,6 +2111,36 @@
           "mapping": {
             "countries": "#/components/schemas/dataInCountryResponse",
             "languages": "#/components/schemas/dataInLanguageResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "resourceInUpdateRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "countries": "#/components/schemas/dataInUpdateCountryRequest"
           }
         },
         "x-abstract": true

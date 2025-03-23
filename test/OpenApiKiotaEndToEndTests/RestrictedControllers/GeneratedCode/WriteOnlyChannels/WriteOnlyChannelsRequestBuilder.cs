@@ -89,8 +89,8 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.WriteOnl
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = new RequestInformation(Method.POST, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
-            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json");
-            requestInfo.SetContentFromParsable(RequestAdapter, "application/vnd.api+json", body);
+            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=openapi");
+            requestInfo.SetContentFromParsable(RequestAdapter, "application/vnd.api+json;ext=openapi", body);
             return requestInfo;
         }
 

@@ -44,7 +44,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         {
             Data = new DataInCreateCountryRequest
             {
-                Type = CountryResourceType.Countries,
+                Type = ResourceType.Countries,
                 Attributes = new AttributesInCreateCountryRequest
                 {
                     Name = newCountry.Name,

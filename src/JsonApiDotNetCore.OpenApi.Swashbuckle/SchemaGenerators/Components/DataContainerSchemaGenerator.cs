@@ -13,26 +13,27 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 /// </summary>
 internal sealed class DataContainerSchemaGenerator
 {
-    private readonly AbstractResourceDataSchemaGenerator _abstractResourceDataSchemaGenerator;
     private readonly DataSchemaGenerator _dataSchemaGenerator;
-    private readonly IncludeDependencyScanner _includeDependencyScanner;
     private readonly IResourceGraph _resourceGraph;
 
-    public DataContainerSchemaGenerator(AbstractResourceDataSchemaGenerator abstractResourceDataSchemaGenerator, DataSchemaGenerator dataSchemaGenerator,
-        IncludeDependencyScanner includeDependencyScanner, IResourceGraph resourceGraph)
+    public DataContainerSchemaGenerator(DataSchemaGenerator dataSchemaGenerator, IResourceGraph resourceGraph)
     {
-        ArgumentNullException.ThrowIfNull(abstractResourceDataSchemaGenerator);
         ArgumentNullException.ThrowIfNull(dataSchemaGenerator);
-        ArgumentNullException.ThrowIfNull(includeDependencyScanner);
         ArgumentNullException.ThrowIfNull(resourceGraph);
 
-        _abstractResourceDataSchemaGenerator = abstractResourceDataSchemaGenerator;
         _dataSchemaGenerator = dataSchemaGenerator;
-        _includeDependencyScanner = includeDependencyScanner;
         _resourceGraph = resourceGraph;
     }
 
-    public OpenApiSchema GenerateSchema(Type dataContainerConstructedType, ResourceType resourceType, bool forRequestSchema, SchemaRepository schemaRepository)
+    public OpenApiSchema GenerateSchemaForCommonResourceDataInResponse(SchemaRepository schemaRepository)
+    {
+        ArgumentNullException.ThrowIfNull(schemaRepository);
+
+        return _dataSchemaGenerator.GenerateSchemaForCommonData(typeof(ResourceInResponse), schemaRepository);
+    }
+
+    public OpenApiSchema GenerateSchema(Type dataContainerConstructedType, ResourceType resourceType, bool forRequestSchema, bool canIncludeRelated,
+        SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(dataContainerConstructedType);
         ArgumentNullException.ThrowIfNull(resourceType);
@@ -43,31 +44,21 @@ internal sealed class DataContainerSchemaGenerator
             return referenceSchemaForData;
         }
 
-        if (!forRequestSchema)
-        {
-            // There's no way to intercept in the Swashbuckle recursive component schema generation when using schema inheritance, which we need
-            // to perform generic type expansions. As a workaround, we generate an empty base schema upfront. And each time the schema
-            // for a derived type is generated, we'll add it to the discriminator mapping.
-            _ = _abstractResourceDataSchemaGenerator.GenerateSchema(schemaRepository);
-        }
-
         Type dataConstructedType = GetElementTypeOfDataProperty(dataContainerConstructedType, resourceType);
 
-        if (!forRequestSchema)
+        if (canIncludeRelated)
         {
-            // Ensure all reachable related resource types are available in the discriminator mapping upfront.
-            // This is needed to make includes work when not all endpoints are exposed.
-            EnsureResourceDataInResponseDerivedTypesAreMappedInDiscriminator(dataConstructedType, schemaRepository);
+            var resourceSchemaType = ResourceSchemaType.Create(dataConstructedType, _resourceGraph);
+
+            if (resourceSchemaType.SchemaOpenType == typeof(DataInResponse<>))
+            {
+                // Ensure all reachable related resource types in response schemas are generated upfront.
+                // This is needed to make includes work when not all endpoints are exposed.
+                GenerateReachableRelatedTypesInResponse(dataConstructedType, schemaRepository);
+            }
         }
 
-        referenceSchemaForData = _dataSchemaGenerator.GenerateSchema(dataConstructedType, schemaRepository);
-
-        if (!forRequestSchema)
-        {
-            _abstractResourceDataSchemaGenerator.MapDiscriminator(dataConstructedType, referenceSchemaForData, schemaRepository);
-        }
-
-        return referenceSchemaForData;
+        return _dataSchemaGenerator.GenerateSchema(dataConstructedType, forRequestSchema, schemaRepository);
     }
 
     private static Type GetElementTypeOfDataProperty(Type dataContainerConstructedType, ResourceType resourceType)
@@ -96,7 +87,7 @@ internal sealed class DataContainerSchemaGenerator
         return innerPropertyType;
     }
 
-    private void EnsureResourceDataInResponseDerivedTypesAreMappedInDiscriminator(Type dataConstructedType, SchemaRepository schemaRepository)
+    private void GenerateReachableRelatedTypesInResponse(Type dataConstructedType, SchemaRepository schemaRepository)
     {
         Type dataOpenType = dataConstructedType.GetGenericTypeDefinition();
 
@@ -104,18 +95,11 @@ internal sealed class DataContainerSchemaGenerator
         {
             var resourceSchemaType = ResourceSchemaType.Create(dataConstructedType, _resourceGraph);
 
-            foreach (ResourceType relatedType in _includeDependencyScanner.GetReachableRelatedTypes(resourceSchemaType.ResourceType))
+            foreach (ResourceType relatedType in IncludeDependencyScanner.Instance.GetReachableRelatedTypes(resourceSchemaType.ResourceType))
             {
-                MapResourceDataInResponseDerivedTypeInDiscriminator(relatedType, schemaRepository);
+                Type resourceDataConstructedType = typeof(DataInResponse<>).MakeGenericType(relatedType.ClrType);
+                _ = _dataSchemaGenerator.GenerateSchema(resourceDataConstructedType, false, schemaRepository);
             }
         }
-    }
-
-    private void MapResourceDataInResponseDerivedTypeInDiscriminator(ResourceType resourceType, SchemaRepository schemaRepository)
-    {
-        Type resourceDataConstructedType = typeof(DataInResponse<>).MakeGenericType(resourceType.ClrType);
-        OpenApiSchema referenceSchemaForResourceData = _dataSchemaGenerator.GenerateSchema(resourceDataConstructedType, schemaRepository);
-
-        _abstractResourceDataSchemaGenerator.MapDiscriminator(resourceDataConstructedType, referenceSchemaForResourceData, schemaRepository);
     }
 }

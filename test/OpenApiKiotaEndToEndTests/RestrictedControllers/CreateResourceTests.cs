@@ -48,7 +48,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
         {
             Data = new DataInCreateWriteOnlyChannelRequest
             {
-                Type = WriteOnlyChannelResourceType.WriteOnlyChannels,
+                Type = ResourceType.WriteOnlyChannels,
                 Attributes = new AttributesInCreateWriteOnlyChannelRequest
                 {
                     Name = newChannel.Name,
@@ -60,7 +60,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
                     {
                         Data = new DataStreamIdentifierInRequest
                         {
-                            Type = DataStreamResourceType.DataStreams,
+                            Type = ResourceType.DataStreams,
                             Id = existingVideoStream.StringId!
                         }
                     },
@@ -70,7 +70,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
                         [
                             new DataStreamIdentifierInRequest
                             {
-                                Type = DataStreamResourceType.DataStreams,
+                                Type = ResourceType.DataStreams,
                                 Id = existingAudioStream.StringId!
                             }
                         ]
@@ -179,7 +179,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
         {
             Data = new DataInCreateWriteOnlyChannelRequest
             {
-                Type = WriteOnlyChannelResourceType.WriteOnlyChannels,
+                Type = ResourceType.WriteOnlyChannels,
                 Attributes = new AttributesInCreateWriteOnlyChannelRequest
                 {
                     Name = newChannel.Name
@@ -190,7 +190,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
                     {
                         Data = new DataStreamIdentifierInRequest
                         {
-                            Type = DataStreamResourceType.DataStreams,
+                            Type = ResourceType.DataStreams,
                             Id = unknownVideoStreamId
                         }
                     }

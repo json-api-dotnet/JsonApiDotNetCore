@@ -6,8 +6,8 @@ namespace OpenApiTests.NamingConventions.CamelCase;
 
 public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext>>
 {
-    private const string EscapedJsonApiMediaType = "['application/vnd.api+json']";
-    private const string EscapedOperationsMediaType = "['application/vnd.api+json; ext=atomic']";
+    private const string EscapedJsonApiMediaType = "['application/vnd.api+json; ext=openapi']";
+    private const string EscapedOperationsMediaType = "['application/vnd.api+json; ext=atomic; ext=openapi']";
 
     private readonly OpenApiTestContext<CamelCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> _testContext;
 
@@ -98,7 +98,7 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
                 propertiesElement.Should().ContainProperty("self");
             });
 
-            schemasElement.Should().ContainPath($"{resourceAttributesInResponseSchemaRefId}.properties").With(propertiesElement =>
+            schemasElement.Should().ContainPath($"{resourceAttributesInResponseSchemaRefId}.allOf[1].properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainProperty("nameOfCity");
                 propertiesElement.Should().ContainProperty("kind");
@@ -107,7 +107,7 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
 
             string? nullableToOneResourceResponseDataSchemaRefId = null;
 
-            schemasElement.Should().ContainPath($"{resourceRelationshipInResponseSchemaRefId}.properties").With(propertiesElement =>
+            schemasElement.Should().ContainPath($"{resourceRelationshipInResponseSchemaRefId}.allOf[1].properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainProperty("storeManager");
 
@@ -399,7 +399,7 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
 
             string? resourceRelationshipInPostRequestSchemaRefId = null;
 
-            schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
+            schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.allOf[1].properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainPath("attributes.allOf[0].$ref").ShouldBeSchemaReferenceId("attributesInCreateSupermarketRequest");
 
@@ -407,7 +407,7 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
                     .ShouldBeSchemaReferenceId("relationshipsInCreateSupermarketRequest").SchemaReferenceId;
             });
 
-            schemasElement.Should().ContainPath($"{resourceRelationshipInPostRequestSchemaRefId}.properties").With(propertiesElement =>
+            schemasElement.Should().ContainPath($"{resourceRelationshipInPostRequestSchemaRefId}.allOf[1].properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainProperty("storeManager");
                 propertiesElement.Should().ContainPath("storeManager.allOf[0].$ref").ShouldBeSchemaReferenceId("toOneStaffMemberInRequest");
@@ -467,7 +467,7 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
                     .ShouldBeSchemaReferenceId("dataInUpdateSupermarketRequest").SchemaReferenceId;
             });
 
-            schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
+            schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.allOf[1].properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainPath("attributes.allOf[0].$ref").ShouldBeSchemaReferenceId("attributesInUpdateSupermarketRequest");
                 propertiesElement.Should().ContainPath("relationships.allOf[0].$ref").ShouldBeSchemaReferenceId("relationshipsInUpdateSupermarketRequest");

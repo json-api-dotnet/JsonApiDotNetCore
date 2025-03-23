@@ -53,7 +53,7 @@ public sealed class AtomicDeleteResourceTests : IClassFixture<IntegrationTestCon
                     Op = RemoveOperationCode.Remove,
                     Ref = new EnrollmentIdentifierInRequest
                     {
-                        Type = EnrollmentResourceType.Enrollments,
+                        Type = ResourceType.Enrollments,
                         Id = existingEnrollment.StringId!
                     }
                 }

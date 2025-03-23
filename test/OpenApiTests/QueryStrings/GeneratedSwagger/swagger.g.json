@@ -53,7 +53,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/nameValuePairCollectionResponseDocument"
                 }
@@ -75,7 +75,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -176,7 +176,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the nameValuePair to create.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -202,7 +202,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryNameValuePairResponseDocument"
                 }
@@ -215,7 +215,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -225,7 +225,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -235,7 +235,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -245,7 +245,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -255,7 +255,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -319,7 +319,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryNameValuePairResponseDocument"
                 }
@@ -341,7 +341,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -351,7 +351,7 @@
           "404": {
             "description": "The nameValuePair does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -477,7 +477,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the nameValuePair to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -493,7 +493,7 @@
           "200": {
             "description": "The nameValuePair was successfully updated, which resulted in additional changes. The updated nameValuePair is returned.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryNameValuePairResponseDocument"
                 }
@@ -506,7 +506,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -516,7 +516,7 @@
           "404": {
             "description": "The nameValuePair or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -526,7 +526,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -536,7 +536,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -571,7 +571,7 @@
           "404": {
             "description": "The nameValuePair does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -635,7 +635,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/secondaryNodeResponseDocument"
                 }
@@ -657,7 +657,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -667,7 +667,7 @@
           "404": {
             "description": "The nameValuePair does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -813,7 +813,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/nodeIdentifierResponseDocument"
                 }
@@ -835,7 +835,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -845,7 +845,7 @@
           "404": {
             "description": "The nameValuePair does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -958,7 +958,7 @@
         "requestBody": {
           "description": "The identity of the node to assign to the owner relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -977,7 +977,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -987,7 +987,7 @@
           "404": {
             "description": "The nameValuePair or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -997,7 +997,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1007,7 +1007,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1060,7 +1060,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/nodeCollectionResponseDocument"
                 }
@@ -1082,7 +1082,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1183,7 +1183,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the node to create.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -1209,7 +1209,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryNodeResponseDocument"
                 }
@@ -1222,7 +1222,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1232,7 +1232,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1242,7 +1242,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1252,7 +1252,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1262,7 +1262,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1326,7 +1326,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryNodeResponseDocument"
                 }
@@ -1348,7 +1348,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1358,7 +1358,7 @@
           "404": {
             "description": "The node does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1484,7 +1484,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the node to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -1500,7 +1500,7 @@
           "200": {
             "description": "The node was successfully updated, which resulted in additional changes. The updated node is returned.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryNodeResponseDocument"
                 }
@@ -1513,7 +1513,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1523,7 +1523,7 @@
           "404": {
             "description": "The node or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1533,7 +1533,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1543,7 +1543,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1578,7 +1578,7 @@
           "404": {
             "description": "The node does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1642,7 +1642,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/nodeCollectionResponseDocument"
                 }
@@ -1664,7 +1664,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1674,7 +1674,7 @@
           "404": {
             "description": "The node does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1820,7 +1820,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/nodeIdentifierCollectionResponseDocument"
                 }
@@ -1842,7 +1842,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1852,7 +1852,7 @@
           "404": {
             "description": "The node does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1965,7 +1965,7 @@
         "requestBody": {
           "description": "The identities of the nodes to add to the children relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -1984,7 +1984,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1994,7 +1994,7 @@
           "404": {
             "description": "The node or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2004,7 +2004,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2014,7 +2014,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2045,7 +2045,7 @@
         "requestBody": {
           "description": "The identities of the nodes to assign to the children relationship, or an empty array to clear the relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -2064,7 +2064,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2074,7 +2074,7 @@
           "404": {
             "description": "The node or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2084,7 +2084,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2094,7 +2094,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2125,7 +2125,7 @@
         "requestBody": {
           "description": "The identities of the nodes to remove from the children relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -2144,7 +2144,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2154,7 +2154,7 @@
           "404": {
             "description": "The node or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2164,7 +2164,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2174,7 +2174,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2238,7 +2238,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/nullableSecondaryNodeResponseDocument"
                 }
@@ -2260,7 +2260,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2270,7 +2270,7 @@
           "404": {
             "description": "The node does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2416,7 +2416,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/nullableNodeIdentifierResponseDocument"
                 }
@@ -2438,7 +2438,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2448,7 +2448,7 @@
           "404": {
             "description": "The node does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2561,7 +2561,7 @@
         "requestBody": {
           "description": "The identity of the node to assign to the parent relationship, or `null` to clear the relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -2580,7 +2580,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2590,7 +2590,7 @@
           "404": {
             "description": "The node or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2600,7 +2600,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2610,7 +2610,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2674,7 +2674,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/nameValuePairCollectionResponseDocument"
                 }
@@ -2696,7 +2696,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2706,7 +2706,7 @@
           "404": {
             "description": "The node does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2852,7 +2852,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/nameValuePairIdentifierCollectionResponseDocument"
                 }
@@ -2874,7 +2874,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2884,7 +2884,7 @@
           "404": {
             "description": "The node does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2997,7 +2997,7 @@
         "requestBody": {
           "description": "The identities of the nameValuePairs to add to the values relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -3016,7 +3016,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3026,7 +3026,7 @@
           "404": {
             "description": "The node or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3036,7 +3036,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3046,7 +3046,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3077,7 +3077,7 @@
         "requestBody": {
           "description": "The identities of the nameValuePairs to assign to the values relationship, or an empty array to clear the relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -3096,7 +3096,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3106,7 +3106,7 @@
           "404": {
             "description": "The node or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3116,7 +3116,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3126,7 +3126,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3157,7 +3157,7 @@
         "requestBody": {
           "description": "The identities of the nameValuePairs to remove from the values relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -3176,7 +3176,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3186,7 +3186,7 @@
           "404": {
             "description": "The node or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3196,7 +3196,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3206,7 +3206,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3220,88 +3220,208 @@
   "components": {
     "schemas": {
       "attributesInCreateNameValuePairRequest": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRequest"
           },
-          "value": {
-            "type": "string",
-            "nullable": true
+          {
+            "required": [
+              "name"
+            ],
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "attributesInCreateNodeRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRequest"
+          },
+          {
+            "required": [
+              "name"
+            ],
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "comment": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInCreateRequest": {
         "required": [
-          "name"
+          "openapi:discriminator"
         ],
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string"
-          },
-          "comment": {
-            "type": "string",
-            "nullable": true
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "nameValuePairs": "#/components/schemas/attributesInCreateNameValuePairRequest",
+            "nodes": "#/components/schemas/attributesInCreateNodeRequest"
+          }
+        },
+        "x-abstract": true
       },
       "attributesInNameValuePairResponse": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
           },
-          "value": {
-            "type": "string",
-            "nullable": true
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "attributesInNodeResponse": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
           },
-          "comment": {
-            "type": "string",
-            "nullable": true
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "comment": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
-      "attributesInUpdateNameValuePairRequest": {
+      "attributesInResponse": {
+        "required": [
+          "openapi:discriminator"
+        ],
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string"
-          },
-          "value": {
-            "type": "string",
-            "nullable": true
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "nameValuePairs": "#/components/schemas/attributesInNameValuePairResponse",
+            "nodes": "#/components/schemas/attributesInNodeResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInUpdateNameValuePairRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "attributesInUpdateNodeRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "comment": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInUpdateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string"
-          },
-          "comment": {
-            "type": "string",
-            "nullable": true
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "nameValuePairs": "#/components/schemas/attributesInUpdateNameValuePairRequest",
+            "nodes": "#/components/schemas/attributesInUpdateNodeRequest"
+          }
+        },
+        "x-abstract": true
       },
       "createNameValuePairRequestDocument": {
         "required": [
@@ -3350,77 +3470,61 @@
         "additionalProperties": false
       },
       "dataInCreateNameValuePairRequest": {
-        "required": [
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nameValuePairResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInCreateRequest"
           },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInCreateNameValuePairRequest"
+          {
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCreateNameValuePairRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInCreateNameValuePairRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationshipsInCreateNameValuePairRequest"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "dataInCreateNodeRequest": {
-        "required": [
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nodeResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInCreateRequest"
           },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInCreateNodeRequest"
+          {
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCreateNodeRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInCreateNodeRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationshipsInCreateNodeRequest"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "dataInNameValuePairResponse": {
@@ -3510,89 +3614,77 @@
         "additionalProperties": false
       },
       "dataInUpdateNameValuePairRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nameValuePairResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInUpdateRequest"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "int64"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInUpdateNameValuePairRequest"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInUpdateNameValuePairRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInUpdateNameValuePairRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationshipsInUpdateNameValuePairRequest"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "dataInUpdateNodeRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nodeResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInUpdateRequest"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "int64"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInUpdateNodeRequest"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInUpdateNodeRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInUpdateNodeRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationshipsInUpdateNodeRequest"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "errorLinks": {
@@ -3717,6 +3809,37 @@
         },
         "additionalProperties": false
       },
+      "identifierInRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "nameValuePairs": "#/components/schemas/nameValuePairIdentifierInRequest",
+            "nodes": "#/components/schemas/nodeIdentifierInRequest"
+          }
+        },
+        "x-abstract": true
+      },
       "meta": {
         "type": "object",
         "additionalProperties": {
@@ -3790,32 +3913,26 @@
         "additionalProperties": false
       },
       "nameValuePairIdentifierInRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nameValuePairResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/identifierInRequest"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "int64"
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "nameValuePairIdentifierInResponse": {
@@ -3920,32 +4037,26 @@
         "additionalProperties": false
       },
       "nodeIdentifierInRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nodeResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/identifierInRequest"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "int64"
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "nodeIdentifierInResponse": {
@@ -4223,127 +4334,247 @@
         "additionalProperties": false
       },
       "relationshipsInCreateNameValuePairRequest": {
-        "required": [
-          "owner"
-        ],
-        "type": "object",
-        "properties": {
-          "owner": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toOneNodeInRequest"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInCreateRequest"
+          },
+          {
+            "required": [
+              "owner"
+            ],
+            "type": "object",
+            "properties": {
+              "owner": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneNodeInRequest"
+                  }
+                ]
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "relationshipsInCreateNodeRequest": {
-        "type": "object",
-        "properties": {
-          "values": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyNameValuePairInRequest"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInCreateRequest"
           },
-          "parent": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOneNodeInRequest"
+          {
+            "type": "object",
+            "properties": {
+              "values": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyNameValuePairInRequest"
+                  }
+                ]
+              },
+              "parent": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOneNodeInRequest"
+                  }
+                ]
+              },
+              "children": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyNodeInRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "children": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyNodeInRequest"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
-      "relationshipsInNameValuePairResponse": {
+      "relationshipsInCreateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
         "type": "object",
         "properties": {
-          "owner": {
+          "openapi:discriminator": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/toOneNodeInResponse"
+                "$ref": "#/components/schemas/resourceType"
               }
             ]
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "nameValuePairs": "#/components/schemas/relationshipsInCreateNameValuePairRequest",
+            "nodes": "#/components/schemas/relationshipsInCreateNodeRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInNameValuePairResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "owner": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneNodeInResponse"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "relationshipsInNodeResponse": {
-        "type": "object",
-        "properties": {
-          "values": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyNameValuePairInResponse"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInResponse"
           },
-          "parent": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOneNodeInResponse"
+          {
+            "type": "object",
+            "properties": {
+              "values": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyNameValuePairInResponse"
+                  }
+                ]
+              },
+              "parent": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOneNodeInResponse"
+                  }
+                ]
+              },
+              "children": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyNodeInResponse"
+                  }
+                ]
               }
-            ]
-          },
-          "children": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyNodeInResponse"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
-      "relationshipsInUpdateNameValuePairRequest": {
+      "relationshipsInResponse": {
+        "required": [
+          "openapi:discriminator"
+        ],
         "type": "object",
         "properties": {
-          "owner": {
+          "openapi:discriminator": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/toOneNodeInRequest"
+                "$ref": "#/components/schemas/resourceType"
               }
             ]
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "nameValuePairs": "#/components/schemas/relationshipsInNameValuePairResponse",
+            "nodes": "#/components/schemas/relationshipsInNodeResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInUpdateNameValuePairRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "owner": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneNodeInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "relationshipsInUpdateNodeRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "values": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyNameValuePairInRequest"
+                  }
+                ]
+              },
+              "parent": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOneNodeInRequest"
+                  }
+                ]
+              },
+              "children": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyNodeInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInUpdateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
         "type": "object",
         "properties": {
-          "values": {
+          "openapi:discriminator": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/toManyNameValuePairInRequest"
-              }
-            ]
-          },
-          "parent": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOneNodeInRequest"
-              }
-            ]
-          },
-          "children": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyNodeInRequest"
+                "$ref": "#/components/schemas/resourceType"
               }
             ]
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "nameValuePairs": "#/components/schemas/relationshipsInUpdateNameValuePairRequest",
+            "nodes": "#/components/schemas/relationshipsInUpdateNodeRequest"
+          }
+        },
+        "x-abstract": true
       },
       "resourceCollectionTopLevelLinks": {
         "type": "object",
@@ -4411,6 +4642,37 @@
         },
         "additionalProperties": false
       },
+      "resourceInCreateRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "nameValuePairs": "#/components/schemas/dataInCreateNameValuePairRequest",
+            "nodes": "#/components/schemas/dataInCreateNodeRequest"
+          }
+        },
+        "x-abstract": true
+      },
       "resourceInResponse": {
         "required": [
           "type"
@@ -4438,6 +4700,37 @@
           "mapping": {
             "nameValuePairs": "#/components/schemas/dataInNameValuePairResponse",
             "nodes": "#/components/schemas/dataInNodeResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "resourceInUpdateRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "nameValuePairs": "#/components/schemas/dataInUpdateNameValuePairRequest",
+            "nodes": "#/components/schemas/dataInUpdateNodeRequest"
           }
         },
         "x-abstract": true

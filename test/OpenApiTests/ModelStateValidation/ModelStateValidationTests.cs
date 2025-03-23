@@ -33,7 +33,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.alternativeId").With(alternativeIdElement =>
+        document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.alternativeId").With(alternativeIdElement =>
         {
             alternativeIdElement.Should().HaveProperty("type", "string");
             alternativeIdElement.Should().HaveProperty("format", "uuid");
@@ -48,7 +48,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.firstName").With(firstNameElement =>
+        document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.firstName").With(firstNameElement =>
         {
             firstNameElement.Should().HaveProperty("type", "string");
             firstNameElement.Should().HaveProperty("maxLength", 20);
@@ -64,7 +64,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.lastName").With(lastNameElement =>
+        document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.lastName").With(lastNameElement =>
         {
             lastNameElement.Should().HaveProperty("type", "string");
             lastNameElement.Should().NotContainPath("minLength");
@@ -79,7 +79,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.userName").With(userNameElement =>
+        document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.userName").With(userNameElement =>
         {
             userNameElement.Should().HaveProperty("type", "string");
             userNameElement.Should().HaveProperty("maxLength", 18);
@@ -95,7 +95,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.userName").With(userNameElement =>
+        document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.userName").With(userNameElement =>
         {
             userNameElement.Should().HaveProperty("type", "string");
             userNameElement.Should().HaveProperty("pattern", "^[a-zA-Z]+$");
@@ -110,7 +110,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.creditCard").With(creditCardElement =>
+        document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.creditCard").With(creditCardElement =>
         {
             creditCardElement.Should().HaveProperty("type", "string");
             creditCardElement.Should().HaveProperty("format", "credit-card");
@@ -125,7 +125,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.email").With(emailElement =>
+        document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.email").With(emailElement =>
         {
             emailElement.Should().HaveProperty("type", "string");
             emailElement.Should().HaveProperty("format", "email");
@@ -140,7 +140,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.password").With(passwordElement =>
+        document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.password").With(passwordElement =>
         {
             passwordElement.Should().HaveProperty("type", "string");
             passwordElement.Should().HaveProperty("format", "byte");
@@ -157,7 +157,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.phone").With(phoneElement =>
+        document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.phone").With(phoneElement =>
         {
             phoneElement.Should().HaveProperty("type", "string");
             phoneElement.Should().HaveProperty("format", "tel");
@@ -172,7 +172,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.age").With(ageElement =>
+        document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.age").With(ageElement =>
         {
             ageElement.Should().HaveProperty("type", "number");
             ageElement.Should().HaveProperty("format", "double");
@@ -191,7 +191,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.profilePicture").With(profilePictureElement =>
+        document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.profilePicture").With(profilePictureElement =>
         {
             profilePictureElement.Should().HaveProperty("type", "string");
             profilePictureElement.Should().HaveProperty("format", "uri");
@@ -206,7 +206,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.backgroundPicture").With(backgroundPictureElement =>
+        document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.backgroundPicture").With(backgroundPictureElement =>
         {
             backgroundPictureElement.Should().HaveProperty("type", "string");
             backgroundPictureElement.Should().HaveProperty("format", "uri");
@@ -221,7 +221,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.tags").With(tagsElement =>
+        document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.tags").With(tagsElement =>
         {
             tagsElement.Should().HaveProperty("type", "array");
             tagsElement.Should().HaveProperty("maxItems", 10);
@@ -242,7 +242,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.nextRevalidation").With(nextRevalidationElement =>
+        document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.nextRevalidation").With(nextRevalidationElement =>
         {
             nextRevalidationElement.Should().HaveProperty("type", "string");
             nextRevalidationElement.Should().HaveProperty("format", "date-span");
@@ -257,7 +257,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.validatedAt").With(validatedAtElement =>
+        document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.validatedAt").With(validatedAtElement =>
         {
             validatedAtElement.Should().HaveProperty("type", "string");
             validatedAtElement.Should().HaveProperty("format", "date-time");
@@ -272,7 +272,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.validatedAtDate").With(validatedDateAtElement =>
+        document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.validatedAtDate").With(validatedDateAtElement =>
         {
             validatedDateAtElement.Should().HaveProperty("type", "string");
             validatedDateAtElement.Should().HaveProperty("format", "date");
@@ -287,7 +287,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath($"components.schemas.{modelName}.properties.validatedAtTime").With(validatedTimeAtElement =>
+        document.Should().ContainPath($"components.schemas.{modelName}.allOf[1].properties.validatedAtTime").With(validatedTimeAtElement =>
         {
             validatedTimeAtElement.Should().HaveProperty("type", "string");
             validatedTimeAtElement.Should().HaveProperty("format", "time");

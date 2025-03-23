@@ -76,7 +76,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.AssignedTodoIt
         {
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
-            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json");
+            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=openapi");
             return requestInfo;
         }
 

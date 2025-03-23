@@ -4,7 +4,6 @@
 #pragma warning disable CS0618
 using Microsoft.Kiota.Abstractions.Extensions;
 using Microsoft.Kiota.Abstractions.Serialization;
-using Microsoft.Kiota.Abstractions.Store;
 using Microsoft.Kiota.Abstractions;
 using System.Collections.Generic;
 using System.IO;
@@ -13,12 +12,9 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
 {
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     #pragma warning disable CS1591
-    public partial class AttributesInEnrollmentResponse : IBackedModel, IParsable
+    public partial class AttributesInEnrollmentResponse : global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AttributesInResponse, IParsable
     #pragma warning restore CS1591
     {
-        /// <summary>Stores model information.</summary>
-        public IBackingStore BackingStore { get; private set; }
-
         /// <summary>The enrolledAt property</summary>
         public Date? EnrolledAt
         {
@@ -41,19 +37,11 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
         }
 
         /// <summary>
-        /// Instantiates a new <see cref="global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AttributesInEnrollmentResponse"/> and sets the default values.
-        /// </summary>
-        public AttributesInEnrollmentResponse()
-        {
-            BackingStore = BackingStoreFactorySingleton.Instance.CreateBackingStore();
-        }
-
-        /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
         /// <returns>A <see cref="global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AttributesInEnrollmentResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AttributesInEnrollmentResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AttributesInEnrollmentResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
             return new global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.AttributesInEnrollmentResponse();
@@ -63,9 +51,9 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
         /// The deserialization information for the current model
         /// </summary>
         /// <returns>A IDictionary&lt;string, Action&lt;IParseNode&gt;&gt;</returns>
-        public virtual IDictionary<string, Action<IParseNode>> GetFieldDeserializers()
+        public override IDictionary<string, Action<IParseNode>> GetFieldDeserializers()
         {
-            return new Dictionary<string, Action<IParseNode>>
+            return new Dictionary<string, Action<IParseNode>>(base.GetFieldDeserializers())
             {
                 { "enrolledAt", n => { EnrolledAt = n.GetDateValue(); } },
                 { "graduatedAt", n => { GraduatedAt = n.GetDateValue(); } },
@@ -77,9 +65,10 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
         /// Serializes information the current object
         /// </summary>
         /// <param name="writer">Serialization writer to use to serialize this model</param>
-        public virtual void Serialize(ISerializationWriter writer)
+        public override void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
+            base.Serialize(writer);
             writer.WriteDateValue("enrolledAt", EnrolledAt);
             writer.WriteDateValue("graduatedAt", GraduatedAt);
         }

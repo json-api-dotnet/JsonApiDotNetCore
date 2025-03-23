@@ -26,7 +26,7 @@ public sealed class NullabilityTests : IClassFixture<OpenApiTestContext<OpenApiS
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath("components.schemas.attributesInResourceResponse.properties").With(schemaProperties =>
+        document.Should().ContainPath("components.schemas.attributesInResourceResponse.allOf[1].properties").With(schemaProperties =>
         {
             schemaProperties.Should().ContainPath(jsonPropertyName).With(schemaProperty =>
             {
@@ -46,7 +46,7 @@ public sealed class NullabilityTests : IClassFixture<OpenApiTestContext<OpenApiS
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath("components.schemas.attributesInResourceResponse.properties").With(schemaProperties =>
+        document.Should().ContainPath("components.schemas.attributesInResourceResponse.allOf[1].properties").With(schemaProperties =>
         {
             schemaProperties.Should().ContainPath(jsonPropertyName).With(schemaProperty =>
             {
@@ -63,7 +63,7 @@ public sealed class NullabilityTests : IClassFixture<OpenApiTestContext<OpenApiS
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath("components.schemas.relationshipsInCreateResourceRequest.properties").With(schemaProperties =>
+        document.Should().ContainPath("components.schemas.relationshipsInCreateResourceRequest.allOf[1].properties").With(schemaProperties =>
         {
             schemaProperties.Should().ContainPath($"{jsonPropertyName}.allOf[0].$ref").WithSchemaReferenceId(schemaReferenceId =>
             {
@@ -85,7 +85,7 @@ public sealed class NullabilityTests : IClassFixture<OpenApiTestContext<OpenApiS
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath("components.schemas.relationshipsInCreateResourceRequest.properties").With(schemaProperties =>
+        document.Should().ContainPath("components.schemas.relationshipsInCreateResourceRequest.allOf[1].properties").With(schemaProperties =>
         {
             schemaProperties.Should().ContainPath($"{jsonPropertyName}.allOf[0].$ref").WithSchemaReferenceId(schemaReferenceId =>
             {

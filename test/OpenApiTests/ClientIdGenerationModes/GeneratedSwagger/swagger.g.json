@@ -35,7 +35,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the game to create.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -61,7 +61,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryGameResponseDocument"
                 }
@@ -74,7 +74,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -84,7 +84,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -94,7 +94,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -104,7 +104,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -139,7 +139,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the playerGroup to create.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -165,7 +165,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryPlayerGroupResponseDocument"
                 }
@@ -178,7 +178,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -188,7 +188,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -198,7 +198,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -208,7 +208,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -218,7 +218,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -253,7 +253,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the player to create.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -279,7 +279,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/primaryPlayerResponseDocument"
                 }
@@ -292,7 +292,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -302,7 +302,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -312,7 +312,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -322,7 +322,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -336,75 +336,173 @@
   "components": {
     "schemas": {
       "attributesInCreateGameRequest": {
-        "required": [
-          "title"
-        ],
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRequest"
           },
-          "purchasePrice": {
-            "type": "number",
-            "format": "double"
+          {
+            "required": [
+              "title"
+            ],
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "purchasePrice": {
+                "type": "number",
+                "format": "double"
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "attributesInCreatePlayerGroupRequest": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRequest"
+          },
+          {
+            "required": [
+              "name"
+            ],
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "attributesInCreatePlayerRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRequest"
+          },
+          {
+            "required": [
+              "userName"
+            ],
+            "type": "object",
+            "properties": {
+              "userName": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInCreateRequest": {
         "required": [
-          "userName"
+          "openapi:discriminator"
         ],
         "type": "object",
         "properties": {
-          "userName": {
-            "type": "string"
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "games": "#/components/schemas/attributesInCreateGameRequest",
+            "playerGroups": "#/components/schemas/attributesInCreatePlayerGroupRequest",
+            "players": "#/components/schemas/attributesInCreatePlayerRequest"
+          }
+        },
+        "x-abstract": true
       },
       "attributesInGameResponse": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
           },
-          "purchasePrice": {
-            "type": "number",
-            "format": "double"
+          {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "purchasePrice": {
+                "type": "number",
+                "format": "double"
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "attributesInPlayerGroupResponse": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "attributesInPlayerResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "userName": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInResponse": {
+        "required": [
+          "openapi:discriminator"
+        ],
         "type": "object",
         "properties": {
-          "userName": {
-            "type": "string"
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "games": "#/components/schemas/attributesInGameResponse",
+            "playerGroups": "#/components/schemas/attributesInPlayerGroupResponse",
+            "players": "#/components/schemas/attributesInPlayerResponse"
+          }
+        },
+        "x-abstract": true
       },
       "createGameRequestDocument": {
         "required": [
@@ -476,118 +574,96 @@
         "additionalProperties": false
       },
       "dataInCreateGameRequest": {
-        "required": [
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/gameResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInCreateRequest"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "uuid"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInCreateGameRequest"
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "uuid"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCreateGameRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "dataInCreatePlayerGroupRequest": {
-        "required": [
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/playerGroupResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInCreateRequest"
           },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInCreatePlayerGroupRequest"
+          {
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCreatePlayerGroupRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInCreatePlayerGroupRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationshipsInCreatePlayerGroupRequest"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "dataInCreatePlayerRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/playerResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInCreateRequest"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "uuid"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInCreatePlayerRequest"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "uuid"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCreatePlayerRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInCreatePlayerRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationshipsInCreatePlayerRequest"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "dataInGameResponse": {
@@ -835,32 +911,26 @@
         "additionalProperties": false
       },
       "gameIdentifierInRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/gameResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/identifierInRequest"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "uuid"
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "uuid"
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "gameIdentifierInResponse": {
@@ -898,15 +968,8 @@
         ],
         "type": "string"
       },
-      "meta": {
-        "type": "object",
-        "additionalProperties": {
-          "nullable": true
-        }
-      },
-      "playerGroupIdentifierInRequest": {
+      "identifierInRequest": {
         "required": [
-          "id",
           "type"
         ],
         "type": "object",
@@ -914,14 +977,9 @@
           "type": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/playerGroupResourceType"
+                "$ref": "#/components/schemas/resourceType"
               }
             ]
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "int64"
           },
           "meta": {
             "allOf": [
@@ -931,6 +989,44 @@
             ]
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "games": "#/components/schemas/gameIdentifierInRequest",
+            "playerGroups": "#/components/schemas/playerGroupIdentifierInRequest",
+            "players": "#/components/schemas/playerIdentifierInRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "meta": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        }
+      },
+      "playerGroupIdentifierInRequest": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/identifierInRequest"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "playerGroupIdentifierInResponse": {
@@ -969,32 +1065,26 @@
         "type": "string"
       },
       "playerIdentifierInRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/playerResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/identifierInRequest"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "uuid"
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "uuid"
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "playerIdentifierInResponse": {
@@ -1156,70 +1246,182 @@
         "additionalProperties": false
       },
       "relationshipsInCreatePlayerGroupRequest": {
-        "type": "object",
-        "properties": {
-          "players": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyPlayerInRequest"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInCreateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "players": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyPlayerInRequest"
+                  }
+                ]
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "relationshipsInCreatePlayerRequest": {
-        "type": "object",
-        "properties": {
-          "ownedGames": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyGameInRequest"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInCreateRequest"
           },
-          "memberOf": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyPlayerGroupInRequest"
+          {
+            "type": "object",
+            "properties": {
+              "ownedGames": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyGameInRequest"
+                  }
+                ]
+              },
+              "memberOf": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyPlayerGroupInRequest"
+                  }
+                ]
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
-      "relationshipsInPlayerGroupResponse": {
+      "relationshipsInCreateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
         "type": "object",
         "properties": {
-          "players": {
+          "openapi:discriminator": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/toManyPlayerInResponse"
+                "$ref": "#/components/schemas/resourceType"
               }
             ]
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "playerGroups": "#/components/schemas/relationshipsInCreatePlayerGroupRequest",
+            "players": "#/components/schemas/relationshipsInCreatePlayerRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInPlayerGroupResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "players": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyPlayerInResponse"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "relationshipsInPlayerResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "ownedGames": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyGameInResponse"
+                  }
+                ]
+              },
+              "memberOf": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyPlayerGroupInResponse"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInResponse": {
+        "required": [
+          "openapi:discriminator"
+        ],
         "type": "object",
         "properties": {
-          "ownedGames": {
+          "openapi:discriminator": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/toManyGameInResponse"
-              }
-            ]
-          },
-          "memberOf": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyPlayerGroupInResponse"
+                "$ref": "#/components/schemas/resourceType"
               }
             ]
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "playerGroups": "#/components/schemas/relationshipsInPlayerGroupResponse",
+            "players": "#/components/schemas/relationshipsInPlayerResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "resourceInCreateRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "games": "#/components/schemas/dataInCreateGameRequest",
+            "playerGroups": "#/components/schemas/dataInCreatePlayerGroupRequest",
+            "players": "#/components/schemas/dataInCreatePlayerRequest"
+          }
+        },
+        "x-abstract": true
       },
       "resourceInResponse": {
         "required": [
