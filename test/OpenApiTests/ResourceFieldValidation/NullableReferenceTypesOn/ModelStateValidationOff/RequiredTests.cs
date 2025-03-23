@@ -92,7 +92,10 @@ public sealed class RequiredTests : IClassFixture<OpenApiTestContext<MsvOffStart
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().NotContainPath("components.schemas.resourceAttributesInPatchRequest.required");
+        document.Should().ContainPath("components.schemas.attributesInUpdateResourceRequest").With(attributesSchema =>
+        {
+            attributesSchema.Should().NotContainPath("required");
+        });
     }
 
     [Fact]
@@ -102,6 +105,9 @@ public sealed class RequiredTests : IClassFixture<OpenApiTestContext<MsvOffStart
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().NotContainPath("components.schemas.resourceRelationshipsInPatchRequest.required");
+        document.Should().ContainPath("components.schemas.relationshipsInUpdateResourceRequest").With(relationshipsSchema =>
+        {
+            relationshipsSchema.Should().NotContainPath("required");
+        });
     }
 }

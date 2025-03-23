@@ -204,7 +204,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/countryPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryCountryResponseDocument"
                 }
               }
             }
@@ -321,7 +321,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/countryPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryCountryResponseDocument"
                 }
               }
             }
@@ -495,7 +495,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/countryPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryCountryResponseDocument"
                 }
               }
             }
@@ -1180,6 +1180,19 @@
   },
   "components": {
     "schemas": {
+      "attributesInCountryResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "population": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
       "attributesInCreateCountryRequest": {
         "required": [
           "name"
@@ -1196,20 +1209,19 @@
         },
         "additionalProperties": false
       },
-      "attributesInUpdateCountryRequest": {
+      "attributesInLanguageResponse": {
         "type": "object",
         "properties": {
-          "name": {
+          "code": {
             "type": "string"
           },
-          "population": {
-            "type": "integer",
-            "format": "int64"
+          "name": {
+            "type": "string"
           }
         },
         "additionalProperties": false
       },
-      "countryAttributesInResponse": {
+      "attributesInUpdateCountryRequest": {
         "type": "object",
         "properties": {
           "name": {
@@ -1239,112 +1251,19 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/countryDataInResponse"
+              "$ref": "#/components/schemas/dataInCountryResponse"
             }
           },
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/dataInResponse"
+              "$ref": "#/components/schemas/resourceInResponse"
             }
           },
           "meta": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "countryDataInResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/dataInResponse"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "minLength": 1,
-                "type": "string",
-                "format": "uuid"
-              },
-              "attributes": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/countryAttributesInResponse"
-                  }
-                ]
-              },
-              "relationships": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/countryRelationshipsInResponse"
-                  }
-                ]
-              },
-              "links": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/resourceLinks"
-                  }
-                ]
-              }
-            },
-            "additionalProperties": false
-          }
-        ],
-        "additionalProperties": false
-      },
-      "countryPrimaryResponseDocument": {
-        "required": [
-          "data",
-          "links"
-        ],
-        "type": "object",
-        "properties": {
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceTopLevelLinks"
-              }
-            ]
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/countryDataInResponse"
-              }
-            ]
-          },
-          "included": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/dataInResponse"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "countryRelationshipsInResponse": {
-        "type": "object",
-        "properties": {
-          "languages": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyLanguageInResponse"
               }
             ]
           }
@@ -1378,6 +1297,49 @@
             ]
           }
         },
+        "additionalProperties": false
+      },
+      "dataInCountryResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "uuid"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCountryResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInCountryResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "dataInCreateCountryRequest": {
@@ -1417,36 +1379,41 @@
         },
         "additionalProperties": false
       },
-      "dataInResponse": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceType"
-              }
-            ]
+      "dataInLanguageResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInResponse"
           },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "uuid"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInLanguageResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
-        "additionalProperties": false,
-        "discriminator": {
-          "propertyName": "type",
-          "mapping": {
-            "countries": "#/components/schemas/countryDataInResponse",
-            "languages": "#/components/schemas/languageDataInResponse"
-          }
-        },
-        "x-abstract": true
+        ],
+        "additionalProperties": false
       },
       "dataInUpdateCountryRequest": {
         "required": [
@@ -1613,18 +1580,6 @@
         },
         "additionalProperties": false
       },
-      "languageAttributesInResponse": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "languageCollectionResponseDocument": {
         "required": [
           "data",
@@ -1642,13 +1597,13 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/languageDataInResponse"
+              "$ref": "#/components/schemas/dataInLanguageResponse"
             }
           },
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/dataInResponse"
+              "$ref": "#/components/schemas/resourceInResponse"
             }
           },
           "meta": {
@@ -1659,42 +1614,6 @@
             ]
           }
         },
-        "additionalProperties": false
-      },
-      "languageDataInResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/dataInResponse"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "minLength": 1,
-                "type": "string",
-                "format": "uuid"
-              },
-              "attributes": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/languageAttributesInResponse"
-                  }
-                ]
-              },
-              "links": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/resourceLinks"
-                  }
-                ]
-              }
-            },
-            "additionalProperties": false
-          }
-        ],
         "additionalProperties": false
       },
       "languageIdentifierCollectionResponseDocument": {
@@ -1797,6 +1716,43 @@
           "nullable": true
         }
       },
+      "primaryCountryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCountryResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
       "relationshipLinks": {
         "type": "object",
         "properties": {
@@ -1805,6 +1761,19 @@
           },
           "related": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "relationshipsInCountryResponse": {
+        "type": "object",
+        "properties": {
+          "languages": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyLanguageInResponse"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1885,6 +1854,37 @@
           }
         },
         "additionalProperties": false
+      },
+      "resourceInResponse": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "countries": "#/components/schemas/dataInCountryResponse",
+            "languages": "#/components/schemas/dataInLanguageResponse"
+          }
+        },
+        "x-abstract": true
       },
       "resourceLinks": {
         "type": "object",

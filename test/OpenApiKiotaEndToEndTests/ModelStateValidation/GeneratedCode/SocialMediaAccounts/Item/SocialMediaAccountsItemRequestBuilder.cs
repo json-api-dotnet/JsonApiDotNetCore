@@ -40,7 +40,7 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMed
         /// <summary>
         /// Updates an existing socialMediaAccount.
         /// </summary>
-        /// <returns>A <see cref="global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountPrimaryResponseDocument"/></returns>
+        /// <returns>A <see cref="global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.PrimarySocialMediaAccountResponseDocument"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
@@ -48,7 +48,7 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMed
         /// <exception cref="global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
         /// <exception cref="global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ErrorResponseDocument">When receiving a 409 status code</exception>
         /// <exception cref="global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ErrorResponseDocument">When receiving a 422 status code</exception>
-        public async Task<global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountPrimaryResponseDocument?> PatchAsync(global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.UpdateSocialMediaAccountRequestDocument body, Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMediaAccounts.Item.SocialMediaAccountsItemRequestBuilder.SocialMediaAccountsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.PrimarySocialMediaAccountResponseDocument?> PatchAsync(global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.UpdateSocialMediaAccountRequestDocument body, Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMediaAccounts.Item.SocialMediaAccountsItemRequestBuilder.SocialMediaAccountsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPatchRequestInformation(body, requestConfiguration);
@@ -59,7 +59,7 @@ namespace OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.SocialMed
                 { "409", global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
                 { "422", global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountPrimaryResponseDocument>(requestInfo, global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.SocialMediaAccountPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.PrimarySocialMediaAccountResponseDocument>(requestInfo, global::OpenApiKiotaEndToEndTests.ModelStateValidation.GeneratedCode.Models.PrimarySocialMediaAccountResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

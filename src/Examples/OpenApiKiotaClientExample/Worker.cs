@@ -206,7 +206,7 @@ public sealed class Worker(ExampleApiClient apiClient, IHostApplicationLifetime 
 
         OperationsResponseDocument? operationsResponse = await _apiClient.Api.Operations.PostAsync(operationsRequest, cancellationToken: cancellationToken);
 
-        var newTodoItem = (TodoItemDataInResponse)operationsResponse!.AtomicResults!.ElementAt(3).Data!;
+        var newTodoItem = (DataInTodoItemResponse)operationsResponse!.AtomicResults!.ElementAt(3).Data!;
         Console.WriteLine($"Created todo-item with ID {newTodoItem.Id}: {newTodoItem.Attributes!.Description}.");
     }
 }

@@ -40,7 +40,7 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Player
         /// <summary>
         /// Creates a new player.
         /// </summary>
-        /// <returns>A <see cref="global::OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.PlayerPrimaryResponseDocument"/></returns>
+        /// <returns>A <see cref="global::OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.PrimaryPlayerResponseDocument"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
@@ -48,7 +48,7 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Player
         /// <exception cref="global::OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
         /// <exception cref="global::OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument">When receiving a 409 status code</exception>
         /// <exception cref="global::OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument">When receiving a 422 status code</exception>
-        public async Task<global::OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.PlayerPrimaryResponseDocument?> PostAsync(global::OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.CreatePlayerRequestDocument body, Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Players.PlayersRequestBuilder.PlayersRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.PrimaryPlayerResponseDocument?> PostAsync(global::OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.CreatePlayerRequestDocument body, Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Players.PlayersRequestBuilder.PlayersRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPostRequestInformation(body, requestConfiguration);
@@ -59,7 +59,7 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Player
                 { "409", global::OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
                 { "422", global::OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.PlayerPrimaryResponseDocument>(requestInfo, global::OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.PlayerPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.PrimaryPlayerResponseDocument>(requestInfo, global::OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models.PrimaryPlayerResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

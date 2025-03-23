@@ -63,7 +63,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/socialMediaAccountPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primarySocialMediaAccountResponseDocument"
                 }
               }
             }
@@ -178,7 +178,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/socialMediaAccountPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primarySocialMediaAccountResponseDocument"
                 }
               }
             }
@@ -236,6 +236,111 @@
         "required": [
           "lastName"
         ],
+        "type": "object",
+        "properties": {
+          "alternativeId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "firstName": {
+            "maxLength": 20,
+            "minLength": 2,
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "userName": {
+            "maxLength": 18,
+            "minLength": 3,
+            "pattern": "^[a-zA-Z]+$",
+            "type": "string",
+            "nullable": true
+          },
+          "creditCard": {
+            "type": "string",
+            "format": "credit-card",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          },
+          "password": {
+            "maxLength": 60,
+            "minLength": 20,
+            "type": "string",
+            "format": "byte",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "format": "tel",
+            "nullable": true
+          },
+          "age": {
+            "maximum": 122.9,
+            "exclusiveMaximum": true,
+            "minimum": 0.1,
+            "exclusiveMinimum": true,
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "profilePicture": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "backgroundPicture": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "tags": {
+            "maxItems": 10,
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "countryCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "planet": {
+            "type": "string",
+            "nullable": true
+          },
+          "nextRevalidation": {
+            "type": "string",
+            "format": "date-span",
+            "nullable": true
+          },
+          "validatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "validatedAtDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "validatedAtTime": {
+            "type": "string",
+            "format": "time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "attributesInSocialMediaAccountResponse": {
         "type": "object",
         "properties": {
           "alternativeId": {
@@ -498,35 +603,41 @@
         },
         "additionalProperties": false
       },
-      "dataInResponse": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceType"
-              }
-            ]
+      "dataInSocialMediaAccountResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInResponse"
           },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "uuid"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInSocialMediaAccountResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
-        "additionalProperties": false,
-        "discriminator": {
-          "propertyName": "type",
-          "mapping": {
-            "socialMediaAccounts": "#/components/schemas/socialMediaAccountDataInResponse"
-          }
-        },
-        "x-abstract": true
+        ],
+        "additionalProperties": false
       },
       "dataInUpdateSocialMediaAccountRequest": {
         "required": [
@@ -692,6 +803,73 @@
           "nullable": true
         }
       },
+      "primarySocialMediaAccountResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInSocialMediaAccountResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceInResponse": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "socialMediaAccounts": "#/components/schemas/dataInSocialMediaAccountResponse"
+          }
+        },
+        "x-abstract": true
+      },
       "resourceLinks": {
         "type": "object",
         "properties": {
@@ -718,184 +896,6 @@
           "socialMediaAccounts"
         ],
         "type": "string"
-      },
-      "socialMediaAccountAttributesInResponse": {
-        "type": "object",
-        "properties": {
-          "alternativeId": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true
-          },
-          "firstName": {
-            "maxLength": 20,
-            "minLength": 2,
-            "type": "string",
-            "nullable": true
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "userName": {
-            "maxLength": 18,
-            "minLength": 3,
-            "pattern": "^[a-zA-Z]+$",
-            "type": "string",
-            "nullable": true
-          },
-          "creditCard": {
-            "type": "string",
-            "format": "credit-card",
-            "nullable": true
-          },
-          "email": {
-            "type": "string",
-            "format": "email",
-            "nullable": true
-          },
-          "password": {
-            "maxLength": 60,
-            "minLength": 20,
-            "type": "string",
-            "format": "byte",
-            "nullable": true
-          },
-          "phone": {
-            "type": "string",
-            "format": "tel",
-            "nullable": true
-          },
-          "age": {
-            "maximum": 122.9,
-            "exclusiveMaximum": true,
-            "minimum": 0.1,
-            "exclusiveMinimum": true,
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "profilePicture": {
-            "type": "string",
-            "format": "uri",
-            "nullable": true
-          },
-          "backgroundPicture": {
-            "type": "string",
-            "format": "uri",
-            "nullable": true
-          },
-          "tags": {
-            "maxItems": 10,
-            "minItems": 1,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "countryCode": {
-            "type": "string",
-            "nullable": true
-          },
-          "planet": {
-            "type": "string",
-            "nullable": true
-          },
-          "nextRevalidation": {
-            "type": "string",
-            "format": "date-span",
-            "nullable": true
-          },
-          "validatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "validatedAtDate": {
-            "type": "string",
-            "format": "date",
-            "nullable": true
-          },
-          "validatedAtTime": {
-            "type": "string",
-            "format": "time",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "socialMediaAccountDataInResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/dataInResponse"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "minLength": 1,
-                "type": "string",
-                "format": "uuid"
-              },
-              "attributes": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/socialMediaAccountAttributesInResponse"
-                  }
-                ]
-              },
-              "links": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/resourceLinks"
-                  }
-                ]
-              }
-            },
-            "additionalProperties": false
-          }
-        ],
-        "additionalProperties": false
-      },
-      "socialMediaAccountPrimaryResponseDocument": {
-        "required": [
-          "data",
-          "links"
-        ],
-        "type": "object",
-        "properties": {
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceTopLevelLinks"
-              }
-            ]
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/socialMediaAccountDataInResponse"
-              }
-            ]
-          },
-          "included": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/dataInResponse"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
       },
       "socialMediaAccountResourceType": {
         "enum": [

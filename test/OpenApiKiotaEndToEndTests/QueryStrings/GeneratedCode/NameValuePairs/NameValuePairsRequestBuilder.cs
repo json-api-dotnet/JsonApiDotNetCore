@@ -82,7 +82,7 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.NameValuePairs
         /// <summary>
         /// Creates a new nameValuePair.
         /// </summary>
-        /// <returns>A <see cref="global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairPrimaryResponseDocument"/></returns>
+        /// <returns>A <see cref="global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.PrimaryNameValuePairResponseDocument"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
@@ -91,7 +91,7 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.NameValuePairs
         /// <exception cref="global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
         /// <exception cref="global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument">When receiving a 409 status code</exception>
         /// <exception cref="global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument">When receiving a 422 status code</exception>
-        public async Task<global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairPrimaryResponseDocument?> PostAsync(global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.CreateNameValuePairRequestDocument body, Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.NameValuePairs.NameValuePairsRequestBuilder.NameValuePairsRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.PrimaryNameValuePairResponseDocument?> PostAsync(global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.CreateNameValuePairRequestDocument body, Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.NameValuePairs.NameValuePairsRequestBuilder.NameValuePairsRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPostRequestInformation(body, requestConfiguration);
@@ -103,7 +103,7 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.NameValuePairs
                 { "409", global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
                 { "422", global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairPrimaryResponseDocument>(requestInfo, global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NameValuePairPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.PrimaryNameValuePairResponseDocument>(requestInfo, global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.PrimaryNameValuePairResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

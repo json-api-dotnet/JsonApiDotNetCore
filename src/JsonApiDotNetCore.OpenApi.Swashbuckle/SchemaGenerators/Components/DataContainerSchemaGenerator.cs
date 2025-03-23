@@ -83,9 +83,9 @@ internal sealed class DataContainerSchemaGenerator
             ? dataProperty.PropertyType.GenericTypeArguments[0]
             : dataProperty.PropertyType;
 
-        if (innerPropertyType == typeof(ResourceData))
+        if (innerPropertyType == typeof(ResourceInResponse))
         {
-            return typeof(ResourceDataInResponse<>).MakeGenericType(resourceType.ClrType);
+            return typeof(DataInResponse<>).MakeGenericType(resourceType.ClrType);
         }
 
         if (!innerPropertyType.IsGenericType)
@@ -100,7 +100,7 @@ internal sealed class DataContainerSchemaGenerator
     {
         Type dataOpenType = dataConstructedType.GetGenericTypeDefinition();
 
-        if (dataOpenType == typeof(ResourceDataInResponse<>))
+        if (dataOpenType == typeof(DataInResponse<>))
         {
             var resourceSchemaType = ResourceSchemaType.Create(dataConstructedType, _resourceGraph);
 
@@ -113,7 +113,7 @@ internal sealed class DataContainerSchemaGenerator
 
     private void MapResourceDataInResponseDerivedTypeInDiscriminator(ResourceType resourceType, SchemaRepository schemaRepository)
     {
-        Type resourceDataConstructedType = typeof(ResourceDataInResponse<>).MakeGenericType(resourceType.ClrType);
+        Type resourceDataConstructedType = typeof(DataInResponse<>).MakeGenericType(resourceType.ClrType);
         OpenApiSchema referenceSchemaForResourceData = _dataSchemaGenerator.GenerateSchema(resourceDataConstructedType, schemaRepository);
 
         _abstractResourceDataSchemaGenerator.MapDiscriminator(resourceDataConstructedType, referenceSchemaForResourceData, schemaRepository);

@@ -31,19 +31,19 @@ internal sealed class LinksVisibilitySchemaGenerator
 
     private static readonly Dictionary<Type, LinkTypes> LinksInJsonApiSchemaTypes = new()
     {
-        [typeof(NullableSecondaryResourceResponseDocument<>)] = ResourceTopLinkTypes,
-        [typeof(PrimaryResourceResponseDocument<>)] = ResourceTopLinkTypes,
-        [typeof(SecondaryResourceResponseDocument<>)] = ResourceTopLinkTypes,
-        [typeof(ResourceCollectionResponseDocument<>)] = ResourceCollectionTopLinkTypes,
-        [typeof(ResourceIdentifierResponseDocument<>)] = ResourceIdentifierTopLinkTypes,
-        [typeof(NullableResourceIdentifierResponseDocument<>)] = ResourceIdentifierTopLinkTypes,
-        [typeof(ResourceIdentifierCollectionResponseDocument<>)] = ResourceIdentifierCollectionTopLinkTypes,
+        [typeof(NullableSecondaryResponseDocument<>)] = ResourceTopLinkTypes,
+        [typeof(PrimaryResponseDocument<>)] = ResourceTopLinkTypes,
+        [typeof(SecondaryResponseDocument<>)] = ResourceTopLinkTypes,
+        [typeof(CollectionResponseDocument<>)] = ResourceCollectionTopLinkTypes,
+        [typeof(IdentifierResponseDocument<>)] = ResourceIdentifierTopLinkTypes,
+        [typeof(NullableIdentifierResponseDocument<>)] = ResourceIdentifierTopLinkTypes,
+        [typeof(IdentifierCollectionResponseDocument<>)] = ResourceIdentifierCollectionTopLinkTypes,
         [typeof(ErrorResponseDocument)] = ErrorTopLinkTypes,
         [typeof(OperationsResponseDocument)] = ResourceTopLinkTypes,
-        [typeof(NullableToOneRelationshipInResponse<>)] = RelationshipLinkTypes,
-        [typeof(ToManyRelationshipInResponse<>)] = RelationshipLinkTypes,
-        [typeof(ToOneRelationshipInResponse<>)] = RelationshipLinkTypes,
-        [typeof(ResourceDataInResponse<>)] = ResourceLinkTypes
+        [typeof(NullableToOneInResponse<>)] = RelationshipLinkTypes,
+        [typeof(ToManyInResponse<>)] = RelationshipLinkTypes,
+        [typeof(ToOneInResponse<>)] = RelationshipLinkTypes,
+        [typeof(DataInResponse<>)] = ResourceLinkTypes
     };
 
     private static readonly Dictionary<LinkTypes, List<string>> LinkTypeToPropertyNamesMap = new()

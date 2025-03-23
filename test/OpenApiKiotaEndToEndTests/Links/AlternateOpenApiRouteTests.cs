@@ -45,7 +45,7 @@ public sealed class AlternateOpenApiRouteTests : IClassFixture<IntegrationTestCo
         });
 
         // Act
-        ExcursionPrimaryResponseDocument? response = await apiClient.Excursions[excursion.StringId!].GetAsync();
+        PrimaryExcursionResponseDocument? response = await apiClient.Excursions[excursion.StringId!].GetAsync();
 
         // Assert
         response.Should().NotBeNull();

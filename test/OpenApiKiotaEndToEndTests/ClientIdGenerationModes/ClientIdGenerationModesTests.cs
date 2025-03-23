@@ -91,7 +91,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        PlayerPrimaryResponseDocument? response = await apiClient.Players.PostAsync(requestBody);
+        PrimaryPlayerResponseDocument? response = await apiClient.Players.PostAsync(requestBody);
 
         // Assert
         response.Should().BeNull();
@@ -127,7 +127,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        GamePrimaryResponseDocument? response = await apiClient.Games.PostAsync(requestBody);
+        PrimaryGameResponseDocument? response = await apiClient.Games.PostAsync(requestBody);
 
         // Assert
         response.Should().NotBeNull();
@@ -169,7 +169,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        GamePrimaryResponseDocument? response = await apiClient.Games.PostAsync(requestBody);
+        PrimaryGameResponseDocument? response = await apiClient.Games.PostAsync(requestBody);
 
         // Assert
         response.Should().BeNull();
@@ -249,7 +249,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        PlayerGroupPrimaryResponseDocument? response = await apiClient.PlayerGroups.PostAsync(requestBody);
+        PrimaryPlayerGroupResponseDocument? response = await apiClient.PlayerGroups.PostAsync(requestBody);
 
         // Assert
         response.Should().NotBeNull();

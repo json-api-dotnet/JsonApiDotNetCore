@@ -108,9 +108,9 @@ internal sealed class ResourceFieldSchemaBuilder
 
     private static AttrCapabilities GetRequiredCapabilityForAttributes(Type resourceDataOpenType)
     {
-        return resourceDataOpenType == typeof(ResourceDataInResponse<>) ? AttrCapabilities.AllowView :
-            resourceDataOpenType == typeof(DataInCreateResourceRequest<>) ? AttrCapabilities.AllowCreate :
-            resourceDataOpenType == typeof(DataInUpdateResourceRequest<>) ? AttrCapabilities.AllowChange : throw new UnreachableException();
+        return resourceDataOpenType == typeof(DataInResponse<>) ? AttrCapabilities.AllowView :
+            resourceDataOpenType == typeof(DataInCreateRequest<>) ? AttrCapabilities.AllowCreate :
+            resourceDataOpenType == typeof(DataInUpdateRequest<>) ? AttrCapabilities.AllowChange : throw new UnreachableException();
     }
 
     private void EnsureAttributeSchemaIsExposed(OpenApiSchema referenceSchemaForAttribute, AttrAttribute attribute, SchemaRepository schemaRepository)
@@ -145,7 +145,7 @@ internal sealed class ResourceFieldSchemaBuilder
 
     private bool IsFieldRequired(ResourceFieldAttribute field)
     {
-        bool isCreateResourceSchemaType = _resourceSchemaType.SchemaOpenType == typeof(DataInCreateResourceRequest<>);
+        bool isCreateResourceSchemaType = _resourceSchemaType.SchemaOpenType == typeof(DataInCreateRequest<>);
         return isCreateResourceSchemaType && _resourceFieldValidationMetadataProvider.IsRequired(field);
     }
 
@@ -188,7 +188,7 @@ internal sealed class ResourceFieldSchemaBuilder
 
     private Type GetRelationshipSchemaType(RelationshipAttribute relationship, Type openSchemaType)
     {
-        bool isResponseSchemaType = openSchemaType.IsAssignableTo(typeof(ResourceDataInResponse<>));
+        bool isResponseSchemaType = openSchemaType.IsAssignableTo(typeof(DataInResponse<>));
         return isResponseSchemaType ? _relationshipTypeFactory.GetForResponse(relationship) : _relationshipTypeFactory.GetForRequest(relationship);
     }
 

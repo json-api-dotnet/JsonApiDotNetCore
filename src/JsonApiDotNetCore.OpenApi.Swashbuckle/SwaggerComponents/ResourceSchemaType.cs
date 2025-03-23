@@ -9,8 +9,8 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 
 /// <summary>
 /// Represents a generic component schema type, whose first type parameter implements <see cref="IIdentifiable" />. Examples:
-/// <see cref="CreateResourceRequestDocument{TResource}" />, <see cref="UpdateToManyRelationshipOperation{TResource}" />,
-/// <see cref="NullableToOneRelationshipInResponse{TResource}" />, <see cref="AttributesInResponse{TResource}" />.
+/// <see cref="CreateRequestDocument{TResource}" />, <see cref="UpdateToManyRelationshipOperation{TResource}" />,
+/// <see cref="NullableToOneInResponse{TResource}" />, <see cref="AttributesInResponse{TResource}" />.
 /// </summary>
 internal sealed class ResourceSchemaType
 {

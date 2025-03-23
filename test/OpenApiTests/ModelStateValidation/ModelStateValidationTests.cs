@@ -11,7 +11,7 @@ public sealed class ModelStateValidationTests : IClassFixture<OpenApiTestContext
     {
         "attributesInCreateSocialMediaAccountRequest",
         "attributesInUpdateSocialMediaAccountRequest",
-        "socialMediaAccountAttributesInResponse"
+        "attributesInSocialMediaAccountResponse"
     };
 
     private readonly OpenApiTestContext<OpenApiStartup<ModelStateValidationDbContext>, ModelStateValidationDbContext> _testContext;

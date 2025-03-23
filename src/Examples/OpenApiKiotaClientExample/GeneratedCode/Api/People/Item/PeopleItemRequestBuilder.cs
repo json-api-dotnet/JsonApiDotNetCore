@@ -77,12 +77,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item
         /// <summary>
         /// Retrieves an individual person by its identifier.
         /// </summary>
-        /// <returns>A <see cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.PersonPrimaryResponseDocument"/></returns>
+        /// <returns>A <see cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.PrimaryPersonResponseDocument"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
         /// <exception cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
-        public async Task<global::OpenApiKiotaClientExample.GeneratedCode.Models.PersonPrimaryResponseDocument?> GetAsync(Action<RequestConfiguration<global::OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.PeopleItemRequestBuilder.PeopleItemRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::OpenApiKiotaClientExample.GeneratedCode.Models.PrimaryPersonResponseDocument?> GetAsync(Action<RequestConfiguration<global::OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.PeopleItemRequestBuilder.PeopleItemRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
             var requestInfo = ToGetRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
@@ -90,7 +90,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item
                 { "400", global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
                 { "404", global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::OpenApiKiotaClientExample.GeneratedCode.Models.PersonPrimaryResponseDocument>(requestInfo, global::OpenApiKiotaClientExample.GeneratedCode.Models.PersonPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::OpenApiKiotaClientExample.GeneratedCode.Models.PrimaryPersonResponseDocument>(requestInfo, global::OpenApiKiotaClientExample.GeneratedCode.Models.PrimaryPersonResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item
         /// <summary>
         /// Updates an existing person.
         /// </summary>
-        /// <returns>A <see cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.PersonPrimaryResponseDocument"/></returns>
+        /// <returns>A <see cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.PrimaryPersonResponseDocument"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
@@ -115,7 +115,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item
         /// <exception cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
         /// <exception cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 409 status code</exception>
         /// <exception cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 422 status code</exception>
-        public async Task<global::OpenApiKiotaClientExample.GeneratedCode.Models.PersonPrimaryResponseDocument?> PatchAsync(global::OpenApiKiotaClientExample.GeneratedCode.Models.UpdatePersonRequestDocument body, Action<RequestConfiguration<global::OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.PeopleItemRequestBuilder.PeopleItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::OpenApiKiotaClientExample.GeneratedCode.Models.PrimaryPersonResponseDocument?> PatchAsync(global::OpenApiKiotaClientExample.GeneratedCode.Models.UpdatePersonRequestDocument body, Action<RequestConfiguration<global::OpenApiKiotaClientExample.GeneratedCode.Api.People.Item.PeopleItemRequestBuilder.PeopleItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPatchRequestInformation(body, requestConfiguration);
@@ -126,7 +126,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People.Item
                 { "409", global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
                 { "422", global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::OpenApiKiotaClientExample.GeneratedCode.Models.PersonPrimaryResponseDocument>(requestInfo, global::OpenApiKiotaClientExample.GeneratedCode.Models.PersonPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::OpenApiKiotaClientExample.GeneratedCode.Models.PrimaryPersonResponseDocument>(requestInfo, global::OpenApiKiotaClientExample.GeneratedCode.Models.PrimaryPersonResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

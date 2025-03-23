@@ -19,9 +19,9 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
         public IBackingStore BackingStore { get; private set; }
 
         /// <summary>The data property</summary>
-        public global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.DataInResponse? Data
+        public global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.ResourceInResponse? Data
         {
-            get { return BackingStore?.Get<global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.DataInResponse?>("data"); }
+            get { return BackingStore?.Get<global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.ResourceInResponse?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 
@@ -59,7 +59,7 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                { "data", n => { Data = n.GetObjectValue<global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.DataInResponse>(global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.DataInResponse.CreateFromDiscriminatorValue); } },
+                { "data", n => { Data = n.GetObjectValue<global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.ResourceInResponse>(global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.ResourceInResponse.CreateFromDiscriminatorValue); } },
                 { "meta", n => { Meta = n.GetObjectValue<global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.Meta>(global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
             };
         }
@@ -71,7 +71,7 @@ namespace OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.DataInResponse>("data", Data);
+            writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.ResourceInResponse>("data", Data);
             writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.AtomicOperations.GeneratedCode.Models.Meta>("meta", Meta);
         }
     }

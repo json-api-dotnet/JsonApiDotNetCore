@@ -64,13 +64,13 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         response.Should().NotBeNull();
 
         response.AtomicResults.Should().HaveCount(1);
-        TeacherDataInResponse teacherDataInResponse = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<TeacherDataInResponse>().Which;
+        DataInTeacherResponse teacherData = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<DataInTeacherResponse>().Which;
 
-        teacherDataInResponse.Attributes.Should().NotBeNull();
-        teacherDataInResponse.Attributes.Name.Should().Be(newTeacher.Name);
-        teacherDataInResponse.Attributes.EmailAddress.Should().Be(newTeacher.EmailAddress);
+        teacherData.Attributes.Should().NotBeNull();
+        teacherData.Attributes.Name.Should().Be(newTeacher.Name);
+        teacherData.Attributes.EmailAddress.Should().Be(newTeacher.EmailAddress);
 
-        long newTeacherId = long.Parse(teacherDataInResponse.Id!);
+        long newTeacherId = long.Parse(teacherData.Id!);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -143,14 +143,14 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         response.Should().NotBeNull();
 
         response.AtomicResults.Should().HaveCount(1);
-        EnrollmentDataInResponse enrollmentDataInResponse = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<EnrollmentDataInResponse>().Which;
+        DataInEnrollmentResponse enrollmentData = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<DataInEnrollmentResponse>().Which;
 
-        enrollmentDataInResponse.Attributes.Should().NotBeNull();
-        enrollmentDataInResponse.Attributes.EnrolledAt.Should().Be((Date)newEnrollment.EnrolledAt);
-        enrollmentDataInResponse.Attributes.GraduatedAt.Should().BeNull();
-        enrollmentDataInResponse.Attributes.HasGraduated.Should().BeFalse();
+        enrollmentData.Attributes.Should().NotBeNull();
+        enrollmentData.Attributes.EnrolledAt.Should().Be((Date)newEnrollment.EnrolledAt);
+        enrollmentData.Attributes.GraduatedAt.Should().BeNull();
+        enrollmentData.Attributes.HasGraduated.Should().BeFalse();
 
-        long newEnrollmentId = long.Parse(enrollmentDataInResponse.Id!);
+        long newEnrollmentId = long.Parse(enrollmentData.Id!);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

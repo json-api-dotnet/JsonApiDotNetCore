@@ -129,7 +129,7 @@ internal sealed class DataSchemaGenerator
             fullSchema.Properties.Remove(JsonApiPropertyName.Lid);
         }
 
-        if (resourceSchemaType.SchemaOpenType == typeof(DataInCreateResourceRequest<>))
+        if (resourceSchemaType.SchemaOpenType == typeof(DataInCreateRequest<>))
         {
             ClientIdGenerationMode clientIdGeneration = resourceSchemaType.ResourceType.ClientIdGeneration ?? _options.ClientIdGeneration;
 
@@ -216,6 +216,7 @@ internal sealed class DataSchemaGenerator
         if (fullSchemaForFields.Properties.Count == 0)
         {
             fullSchemaForData.Properties.Remove(propertyNameInSchema);
+            schemaRepository.Schemas.Remove(referenceSchemaForFields.Reference.Id);
         }
     }
 

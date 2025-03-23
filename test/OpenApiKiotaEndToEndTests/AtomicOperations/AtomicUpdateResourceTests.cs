@@ -78,12 +78,12 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         response.Should().NotBeNull();
 
         response.AtomicResults.Should().HaveCount(1);
-        StudentDataInResponse studentDataInResponse = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<StudentDataInResponse>().Which;
+        DataInStudentResponse studentData = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<DataInStudentResponse>().Which;
 
-        studentDataInResponse.Id.Should().Be(existingStudent.StringId);
-        studentDataInResponse.Attributes.Should().NotBeNull();
-        studentDataInResponse.Attributes.Name.Should().Be(newName);
-        studentDataInResponse.Attributes.EmailAddress.Should().Be(newEmailAddress);
+        studentData.Id.Should().Be(existingStudent.StringId);
+        studentData.Attributes.Should().NotBeNull();
+        studentData.Attributes.Name.Should().Be(newName);
+        studentData.Attributes.EmailAddress.Should().Be(newEmailAddress);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -142,12 +142,12 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         response.Should().NotBeNull();
 
         response.AtomicResults.Should().HaveCount(1);
-        StudentDataInResponse studentDataInResponse = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<StudentDataInResponse>().Which;
+        DataInStudentResponse studentData = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<DataInStudentResponse>().Which;
 
-        studentDataInResponse.Id.Should().Be(existingStudent.StringId);
-        studentDataInResponse.Attributes.Should().NotBeNull();
-        studentDataInResponse.Attributes.Name.Should().Be(existingStudent.Name);
-        studentDataInResponse.Attributes.EmailAddress.Should().Be(newEmailAddress);
+        studentData.Id.Should().Be(existingStudent.StringId);
+        studentData.Attributes.Should().NotBeNull();
+        studentData.Attributes.Name.Should().Be(existingStudent.Name);
+        studentData.Attributes.EmailAddress.Should().Be(newEmailAddress);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -225,13 +225,13 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         response.Should().NotBeNull();
 
         response.AtomicResults.Should().HaveCount(1);
-        EnrollmentDataInResponse enrollmentDataInResponse = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<EnrollmentDataInResponse>().Which;
+        DataInEnrollmentResponse enrollmentData = response.AtomicResults.ElementAt(0).Data.Should().BeOfType<DataInEnrollmentResponse>().Which;
 
-        enrollmentDataInResponse.Id.Should().Be(existingEnrollment.StringId);
-        enrollmentDataInResponse.Attributes.Should().NotBeNull();
-        enrollmentDataInResponse.Attributes.EnrolledAt.Should().Be((Date)newEnrolledAt);
-        enrollmentDataInResponse.Attributes.GraduatedAt.Should().Be((Date)existingEnrollment.GraduatedAt!.Value);
-        enrollmentDataInResponse.Attributes.HasGraduated.Should().Be(existingEnrollment.HasGraduated);
+        enrollmentData.Id.Should().Be(existingEnrollment.StringId);
+        enrollmentData.Attributes.Should().NotBeNull();
+        enrollmentData.Attributes.EnrolledAt.Should().Be((Date)newEnrolledAt);
+        enrollmentData.Attributes.GraduatedAt.Should().Be((Date)existingEnrollment.GraduatedAt!.Value);
+        enrollmentData.Attributes.HasGraduated.Should().Be(existingEnrollment.HasGraduated);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

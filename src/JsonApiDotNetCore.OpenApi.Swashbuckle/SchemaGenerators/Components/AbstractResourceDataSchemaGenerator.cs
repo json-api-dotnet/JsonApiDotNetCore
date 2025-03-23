@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 
 internal sealed class AbstractResourceDataSchemaGenerator
 {
-    private static readonly Type ResourceDataAbstractType = typeof(ResourceData);
+    private static readonly Type ResourceInResponseAbstractType = typeof(ResourceInResponse);
 
     private readonly MetaSchemaGenerator _metaSchemaGenerator;
     private readonly JsonApiSchemaIdSelector _schemaIdSelector;
@@ -31,7 +31,7 @@ internal sealed class AbstractResourceDataSchemaGenerator
     {
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        if (schemaRepository.TryLookupByType(ResourceDataAbstractType, out OpenApiSchema? referenceSchema))
+        if (schemaRepository.TryLookupByType(ResourceInResponseAbstractType, out OpenApiSchema? referenceSchema))
         {
             return referenceSchema;
         }
@@ -63,10 +63,10 @@ internal sealed class AbstractResourceDataSchemaGenerator
             }
         };
 
-        string schemaId = _schemaIdSelector.GetSchemaId(ResourceDataAbstractType);
+        string schemaId = _schemaIdSelector.GetSchemaId(ResourceInResponseAbstractType);
 
         referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
-        schemaRepository.RegisterType(ResourceDataAbstractType, schemaId);
+        schemaRepository.RegisterType(ResourceInResponseAbstractType, schemaId);
 
         return referenceSchema;
     }
@@ -94,9 +94,9 @@ internal sealed class AbstractResourceDataSchemaGenerator
 
         var resourceSchemaType = ResourceSchemaType.Create(resourceDataConstructedType, _resourceGraph);
 
-        if (resourceSchemaType.SchemaOpenType == typeof(ResourceDataInResponse<>))
+        if (resourceSchemaType.SchemaOpenType == typeof(DataInResponse<>))
         {
-            if (!schemaRepository.TryLookupByType(ResourceDataAbstractType, out OpenApiSchema? referenceSchemaForAbstractResourceData))
+            if (!schemaRepository.TryLookupByType(ResourceInResponseAbstractType, out OpenApiSchema? referenceSchemaForAbstractResourceData))
             {
                 throw new UnreachableException();
             }

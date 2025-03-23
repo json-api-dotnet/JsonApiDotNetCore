@@ -82,7 +82,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People
         /// <summary>
         /// Creates a new person.
         /// </summary>
-        /// <returns>A <see cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.PersonPrimaryResponseDocument"/></returns>
+        /// <returns>A <see cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.PrimaryPersonResponseDocument"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
@@ -91,7 +91,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People
         /// <exception cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
         /// <exception cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 409 status code</exception>
         /// <exception cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 422 status code</exception>
-        public async Task<global::OpenApiKiotaClientExample.GeneratedCode.Models.PersonPrimaryResponseDocument?> PostAsync(global::OpenApiKiotaClientExample.GeneratedCode.Models.CreatePersonRequestDocument body, Action<RequestConfiguration<global::OpenApiKiotaClientExample.GeneratedCode.Api.People.PeopleRequestBuilder.PeopleRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::OpenApiKiotaClientExample.GeneratedCode.Models.PrimaryPersonResponseDocument?> PostAsync(global::OpenApiKiotaClientExample.GeneratedCode.Models.CreatePersonRequestDocument body, Action<RequestConfiguration<global::OpenApiKiotaClientExample.GeneratedCode.Api.People.PeopleRequestBuilder.PeopleRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPostRequestInformation(body, requestConfiguration);
@@ -103,7 +103,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.People
                 { "409", global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
                 { "422", global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::OpenApiKiotaClientExample.GeneratedCode.Models.PersonPrimaryResponseDocument>(requestInfo, global::OpenApiKiotaClientExample.GeneratedCode.Models.PersonPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::OpenApiKiotaClientExample.GeneratedCode.Models.PrimaryPersonResponseDocument>(requestInfo, global::OpenApiKiotaClientExample.GeneratedCode.Models.PrimaryPersonResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

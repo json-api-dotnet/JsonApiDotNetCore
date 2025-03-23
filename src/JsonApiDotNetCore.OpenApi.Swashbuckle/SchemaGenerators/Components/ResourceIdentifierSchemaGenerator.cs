@@ -31,12 +31,12 @@ internal sealed class ResourceIdentifierSchemaGenerator
         ArgumentNullException.ThrowIfNull(resourceType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        Type resourceIdentifierOpenType = forRequestSchema ? typeof(ResourceIdentifierInRequest<>) : typeof(ResourceIdentifierInResponse<>);
-        Type resourceIdentifierConstructedType = resourceIdentifierOpenType.MakeGenericType(resourceType.ClrType);
+        Type identifierOpenType = forRequestSchema ? typeof(IdentifierInRequest<>) : typeof(IdentifierInResponse<>);
+        Type identifierConstructedType = identifierOpenType.MakeGenericType(resourceType.ClrType);
 
-        if (!schemaRepository.TryLookupByType(resourceIdentifierConstructedType, out OpenApiSchema? referenceSchemaForIdentifier))
+        if (!schemaRepository.TryLookupByType(identifierConstructedType, out OpenApiSchema? referenceSchemaForIdentifier))
         {
-            referenceSchemaForIdentifier = _defaultSchemaGenerator.GenerateSchema(resourceIdentifierConstructedType, schemaRepository);
+            referenceSchemaForIdentifier = _defaultSchemaGenerator.GenerateSchema(identifierConstructedType, schemaRepository);
             OpenApiSchema fullSchemaForIdentifier = schemaRepository.Schemas[referenceSchemaForIdentifier.Reference.Id];
 
             if (forRequestSchema && !_generationCacheSchemaGenerator.HasAtomicOperationsEndpoint(schemaRepository))

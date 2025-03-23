@@ -15,22 +15,22 @@ internal sealed class ResourceOrRelationshipBodySchemaGenerator : BodySchemaGene
 {
     private static readonly Type[] RequestBodySchemaTypes =
     [
-        typeof(CreateResourceRequestDocument<>),
-        typeof(UpdateResourceRequestDocument<>),
-        typeof(ToOneRelationshipInRequest<>),
-        typeof(NullableToOneRelationshipInRequest<>),
-        typeof(ToManyRelationshipInRequest<>)
+        typeof(CreateRequestDocument<>),
+        typeof(UpdateRequestDocument<>),
+        typeof(ToOneInRequest<>),
+        typeof(NullableToOneInRequest<>),
+        typeof(ToManyInRequest<>)
     ];
 
     private static readonly Type[] ResponseBodySchemaTypes =
     [
-        typeof(ResourceCollectionResponseDocument<>),
-        typeof(PrimaryResourceResponseDocument<>),
-        typeof(SecondaryResourceResponseDocument<>),
-        typeof(NullableSecondaryResourceResponseDocument<>),
-        typeof(ResourceIdentifierResponseDocument<>),
-        typeof(NullableResourceIdentifierResponseDocument<>),
-        typeof(ResourceIdentifierCollectionResponseDocument<>)
+        typeof(CollectionResponseDocument<>),
+        typeof(PrimaryResponseDocument<>),
+        typeof(SecondaryResponseDocument<>),
+        typeof(NullableSecondaryResponseDocument<>),
+        typeof(IdentifierResponseDocument<>),
+        typeof(NullableIdentifierResponseDocument<>),
+        typeof(IdentifierCollectionResponseDocument<>)
     ];
 
     private readonly SchemaGenerator _defaultSchemaGenerator;

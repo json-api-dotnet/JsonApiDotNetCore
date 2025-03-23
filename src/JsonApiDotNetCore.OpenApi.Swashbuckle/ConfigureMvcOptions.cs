@@ -25,6 +25,8 @@ internal sealed class ConfigureMvcOptions : IConfigureOptions<MvcOptions>
 
     public void Configure(MvcOptions options)
     {
+        ArgumentNullException.ThrowIfNull(options);
+
         AddSwashbuckleCliCompatibility(options);
 
         options.InputFormatters.Add(_jsonApiRequestFormatMetadataProvider);

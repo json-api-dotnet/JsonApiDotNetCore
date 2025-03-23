@@ -95,9 +95,9 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
 
     private void GenerateSchemaForOperation(ResourceType resourceType, SchemaRepository schemaRepository)
     {
-        GenerateSchemaForResourceOperation(typeof(CreateResourceOperation<>), resourceType, AtomicOperationCode.Add, schemaRepository);
-        GenerateSchemaForResourceOperation(typeof(UpdateResourceOperation<>), resourceType, AtomicOperationCode.Update, schemaRepository);
-        GenerateSchemaForResourceOperation(typeof(DeleteResourceOperation<>), resourceType, AtomicOperationCode.Remove, schemaRepository);
+        GenerateSchemaForResourceOperation(typeof(CreateOperation<>), resourceType, AtomicOperationCode.Add, schemaRepository);
+        GenerateSchemaForResourceOperation(typeof(UpdateOperation<>), resourceType, AtomicOperationCode.Update, schemaRepository);
+        GenerateSchemaForResourceOperation(typeof(DeleteOperation<>), resourceType, AtomicOperationCode.Remove, schemaRepository);
 
         foreach (RelationshipAttribute relationship in resourceType.Relationships)
         {
@@ -133,7 +133,7 @@ internal sealed class AtomicOperationsBodySchemaGenerator : BodySchemaGenerator
         _ = _resourceIdentifierSchemaGenerator.GenerateSchema(resourceType, true, schemaRepository);
 
         Type operationConstructedType = operationOpenType.MakeGenericType(resourceType.ClrType);
-        bool hasDataProperty = operationOpenType != typeof(DeleteResourceOperation<>);
+        bool hasDataProperty = operationOpenType != typeof(DeleteOperation<>);
 
         if (hasDataProperty)
         {

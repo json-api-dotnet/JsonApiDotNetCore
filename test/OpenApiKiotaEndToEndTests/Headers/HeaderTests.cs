@@ -54,7 +54,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         };
 
         // Act
-        CountryPrimaryResponseDocument? response =
+        PrimaryCountryResponseDocument? response =
             await apiClient.Countries.PostAsync(requestBody, configuration => configuration.Options.Add(headerInspector));
 
         // Assert

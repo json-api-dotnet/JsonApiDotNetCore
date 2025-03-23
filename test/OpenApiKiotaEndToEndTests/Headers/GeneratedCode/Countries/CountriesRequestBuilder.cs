@@ -82,7 +82,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries
         /// <summary>
         /// Creates a new country.
         /// </summary>
-        /// <returns>A <see cref="global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.CountryPrimaryResponseDocument"/></returns>
+        /// <returns>A <see cref="global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.PrimaryCountryResponseDocument"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
@@ -91,7 +91,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries
         /// <exception cref="global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
         /// <exception cref="global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 409 status code</exception>
         /// <exception cref="global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument">When receiving a 422 status code</exception>
-        public async Task<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.CountryPrimaryResponseDocument?> PostAsync(global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.CreateCountryRequestDocument body, Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.CountriesRequestBuilder.CountriesRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.PrimaryCountryResponseDocument?> PostAsync(global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.CreateCountryRequestDocument body, Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries.CountriesRequestBuilder.CountriesRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPostRequestInformation(body, requestConfiguration);
@@ -103,7 +103,7 @@ namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Countries
                 { "409", global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
                 { "422", global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.CountryPrimaryResponseDocument>(requestInfo, global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.CountryPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.PrimaryCountryResponseDocument>(requestInfo, global::OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models.PrimaryCountryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

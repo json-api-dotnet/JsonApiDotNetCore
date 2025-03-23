@@ -13,11 +13,16 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 
 internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
 {
+    private static readonly Dictionary<Type, Type> BaseToDerivedSchemaTypes = new()
+    {
+        [typeof(ResourceInResponse)] = typeof(DataInResponse<>)
+    };
+
     private static readonly Type[] AtomicOperationDerivedSchemaTypes =
     [
-        typeof(CreateResourceOperation<>),
-        typeof(UpdateResourceOperation<>),
-        typeof(DeleteResourceOperation<>),
+        typeof(CreateOperation<>),
+        typeof(UpdateOperation<>),
+        typeof(DeleteOperation<>),
         typeof(UpdateToOneRelationshipOperation<>),
         typeof(UpdateToManyRelationshipOperation<>),
         typeof(AddToRelationshipOperation<>),
@@ -68,9 +73,9 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
 
     private List<Type> SelectDerivedTypes(Type baseType)
     {
-        if (baseType == typeof(ResourceData))
+        if (BaseToDerivedSchemaTypes.TryGetValue(baseType, out Type? schemaOpenType))
         {
-            return GetConstructedTypesForResourceData();
+            return GetConstructedTypesFromResourceGraph(schemaOpenType);
         }
 
         if (baseType == typeof(AtomicOperation))
@@ -81,17 +86,17 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
         return [];
     }
 
-    private List<Type> GetConstructedTypesForResourceData()
+    private List<Type> GetConstructedTypesFromResourceGraph(Type schemaOpenType)
     {
-        List<Type> derivedTypes = [];
+        List<Type> constructedTypes = [];
 
         foreach (ResourceType resourceType in _resourceGraph.GetResourceTypes())
         {
-            Type constructedType = typeof(ResourceDataInResponse<>).MakeGenericType(resourceType.ClrType);
-            derivedTypes.Add(constructedType);
+            Type constructedType = schemaOpenType.MakeGenericType(resourceType.ClrType);
+            constructedTypes.Add(constructedType);
         }
 
-        return derivedTypes;
+        return constructedTypes;
     }
 
     private List<Type> GetConstructedTypesForAtomicOperation()

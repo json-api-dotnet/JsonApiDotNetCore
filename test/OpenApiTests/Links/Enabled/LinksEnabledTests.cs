@@ -54,12 +54,12 @@ public sealed class LinksEnabledTests : IClassFixture<OpenApiTestContext<OpenApi
     }
 
     [Theory]
-    [InlineData("resourceTopLevelLinks", "accommodationPrimaryResponseDocument", true)]
-    [InlineData("resourceTopLevelLinks", "accommodationSecondaryResponseDocument", true)]
-    [InlineData("resourceTopLevelLinks", "excursionPrimaryResponseDocument", true)]
-    [InlineData("resourceTopLevelLinks", "transportPrimaryResponseDocument", true)]
-    [InlineData("resourceTopLevelLinks", "nullableTransportSecondaryResponseDocument", true)]
-    [InlineData("resourceTopLevelLinks", "vacationPrimaryResponseDocument", true)]
+    [InlineData("resourceTopLevelLinks", "primaryAccommodationResponseDocument", true)]
+    [InlineData("resourceTopLevelLinks", "secondaryAccommodationResponseDocument", true)]
+    [InlineData("resourceTopLevelLinks", "primaryExcursionResponseDocument", true)]
+    [InlineData("resourceTopLevelLinks", "primaryTransportResponseDocument", true)]
+    [InlineData("resourceTopLevelLinks", "nullableSecondaryTransportResponseDocument", true)]
+    [InlineData("resourceTopLevelLinks", "primaryVacationResponseDocument", true)]
     [InlineData("resourceCollectionTopLevelLinks", "accommodationCollectionResponseDocument", true)]
     [InlineData("resourceCollectionTopLevelLinks", "excursionCollectionResponseDocument", true)]
     [InlineData("resourceCollectionTopLevelLinks", "transportCollectionResponseDocument", true)]
@@ -71,10 +71,10 @@ public sealed class LinksEnabledTests : IClassFixture<OpenApiTestContext<OpenApi
     [InlineData("relationshipLinks", "toOneAccommodationInResponse", false)]
     [InlineData("relationshipLinks", "toManyExcursionInResponse", false)]
     [InlineData("relationshipLinks", "nullableToOneTransportInResponse", false)]
-    [InlineData("resourceLinks", "accommodationDataInResponse.allOf[1]", false)]
-    [InlineData("resourceLinks", "excursionDataInResponse.allOf[1]", false)]
-    [InlineData("resourceLinks", "transportDataInResponse.allOf[1]", false)]
-    [InlineData("resourceLinks", "vacationDataInResponse.allOf[1]", false)]
+    [InlineData("resourceLinks", "dataInAccommodationResponse.allOf[1]", false)]
+    [InlineData("resourceLinks", "dataInExcursionResponse.allOf[1]", false)]
+    [InlineData("resourceLinks", "dataInTransportResponse.allOf[1]", false)]
+    [InlineData("resourceLinks", "dataInVacationResponse.allOf[1]", false)]
     public async Task All_container_schemas_contain_correct_link_property(string linkSchemaId, string containerSchemaId, bool isRequired)
     {
         // Act

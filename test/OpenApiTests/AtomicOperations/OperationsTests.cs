@@ -295,7 +295,7 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
                     "data": {
                       "allOf": [
                         {
-                          "$ref": "#/components/schemas/dataInResponse"
+                          "$ref": "#/components/schemas/resourceInResponse"
                         }
                       ]
                     },

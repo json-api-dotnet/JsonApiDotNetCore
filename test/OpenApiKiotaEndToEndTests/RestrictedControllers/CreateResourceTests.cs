@@ -87,7 +87,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
         });
 
         // Act
-        WriteOnlyChannelPrimaryResponseDocument? response = await apiClient.WriteOnlyChannels.PostAsync(requestBody);
+        PrimaryWriteOnlyChannelResponseDocument? response = await apiClient.WriteOnlyChannels.PostAsync(requestBody);
 
         // Assert
         response.Should().NotBeNull();
@@ -107,18 +107,18 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
 
         response.Included.Should().HaveCount(2);
 
-        response.Included.OfType<DataStreamDataInResponse>().Should().ContainSingle(streamData => streamData.Id == existingVideoStream.StringId).Subject.With(
-            streamData =>
+        response.Included.OfType<DataInDataStreamResponse>().Should().ContainSingle(include => include.Id == existingVideoStream.StringId).Subject.With(
+            include =>
             {
-                streamData.Attributes.Should().NotBeNull();
-                streamData.Attributes.BytesTransmitted.Should().Be((long?)existingVideoStream.BytesTransmitted);
+                include.Attributes.Should().NotBeNull();
+                include.Attributes.BytesTransmitted.Should().Be((long?)existingVideoStream.BytesTransmitted);
             });
 
-        response.Included.OfType<DataStreamDataInResponse>().Should().ContainSingle(streamData => streamData.Id == existingAudioStream.StringId).Subject.With(
-            streamData =>
+        response.Included.OfType<DataInDataStreamResponse>().Should().ContainSingle(include => include.Id == existingAudioStream.StringId).Subject.With(
+            include =>
             {
-                streamData.Attributes.Should().NotBeNull();
-                streamData.Attributes.BytesTransmitted.Should().Be((long?)existingAudioStream.BytesTransmitted);
+                include.Attributes.Should().NotBeNull();
+                include.Attributes.BytesTransmitted.Should().Be((long?)existingAudioStream.BytesTransmitted);
             });
 
         long newChannelId = long.Parse(response.Data.Id.Should().NotBeNull().And.Subject);
