@@ -32,19 +32,19 @@ internal sealed class DataContainerSchemaGenerator
         return _dataSchemaGenerator.GenerateSchemaForCommonData(typeof(ResourceInResponse), schemaRepository);
     }
 
-    public OpenApiSchema GenerateSchema(Type dataContainerConstructedType, ResourceType resourceType, bool forRequestSchema, bool canIncludeRelated,
+    public OpenApiSchema GenerateSchema(Type dataContainerSchemaType, ResourceType resourceType, bool forRequestSchema, bool canIncludeRelated,
         SchemaRepository schemaRepository)
     {
-        ArgumentNullException.ThrowIfNull(dataContainerConstructedType);
+        ArgumentNullException.ThrowIfNull(dataContainerSchemaType);
         ArgumentNullException.ThrowIfNull(resourceType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        if (schemaRepository.TryLookupByType(dataContainerConstructedType, out OpenApiSchema referenceSchemaForData))
+        if (schemaRepository.TryLookupByType(dataContainerSchemaType, out OpenApiSchema referenceSchemaForData))
         {
             return referenceSchemaForData;
         }
 
-        Type dataConstructedType = GetElementTypeOfDataProperty(dataContainerConstructedType, resourceType);
+        Type dataConstructedType = GetElementTypeOfDataProperty(dataContainerSchemaType, resourceType);
 
         if (canIncludeRelated)
         {

@@ -70,12 +70,12 @@ internal sealed class LinksVisibilitySchemaGenerator
         _lazyLinksVisibility = new Lazy<LinksVisibility>(() => new LinksVisibility(options, resourceGraph), LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
-    public void UpdateSchemaForTopLevel(Type modelType, OpenApiSchema fullSchemaForLinksContainer, SchemaRepository schemaRepository)
+    public void UpdateSchemaForTopLevel(Type schemaType, OpenApiSchema fullSchemaForLinksContainer, SchemaRepository schemaRepository)
     {
-        ArgumentNullException.ThrowIfNull(modelType);
+        ArgumentNullException.ThrowIfNull(schemaType);
         ArgumentNullException.ThrowIfNull(fullSchemaForLinksContainer);
 
-        Type lookupType = modelType.ConstructedToOpenType();
+        Type lookupType = schemaType.ConstructedToOpenType();
 
         if (LinksInJsonApiSchemaTypes.TryGetValue(lookupType, out LinkTypes possibleLinkTypes))
         {
@@ -94,12 +94,12 @@ internal sealed class LinksVisibilitySchemaGenerator
         }
     }
 
-    public void UpdateSchemaForRelationship(Type modelType, OpenApiSchema fullSchemaForRelationship, SchemaRepository schemaRepository)
+    public void UpdateSchemaForRelationship(Type schemaType, OpenApiSchema fullSchemaForRelationship, SchemaRepository schemaRepository)
     {
-        ArgumentNullException.ThrowIfNull(modelType);
+        ArgumentNullException.ThrowIfNull(schemaType);
         ArgumentNullException.ThrowIfNull(fullSchemaForRelationship);
 
-        Type lookupType = modelType.ConstructedToOpenType();
+        Type lookupType = schemaType.ConstructedToOpenType();
 
         if (LinksInJsonApiSchemaTypes.TryGetValue(lookupType, out LinkTypes possibleLinkTypes))
         {

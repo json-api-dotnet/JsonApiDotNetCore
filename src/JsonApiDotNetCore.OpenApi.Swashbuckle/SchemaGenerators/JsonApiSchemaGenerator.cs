@@ -23,19 +23,19 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         _documentSchemaGenerators = documentSchemaGenerators as DocumentSchemaGenerator[] ?? documentSchemaGenerators.ToArray();
     }
 
-    public OpenApiSchema GenerateSchema(Type modelType, SchemaRepository schemaRepository, MemberInfo? memberInfo = null, ParameterInfo? parameterInfo = null,
+    public OpenApiSchema GenerateSchema(Type schemaType, SchemaRepository schemaRepository, MemberInfo? memberInfo = null, ParameterInfo? parameterInfo = null,
         ApiParameterRouteInfo? routeInfo = null)
     {
-        ArgumentNullException.ThrowIfNull(modelType);
+        ArgumentNullException.ThrowIfNull(schemaType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
         if (parameterInfo is { Name: "id" } && IsJsonApiParameter(parameterInfo))
         {
-            return _resourceIdSchemaGenerator.GenerateSchema(modelType, schemaRepository);
+            return _resourceIdSchemaGenerator.GenerateSchema(schemaType, schemaRepository);
         }
 
-        DocumentSchemaGenerator schemaGenerator = GetDocumentSchemaGenerator(modelType);
-        OpenApiSchema referenceSchema = schemaGenerator.GenerateSchema(modelType, schemaRepository);
+        DocumentSchemaGenerator schemaGenerator = GetDocumentSchemaGenerator(schemaType);
+        OpenApiSchema referenceSchema = schemaGenerator.GenerateSchema(schemaType, schemaRepository);
 
         if (memberInfo != null || parameterInfo != null)
         {
@@ -52,11 +52,11 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         return parameter.Member.DeclaringType != null && parameter.Member.DeclaringType.IsAssignableTo(typeof(CoreJsonApiController));
     }
 
-    private DocumentSchemaGenerator GetDocumentSchemaGenerator(Type modelType)
+    private DocumentSchemaGenerator GetDocumentSchemaGenerator(Type schemaType)
     {
         foreach (DocumentSchemaGenerator documentSchemaGenerator in _documentSchemaGenerators)
         {
-            if (documentSchemaGenerator.CanGenerate(modelType))
+            if (documentSchemaGenerator.CanGenerate(schemaType))
             {
                 return documentSchemaGenerator;
             }
