@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.AtomicOperations;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
+using JsonApiDotNetCore.Resources;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -13,11 +14,19 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 
 internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
 {
+    private static readonly Dictionary<Type, Type> BaseToDerivedSchemaTypes = new()
+    {
+        [typeof(IdentifierInRequest)] = typeof(IdentifierInRequest<>),
+        [typeof(ResourceInCreateRequest)] = typeof(DataInCreateRequest<>),
+        [typeof(ResourceInUpdateRequest)] = typeof(DataInUpdateRequest<>),
+        [typeof(ResourceInResponse)] = typeof(DataInResponse<>)
+    };
+
     private static readonly Type[] AtomicOperationDerivedSchemaTypes =
     [
-        typeof(CreateResourceOperation<>),
-        typeof(UpdateResourceOperation<>),
-        typeof(DeleteResourceOperation<>),
+        typeof(CreateOperation<>),
+        typeof(UpdateOperation<>),
+        typeof(DeleteOperation<>),
         typeof(UpdateToOneRelationshipOperation<>),
         typeof(UpdateToManyRelationshipOperation<>),
         typeof(AddToRelationshipOperation<>),
@@ -63,14 +72,15 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
         options.DocumentFilter<ServerDocumentFilter>();
         options.DocumentFilter<EndpointOrderingFilter>();
         options.DocumentFilter<StringEnumOrderingFilter>();
+        options.DocumentFilter<SetSchemaTypeToObjectDocumentFilter>();
         options.DocumentFilter<UnusedComponentSchemaCleaner>();
     }
 
     private List<Type> SelectDerivedTypes(Type baseType)
     {
-        if (baseType == typeof(ResourceData))
+        if (BaseToDerivedSchemaTypes.TryGetValue(baseType, out Type? schemaOpenType))
         {
-            return GetConstructedTypesForResourceData();
+            return GetConstructedTypesFromResourceGraph(schemaOpenType);
         }
 
         if (baseType == typeof(AtomicOperation))
@@ -78,20 +88,30 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
             return GetConstructedTypesForAtomicOperation();
         }
 
+        if (baseType.IsAssignableTo(typeof(IIdentifiable)))
+        {
+            ResourceType? resourceType = _resourceGraph.FindResourceType(baseType);
+
+            if (resourceType != null && resourceType.IsPartOfTypeHierarchy())
+            {
+                return GetResourceDerivedTypes(resourceType);
+            }
+        }
+
         return [];
     }
 
-    private List<Type> GetConstructedTypesForResourceData()
+    private List<Type> GetConstructedTypesFromResourceGraph(Type schemaOpenType)
     {
-        List<Type> derivedTypes = [];
+        List<Type> constructedTypes = [];
 
         foreach (ResourceType resourceType in _resourceGraph.GetResourceTypes())
         {
-            Type constructedType = typeof(ResourceDataInResponse<>).MakeGenericType(resourceType.ClrType);
-            derivedTypes.Add(constructedType);
+            Type constructedType = schemaOpenType.MakeGenericType(resourceType.ClrType);
+            constructedTypes.Add(constructedType);
         }
 
-        return derivedTypes;
+        return constructedTypes;
     }
 
     private List<Type> GetConstructedTypesForAtomicOperation()
@@ -104,6 +124,22 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
         }
 
         return derivedTypes;
+    }
+
+    private static List<Type> GetResourceDerivedTypes(ResourceType baseType)
+    {
+        List<Type> clrTypes = [];
+        IncludeDerivedTypes(baseType, clrTypes);
+        return clrTypes;
+    }
+
+    private static void IncludeDerivedTypes(ResourceType baseType, List<Type> clrTypes)
+    {
+        foreach (ResourceType derivedType in baseType.DirectlyDerivedTypes)
+        {
+            clrTypes.Add(derivedType.ClrType);
+            IncludeDerivedTypes(derivedType, clrTypes);
+        }
     }
 
     private static List<string> GetOpenApiOperationTags(ApiDescription description, IControllerResourceMapping controllerResourceMapping)

@@ -23,6 +23,7 @@
         "files": [
           "api/**.yml",
           "api/index.md",
+          "ext/openapi/index.md",
           "getting-started/**.md",
           "getting-started/**/toc.yml",
           "usage/**.md",

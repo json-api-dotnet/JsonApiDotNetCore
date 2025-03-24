@@ -5,28 +5,49 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 
 internal sealed class IncludeDependencyScanner
 {
+    public static IncludeDependencyScanner Instance { get; } = new();
+
+    private IncludeDependencyScanner()
+    {
+    }
+
     /// <summary>
-    /// Returns all related resource types that are reachable from the specified resource type. May include <paramref name="resourceType" /> itself.
+    /// Returns all related resource types that are reachable from the specified resource type. Does not include <paramref name="resourceType" /> itself.
     /// </summary>
     public IReadOnlySet<ResourceType> GetReachableRelatedTypes(ResourceType resourceType)
     {
         ArgumentNullException.ThrowIfNull(resourceType);
 
         HashSet<ResourceType> resourceTypesFound = [];
-        AddTypesFromRelationships(resourceType.Relationships, resourceTypesFound);
+
+        IncludeResourceType(resourceType, resourceTypesFound);
+        resourceTypesFound.Remove(resourceType);
+
         return resourceTypesFound;
     }
 
-    private static void AddTypesFromRelationships(IEnumerable<RelationshipAttribute> relationships, ISet<ResourceType> resourceTypesFound)
+    private static void IncludeResourceType(ResourceType resourceType, ISet<ResourceType> resourceTypesFound)
     {
-        foreach (RelationshipAttribute relationship in relationships)
+        if (resourceTypesFound.Add(resourceType))
         {
-            ResourceType resourceType = relationship.RightType;
+            IncludeDerivedTypes(resourceType, resourceTypesFound);
+            IncludeRelatedTypes(resourceType, resourceTypesFound);
+        }
+    }
 
-            if (resourceTypesFound.Add(resourceType))
-            {
-                AddTypesFromRelationships(resourceType.Relationships, resourceTypesFound);
-            }
+    private static void IncludeDerivedTypes(ResourceType resourceType, ISet<ResourceType> resourceTypesFound)
+    {
+        foreach (ResourceType derivedType in resourceType.DirectlyDerivedTypes)
+        {
+            IncludeResourceType(derivedType, resourceTypesFound);
+        }
+    }
+
+    private static void IncludeRelatedTypes(ResourceType resourceType, ISet<ResourceType> resourceTypesFound)
+    {
+        foreach (RelationshipAttribute relationship in resourceType.Relationships)
+        {
+            IncludeResourceType(relationship.RightType, resourceTypesFound);
         }
     }
 }

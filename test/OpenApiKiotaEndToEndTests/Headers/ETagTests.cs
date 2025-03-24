@@ -139,7 +139,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         {
             Data = new DataInCreateCountryRequest
             {
-                Type = CountryResourceType.Countries,
+                Type = ResourceType.Countries,
                 Attributes = new AttributesInCreateCountryRequest
                 {
                     Name = newCountry.Name,
@@ -149,7 +149,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         };
 
         // Act
-        CountryPrimaryResponseDocument? response =
+        PrimaryCountryResponseDocument? response =
             await apiClient.Countries.PostAsync(requestBody, configuration => configuration.Options.Add(headerInspector));
 
         // Assert

@@ -128,7 +128,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         };
 
         // Act
-        ApiResponse<CountryPrimaryResponseDocument?> response = await ApiResponse.TranslateAsync(async () => await apiClient.PostCountryAsync(requestBody));
+        ApiResponse<PrimaryCountryResponseDocument?> response = await ApiResponse.TranslateAsync(async () => await apiClient.PostCountryAsync(requestBody));
 
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.Created);

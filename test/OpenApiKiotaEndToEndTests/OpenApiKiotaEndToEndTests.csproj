@@ -65,6 +65,38 @@
       <OutputPath>./%(Name)/GeneratedCode</OutputPath>
       <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
     </KiotaReference>
+    <KiotaReference Include="../OpenApiTests/ResourceInheritance/NoOperations/GeneratedSwagger/swagger.g.json">
+      <Subcategory>ResourceInheritance</Subcategory>
+      <Name>NoOperations</Name>
+      <NamespaceName>$(MSBuildProjectName).%(Subcategory).%(Name).GeneratedCode</NamespaceName>
+      <ClassName>%(Name)InheritanceClient</ClassName>
+      <OutputPath>./%(Subcategory)/%(Name)/GeneratedCode</OutputPath>
+      <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
+    </KiotaReference>
+    <KiotaReference Include="../OpenApiTests/ResourceInheritance/OnlyRelationships/GeneratedSwagger/swagger.g.json">
+      <Subcategory>ResourceInheritance</Subcategory>
+      <Name>OnlyRelationships</Name>
+      <NamespaceName>$(MSBuildProjectName).%(Subcategory).%(Name).GeneratedCode</NamespaceName>
+      <ClassName>%(Name)InheritanceClient</ClassName>
+      <OutputPath>./%(Subcategory)/%(Name)/GeneratedCode</OutputPath>
+      <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
+    </KiotaReference>
+    <KiotaReference Include="../OpenApiTests/ResourceInheritance/SubsetOfOperations/GeneratedSwagger/swagger.g.json">
+      <Subcategory>ResourceInheritance</Subcategory>
+      <Name>SubsetOfOperations</Name>
+      <NamespaceName>$(MSBuildProjectName).%(Subcategory).%(Name).GeneratedCode</NamespaceName>
+      <ClassName>%(Name)InheritanceClient</ClassName>
+      <OutputPath>./%(Subcategory)/%(Name)/GeneratedCode</OutputPath>
+      <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
+    </KiotaReference>
+    <KiotaReference Include="../OpenApiTests/ResourceInheritance/SubsetOfVarious/GeneratedSwagger/swagger.g.json">
+      <Subcategory>ResourceInheritance</Subcategory>
+      <Name>SubsetOfVarious</Name>
+      <NamespaceName>$(MSBuildProjectName).%(Subcategory).%(Name).GeneratedCode</NamespaceName>
+      <ClassName>%(Name)InheritanceClient</ClassName>
+      <OutputPath>./%(Subcategory)/%(Name)/GeneratedCode</OutputPath>
+      <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
+    </KiotaReference>
     <KiotaReference Include="../OpenApiTests/RestrictedControllers/GeneratedSwagger/swagger.g.json">
       <Name>RestrictedControllers</Name>
       <NamespaceName>$(MSBuildProjectName).%(Name).GeneratedCode</NamespaceName>

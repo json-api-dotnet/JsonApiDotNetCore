@@ -1,8 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators;
-using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Bodies;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
+using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 using JsonApiDotNetCore.Serialization.Response;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +34,10 @@ public static class ServiceCollectionExtensions
         {
             services.Configure(configureSwaggerGenOptions);
         }
+
+        services.AddSingleton<IJsonApiContentNegotiator, OpenApiContentNegotiator>();
+        services.TryAddSingleton<IJsonApiRequestAccessor, JsonApiRequestAccessor>();
+        services.Replace(ServiceDescriptor.Singleton<IJsonApiApplicationBuilderEvents, OpenApiApplicationBuilderEvents>());
     }
 
     private static void AddCustomApiExplorer(IServiceCollection services)
@@ -71,7 +77,6 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<ResourceDocumentationReader>();
         services.TryAddSingleton<OpenApiOperationIdSelector>();
         services.TryAddSingleton<JsonApiSchemaIdSelector>();
-        services.TryAddSingleton<IncludeDependencyScanner>();
     }
 
     private static void AddSwaggerGenerator(IServiceCollection services)
@@ -90,19 +95,16 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<SchemaGenerator>();
         services.TryAddSingleton<ISchemaGenerator, JsonApiSchemaGenerator>();
 
-        services.TryAddEnumerable(ServiceDescriptor.Singleton<BodySchemaGenerator, ResourceOrRelationshipBodySchemaGenerator>());
-        services.TryAddEnumerable(ServiceDescriptor.Singleton<BodySchemaGenerator, AtomicOperationsBodySchemaGenerator>());
-        services.TryAddEnumerable(ServiceDescriptor.Singleton<BodySchemaGenerator, ErrorResponseBodySchemaGenerator>());
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<DocumentSchemaGenerator, ResourceOrRelationshipDocumentSchemaGenerator>());
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<DocumentSchemaGenerator, AtomicOperationsDocumentSchemaGenerator>());
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<DocumentSchemaGenerator, ErrorResponseDocumentSchemaGenerator>());
 
         services.TryAddSingleton<AtomicOperationCodeSchemaGenerator>();
         services.TryAddSingleton<ResourceTypeSchemaGenerator>();
         services.TryAddSingleton<ResourceIdSchemaGenerator>();
         services.TryAddSingleton<MetaSchemaGenerator>();
-        services.TryAddSingleton<ResourceIdentifierSchemaGenerator>();
         services.TryAddSingleton<RelationshipIdentifierSchemaGenerator>();
         services.TryAddSingleton<RelationshipNameSchemaGenerator>();
-        services.TryAddSingleton<AbstractResourceDataSchemaGenerator>();
-        services.TryAddSingleton<AbstractAtomicOperationSchemaGenerator>();
         services.TryAddSingleton<DataSchemaGenerator>();
         services.TryAddSingleton<DataContainerSchemaGenerator>();
         services.TryAddSingleton<LinksVisibilitySchemaGenerator>();

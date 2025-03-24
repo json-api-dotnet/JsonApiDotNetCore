@@ -44,7 +44,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         {
             Data = new DataInCreateCountryRequest
             {
-                Type = CountryResourceType.Countries,
+                Type = ResourceType.Countries,
                 Attributes = new AttributesInCreateCountryRequest
                 {
                     Name = newCountry.Name,
@@ -54,7 +54,7 @@ public sealed class HeaderTests : IClassFixture<IntegrationTestContext<OpenApiSt
         };
 
         // Act
-        CountryPrimaryResponseDocument? response =
+        PrimaryCountryResponseDocument? response =
             await apiClient.Countries.PostAsync(requestBody, configuration => configuration.Options.Add(headerInspector));
 
         // Assert

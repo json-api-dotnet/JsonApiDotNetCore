@@ -53,7 +53,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/airplane-collection-response-document"
                 }
@@ -75,7 +75,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -176,7 +176,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the airplane to create.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -202,9 +202,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/airplane-primary-response-document"
+                  "$ref": "#/components/schemas/primary-airplane-response-document"
                 }
               }
             }
@@ -215,7 +215,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -225,7 +225,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -235,7 +235,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -245,7 +245,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -255,7 +255,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -317,9 +317,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/airplane-primary-response-document"
+                  "$ref": "#/components/schemas/primary-airplane-response-document"
                 }
               }
             }
@@ -339,7 +339,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -349,7 +349,7 @@
           "404": {
             "description": "The airplane does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -471,7 +471,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the airplane to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -487,9 +487,9 @@
           "200": {
             "description": "The airplane was successfully updated, which resulted in additional changes. The updated airplane is returned.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/airplane-primary-response-document"
+                  "$ref": "#/components/schemas/primary-airplane-response-document"
                 }
               }
             }
@@ -500,7 +500,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -510,7 +510,7 @@
           "404": {
             "description": "The airplane or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -520,7 +520,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -530,7 +530,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -563,7 +563,7 @@
           "404": {
             "description": "The airplane does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -625,7 +625,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/flight-collection-response-document"
                 }
@@ -647,7 +647,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -657,7 +657,7 @@
           "404": {
             "description": "The airplane does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -799,7 +799,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/flight-identifier-collection-response-document"
                 }
@@ -821,7 +821,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -831,7 +831,7 @@
           "404": {
             "description": "The airplane does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -940,7 +940,7 @@
         "requestBody": {
           "description": "The identities of the flights to add to the flights relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -959,7 +959,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -969,7 +969,7 @@
           "404": {
             "description": "The airplane or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -979,7 +979,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -989,7 +989,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1018,7 +1018,7 @@
         "requestBody": {
           "description": "The identities of the flights to assign to the flights relationship, or an empty array to clear the relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -1037,7 +1037,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1047,7 +1047,7 @@
           "404": {
             "description": "The airplane or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1057,7 +1057,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1067,7 +1067,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1096,7 +1096,7 @@
         "requestBody": {
           "description": "The identities of the flights to remove from the flights relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -1115,7 +1115,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1125,7 +1125,7 @@
           "404": {
             "description": "The airplane or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1135,7 +1135,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1145,7 +1145,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1198,7 +1198,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/flight-attendant-collection-response-document"
                 }
@@ -1220,7 +1220,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1321,7 +1321,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the flight-attendant to create.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -1347,9 +1347,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/flight-attendant-primary-response-document"
+                  "$ref": "#/components/schemas/primary-flight-attendant-response-document"
                 }
               }
             }
@@ -1360,7 +1360,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1370,7 +1370,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1380,7 +1380,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1390,7 +1390,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1400,7 +1400,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1462,9 +1462,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/flight-attendant-primary-response-document"
+                  "$ref": "#/components/schemas/primary-flight-attendant-response-document"
                 }
               }
             }
@@ -1484,7 +1484,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1494,7 +1494,7 @@
           "404": {
             "description": "The flight-attendant does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1616,7 +1616,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the flight-attendant to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -1632,9 +1632,9 @@
           "200": {
             "description": "The flight-attendant was successfully updated, which resulted in additional changes. The updated flight-attendant is returned.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/flight-attendant-primary-response-document"
+                  "$ref": "#/components/schemas/primary-flight-attendant-response-document"
                 }
               }
             }
@@ -1645,7 +1645,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1655,7 +1655,7 @@
           "404": {
             "description": "The flight-attendant or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1665,7 +1665,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1675,7 +1675,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1708,7 +1708,7 @@
           "404": {
             "description": "The flight-attendant does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1770,7 +1770,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/flight-collection-response-document"
                 }
@@ -1792,7 +1792,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1802,7 +1802,7 @@
           "404": {
             "description": "The flight-attendant does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1944,7 +1944,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/flight-identifier-collection-response-document"
                 }
@@ -1966,7 +1966,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -1976,7 +1976,7 @@
           "404": {
             "description": "The flight-attendant does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2085,7 +2085,7 @@
         "requestBody": {
           "description": "The identities of the flights to add to the purser-on-flights relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -2104,7 +2104,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2114,7 +2114,7 @@
           "404": {
             "description": "The flight-attendant or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2124,7 +2124,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2134,7 +2134,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2163,7 +2163,7 @@
         "requestBody": {
           "description": "The identities of the flights to assign to the purser-on-flights relationship, or an empty array to clear the relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -2182,7 +2182,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2192,7 +2192,7 @@
           "404": {
             "description": "The flight-attendant or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2202,7 +2202,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2212,7 +2212,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2241,7 +2241,7 @@
         "requestBody": {
           "description": "The identities of the flights to remove from the purser-on-flights relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -2260,7 +2260,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2270,7 +2270,7 @@
           "404": {
             "description": "The flight-attendant or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2280,7 +2280,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2290,7 +2290,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2352,7 +2352,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/flight-collection-response-document"
                 }
@@ -2374,7 +2374,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2384,7 +2384,7 @@
           "404": {
             "description": "The flight-attendant does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2526,7 +2526,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/flight-identifier-collection-response-document"
                 }
@@ -2548,7 +2548,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2558,7 +2558,7 @@
           "404": {
             "description": "The flight-attendant does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2667,7 +2667,7 @@
         "requestBody": {
           "description": "The identities of the flights to add to the scheduled-for-flights relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -2686,7 +2686,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2696,7 +2696,7 @@
           "404": {
             "description": "The flight-attendant or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2706,7 +2706,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2716,7 +2716,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2745,7 +2745,7 @@
         "requestBody": {
           "description": "The identities of the flights to assign to the scheduled-for-flights relationship, or an empty array to clear the relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -2764,7 +2764,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2774,7 +2774,7 @@
           "404": {
             "description": "The flight-attendant or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2784,7 +2784,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2794,7 +2794,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2823,7 +2823,7 @@
         "requestBody": {
           "description": "The identities of the flights to remove from the scheduled-for-flights relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -2842,7 +2842,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2852,7 +2852,7 @@
           "404": {
             "description": "The flight-attendant or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2862,7 +2862,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2872,7 +2872,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -2925,7 +2925,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/flight-collection-response-document"
                 }
@@ -2947,7 +2947,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -3048,7 +3048,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the flight to create.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -3074,9 +3074,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/flight-primary-response-document"
+                  "$ref": "#/components/schemas/primary-flight-response-document"
                 }
               }
             }
@@ -3087,7 +3087,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -3097,7 +3097,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -3107,7 +3107,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -3117,7 +3117,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -3127,7 +3127,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -3189,9 +3189,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/flight-primary-response-document"
+                  "$ref": "#/components/schemas/primary-flight-response-document"
                 }
               }
             }
@@ -3211,7 +3211,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -3221,7 +3221,7 @@
           "404": {
             "description": "The flight does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -3343,7 +3343,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the flight to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -3359,9 +3359,9 @@
           "200": {
             "description": "The flight was successfully updated, which resulted in additional changes. The updated flight is returned.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/flight-primary-response-document"
+                  "$ref": "#/components/schemas/primary-flight-response-document"
                 }
               }
             }
@@ -3372,7 +3372,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -3382,7 +3382,7 @@
           "404": {
             "description": "The flight or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -3392,7 +3392,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -3402,7 +3402,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -3435,7 +3435,7 @@
           "404": {
             "description": "The flight does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -3497,9 +3497,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/nullable-flight-attendant-secondary-response-document"
+                  "$ref": "#/components/schemas/nullable-secondary-flight-attendant-response-document"
                 }
               }
             }
@@ -3519,7 +3519,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -3529,7 +3529,7 @@
           "404": {
             "description": "The flight does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -3671,7 +3671,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/nullable-flight-attendant-identifier-response-document"
                 }
@@ -3693,7 +3693,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -3703,7 +3703,7 @@
           "404": {
             "description": "The flight does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -3812,7 +3812,7 @@
         "requestBody": {
           "description": "The identity of the flight-attendant to assign to the backup-purser relationship, or `null` to clear the relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -3831,7 +3831,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -3841,7 +3841,7 @@
           "404": {
             "description": "The flight or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -3851,7 +3851,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -3861,7 +3861,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -3923,7 +3923,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/flight-attendant-collection-response-document"
                 }
@@ -3945,7 +3945,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -3955,7 +3955,7 @@
           "404": {
             "description": "The flight does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4097,7 +4097,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/flight-attendant-identifier-collection-response-document"
                 }
@@ -4119,7 +4119,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4129,7 +4129,7 @@
           "404": {
             "description": "The flight does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4238,7 +4238,7 @@
         "requestBody": {
           "description": "The identities of the flight-attendants to add to the cabin-crew-members relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -4257,7 +4257,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4267,7 +4267,7 @@
           "404": {
             "description": "The flight or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4277,7 +4277,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4287,7 +4287,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4316,7 +4316,7 @@
         "requestBody": {
           "description": "The identities of the flight-attendants to assign to the cabin-crew-members relationship, or an empty array to clear the relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -4335,7 +4335,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4345,7 +4345,7 @@
           "404": {
             "description": "The flight or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4355,7 +4355,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4365,7 +4365,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4394,7 +4394,7 @@
         "requestBody": {
           "description": "The identities of the flight-attendants to remove from the cabin-crew-members relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -4413,7 +4413,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4423,7 +4423,7 @@
           "404": {
             "description": "The flight or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4433,7 +4433,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4443,7 +4443,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4505,7 +4505,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/passenger-collection-response-document"
                 }
@@ -4527,7 +4527,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4537,7 +4537,7 @@
           "404": {
             "description": "The flight does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4679,7 +4679,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/passenger-identifier-collection-response-document"
                 }
@@ -4701,7 +4701,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4711,7 +4711,7 @@
           "404": {
             "description": "The flight does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4820,7 +4820,7 @@
         "requestBody": {
           "description": "The identities of the passengers to add to the passengers relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -4839,7 +4839,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4849,7 +4849,7 @@
           "404": {
             "description": "The flight or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4859,7 +4859,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4869,7 +4869,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4898,7 +4898,7 @@
         "requestBody": {
           "description": "The identities of the passengers to assign to the passengers relationship, or an empty array to clear the relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -4917,7 +4917,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4927,7 +4927,7 @@
           "404": {
             "description": "The flight or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4937,7 +4937,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4947,7 +4947,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -4976,7 +4976,7 @@
         "requestBody": {
           "description": "The identities of the passengers to remove from the passengers relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -4995,7 +4995,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5005,7 +5005,7 @@
           "404": {
             "description": "The flight or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5015,7 +5015,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5025,7 +5025,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5087,9 +5087,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/flight-attendant-secondary-response-document"
+                  "$ref": "#/components/schemas/secondary-flight-attendant-response-document"
                 }
               }
             }
@@ -5109,7 +5109,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5119,7 +5119,7 @@
           "404": {
             "description": "The flight does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5261,7 +5261,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/flight-attendant-identifier-response-document"
                 }
@@ -5283,7 +5283,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5293,7 +5293,7 @@
           "404": {
             "description": "The flight does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5402,7 +5402,7 @@
         "requestBody": {
           "description": "The identity of the flight-attendant to assign to the purser relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -5421,7 +5421,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5431,7 +5431,7 @@
           "404": {
             "description": "The flight or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5441,7 +5441,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5451,7 +5451,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5504,7 +5504,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/passenger-collection-response-document"
                 }
@@ -5526,7 +5526,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5627,7 +5627,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the passenger to create.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -5653,9 +5653,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/passenger-primary-response-document"
+                  "$ref": "#/components/schemas/primary-passenger-response-document"
                 }
               }
             }
@@ -5666,7 +5666,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5676,7 +5676,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5686,7 +5686,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5696,7 +5696,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5706,7 +5706,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5768,9 +5768,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/passenger-primary-response-document"
+                  "$ref": "#/components/schemas/primary-passenger-response-document"
                 }
               }
             }
@@ -5790,7 +5790,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5800,7 +5800,7 @@
           "404": {
             "description": "The passenger does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5922,7 +5922,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the passenger to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -5938,9 +5938,9 @@
           "200": {
             "description": "The passenger was successfully updated, which resulted in additional changes. The updated passenger is returned.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/passenger-primary-response-document"
+                  "$ref": "#/components/schemas/primary-passenger-response-document"
                 }
               }
             }
@@ -5951,7 +5951,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5961,7 +5961,7 @@
           "404": {
             "description": "The passenger or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5971,7 +5971,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -5981,7 +5981,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -6014,7 +6014,7 @@
           "404": {
             "description": "The passenger does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
                 }
@@ -6045,51 +6045,6 @@
         "type": "string",
         "description": "Lists the various airlines used in this API."
       },
-      "airplane-attributes-in-response": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "maxLength": 255,
-            "type": "string"
-          },
-          "serial-number": {
-            "maxLength": 16,
-            "type": "string",
-            "nullable": true
-          },
-          "airtime-in-hours": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "last-serviced-at": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "manufactured-at": {
-            "type": "string",
-            "description": "Gets the day on which this airplane was manufactured.",
-            "format": "date-time"
-          },
-          "is-in-maintenance": {
-            "type": "boolean"
-          },
-          "manufactured-in-city": {
-            "maxLength": 85,
-            "type": "string",
-            "nullable": true
-          },
-          "kind": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/aircraft-kind"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
       "airplane-collection-response-document": {
         "required": [
           "data",
@@ -6114,13 +6069,13 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/airplane-data-in-response"
+              "$ref": "#/components/schemas/data-in-airplane-response"
             }
           },
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/data-in-response"
+              "$ref": "#/components/schemas/resource-in-response"
             }
           },
           "meta": {
@@ -6133,38 +6088,50 @@
         },
         "additionalProperties": false
       },
-      "airplane-data-in-response": {
+      "attributes-in-airplane-response": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/data-in-response"
+            "$ref": "#/components/schemas/attributes-in-response"
           },
           {
-            "required": [
-              "id"
-            ],
             "type": "object",
             "properties": {
-              "id": {
+              "name": {
+                "maxLength": 255,
                 "type": "string"
               },
-              "attributes": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/airplane-attributes-in-response"
-                  }
-                ]
+              "serial-number": {
+                "maxLength": 16,
+                "type": "string",
+                "nullable": true
               },
-              "relationships": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/airplane-relationships-in-response"
-                  }
-                ]
+              "airtime-in-hours": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
               },
-              "links": {
+              "last-serviced-at": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "manufactured-at": {
+                "type": "string",
+                "description": "Gets the day on which this airplane was manufactured.",
+                "format": "date-time"
+              },
+              "is-in-maintenance": {
+                "type": "boolean"
+              },
+              "manufactured-in-city": {
+                "maxLength": 85,
+                "type": "string",
+                "nullable": true
+              },
+              "kind": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/resource-links"
+                    "$ref": "#/components/schemas/aircraft-kind"
                   }
                 ]
               }
@@ -6174,216 +6141,390 @@
         ],
         "additionalProperties": false
       },
-      "airplane-primary-response-document": {
-        "required": [
-          "data",
-          "links"
-        ],
-        "type": "object",
-        "properties": {
-          "jsonapi": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/jsonapi"
-              }
-            ]
-          },
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resource-top-level-links"
-              }
-            ]
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/airplane-data-in-response"
-              }
-            ]
-          },
-          "included": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/data-in-response"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "airplane-relationships-in-response": {
-        "type": "object",
-        "properties": {
-          "flights": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/to-many-flight-in-response"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "airplane-resource-type": {
-        "enum": [
-          "airplanes"
-        ],
-        "type": "string"
-      },
       "attributes-in-create-airplane-request": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "maxLength": 255,
-            "type": "string"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributes-in-create-request"
           },
-          "serial-number": {
-            "maxLength": 16,
-            "type": "string",
-            "nullable": true
-          },
-          "airtime-in-hours": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "last-serviced-at": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
+          {
+            "required": [
+              "name"
+            ],
+            "type": "object",
+            "properties": {
+              "name": {
+                "maxLength": 255,
+                "type": "string"
+              },
+              "serial-number": {
+                "maxLength": 16,
+                "type": "string",
+                "nullable": true
+              },
+              "airtime-in-hours": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "last-serviced-at": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "attributes-in-create-flight-attendant-request": {
-        "required": [
-          "email-address",
-          "profile-image-url"
-        ],
-        "type": "object",
-        "properties": {
-          "email-address": {
-            "minLength": 1,
-            "type": "string",
-            "format": "email"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributes-in-create-request"
           },
-          "age": {
-            "maximum": 75,
-            "minimum": 18,
-            "type": "integer",
-            "format": "int32"
-          },
-          "profile-image-url": {
-            "type": "string",
-            "format": "uri"
+          {
+            "required": [
+              "email-address",
+              "profile-image-url"
+            ],
+            "type": "object",
+            "properties": {
+              "email-address": {
+                "minLength": 1,
+                "type": "string",
+                "format": "email"
+              },
+              "age": {
+                "maximum": 75,
+                "minimum": 18,
+                "type": "integer",
+                "format": "int32"
+              },
+              "profile-image-url": {
+                "type": "string",
+                "format": "uri"
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "attributes-in-create-passenger-request": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributes-in-create-request"
+          },
+          {
+            "required": [
+              "document-number"
+            ],
+            "type": "object",
+            "properties": {
+              "document-number": {
+                "maxLength": 9,
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributes-in-create-request": {
         "required": [
-          "document-number"
+          "openapi:discriminator"
         ],
         "type": "object",
         "properties": {
-          "document-number": {
-            "maxLength": 9,
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "attributes-in-update-airplane-request": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "maxLength": 255,
-            "type": "string"
-          },
-          "serial-number": {
-            "maxLength": 16,
-            "type": "string",
-            "nullable": true
-          },
-          "airtime-in-hours": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "last-serviced-at": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "is-in-maintenance": {
-            "type": "boolean"
-          },
-          "manufactured-in-city": {
-            "maxLength": 85,
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "attributes-in-update-flight-attendant-request": {
-        "type": "object",
-        "properties": {
-          "email-address": {
-            "minLength": 1,
-            "type": "string",
-            "format": "email"
-          },
-          "age": {
-            "maximum": 75,
-            "minimum": 18,
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "attributes-in-update-flight-request": {
-        "type": "object",
-        "properties": {
-          "final-destination": {
-            "maxLength": 40,
-            "type": "string"
-          },
-          "stop-over-destination": {
-            "maxLength": 2000,
-            "type": "string",
-            "nullable": true
-          },
-          "operated-by": {
+          "openapi:discriminator": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/airline"
+                "$ref": "#/components/schemas/resource-type"
               }
             ]
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "airplanes": "#/components/schemas/attributes-in-create-airplane-request",
+            "flight-attendants": "#/components/schemas/attributes-in-create-flight-attendant-request",
+            "passengers": "#/components/schemas/attributes-in-create-passenger-request"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributes-in-flight-attendant-response": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributes-in-response"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "email-address": {
+                "minLength": 1,
+                "type": "string",
+                "format": "email"
+              },
+              "age": {
+                "maximum": 75,
+                "minimum": 18,
+                "type": "integer",
+                "format": "int32"
+              },
+              "profile-image-url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "distance-traveled-in-kilometers": {
+                "type": "integer",
+                "format": "int64"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributes-in-flight-response": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributes-in-response"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "final-destination": {
+                "maxLength": 40,
+                "type": "string"
+              },
+              "stop-over-destination": {
+                "maxLength": 2000,
+                "type": "string",
+                "nullable": true
+              },
+              "operated-by": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/airline"
+                  }
+                ]
+              },
+              "departs-at": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "arrives-at": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "services-on-board": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributes-in-passenger-response": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributes-in-response"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "full-name": {
+                "type": "string",
+                "nullable": true
+              },
+              "cabin-area": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/cabin-area"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributes-in-response": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resource-type"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "airplanes": "#/components/schemas/attributes-in-airplane-response",
+            "flight-attendants": "#/components/schemas/attributes-in-flight-attendant-response",
+            "flights": "#/components/schemas/attributes-in-flight-response",
+            "passengers": "#/components/schemas/attributes-in-passenger-response"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributes-in-update-airplane-request": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributes-in-update-request"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "maxLength": 255,
+                "type": "string"
+              },
+              "serial-number": {
+                "maxLength": 16,
+                "type": "string",
+                "nullable": true
+              },
+              "airtime-in-hours": {
+                "type": "integer",
+                "format": "int32",
+                "nullable": true
+              },
+              "last-serviced-at": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "is-in-maintenance": {
+                "type": "boolean"
+              },
+              "manufactured-in-city": {
+                "maxLength": 85,
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributes-in-update-flight-attendant-request": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributes-in-update-request"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "email-address": {
+                "minLength": 1,
+                "type": "string",
+                "format": "email"
+              },
+              "age": {
+                "maximum": 75,
+                "minimum": 18,
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributes-in-update-flight-request": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributes-in-update-request"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "final-destination": {
+                "maxLength": 40,
+                "type": "string"
+              },
+              "stop-over-destination": {
+                "maxLength": 2000,
+                "type": "string",
+                "nullable": true
+              },
+              "operated-by": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/airline"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "attributes-in-update-passenger-request": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributes-in-update-request"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "document-number": {
+                "maxLength": 9,
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributes-in-update-request": {
+        "required": [
+          "openapi:discriminator"
+        ],
         "type": "object",
         "properties": {
-          "document-number": {
-            "maxLength": 9,
-            "type": "string"
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resource-type"
+              }
+            ]
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "airplanes": "#/components/schemas/attributes-in-update-airplane-request",
+            "flight-attendants": "#/components/schemas/attributes-in-update-flight-attendant-request",
+            "flights": "#/components/schemas/attributes-in-update-flight-request",
+            "passengers": "#/components/schemas/attributes-in-update-passenger-request"
+          }
+        },
+        "x-abstract": true
       },
       "cabin-area": {
         "enum": [
@@ -6485,328 +6626,396 @@
         },
         "additionalProperties": false
       },
-      "data-in-create-airplane-request": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/airplane-resource-type"
-              }
-            ]
+      "data-in-airplane-response": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resource-in-response"
           },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributes-in-create-airplane-request"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributes-in-airplane-response"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationships-in-airplane-response"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resource-links"
+                  }
+                ]
               }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationships-in-create-airplane-request"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
+        "additionalProperties": false
+      },
+      "data-in-create-airplane-request": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resource-in-create-request"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributes-in-create-airplane-request"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationships-in-create-airplane-request"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "data-in-create-flight-attendant-request": {
-        "required": [
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-attendant-resource-type"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resource-in-create-request"
           },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributes-in-create-flight-attendant-request"
+          {
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributes-in-create-flight-attendant-request"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationships-in-create-flight-attendant-request"
+                  }
+                ]
               }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationships-in-create-flight-attendant-request"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "data-in-create-flight-request": {
-        "required": [
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-resource-type"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resource-in-create-request"
           },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationships-in-create-flight-request"
+          {
+            "type": "object",
+            "properties": {
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationships-in-create-flight-request"
+                  }
+                ]
               }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "data-in-create-passenger-request": {
-        "required": [
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/passenger-resource-type"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resource-in-create-request"
           },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributes-in-create-passenger-request"
+          {
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributes-in-create-passenger-request"
+                  }
+                ]
               }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
-      "data-in-response": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resource-type"
-              }
-            ]
+      "data-in-flight-attendant-response": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resource-in-response"
           },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributes-in-flight-attendant-response"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationships-in-flight-attendant-response"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resource-links"
+                  }
+                ]
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
-        "additionalProperties": false,
-        "discriminator": {
-          "propertyName": "type",
-          "mapping": {
-            "airplanes": "#/components/schemas/airplane-data-in-response",
-            "flight-attendants": "#/components/schemas/flight-attendant-data-in-response",
-            "flights": "#/components/schemas/flight-data-in-response",
-            "passengers": "#/components/schemas/passenger-data-in-response"
+        ],
+        "additionalProperties": false
+      },
+      "data-in-flight-response": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resource-in-response"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributes-in-flight-response"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationships-in-flight-response"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resource-links"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
           }
-        },
-        "x-abstract": true
+        ],
+        "additionalProperties": false
+      },
+      "data-in-passenger-response": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resource-in-response"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributes-in-passenger-response"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resource-links"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
       },
       "data-in-update-airplane-request": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/airplane-resource-type"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resource-in-update-request"
           },
-          "id": {
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributes-in-update-airplane-request"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributes-in-update-airplane-request"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationships-in-update-airplane-request"
+                  }
+                ]
               }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationships-in-update-airplane-request"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "data-in-update-flight-attendant-request": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-attendant-resource-type"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resource-in-update-request"
           },
-          "id": {
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributes-in-update-flight-attendant-request"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributes-in-update-flight-attendant-request"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationships-in-update-flight-attendant-request"
+                  }
+                ]
               }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationships-in-update-flight-attendant-request"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "data-in-update-flight-request": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-resource-type"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resource-in-update-request"
           },
-          "id": {
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributes-in-update-flight-request"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributes-in-update-flight-request"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationships-in-update-flight-request"
+                  }
+                ]
               }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationships-in-update-flight-request"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "data-in-update-passenger-request": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/passenger-resource-type"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resource-in-update-request"
           },
-          "id": {
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributes-in-update-passenger-request"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributes-in-update-passenger-request"
+                  }
+                ]
               }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "error-links": {
@@ -6938,31 +7147,6 @@
         },
         "additionalProperties": false
       },
-      "flight-attendant-attributes-in-response": {
-        "type": "object",
-        "properties": {
-          "email-address": {
-            "minLength": 1,
-            "type": "string",
-            "format": "email"
-          },
-          "age": {
-            "maximum": 75,
-            "minimum": 18,
-            "type": "integer",
-            "format": "int32"
-          },
-          "profile-image-url": {
-            "type": "string",
-            "format": "uri"
-          },
-          "distance-traveled-in-kilometers": {
-            "type": "integer",
-            "format": "int64"
-          }
-        },
-        "additionalProperties": false
-      },
       "flight-attendant-collection-response-document": {
         "required": [
           "data",
@@ -6987,13 +7171,13 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/flight-attendant-data-in-response"
+              "$ref": "#/components/schemas/data-in-flight-attendant-response"
             }
           },
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/data-in-response"
+              "$ref": "#/components/schemas/resource-in-response"
             }
           },
           "meta": {
@@ -7004,47 +7188,6 @@
             ]
           }
         },
-        "additionalProperties": false
-      },
-      "flight-attendant-data-in-response": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/data-in-response"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "attributes": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/flight-attendant-attributes-in-response"
-                  }
-                ]
-              },
-              "relationships": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/flight-attendant-relationships-in-response"
-                  }
-                ]
-              },
-              "links": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/resource-links"
-                  }
-                ]
-              }
-            },
-            "additionalProperties": false
-          }
-        ],
         "additionalProperties": false
       },
       "flight-attendant-identifier-collection-response-document": {
@@ -7085,30 +7228,24 @@
         "additionalProperties": false
       },
       "flight-attendant-identifier-in-request": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-attendant-resource-type"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/identifier-in-request"
           },
-          "id": {
-            "type": "string"
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "flight-attendant-identifier-in-response": {
@@ -7176,157 +7313,11 @@
         },
         "additionalProperties": false
       },
-      "flight-attendant-primary-response-document": {
-        "required": [
-          "data",
-          "links"
-        ],
-        "type": "object",
-        "properties": {
-          "jsonapi": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/jsonapi"
-              }
-            ]
-          },
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resource-top-level-links"
-              }
-            ]
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-attendant-data-in-response"
-              }
-            ]
-          },
-          "included": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/data-in-response"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "flight-attendant-relationships-in-response": {
-        "type": "object",
-        "properties": {
-          "scheduled-for-flights": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/to-many-flight-in-response"
-              }
-            ]
-          },
-          "purser-on-flights": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/to-many-flight-in-response"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
       "flight-attendant-resource-type": {
         "enum": [
           "flight-attendants"
         ],
         "type": "string"
-      },
-      "flight-attendant-secondary-response-document": {
-        "required": [
-          "data",
-          "links"
-        ],
-        "type": "object",
-        "properties": {
-          "jsonapi": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/jsonapi"
-              }
-            ]
-          },
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resource-top-level-links"
-              }
-            ]
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-attendant-data-in-response"
-              }
-            ]
-          },
-          "included": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/data-in-response"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "flight-attributes-in-response": {
-        "type": "object",
-        "properties": {
-          "final-destination": {
-            "maxLength": 40,
-            "type": "string"
-          },
-          "stop-over-destination": {
-            "maxLength": 2000,
-            "type": "string",
-            "nullable": true
-          },
-          "operated-by": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/airline"
-              }
-            ]
-          },
-          "departs-at": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "arrives-at": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "services-on-board": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        },
-        "additionalProperties": false
       },
       "flight-collection-response-document": {
         "required": [
@@ -7352,13 +7343,13 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/flight-data-in-response"
+              "$ref": "#/components/schemas/data-in-flight-response"
             }
           },
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/data-in-response"
+              "$ref": "#/components/schemas/resource-in-response"
             }
           },
           "meta": {
@@ -7369,47 +7360,6 @@
             ]
           }
         },
-        "additionalProperties": false
-      },
-      "flight-data-in-response": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/data-in-response"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "attributes": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/flight-attributes-in-response"
-                  }
-                ]
-              },
-              "relationships": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/flight-relationships-in-response"
-                  }
-                ]
-              },
-              "links": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/resource-links"
-                  }
-                ]
-              }
-            },
-            "additionalProperties": false
-          }
-        ],
         "additionalProperties": false
       },
       "flight-identifier-collection-response-document": {
@@ -7450,30 +7400,24 @@
         "additionalProperties": false
       },
       "flight-identifier-in-request": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-resource-type"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/identifier-in-request"
           },
-          "id": {
-            "type": "string"
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "flight-identifier-in-response": {
@@ -7503,39 +7447,24 @@
         },
         "additionalProperties": false
       },
-      "flight-primary-response-document": {
+      "flight-resource-type": {
+        "enum": [
+          "flights"
+        ],
+        "type": "string"
+      },
+      "identifier-in-request": {
         "required": [
-          "data",
-          "links"
+          "type"
         ],
         "type": "object",
         "properties": {
-          "jsonapi": {
+          "type": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/jsonapi"
+                "$ref": "#/components/schemas/resource-type"
               }
             ]
-          },
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resource-top-level-links"
-              }
-            ]
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-data-in-response"
-              }
-            ]
-          },
-          "included": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/data-in-response"
-            }
           },
           "meta": {
             "allOf": [
@@ -7545,47 +7474,16 @@
             ]
           }
         },
-        "additionalProperties": false
-      },
-      "flight-relationships-in-response": {
-        "type": "object",
-        "properties": {
-          "cabin-crew-members": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/to-many-flight-attendant-in-response"
-              }
-            ]
-          },
-          "purser": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/to-one-flight-attendant-in-response"
-              }
-            ]
-          },
-          "backup-purser": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullable-to-one-flight-attendant-in-response"
-              }
-            ]
-          },
-          "passengers": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/to-many-passenger-in-response"
-              }
-            ]
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "flight-attendants": "#/components/schemas/flight-attendant-identifier-in-request",
+            "flights": "#/components/schemas/flight-identifier-in-request",
+            "passengers": "#/components/schemas/passenger-identifier-in-request"
           }
         },
-        "additionalProperties": false
-      },
-      "flight-resource-type": {
-        "enum": [
-          "flights"
-        ],
-        "type": "string"
+        "x-abstract": true
       },
       "jsonapi": {
         "type": "object",
@@ -7660,7 +7558,7 @@
         },
         "additionalProperties": false
       },
-      "nullable-flight-attendant-secondary-response-document": {
+      "nullable-secondary-flight-attendant-response-document": {
         "required": [
           "data",
           "links"
@@ -7684,7 +7582,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/flight-attendant-data-in-response"
+                "$ref": "#/components/schemas/data-in-flight-attendant-response"
               }
             ],
             "nullable": true
@@ -7692,7 +7590,7 @@
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/data-in-response"
+              "$ref": "#/components/schemas/resource-in-response"
             }
           },
           "meta": {
@@ -7757,23 +7655,6 @@
         },
         "additionalProperties": false
       },
-      "passenger-attributes-in-response": {
-        "type": "object",
-        "properties": {
-          "full-name": {
-            "type": "string",
-            "nullable": true
-          },
-          "cabin-area": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/cabin-area"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
       "passenger-collection-response-document": {
         "required": [
           "data",
@@ -7798,13 +7679,13 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/passenger-data-in-response"
+              "$ref": "#/components/schemas/data-in-passenger-response"
             }
           },
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/data-in-response"
+              "$ref": "#/components/schemas/resource-in-response"
             }
           },
           "meta": {
@@ -7815,40 +7696,6 @@
             ]
           }
         },
-        "additionalProperties": false
-      },
-      "passenger-data-in-response": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/data-in-response"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "attributes": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/passenger-attributes-in-response"
-                  }
-                ]
-              },
-              "links": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/resource-links"
-                  }
-                ]
-              }
-            },
-            "additionalProperties": false
-          }
-        ],
         "additionalProperties": false
       },
       "passenger-identifier-collection-response-document": {
@@ -7889,30 +7736,24 @@
         "additionalProperties": false
       },
       "passenger-identifier-in-request": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/passenger-resource-type"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/identifier-in-request"
           },
-          "id": {
-            "type": "string"
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "passenger-identifier-in-response": {
@@ -7942,7 +7783,13 @@
         },
         "additionalProperties": false
       },
-      "passenger-primary-response-document": {
+      "passenger-resource-type": {
+        "enum": [
+          "passengers"
+        ],
+        "type": "string"
+      },
+      "primary-airplane-response-document": {
         "required": [
           "data",
           "links"
@@ -7966,14 +7813,14 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/passenger-data-in-response"
+                "$ref": "#/components/schemas/data-in-airplane-response"
               }
             ]
           },
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/data-in-response"
+              "$ref": "#/components/schemas/resource-in-response"
             }
           },
           "meta": {
@@ -7986,11 +7833,137 @@
         },
         "additionalProperties": false
       },
-      "passenger-resource-type": {
-        "enum": [
-          "passengers"
+      "primary-flight-attendant-response-document": {
+        "required": [
+          "data",
+          "links"
         ],
-        "type": "string"
+        "type": "object",
+        "properties": {
+          "jsonapi": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi"
+              }
+            ]
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resource-top-level-links"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/data-in-flight-attendant-response"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resource-in-response"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "primary-flight-response-document": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "jsonapi": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi"
+              }
+            ]
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resource-top-level-links"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/data-in-flight-response"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resource-in-response"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "primary-passenger-response-document": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "jsonapi": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi"
+              }
+            ]
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resource-top-level-links"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/data-in-passenger-response"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resource-in-response"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
       },
       "relationship-links": {
         "type": "object",
@@ -8004,142 +7977,356 @@
         },
         "additionalProperties": false
       },
-      "relationships-in-create-airplane-request": {
-        "type": "object",
-        "properties": {
-          "flights": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/to-many-flight-in-request"
+      "relationships-in-airplane-response": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationships-in-response"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "flights": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-in-response"
+                  }
+                ]
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
+        "additionalProperties": false
+      },
+      "relationships-in-create-airplane-request": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationships-in-create-request"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "flights": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-in-request"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "relationships-in-create-flight-attendant-request": {
-        "type": "object",
-        "properties": {
-          "scheduled-for-flights": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/to-many-flight-in-request"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationships-in-create-request"
           },
-          "purser-on-flights": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/to-many-flight-in-request"
+          {
+            "type": "object",
+            "properties": {
+              "scheduled-for-flights": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-in-request"
+                  }
+                ]
+              },
+              "purser-on-flights": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-in-request"
+                  }
+                ]
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "relationships-in-create-flight-request": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationships-in-create-request"
+          },
+          {
+            "required": [
+              "purser"
+            ],
+            "type": "object",
+            "properties": {
+              "cabin-crew-members": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-attendant-in-request"
+                  }
+                ]
+              },
+              "purser": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-one-flight-attendant-in-request"
+                  }
+                ]
+              },
+              "backup-purser": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullable-to-one-flight-attendant-in-request"
+                  }
+                ]
+              },
+              "passengers": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-passenger-in-request"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationships-in-create-request": {
         "required": [
-          "purser"
+          "openapi:discriminator"
         ],
         "type": "object",
         "properties": {
-          "cabin-crew-members": {
+          "openapi:discriminator": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/to-many-flight-attendant-in-request"
-              }
-            ]
-          },
-          "purser": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/to-one-flight-attendant-in-request"
-              }
-            ]
-          },
-          "backup-purser": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullable-to-one-flight-attendant-in-request"
-              }
-            ]
-          },
-          "passengers": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/to-many-passenger-in-request"
+                "$ref": "#/components/schemas/resource-type"
               }
             ]
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "airplanes": "#/components/schemas/relationships-in-create-airplane-request",
+            "flight-attendants": "#/components/schemas/relationships-in-create-flight-attendant-request",
+            "flights": "#/components/schemas/relationships-in-create-flight-request"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationships-in-flight-attendant-response": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationships-in-response"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "scheduled-for-flights": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-in-response"
+                  }
+                ]
+              },
+              "purser-on-flights": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-in-response"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
-      "relationships-in-update-airplane-request": {
+      "relationships-in-flight-response": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationships-in-response"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "cabin-crew-members": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-attendant-in-response"
+                  }
+                ]
+              },
+              "purser": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-one-flight-attendant-in-response"
+                  }
+                ]
+              },
+              "backup-purser": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullable-to-one-flight-attendant-in-response"
+                  }
+                ]
+              },
+              "passengers": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-passenger-in-response"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationships-in-response": {
+        "required": [
+          "openapi:discriminator"
+        ],
         "type": "object",
         "properties": {
-          "flights": {
+          "openapi:discriminator": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/to-many-flight-in-request"
+                "$ref": "#/components/schemas/resource-type"
               }
             ]
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "airplanes": "#/components/schemas/relationships-in-airplane-response",
+            "flight-attendants": "#/components/schemas/relationships-in-flight-attendant-response",
+            "flights": "#/components/schemas/relationships-in-flight-response"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationships-in-update-airplane-request": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationships-in-update-request"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "flights": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-in-request"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "relationships-in-update-flight-attendant-request": {
-        "type": "object",
-        "properties": {
-          "scheduled-for-flights": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/to-many-flight-in-request"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationships-in-update-request"
           },
-          "purser-on-flights": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/to-many-flight-in-request"
+          {
+            "type": "object",
+            "properties": {
+              "scheduled-for-flights": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-in-request"
+                  }
+                ]
+              },
+              "purser-on-flights": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-in-request"
+                  }
+                ]
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "relationships-in-update-flight-request": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationships-in-update-request"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "cabin-crew-members": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-attendant-in-request"
+                  }
+                ]
+              },
+              "purser": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-one-flight-attendant-in-request"
+                  }
+                ]
+              },
+              "backup-purser": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullable-to-one-flight-attendant-in-request"
+                  }
+                ]
+              },
+              "passengers": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-passenger-in-request"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationships-in-update-request": {
+        "required": [
+          "openapi:discriminator"
+        ],
         "type": "object",
         "properties": {
-          "cabin-crew-members": {
+          "openapi:discriminator": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/to-many-flight-attendant-in-request"
-              }
-            ]
-          },
-          "purser": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/to-one-flight-attendant-in-request"
-              }
-            ]
-          },
-          "backup-purser": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullable-to-one-flight-attendant-in-request"
-              }
-            ]
-          },
-          "passengers": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/to-many-passenger-in-request"
+                "$ref": "#/components/schemas/resource-type"
               }
             ]
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "airplanes": "#/components/schemas/relationships-in-update-airplane-request",
+            "flight-attendants": "#/components/schemas/relationships-in-update-flight-attendant-request",
+            "flights": "#/components/schemas/relationships-in-update-flight-request"
+          }
+        },
+        "x-abstract": true
       },
       "resource-collection-top-level-links": {
         "type": "object",
@@ -8207,6 +8394,105 @@
         },
         "additionalProperties": false
       },
+      "resource-in-create-request": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resource-type"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "airplanes": "#/components/schemas/data-in-create-airplane-request",
+            "flight-attendants": "#/components/schemas/data-in-create-flight-attendant-request",
+            "flights": "#/components/schemas/data-in-create-flight-request",
+            "passengers": "#/components/schemas/data-in-create-passenger-request"
+          }
+        },
+        "x-abstract": true
+      },
+      "resource-in-response": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resource-type"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "airplanes": "#/components/schemas/data-in-airplane-response",
+            "flight-attendants": "#/components/schemas/data-in-flight-attendant-response",
+            "flights": "#/components/schemas/data-in-flight-response",
+            "passengers": "#/components/schemas/data-in-passenger-response"
+          }
+        },
+        "x-abstract": true
+      },
+      "resource-in-update-request": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resource-type"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "airplanes": "#/components/schemas/data-in-update-airplane-request",
+            "flight-attendants": "#/components/schemas/data-in-update-flight-attendant-request",
+            "flights": "#/components/schemas/data-in-update-flight-request",
+            "passengers": "#/components/schemas/data-in-update-passenger-request"
+          }
+        },
+        "x-abstract": true
+      },
       "resource-links": {
         "type": "object",
         "properties": {
@@ -8236,6 +8522,50 @@
           "passengers"
         ],
         "type": "string"
+      },
+      "secondary-flight-attendant-response-document": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "jsonapi": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi"
+              }
+            ]
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resource-top-level-links"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/data-in-flight-attendant-response"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resource-in-response"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
       },
       "to-many-flight-attendant-in-request": {
         "required": [

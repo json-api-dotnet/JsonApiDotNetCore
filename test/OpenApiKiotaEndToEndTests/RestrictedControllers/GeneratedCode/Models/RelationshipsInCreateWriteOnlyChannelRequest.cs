@@ -4,7 +4,6 @@
 #pragma warning disable CS0618
 using Microsoft.Kiota.Abstractions.Extensions;
 using Microsoft.Kiota.Abstractions.Serialization;
-using Microsoft.Kiota.Abstractions.Store;
 using System.Collections.Generic;
 using System.IO;
 using System;
@@ -12,7 +11,7 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models
 {
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     #pragma warning disable CS1591
-    public partial class RelationshipsInCreateWriteOnlyChannelRequest : IBackedModel, IParsable
+    public partial class RelationshipsInCreateWriteOnlyChannelRequest : global::OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.RelationshipsInCreateRequest, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>The audioStreams property</summary>
@@ -21,9 +20,6 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models
             get { return BackingStore?.Get<global::OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ToManyDataStreamInRequest?>("audioStreams"); }
             set { BackingStore?.Set("audioStreams", value); }
         }
-
-        /// <summary>Stores model information.</summary>
-        public IBackingStore BackingStore { get; private set; }
 
         /// <summary>The ultraHighDefinitionVideoStream property</summary>
         public global::OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.NullableToOneDataStreamInRequest? UltraHighDefinitionVideoStream
@@ -40,19 +36,11 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models
         }
 
         /// <summary>
-        /// Instantiates a new <see cref="global::OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.RelationshipsInCreateWriteOnlyChannelRequest"/> and sets the default values.
-        /// </summary>
-        public RelationshipsInCreateWriteOnlyChannelRequest()
-        {
-            BackingStore = BackingStoreFactorySingleton.Instance.CreateBackingStore();
-        }
-
-        /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
         /// <returns>A <see cref="global::OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.RelationshipsInCreateWriteOnlyChannelRequest"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static global::OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.RelationshipsInCreateWriteOnlyChannelRequest CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static new global::OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.RelationshipsInCreateWriteOnlyChannelRequest CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
             return new global::OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.RelationshipsInCreateWriteOnlyChannelRequest();
@@ -62,9 +50,9 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models
         /// The deserialization information for the current model
         /// </summary>
         /// <returns>A IDictionary&lt;string, Action&lt;IParseNode&gt;&gt;</returns>
-        public virtual IDictionary<string, Action<IParseNode>> GetFieldDeserializers()
+        public override IDictionary<string, Action<IParseNode>> GetFieldDeserializers()
         {
-            return new Dictionary<string, Action<IParseNode>>
+            return new Dictionary<string, Action<IParseNode>>(base.GetFieldDeserializers())
             {
                 { "audioStreams", n => { AudioStreams = n.GetObjectValue<global::OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ToManyDataStreamInRequest>(global::OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ToManyDataStreamInRequest.CreateFromDiscriminatorValue); } },
                 { "ultraHighDefinitionVideoStream", n => { UltraHighDefinitionVideoStream = n.GetObjectValue<global::OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.NullableToOneDataStreamInRequest>(global::OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.NullableToOneDataStreamInRequest.CreateFromDiscriminatorValue); } },
@@ -76,9 +64,10 @@ namespace OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models
         /// Serializes information the current object
         /// </summary>
         /// <param name="writer">Serialization writer to use to serialize this model</param>
-        public virtual void Serialize(ISerializationWriter writer)
+        public override void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
+            base.Serialize(writer);
             writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ToManyDataStreamInRequest>("audioStreams", AudioStreams);
             writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.NullableToOneDataStreamInRequest>("ultraHighDefinitionVideoStream", UltraHighDefinitionVideoStream);
             writer.WriteObjectValue<global::OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode.Models.ToOneDataStreamInRequest>("videoStream", VideoStream);

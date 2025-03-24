@@ -31,19 +31,19 @@ internal sealed class LinksVisibilitySchemaGenerator
 
     private static readonly Dictionary<Type, LinkTypes> LinksInJsonApiSchemaTypes = new()
     {
-        [typeof(NullableSecondaryResourceResponseDocument<>)] = ResourceTopLinkTypes,
-        [typeof(PrimaryResourceResponseDocument<>)] = ResourceTopLinkTypes,
-        [typeof(SecondaryResourceResponseDocument<>)] = ResourceTopLinkTypes,
-        [typeof(ResourceCollectionResponseDocument<>)] = ResourceCollectionTopLinkTypes,
-        [typeof(ResourceIdentifierResponseDocument<>)] = ResourceIdentifierTopLinkTypes,
-        [typeof(NullableResourceIdentifierResponseDocument<>)] = ResourceIdentifierTopLinkTypes,
-        [typeof(ResourceIdentifierCollectionResponseDocument<>)] = ResourceIdentifierCollectionTopLinkTypes,
+        [typeof(NullableSecondaryResponseDocument<>)] = ResourceTopLinkTypes,
+        [typeof(PrimaryResponseDocument<>)] = ResourceTopLinkTypes,
+        [typeof(SecondaryResponseDocument<>)] = ResourceTopLinkTypes,
+        [typeof(CollectionResponseDocument<>)] = ResourceCollectionTopLinkTypes,
+        [typeof(IdentifierResponseDocument<>)] = ResourceIdentifierTopLinkTypes,
+        [typeof(NullableIdentifierResponseDocument<>)] = ResourceIdentifierTopLinkTypes,
+        [typeof(IdentifierCollectionResponseDocument<>)] = ResourceIdentifierCollectionTopLinkTypes,
         [typeof(ErrorResponseDocument)] = ErrorTopLinkTypes,
         [typeof(OperationsResponseDocument)] = ResourceTopLinkTypes,
-        [typeof(NullableToOneRelationshipInResponse<>)] = RelationshipLinkTypes,
-        [typeof(ToManyRelationshipInResponse<>)] = RelationshipLinkTypes,
-        [typeof(ToOneRelationshipInResponse<>)] = RelationshipLinkTypes,
-        [typeof(ResourceDataInResponse<>)] = ResourceLinkTypes
+        [typeof(NullableToOneInResponse<>)] = RelationshipLinkTypes,
+        [typeof(ToManyInResponse<>)] = RelationshipLinkTypes,
+        [typeof(ToOneInResponse<>)] = RelationshipLinkTypes,
+        [typeof(DataInResponse<>)] = ResourceLinkTypes
     };
 
     private static readonly Dictionary<LinkTypes, List<string>> LinkTypeToPropertyNamesMap = new()
@@ -70,12 +70,12 @@ internal sealed class LinksVisibilitySchemaGenerator
         _lazyLinksVisibility = new Lazy<LinksVisibility>(() => new LinksVisibility(options, resourceGraph), LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
-    public void UpdateSchemaForTopLevel(Type modelType, OpenApiSchema fullSchemaForLinksContainer, SchemaRepository schemaRepository)
+    public void UpdateSchemaForTopLevel(Type schemaType, OpenApiSchema fullSchemaForLinksContainer, SchemaRepository schemaRepository)
     {
-        ArgumentNullException.ThrowIfNull(modelType);
+        ArgumentNullException.ThrowIfNull(schemaType);
         ArgumentNullException.ThrowIfNull(fullSchemaForLinksContainer);
 
-        Type lookupType = modelType.ConstructedToOpenType();
+        Type lookupType = schemaType.ConstructedToOpenType();
 
         if (LinksInJsonApiSchemaTypes.TryGetValue(lookupType, out LinkTypes possibleLinkTypes))
         {
@@ -94,12 +94,12 @@ internal sealed class LinksVisibilitySchemaGenerator
         }
     }
 
-    public void UpdateSchemaForRelationship(Type modelType, OpenApiSchema fullSchemaForRelationship, SchemaRepository schemaRepository)
+    public void UpdateSchemaForRelationship(Type schemaType, OpenApiSchema fullSchemaForRelationship, SchemaRepository schemaRepository)
     {
-        ArgumentNullException.ThrowIfNull(modelType);
+        ArgumentNullException.ThrowIfNull(schemaType);
         ArgumentNullException.ThrowIfNull(fullSchemaForRelationship);
 
-        Type lookupType = modelType.ConstructedToOpenType();
+        Type lookupType = schemaType.ConstructedToOpenType();
 
         if (LinksInJsonApiSchemaTypes.TryGetValue(lookupType, out LinkTypes possibleLinkTypes))
         {

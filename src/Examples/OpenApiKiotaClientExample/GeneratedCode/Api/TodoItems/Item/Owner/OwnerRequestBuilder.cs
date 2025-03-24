@@ -40,12 +40,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Owner
         /// <summary>
         /// Retrieves the related person of an individual todoItem&apos;s owner relationship.
         /// </summary>
-        /// <returns>A <see cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.PersonSecondaryResponseDocument"/></returns>
+        /// <returns>A <see cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.SecondaryPersonResponseDocument"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
         /// <exception cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
-        public async Task<global::OpenApiKiotaClientExample.GeneratedCode.Models.PersonSecondaryResponseDocument?> GetAsync(Action<RequestConfiguration<global::OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Owner.OwnerRequestBuilder.OwnerRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::OpenApiKiotaClientExample.GeneratedCode.Models.SecondaryPersonResponseDocument?> GetAsync(Action<RequestConfiguration<global::OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Owner.OwnerRequestBuilder.OwnerRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
             var requestInfo = ToGetRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
@@ -53,7 +53,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Owner
                 { "400", global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
                 { "404", global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::OpenApiKiotaClientExample.GeneratedCode.Models.PersonSecondaryResponseDocument>(requestInfo, global::OpenApiKiotaClientExample.GeneratedCode.Models.PersonSecondaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::OpenApiKiotaClientExample.GeneratedCode.Models.SecondaryPersonResponseDocument>(requestInfo, global::OpenApiKiotaClientExample.GeneratedCode.Models.SecondaryPersonResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Owner
         {
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
-            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json");
+            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=openapi");
             return requestInfo;
         }
 

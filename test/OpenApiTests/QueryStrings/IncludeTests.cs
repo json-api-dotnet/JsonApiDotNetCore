@@ -38,7 +38,7 @@ public sealed class IncludeTests : IClassFixture<OpenApiTestContext<OpenApiStart
         {
             List<string> discriminatorRefIds = [];
 
-            schemasElement.Should().ContainPath("dataInResponse.discriminator").With(discriminatorElement =>
+            schemasElement.Should().ContainPath("resourceInResponse.discriminator").With(discriminatorElement =>
             {
                 discriminatorElement.Should().HaveProperty("propertyName", "type");
 
@@ -56,7 +56,7 @@ public sealed class IncludeTests : IClassFixture<OpenApiTestContext<OpenApiStart
 
             foreach (string discriminatorRefId in discriminatorRefIds)
             {
-                schemasElement.Should().ContainPath($"{discriminatorRefId}.allOf[0].$ref").ShouldBeSchemaReferenceId("dataInResponse");
+                schemasElement.Should().ContainPath($"{discriminatorRefId}.allOf[0].$ref").ShouldBeSchemaReferenceId("resourceInResponse");
             }
         });
     }

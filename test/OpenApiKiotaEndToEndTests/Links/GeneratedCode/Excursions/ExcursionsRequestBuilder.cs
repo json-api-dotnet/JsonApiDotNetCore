@@ -82,7 +82,7 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Excursions
         /// <summary>
         /// Creates a new excursion.
         /// </summary>
-        /// <returns>A <see cref="global::OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ExcursionPrimaryResponseDocument"/></returns>
+        /// <returns>A <see cref="global::OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.PrimaryExcursionResponseDocument"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
@@ -91,7 +91,7 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Excursions
         /// <exception cref="global::OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
         /// <exception cref="global::OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorResponseDocument">When receiving a 409 status code</exception>
         /// <exception cref="global::OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorResponseDocument">When receiving a 422 status code</exception>
-        public async Task<global::OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ExcursionPrimaryResponseDocument?> PostAsync(global::OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.CreateExcursionRequestDocument body, Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.Links.GeneratedCode.Excursions.ExcursionsRequestBuilder.ExcursionsRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.PrimaryExcursionResponseDocument?> PostAsync(global::OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.CreateExcursionRequestDocument body, Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.Links.GeneratedCode.Excursions.ExcursionsRequestBuilder.ExcursionsRequestBuilderPostQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPostRequestInformation(body, requestConfiguration);
@@ -103,7 +103,7 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Excursions
                 { "409", global::OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
                 { "422", global::OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ExcursionPrimaryResponseDocument>(requestInfo, global::OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.ExcursionPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.PrimaryExcursionResponseDocument>(requestInfo, global::OpenApiKiotaEndToEndTests.Links.GeneratedCode.Models.PrimaryExcursionResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Excursions
         {
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
-            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json");
+            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=openapi");
             return requestInfo;
         }
 
@@ -142,8 +142,8 @@ namespace OpenApiKiotaEndToEndTests.Links.GeneratedCode.Excursions
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = new RequestInformation(Method.POST, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
-            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json");
-            requestInfo.SetContentFromParsable(RequestAdapter, "application/vnd.api+json", body);
+            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=openapi");
+            requestInfo.SetContentFromParsable(RequestAdapter, "application/vnd.api+json;ext=openapi", body);
             return requestInfo;
         }
 

@@ -42,7 +42,7 @@ public sealed class ClientIdGenerationModesTests
         {
             Data = new DataInCreatePlayerRequest
             {
-                Type = PlayerResourceType.Players,
+                Type = ResourceType.Players,
                 Attributes = new AttributesInCreatePlayerRequest
                 {
                     UserName = newPlayer.UserName
@@ -81,7 +81,7 @@ public sealed class ClientIdGenerationModesTests
         {
             Data = new DataInCreatePlayerRequest
             {
-                Type = PlayerResourceType.Players,
+                Type = ResourceType.Players,
                 Id = newPlayer.Id,
                 Attributes = new AttributesInCreatePlayerRequest
                 {
@@ -91,7 +91,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        PlayerPrimaryResponseDocument? response = await apiClient.Players.PostAsync(requestBody);
+        PrimaryPlayerResponseDocument? response = await apiClient.Players.PostAsync(requestBody);
 
         // Assert
         response.Should().BeNull();
@@ -117,7 +117,7 @@ public sealed class ClientIdGenerationModesTests
         {
             Data = new DataInCreateGameRequest
             {
-                Type = GameResourceType.Games,
+                Type = ResourceType.Games,
                 Attributes = new AttributesInCreateGameRequest
                 {
                     Title = newGame.Title,
@@ -127,7 +127,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        GamePrimaryResponseDocument? response = await apiClient.Games.PostAsync(requestBody);
+        PrimaryGameResponseDocument? response = await apiClient.Games.PostAsync(requestBody);
 
         // Assert
         response.Should().NotBeNull();
@@ -158,7 +158,7 @@ public sealed class ClientIdGenerationModesTests
         {
             Data = new DataInCreateGameRequest
             {
-                Type = GameResourceType.Games,
+                Type = ResourceType.Games,
                 Id = newGame.Id,
                 Attributes = new AttributesInCreateGameRequest
                 {
@@ -169,7 +169,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        GamePrimaryResponseDocument? response = await apiClient.Games.PostAsync(requestBody);
+        PrimaryGameResponseDocument? response = await apiClient.Games.PostAsync(requestBody);
 
         // Assert
         response.Should().BeNull();
@@ -202,7 +202,7 @@ public sealed class ClientIdGenerationModesTests
         {
             Data = new DataInCreateGameRequest
             {
-                Type = GameResourceType.Games,
+                Type = ResourceType.Games,
                 Id = existingGame.Id,
                 Attributes = new AttributesInCreateGameRequest
                 {
@@ -240,7 +240,7 @@ public sealed class ClientIdGenerationModesTests
         {
             Data = new DataInCreatePlayerGroupRequest
             {
-                Type = PlayerGroupResourceType.PlayerGroups,
+                Type = ResourceType.PlayerGroups,
                 Attributes = new AttributesInCreatePlayerGroupRequest
                 {
                     Name = newPlayerGroup.Name
@@ -249,7 +249,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        PlayerGroupPrimaryResponseDocument? response = await apiClient.PlayerGroups.PostAsync(requestBody);
+        PrimaryPlayerGroupResponseDocument? response = await apiClient.PlayerGroups.PostAsync(requestBody);
 
         // Assert
         response.Should().NotBeNull();

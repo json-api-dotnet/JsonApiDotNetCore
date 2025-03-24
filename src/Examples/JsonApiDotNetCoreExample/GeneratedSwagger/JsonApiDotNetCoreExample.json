@@ -20,7 +20,7 @@
         "requestBody": {
           "description": "An array of mutation operations. For syntax, see the [Atomic Operations documentation](https://jsonapi.org/ext/atomic/).",
           "content": {
-            "application/vnd.api+json; ext=atomic": {
+            "application/vnd.api+json; ext=atomic; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -36,7 +36,7 @@
           "200": {
             "description": "All operations were successfully applied, which resulted in additional changes.",
             "content": {
-              "application/vnd.api+json; ext=atomic": {
+              "application/vnd.api+json; ext=atomic; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/operationsResponseDocument"
                 }
@@ -49,7 +49,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json; ext=atomic": {
+              "application/vnd.api+json; ext=atomic; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -59,7 +59,7 @@
           "403": {
             "description": "An operation is not accessible or a client-generated ID is used.",
             "content": {
-              "application/vnd.api+json; ext=atomic": {
+              "application/vnd.api+json; ext=atomic; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -69,7 +69,7 @@
           "404": {
             "description": "A resource or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json; ext=atomic": {
+              "application/vnd.api+json; ext=atomic; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -79,7 +79,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json; ext=atomic": {
+              "application/vnd.api+json; ext=atomic; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -89,7 +89,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json; ext=atomic": {
+              "application/vnd.api+json; ext=atomic; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -142,7 +142,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/personCollectionResponseDocument"
                 }
@@ -164,7 +164,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -265,7 +265,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the person to create.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -291,9 +291,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/personPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryPersonResponseDocument"
                 }
               }
             }
@@ -304,7 +304,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -314,7 +314,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -324,7 +324,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -334,7 +334,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -344,7 +344,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -408,9 +408,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/personPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryPersonResponseDocument"
                 }
               }
             }
@@ -430,7 +430,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -440,7 +440,7 @@
           "404": {
             "description": "The person does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -566,7 +566,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the person to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -582,9 +582,9 @@
           "200": {
             "description": "The person was successfully updated, which resulted in additional changes. The updated person is returned.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/personPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryPersonResponseDocument"
                 }
               }
             }
@@ -595,7 +595,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -605,7 +605,7 @@
           "404": {
             "description": "The person or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -615,7 +615,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -625,7 +625,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -660,7 +660,7 @@
           "404": {
             "description": "The person does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -724,7 +724,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/todoItemCollectionResponseDocument"
                 }
@@ -746,7 +746,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -756,7 +756,7 @@
           "404": {
             "description": "The person does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -902,7 +902,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/todoItemIdentifierCollectionResponseDocument"
                 }
@@ -924,7 +924,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -934,7 +934,7 @@
           "404": {
             "description": "The person does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1047,7 +1047,7 @@
         "requestBody": {
           "description": "The identities of the todoItems to add to the assignedTodoItems relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -1066,7 +1066,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1076,7 +1076,7 @@
           "404": {
             "description": "The person or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1086,7 +1086,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1096,7 +1096,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1127,7 +1127,7 @@
         "requestBody": {
           "description": "The identities of the todoItems to assign to the assignedTodoItems relationship, or an empty array to clear the relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -1146,7 +1146,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1156,7 +1156,7 @@
           "404": {
             "description": "The person or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1166,7 +1166,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1176,7 +1176,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1207,7 +1207,7 @@
         "requestBody": {
           "description": "The identities of the todoItems to remove from the assignedTodoItems relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -1226,7 +1226,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1236,7 +1236,7 @@
           "404": {
             "description": "The person or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1246,7 +1246,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1256,7 +1256,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1320,7 +1320,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/todoItemCollectionResponseDocument"
                 }
@@ -1342,7 +1342,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1352,7 +1352,7 @@
           "404": {
             "description": "The person does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1498,7 +1498,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/todoItemIdentifierCollectionResponseDocument"
                 }
@@ -1520,7 +1520,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1530,7 +1530,7 @@
           "404": {
             "description": "The person does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1643,7 +1643,7 @@
         "requestBody": {
           "description": "The identities of the todoItems to add to the ownedTodoItems relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -1662,7 +1662,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1672,7 +1672,7 @@
           "404": {
             "description": "The person or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1682,7 +1682,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1692,7 +1692,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1723,7 +1723,7 @@
         "requestBody": {
           "description": "The identities of the todoItems to assign to the ownedTodoItems relationship, or an empty array to clear the relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -1742,7 +1742,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1752,7 +1752,7 @@
           "404": {
             "description": "The person or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1762,7 +1762,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1772,7 +1772,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1803,7 +1803,7 @@
         "requestBody": {
           "description": "The identities of the todoItems to remove from the ownedTodoItems relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -1822,7 +1822,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1832,7 +1832,7 @@
           "404": {
             "description": "The person or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1842,7 +1842,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1852,7 +1852,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1905,7 +1905,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/tagCollectionResponseDocument"
                 }
@@ -1927,7 +1927,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2028,7 +2028,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the tag to create.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -2054,9 +2054,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/tagPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryTagResponseDocument"
                 }
               }
             }
@@ -2067,7 +2067,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2077,7 +2077,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2087,7 +2087,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2097,7 +2097,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2107,7 +2107,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2171,9 +2171,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/tagPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryTagResponseDocument"
                 }
               }
             }
@@ -2193,7 +2193,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2203,7 +2203,7 @@
           "404": {
             "description": "The tag does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2329,7 +2329,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the tag to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -2345,9 +2345,9 @@
           "200": {
             "description": "The tag was successfully updated, which resulted in additional changes. The updated tag is returned.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/tagPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryTagResponseDocument"
                 }
               }
             }
@@ -2358,7 +2358,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2368,7 +2368,7 @@
           "404": {
             "description": "The tag or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2378,7 +2378,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2388,7 +2388,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2423,7 +2423,7 @@
           "404": {
             "description": "The tag does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2487,7 +2487,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/todoItemCollectionResponseDocument"
                 }
@@ -2509,7 +2509,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2519,7 +2519,7 @@
           "404": {
             "description": "The tag does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2665,7 +2665,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/todoItemIdentifierCollectionResponseDocument"
                 }
@@ -2687,7 +2687,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2697,7 +2697,7 @@
           "404": {
             "description": "The tag does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2810,7 +2810,7 @@
         "requestBody": {
           "description": "The identities of the todoItems to add to the todoItems relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -2829,7 +2829,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2839,7 +2839,7 @@
           "404": {
             "description": "The tag or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2849,7 +2849,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2859,7 +2859,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2890,7 +2890,7 @@
         "requestBody": {
           "description": "The identities of the todoItems to assign to the todoItems relationship, or an empty array to clear the relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -2909,7 +2909,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2919,7 +2919,7 @@
           "404": {
             "description": "The tag or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2929,7 +2929,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2939,7 +2939,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2970,7 +2970,7 @@
         "requestBody": {
           "description": "The identities of the todoItems to remove from the todoItems relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -2989,7 +2989,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2999,7 +2999,7 @@
           "404": {
             "description": "The tag or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3009,7 +3009,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3019,7 +3019,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3072,7 +3072,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/todoItemCollectionResponseDocument"
                 }
@@ -3094,7 +3094,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3195,7 +3195,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the todoItem to create.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -3221,9 +3221,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/todoItemPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryTodoItemResponseDocument"
                 }
               }
             }
@@ -3234,7 +3234,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3244,7 +3244,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3254,7 +3254,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3264,7 +3264,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3274,7 +3274,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3338,9 +3338,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/todoItemPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryTodoItemResponseDocument"
                 }
               }
             }
@@ -3360,7 +3360,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3370,7 +3370,7 @@
           "404": {
             "description": "The todoItem does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3496,7 +3496,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the todoItem to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -3512,9 +3512,9 @@
           "200": {
             "description": "The todoItem was successfully updated, which resulted in additional changes. The updated todoItem is returned.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/todoItemPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryTodoItemResponseDocument"
                 }
               }
             }
@@ -3525,7 +3525,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3535,7 +3535,7 @@
           "404": {
             "description": "The todoItem or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3545,7 +3545,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3555,7 +3555,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3590,7 +3590,7 @@
           "404": {
             "description": "The todoItem does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3654,9 +3654,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/nullablePersonSecondaryResponseDocument"
+                  "$ref": "#/components/schemas/nullableSecondaryPersonResponseDocument"
                 }
               }
             }
@@ -3676,7 +3676,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3686,7 +3686,7 @@
           "404": {
             "description": "The todoItem does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3832,7 +3832,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/nullablePersonIdentifierResponseDocument"
                 }
@@ -3854,7 +3854,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3864,7 +3864,7 @@
           "404": {
             "description": "The todoItem does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3977,7 +3977,7 @@
         "requestBody": {
           "description": "The identity of the person to assign to the assignee relationship, or `null` to clear the relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -3996,7 +3996,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4006,7 +4006,7 @@
           "404": {
             "description": "The todoItem or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4016,7 +4016,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4026,7 +4026,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4090,9 +4090,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/personSecondaryResponseDocument"
+                  "$ref": "#/components/schemas/secondaryPersonResponseDocument"
                 }
               }
             }
@@ -4112,7 +4112,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4122,7 +4122,7 @@
           "404": {
             "description": "The todoItem does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4268,7 +4268,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/personIdentifierResponseDocument"
                 }
@@ -4290,7 +4290,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4300,7 +4300,7 @@
           "404": {
             "description": "The todoItem does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4413,7 +4413,7 @@
         "requestBody": {
           "description": "The identity of the person to assign to the owner relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -4432,7 +4432,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4442,7 +4442,7 @@
           "404": {
             "description": "The todoItem or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4452,7 +4452,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4462,7 +4462,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4526,7 +4526,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/tagCollectionResponseDocument"
                 }
@@ -4548,7 +4548,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4558,7 +4558,7 @@
           "404": {
             "description": "The todoItem does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4704,7 +4704,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/tagIdentifierCollectionResponseDocument"
                 }
@@ -4726,7 +4726,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4736,7 +4736,7 @@
           "404": {
             "description": "The todoItem does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4849,7 +4849,7 @@
         "requestBody": {
           "description": "The identities of the tags to add to the tags relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -4868,7 +4868,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4878,7 +4878,7 @@
           "404": {
             "description": "The todoItem or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4888,7 +4888,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4898,7 +4898,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4929,7 +4929,7 @@
         "requestBody": {
           "description": "The identities of the tags to assign to the tags relationship, or an empty array to clear the relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -4948,7 +4948,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4958,7 +4958,7 @@
           "404": {
             "description": "The todoItem or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4968,7 +4968,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4978,7 +4978,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5009,7 +5009,7 @@
         "requestBody": {
           "description": "The identities of the tags to remove from the tags relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -5028,7 +5028,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5038,7 +5038,7 @@
           "404": {
             "description": "The todoItem or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5048,7 +5048,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5058,7 +5058,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -5287,7 +5287,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/dataInResponse"
+                "$ref": "#/components/schemas/resourceInResponse"
               }
             ]
           },
@@ -5302,101 +5302,305 @@
         "additionalProperties": false
       },
       "attributesInCreatePersonRequest": {
-        "required": [
-          "lastName"
-        ],
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "type": "string",
-            "nullable": true
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRequest"
           },
-          "lastName": {
-            "type": "string"
+          {
+            "required": [
+              "lastName"
+            ],
+            "type": "object",
+            "properties": {
+              "firstName": {
+                "type": "string",
+                "nullable": true
+              },
+              "lastName": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
-      "attributesInCreateTagRequest": {
+      "attributesInCreateRequest": {
         "required": [
-          "name"
+          "openapi:discriminator"
         ],
         "type": "object",
         "properties": {
-          "name": {
-            "minLength": 1,
-            "type": "string"
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "people": "#/components/schemas/attributesInCreatePersonRequest",
+            "tags": "#/components/schemas/attributesInCreateTagRequest",
+            "todoItems": "#/components/schemas/attributesInCreateTodoItemRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInCreateTagRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRequest"
+          },
+          {
+            "required": [
+              "name"
+            ],
+            "type": "object",
+            "properties": {
+              "name": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "attributesInCreateTodoItemRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRequest"
+          },
+          {
+            "required": [
+              "description",
+              "priority"
+            ],
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "priority": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/todoItemPriority"
+                  }
+                ]
+              },
+              "durationInHours": {
+                "type": "integer",
+                "format": "int64",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInPersonResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "firstName": {
+                "type": "string",
+                "nullable": true
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "displayName": {
+                "type": "string",
+                "readOnly": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInResponse": {
         "required": [
-          "description",
-          "priority"
+          "openapi:discriminator"
         ],
         "type": "object",
         "properties": {
-          "description": {
-            "type": "string"
-          },
-          "priority": {
+          "openapi:discriminator": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/todoItemPriority"
+                "$ref": "#/components/schemas/resourceType"
               }
             ]
-          },
-          "durationInHours": {
-            "type": "integer",
-            "format": "int64",
-            "nullable": true
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "people": "#/components/schemas/attributesInPersonResponse",
+            "tags": "#/components/schemas/attributesInTagResponse",
+            "todoItems": "#/components/schemas/attributesInTodoItemResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInTagResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInTodoItemResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "priority": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/todoItemPriority"
+                  }
+                ]
+              },
+              "durationInHours": {
+                "type": "integer",
+                "format": "int64",
+                "nullable": true
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "modifiedAt": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "attributesInUpdatePersonRequest": {
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "type": "string",
-            "nullable": true
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateRequest"
           },
-          "lastName": {
-            "type": "string"
+          {
+            "type": "object",
+            "properties": {
+              "firstName": {
+                "type": "string",
+                "nullable": true
+              },
+              "lastName": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
-      "attributesInUpdateTagRequest": {
+      "attributesInUpdateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
         "type": "object",
         "properties": {
-          "name": {
-            "minLength": 1,
-            "type": "string"
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "people": "#/components/schemas/attributesInUpdatePersonRequest",
+            "tags": "#/components/schemas/attributesInUpdateTagRequest",
+            "todoItems": "#/components/schemas/attributesInUpdateTodoItemRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInUpdateTagRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "attributesInUpdateTodoItemRequest": {
-        "type": "object",
-        "properties": {
-          "description": {
-            "type": "string"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateRequest"
           },
-          "priority": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/todoItemPriority"
+          {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "priority": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/todoItemPriority"
+                  }
+                ]
+              },
+              "durationInHours": {
+                "type": "integer",
+                "format": "int64",
+                "nullable": true
               }
-            ]
-          },
-          "durationInHours": {
-            "type": "integer",
-            "format": "int64",
-            "nullable": true
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "createPersonOperation": {
@@ -5565,296 +5769,345 @@
         "additionalProperties": false
       },
       "dataInCreatePersonRequest": {
-        "required": [
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/personResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInCreateRequest"
           },
-          "lid": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInCreatePersonRequest"
+          {
+            "type": "object",
+            "properties": {
+              "lid": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCreatePersonRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInCreatePersonRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationshipsInCreatePersonRequest"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "dataInCreateTagRequest": {
-        "required": [
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/tagResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInCreateRequest"
           },
-          "lid": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInCreateTagRequest"
+          {
+            "type": "object",
+            "properties": {
+              "lid": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCreateTagRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInCreateTagRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationshipsInCreateTagRequest"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "dataInCreateTodoItemRequest": {
-        "required": [
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/todoItemResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInCreateRequest"
           },
-          "lid": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInCreateTodoItemRequest"
+          {
+            "type": "object",
+            "properties": {
+              "lid": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCreateTodoItemRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInCreateTodoItemRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationshipsInCreateTodoItemRequest"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
-      "dataInResponse": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceType"
-              }
-            ]
+      "dataInPersonResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInResponse"
           },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInPersonResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInPersonResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
-        "additionalProperties": false,
-        "discriminator": {
-          "propertyName": "type",
-          "mapping": {
-            "people": "#/components/schemas/personDataInResponse",
-            "tags": "#/components/schemas/tagDataInResponse",
-            "todoItems": "#/components/schemas/todoItemDataInResponse"
+        ],
+        "additionalProperties": false
+      },
+      "dataInTagResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInTagResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInTagResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
           }
-        },
-        "x-abstract": true
+        ],
+        "additionalProperties": false
+      },
+      "dataInTodoItemResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInTodoItemResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInTodoItemResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
       },
       "dataInUpdatePersonRequest": {
-        "required": [
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/personResourceType"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "lid": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInUpdatePersonRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInUpdatePersonRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "int64"
-          },
-          "lid": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInUpdatePersonRequest"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationshipsInUpdatePersonRequest"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "dataInUpdateTagRequest": {
-        "required": [
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/tagResourceType"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "lid": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInUpdateTagRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInUpdateTagRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "int64"
-          },
-          "lid": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInUpdateTagRequest"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationshipsInUpdateTagRequest"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "dataInUpdateTodoItemRequest": {
-        "required": [
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/todoItemResourceType"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "lid": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInUpdateTodoItemRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInUpdateTodoItemRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "int64"
-          },
-          "lid": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInUpdateTodoItemRequest"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationshipsInUpdateTodoItemRequest"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "deletePersonOperation": {
@@ -6075,6 +6328,38 @@
         },
         "additionalProperties": false
       },
+      "identifierInRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "people": "#/components/schemas/personIdentifierInRequest",
+            "tags": "#/components/schemas/tagIdentifierInRequest",
+            "todoItems": "#/components/schemas/todoItemIdentifierInRequest"
+          }
+        },
+        "x-abstract": true
+      },
       "meta": {
         "type": "object",
         "additionalProperties": {
@@ -6113,7 +6398,7 @@
         },
         "additionalProperties": false
       },
-      "nullablePersonSecondaryResponseDocument": {
+      "nullableSecondaryPersonResponseDocument": {
         "required": [
           "data",
           "links"
@@ -6130,7 +6415,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/personDataInResponse"
+                "$ref": "#/components/schemas/dataInPersonResponse"
               }
             ],
             "nullable": true
@@ -6138,7 +6423,7 @@
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/dataInResponse"
+              "$ref": "#/components/schemas/resourceInResponse"
             }
           },
           "meta": {
@@ -6296,23 +6581,6 @@
         ],
         "type": "string"
       },
-      "personAttributesInResponse": {
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "type": "string",
-            "nullable": true
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "displayName": {
-            "type": "string",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
       "personCollectionResponseDocument": {
         "required": [
           "data",
@@ -6330,13 +6598,13 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/personDataInResponse"
+              "$ref": "#/components/schemas/dataInPersonResponse"
             }
           },
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/dataInResponse"
+              "$ref": "#/components/schemas/resourceInResponse"
             }
           },
           "meta": {
@@ -6349,15 +6617,13 @@
         },
         "additionalProperties": false
       },
-      "personDataInResponse": {
+      "personIdentifierInRequest": {
+        "type": "object",
         "allOf": [
           {
-            "$ref": "#/components/schemas/dataInResponse"
+            "$ref": "#/components/schemas/identifierInRequest"
           },
           {
-            "required": [
-              "id"
-            ],
             "type": "object",
             "properties": {
               "id": {
@@ -6365,63 +6631,14 @@
                 "type": "string",
                 "format": "int64"
               },
-              "attributes": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/personAttributesInResponse"
-                  }
-                ]
-              },
-              "relationships": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/personRelationshipsInResponse"
-                  }
-                ]
-              },
-              "links": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/resourceLinks"
-                  }
-                ]
+              "lid": {
+                "minLength": 1,
+                "type": "string"
               }
             },
             "additionalProperties": false
           }
         ],
-        "additionalProperties": false
-      },
-      "personIdentifierInRequest": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/personResourceType"
-              }
-            ]
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "int64"
-          },
-          "lid": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
         "additionalProperties": false
       },
       "personIdentifierInResponse": {
@@ -6523,7 +6740,13 @@
         ],
         "type": "string"
       },
-      "personPrimaryResponseDocument": {
+      "personResourceType": {
+        "enum": [
+          "people"
+        ],
+        "type": "string"
+      },
+      "primaryPersonResponseDocument": {
         "required": [
           "data",
           "links"
@@ -6540,14 +6763,14 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/personDataInResponse"
+                "$ref": "#/components/schemas/dataInPersonResponse"
               }
             ]
           },
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/dataInResponse"
+              "$ref": "#/components/schemas/resourceInResponse"
             }
           },
           "meta": {
@@ -6560,33 +6783,7 @@
         },
         "additionalProperties": false
       },
-      "personRelationshipsInResponse": {
-        "type": "object",
-        "properties": {
-          "ownedTodoItems": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyTodoItemInResponse"
-              }
-            ]
-          },
-          "assignedTodoItems": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyTodoItemInResponse"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "personResourceType": {
-        "enum": [
-          "people"
-        ],
-        "type": "string"
-      },
-      "personSecondaryResponseDocument": {
+      "primaryTagResponseDocument": {
         "required": [
           "data",
           "links"
@@ -6603,14 +6800,51 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/personDataInResponse"
+                "$ref": "#/components/schemas/dataInTagResponse"
               }
             ]
           },
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/dataInResponse"
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "primaryTodoItemResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInTodoItemResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
             }
           },
           "meta": {
@@ -6636,126 +6870,333 @@
         "additionalProperties": false
       },
       "relationshipsInCreatePersonRequest": {
-        "type": "object",
-        "properties": {
-          "ownedTodoItems": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyTodoItemInRequest"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInCreateRequest"
           },
-          "assignedTodoItems": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyTodoItemInRequest"
+          {
+            "type": "object",
+            "properties": {
+              "ownedTodoItems": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                  }
+                ]
+              },
+              "assignedTodoItems": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                  }
+                ]
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
-      "relationshipsInCreateTagRequest": {
-        "type": "object",
-        "properties": {
-          "todoItems": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyTodoItemInRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "relationshipsInCreateTodoItemRequest": {
+      "relationshipsInCreateRequest": {
         "required": [
-          "owner"
+          "openapi:discriminator"
         ],
         "type": "object",
         "properties": {
-          "owner": {
+          "openapi:discriminator": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/toOnePersonInRequest"
-              }
-            ]
-          },
-          "assignee": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOnePersonInRequest"
-              }
-            ]
-          },
-          "tags": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyTagInRequest"
+                "$ref": "#/components/schemas/resourceType"
               }
             ]
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "people": "#/components/schemas/relationshipsInCreatePersonRequest",
+            "tags": "#/components/schemas/relationshipsInCreateTagRequest",
+            "todoItems": "#/components/schemas/relationshipsInCreateTodoItemRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInCreateTagRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInCreateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "todoItems": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInCreateTodoItemRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInCreateRequest"
+          },
+          {
+            "required": [
+              "owner"
+            ],
+            "type": "object",
+            "properties": {
+              "owner": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOnePersonInRequest"
+                  }
+                ]
+              },
+              "assignee": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOnePersonInRequest"
+                  }
+                ]
+              },
+              "tags": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTagInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInPersonResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "ownedTodoItems": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTodoItemInResponse"
+                  }
+                ]
+              },
+              "assignedTodoItems": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTodoItemInResponse"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInResponse": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "people": "#/components/schemas/relationshipsInPersonResponse",
+            "tags": "#/components/schemas/relationshipsInTagResponse",
+            "todoItems": "#/components/schemas/relationshipsInTodoItemResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInTagResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "todoItems": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTodoItemInResponse"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInTodoItemResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "owner": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOnePersonInResponse"
+                  }
+                ]
+              },
+              "assignee": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOnePersonInResponse"
+                  }
+                ]
+              },
+              "tags": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTagInResponse"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "relationshipsInUpdatePersonRequest": {
-        "type": "object",
-        "properties": {
-          "ownedTodoItems": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyTodoItemInRequest"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInUpdateRequest"
           },
-          "assignedTodoItems": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyTodoItemInRequest"
+          {
+            "type": "object",
+            "properties": {
+              "ownedTodoItems": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                  }
+                ]
+              },
+              "assignedTodoItems": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                  }
+                ]
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
-      "relationshipsInUpdateTagRequest": {
+      "relationshipsInUpdateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
         "type": "object",
         "properties": {
-          "todoItems": {
+          "openapi:discriminator": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                "$ref": "#/components/schemas/resourceType"
               }
             ]
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "people": "#/components/schemas/relationshipsInUpdatePersonRequest",
+            "tags": "#/components/schemas/relationshipsInUpdateTagRequest",
+            "todoItems": "#/components/schemas/relationshipsInUpdateTodoItemRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInUpdateTagRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "todoItems": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "relationshipsInUpdateTodoItemRequest": {
-        "type": "object",
-        "properties": {
-          "owner": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toOnePersonInRequest"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInUpdateRequest"
           },
-          "assignee": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOnePersonInRequest"
+          {
+            "type": "object",
+            "properties": {
+              "owner": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOnePersonInRequest"
+                  }
+                ]
+              },
+              "assignee": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOnePersonInRequest"
+                  }
+                ]
+              },
+              "tags": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTagInRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "tags": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyTagInRequest"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "removeFromPersonAssignedTodoItemsRelationshipOperation": {
@@ -6986,6 +7427,102 @@
         },
         "additionalProperties": false
       },
+      "resourceInCreateRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "people": "#/components/schemas/dataInCreatePersonRequest",
+            "tags": "#/components/schemas/dataInCreateTagRequest",
+            "todoItems": "#/components/schemas/dataInCreateTodoItemRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "resourceInResponse": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "people": "#/components/schemas/dataInPersonResponse",
+            "tags": "#/components/schemas/dataInTagResponse",
+            "todoItems": "#/components/schemas/dataInTodoItemResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "resourceInUpdateRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "people": "#/components/schemas/dataInUpdatePersonRequest",
+            "tags": "#/components/schemas/dataInUpdateTagRequest",
+            "todoItems": "#/components/schemas/dataInUpdateTodoItemRequest"
+          }
+        },
+        "x-abstract": true
+      },
       "resourceLinks": {
         "type": "object",
         "properties": {
@@ -7015,12 +7552,39 @@
         ],
         "type": "string"
       },
-      "tagAttributesInResponse": {
+      "secondaryPersonResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
         "type": "object",
         "properties": {
-          "name": {
-            "minLength": 1,
-            "type": "string"
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInPersonResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -7042,13 +7606,13 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/tagDataInResponse"
+              "$ref": "#/components/schemas/dataInTagResponse"
             }
           },
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/dataInResponse"
+              "$ref": "#/components/schemas/resourceInResponse"
             }
           },
           "meta": {
@@ -7059,49 +7623,6 @@
             ]
           }
         },
-        "additionalProperties": false
-      },
-      "tagDataInResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/dataInResponse"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "minLength": 1,
-                "type": "string",
-                "format": "int64"
-              },
-              "attributes": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/tagAttributesInResponse"
-                  }
-                ]
-              },
-              "relationships": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/tagRelationshipsInResponse"
-                  }
-                ]
-              },
-              "links": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/resourceLinks"
-                  }
-                ]
-              }
-            },
-            "additionalProperties": false
-          }
-        ],
         "additionalProperties": false
       },
       "tagIdentifierCollectionResponseDocument": {
@@ -7135,35 +7656,27 @@
         "additionalProperties": false
       },
       "tagIdentifierInRequest": {
-        "required": [
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/tagResourceType"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/identifierInRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "lid": {
+                "minLength": 1,
+                "type": "string"
               }
-            ]
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "int64"
-          },
-          "lid": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "tagIdentifierInResponse": {
@@ -7189,56 +7702,6 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "tagPrimaryResponseDocument": {
-        "required": [
-          "data",
-          "links"
-        ],
-        "type": "object",
-        "properties": {
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceTopLevelLinks"
-              }
-            ]
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/tagDataInResponse"
-              }
-            ]
-          },
-          "included": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/dataInResponse"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "tagRelationshipsInResponse": {
-        "type": "object",
-        "properties": {
-          "todoItems": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyTodoItemInResponse"
               }
             ]
           }
@@ -7475,36 +7938,6 @@
         ],
         "type": "string"
       },
-      "todoItemAttributesInResponse": {
-        "type": "object",
-        "properties": {
-          "description": {
-            "type": "string"
-          },
-          "priority": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/todoItemPriority"
-              }
-            ]
-          },
-          "durationInHours": {
-            "type": "integer",
-            "format": "int64",
-            "nullable": true
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "modifiedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "todoItemCollectionResponseDocument": {
         "required": [
           "data",
@@ -7522,13 +7955,13 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/todoItemDataInResponse"
+              "$ref": "#/components/schemas/dataInTodoItemResponse"
             }
           },
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/dataInResponse"
+              "$ref": "#/components/schemas/resourceInResponse"
             }
           },
           "meta": {
@@ -7539,49 +7972,6 @@
             ]
           }
         },
-        "additionalProperties": false
-      },
-      "todoItemDataInResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/dataInResponse"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "minLength": 1,
-                "type": "string",
-                "format": "int64"
-              },
-              "attributes": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/todoItemAttributesInResponse"
-                  }
-                ]
-              },
-              "relationships": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/todoItemRelationshipsInResponse"
-                  }
-                ]
-              },
-              "links": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/resourceLinks"
-                  }
-                ]
-              }
-            },
-            "additionalProperties": false
-          }
-        ],
         "additionalProperties": false
       },
       "todoItemIdentifierCollectionResponseDocument": {
@@ -7615,35 +8005,27 @@
         "additionalProperties": false
       },
       "todoItemIdentifierInRequest": {
-        "required": [
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/todoItemResourceType"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/identifierInRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "lid": {
+                "minLength": 1,
+                "type": "string"
               }
-            ]
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "int64"
-          },
-          "lid": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "todoItemIdentifierInResponse": {
@@ -7714,43 +8096,6 @@
         ],
         "type": "string"
       },
-      "todoItemPrimaryResponseDocument": {
-        "required": [
-          "data",
-          "links"
-        ],
-        "type": "object",
-        "properties": {
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceTopLevelLinks"
-              }
-            ]
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/todoItemDataInResponse"
-              }
-            ]
-          },
-          "included": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/dataInResponse"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
       "todoItemPriority": {
         "enum": [
           "High",
@@ -7758,33 +8103,6 @@
           "Low"
         ],
         "type": "string"
-      },
-      "todoItemRelationshipsInResponse": {
-        "type": "object",
-        "properties": {
-          "owner": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toOnePersonInResponse"
-              }
-            ]
-          },
-          "assignee": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOnePersonInResponse"
-              }
-            ]
-          },
-          "tags": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyTagInResponse"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
       },
       "todoItemResourceType": {
         "enum": [

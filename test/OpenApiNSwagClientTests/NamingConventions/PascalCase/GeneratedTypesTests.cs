@@ -50,17 +50,17 @@ public sealed class GeneratedTypesTests
     {
         _ = nameof(SupermarketCollectionResponseDocument.Meta);
         _ = nameof(CreateSupermarketRequestDocument.Meta);
-        _ = nameof(SupermarketPrimaryResponseDocument.Meta);
+        _ = nameof(PrimarySupermarketResponseDocument.Meta);
         _ = nameof(UpdateSupermarketRequestDocument.Meta);
 
         _ = nameof(StaffMemberCollectionResponseDocument.Meta);
         _ = nameof(CreateStaffMemberRequestDocument.Meta);
-        _ = nameof(StaffMemberPrimaryResponseDocument.Meta);
+        _ = nameof(PrimaryStaffMemberResponseDocument.Meta);
         _ = nameof(UpdateStaffMemberRequestDocument.Meta);
         _ = nameof(StaffMemberIdentifierCollectionResponseDocument.Meta);
         _ = nameof(StaffMemberIdentifierResponseDocument.Meta);
-        _ = nameof(StaffMemberSecondaryResponseDocument.Meta);
-        _ = nameof(NullableStaffMemberSecondaryResponseDocument.Meta);
+        _ = nameof(SecondaryStaffMemberResponseDocument.Meta);
+        _ = nameof(NullableSecondaryStaffMemberResponseDocument.Meta);
         _ = nameof(NullableStaffMemberIdentifierResponseDocument.Meta);
 
         _ = nameof(ErrorResponseDocument.Meta);
@@ -106,25 +106,25 @@ public sealed class GeneratedTypesTests
         _ = nameof(AttributesInCreateSupermarketRequest.Kind);
         _ = nameof(AttributesInUpdateSupermarketRequest.NameOfCity);
         _ = nameof(AttributesInUpdateSupermarketRequest.Kind);
-        _ = nameof(SupermarketAttributesInResponse.NameOfCity);
-        _ = nameof(SupermarketAttributesInResponse.Kind);
+        _ = nameof(AttributesInSupermarketResponse.NameOfCity);
+        _ = nameof(AttributesInSupermarketResponse.Kind);
         _ = nameof(RelationshipsInCreateSupermarketRequest.StoreManager);
         _ = nameof(RelationshipsInCreateSupermarketRequest.BackupStoreManager);
         _ = nameof(RelationshipsInCreateSupermarketRequest.Cashiers);
         _ = nameof(RelationshipsInUpdateSupermarketRequest.StoreManager);
         _ = nameof(RelationshipsInUpdateSupermarketRequest.BackupStoreManager);
         _ = nameof(RelationshipsInUpdateSupermarketRequest.Cashiers);
-        _ = nameof(SupermarketRelationshipsInResponse.StoreManager);
-        _ = nameof(SupermarketRelationshipsInResponse.BackupStoreManager);
-        _ = nameof(SupermarketRelationshipsInResponse.Cashiers);
+        _ = nameof(RelationshipsInSupermarketResponse.StoreManager);
+        _ = nameof(RelationshipsInSupermarketResponse.BackupStoreManager);
+        _ = nameof(RelationshipsInSupermarketResponse.Cashiers);
         _ = nameof(SupermarketType);
 
         _ = nameof(AttributesInCreateStaffMemberRequest.Name);
         _ = nameof(AttributesInCreateStaffMemberRequest.Age);
         _ = nameof(AttributesInUpdateStaffMemberRequest.Name);
         _ = nameof(AttributesInUpdateStaffMemberRequest.Age);
-        _ = nameof(StaffMemberAttributesInResponse.Name);
-        _ = nameof(StaffMemberAttributesInResponse.Age);
+        _ = nameof(AttributesInStaffMemberResponse.Name);
+        _ = nameof(AttributesInStaffMemberResponse.Age);
     }
 
     [Fact]
@@ -170,17 +170,20 @@ public sealed class GeneratedTypesTests
     [Fact]
     public void Generated_data_types_are_named_as_expected()
     {
-        _ = nameof(DataInResponse.Meta);
+        _ = nameof(ResourceInCreateRequest.Meta);
+        _ = nameof(ResourceInUpdateRequest.Meta);
+        _ = nameof(IdentifierInRequest.Meta);
+        _ = nameof(ResourceInResponse.Meta);
 
         _ = nameof(DataInCreateSupermarketRequest.Meta);
         _ = nameof(DataInUpdateSupermarketRequest.Meta);
-        _ = nameof(SupermarketDataInResponse.Meta);
+        _ = nameof(DataInSupermarketResponse.Meta);
 
         _ = nameof(SupermarketIdentifierInRequest.Meta);
 
         _ = nameof(DataInCreateStaffMemberRequest.Meta);
         _ = nameof(DataInUpdateStaffMemberRequest.Meta);
-        _ = nameof(StaffMemberDataInResponse.Meta);
+        _ = nameof(DataInStaffMemberResponse.Meta);
 
         _ = nameof(StaffMemberIdentifierInRequest.Meta);
         _ = nameof(StaffMemberIdentifierInResponse.Meta);

@@ -53,7 +53,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/accommodationCollectionResponseDocument"
                 }
@@ -75,7 +75,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -176,7 +176,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the accommodation to create.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -202,9 +202,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/accommodationPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryAccommodationResponseDocument"
                 }
               }
             }
@@ -215,7 +215,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -225,7 +225,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -235,7 +235,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -245,7 +245,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -255,7 +255,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -319,9 +319,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/accommodationPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryAccommodationResponseDocument"
                 }
               }
             }
@@ -341,7 +341,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -351,7 +351,7 @@
           "404": {
             "description": "The accommodation does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -477,7 +477,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the accommodation to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -493,9 +493,9 @@
           "200": {
             "description": "The accommodation was successfully updated, which resulted in additional changes. The updated accommodation is returned.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/accommodationPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryAccommodationResponseDocument"
                 }
               }
             }
@@ -506,7 +506,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -516,7 +516,7 @@
           "404": {
             "description": "The accommodation or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -526,7 +526,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -536,7 +536,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -571,7 +571,7 @@
           "404": {
             "description": "The accommodation does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -624,7 +624,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/excursionCollectionResponseDocument"
                 }
@@ -646,7 +646,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -747,7 +747,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the excursion to create.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -773,9 +773,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/excursionPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryExcursionResponseDocument"
                 }
               }
             }
@@ -786,7 +786,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -796,7 +796,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -806,7 +806,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -816,7 +816,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -826,7 +826,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -890,9 +890,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/excursionPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryExcursionResponseDocument"
                 }
               }
             }
@@ -912,7 +912,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -922,7 +922,7 @@
           "404": {
             "description": "The excursion does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1048,7 +1048,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the excursion to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -1064,9 +1064,9 @@
           "200": {
             "description": "The excursion was successfully updated, which resulted in additional changes. The updated excursion is returned.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/excursionPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryExcursionResponseDocument"
                 }
               }
             }
@@ -1077,7 +1077,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1087,7 +1087,7 @@
           "404": {
             "description": "The excursion or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1097,7 +1097,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1107,7 +1107,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1142,7 +1142,7 @@
           "404": {
             "description": "The excursion does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1195,7 +1195,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/transportCollectionResponseDocument"
                 }
@@ -1217,7 +1217,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1318,7 +1318,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the transport to create.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -1344,9 +1344,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/transportPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryTransportResponseDocument"
                 }
               }
             }
@@ -1357,7 +1357,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1367,7 +1367,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1377,7 +1377,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1387,7 +1387,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1397,7 +1397,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1461,9 +1461,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/transportPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryTransportResponseDocument"
                 }
               }
             }
@@ -1483,7 +1483,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1493,7 +1493,7 @@
           "404": {
             "description": "The transport does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1619,7 +1619,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the transport to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -1635,9 +1635,9 @@
           "200": {
             "description": "The transport was successfully updated, which resulted in additional changes. The updated transport is returned.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/transportPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryTransportResponseDocument"
                 }
               }
             }
@@ -1648,7 +1648,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1658,7 +1658,7 @@
           "404": {
             "description": "The transport or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1668,7 +1668,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1678,7 +1678,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1713,7 +1713,7 @@
           "404": {
             "description": "The transport does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1766,7 +1766,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/vacationCollectionResponseDocument"
                 }
@@ -1788,7 +1788,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1889,7 +1889,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the vacation to create.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -1915,9 +1915,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/vacationPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryVacationResponseDocument"
                 }
               }
             }
@@ -1928,7 +1928,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1938,7 +1938,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1948,7 +1948,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1958,7 +1958,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1968,7 +1968,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2032,9 +2032,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/vacationPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryVacationResponseDocument"
                 }
               }
             }
@@ -2054,7 +2054,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2064,7 +2064,7 @@
           "404": {
             "description": "The vacation does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2190,7 +2190,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the vacation to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -2206,9 +2206,9 @@
           "200": {
             "description": "The vacation was successfully updated, which resulted in additional changes. The updated vacation is returned.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/vacationPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryVacationResponseDocument"
                 }
               }
             }
@@ -2219,7 +2219,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2229,7 +2229,7 @@
           "404": {
             "description": "The vacation or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2239,7 +2239,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2249,7 +2249,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2284,7 +2284,7 @@
           "404": {
             "description": "The vacation does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2348,9 +2348,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/accommodationSecondaryResponseDocument"
+                  "$ref": "#/components/schemas/secondaryAccommodationResponseDocument"
                 }
               }
             }
@@ -2370,7 +2370,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2380,7 +2380,7 @@
           "404": {
             "description": "The vacation does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2526,7 +2526,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/accommodationIdentifierResponseDocument"
                 }
@@ -2548,7 +2548,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2558,7 +2558,7 @@
           "404": {
             "description": "The vacation does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2671,7 +2671,7 @@
         "requestBody": {
           "description": "The identity of the accommodation to assign to the accommodation relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -2690,7 +2690,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2700,7 +2700,7 @@
           "404": {
             "description": "The vacation or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2710,7 +2710,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2720,7 +2720,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2784,7 +2784,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/excursionCollectionResponseDocument"
                 }
@@ -2806,7 +2806,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2816,7 +2816,7 @@
           "404": {
             "description": "The vacation does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2962,7 +2962,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/excursionIdentifierCollectionResponseDocument"
                 }
@@ -2984,7 +2984,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2994,7 +2994,7 @@
           "404": {
             "description": "The vacation does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3107,7 +3107,7 @@
         "requestBody": {
           "description": "The identities of the excursions to add to the excursions relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -3126,7 +3126,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3136,7 +3136,7 @@
           "404": {
             "description": "The vacation or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3146,7 +3146,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3156,7 +3156,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3187,7 +3187,7 @@
         "requestBody": {
           "description": "The identities of the excursions to assign to the excursions relationship, or an empty array to clear the relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -3206,7 +3206,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3216,7 +3216,7 @@
           "404": {
             "description": "The vacation or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3226,7 +3226,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3236,7 +3236,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3267,7 +3267,7 @@
         "requestBody": {
           "description": "The identities of the excursions to remove from the excursions relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -3286,7 +3286,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3296,7 +3296,7 @@
           "404": {
             "description": "The vacation or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3306,7 +3306,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3316,7 +3316,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3380,9 +3380,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/nullableTransportSecondaryResponseDocument"
+                  "$ref": "#/components/schemas/nullableSecondaryTransportResponseDocument"
                 }
               }
             }
@@ -3402,7 +3402,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3412,7 +3412,7 @@
           "404": {
             "description": "The vacation does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3558,7 +3558,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/nullableTransportIdentifierResponseDocument"
                 }
@@ -3580,7 +3580,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3590,7 +3590,7 @@
           "404": {
             "description": "The vacation does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3703,7 +3703,7 @@
         "requestBody": {
           "description": "The identity of the transport to assign to the transport relationship, or `null` to clear the relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -3722,7 +3722,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3732,7 +3732,7 @@
           "404": {
             "description": "The vacation or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3742,7 +3742,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3752,7 +3752,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3765,15 +3765,6 @@
   },
   "components": {
     "schemas": {
-      "accommodationAttributesInResponse": {
-        "type": "object",
-        "properties": {
-          "address": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "accommodationCollectionResponseDocument": {
         "required": [
           "data",
@@ -3791,13 +3782,13 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/accommodationDataInResponse"
+              "$ref": "#/components/schemas/dataInAccommodationResponse"
             }
           },
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/dataInResponse"
+              "$ref": "#/components/schemas/resourceInResponse"
             }
           },
           "meta": {
@@ -3810,10 +3801,11 @@
         },
         "additionalProperties": false
       },
-      "accommodationDataInResponse": {
+      "accommodationIdentifierInRequest": {
+        "type": "object",
         "allOf": [
           {
-            "$ref": "#/components/schemas/dataInResponse"
+            "$ref": "#/components/schemas/identifierInRequest"
           },
           {
             "required": [
@@ -3825,54 +3817,11 @@
                 "minLength": 1,
                 "type": "string",
                 "format": "int64"
-              },
-              "attributes": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/accommodationAttributesInResponse"
-                  }
-                ]
-              },
-              "links": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/resourceLinks"
-                  }
-                ]
               }
             },
             "additionalProperties": false
           }
         ],
-        "additionalProperties": false
-      },
-      "accommodationIdentifierInRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/accommodationResourceType"
-              }
-            ]
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "int64"
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
         "additionalProperties": false
       },
       "accommodationIdentifierInResponse": {
@@ -3935,205 +3884,358 @@
         },
         "additionalProperties": false
       },
-      "accommodationPrimaryResponseDocument": {
-        "required": [
-          "data",
-          "links"
-        ],
-        "type": "object",
-        "properties": {
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceTopLevelLinks"
-              }
-            ]
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/accommodationDataInResponse"
-              }
-            ]
-          },
-          "included": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/dataInResponse"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
       "accommodationResourceType": {
         "enum": [
           "accommodations"
         ],
         "type": "string"
       },
-      "accommodationSecondaryResponseDocument": {
-        "required": [
-          "data",
-          "links"
-        ],
-        "type": "object",
-        "properties": {
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceTopLevelLinks"
-              }
-            ]
+      "attributesInAccommodationResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
           },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/accommodationDataInResponse"
+          {
+            "type": "object",
+            "properties": {
+              "address": {
+                "type": "string"
               }
-            ]
-          },
-          "included": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/dataInResponse"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "attributesInCreateAccommodationRequest": {
-        "required": [
-          "address"
-        ],
-        "type": "object",
-        "properties": {
-          "address": {
-            "type": "string"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRequest"
+          },
+          {
+            "required": [
+              "address"
+            ],
+            "type": "object",
+            "properties": {
+              "address": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "attributesInCreateExcursionRequest": {
-        "required": [
-          "description",
-          "occursAt"
-        ],
-        "type": "object",
-        "properties": {
-          "occursAt": {
-            "type": "string",
-            "format": "date-time"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRequest"
           },
-          "description": {
-            "type": "string"
+          {
+            "required": [
+              "description",
+              "occursAt"
+            ],
+            "type": "object",
+            "properties": {
+              "occursAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "description": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
-      "attributesInCreateTransportRequest": {
+      "attributesInCreateRequest": {
         "required": [
-          "durationInMinutes",
-          "type"
+          "openapi:discriminator"
         ],
         "type": "object",
         "properties": {
-          "type": {
+          "openapi:discriminator": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/transportType"
+                "$ref": "#/components/schemas/resourceType"
               }
             ]
-          },
-          "durationInMinutes": {
-            "type": "integer",
-            "format": "int32"
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "accommodations": "#/components/schemas/attributesInCreateAccommodationRequest",
+            "excursions": "#/components/schemas/attributesInCreateExcursionRequest",
+            "transports": "#/components/schemas/attributesInCreateTransportRequest",
+            "vacations": "#/components/schemas/attributesInCreateVacationRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInCreateTransportRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRequest"
+          },
+          {
+            "required": [
+              "durationInMinutes",
+              "type"
+            ],
+            "type": "object",
+            "properties": {
+              "type": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/transportType"
+                  }
+                ]
+              },
+              "durationInMinutes": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "attributesInCreateVacationRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRequest"
+          },
+          {
+            "required": [
+              "endsAt",
+              "startsAt"
+            ],
+            "type": "object",
+            "properties": {
+              "startsAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "endsAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInExcursionResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "occursAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "description": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInResponse": {
         "required": [
-          "endsAt",
-          "startsAt"
+          "openapi:discriminator"
         ],
         "type": "object",
         "properties": {
-          "startsAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endsAt": {
-            "type": "string",
-            "format": "date-time"
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "accommodations": "#/components/schemas/attributesInAccommodationResponse",
+            "excursions": "#/components/schemas/attributesInExcursionResponse",
+            "transports": "#/components/schemas/attributesInTransportResponse",
+            "vacations": "#/components/schemas/attributesInVacationResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInTransportResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/transportType"
+                  }
+                ]
+              },
+              "durationInMinutes": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "attributesInUpdateAccommodationRequest": {
-        "type": "object",
-        "properties": {
-          "address": {
-            "type": "string"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "address": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "attributesInUpdateExcursionRequest": {
-        "type": "object",
-        "properties": {
-          "occursAt": {
-            "type": "string",
-            "format": "date-time"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateRequest"
           },
-          "description": {
-            "type": "string"
+          {
+            "type": "object",
+            "properties": {
+              "occursAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "description": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
-      "attributesInUpdateTransportRequest": {
+      "attributesInUpdateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
         "type": "object",
         "properties": {
-          "type": {
+          "openapi:discriminator": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/transportType"
+                "$ref": "#/components/schemas/resourceType"
               }
             ]
-          },
-          "durationInMinutes": {
-            "type": "integer",
-            "format": "int32"
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "accommodations": "#/components/schemas/attributesInUpdateAccommodationRequest",
+            "excursions": "#/components/schemas/attributesInUpdateExcursionRequest",
+            "transports": "#/components/schemas/attributesInUpdateTransportRequest",
+            "vacations": "#/components/schemas/attributesInUpdateVacationRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInUpdateTransportRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/transportType"
+                  }
+                ]
+              },
+              "durationInMinutes": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "attributesInUpdateVacationRequest": {
-        "type": "object",
-        "properties": {
-          "startsAt": {
-            "type": "string",
-            "format": "date-time"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateRequest"
           },
-          "endsAt": {
-            "type": "string",
-            "format": "date-time"
+          {
+            "type": "object",
+            "properties": {
+              "startsAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "endsAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
+        "additionalProperties": false
+      },
+      "attributesInVacationResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "startsAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "endsAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "createAccommodationRequestDocument": {
@@ -4228,315 +4330,377 @@
         },
         "additionalProperties": false
       },
-      "dataInCreateAccommodationRequest": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/accommodationResourceType"
-              }
-            ]
+      "dataInAccommodationResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInResponse"
           },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInCreateAccommodationRequest"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInAccommodationResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
               }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
+        "additionalProperties": false
+      },
+      "dataInCreateAccommodationRequest": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInCreateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCreateAccommodationRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "dataInCreateExcursionRequest": {
-        "required": [
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/excursionResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInCreateRequest"
           },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInCreateExcursionRequest"
+          {
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCreateExcursionRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "dataInCreateTransportRequest": {
-        "required": [
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/transportResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInCreateRequest"
           },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInCreateTransportRequest"
+          {
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCreateTransportRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "dataInCreateVacationRequest": {
-        "required": [
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/vacationResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInCreateRequest"
           },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInCreateVacationRequest"
+          {
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCreateVacationRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInCreateVacationRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationshipsInCreateVacationRequest"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
-      "dataInResponse": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceType"
-              }
-            ]
+      "dataInExcursionResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInResponse"
           },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInExcursionResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
-        "additionalProperties": false,
-        "discriminator": {
-          "propertyName": "type",
-          "mapping": {
-            "accommodations": "#/components/schemas/accommodationDataInResponse",
-            "excursions": "#/components/schemas/excursionDataInResponse",
-            "transports": "#/components/schemas/transportDataInResponse",
-            "vacations": "#/components/schemas/vacationDataInResponse"
+        ],
+        "additionalProperties": false
+      },
+      "dataInTransportResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInTransportResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
           }
-        },
-        "x-abstract": true
+        ],
+        "additionalProperties": false
       },
       "dataInUpdateAccommodationRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/accommodationResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInUpdateRequest"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "int64"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInUpdateAccommodationRequest"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInUpdateAccommodationRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "dataInUpdateExcursionRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/excursionResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInUpdateRequest"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "int64"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInUpdateExcursionRequest"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInUpdateExcursionRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "dataInUpdateTransportRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/transportResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInUpdateRequest"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "int64"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInUpdateTransportRequest"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInUpdateTransportRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "dataInUpdateVacationRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/vacationResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInUpdateRequest"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "int64"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInUpdateVacationRequest"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInUpdateVacationRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInUpdateVacationRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationshipsInUpdateVacationRequest"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
+        "additionalProperties": false
+      },
+      "dataInVacationResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInVacationResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInVacationResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "errorLinks": {
@@ -4661,19 +4825,6 @@
         },
         "additionalProperties": false
       },
-      "excursionAttributesInResponse": {
-        "type": "object",
-        "properties": {
-          "occursAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "description": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "excursionCollectionResponseDocument": {
         "required": [
           "data",
@@ -4691,13 +4842,13 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/excursionDataInResponse"
+              "$ref": "#/components/schemas/dataInExcursionResponse"
             }
           },
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/dataInResponse"
+              "$ref": "#/components/schemas/resourceInResponse"
             }
           },
           "meta": {
@@ -4708,42 +4859,6 @@
             ]
           }
         },
-        "additionalProperties": false
-      },
-      "excursionDataInResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/dataInResponse"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "minLength": 1,
-                "type": "string",
-                "format": "int64"
-              },
-              "attributes": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/excursionAttributesInResponse"
-                  }
-                ]
-              },
-              "links": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/resourceLinks"
-                  }
-                ]
-              }
-            },
-            "additionalProperties": false
-          }
-        ],
         "additionalProperties": false
       },
       "excursionIdentifierCollectionResponseDocument": {
@@ -4777,32 +4892,26 @@
         "additionalProperties": false
       },
       "excursionIdentifierInRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/excursionResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/identifierInRequest"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "int64"
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "excursionIdentifierInResponse": {
@@ -4834,7 +4943,51 @@
         },
         "additionalProperties": false
       },
-      "excursionPrimaryResponseDocument": {
+      "excursionResourceType": {
+        "enum": [
+          "excursions"
+        ],
+        "type": "string"
+      },
+      "identifierInRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "accommodations": "#/components/schemas/accommodationIdentifierInRequest",
+            "excursions": "#/components/schemas/excursionIdentifierInRequest",
+            "transports": "#/components/schemas/transportIdentifierInRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "meta": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        }
+      },
+      "nullableSecondaryTransportResponseDocument": {
         "required": [
           "data",
           "links"
@@ -4851,14 +5004,15 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/excursionDataInResponse"
+                "$ref": "#/components/schemas/dataInTransportResponse"
               }
-            ]
+            ],
+            "nullable": true
           },
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/dataInResponse"
+              "$ref": "#/components/schemas/resourceInResponse"
             }
           },
           "meta": {
@@ -4870,18 +5024,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "excursionResourceType": {
-        "enum": [
-          "excursions"
-        ],
-        "type": "string"
-      },
-      "meta": {
-        "type": "object",
-        "additionalProperties": {
-          "nullable": true
-        }
       },
       "nullableToOneTransportInRequest": {
         "required": [
@@ -4967,7 +5109,7 @@
         },
         "additionalProperties": false
       },
-      "nullableTransportSecondaryResponseDocument": {
+      "primaryAccommodationResponseDocument": {
         "required": [
           "data",
           "links"
@@ -4984,15 +5126,125 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/transportDataInResponse"
+                "$ref": "#/components/schemas/dataInAccommodationResponse"
               }
-            ],
-            "nullable": true
+            ]
           },
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/dataInResponse"
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "primaryExcursionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInExcursionResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "primaryTransportResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInTransportResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "primaryVacationResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInVacationResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
             }
           },
           "meta": {
@@ -5017,61 +5269,181 @@
         },
         "additionalProperties": false
       },
-      "relationshipsInCreateVacationRequest": {
+      "relationshipsInCreateRequest": {
         "required": [
-          "accommodation"
+          "openapi:discriminator"
         ],
         "type": "object",
         "properties": {
-          "accommodation": {
+          "openapi:discriminator": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/toOneAccommodationInRequest"
-              }
-            ]
-          },
-          "transport": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOneTransportInRequest"
-              }
-            ]
-          },
-          "excursions": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyExcursionInRequest"
+                "$ref": "#/components/schemas/resourceType"
               }
             ]
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "vacations": "#/components/schemas/relationshipsInCreateVacationRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInCreateVacationRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInCreateRequest"
+          },
+          {
+            "required": [
+              "accommodation"
+            ],
+            "type": "object",
+            "properties": {
+              "accommodation": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneAccommodationInRequest"
+                  }
+                ]
+              },
+              "transport": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOneTransportInRequest"
+                  }
+                ]
+              },
+              "excursions": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyExcursionInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
-      "relationshipsInUpdateVacationRequest": {
+      "relationshipsInResponse": {
+        "required": [
+          "openapi:discriminator"
+        ],
         "type": "object",
         "properties": {
-          "accommodation": {
+          "openapi:discriminator": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/toOneAccommodationInRequest"
-              }
-            ]
-          },
-          "transport": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOneTransportInRequest"
-              }
-            ]
-          },
-          "excursions": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyExcursionInRequest"
+                "$ref": "#/components/schemas/resourceType"
               }
             ]
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "vacations": "#/components/schemas/relationshipsInVacationResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInUpdateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "vacations": "#/components/schemas/relationshipsInUpdateVacationRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInUpdateVacationRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "accommodation": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneAccommodationInRequest"
+                  }
+                ]
+              },
+              "transport": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOneTransportInRequest"
+                  }
+                ]
+              },
+              "excursions": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyExcursionInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInVacationResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "accommodation": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneAccommodationInResponse"
+                  }
+                ]
+              },
+              "transport": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOneTransportInResponse"
+                  }
+                ]
+              },
+              "excursions": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyExcursionInResponse"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "resourceCollectionTopLevelLinks": {
@@ -5140,6 +5512,105 @@
         },
         "additionalProperties": false
       },
+      "resourceInCreateRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "accommodations": "#/components/schemas/dataInCreateAccommodationRequest",
+            "excursions": "#/components/schemas/dataInCreateExcursionRequest",
+            "transports": "#/components/schemas/dataInCreateTransportRequest",
+            "vacations": "#/components/schemas/dataInCreateVacationRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "resourceInResponse": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "accommodations": "#/components/schemas/dataInAccommodationResponse",
+            "excursions": "#/components/schemas/dataInExcursionResponse",
+            "transports": "#/components/schemas/dataInTransportResponse",
+            "vacations": "#/components/schemas/dataInVacationResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "resourceInUpdateRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "accommodations": "#/components/schemas/dataInUpdateAccommodationRequest",
+            "excursions": "#/components/schemas/dataInUpdateExcursionRequest",
+            "transports": "#/components/schemas/dataInUpdateTransportRequest",
+            "vacations": "#/components/schemas/dataInUpdateVacationRequest"
+          }
+        },
+        "x-abstract": true
+      },
       "resourceLinks": {
         "type": "object",
         "properties": {
@@ -5169,6 +5640,43 @@
           "vacations"
         ],
         "type": "string"
+      },
+      "secondaryAccommodationResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInAccommodationResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
       },
       "toManyExcursionInRequest": {
         "required": [
@@ -5268,23 +5776,6 @@
         },
         "additionalProperties": false
       },
-      "transportAttributesInResponse": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/transportType"
-              }
-            ]
-          },
-          "durationInMinutes": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
       "transportCollectionResponseDocument": {
         "required": [
           "data",
@@ -5302,13 +5793,13 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/transportDataInResponse"
+              "$ref": "#/components/schemas/dataInTransportResponse"
             }
           },
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/dataInResponse"
+              "$ref": "#/components/schemas/resourceInResponse"
             }
           },
           "meta": {
@@ -5321,10 +5812,11 @@
         },
         "additionalProperties": false
       },
-      "transportDataInResponse": {
+      "transportIdentifierInRequest": {
+        "type": "object",
         "allOf": [
           {
-            "$ref": "#/components/schemas/dataInResponse"
+            "$ref": "#/components/schemas/identifierInRequest"
           },
           {
             "required": [
@@ -5336,54 +5828,11 @@
                 "minLength": 1,
                 "type": "string",
                 "format": "int64"
-              },
-              "attributes": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/transportAttributesInResponse"
-                  }
-                ]
-              },
-              "links": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/resourceLinks"
-                  }
-                ]
               }
             },
             "additionalProperties": false
           }
         ],
-        "additionalProperties": false
-      },
-      "transportIdentifierInRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/transportResourceType"
-              }
-            ]
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "int64"
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
         "additionalProperties": false
       },
       "transportIdentifierInResponse": {
@@ -5404,43 +5853,6 @@
             "minLength": 1,
             "type": "string",
             "format": "int64"
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "transportPrimaryResponseDocument": {
-        "required": [
-          "data",
-          "links"
-        ],
-        "type": "object",
-        "properties": {
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceTopLevelLinks"
-              }
-            ]
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/transportDataInResponse"
-              }
-            ]
-          },
-          "included": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/dataInResponse"
-            }
           },
           "meta": {
             "allOf": [
@@ -5560,20 +5972,6 @@
         },
         "additionalProperties": false
       },
-      "vacationAttributesInResponse": {
-        "type": "object",
-        "properties": {
-          "startsAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endsAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "additionalProperties": false
-      },
       "vacationCollectionResponseDocument": {
         "required": [
           "data",
@@ -5591,13 +5989,13 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/vacationDataInResponse"
+              "$ref": "#/components/schemas/dataInVacationResponse"
             }
           },
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/dataInResponse"
+              "$ref": "#/components/schemas/resourceInResponse"
             }
           },
           "meta": {
@@ -5609,119 +6007,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "vacationDataInResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/dataInResponse"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "minLength": 1,
-                "type": "string",
-                "format": "int64"
-              },
-              "attributes": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/vacationAttributesInResponse"
-                  }
-                ]
-              },
-              "relationships": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/vacationRelationshipsInResponse"
-                  }
-                ]
-              },
-              "links": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/resourceLinks"
-                  }
-                ]
-              }
-            },
-            "additionalProperties": false
-          }
-        ],
-        "additionalProperties": false
-      },
-      "vacationPrimaryResponseDocument": {
-        "required": [
-          "data",
-          "links"
-        ],
-        "type": "object",
-        "properties": {
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceTopLevelLinks"
-              }
-            ]
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/vacationDataInResponse"
-              }
-            ]
-          },
-          "included": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/dataInResponse"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "vacationRelationshipsInResponse": {
-        "type": "object",
-        "properties": {
-          "accommodation": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toOneAccommodationInResponse"
-              }
-            ]
-          },
-          "transport": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOneTransportInResponse"
-              }
-            ]
-          },
-          "excursions": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyExcursionInResponse"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "vacationResourceType": {
-        "enum": [
-          "vacations"
-        ],
-        "type": "string"
       }
     }
   }

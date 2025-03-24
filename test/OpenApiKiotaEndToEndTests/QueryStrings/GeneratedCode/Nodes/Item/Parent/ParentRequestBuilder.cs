@@ -40,12 +40,12 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Parent
         /// <summary>
         /// Retrieves the related node of an individual node&apos;s parent relationship.
         /// </summary>
-        /// <returns>A <see cref="global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NullableNodeSecondaryResponseDocument"/></returns>
+        /// <returns>A <see cref="global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NullableSecondaryNodeResponseDocument"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
         /// <exception cref="global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
-        public async Task<global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NullableNodeSecondaryResponseDocument?> GetAsync(Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Parent.ParentRequestBuilder.ParentRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NullableSecondaryNodeResponseDocument?> GetAsync(Action<RequestConfiguration<global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Parent.ParentRequestBuilder.ParentRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
             var requestInfo = ToGetRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
@@ -53,7 +53,7 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Parent
                 { "400", global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
                 { "404", global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NullableNodeSecondaryResponseDocument>(requestInfo, global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NullableNodeSecondaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NullableSecondaryNodeResponseDocument>(requestInfo, global::OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models.NullableSecondaryNodeResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes.Item.Parent
         {
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
-            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json");
+            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=openapi");
             return requestInfo;
         }
 

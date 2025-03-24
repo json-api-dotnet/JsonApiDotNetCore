@@ -20,5 +20,5 @@ internal sealed class RemoveFromRelationshipOperation<TResource> : AtomicOperati
 
     [Required]
     [JsonPropertyName("data")]
-    public ICollection<ResourceIdentifierInRequest<TResource>> Data { get; set; } = null!;
+    public ICollection<IdentifierInRequest<TResource>> Data { get; set; } = null!;
 }

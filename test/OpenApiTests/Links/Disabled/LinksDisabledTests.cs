@@ -70,12 +70,12 @@ public sealed class LinksDisabledTests : IClassFixture<OpenApiTestContext<OpenAp
     }
 
     [Theory]
-    [InlineData("accommodationPrimaryResponseDocument")]
-    [InlineData("accommodationSecondaryResponseDocument")]
-    [InlineData("excursionPrimaryResponseDocument")]
-    [InlineData("transportPrimaryResponseDocument")]
-    [InlineData("nullableTransportSecondaryResponseDocument")]
-    [InlineData("vacationPrimaryResponseDocument")]
+    [InlineData("primaryAccommodationResponseDocument")]
+    [InlineData("secondaryAccommodationResponseDocument")]
+    [InlineData("primaryExcursionResponseDocument")]
+    [InlineData("primaryTransportResponseDocument")]
+    [InlineData("nullableSecondaryTransportResponseDocument")]
+    [InlineData("primaryVacationResponseDocument")]
     [InlineData("accommodationCollectionResponseDocument")]
     [InlineData("excursionCollectionResponseDocument")]
     [InlineData("transportCollectionResponseDocument")]
@@ -87,10 +87,10 @@ public sealed class LinksDisabledTests : IClassFixture<OpenApiTestContext<OpenAp
     [InlineData("toOneAccommodationInResponse")]
     [InlineData("toManyExcursionInResponse")]
     [InlineData("nullableToOneTransportInResponse")]
-    [InlineData("accommodationDataInResponse.allOf[1]")]
-    [InlineData("excursionDataInResponse.allOf[1]")]
-    [InlineData("transportDataInResponse.allOf[1]")]
-    [InlineData("vacationDataInResponse.allOf[1]")]
+    [InlineData("dataInAccommodationResponse.allOf[1]")]
+    [InlineData("dataInExcursionResponse.allOf[1]")]
+    [InlineData("dataInTransportResponse.allOf[1]")]
+    [InlineData("dataInVacationResponse.allOf[1]")]
     public async Task All_container_schemas_contain_no_link_property(string containerSchemaId)
     {
         // Act

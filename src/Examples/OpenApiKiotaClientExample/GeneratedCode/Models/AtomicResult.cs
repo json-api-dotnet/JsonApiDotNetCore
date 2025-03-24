@@ -19,9 +19,9 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
         public IBackingStore BackingStore { get; private set; }
 
         /// <summary>The data property</summary>
-        public global::OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse? Data
+        public global::OpenApiKiotaClientExample.GeneratedCode.Models.ResourceInResponse? Data
         {
-            get { return BackingStore?.Get<global::OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse?>("data"); }
+            get { return BackingStore?.Get<global::OpenApiKiotaClientExample.GeneratedCode.Models.ResourceInResponse?>("data"); }
             set { BackingStore?.Set("data", value); }
         }
 
@@ -59,7 +59,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                { "data", n => { Data = n.GetObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse>(global::OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse.CreateFromDiscriminatorValue); } },
+                { "data", n => { Data = n.GetObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.ResourceInResponse>(global::OpenApiKiotaClientExample.GeneratedCode.Models.ResourceInResponse.CreateFromDiscriminatorValue); } },
                 { "meta", n => { Meta = n.GetObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta>(global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta.CreateFromDiscriminatorValue); } },
             };
         }
@@ -71,7 +71,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.DataInResponse>("data", Data);
+            writer.WriteObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.ResourceInResponse>("data", Data);
             writer.WriteObjectValue<global::OpenApiKiotaClientExample.GeneratedCode.Models.Meta>("meta", Meta);
         }
     }

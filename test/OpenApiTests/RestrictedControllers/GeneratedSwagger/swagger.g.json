@@ -53,7 +53,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/dataStreamCollectionResponseDocument"
                 }
@@ -75,7 +75,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -207,9 +207,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/dataStreamPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryDataStreamResponseDocument"
                 }
               }
             }
@@ -229,7 +229,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -239,7 +239,7 @@
           "404": {
             "description": "The dataStream does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -374,7 +374,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/readOnlyChannelCollectionResponseDocument"
                 }
@@ -396,7 +396,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -528,9 +528,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/readOnlyChannelPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryReadOnlyChannelResponseDocument"
                 }
               }
             }
@@ -550,7 +550,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -560,7 +560,7 @@
           "404": {
             "description": "The readOnlyChannel does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -706,7 +706,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/dataStreamCollectionResponseDocument"
                 }
@@ -728,7 +728,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -738,7 +738,7 @@
           "404": {
             "description": "The readOnlyChannel does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -884,7 +884,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/dataStreamIdentifierCollectionResponseDocument"
                 }
@@ -906,7 +906,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -916,7 +916,7 @@
           "404": {
             "description": "The readOnlyChannel does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1062,9 +1062,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/nullableDataStreamSecondaryResponseDocument"
+                  "$ref": "#/components/schemas/nullableSecondaryDataStreamResponseDocument"
                 }
               }
             }
@@ -1084,7 +1084,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1094,7 +1094,7 @@
           "404": {
             "description": "The readOnlyChannel does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1240,7 +1240,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/nullableDataStreamIdentifierResponseDocument"
                 }
@@ -1262,7 +1262,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1272,7 +1272,7 @@
           "404": {
             "description": "The readOnlyChannel does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1418,9 +1418,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/dataStreamSecondaryResponseDocument"
+                  "$ref": "#/components/schemas/secondaryDataStreamResponseDocument"
                 }
               }
             }
@@ -1440,7 +1440,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1450,7 +1450,7 @@
           "404": {
             "description": "The readOnlyChannel does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1596,7 +1596,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/dataStreamIdentifierResponseDocument"
                 }
@@ -1618,7 +1618,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1628,7 +1628,7 @@
           "404": {
             "description": "The readOnlyChannel does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1763,7 +1763,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/readOnlyResourceChannelCollectionResponseDocument"
                 }
@@ -1785,7 +1785,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1917,9 +1917,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/readOnlyResourceChannelPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryReadOnlyResourceChannelResponseDocument"
                 }
               }
             }
@@ -1939,7 +1939,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -1949,7 +1949,7 @@
           "404": {
             "description": "The readOnlyResourceChannel does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2095,7 +2095,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/dataStreamCollectionResponseDocument"
                 }
@@ -2117,7 +2117,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2127,7 +2127,7 @@
           "404": {
             "description": "The readOnlyResourceChannel does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2273,9 +2273,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/nullableDataStreamSecondaryResponseDocument"
+                  "$ref": "#/components/schemas/nullableSecondaryDataStreamResponseDocument"
                 }
               }
             }
@@ -2295,7 +2295,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2305,7 +2305,7 @@
           "404": {
             "description": "The readOnlyResourceChannel does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2451,9 +2451,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/dataStreamSecondaryResponseDocument"
+                  "$ref": "#/components/schemas/secondaryDataStreamResponseDocument"
                 }
               }
             }
@@ -2473,7 +2473,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2483,7 +2483,7 @@
           "404": {
             "description": "The readOnlyResourceChannel does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2629,7 +2629,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/dataStreamIdentifierCollectionResponseDocument"
                 }
@@ -2651,7 +2651,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2661,7 +2661,7 @@
           "404": {
             "description": "The relationshipChannel does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2774,7 +2774,7 @@
         "requestBody": {
           "description": "The identities of the dataStreams to add to the audioStreams relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -2793,7 +2793,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2803,7 +2803,7 @@
           "404": {
             "description": "The relationshipChannel or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2813,7 +2813,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2823,7 +2823,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2854,7 +2854,7 @@
         "requestBody": {
           "description": "The identities of the dataStreams to assign to the audioStreams relationship, or an empty array to clear the relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -2873,7 +2873,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2883,7 +2883,7 @@
           "404": {
             "description": "The relationshipChannel or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2893,7 +2893,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2903,7 +2903,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2934,7 +2934,7 @@
         "requestBody": {
           "description": "The identities of the dataStreams to remove from the audioStreams relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -2953,7 +2953,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2963,7 +2963,7 @@
           "404": {
             "description": "The relationshipChannel or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2973,7 +2973,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -2983,7 +2983,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3047,7 +3047,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/nullableDataStreamIdentifierResponseDocument"
                 }
@@ -3069,7 +3069,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3079,7 +3079,7 @@
           "404": {
             "description": "The relationshipChannel does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3192,7 +3192,7 @@
         "requestBody": {
           "description": "The identity of the dataStream to assign to the ultraHighDefinitionVideoStream relationship, or `null` to clear the relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -3211,7 +3211,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3221,7 +3221,7 @@
           "404": {
             "description": "The relationshipChannel or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3231,7 +3231,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3241,7 +3241,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3305,7 +3305,7 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/dataStreamIdentifierResponseDocument"
                 }
@@ -3327,7 +3327,7 @@
           "400": {
             "description": "The query string is invalid.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3337,7 +3337,7 @@
           "404": {
             "description": "The relationshipChannel does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3450,7 +3450,7 @@
         "requestBody": {
           "description": "The identity of the dataStream to assign to the videoStream relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -3469,7 +3469,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3479,7 +3479,7 @@
           "404": {
             "description": "The relationshipChannel or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3489,7 +3489,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3499,7 +3499,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3534,7 +3534,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the writeOnlyChannel to create.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -3560,9 +3560,9 @@
               }
             },
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/writeOnlyChannelPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryWriteOnlyChannelResponseDocument"
                 }
               }
             }
@@ -3573,7 +3573,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3583,7 +3583,7 @@
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3593,7 +3593,7 @@
           "404": {
             "description": "A related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3603,7 +3603,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3613,7 +3613,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3659,7 +3659,7 @@
         "requestBody": {
           "description": "The attributes and relationships of the writeOnlyChannel to update. Omitted fields are left unchanged.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -3675,9 +3675,9 @@
           "200": {
             "description": "The writeOnlyChannel was successfully updated, which resulted in additional changes. The updated writeOnlyChannel is returned.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
-                  "$ref": "#/components/schemas/writeOnlyChannelPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/primaryWriteOnlyChannelResponseDocument"
                 }
               }
             }
@@ -3688,7 +3688,7 @@
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3698,7 +3698,7 @@
           "404": {
             "description": "The writeOnlyChannel or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3708,7 +3708,7 @@
           "409": {
             "description": "A resource type or identifier in the request body is incompatible.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3718,7 +3718,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3753,7 +3753,7 @@
           "404": {
             "description": "The writeOnlyChannel does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3786,7 +3786,7 @@
         "requestBody": {
           "description": "The identities of the dataStreams to add to the audioStreams relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -3805,7 +3805,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3815,7 +3815,7 @@
           "404": {
             "description": "The writeOnlyChannel or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3825,7 +3825,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3835,7 +3835,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3866,7 +3866,7 @@
         "requestBody": {
           "description": "The identities of the dataStreams to assign to the audioStreams relationship, or an empty array to clear the relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -3885,7 +3885,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3895,7 +3895,7 @@
           "404": {
             "description": "The writeOnlyChannel or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3905,7 +3905,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3915,7 +3915,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3946,7 +3946,7 @@
         "requestBody": {
           "description": "The identities of the dataStreams to remove from the audioStreams relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -3965,7 +3965,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3975,7 +3975,7 @@
           "404": {
             "description": "The writeOnlyChannel or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3985,7 +3985,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -3995,7 +3995,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4028,7 +4028,7 @@
         "requestBody": {
           "description": "The identity of the dataStream to assign to the ultraHighDefinitionVideoStream relationship, or `null` to clear the relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -4047,7 +4047,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4057,7 +4057,7 @@
           "404": {
             "description": "The writeOnlyChannel or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4067,7 +4067,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4077,7 +4077,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4110,7 +4110,7 @@
         "requestBody": {
           "description": "The identity of the dataStream to assign to the videoStream relationship.",
           "content": {
-            "application/vnd.api+json": {
+            "application/vnd.api+json; ext=openapi": {
               "schema": {
                 "allOf": [
                   {
@@ -4129,7 +4129,7 @@
           "400": {
             "description": "The request body is missing or malformed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4139,7 +4139,7 @@
           "404": {
             "description": "The writeOnlyChannel or a related resource does not exist.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4149,7 +4149,7 @@
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4159,7 +4159,7 @@
           "422": {
             "description": "Validation of the request body failed.",
             "content": {
-              "application/vnd.api+json": {
+              "application/vnd.api+json; ext=openapi": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
@@ -4172,40 +4172,224 @@
   },
   "components": {
     "schemas": {
-      "attributesInCreateWriteOnlyChannelRequest": {
+      "attributesInCreateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "isCommercial": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isAdultOnly": {
-            "type": "boolean",
-            "nullable": true
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "writeOnlyChannels": "#/components/schemas/attributesInCreateWriteOnlyChannelRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInCreateWriteOnlyChannelRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "nullable": true
+              },
+              "isCommercial": {
+                "type": "boolean",
+                "nullable": true
+              },
+              "isAdultOnly": {
+                "type": "boolean",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
-      "attributesInUpdateWriteOnlyChannelRequest": {
+      "attributesInDataStreamResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "bytesTransmitted": {
+                "type": "integer",
+                "format": "int64"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInReadOnlyChannelResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "nullable": true
+              },
+              "isCommercial": {
+                "type": "boolean",
+                "nullable": true
+              },
+              "isAdultOnly": {
+                "type": "boolean",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInReadOnlyResourceChannelResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "nullable": true
+              },
+              "isCommercial": {
+                "type": "boolean",
+                "nullable": true
+              },
+              "isAdultOnly": {
+                "type": "boolean",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInResponse": {
+        "required": [
+          "openapi:discriminator"
+        ],
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "isCommercial": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isAdultOnly": {
-            "type": "boolean",
-            "nullable": true
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "dataStreams": "#/components/schemas/attributesInDataStreamResponse",
+            "readOnlyChannels": "#/components/schemas/attributesInReadOnlyChannelResponse",
+            "readOnlyResourceChannels": "#/components/schemas/attributesInReadOnlyResourceChannelResponse",
+            "writeOnlyChannels": "#/components/schemas/attributesInWriteOnlyChannelResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInUpdateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "writeOnlyChannels": "#/components/schemas/attributesInUpdateWriteOnlyChannelRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInUpdateWriteOnlyChannelRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "nullable": true
+              },
+              "isCommercial": {
+                "type": "boolean",
+                "nullable": true
+              },
+              "isAdultOnly": {
+                "type": "boolean",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInWriteOnlyChannelResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "nullable": true
+              },
+              "isCommercial": {
+                "type": "boolean",
+                "nullable": true
+              },
+              "isAdultOnly": {
+                "type": "boolean",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "createWriteOnlyChannelRequestDocument": {
@@ -4232,126 +4416,234 @@
         "additionalProperties": false
       },
       "dataInCreateWriteOnlyChannelRequest": {
-        "required": [
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/writeOnlyChannelResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInCreateRequest"
           },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInCreateWriteOnlyChannelRequest"
+          {
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCreateWriteOnlyChannelRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInCreateWriteOnlyChannelRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationshipsInCreateWriteOnlyChannelRequest"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
-      "dataInResponse": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceType"
-              }
-            ]
+      "dataInDataStreamResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInResponse"
           },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInDataStreamResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
-        "additionalProperties": false,
-        "discriminator": {
-          "propertyName": "type",
-          "mapping": {
-            "dataStreams": "#/components/schemas/dataStreamDataInResponse",
-            "readOnlyChannels": "#/components/schemas/readOnlyChannelDataInResponse",
-            "readOnlyResourceChannels": "#/components/schemas/readOnlyResourceChannelDataInResponse",
-            "writeOnlyChannels": "#/components/schemas/writeOnlyChannelDataInResponse"
+        ],
+        "additionalProperties": false
+      },
+      "dataInReadOnlyChannelResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInReadOnlyChannelResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInReadOnlyChannelResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
           }
-        },
-        "x-abstract": true
+        ],
+        "additionalProperties": false
+      },
+      "dataInReadOnlyResourceChannelResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInReadOnlyResourceChannelResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInReadOnlyResourceChannelResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
       },
       "dataInUpdateWriteOnlyChannelRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/writeOnlyChannelResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInUpdateRequest"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "int64"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/attributesInUpdateWriteOnlyChannelRequest"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInUpdateWriteOnlyChannelRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInUpdateWriteOnlyChannelRequest"
+                  }
+                ]
               }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/relationshipsInUpdateWriteOnlyChannelRequest"
-              }
-            ]
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
-      "dataStreamAttributesInResponse": {
-        "type": "object",
-        "properties": {
-          "bytesTransmitted": {
-            "type": "integer",
-            "format": "int64"
+      "dataInWriteOnlyChannelResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInWriteOnlyChannelResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInWriteOnlyChannelResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "dataStreamCollectionResponseDocument": {
@@ -4371,13 +4663,13 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/dataStreamDataInResponse"
+              "$ref": "#/components/schemas/dataInDataStreamResponse"
             }
           },
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/dataInResponse"
+              "$ref": "#/components/schemas/resourceInResponse"
             }
           },
           "meta": {
@@ -4388,42 +4680,6 @@
             ]
           }
         },
-        "additionalProperties": false
-      },
-      "dataStreamDataInResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/dataInResponse"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "minLength": 1,
-                "type": "string",
-                "format": "int64"
-              },
-              "attributes": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/dataStreamAttributesInResponse"
-                  }
-                ]
-              },
-              "links": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/resourceLinks"
-                  }
-                ]
-              }
-            },
-            "additionalProperties": false
-          }
-        ],
         "additionalProperties": false
       },
       "dataStreamIdentifierCollectionResponseDocument": {
@@ -4457,32 +4713,26 @@
         "additionalProperties": false
       },
       "dataStreamIdentifierInRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
         "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/dataStreamResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/identifierInRequest"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "format": "int64"
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
               }
-            ]
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "dataStreamIdentifierInResponse": {
@@ -4545,85 +4795,11 @@
         },
         "additionalProperties": false
       },
-      "dataStreamPrimaryResponseDocument": {
-        "required": [
-          "data",
-          "links"
-        ],
-        "type": "object",
-        "properties": {
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceTopLevelLinks"
-              }
-            ]
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/dataStreamDataInResponse"
-              }
-            ]
-          },
-          "included": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/dataInResponse"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
       "dataStreamResourceType": {
         "enum": [
           "dataStreams"
         ],
         "type": "string"
-      },
-      "dataStreamSecondaryResponseDocument": {
-        "required": [
-          "data",
-          "links"
-        ],
-        "type": "object",
-        "properties": {
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceTopLevelLinks"
-              }
-            ]
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/dataStreamDataInResponse"
-              }
-            ]
-          },
-          "included": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/dataInResponse"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
       },
       "errorLinks": {
         "type": "object",
@@ -4747,6 +4923,36 @@
         },
         "additionalProperties": false
       },
+      "identifierInRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "dataStreams": "#/components/schemas/dataStreamIdentifierInRequest"
+          }
+        },
+        "x-abstract": true
+      },
       "meta": {
         "type": "object",
         "additionalProperties": {
@@ -4785,7 +4991,7 @@
         },
         "additionalProperties": false
       },
-      "nullableDataStreamSecondaryResponseDocument": {
+      "nullableSecondaryDataStreamResponseDocument": {
         "required": [
           "data",
           "links"
@@ -4802,7 +5008,7 @@
           "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/dataStreamDataInResponse"
+                "$ref": "#/components/schemas/dataInDataStreamResponse"
               }
             ],
             "nullable": true
@@ -4810,7 +5016,7 @@
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/dataInResponse"
+              "$ref": "#/components/schemas/resourceInResponse"
             }
           },
           "meta": {
@@ -4875,20 +5081,150 @@
         },
         "additionalProperties": false
       },
-      "readOnlyChannelAttributesInResponse": {
+      "primaryDataStreamResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
           },
-          "isCommercial": {
-            "type": "boolean",
-            "nullable": true
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInDataStreamResponse"
+              }
+            ]
           },
-          "isAdultOnly": {
-            "type": "boolean",
-            "nullable": true
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "primaryReadOnlyChannelResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInReadOnlyChannelResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "primaryReadOnlyResourceChannelResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInReadOnlyResourceChannelResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "primaryWriteOnlyChannelResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInWriteOnlyChannelResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4910,13 +5246,13 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/readOnlyChannelDataInResponse"
+              "$ref": "#/components/schemas/dataInReadOnlyChannelResponse"
             }
           },
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/dataInResponse"
+              "$ref": "#/components/schemas/resourceInResponse"
             }
           },
           "meta": {
@@ -4925,131 +5261,6 @@
                 "$ref": "#/components/schemas/meta"
               }
             ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "readOnlyChannelDataInResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/dataInResponse"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "minLength": 1,
-                "type": "string",
-                "format": "int64"
-              },
-              "attributes": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/readOnlyChannelAttributesInResponse"
-                  }
-                ]
-              },
-              "relationships": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/readOnlyChannelRelationshipsInResponse"
-                  }
-                ]
-              },
-              "links": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/resourceLinks"
-                  }
-                ]
-              }
-            },
-            "additionalProperties": false
-          }
-        ],
-        "additionalProperties": false
-      },
-      "readOnlyChannelPrimaryResponseDocument": {
-        "required": [
-          "data",
-          "links"
-        ],
-        "type": "object",
-        "properties": {
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceTopLevelLinks"
-              }
-            ]
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/readOnlyChannelDataInResponse"
-              }
-            ]
-          },
-          "included": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/dataInResponse"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "readOnlyChannelRelationshipsInResponse": {
-        "type": "object",
-        "properties": {
-          "videoStream": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toOneDataStreamInResponse"
-              }
-            ]
-          },
-          "ultraHighDefinitionVideoStream": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOneDataStreamInResponse"
-              }
-            ]
-          },
-          "audioStreams": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyDataStreamInResponse"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "readOnlyResourceChannelAttributesInResponse": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "isCommercial": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isAdultOnly": {
-            "type": "boolean",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -5071,126 +5282,19 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/readOnlyResourceChannelDataInResponse"
+              "$ref": "#/components/schemas/dataInReadOnlyResourceChannelResponse"
             }
           },
           "included": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/dataInResponse"
+              "$ref": "#/components/schemas/resourceInResponse"
             }
           },
           "meta": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "readOnlyResourceChannelDataInResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/dataInResponse"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "minLength": 1,
-                "type": "string",
-                "format": "int64"
-              },
-              "attributes": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/readOnlyResourceChannelAttributesInResponse"
-                  }
-                ]
-              },
-              "relationships": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/readOnlyResourceChannelRelationshipsInResponse"
-                  }
-                ]
-              },
-              "links": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/resourceLinks"
-                  }
-                ]
-              }
-            },
-            "additionalProperties": false
-          }
-        ],
-        "additionalProperties": false
-      },
-      "readOnlyResourceChannelPrimaryResponseDocument": {
-        "required": [
-          "data",
-          "links"
-        ],
-        "type": "object",
-        "properties": {
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceTopLevelLinks"
-              }
-            ]
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/readOnlyResourceChannelDataInResponse"
-              }
-            ]
-          },
-          "included": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/dataInResponse"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "readOnlyResourceChannelRelationshipsInResponse": {
-        "type": "object",
-        "properties": {
-          "videoStream": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toOneDataStreamInResponse"
-              }
-            ]
-          },
-          "ultraHighDefinitionVideoStream": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOneDataStreamInResponse"
-              }
-            ]
-          },
-          "audioStreams": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyDataStreamInResponse"
               }
             ]
           }
@@ -5209,61 +5313,253 @@
         },
         "additionalProperties": false
       },
-      "relationshipsInCreateWriteOnlyChannelRequest": {
+      "relationshipsInCreateRequest": {
         "required": [
-          "videoStream"
+          "openapi:discriminator"
         ],
         "type": "object",
         "properties": {
-          "videoStream": {
+          "openapi:discriminator": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/toOneDataStreamInRequest"
-              }
-            ]
-          },
-          "ultraHighDefinitionVideoStream": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOneDataStreamInRequest"
-              }
-            ]
-          },
-          "audioStreams": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyDataStreamInRequest"
+                "$ref": "#/components/schemas/resourceType"
               }
             ]
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "writeOnlyChannels": "#/components/schemas/relationshipsInCreateWriteOnlyChannelRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInCreateWriteOnlyChannelRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInCreateRequest"
+          },
+          {
+            "required": [
+              "videoStream"
+            ],
+            "type": "object",
+            "properties": {
+              "videoStream": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneDataStreamInRequest"
+                  }
+                ]
+              },
+              "ultraHighDefinitionVideoStream": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOneDataStreamInRequest"
+                  }
+                ]
+              },
+              "audioStreams": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyDataStreamInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
-      "relationshipsInUpdateWriteOnlyChannelRequest": {
+      "relationshipsInReadOnlyChannelResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "videoStream": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneDataStreamInResponse"
+                  }
+                ]
+              },
+              "ultraHighDefinitionVideoStream": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOneDataStreamInResponse"
+                  }
+                ]
+              },
+              "audioStreams": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyDataStreamInResponse"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInReadOnlyResourceChannelResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "videoStream": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneDataStreamInResponse"
+                  }
+                ]
+              },
+              "ultraHighDefinitionVideoStream": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOneDataStreamInResponse"
+                  }
+                ]
+              },
+              "audioStreams": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyDataStreamInResponse"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInResponse": {
+        "required": [
+          "openapi:discriminator"
+        ],
         "type": "object",
         "properties": {
-          "videoStream": {
+          "openapi:discriminator": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/toOneDataStreamInRequest"
-              }
-            ]
-          },
-          "ultraHighDefinitionVideoStream": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOneDataStreamInRequest"
-              }
-            ]
-          },
-          "audioStreams": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyDataStreamInRequest"
+                "$ref": "#/components/schemas/resourceType"
               }
             ]
           }
         },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "readOnlyChannels": "#/components/schemas/relationshipsInReadOnlyChannelResponse",
+            "readOnlyResourceChannels": "#/components/schemas/relationshipsInReadOnlyResourceChannelResponse",
+            "writeOnlyChannels": "#/components/schemas/relationshipsInWriteOnlyChannelResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInUpdateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "writeOnlyChannels": "#/components/schemas/relationshipsInUpdateWriteOnlyChannelRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInUpdateWriteOnlyChannelRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "videoStream": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneDataStreamInRequest"
+                  }
+                ]
+              },
+              "ultraHighDefinitionVideoStream": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOneDataStreamInRequest"
+                  }
+                ]
+              },
+              "audioStreams": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyDataStreamInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInWriteOnlyChannelResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "videoStream": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneDataStreamInResponse"
+                  }
+                ]
+              },
+              "ultraHighDefinitionVideoStream": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOneDataStreamInResponse"
+                  }
+                ]
+              },
+              "audioStreams": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyDataStreamInResponse"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "resourceCollectionTopLevelLinks": {
@@ -5332,6 +5628,99 @@
         },
         "additionalProperties": false
       },
+      "resourceInCreateRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "writeOnlyChannels": "#/components/schemas/dataInCreateWriteOnlyChannelRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "resourceInResponse": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "dataStreams": "#/components/schemas/dataInDataStreamResponse",
+            "readOnlyChannels": "#/components/schemas/dataInReadOnlyChannelResponse",
+            "readOnlyResourceChannels": "#/components/schemas/dataInReadOnlyResourceChannelResponse",
+            "writeOnlyChannels": "#/components/schemas/dataInWriteOnlyChannelResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "resourceInUpdateRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "writeOnlyChannels": "#/components/schemas/dataInUpdateWriteOnlyChannelRequest"
+          }
+        },
+        "x-abstract": true
+      },
       "resourceLinks": {
         "type": "object",
         "properties": {
@@ -5361,6 +5750,43 @@
           "writeOnlyChannels"
         ],
         "type": "string"
+      },
+      "secondaryDataStreamResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInDataStreamResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
       },
       "toManyDataStreamInRequest": {
         "required": [
@@ -5482,137 +5908,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "writeOnlyChannelAttributesInResponse": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "isCommercial": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isAdultOnly": {
-            "type": "boolean",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "writeOnlyChannelDataInResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/dataInResponse"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "minLength": 1,
-                "type": "string",
-                "format": "int64"
-              },
-              "attributes": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/writeOnlyChannelAttributesInResponse"
-                  }
-                ]
-              },
-              "relationships": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/writeOnlyChannelRelationshipsInResponse"
-                  }
-                ]
-              },
-              "links": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/resourceLinks"
-                  }
-                ]
-              }
-            },
-            "additionalProperties": false
-          }
-        ],
-        "additionalProperties": false
-      },
-      "writeOnlyChannelPrimaryResponseDocument": {
-        "required": [
-          "data",
-          "links"
-        ],
-        "type": "object",
-        "properties": {
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceTopLevelLinks"
-              }
-            ]
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/writeOnlyChannelDataInResponse"
-              }
-            ]
-          },
-          "included": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/dataInResponse"
-            }
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/meta"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "writeOnlyChannelRelationshipsInResponse": {
-        "type": "object",
-        "properties": {
-          "videoStream": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toOneDataStreamInResponse"
-              }
-            ]
-          },
-          "ultraHighDefinitionVideoStream": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nullableToOneDataStreamInResponse"
-              }
-            ]
-          },
-          "audioStreams": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyDataStreamInResponse"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "writeOnlyChannelResourceType": {
-        "enum": [
-          "writeOnlyChannels"
-        ],
-        "type": "string"
       }
     }
   }

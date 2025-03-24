@@ -40,12 +40,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Assignee
         /// <summary>
         /// Retrieves the related person of an individual todoItem&apos;s assignee relationship.
         /// </summary>
-        /// <returns>A <see cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.NullablePersonSecondaryResponseDocument"/></returns>
+        /// <returns>A <see cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.NullableSecondaryPersonResponseDocument"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
         /// <exception cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
-        public async Task<global::OpenApiKiotaClientExample.GeneratedCode.Models.NullablePersonSecondaryResponseDocument?> GetAsync(Action<RequestConfiguration<global::OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Assignee.AssigneeRequestBuilder.AssigneeRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::OpenApiKiotaClientExample.GeneratedCode.Models.NullableSecondaryPersonResponseDocument?> GetAsync(Action<RequestConfiguration<global::OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Assignee.AssigneeRequestBuilder.AssigneeRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
             var requestInfo = ToGetRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
@@ -53,7 +53,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Assignee
                 { "400", global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
                 { "404", global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::OpenApiKiotaClientExample.GeneratedCode.Models.NullablePersonSecondaryResponseDocument>(requestInfo, global::OpenApiKiotaClientExample.GeneratedCode.Models.NullablePersonSecondaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::OpenApiKiotaClientExample.GeneratedCode.Models.NullableSecondaryPersonResponseDocument>(requestInfo, global::OpenApiKiotaClientExample.GeneratedCode.Models.NullableSecondaryPersonResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.TodoItems.Item.Assignee
         {
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
-            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json");
+            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=openapi");
             return requestInfo;
         }
 

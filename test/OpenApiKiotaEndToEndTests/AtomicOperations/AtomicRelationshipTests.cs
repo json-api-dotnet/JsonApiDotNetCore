@@ -62,7 +62,7 @@ public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestConte
                     },
                     Data = new StudentIdentifierInRequest
                     {
-                        Type = StudentResourceType.Students,
+                        Type = ResourceType.Students,
                         Id = existingStudent.StringId!
                     }
                 }
@@ -119,12 +119,12 @@ public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestConte
                     [
                         new CourseIdentifierInRequest
                         {
-                            Type = CourseResourceType.Courses,
+                            Type = ResourceType.Courses,
                             Id = existingCourses.ElementAt(0).Id
                         },
                         new CourseIdentifierInRequest
                         {
-                            Type = CourseResourceType.Courses,
+                            Type = ResourceType.Courses,
                             Id = existingCourses.ElementAt(1).Id
                         }
                     ]
@@ -183,12 +183,12 @@ public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestConte
                     [
                         new CourseIdentifierInRequest
                         {
-                            Type = CourseResourceType.Courses,
+                            Type = ResourceType.Courses,
                             Id = existingCourses.ElementAt(0).Id
                         },
                         new CourseIdentifierInRequest
                         {
-                            Type = CourseResourceType.Courses,
+                            Type = ResourceType.Courses,
                             Id = existingCourses.ElementAt(1).Id
                         }
                     ]
@@ -246,12 +246,12 @@ public sealed class AtomicRelationshipTests : IClassFixture<IntegrationTestConte
                     [
                         new CourseIdentifierInRequest
                         {
-                            Type = CourseResourceType.Courses,
+                            Type = ResourceType.Courses,
                             Id = existingTeacher.Teaches.ElementAt(0).Id
                         },
                         new CourseIdentifierInRequest
                         {
-                            Type = CourseResourceType.Courses,
+                            Type = ResourceType.Courses,
                             Id = existingTeacher.Teaches.ElementAt(2).Id
                         }
                     ]

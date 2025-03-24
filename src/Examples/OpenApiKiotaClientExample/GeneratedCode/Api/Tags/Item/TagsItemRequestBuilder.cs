@@ -70,12 +70,12 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item
         /// <summary>
         /// Retrieves an individual tag by its identifier.
         /// </summary>
-        /// <returns>A <see cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.TagPrimaryResponseDocument"/></returns>
+        /// <returns>A <see cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.PrimaryTagResponseDocument"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 400 status code</exception>
         /// <exception cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
-        public async Task<global::OpenApiKiotaClientExample.GeneratedCode.Models.TagPrimaryResponseDocument?> GetAsync(Action<RequestConfiguration<global::OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.TagsItemRequestBuilder.TagsItemRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::OpenApiKiotaClientExample.GeneratedCode.Models.PrimaryTagResponseDocument?> GetAsync(Action<RequestConfiguration<global::OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.TagsItemRequestBuilder.TagsItemRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
             var requestInfo = ToGetRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
@@ -83,7 +83,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item
                 { "400", global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
                 { "404", global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::OpenApiKiotaClientExample.GeneratedCode.Models.TagPrimaryResponseDocument>(requestInfo, global::OpenApiKiotaClientExample.GeneratedCode.Models.TagPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::OpenApiKiotaClientExample.GeneratedCode.Models.PrimaryTagResponseDocument>(requestInfo, global::OpenApiKiotaClientExample.GeneratedCode.Models.PrimaryTagResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item
         /// <summary>
         /// Updates an existing tag.
         /// </summary>
-        /// <returns>A <see cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.TagPrimaryResponseDocument"/></returns>
+        /// <returns>A <see cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.PrimaryTagResponseDocument"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
@@ -108,7 +108,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item
         /// <exception cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 404 status code</exception>
         /// <exception cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 409 status code</exception>
         /// <exception cref="global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument">When receiving a 422 status code</exception>
-        public async Task<global::OpenApiKiotaClientExample.GeneratedCode.Models.TagPrimaryResponseDocument?> PatchAsync(global::OpenApiKiotaClientExample.GeneratedCode.Models.UpdateTagRequestDocument body, Action<RequestConfiguration<global::OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.TagsItemRequestBuilder.TagsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::OpenApiKiotaClientExample.GeneratedCode.Models.PrimaryTagResponseDocument?> PatchAsync(global::OpenApiKiotaClientExample.GeneratedCode.Models.UpdateTagRequestDocument body, Action<RequestConfiguration<global::OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item.TagsItemRequestBuilder.TagsItemRequestBuilderPatchQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPatchRequestInformation(body, requestConfiguration);
@@ -119,7 +119,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item
                 { "409", global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
                 { "422", global::OpenApiKiotaClientExample.GeneratedCode.Models.ErrorResponseDocument.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::OpenApiKiotaClientExample.GeneratedCode.Models.TagPrimaryResponseDocument>(requestInfo, global::OpenApiKiotaClientExample.GeneratedCode.Models.TagPrimaryResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::OpenApiKiotaClientExample.GeneratedCode.Models.PrimaryTagResponseDocument>(requestInfo, global::OpenApiKiotaClientExample.GeneratedCode.Models.PrimaryTagResponseDocument.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item
         {
             var requestInfo = new RequestInformation(Method.DELETE, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
-            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json");
+            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=openapi");
             return requestInfo;
         }
 
@@ -144,7 +144,7 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item
         {
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
-            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json");
+            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=openapi");
             return requestInfo;
         }
 
@@ -171,8 +171,8 @@ namespace OpenApiKiotaClientExample.GeneratedCode.Api.Tags.Item
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = new RequestInformation(Method.PATCH, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
-            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json");
-            requestInfo.SetContentFromParsable(RequestAdapter, "application/vnd.api+json", body);
+            requestInfo.Headers.TryAdd("Accept", "application/vnd.api+json;ext=openapi");
+            requestInfo.SetContentFromParsable(RequestAdapter, "application/vnd.api+json;ext=openapi", body);
             return requestInfo;
         }
 
