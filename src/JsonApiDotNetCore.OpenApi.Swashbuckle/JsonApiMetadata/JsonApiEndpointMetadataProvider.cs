@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
@@ -43,11 +42,7 @@ internal sealed class JsonApiEndpointMetadataProvider
         }
 
         ResourceType? primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(controllerAction.ReflectedType);
-
-        if (primaryResourceType == null)
-        {
-            throw new UnreachableException();
-        }
+        ConsistencyGuard.ThrowIf(primaryResourceType == null);
 
         IJsonApiRequestMetadata? requestMetadata = GetRequestMetadata(endpoint, primaryResourceType);
         IJsonApiResponseMetadata? responseMetadata = GetResponseMetadata(endpoint, primaryResourceType);

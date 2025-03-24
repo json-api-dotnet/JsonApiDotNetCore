@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json;
 using Humanizer;
@@ -64,23 +63,14 @@ internal sealed class OpenApiOperationIdSelector
     private static string GetTemplate(ApiDescription endpoint)
     {
         Type bodyType = GetBodyType(endpoint);
-
-        if (!SchemaOpenTypeToOpenApiOperationIdTemplateMap.TryGetValue(bodyType, out string? template))
-        {
-            throw new UnreachableException();
-        }
-
+        ConsistencyGuard.ThrowIf(!SchemaOpenTypeToOpenApiOperationIdTemplateMap.TryGetValue(bodyType, out string? template));
         return template;
     }
 
     private static Type GetBodyType(ApiDescription endpoint)
     {
         var producesResponseTypeAttribute = endpoint.ActionDescriptor.GetFilterMetadata<ProducesResponseTypeAttribute>();
-
-        if (producesResponseTypeAttribute == null)
-        {
-            throw new UnreachableException();
-        }
+        ConsistencyGuard.ThrowIf(producesResponseTypeAttribute == null);
 
         ControllerParameterDescriptor? requestBodyDescriptor = endpoint.ActionDescriptor.GetBodyParameterDescriptor();
         Type bodyType = (requestBodyDescriptor?.ParameterType ?? producesResponseTypeAttribute.Type).ConstructedToOpenType();
@@ -95,10 +85,8 @@ internal sealed class OpenApiOperationIdSelector
 
     private string ApplyTemplate(string openApiOperationIdTemplate, ResourceType? resourceType, ApiDescription endpoint)
     {
-        if (endpoint.RelativePath == null || endpoint.HttpMethod == null)
-        {
-            throw new UnreachableException();
-        }
+        ConsistencyGuard.ThrowIf(endpoint.RelativePath == null);
+        ConsistencyGuard.ThrowIf(endpoint.HttpMethod == null);
 
         string method = endpoint.HttpMethod.ToLowerInvariant();
         string relationshipName = openApiOperationIdTemplate.Contains("[RelationshipName]") ? endpoint.RelativePath.Split('/').Last() : string.Empty;

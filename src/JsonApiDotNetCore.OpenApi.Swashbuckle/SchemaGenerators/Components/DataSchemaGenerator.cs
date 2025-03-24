@@ -390,11 +390,7 @@ internal sealed class DataSchemaGenerator
                 GetResourceSchemaTypeForFieldsProperty(resourceSchemaTypeForData, forAttributes ? "Attributes" : "Relationships");
 
             Type? commonFieldsSchemaType = GetCommonSchemaType(resourceSchemaTypeForFields.SchemaOpenType);
-
-            if (commonFieldsSchemaType == null)
-            {
-                throw new UnreachableException();
-            }
+            ConsistencyGuard.ThrowIf(commonFieldsSchemaType == null);
 
             _ = GenerateSchemaForCommonFields(commonFieldsSchemaType, schemaRepository);
 
@@ -432,11 +428,7 @@ internal sealed class DataSchemaGenerator
     private ResourceSchemaType GetResourceSchemaTypeForFieldsProperty(ResourceSchemaType resourceSchemaTypeForData, string propertyName)
     {
         PropertyInfo? fieldsProperty = resourceSchemaTypeForData.SchemaConstructedType.GetProperty(propertyName);
-
-        if (fieldsProperty == null)
-        {
-            throw new UnreachableException();
-        }
+        ConsistencyGuard.ThrowIf(fieldsProperty == null);
 
         Type fieldsConstructedType = fieldsProperty.PropertyType;
         return ResourceSchemaType.Create(fieldsConstructedType, _resourceGraph);

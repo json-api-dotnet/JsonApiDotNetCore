@@ -221,9 +221,6 @@ internal sealed class ResourceFieldSchemaBuilder
 
     private static void AssertHasNoProperties(OpenApiSchema fullSchema)
     {
-        if (fullSchema.Properties.Count > 0)
-        {
-            throw new UnreachableException();
-        }
+        ConsistencyGuard.ThrowIf(fullSchema.Properties.Count > 0);
     }
 }

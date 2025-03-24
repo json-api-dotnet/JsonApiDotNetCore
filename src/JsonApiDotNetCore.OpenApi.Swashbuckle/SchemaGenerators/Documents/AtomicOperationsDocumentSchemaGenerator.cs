@@ -336,11 +336,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
             RemoveProperties(inlineSchemaForOperation);
 
             string baseRelationshipSchemaId = _schemaIdSelector.GetRelationshipAtomicOperationSchemaId(relationshipInAnyBaseResourceType, operationCode);
-
-            if (!schemaRepository.Schemas.ContainsKey(baseRelationshipSchemaId))
-            {
-                throw new UnreachableException();
-            }
+            ConsistencyGuard.ThrowIf(!schemaRepository.Schemas.ContainsKey(baseRelationshipSchemaId));
 
             fullSchemaForOperation.AllOf[0] = new OpenApiSchema
             {
