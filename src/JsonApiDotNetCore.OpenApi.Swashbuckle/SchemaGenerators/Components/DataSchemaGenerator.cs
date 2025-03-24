@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
@@ -144,62 +144,55 @@ internal sealed class DataSchemaGenerator
 
     private static Type? GetCommonSchemaType(Type schemaOpenType)
     {
+        StrongBox<Type?>? boxedSchemaType = null;
+
         if (schemaOpenType == typeof(IdentifierInRequest<>))
         {
-            return typeof(IdentifierInRequest);
+            boxedSchemaType = new StrongBox<Type?>(typeof(IdentifierInRequest));
         }
-
-        if (schemaOpenType == typeof(DataInCreateRequest<>))
+        else if (schemaOpenType == typeof(DataInCreateRequest<>))
         {
-            return typeof(ResourceInCreateRequest);
+            boxedSchemaType = new StrongBox<Type?>(typeof(ResourceInCreateRequest));
         }
-
-        if (schemaOpenType == typeof(AttributesInCreateRequest<>))
+        else if (schemaOpenType == typeof(AttributesInCreateRequest<>))
         {
-            return typeof(AttributesInCreateRequest);
+            boxedSchemaType = new StrongBox<Type?>(typeof(AttributesInCreateRequest));
         }
-
-        if (schemaOpenType == typeof(RelationshipsInCreateRequest<>))
+        else if (schemaOpenType == typeof(RelationshipsInCreateRequest<>))
         {
-            return typeof(RelationshipsInCreateRequest);
+            boxedSchemaType = new StrongBox<Type?>(typeof(RelationshipsInCreateRequest));
         }
-
-        if (schemaOpenType == typeof(DataInUpdateRequest<>))
+        else if (schemaOpenType == typeof(DataInUpdateRequest<>))
         {
-            return typeof(ResourceInUpdateRequest);
+            boxedSchemaType = new StrongBox<Type?>(typeof(ResourceInUpdateRequest));
         }
-
-        if (schemaOpenType == typeof(AttributesInUpdateRequest<>))
+        else if (schemaOpenType == typeof(AttributesInUpdateRequest<>))
         {
-            return typeof(AttributesInUpdateRequest);
+            boxedSchemaType = new StrongBox<Type?>(typeof(AttributesInUpdateRequest));
         }
-
-        if (schemaOpenType == typeof(RelationshipsInUpdateRequest<>))
+        else if (schemaOpenType == typeof(RelationshipsInUpdateRequest<>))
         {
-            return typeof(RelationshipsInUpdateRequest);
+            boxedSchemaType = new StrongBox<Type?>(typeof(RelationshipsInUpdateRequest));
         }
-
-        if (schemaOpenType == typeof(IdentifierInResponse<>))
+        else if (schemaOpenType == typeof(IdentifierInResponse<>))
         {
-            return null;
+            boxedSchemaType = new StrongBox<Type?>(null);
         }
-
-        if (schemaOpenType == typeof(DataInResponse<>))
+        else if (schemaOpenType == typeof(DataInResponse<>))
         {
-            return typeof(ResourceInResponse);
+            boxedSchemaType = new StrongBox<Type?>(typeof(ResourceInResponse));
         }
-
-        if (schemaOpenType == typeof(AttributesInResponse<>))
+        else if (schemaOpenType == typeof(AttributesInResponse<>))
         {
-            return typeof(AttributesInResponse);
+            boxedSchemaType = new StrongBox<Type?>(typeof(AttributesInResponse));
         }
-
-        if (schemaOpenType == typeof(RelationshipsInResponse<>))
+        else if (schemaOpenType == typeof(RelationshipsInResponse<>))
         {
-            return typeof(RelationshipsInResponse);
+            boxedSchemaType = new StrongBox<Type?>(typeof(RelationshipsInResponse));
         }
 
-        throw new UnreachableException();
+        ConsistencyGuard.ThrowIf(boxedSchemaType == null);
+        return boxedSchemaType.Value;
     }
 
     public OpenApiSchema GenerateSchemaForCommonData(Type commonDataSchemaType, SchemaRepository schemaRepository)
