@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
@@ -158,13 +157,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
     private void GenerateSchemaForResourceOperation(Type operationOpenType, ResourceType resourceType, AtomicOperationCode operationCode,
         SchemaRepository schemaRepository)
     {
-        WriteOperationKind writeOperation = operationCode switch
-        {
-            AtomicOperationCode.Add => WriteOperationKind.CreateResource,
-            AtomicOperationCode.Update => WriteOperationKind.UpdateResource,
-            AtomicOperationCode.Remove => WriteOperationKind.DeleteResource,
-            _ => throw new UnreachableException()
-        };
+        WriteOperationKind writeOperation = GetKindOfResourceOperation(operationCode);
 
         if (IsResourceTypeEnabled(resourceType, writeOperation))
         {
@@ -210,6 +203,27 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
         {
             GenerateSchemaForResourceOperation(operationOpenType, derivedType, operationCode, schemaRepository);
         }
+    }
+
+    private static WriteOperationKind GetKindOfResourceOperation(AtomicOperationCode operationCode)
+    {
+        WriteOperationKind? writeOperation = null;
+
+        if (operationCode == AtomicOperationCode.Add)
+        {
+            writeOperation = WriteOperationKind.CreateResource;
+        }
+        else if (operationCode == AtomicOperationCode.Update)
+        {
+            writeOperation = WriteOperationKind.UpdateResource;
+        }
+        else if (operationCode == AtomicOperationCode.Remove)
+        {
+            writeOperation = WriteOperationKind.DeleteResource;
+        }
+
+        ConsistencyGuard.ThrowIf(writeOperation == null);
+        return writeOperation.Value;
     }
 
     private bool IsResourceTypeEnabled(ResourceType resourceType, WriteOperationKind writeOperation)
@@ -277,13 +291,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
     private void GenerateSchemaForRelationshipOperation(Type operationOpenType, RelationshipAttribute relationship, AtomicOperationCode operationCode,
         SchemaRepository schemaRepository)
     {
-        WriteOperationKind writeOperation = operationCode switch
-        {
-            AtomicOperationCode.Add => WriteOperationKind.AddToRelationship,
-            AtomicOperationCode.Update => WriteOperationKind.SetRelationship,
-            AtomicOperationCode.Remove => WriteOperationKind.RemoveFromRelationship,
-            _ => throw new UnreachableException()
-        };
+        WriteOperationKind writeOperation = GetKindOfRelationshipOperation(operationCode);
 
         if (!IsRelationshipEnabled(relationship, writeOperation))
         {
@@ -336,11 +344,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
             RemoveProperties(inlineSchemaForOperation);
 
             string baseRelationshipSchemaId = _schemaIdSelector.GetRelationshipAtomicOperationSchemaId(relationshipInAnyBaseResourceType, operationCode);
-
-            if (!schemaRepository.Schemas.ContainsKey(baseRelationshipSchemaId))
-            {
-                throw new UnreachableException();
-            }
+            ConsistencyGuard.ThrowIf(!schemaRepository.Schemas.ContainsKey(baseRelationshipSchemaId));
 
             fullSchemaForOperation.AllOf[0] = new OpenApiSchema
             {
@@ -354,6 +358,27 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
 
         string discriminatorValue = _schemaIdSelector.GetAtomicOperationDiscriminatorValue(operationCode, relationship);
         MapInDiscriminator(referenceSchemaForOperation, discriminatorValue, schemaRepository);
+    }
+
+    private static WriteOperationKind GetKindOfRelationshipOperation(AtomicOperationCode operationCode)
+    {
+        WriteOperationKind? writeOperation = null;
+
+        if (operationCode == AtomicOperationCode.Add)
+        {
+            writeOperation = WriteOperationKind.AddToRelationship;
+        }
+        else if (operationCode == AtomicOperationCode.Update)
+        {
+            writeOperation = WriteOperationKind.SetRelationship;
+        }
+        else if (operationCode == AtomicOperationCode.Remove)
+        {
+            writeOperation = WriteOperationKind.RemoveFromRelationship;
+        }
+
+        ConsistencyGuard.ThrowIf(writeOperation == null);
+        return writeOperation.Value;
     }
 
     private bool IsRelationshipEnabled(RelationshipAttribute relationship, WriteOperationKind writeOperation)
@@ -378,22 +403,36 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
 
     private static bool IsToOneRelationshipEnabled(HasOneAttribute relationship, WriteOperationKind writeOperation)
     {
-        return writeOperation switch
+        bool? isEnabled = null;
+
+        if (writeOperation == WriteOperationKind.SetRelationship)
         {
-            WriteOperationKind.SetRelationship => relationship.Capabilities.HasFlag(HasOneCapabilities.AllowSet),
-            _ => throw new UnreachableException()
-        };
+            isEnabled = relationship.Capabilities.HasFlag(HasOneCapabilities.AllowSet);
+        }
+
+        ConsistencyGuard.ThrowIf(isEnabled == null);
+        return isEnabled.Value;
     }
 
     private static bool IsToManyRelationshipEnabled(HasManyAttribute relationship, WriteOperationKind writeOperation)
     {
-        return writeOperation switch
+        bool? isEnabled = null;
+
+        if (writeOperation == WriteOperationKind.SetRelationship)
         {
-            WriteOperationKind.SetRelationship => relationship.Capabilities.HasFlag(HasManyCapabilities.AllowSet),
-            WriteOperationKind.AddToRelationship => relationship.Capabilities.HasFlag(HasManyCapabilities.AllowAdd),
-            WriteOperationKind.RemoveFromRelationship => relationship.Capabilities.HasFlag(HasManyCapabilities.AllowRemove),
-            _ => throw new UnreachableException()
-        };
+            isEnabled = relationship.Capabilities.HasFlag(HasManyCapabilities.AllowSet);
+        }
+        else if (writeOperation == WriteOperationKind.AddToRelationship)
+        {
+            isEnabled = relationship.Capabilities.HasFlag(HasManyCapabilities.AllowAdd);
+        }
+        else if (writeOperation == WriteOperationKind.RemoveFromRelationship)
+        {
+            isEnabled = relationship.Capabilities.HasFlag(HasManyCapabilities.AllowRemove);
+        }
+
+        ConsistencyGuard.ThrowIf(isEnabled == null);
+        return isEnabled.Value;
     }
 
     private RelationshipAttribute? GetRelationshipEnabledInAnyBase(RelationshipAttribute relationship, WriteOperationKind writeOperation)

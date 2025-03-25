@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Reflection;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
@@ -115,18 +114,20 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
 
     private static void UpdateProducesResponseTypeAttribute(ActionDescriptor endpoint, Type responseDocumentType)
     {
+        ProducesResponseTypeAttribute? attribute = null;
+
         if (ProducesJsonApiResponseDocument(endpoint))
         {
             var producesResponse = endpoint.GetFilterMetadata<ProducesResponseTypeAttribute>();
 
             if (producesResponse != null)
             {
-                producesResponse.Type = responseDocumentType;
-                return;
+                attribute = producesResponse;
             }
         }
 
-        throw new UnreachableException();
+        ConsistencyGuard.ThrowIf(attribute == null);
+        attribute.Type = responseDocumentType;
     }
 
     private static bool ProducesJsonApiResponseDocument(ActionDescriptor endpoint)

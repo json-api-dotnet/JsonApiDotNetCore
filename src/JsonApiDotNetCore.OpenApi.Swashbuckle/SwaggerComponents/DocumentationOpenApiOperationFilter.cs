@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Net;
 using System.Reflection;
 using Humanizer;
@@ -439,10 +438,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 
     private static RelationshipAttribute GetRelationshipFromRoute(ApiDescription apiDescription, ResourceType resourceType)
     {
-        if (apiDescription.RelativePath == null)
-        {
-            throw new UnreachableException();
-        }
+        ConsistencyGuard.ThrowIf(apiDescription.RelativePath == null);
 
         string relationshipName = apiDescription.RelativePath.Split('/').Last();
         return resourceType.GetRelationshipByPublicName(relationshipName);

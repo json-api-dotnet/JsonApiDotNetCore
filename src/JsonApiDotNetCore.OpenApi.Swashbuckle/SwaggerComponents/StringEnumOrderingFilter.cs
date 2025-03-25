@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using JetBrains.Annotations;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
@@ -47,11 +46,7 @@ internal sealed class StringEnumOrderingFilter : IDocumentFilter
         private static void OrderEnumMembers(OpenApiSchema schema)
         {
             List<IOpenApiAny> ordered = schema.Enum.OfType<OpenApiString>().OrderBy(openApiString => openApiString.Value).Cast<IOpenApiAny>().ToList();
-
-            if (ordered.Count != schema.Enum.Count)
-            {
-                throw new UnreachableException();
-            }
+            ConsistencyGuard.ThrowIf(ordered.Count != schema.Enum.Count);
 
             schema.Enum = ordered;
         }

@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Reflection;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
@@ -54,14 +53,18 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
 
     private DocumentSchemaGenerator GetDocumentSchemaGenerator(Type schemaType)
     {
+        DocumentSchemaGenerator? generator = null;
+
         foreach (DocumentSchemaGenerator documentSchemaGenerator in _documentSchemaGenerators)
         {
             if (documentSchemaGenerator.CanGenerate(schemaType))
             {
-                return documentSchemaGenerator;
+                generator = documentSchemaGenerator;
+                break;
             }
         }
 
-        throw new UnreachableException();
+        ConsistencyGuard.ThrowIf(generator == null);
+        return generator;
     }
 }

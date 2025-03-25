@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Reflection;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
@@ -108,9 +107,23 @@ internal sealed class ResourceFieldSchemaBuilder
 
     private static AttrCapabilities GetRequiredCapabilityForAttributes(Type resourceDataOpenType)
     {
-        return resourceDataOpenType == typeof(DataInResponse<>) ? AttrCapabilities.AllowView :
-            resourceDataOpenType == typeof(DataInCreateRequest<>) ? AttrCapabilities.AllowCreate :
-            resourceDataOpenType == typeof(DataInUpdateRequest<>) ? AttrCapabilities.AllowChange : throw new UnreachableException();
+        AttrCapabilities? capabilities = null;
+
+        if (resourceDataOpenType == typeof(DataInResponse<>))
+        {
+            capabilities = AttrCapabilities.AllowView;
+        }
+        else if (resourceDataOpenType == typeof(DataInCreateRequest<>))
+        {
+            capabilities = AttrCapabilities.AllowCreate;
+        }
+        else if (resourceDataOpenType == typeof(DataInUpdateRequest<>))
+        {
+            capabilities = AttrCapabilities.AllowChange;
+        }
+
+        ConsistencyGuard.ThrowIf(capabilities == null);
+        return capabilities.Value;
     }
 
     private void EnsureAttributeSchemaIsExposed(OpenApiSchema referenceSchemaForAttribute, AttrAttribute attribute, SchemaRepository schemaRepository)
@@ -221,9 +234,6 @@ internal sealed class ResourceFieldSchemaBuilder
 
     private static void AssertHasNoProperties(OpenApiSchema fullSchema)
     {
-        if (fullSchema.Properties.Count > 0)
-        {
-            throw new UnreachableException();
-        }
+        ConsistencyGuard.ThrowIf(fullSchema.Properties.Count > 0);
     }
 }

@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Net;
 using System.Reflection;
 using JsonApiDotNetCore.Configuration;
@@ -97,20 +96,56 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
 
         // For an overridden JSON:API action method in a partial class to show up, it's flag must be turned on in [Resource].
         // Otherwise, it is considered to be an action method that throws because the endpoint is unavailable.
-        return endpoint switch
+        return IncludesEndpoint(endpoint, availableEndpoints);
+    }
+
+    private static bool IncludesEndpoint(JsonApiEndpoints endpoint, JsonApiEndpoints availableEndpoints)
+    {
+        bool? isIncluded = null;
+
+        if (endpoint == JsonApiEndpoints.GetCollection)
         {
-            JsonApiEndpoints.GetCollection => availableEndpoints.HasFlag(JsonApiEndpoints.GetCollection),
-            JsonApiEndpoints.GetSingle => availableEndpoints.HasFlag(JsonApiEndpoints.GetSingle),
-            JsonApiEndpoints.GetSecondary => availableEndpoints.HasFlag(JsonApiEndpoints.GetSecondary),
-            JsonApiEndpoints.GetRelationship => availableEndpoints.HasFlag(JsonApiEndpoints.GetRelationship),
-            JsonApiEndpoints.Post => availableEndpoints.HasFlag(JsonApiEndpoints.Post),
-            JsonApiEndpoints.PostRelationship => availableEndpoints.HasFlag(JsonApiEndpoints.PostRelationship),
-            JsonApiEndpoints.Patch => availableEndpoints.HasFlag(JsonApiEndpoints.Patch),
-            JsonApiEndpoints.PatchRelationship => availableEndpoints.HasFlag(JsonApiEndpoints.PatchRelationship),
-            JsonApiEndpoints.Delete => availableEndpoints.HasFlag(JsonApiEndpoints.Delete),
-            JsonApiEndpoints.DeleteRelationship => availableEndpoints.HasFlag(JsonApiEndpoints.DeleteRelationship),
-            _ => throw new UnreachableException()
-        };
+            isIncluded = availableEndpoints.HasFlag(JsonApiEndpoints.GetCollection);
+        }
+        else if (endpoint == JsonApiEndpoints.GetSingle)
+        {
+            isIncluded = availableEndpoints.HasFlag(JsonApiEndpoints.GetSingle);
+        }
+        else if (endpoint == JsonApiEndpoints.GetSecondary)
+        {
+            isIncluded = availableEndpoints.HasFlag(JsonApiEndpoints.GetSecondary);
+        }
+        else if (endpoint == JsonApiEndpoints.GetRelationship)
+        {
+            isIncluded = availableEndpoints.HasFlag(JsonApiEndpoints.GetRelationship);
+        }
+        else if (endpoint == JsonApiEndpoints.Post)
+        {
+            isIncluded = availableEndpoints.HasFlag(JsonApiEndpoints.Post);
+        }
+        else if (endpoint == JsonApiEndpoints.PostRelationship)
+        {
+            isIncluded = availableEndpoints.HasFlag(JsonApiEndpoints.PostRelationship);
+        }
+        else if (endpoint == JsonApiEndpoints.Patch)
+        {
+            isIncluded = availableEndpoints.HasFlag(JsonApiEndpoints.Patch);
+        }
+        else if (endpoint == JsonApiEndpoints.PatchRelationship)
+        {
+            isIncluded = availableEndpoints.HasFlag(JsonApiEndpoints.PatchRelationship);
+        }
+        else if (endpoint == JsonApiEndpoints.Delete)
+        {
+            isIncluded = availableEndpoints.HasFlag(JsonApiEndpoints.Delete);
+        }
+        else if (endpoint == JsonApiEndpoints.DeleteRelationship)
+        {
+            isIncluded = availableEndpoints.HasFlag(JsonApiEndpoints.DeleteRelationship);
+        }
+
+        ConsistencyGuard.ThrowIf(isIncluded == null);
+        return isIncluded.Value;
     }
 
     private static JsonApiEndpoints GetGeneratedControllerEndpoints(ResourceType resourceType)
@@ -158,29 +193,40 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
             ];
         }
 
-        return endpoint.Value switch
+        HttpStatusCode[]? statusCodes = null;
+
+        if (endpoint.Value is JsonApiEndpoints.GetCollection or JsonApiEndpoints.GetSingle or JsonApiEndpoints.GetSecondary or JsonApiEndpoints.GetRelationship)
         {
-            JsonApiEndpoints.GetCollection or JsonApiEndpoints.GetSingle or JsonApiEndpoints.GetSecondary or JsonApiEndpoints.GetRelationship =>
+            statusCodes =
             [
                 HttpStatusCode.OK,
                 HttpStatusCode.NotModified
-            ],
-            JsonApiEndpoints.Post =>
+            ];
+        }
+        else if (endpoint.Value == JsonApiEndpoints.Post)
+        {
+            statusCodes =
             [
                 HttpStatusCode.Created,
                 HttpStatusCode.NoContent
-            ],
-            JsonApiEndpoints.Patch =>
+            ];
+        }
+        else if (endpoint.Value == JsonApiEndpoints.Patch)
+        {
+            statusCodes =
             [
                 HttpStatusCode.OK,
                 HttpStatusCode.NoContent
-            ],
-            JsonApiEndpoints.Delete or JsonApiEndpoints.PostRelationship or JsonApiEndpoints.PatchRelationship or JsonApiEndpoints.DeleteRelationship =>
-            [
-                HttpStatusCode.NoContent
-            ],
-            _ => throw new UnreachableException()
-        };
+            ];
+        }
+        else if (endpoint.Value is JsonApiEndpoints.Delete or JsonApiEndpoints.PostRelationship or JsonApiEndpoints.PatchRelationship or
+            JsonApiEndpoints.DeleteRelationship)
+        {
+            statusCodes = [HttpStatusCode.NoContent];
+        }
+
+        ConsistencyGuard.ThrowIf(statusCodes == null);
+        return statusCodes;
     }
 
     private HttpStatusCode[] GetErrorStatusCodesForEndpoint(JsonApiEndpointWrapper endpoint, ResourceType? resourceType)
@@ -200,46 +246,58 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
         // Condition doesn't apply to atomic operations, because Forbidden is also used when an operation is not accessible.
         ClientIdGenerationMode clientIdGeneration = resourceType?.ClientIdGeneration ?? _options.ClientIdGeneration;
 
-        return endpoint.Value switch
+        HttpStatusCode[]? statusCodes = null;
+
+        if (endpoint.Value == JsonApiEndpoints.GetCollection)
         {
-            JsonApiEndpoints.GetCollection => [HttpStatusCode.BadRequest],
-            JsonApiEndpoints.GetSingle or JsonApiEndpoints.GetSecondary or JsonApiEndpoints.GetRelationship =>
+            statusCodes = [HttpStatusCode.BadRequest];
+        }
+        else if (endpoint.Value is JsonApiEndpoints.GetSingle or JsonApiEndpoints.GetSecondary or JsonApiEndpoints.GetRelationship)
+        {
+            statusCodes =
             [
                 HttpStatusCode.BadRequest,
                 HttpStatusCode.NotFound
-            ],
-            JsonApiEndpoints.Post when clientIdGeneration == ClientIdGenerationMode.Forbidden =>
+            ];
+        }
+        else if (endpoint.Value == JsonApiEndpoints.Post && clientIdGeneration == ClientIdGenerationMode.Forbidden)
+        {
+            statusCodes =
             [
                 HttpStatusCode.BadRequest,
                 HttpStatusCode.Forbidden,
                 HttpStatusCode.NotFound,
                 HttpStatusCode.Conflict,
                 HttpStatusCode.UnprocessableEntity
-            ],
-            JsonApiEndpoints.Post =>
+            ];
+        }
+        else if (endpoint.Value is JsonApiEndpoints.Post or JsonApiEndpoints.Patch)
+        {
+            statusCodes =
             [
                 HttpStatusCode.BadRequest,
                 HttpStatusCode.NotFound,
                 HttpStatusCode.Conflict,
                 HttpStatusCode.UnprocessableEntity
-            ],
-            JsonApiEndpoints.Patch =>
+            ];
+        }
+        else if (endpoint.Value == JsonApiEndpoints.Delete)
+        {
+            statusCodes = [HttpStatusCode.NotFound];
+        }
+        else if (endpoint.Value is JsonApiEndpoints.PostRelationship or JsonApiEndpoints.PatchRelationship or JsonApiEndpoints.DeleteRelationship)
+        {
+            statusCodes =
             [
                 HttpStatusCode.BadRequest,
                 HttpStatusCode.NotFound,
                 HttpStatusCode.Conflict,
                 HttpStatusCode.UnprocessableEntity
-            ],
-            JsonApiEndpoints.Delete => [HttpStatusCode.NotFound],
-            JsonApiEndpoints.PostRelationship or JsonApiEndpoints.PatchRelationship or JsonApiEndpoints.DeleteRelationship =>
-            [
-                HttpStatusCode.BadRequest,
-                HttpStatusCode.NotFound,
-                HttpStatusCode.Conflict,
-                HttpStatusCode.UnprocessableEntity
-            ],
-            _ => throw new UnreachableException()
-        };
+            ];
+        }
+
+        ConsistencyGuard.ThrowIf(statusCodes == null);
+        return statusCodes;
     }
 
     private void SetRequestMetadata(ActionModel action, JsonApiEndpointWrapper endpoint)
