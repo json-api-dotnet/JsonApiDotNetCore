@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Middleware;
 using Microsoft.Extensions.DependencyInjection;
 using OpenApiTests.ResourceInheritance.Models;
 using Xunit;
+using Xunit.Abstractions;
 
 #pragma warning disable format
 
@@ -11,8 +12,9 @@ namespace OpenApiTests.ResourceInheritance.OnlyAbstract;
 
 public sealed class OnlyAbstractInheritanceTests : ResourceInheritanceTests
 {
-    public OnlyAbstractInheritanceTests(OpenApiTestContext<OpenApiStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext> testContext)
-        : base(testContext, true, false)
+    public OnlyAbstractInheritanceTests(OpenApiTestContext<OpenApiStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext> testContext,
+        ITestOutputHelper testOutputHelper)
+        : base(testContext, testOutputHelper, true, false)
     {
         testContext.ConfigureServices(services =>
         {

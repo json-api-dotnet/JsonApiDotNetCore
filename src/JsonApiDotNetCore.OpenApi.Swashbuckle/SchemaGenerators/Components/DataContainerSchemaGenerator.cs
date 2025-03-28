@@ -12,14 +12,17 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 /// </summary>
 internal sealed class DataContainerSchemaGenerator
 {
+    private readonly SchemaGenerationTracer _schemaGenerationTracer;
     private readonly DataSchemaGenerator _dataSchemaGenerator;
     private readonly IResourceGraph _resourceGraph;
 
-    public DataContainerSchemaGenerator(DataSchemaGenerator dataSchemaGenerator, IResourceGraph resourceGraph)
+    public DataContainerSchemaGenerator(SchemaGenerationTracer schemaGenerationTracer, DataSchemaGenerator dataSchemaGenerator, IResourceGraph resourceGraph)
     {
+        ArgumentNullException.ThrowIfNull(schemaGenerationTracer);
         ArgumentNullException.ThrowIfNull(dataSchemaGenerator);
         ArgumentNullException.ThrowIfNull(resourceGraph);
 
+        _schemaGenerationTracer = schemaGenerationTracer;
         _dataSchemaGenerator = dataSchemaGenerator;
         _resourceGraph = resourceGraph;
     }
@@ -44,6 +47,8 @@ internal sealed class DataContainerSchemaGenerator
         }
 
         Type dataConstructedType = GetElementTypeOfDataProperty(dataContainerSchemaType, resourceType);
+
+        using IDisposable traceScope = _schemaGenerationTracer.TraceStart(this, dataConstructedType);
 
         if (canIncludeRelated)
         {

@@ -7,12 +7,15 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 
 internal sealed class AtomicOperationCodeSchemaGenerator
 {
+    private readonly SchemaGenerationTracer _schemaGenerationTracer;
     private readonly JsonApiSchemaIdSelector _schemaIdSelector;
 
-    public AtomicOperationCodeSchemaGenerator(JsonApiSchemaIdSelector schemaIdSelector)
+    public AtomicOperationCodeSchemaGenerator(SchemaGenerationTracer schemaGenerationTracer, JsonApiSchemaIdSelector schemaIdSelector)
     {
+        ArgumentNullException.ThrowIfNull(schemaGenerationTracer);
         ArgumentNullException.ThrowIfNull(schemaIdSelector);
 
+        _schemaGenerationTracer = schemaGenerationTracer;
         _schemaIdSelector = schemaIdSelector;
     }
 
@@ -33,6 +36,8 @@ internal sealed class AtomicOperationCodeSchemaGenerator
                 }
             };
         }
+
+        using IDisposable traceScope = _schemaGenerationTracer.TraceStart(this, schemaId);
 
         string enumValue = operationCode.ToString().ToLowerInvariant();
 

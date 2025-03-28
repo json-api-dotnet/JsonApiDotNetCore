@@ -1,7 +1,10 @@
 using System.Reflection;
 using System.Text.Json;
 using JetBrains.Annotations;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
+using Xunit.Abstractions;
 
 namespace OpenApiTests;
 
@@ -11,6 +14,7 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
     where TDbContext : TestableDbContext
 {
     private readonly Lazy<Task<JsonElement>> _lazySwaggerDocument;
+    private ITestOutputHelper? _testOutputHelper;
 
     internal string? SwaggerDocumentOutputDirectory { get; set; }
 
@@ -37,6 +41,23 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
         }
 
         return rootElement;
+    }
+
+    internal void SetTestOutputHelper(ITestOutputHelper testOutputHelper)
+    {
+        ArgumentNullException.ThrowIfNull(testOutputHelper);
+
+        _testOutputHelper = testOutputHelper;
+        ConfigureLogging(AddXUnitProvider);
+    }
+
+    private void AddXUnitProvider(ILoggingBuilder loggingBuilder)
+    {
+        if (_testOutputHelper != null)
+        {
+            loggingBuilder.SetMinimumLevel(LogLevel.Trace);
+            loggingBuilder.Services.AddSingleton<ILoggerProvider>(_ => new XUnitLoggerProvider(_testOutputHelper, "JsonApiDotNetCore.OpenApi.Swashbuckle"));
+        }
     }
 
     private static string GetSwaggerDocumentAbsoluteOutputPath(string relativePath)

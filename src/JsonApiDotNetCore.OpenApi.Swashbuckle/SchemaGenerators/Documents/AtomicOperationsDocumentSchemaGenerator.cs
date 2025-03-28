@@ -20,6 +20,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
 {
     private static readonly Type AtomicOperationAbstractType = typeof(AtomicOperation);
 
+    private readonly SchemaGenerationTracer _schemaGenerationTracer;
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly AtomicOperationCodeSchemaGenerator _atomicOperationCodeSchemaGenerator;
     private readonly DataSchemaGenerator _dataSchemaGenerator;
@@ -31,13 +32,13 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
     private readonly ResourceFieldValidationMetadataProvider _resourceFieldValidationMetadataProvider;
     private readonly IResourceGraph _resourceGraph;
 
-    public AtomicOperationsDocumentSchemaGenerator(SchemaGenerator defaultSchemaGenerator,
+    public AtomicOperationsDocumentSchemaGenerator(SchemaGenerationTracer schemaGenerationTracer, SchemaGenerator defaultSchemaGenerator,
         AtomicOperationCodeSchemaGenerator atomicOperationCodeSchemaGenerator, DataSchemaGenerator dataSchemaGenerator,
         RelationshipIdentifierSchemaGenerator relationshipIdentifierSchemaGenerator, DataContainerSchemaGenerator dataContainerSchemaGenerator,
         MetaSchemaGenerator metaSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, IAtomicOperationFilter atomicOperationFilter,
         JsonApiSchemaIdSelector schemaIdSelector, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider, IJsonApiOptions options,
         IResourceGraph resourceGraph)
-        : base(metaSchemaGenerator, linksVisibilitySchemaGenerator, options)
+        : base(schemaGenerationTracer, metaSchemaGenerator, linksVisibilitySchemaGenerator, options)
     {
         ArgumentNullException.ThrowIfNull(defaultSchemaGenerator);
         ArgumentNullException.ThrowIfNull(atomicOperationCodeSchemaGenerator);
@@ -49,6 +50,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
         ArgumentNullException.ThrowIfNull(resourceFieldValidationMetadataProvider);
         ArgumentNullException.ThrowIfNull(resourceGraph);
 
+        _schemaGenerationTracer = schemaGenerationTracer;
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _atomicOperationCodeSchemaGenerator = atomicOperationCodeSchemaGenerator;
         _dataSchemaGenerator = dataSchemaGenerator;
@@ -68,6 +70,9 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
 
     protected override OpenApiSchema GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository)
     {
+        ArgumentNullException.ThrowIfNull(schemaType);
+        ArgumentNullException.ThrowIfNull(schemaRepository);
+
         bool isRequestSchema = schemaType == typeof(OperationsRequestDocument);
 
         if (isRequestSchema)
@@ -98,6 +103,8 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
         {
             return referenceSchema;
         }
+
+        using IDisposable traceScope = _schemaGenerationTracer.TraceStart(this, AtomicOperationAbstractType);
 
         OpenApiSchema referenceSchemaForMeta = _metaSchemaGenerator.GenerateSchema(schemaRepository);
 
@@ -162,6 +169,9 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
         if (IsResourceTypeEnabled(resourceType, writeOperation))
         {
             Type operationConstructedType = ChangeResourceTypeInSchemaType(operationOpenType, resourceType);
+
+            using IDisposable traceScope = _schemaGenerationTracer.TraceStart(this, operationConstructedType);
+
             bool needsEmptyDerivedSchema = resourceType.BaseType != null && _atomicOperationFilter.IsEnabled(resourceType.BaseType, writeOperation);
 
             if (!needsEmptyDerivedSchema)
@@ -298,6 +308,10 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
             return;
         }
 
+        string schemaId = _schemaIdSelector.GetRelationshipAtomicOperationSchemaId(relationship, operationCode);
+
+        using IDisposable traceScope = _schemaGenerationTracer.TraceStart(this, schemaId);
+
         RelationshipAttribute? relationshipInAnyBaseResourceType = GetRelationshipEnabledInAnyBase(relationship, writeOperation);
 
         OpenApiSchema? referenceSchemaForRelationshipIdentifier;
@@ -320,7 +334,6 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
         // This complicated implementation that generates a temporary schema stems from the fact that GetSchemaId takes a Type.
         // We could feed it a constructed type with TLeftResource and TRightResource, but there's no way to include
         // the relationship name because there's no runtime Type available for it.
-        string schemaId = _schemaIdSelector.GetRelationshipAtomicOperationSchemaId(relationship, operationCode);
 
         OpenApiSchema referenceSchemaForOperation = _defaultSchemaGenerator.GenerateSchema(operationConstructedType, schemaRepository);
         OpenApiSchema fullSchemaForOperation = schemaRepository.Schemas[referenceSchemaForOperation.Reference.Id];

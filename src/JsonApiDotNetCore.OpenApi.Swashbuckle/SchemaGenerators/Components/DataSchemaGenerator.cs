@@ -29,6 +29,7 @@ internal sealed class DataSchemaGenerator
         JsonApiPropertyName.Meta
     ];
 
+    private readonly SchemaGenerationTracer _schemaGenerationTracer;
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly GenerationCacheSchemaGenerator _generationCacheSchemaGenerator;
     private readonly ResourceTypeSchemaGenerator _resourceTypeSchemaGenerator;
@@ -42,12 +43,14 @@ internal sealed class DataSchemaGenerator
     private readonly RelationshipTypeFactory _relationshipTypeFactory;
     private readonly ResourceDocumentationReader _resourceDocumentationReader;
 
-    public DataSchemaGenerator(SchemaGenerator defaultSchemaGenerator, GenerationCacheSchemaGenerator generationCacheSchemaGenerator,
-        ResourceTypeSchemaGenerator resourceTypeSchemaGenerator, ResourceIdSchemaGenerator resourceIdSchemaGenerator,
-        LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, MetaSchemaGenerator metaSchemaGenerator, JsonApiSchemaIdSelector schemaIdSelector,
-        IJsonApiOptions options, IResourceGraph resourceGraph, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider,
-        RelationshipTypeFactory relationshipTypeFactory, ResourceDocumentationReader resourceDocumentationReader)
+    public DataSchemaGenerator(SchemaGenerationTracer schemaGenerationTracer, SchemaGenerator defaultSchemaGenerator,
+        GenerationCacheSchemaGenerator generationCacheSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator,
+        ResourceIdSchemaGenerator resourceIdSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator,
+        MetaSchemaGenerator metaSchemaGenerator, JsonApiSchemaIdSelector schemaIdSelector, IJsonApiOptions options, IResourceGraph resourceGraph,
+        ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider, RelationshipTypeFactory relationshipTypeFactory,
+        ResourceDocumentationReader resourceDocumentationReader)
     {
+        ArgumentNullException.ThrowIfNull(schemaGenerationTracer);
         ArgumentNullException.ThrowIfNull(defaultSchemaGenerator);
         ArgumentNullException.ThrowIfNull(generationCacheSchemaGenerator);
         ArgumentNullException.ThrowIfNull(resourceTypeSchemaGenerator);
@@ -61,6 +64,7 @@ internal sealed class DataSchemaGenerator
         ArgumentNullException.ThrowIfNull(relationshipTypeFactory);
         ArgumentNullException.ThrowIfNull(resourceDocumentationReader);
 
+        _schemaGenerationTracer = schemaGenerationTracer;
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _generationCacheSchemaGenerator = generationCacheSchemaGenerator;
         _resourceTypeSchemaGenerator = resourceTypeSchemaGenerator;
@@ -87,6 +91,8 @@ internal sealed class DataSchemaGenerator
         {
             return referenceSchemaForData;
         }
+
+        using IDisposable traceScope = _schemaGenerationTracer.TraceStart(this, dataSchemaType);
 
         var resourceSchemaType = ResourceSchemaType.Create(dataSchemaType, _resourceGraph);
         ResourceType resourceType = resourceSchemaType.ResourceType;
@@ -204,6 +210,8 @@ internal sealed class DataSchemaGenerator
         {
             return referenceSchema;
         }
+
+        using IDisposable traceScope = _schemaGenerationTracer.TraceStart(this, commonDataSchemaType);
 
         OpenApiSchema referenceSchemaForResourceType = _resourceTypeSchemaGenerator.GenerateSchema(schemaRepository);
         OpenApiSchema referenceSchemaForMeta = _metaSchemaGenerator.GenerateSchema(schemaRepository);
@@ -434,6 +442,8 @@ internal sealed class DataSchemaGenerator
             return referenceSchema;
         }
 
+        using IDisposable traceScope = _schemaGenerationTracer.TraceStart(this, commonFieldsSchemaType);
+
         OpenApiSchema referenceSchemaForResourceType = _resourceTypeSchemaGenerator.GenerateSchema(schemaRepository);
 
         var fullSchema = new OpenApiSchema
@@ -556,6 +566,8 @@ internal sealed class DataSchemaGenerator
         {
             ResourceSchemaType resourceSchemaTypeForDerived = resourceSchemaType.ChangeResourceType(derivedType);
             Type derivedSchemaType = resourceSchemaTypeForDerived.SchemaConstructedType;
+
+            using IDisposable traceScope = _schemaGenerationTracer.TraceStart(this, resourceSchemaTypeForDerived.SchemaConstructedType);
 
             OpenApiSchema referenceSchemaForDerived = _defaultSchemaGenerator.GenerateSchema(derivedSchemaType, schemaRepository);
             OpenApiSchema fullSchemaForDerived = schemaRepository.Schemas[referenceSchemaForDerived.Reference.Id];

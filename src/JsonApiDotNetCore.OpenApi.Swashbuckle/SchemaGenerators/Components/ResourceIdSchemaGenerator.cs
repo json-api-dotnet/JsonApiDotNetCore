@@ -17,6 +17,8 @@ internal sealed class ResourceIdSchemaGenerator
 
     public OpenApiSchema GenerateSchema(ResourceType resourceType, SchemaRepository schemaRepository)
     {
+        ArgumentNullException.ThrowIfNull(resourceType);
+
         return GenerateSchema(resourceType.IdentityClrType, schemaRepository);
     }
 
@@ -26,6 +28,8 @@ internal sealed class ResourceIdSchemaGenerator
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
         OpenApiSchema idSchema = _defaultSchemaGenerator.GenerateSchema(resourceIdClrType, schemaRepository);
+        ConsistencyGuard.ThrowIf(idSchema.Reference != null);
+
         idSchema.Type = "string";
 
         if (resourceIdClrType != typeof(string))

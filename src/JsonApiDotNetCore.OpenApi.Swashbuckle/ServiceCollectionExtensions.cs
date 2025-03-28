@@ -109,5 +109,7 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<DataContainerSchemaGenerator>();
         services.TryAddSingleton<LinksVisibilitySchemaGenerator>();
         services.TryAddSingleton<GenerationCacheSchemaGenerator>();
+
+        services.TryAddSingleton<SchemaGenerationTracer>();
     }
 }

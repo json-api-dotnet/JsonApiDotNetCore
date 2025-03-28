@@ -8,22 +8,25 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 
 internal sealed class RelationshipIdentifierSchemaGenerator
 {
+    private readonly SchemaGenerationTracer _schemaGenerationTracer;
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly ResourceTypeSchemaGenerator _resourceTypeSchemaGenerator;
     private readonly ResourceIdSchemaGenerator _resourceIdSchemaGenerator;
     private readonly RelationshipNameSchemaGenerator _relationshipNameSchemaGenerator;
     private readonly JsonApiSchemaIdSelector _schemaIdSelector;
 
-    public RelationshipIdentifierSchemaGenerator(SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator,
-        ResourceIdSchemaGenerator resourceIdSchemaGenerator, RelationshipNameSchemaGenerator relationshipNameSchemaGenerator,
-        JsonApiSchemaIdSelector schemaIdSelector)
+    public RelationshipIdentifierSchemaGenerator(SchemaGenerationTracer schemaGenerationTracer, SchemaGenerator defaultSchemaGenerator,
+        ResourceTypeSchemaGenerator resourceTypeSchemaGenerator, ResourceIdSchemaGenerator resourceIdSchemaGenerator,
+        RelationshipNameSchemaGenerator relationshipNameSchemaGenerator, JsonApiSchemaIdSelector schemaIdSelector)
     {
+        ArgumentNullException.ThrowIfNull(schemaGenerationTracer);
         ArgumentNullException.ThrowIfNull(defaultSchemaGenerator);
         ArgumentNullException.ThrowIfNull(resourceTypeSchemaGenerator);
         ArgumentNullException.ThrowIfNull(resourceIdSchemaGenerator);
         ArgumentNullException.ThrowIfNull(relationshipNameSchemaGenerator);
         ArgumentNullException.ThrowIfNull(schemaIdSelector);
 
+        _schemaGenerationTracer = schemaGenerationTracer;
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _resourceTypeSchemaGenerator = resourceTypeSchemaGenerator;
         _resourceIdSchemaGenerator = resourceIdSchemaGenerator;
@@ -49,6 +52,8 @@ internal sealed class RelationshipIdentifierSchemaGenerator
                 }
             };
         }
+
+        using IDisposable traceScope = _schemaGenerationTracer.TraceStart(this, schemaId);
 
         Type relationshipIdentifierConstructedType = typeof(RelationshipIdentifier<>).MakeGenericType(relationship.LeftType.ClrType);
         ConsistencyGuard.ThrowIf(schemaRepository.TryLookupByType(relationshipIdentifierConstructedType, out _));

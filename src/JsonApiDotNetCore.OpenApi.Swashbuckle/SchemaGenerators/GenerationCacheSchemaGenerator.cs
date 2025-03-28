@@ -16,20 +16,26 @@ internal sealed class GenerationCacheSchemaGenerator
     private const string HasAtomicOperationsEndpointPropertyName = "HasAtomicOperationsEndpoint";
     public const string SchemaId = "__JsonApiSchemaGenerationCache__";
 
+    private readonly SchemaGenerationTracer _schemaGenerationTracer;
     private readonly IActionDescriptorCollectionProvider _defaultProvider;
     private readonly JsonApiEndpointMetadataProvider _jsonApiEndpointMetadataProvider;
 
-    public GenerationCacheSchemaGenerator(IActionDescriptorCollectionProvider defaultProvider, JsonApiEndpointMetadataProvider jsonApiEndpointMetadataProvider)
+    public GenerationCacheSchemaGenerator(SchemaGenerationTracer schemaGenerationTracer, IActionDescriptorCollectionProvider defaultProvider,
+        JsonApiEndpointMetadataProvider jsonApiEndpointMetadataProvider)
     {
+        ArgumentNullException.ThrowIfNull(schemaGenerationTracer);
         ArgumentNullException.ThrowIfNull(defaultProvider);
         ArgumentNullException.ThrowIfNull(jsonApiEndpointMetadataProvider);
 
+        _schemaGenerationTracer = schemaGenerationTracer;
         _defaultProvider = defaultProvider;
         _jsonApiEndpointMetadataProvider = jsonApiEndpointMetadataProvider;
     }
 
     public bool HasAtomicOperationsEndpoint(SchemaRepository schemaRepository)
     {
+        ArgumentNullException.ThrowIfNull(schemaRepository);
+
         OpenApiSchema referenceSchema = GenerateFullSchema(schemaRepository);
 
         var hasAtomicOperationsEndpoint = (OpenApiBoolean)referenceSchema.Properties[HasAtomicOperationsEndpointPropertyName].Default;
@@ -38,12 +44,12 @@ internal sealed class GenerationCacheSchemaGenerator
 
     private OpenApiSchema GenerateFullSchema(SchemaRepository schemaRepository)
     {
-        ArgumentNullException.ThrowIfNull(schemaRepository);
-
         if (schemaRepository.Schemas.TryGetValue(SchemaId, out OpenApiSchema? fullSchema))
         {
             return fullSchema;
         }
+
+        using IDisposable traceScope = _schemaGenerationTracer.TraceStart(this, SchemaId);
 
         bool hasAtomicOperationsEndpoint = EvaluateHasAtomicOperationsEndpoint();
 

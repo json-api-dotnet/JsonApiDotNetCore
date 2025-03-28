@@ -7,12 +7,15 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 
 internal sealed class RelationshipNameSchemaGenerator
 {
+    private readonly SchemaGenerationTracer _schemaGenerationTracer;
     private readonly JsonApiSchemaIdSelector _schemaIdSelector;
 
-    public RelationshipNameSchemaGenerator(JsonApiSchemaIdSelector schemaIdSelector)
+    public RelationshipNameSchemaGenerator(SchemaGenerationTracer schemaGenerationTracer, JsonApiSchemaIdSelector schemaIdSelector)
     {
+        ArgumentNullException.ThrowIfNull(schemaGenerationTracer);
         ArgumentNullException.ThrowIfNull(schemaIdSelector);
 
+        _schemaGenerationTracer = schemaGenerationTracer;
         _schemaIdSelector = schemaIdSelector;
     }
 
@@ -34,6 +37,8 @@ internal sealed class RelationshipNameSchemaGenerator
                 }
             };
         }
+
+        using IDisposable traceScope = _schemaGenerationTracer.TraceStart(this, schemaId);
 
         var fullSchema = new OpenApiSchema
         {

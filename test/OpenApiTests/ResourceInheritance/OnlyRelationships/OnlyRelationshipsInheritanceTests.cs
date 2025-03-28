@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Middleware;
 using Microsoft.Extensions.DependencyInjection;
 using OpenApiTests.ResourceInheritance.Models;
 using Xunit;
+using Xunit.Abstractions;
 
 #pragma warning disable format
 
@@ -14,8 +15,9 @@ public sealed class OnlyRelationshipsInheritanceTests : ResourceInheritanceTests
     private const JsonApiEndpoints OnlyRelationshipEndpoints = JsonApiEndpoints.GetRelationship | JsonApiEndpoints.PostRelationship |
         JsonApiEndpoints.PatchRelationship | JsonApiEndpoints.DeleteRelationship;
 
-    public OnlyRelationshipsInheritanceTests(OpenApiTestContext<OpenApiStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext> testContext)
-        : base(testContext, true, true)
+    public OnlyRelationshipsInheritanceTests(OpenApiTestContext<OpenApiStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext> testContext,
+        ITestOutputHelper testOutputHelper)
+        : base(testContext, testOutputHelper, true, true)
     {
         testContext.ConfigureServices(services =>
         {

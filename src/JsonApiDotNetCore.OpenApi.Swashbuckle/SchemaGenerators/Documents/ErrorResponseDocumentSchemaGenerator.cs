@@ -15,9 +15,9 @@ internal sealed class ErrorResponseDocumentSchemaGenerator : DocumentSchemaGener
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly MetaSchemaGenerator _metaSchemaGenerator;
 
-    public ErrorResponseDocumentSchemaGenerator(SchemaGenerator defaultSchemaGenerator, MetaSchemaGenerator metaSchemaGenerator,
-        LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, IJsonApiOptions options)
-        : base(metaSchemaGenerator, linksVisibilitySchemaGenerator, options)
+    public ErrorResponseDocumentSchemaGenerator(SchemaGenerationTracer schemaGenerationTracer, SchemaGenerator defaultSchemaGenerator,
+        MetaSchemaGenerator metaSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, IJsonApiOptions options)
+        : base(schemaGenerationTracer, metaSchemaGenerator, linksVisibilitySchemaGenerator, options)
     {
         ArgumentNullException.ThrowIfNull(defaultSchemaGenerator);
 
@@ -32,6 +32,9 @@ internal sealed class ErrorResponseDocumentSchemaGenerator : DocumentSchemaGener
 
     protected override OpenApiSchema GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository)
     {
+        ArgumentNullException.ThrowIfNull(schemaType);
+        ArgumentNullException.ThrowIfNull(schemaRepository);
+
         OpenApiSchema referenceSchemaForErrorObject = _defaultSchemaGenerator.GenerateSchema(typeof(ErrorObject), schemaRepository);
         OpenApiSchema fullSchemaForErrorObject = schemaRepository.Schemas[referenceSchemaForErrorObject.Reference.Id];
 

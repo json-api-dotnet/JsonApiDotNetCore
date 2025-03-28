@@ -10,17 +10,20 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
 /// </summary>
 internal abstract class DocumentSchemaGenerator
 {
+    private readonly SchemaGenerationTracer _schemaGenerationTracer;
     private readonly MetaSchemaGenerator _metaSchemaGenerator;
     private readonly LinksVisibilitySchemaGenerator _linksVisibilitySchemaGenerator;
     private readonly IJsonApiOptions _options;
 
-    protected DocumentSchemaGenerator(MetaSchemaGenerator metaSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator,
-        IJsonApiOptions options)
+    protected DocumentSchemaGenerator(SchemaGenerationTracer schemaGenerationTracer, MetaSchemaGenerator metaSchemaGenerator,
+        LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, IJsonApiOptions options)
     {
+        ArgumentNullException.ThrowIfNull(schemaGenerationTracer);
         ArgumentNullException.ThrowIfNull(metaSchemaGenerator);
         ArgumentNullException.ThrowIfNull(linksVisibilitySchemaGenerator);
         ArgumentNullException.ThrowIfNull(options);
 
+        _schemaGenerationTracer = schemaGenerationTracer;
         _metaSchemaGenerator = metaSchemaGenerator;
         _linksVisibilitySchemaGenerator = linksVisibilitySchemaGenerator;
         _options = options;
@@ -37,6 +40,8 @@ internal abstract class DocumentSchemaGenerator
         {
             return referenceSchema;
         }
+
+        using IDisposable traceScope = _schemaGenerationTracer.TraceStart(this, schemaType);
 
         _metaSchemaGenerator.GenerateSchema(schemaRepository);
 
