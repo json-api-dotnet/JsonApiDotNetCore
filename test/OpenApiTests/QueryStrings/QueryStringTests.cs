@@ -2,6 +2,7 @@ using System.Text.Json;
 using FluentAssertions;
 using TestBuildingBlocks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace OpenApiTests.QueryStrings;
 
@@ -9,13 +10,14 @@ public sealed class QueryStringTests : IClassFixture<OpenApiTestContext<OpenApiS
 {
     private readonly OpenApiTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
 
-    public QueryStringTests(OpenApiTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
+    public QueryStringTests(OpenApiTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> testContext, ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
 
         testContext.UseController<NodesController>();
         testContext.UseController<NameValuePairsController>();
 
+        testContext.SetTestOutputHelper(testOutputHelper);
         testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 

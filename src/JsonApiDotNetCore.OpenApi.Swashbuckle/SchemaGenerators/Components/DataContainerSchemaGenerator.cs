@@ -12,14 +12,17 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 /// </summary>
 internal sealed class DataContainerSchemaGenerator
 {
+    private readonly SchemaGenerationTracer _schemaGenerationTracer;
     private readonly DataSchemaGenerator _dataSchemaGenerator;
     private readonly IResourceGraph _resourceGraph;
 
-    public DataContainerSchemaGenerator(DataSchemaGenerator dataSchemaGenerator, IResourceGraph resourceGraph)
+    public DataContainerSchemaGenerator(SchemaGenerationTracer schemaGenerationTracer, DataSchemaGenerator dataSchemaGenerator, IResourceGraph resourceGraph)
     {
+        ArgumentNullException.ThrowIfNull(schemaGenerationTracer);
         ArgumentNullException.ThrowIfNull(dataSchemaGenerator);
         ArgumentNullException.ThrowIfNull(resourceGraph);
 
+        _schemaGenerationTracer = schemaGenerationTracer;
         _dataSchemaGenerator = dataSchemaGenerator;
         _resourceGraph = resourceGraph;
     }
@@ -45,6 +48,13 @@ internal sealed class DataContainerSchemaGenerator
 
         Type dataConstructedType = GetElementTypeOfDataProperty(dataContainerSchemaType, resourceType);
 
+        if (schemaRepository.TryLookupByType(dataConstructedType, out _))
+        {
+            return referenceSchemaForData;
+        }
+
+        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, dataConstructedType);
+
         if (canIncludeRelated)
         {
             var resourceSchemaType = ResourceSchemaType.Create(dataConstructedType, _resourceGraph);
@@ -57,7 +67,9 @@ internal sealed class DataContainerSchemaGenerator
             }
         }
 
-        return _dataSchemaGenerator.GenerateSchema(dataConstructedType, forRequestSchema, schemaRepository);
+        referenceSchemaForData = _dataSchemaGenerator.GenerateSchema(dataConstructedType, forRequestSchema, schemaRepository);
+        traceScope.TraceSucceeded(referenceSchemaForData.Reference.Id);
+        return referenceSchemaForData;
     }
 
     private static Type GetElementTypeOfDataProperty(Type dataContainerConstructedType, ResourceType resourceType)

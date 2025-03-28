@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace OpenApiTests.Links.Disabled;
 
@@ -12,7 +13,7 @@ public sealed class LinksDisabledTests : IClassFixture<OpenApiTestContext<OpenAp
 {
     private readonly OpenApiTestContext<OpenApiStartup<LinkDbContext>, LinkDbContext> _testContext;
 
-    public LinksDisabledTests(OpenApiTestContext<OpenApiStartup<LinkDbContext>, LinkDbContext> testContext)
+    public LinksDisabledTests(OpenApiTestContext<OpenApiStartup<LinkDbContext>, LinkDbContext> testContext, ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
 
@@ -20,6 +21,8 @@ public sealed class LinksDisabledTests : IClassFixture<OpenApiTestContext<OpenAp
         testContext.UseController<AccommodationsController>();
         testContext.UseController<TransportsController>();
         testContext.UseController<ExcursionsController>();
+
+        testContext.SetTestOutputHelper(testOutputHelper);
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.TopLevelLinks = LinkTypes.None;

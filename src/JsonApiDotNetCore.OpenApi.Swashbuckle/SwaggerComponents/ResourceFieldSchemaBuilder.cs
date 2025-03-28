@@ -10,6 +10,7 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 
 internal sealed class ResourceFieldSchemaBuilder
 {
+    private readonly SchemaGenerationTracer _schemaGenerationTracer;
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly DataSchemaGenerator _dataSchemaGenerator;
     private readonly LinksVisibilitySchemaGenerator _linksVisibilitySchemaGenerator;
@@ -21,10 +22,12 @@ internal sealed class ResourceFieldSchemaBuilder
     private readonly ResourceDocumentationReader _resourceDocumentationReader = new();
     private readonly IDictionary<string, OpenApiSchema> _schemasForResourceFields;
 
-    public ResourceFieldSchemaBuilder(SchemaGenerator defaultSchemaGenerator, DataSchemaGenerator dataSchemaGenerator,
-        LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider,
-        RelationshipTypeFactory relationshipTypeFactory, ResourceSchemaType resourceSchemaType)
+    public ResourceFieldSchemaBuilder(SchemaGenerationTracer schemaGenerationTracer, SchemaGenerator defaultSchemaGenerator,
+        DataSchemaGenerator dataSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator,
+        ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider, RelationshipTypeFactory relationshipTypeFactory,
+        ResourceSchemaType resourceSchemaType)
     {
+        ArgumentNullException.ThrowIfNull(schemaGenerationTracer);
         ArgumentNullException.ThrowIfNull(defaultSchemaGenerator);
         ArgumentNullException.ThrowIfNull(dataSchemaGenerator);
         ArgumentNullException.ThrowIfNull(linksVisibilitySchemaGenerator);
@@ -32,6 +35,7 @@ internal sealed class ResourceFieldSchemaBuilder
         ArgumentNullException.ThrowIfNull(resourceFieldValidationMetadataProvider);
         ArgumentNullException.ThrowIfNull(relationshipTypeFactory);
 
+        _schemaGenerationTracer = schemaGenerationTracer;
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _dataSchemaGenerator = dataSchemaGenerator;
         _linksVisibilitySchemaGenerator = linksVisibilitySchemaGenerator;
@@ -135,11 +139,15 @@ internal sealed class ResourceFieldSchemaBuilder
             return;
         }
 
-        string schemaId = referenceSchemaForAttribute.Reference.Id;
+        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, nonNullableTypeInPropertyType);
 
+        string schemaId = referenceSchemaForAttribute.Reference.Id;
         OpenApiSchema fullSchema = _resourceSchemaRepository.Schemas[schemaId];
+
         schemaRepository.AddDefinition(schemaId, fullSchema);
         schemaRepository.RegisterType(nonNullableTypeInPropertyType, schemaId);
+
+        traceScope.TraceSucceeded(schemaId);
     }
 
     private Type GetRepresentedTypeForAttributeSchema(AttrAttribute attribute)
@@ -215,6 +223,8 @@ internal sealed class ResourceFieldSchemaBuilder
 
     private OpenApiSchema CreateReferenceSchemaForRelationship(Type relationshipSchemaType, SchemaRepository schemaRepository)
     {
+        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, relationshipSchemaType);
+
         OpenApiSchema referenceSchema = _defaultSchemaGenerator.GenerateSchema(relationshipSchemaType, schemaRepository);
 
         OpenApiSchema fullSchema = schemaRepository.Schemas[referenceSchema.Reference.Id];
@@ -229,6 +239,7 @@ internal sealed class ResourceFieldSchemaBuilder
             _linksVisibilitySchemaGenerator.UpdateSchemaForRelationship(relationshipSchemaType, fullSchema, schemaRepository);
         }
 
+        traceScope.TraceSucceeded(referenceSchema.Reference.Id);
         return referenceSchema;
     }
 

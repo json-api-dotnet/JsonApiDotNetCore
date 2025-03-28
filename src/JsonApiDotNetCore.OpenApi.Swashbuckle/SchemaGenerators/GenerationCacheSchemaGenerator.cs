@@ -16,34 +16,40 @@ internal sealed class GenerationCacheSchemaGenerator
     private const string HasAtomicOperationsEndpointPropertyName = "HasAtomicOperationsEndpoint";
     public const string SchemaId = "__JsonApiSchemaGenerationCache__";
 
+    private readonly SchemaGenerationTracer _schemaGenerationTracer;
     private readonly IActionDescriptorCollectionProvider _defaultProvider;
     private readonly JsonApiEndpointMetadataProvider _jsonApiEndpointMetadataProvider;
 
-    public GenerationCacheSchemaGenerator(IActionDescriptorCollectionProvider defaultProvider, JsonApiEndpointMetadataProvider jsonApiEndpointMetadataProvider)
+    public GenerationCacheSchemaGenerator(SchemaGenerationTracer schemaGenerationTracer, IActionDescriptorCollectionProvider defaultProvider,
+        JsonApiEndpointMetadataProvider jsonApiEndpointMetadataProvider)
     {
+        ArgumentNullException.ThrowIfNull(schemaGenerationTracer);
         ArgumentNullException.ThrowIfNull(defaultProvider);
         ArgumentNullException.ThrowIfNull(jsonApiEndpointMetadataProvider);
 
+        _schemaGenerationTracer = schemaGenerationTracer;
         _defaultProvider = defaultProvider;
         _jsonApiEndpointMetadataProvider = jsonApiEndpointMetadataProvider;
     }
 
     public bool HasAtomicOperationsEndpoint(SchemaRepository schemaRepository)
     {
-        OpenApiSchema referenceSchema = GenerateFullSchema(schemaRepository);
+        ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        var hasAtomicOperationsEndpoint = (OpenApiBoolean)referenceSchema.Properties[HasAtomicOperationsEndpointPropertyName].Default;
+        OpenApiSchema fullSchema = GenerateFullSchema(schemaRepository);
+
+        var hasAtomicOperationsEndpoint = (OpenApiBoolean)fullSchema.Properties[HasAtomicOperationsEndpointPropertyName].Default;
         return hasAtomicOperationsEndpoint.Value;
     }
 
     private OpenApiSchema GenerateFullSchema(SchemaRepository schemaRepository)
     {
-        ArgumentNullException.ThrowIfNull(schemaRepository);
-
         if (schemaRepository.Schemas.TryGetValue(SchemaId, out OpenApiSchema? fullSchema))
         {
             return fullSchema;
         }
+
+        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this);
 
         bool hasAtomicOperationsEndpoint = EvaluateHasAtomicOperationsEndpoint();
 
@@ -61,7 +67,9 @@ internal sealed class GenerationCacheSchemaGenerator
         };
 
         schemaRepository.AddDefinition(SchemaId, fullSchema);
-        return schemaRepository.Schemas[SchemaId];
+
+        traceScope.TraceSucceeded(SchemaId);
+        return fullSchema;
     }
 
     private bool EvaluateHasAtomicOperationsEndpoint()

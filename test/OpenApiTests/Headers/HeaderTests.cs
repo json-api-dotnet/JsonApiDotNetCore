@@ -2,6 +2,7 @@ using System.Text.Json;
 using FluentAssertions;
 using TestBuildingBlocks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace OpenApiTests.Headers;
 
@@ -9,12 +10,13 @@ public sealed class HeaderTests : IClassFixture<OpenApiTestContext<OpenApiStartu
 {
     private readonly OpenApiTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext> _testContext;
 
-    public HeaderTests(OpenApiTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext> testContext)
+    public HeaderTests(OpenApiTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext> testContext, ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
 
         testContext.UseController<CountriesController>();
 
+        testContext.SetTestOutputHelper(testOutputHelper);
         testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 

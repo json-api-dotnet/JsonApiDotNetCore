@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace OpenApiTests.QueryStrings;
 
@@ -16,11 +17,13 @@ public sealed class IncludeTests : IClassFixture<OpenApiTestContext<OpenApiStart
 {
     private readonly OpenApiTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
 
-    public IncludeTests(OpenApiTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
+    public IncludeTests(OpenApiTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> testContext, ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
 
         testContext.UseController<OnlyGetSingleNodeController>();
+
+        testContext.SetTestOutputHelper(testOutputHelper);
     }
 
     [Fact]

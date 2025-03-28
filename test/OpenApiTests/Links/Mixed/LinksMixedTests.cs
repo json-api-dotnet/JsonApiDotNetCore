@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace OpenApiTests.Links.Mixed;
 
@@ -13,7 +14,7 @@ public sealed class LinksMixedTests : IClassFixture<OpenApiTestContext<OpenApiSt
 {
     private readonly OpenApiTestContext<OpenApiStartup<LinkDbContext>, LinkDbContext> _testContext;
 
-    public LinksMixedTests(OpenApiTestContext<OpenApiStartup<LinkDbContext>, LinkDbContext> testContext)
+    public LinksMixedTests(OpenApiTestContext<OpenApiStartup<LinkDbContext>, LinkDbContext> testContext, ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
 
@@ -22,6 +23,7 @@ public sealed class LinksMixedTests : IClassFixture<OpenApiTestContext<OpenApiSt
         testContext.UseController<TransportsController>();
         testContext.UseController<ExcursionsController>();
 
+        testContext.SetTestOutputHelper(testOutputHelper);
         testContext.ConfigureServices(services => services.AddSingleton(CreateResourceGraph));
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();

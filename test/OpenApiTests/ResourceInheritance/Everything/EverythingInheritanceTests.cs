@@ -1,13 +1,15 @@
 using JsonApiDotNetCore.Controllers;
 using OpenApiTests.ResourceInheritance.Models;
 using Xunit;
+using Xunit.Abstractions;
 
 #pragma warning disable format
 
 namespace OpenApiTests.ResourceInheritance.Everything;
 
-public sealed class EverythingInheritanceTests(OpenApiTestContext<OpenApiStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext> testContext)
-    : ResourceInheritanceTests(testContext, true, false)
+public sealed class EverythingInheritanceTests(
+    OpenApiTestContext<OpenApiStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext> testContext, ITestOutputHelper testOutputHelper)
+    : ResourceInheritanceTests(testContext, testOutputHelper, true, false)
 {
     [Theory]
     [InlineData(typeof(District), JsonApiEndpoints.All)]
