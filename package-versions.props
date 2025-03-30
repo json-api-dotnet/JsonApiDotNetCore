@@ -20,7 +20,7 @@
     <KiotaVersion>1.*</KiotaVersion>
     <MicrosoftApiClientVersion>9.0.*</MicrosoftApiClientVersion>
     <MicrosoftApiServerVersion>9.0.*</MicrosoftApiServerVersion>
-    <NSwagApiClientVersion>14.2.*</NSwagApiClientVersion>
+    <NSwagApiClientVersion>14.3.*</NSwagApiClientVersion>
     <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
     <ScalarAspNetCoreVersion>2.1.*</ScalarAspNetCoreVersion>
     <SwashbuckleVersion>8.*-*</SwashbuckleVersion>
