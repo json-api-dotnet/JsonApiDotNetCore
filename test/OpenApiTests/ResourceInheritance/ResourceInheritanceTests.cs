@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
+using Xunit.Abstractions;
 
 #pragma warning disable AV1755 // Name of async method should end with Async or TaskAsync
 
@@ -16,11 +17,12 @@ public abstract class ResourceInheritanceTests : IClassFixture<OpenApiTestContex
     private readonly OpenApiTestContext<OpenApiStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext> _testContext;
 
     protected ResourceInheritanceTests(OpenApiTestContext<OpenApiStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext> testContext,
-        bool hasOperationsController, bool writeToDisk)
+        ITestOutputHelper testOutputHelper, bool hasOperationsController, bool writeToDisk)
     {
         _testContext = testContext;
 
         testContext.UseInheritanceControllers(hasOperationsController);
+        testContext.SetTestOutputHelper(testOutputHelper);
 
         if (writeToDisk)
         {

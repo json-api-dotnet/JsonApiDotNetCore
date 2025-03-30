@@ -1,6 +1,7 @@
 using System.Text.Json;
 using TestBuildingBlocks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace OpenApiTests.NamingConventions.KebabCase;
 
@@ -11,7 +12,8 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
 
     private readonly OpenApiTestContext<KebabCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> _testContext;
 
-    public KebabCaseTests(OpenApiTestContext<KebabCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> testContext)
+    public KebabCaseTests(OpenApiTestContext<KebabCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> testContext,
+        ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
 
@@ -19,6 +21,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
         testContext.UseController<StaffMembersController>();
         testContext.UseController<OperationsController>();
 
+        testContext.SetTestOutputHelper(testOutputHelper);
         testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 

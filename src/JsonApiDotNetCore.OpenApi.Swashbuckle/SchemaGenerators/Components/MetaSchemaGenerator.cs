@@ -6,12 +6,16 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 
 internal sealed class MetaSchemaGenerator
 {
+    private static readonly Type SchemaType = typeof(Meta);
+    private readonly SchemaGenerationTracer _schemaGenerationTracer;
     private readonly JsonApiSchemaIdSelector _schemaIdSelector;
 
-    public MetaSchemaGenerator(JsonApiSchemaIdSelector schemaIdSelector)
+    public MetaSchemaGenerator(SchemaGenerationTracer schemaGenerationTracer, JsonApiSchemaIdSelector schemaIdSelector)
     {
+        ArgumentNullException.ThrowIfNull(schemaGenerationTracer);
         ArgumentNullException.ThrowIfNull(schemaIdSelector);
 
+        _schemaGenerationTracer = schemaGenerationTracer;
         _schemaIdSelector = schemaIdSelector;
     }
 
@@ -19,10 +23,12 @@ internal sealed class MetaSchemaGenerator
     {
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        if (schemaRepository.TryLookupByType(typeof(Meta), out OpenApiSchema? referenceSchema))
+        if (schemaRepository.TryLookupByType(SchemaType, out OpenApiSchema? referenceSchema))
         {
             return referenceSchema;
         }
+
+        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, SchemaType);
 
         var fullSchema = new OpenApiSchema
         {
@@ -36,8 +42,9 @@ internal sealed class MetaSchemaGenerator
         string schemaId = _schemaIdSelector.GetMetaSchemaId();
 
         referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
-        schemaRepository.RegisterType(typeof(Meta), schemaId);
+        schemaRepository.RegisterType(SchemaType, schemaId);
 
+        traceScope.TraceSucceeded(schemaId);
         return referenceSchema;
     }
 }

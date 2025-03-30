@@ -8,12 +8,15 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 
 internal sealed class ResourceTypeSchemaGenerator
 {
+    private readonly SchemaGenerationTracer _schemaGenerationTracer;
     private readonly JsonApiSchemaIdSelector _schemaIdSelector;
 
-    public ResourceTypeSchemaGenerator(JsonApiSchemaIdSelector schemaIdSelector)
+    public ResourceTypeSchemaGenerator(SchemaGenerationTracer schemaGenerationTracer, JsonApiSchemaIdSelector schemaIdSelector)
     {
+        ArgumentNullException.ThrowIfNull(schemaGenerationTracer);
         ArgumentNullException.ThrowIfNull(schemaIdSelector);
 
+        _schemaGenerationTracer = schemaGenerationTracer;
         _schemaIdSelector = schemaIdSelector;
     }
 
@@ -26,6 +29,8 @@ internal sealed class ResourceTypeSchemaGenerator
         {
             return referenceSchema;
         }
+
+        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, resourceType.ClrType);
 
         var fullSchema = new OpenApiSchema
         {
@@ -47,6 +52,7 @@ internal sealed class ResourceTypeSchemaGenerator
         referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
         schemaRepository.RegisterType(resourceType.ClrType, schemaId);
 
+        traceScope.TraceSucceeded(schemaId);
         return referenceSchema;
     }
 
@@ -66,6 +72,8 @@ internal sealed class ResourceTypeSchemaGenerator
             };
         }
 
+        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this);
+
         var fullSchema = new OpenApiSchema
         {
             Type = "string",
@@ -75,6 +83,9 @@ internal sealed class ResourceTypeSchemaGenerator
             }
         };
 
-        return schemaRepository.AddDefinition(schemaId, fullSchema);
+        OpenApiSchema referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
+
+        traceScope.TraceSucceeded(schemaId);
+        return referenceSchema;
     }
 }

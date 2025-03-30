@@ -2,6 +2,7 @@ using System.Text.Json;
 using FluentAssertions;
 using TestBuildingBlocks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace OpenApiTests.Documentation;
 
@@ -12,7 +13,8 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
 
     private readonly OpenApiTestContext<DocumentationStartup<DocumentationDbContext>, DocumentationDbContext> _testContext;
 
-    public ErrorResponseTests(OpenApiTestContext<DocumentationStartup<DocumentationDbContext>, DocumentationDbContext> testContext)
+    public ErrorResponseTests(OpenApiTestContext<DocumentationStartup<DocumentationDbContext>, DocumentationDbContext> testContext,
+        ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
 
@@ -20,6 +22,8 @@ public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<Docume
         testContext.UseController<ElevatorsController>();
         testContext.UseController<SpacesController>();
         testContext.UseController<OperationsController>();
+
+        testContext.SetTestOutputHelper(testOutputHelper);
     }
 
     [Fact]

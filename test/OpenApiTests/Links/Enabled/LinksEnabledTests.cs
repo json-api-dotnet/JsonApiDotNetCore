@@ -3,6 +3,7 @@ using FluentAssertions;
 using JsonApiDotNetCore.Resources.Annotations;
 using TestBuildingBlocks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace OpenApiTests.Links.Enabled;
 
@@ -10,7 +11,7 @@ public sealed class LinksEnabledTests : IClassFixture<OpenApiTestContext<OpenApi
 {
     private readonly OpenApiTestContext<OpenApiStartup<LinkDbContext>, LinkDbContext> _testContext;
 
-    public LinksEnabledTests(OpenApiTestContext<OpenApiStartup<LinkDbContext>, LinkDbContext> testContext)
+    public LinksEnabledTests(OpenApiTestContext<OpenApiStartup<LinkDbContext>, LinkDbContext> testContext, ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
 
@@ -19,6 +20,7 @@ public sealed class LinksEnabledTests : IClassFixture<OpenApiTestContext<OpenApi
         testContext.UseController<TransportsController>();
         testContext.UseController<ExcursionsController>();
 
+        testContext.SetTestOutputHelper(testOutputHelper);
         testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 

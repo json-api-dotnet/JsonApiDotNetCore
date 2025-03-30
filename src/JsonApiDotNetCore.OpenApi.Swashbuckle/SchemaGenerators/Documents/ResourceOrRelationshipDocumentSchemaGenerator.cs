@@ -37,10 +37,10 @@ internal sealed class ResourceOrRelationshipDocumentSchemaGenerator : DocumentSc
     private readonly DataContainerSchemaGenerator _dataContainerSchemaGenerator;
     private readonly IResourceGraph _resourceGraph;
 
-    public ResourceOrRelationshipDocumentSchemaGenerator(SchemaGenerator defaultSchemaGenerator, DataContainerSchemaGenerator dataContainerSchemaGenerator,
-        MetaSchemaGenerator metaSchemaGenerator, LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, IJsonApiOptions options,
-        IResourceGraph resourceGraph)
-        : base(metaSchemaGenerator, linksVisibilitySchemaGenerator, options)
+    public ResourceOrRelationshipDocumentSchemaGenerator(SchemaGenerationTracer schemaGenerationTracer, SchemaGenerator defaultSchemaGenerator,
+        DataContainerSchemaGenerator dataContainerSchemaGenerator, MetaSchemaGenerator metaSchemaGenerator,
+        LinksVisibilitySchemaGenerator linksVisibilitySchemaGenerator, IJsonApiOptions options, IResourceGraph resourceGraph)
+        : base(schemaGenerationTracer, metaSchemaGenerator, linksVisibilitySchemaGenerator, options)
     {
         ArgumentNullException.ThrowIfNull(defaultSchemaGenerator);
         ArgumentNullException.ThrowIfNull(dataContainerSchemaGenerator);
@@ -62,17 +62,12 @@ internal sealed class ResourceOrRelationshipDocumentSchemaGenerator : DocumentSc
         ArgumentNullException.ThrowIfNull(schemaType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        if (schemaRepository.TryLookupByType(schemaType, out OpenApiSchema? referenceSchemaForDocument))
-        {
-            return referenceSchemaForDocument;
-        }
-
         var resourceSchemaType = ResourceSchemaType.Create(schemaType, _resourceGraph);
         bool isRequestSchema = RequestDocumentSchemaTypes.Contains(resourceSchemaType.SchemaOpenType);
 
         _ = _dataContainerSchemaGenerator.GenerateSchema(schemaType, resourceSchemaType.ResourceType, isRequestSchema, !isRequestSchema, schemaRepository);
 
-        referenceSchemaForDocument = _defaultSchemaGenerator.GenerateSchema(schemaType, schemaRepository);
+        OpenApiSchema? referenceSchemaForDocument = _defaultSchemaGenerator.GenerateSchema(schemaType, schemaRepository);
         OpenApiSchema inlineSchemaForDocument = schemaRepository.Schemas[referenceSchemaForDocument.Reference.Id].UnwrapLastExtendedSchema();
 
         if (JsonApiSchemaFacts.HasNullableDataProperty(resourceSchemaType.SchemaOpenType))

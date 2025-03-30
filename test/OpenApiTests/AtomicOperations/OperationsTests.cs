@@ -3,6 +3,7 @@ using JsonApiDotNetCore.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace OpenApiTests.AtomicOperations;
 
@@ -10,16 +11,17 @@ public sealed class OperationsTests : IClassFixture<OpenApiTestContext<OpenApiSt
 {
     private readonly OpenApiTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext> _testContext;
 
-    public OperationsTests(OpenApiTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext> testContext)
+    public OperationsTests(OpenApiTestContext<OpenApiStartup<OperationsDbContext>, OperationsDbContext> testContext, ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
 
         testContext.UseController<OperationsController>();
 
+        testContext.SetTestOutputHelper(testOutputHelper);
+        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
+
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.IncludeJsonApiVersion = true;
-
-        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
     [Fact]

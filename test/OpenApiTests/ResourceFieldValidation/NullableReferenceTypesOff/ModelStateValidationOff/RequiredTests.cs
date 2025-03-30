@@ -1,6 +1,7 @@
 using System.Text.Json;
 using TestBuildingBlocks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace OpenApiTests.ResourceFieldValidation.NullableReferenceTypesOff.ModelStateValidationOff;
 
@@ -8,11 +9,13 @@ public sealed class RequiredTests : IClassFixture<OpenApiTestContext<MsvOffStart
 {
     private readonly OpenApiTestContext<MsvOffStartup<NrtOffDbContext>, NrtOffDbContext> _testContext;
 
-    public RequiredTests(OpenApiTestContext<MsvOffStartup<NrtOffDbContext>, NrtOffDbContext> testContext)
+    public RequiredTests(OpenApiTestContext<MsvOffStartup<NrtOffDbContext>, NrtOffDbContext> testContext, ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
 
         testContext.UseController<NrtOffResourcesController>();
+
+        testContext.SetTestOutputHelper(testOutputHelper);
     }
 
     [Theory]

@@ -2,6 +2,7 @@ using System.Text.Json;
 using FluentAssertions;
 using TestBuildingBlocks;
 using Xunit;
+using Xunit.Abstractions;
 
 // @formatter:max_line_length 250
 
@@ -17,7 +18,7 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
 
     private readonly OpenApiTestContext<DocumentationStartup<DocumentationDbContext>, DocumentationDbContext> _testContext;
 
-    public DocumentationTests(OpenApiTestContext<DocumentationStartup<DocumentationDbContext>, DocumentationDbContext> testContext)
+    public DocumentationTests(OpenApiTestContext<DocumentationStartup<DocumentationDbContext>, DocumentationDbContext> testContext, ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
 
@@ -25,6 +26,8 @@ public sealed class DocumentationTests : IClassFixture<OpenApiTestContext<Docume
         testContext.UseController<ElevatorsController>();
         testContext.UseController<SpacesController>();
         testContext.UseController<OperationsController>();
+
+        testContext.SetTestOutputHelper(testOutputHelper);
     }
 
     [Fact]

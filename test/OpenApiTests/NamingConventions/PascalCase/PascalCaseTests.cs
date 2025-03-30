@@ -1,6 +1,7 @@
 using System.Text.Json;
 using TestBuildingBlocks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace OpenApiTests.NamingConventions.PascalCase;
 
@@ -11,7 +12,8 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
 
     private readonly OpenApiTestContext<PascalCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> _testContext;
 
-    public PascalCaseTests(OpenApiTestContext<PascalCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> testContext)
+    public PascalCaseTests(OpenApiTestContext<PascalCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> testContext,
+        ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
 
@@ -19,6 +21,7 @@ public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCas
         testContext.UseController<StaffMembersController>();
         testContext.UseController<OperationsController>();
 
+        testContext.SetTestOutputHelper(testOutputHelper);
         testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 

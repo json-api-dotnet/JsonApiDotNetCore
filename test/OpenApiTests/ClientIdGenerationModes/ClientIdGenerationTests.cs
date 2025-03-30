@@ -1,6 +1,7 @@
 using System.Text.Json;
 using TestBuildingBlocks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace OpenApiTests.ClientIdGenerationModes;
 
@@ -8,7 +9,8 @@ public sealed class ClientIdGenerationTests : IClassFixture<OpenApiTestContext<O
 {
     private readonly OpenApiTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext> _testContext;
 
-    public ClientIdGenerationTests(OpenApiTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext> testContext)
+    public ClientIdGenerationTests(OpenApiTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext> testContext,
+        ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
 
@@ -16,6 +18,7 @@ public sealed class ClientIdGenerationTests : IClassFixture<OpenApiTestContext<O
         testContext.UseController<GamesController>();
         testContext.UseController<PlayerGroupsController>();
 
+        testContext.SetTestOutputHelper(testOutputHelper);
         testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 

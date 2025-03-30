@@ -4,13 +4,15 @@ using JsonApiDotNetCore.Middleware;
 using Microsoft.Extensions.DependencyInjection;
 using OpenApiTests.ResourceInheritance.Models;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace OpenApiTests.ResourceInheritance.SubsetOfVarious;
 
 public sealed class SubsetOfVariousInheritanceTests : ResourceInheritanceTests
 {
-    public SubsetOfVariousInheritanceTests(OpenApiTestContext<OpenApiStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext> testContext)
-        : base(testContext, false, true)
+    public SubsetOfVariousInheritanceTests(OpenApiTestContext<OpenApiStartup<ResourceInheritanceDbContext>, ResourceInheritanceDbContext> testContext,
+        ITestOutputHelper testOutputHelper)
+        : base(testContext, testOutputHelper, false, true)
     {
         testContext.ConfigureServices(services =>
         {

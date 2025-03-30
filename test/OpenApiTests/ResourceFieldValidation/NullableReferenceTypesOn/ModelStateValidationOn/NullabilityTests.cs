@@ -2,6 +2,7 @@ using System.Text.Json;
 using FluentAssertions;
 using TestBuildingBlocks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace OpenApiTests.ResourceFieldValidation.NullableReferenceTypesOn.ModelStateValidationOn;
 
@@ -9,11 +10,13 @@ public sealed class NullabilityTests : IClassFixture<OpenApiTestContext<OpenApiS
 {
     private readonly OpenApiTestContext<OpenApiStartup<NrtOnDbContext>, NrtOnDbContext> _testContext;
 
-    public NullabilityTests(OpenApiTestContext<OpenApiStartup<NrtOnDbContext>, NrtOnDbContext> testContext)
+    public NullabilityTests(OpenApiTestContext<OpenApiStartup<NrtOnDbContext>, NrtOnDbContext> testContext, ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
 
         testContext.UseController<NrtOnResourcesController>();
+
+        testContext.SetTestOutputHelper(testOutputHelper);
         testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 

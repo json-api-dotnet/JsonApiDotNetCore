@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace OpenApiTests.RestrictedControllers;
 
@@ -12,7 +13,7 @@ public sealed class RestrictionTests : IClassFixture<OpenApiTestContext<OpenApiS
 {
     private readonly OpenApiTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext> _testContext;
 
-    public RestrictionTests(OpenApiTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext> testContext)
+    public RestrictionTests(OpenApiTestContext<OpenApiStartup<RestrictionDbContext>, RestrictionDbContext> testContext, ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
 
@@ -22,6 +23,7 @@ public sealed class RestrictionTests : IClassFixture<OpenApiTestContext<OpenApiS
         testContext.UseController<RelationshipChannelsController>();
         testContext.UseController<ReadOnlyResourceChannelsController>();
 
+        testContext.SetTestOutputHelper(testOutputHelper);
         testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 

@@ -7,12 +7,15 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 
 internal sealed class AtomicOperationCodeSchemaGenerator
 {
+    private readonly SchemaGenerationTracer _schemaGenerationTracer;
     private readonly JsonApiSchemaIdSelector _schemaIdSelector;
 
-    public AtomicOperationCodeSchemaGenerator(JsonApiSchemaIdSelector schemaIdSelector)
+    public AtomicOperationCodeSchemaGenerator(SchemaGenerationTracer schemaGenerationTracer, JsonApiSchemaIdSelector schemaIdSelector)
     {
+        ArgumentNullException.ThrowIfNull(schemaGenerationTracer);
         ArgumentNullException.ThrowIfNull(schemaIdSelector);
 
+        _schemaGenerationTracer = schemaGenerationTracer;
         _schemaIdSelector = schemaIdSelector;
     }
 
@@ -34,6 +37,8 @@ internal sealed class AtomicOperationCodeSchemaGenerator
             };
         }
 
+        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, operationCode);
+
         string enumValue = operationCode.ToString().ToLowerInvariant();
 
         var fullSchema = new OpenApiSchema
@@ -42,6 +47,9 @@ internal sealed class AtomicOperationCodeSchemaGenerator
             Enum = [new OpenApiString(enumValue)]
         };
 
-        return schemaRepository.AddDefinition(schemaId, fullSchema);
+        OpenApiSchema referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
+
+        traceScope.TraceSucceeded(schemaId);
+        return referenceSchema;
     }
 }
