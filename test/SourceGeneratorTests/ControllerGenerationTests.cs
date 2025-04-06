@@ -225,7 +225,7 @@ public sealed class ControllerGenerationTests
                 {
                     private const JsonApiEndpoints NoRelationshipEndpoints = JsonApiEndpoints.GetCollection |
                         JsonApiEndpoints.GetSingle | JsonApiEndpoints.Post | JsonApiEndpoints.Patch | JsonApiEndpoints.Delete;
-
+                
                     [Attr]
                     public int Value { get; set; }
                 }
