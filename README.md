@@ -109,7 +109,7 @@ To try it out, follow the steps below:
    In the command above:
    - Replace YOUR-GITHUB-USERNAME with the username you use to login your GitHub account.
    - Replace YOUR-PAT-CLASSIC with the token your created above.
-   
+
    :warning: If the above command doesn't give you access in the next step, remove the package source by running:
    ```bash
    dotnet nuget remove source github-json-api
