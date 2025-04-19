@@ -16,6 +16,12 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <!-- .NET 10 Preview -->
+    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+    <NoWarn>$(NoWarn);NU1903;NU5104;NU1608</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <!--
       Disabled IDE analyzers for "Use collection expression" because they are dangerous in a subtle way.
       For example, a suggestion for the following code is raised:

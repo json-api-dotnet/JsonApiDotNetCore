@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
   </PropertyGroup>
 
   <Import Project="..\..\..\package-versions.props" />
@@ -14,6 +14,7 @@
   <ItemGroup>
     <PackageReference Include="Dapper" Version="$(DapperVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EntityFrameworkCoreVersion)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="$(EntityFrameworkCoreVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(EntityFrameworkCoreVersion)" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(EntityFrameworkCoreVersion)" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="$(EntityFrameworkCoreVersion)" />

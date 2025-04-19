@@ -1,6 +1,6 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
   </PropertyGroup>
 
   <Import Project="..\..\package-versions.props" />
@@ -19,6 +19,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="$(EntityFrameworkCoreVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="$(EntityFrameworkCoreVersion)" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
-    <PackageReference Include="System.Text.Json" Version="$(SystemTextJsonVersion)" />
+    <PackageReference Include="System.Text.Json" Condition="'$(TargetFramework)' == 'net8.0'" Version="$(SystemTextJsonVersion)" />
   </ItemGroup>
 </Project>
