@@ -8,6 +8,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading;
 
 internal sealed class UniverseFakers
 {
+    private readonly Lazy<Faker<Constellation>> _lazyConstellationFaker = new(() => new Faker<Constellation>()
+        .MakeDeterministic()
+        .RuleFor(constellation => constellation.Name, faker => faker.Random.Word())
+        .RuleFor(constellation => constellation.VisibleDuring, faker => faker.PickRandom<Season>()));
+
     private readonly Lazy<Faker<Star>> _lazyStarFaker = new(() => new Faker<Star>()
         .MakeDeterministic()
         .RuleFor(star => star.Name, faker => faker.Random.Word())
@@ -27,6 +32,7 @@ internal sealed class UniverseFakers
         .RuleFor(moon => moon.Name, faker => faker.Random.Word())
         .RuleFor(moon => moon.SolarRadius, faker => faker.Random.Decimal(.01M, 1000M)));
 
+    public Faker<Constellation> Constellation => _lazyConstellationFaker.Value;
     public Faker<Star> Star => _lazyStarFaker.Value;
     public Faker<Planet> Planet => _lazyPlanetFaker.Value;
     public Faker<Moon> Moon => _lazyMoonFaker.Value;

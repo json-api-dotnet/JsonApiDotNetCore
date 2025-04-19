@@ -23,6 +23,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
         testContext.ConfigureServices(services =>
         {
+            services.AddResourceDefinition<ConstellationDefinition>();
             services.AddResourceDefinition<StarDefinition>();
             services.AddResourceDefinition<PlanetDefinition>();
             services.AddResourceDefinition<MoonDefinition>();
