@@ -35,6 +35,16 @@
     <XunitVisualStudioVersion>3.1.*</XunitVisualStudioVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <!-- Published dependencies (only update on major version change) -->
+    <EntityFrameworkCoreFrozenVersion>10.0.*-*</EntityFrameworkCoreFrozenVersion>
+
+    <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
+    <AspNetCoreVersion>10.0.*-*</AspNetCoreVersion>
+    <EntityFrameworkCoreVersion>10.0.*-*</EntityFrameworkCoreVersion>
+    <EntityFrameworkCorePomeloVersion>9.0.*-*</EntityFrameworkCorePomeloVersion>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
     <!-- Published dependencies (only update on major version change) -->
     <EntityFrameworkCoreFrozenVersion>N/A</EntityFrameworkCoreFrozenVersion>
