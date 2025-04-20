@@ -324,7 +324,6 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            await dbContext.ClearTableAsync<Planet>();
             dbContext.Stars.Add(star);
             await dbContext.SaveChangesAsync();
         });
@@ -376,7 +375,6 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            await dbContext.ClearTableAsync<Planet>();
             dbContext.Stars.Add(star);
             await dbContext.SaveChangesAsync();
         });
