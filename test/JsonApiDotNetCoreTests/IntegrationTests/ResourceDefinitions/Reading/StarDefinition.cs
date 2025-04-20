@@ -2,15 +2,34 @@ using System.ComponentModel;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 // The constructor parameters will be resolved from the container, which means you can take on any dependency that is also defined in the container.
-public sealed class StarDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter)
+public sealed class StarDefinition(IResourceGraph resourceGraph, IClientSettingsProvider clientSettingsProvider, ResourceDefinitionHitCounter hitCounter)
     : HitCountingResourceDefinition<Star, int>(resourceGraph, hitCounter)
 {
+    private readonly IClientSettingsProvider _clientSettingsProvider = clientSettingsProvider;
+
     protected override ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.Reading;
+
+    public override FilterExpression? OnApplyFilter(FilterExpression? existingFilter)
+    {
+        FilterExpression? baseFilter = base.OnApplyFilter(existingFilter);
+
+        if (_clientSettingsProvider.AreVeryLargeStarsHidden)
+        {
+            AttrAttribute solarRadiusAttribute = ResourceType.GetAttributeByPropertyName(nameof(Star.SolarRadius));
+            var solarRadiusChain = new ResourceFieldChainExpression(solarRadiusAttribute);
+            var solarRadiusComparison = new ComparisonExpression(ComparisonOperator.LessThan, solarRadiusChain, new LiteralConstantExpression(2000M));
+
+            return LogicalExpression.Compose(LogicalOperator.And, baseFilter, solarRadiusComparison);
+        }
+
+        return baseFilter;
+    }
 
     public override SortExpression OnApplySort(SortExpression? existingSort)
     {
