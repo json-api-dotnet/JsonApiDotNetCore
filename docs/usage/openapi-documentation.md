@@ -1,3 +1,6 @@
+> [!WARNING]
+> OpenAPI support for JSON:API is currently experimental. The API and the structure of the OpenAPI document may change in future versions.
+
 # OpenAPI documentation
 
 After [enabling OpenAPI](~/usage/openapi.md), you can expose a documentation website with SwaggerUI, Redoc and/or Scalar.

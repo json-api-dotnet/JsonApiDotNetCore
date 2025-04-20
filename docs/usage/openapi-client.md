@@ -1,3 +1,6 @@
+> [!WARNING]
+> OpenAPI support for JSON:API is currently experimental. The API and the structure of the OpenAPI document may change in future versions.
+
 # OpenAPI clients
 
 After [enabling OpenAPI](~/usage/openapi.md), you can generate a typed JSON:API client for your API in various programming languages.
@@ -315,5 +318,39 @@ demonstrates how to use them. It uses local IDs to:
 - Update the person to clear an attribute (using built-in backing-store)
 - Create a new todo-item, tagged with the new tag, and owned by the new person
 - Assign the todo-item to the created person
+
+---
+
+## Known limitations
+
+# [NSwag](#tab/nswag)
+
+| Limitation | Workaround | Links |
+| --- | --- | --- |
+| Partial POST/PATCH sends incorrect request | Use `TrackChangesFor` from `JsonApiDotNetCore.OpenApi.Client.NSwag` package | |
+| Exception thrown on successful HTTP status | Use `TranslateAsync` from `JsonApiDotNetCore.OpenApi.Client.NSwag` package | https://github.com/RicoSuter/NSwag/issues/2499 |
+| No `Accept` header sent when only error responses define `Content-Type` | `JsonApiDotNetCore.OpenApi.Swashbuckle` package contains workaround | |
+| Schema type not always inferred with `allOf` | `JsonApiDotNetCore.OpenApi.Swashbuckle` package contains workaround | |
+| Generated code for JSON:API extensions does not compile | `JsonApiDotNetCore.OpenApi.Swashbuckle` package contains workaround | |
+| A project can't contain both JSON:API clients and regular OpenAPI clients | Use separate projects | |
+
+# [Kiota](#tab/kiota)
+
+| Limitation | Workaround | Links |
+| --- | --- | --- |
+| Properties are always nullable | - | https://github.com/microsoft/kiota/issues/3911 |
+| JSON:API query strings are inaccessible | Use `SetQueryStringHttpMessageHandler.CreateScope` from `JsonApiDotNetCore.OpenApi.Client.Kiota` package | https://github.com/microsoft/kiota/issues/3800 |
+| Properties set to `null` are sent twice | - | https://github.com/microsoft/kiota-dotnet/issues/535 |
+| HTTP 304 (Not Modified) is not properly recognized | Catch `ApiException` and inspect the response status code | https://github.com/microsoft/kiota/issues/4190, https://github.com/microsoft/kiota-dotnet/issues/531 |
+| Generator warns about unsupported formats | Use `JsonApiDotNetCore.OpenApi.Client.Kiota` package | https://github.com/microsoft/kiota/issues/4227 |
+| `Stream` response for HEAD request | - | https://github.com/microsoft/kiota/issues/4245 |
+| Unhelpful exception messages | - | https://github.com/microsoft/kiota/issues/4349 |
+| Discriminator properties aren't being set automatically | - |  https://github.com/microsoft/kiota/issues/4618 |
+| Discriminator mappings must be repeated in every derived type used in responses | `JsonApiDotNetCore.OpenApi.Swashbuckle` package contains workaround | https://github.com/microsoft/kiota/issues/2432 |
+| `x-abstract` in `openapi.json` is ignored | - | |
+| No MSBuild / IDE support | Use `KiotaReference` from `JsonApiDotNetCore.OpenApi.Client.Kiota` package | https://github.com/microsoft/kiota/issues/3005 |
+| Incorrect nullability in API methods | Use `KiotaReference` from `JsonApiDotNetCore.OpenApi.Client.Kiota` package | https://github.com/microsoft/kiota/issues/3944 |
+| Generated code for JSON:API extensions does not compile | `JsonApiDotNetCore.OpenApi.Swashbuckle` package contains workaround | |
+| Properties are always sent in alphabetic order | - | https://github.com/microsoft/kiota/issues/4680 |
 
 ---
