@@ -78,7 +78,7 @@ Here's how an article (i.e. a resource of type "articles") might appear in a doc
 
 ### Atomic Operations
 
-In addition to the members allowed by the [Atomic Operations extension](https://jsonapi.org/ext/atomic/), 
+In addition to the members allowed by the [Atomic Operations extension](https://jsonapi.org/ext/atomic/),
 the following member MAY be included in elements of an `atomic:operations` array:
 
 * `openapi:discriminator` - A free-format string to facilitate generation of client code.

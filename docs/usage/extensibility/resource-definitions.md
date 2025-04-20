@@ -29,7 +29,7 @@ For various reasons (see examples below) you may need to change parts of the que
 `JsonApiResourceDefinition<TResource, TId>` (which is an empty implementation of `IResourceDefinition<TResource, TId>`) provides overridable methods that pass you the result of query string parameter parsing.
 The value returned by you determines what will be used to execute the query.
 
-An intermediate format (`QueryExpression` and derived types) is used, which enables us to separate JSON:API implementation 
+An intermediate format (`QueryExpression` and derived types) is used, which enables us to separate JSON:API implementation
 from Entity Framework Core `IQueryable` execution.
 
 ### Excluding fields
@@ -220,7 +220,7 @@ You can define additional query string parameters with the LINQ expression that 
 If the key is present in a query string, the supplied LINQ expression will be added to the database query.
 
 > [!NOTE]
-> This directly influences the Entity Framework Core `IQueryable`. As opposed to using `OnApplyFilter`, this enables the full range of Entity Framework Core operators. 
+> This directly influences the Entity Framework Core `IQueryable`. As opposed to using `OnApplyFilter`, this enables the full range of Entity Framework Core operators.
 But it only works on primary resource endpoints (for example: /articles, but not on /blogs/1/articles or /blogs?include=articles).
 
 ```c#

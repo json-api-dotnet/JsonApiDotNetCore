@@ -226,11 +226,11 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
                             }
                         }
 
-                        attributes.Add(attributeName, attributeValue);
+                        attributes[attributeName] = attributeValue;
                     }
                     else
                     {
-                        attributes.Add(attributeName, null);
+                        attributes[attributeName] = null;
                         reader.Skip();
                     }
 

@@ -96,18 +96,25 @@ public class QueryLayerComposer : IQueryLayerComposer
         // @formatter:wrap_chained_method_calls restore
 
         FilterExpression? primaryFilter = GetFilter(Array.Empty<QueryExpression>(), hasManyRelationship.LeftType);
+
+        if (primaryFilter != null && inverseRelationship is HasOneAttribute)
+        {
+            // We can't lift the field chains in a primary filter, because there's no way for a custom filter expression to express
+            // the scope of its chains. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1671.
+            return null;
+        }
+
         FilterExpression? secondaryFilter = GetFilter(filtersInSecondaryScope, hasManyRelationship.RightType);
+        FilterExpression inverseFilter = GetInverseRelationshipFilter(primaryId, primaryFilter, hasManyRelationship, inverseRelationship);
 
-        FilterExpression inverseFilter = GetInverseRelationshipFilter(primaryId, hasManyRelationship, inverseRelationship);
-
-        return LogicalExpression.Compose(LogicalOperator.And, inverseFilter, primaryFilter, secondaryFilter);
+        return LogicalExpression.Compose(LogicalOperator.And, inverseFilter, secondaryFilter);
     }
 
-    private static FilterExpression GetInverseRelationshipFilter<TId>([DisallowNull] TId primaryId, HasManyAttribute relationship,
-        RelationshipAttribute inverseRelationship)
+    private static FilterExpression GetInverseRelationshipFilter<TId>([DisallowNull] TId primaryId, FilterExpression? primaryFilter,
+        HasManyAttribute relationship, RelationshipAttribute inverseRelationship)
     {
         return inverseRelationship is HasManyAttribute hasManyInverseRelationship
-            ? GetInverseHasManyRelationshipFilter(primaryId, relationship, hasManyInverseRelationship)
+            ? GetInverseHasManyRelationshipFilter(primaryId, primaryFilter, relationship, hasManyInverseRelationship)
             : GetInverseHasOneRelationshipFilter(primaryId, relationship, (HasOneAttribute)inverseRelationship);
     }
 
@@ -120,14 +127,15 @@ public class QueryLayerComposer : IQueryLayerComposer
         return new ComparisonExpression(ComparisonOperator.Equals, idChain, new LiteralConstantExpression(primaryId));
     }
 
-    private static HasExpression GetInverseHasManyRelationshipFilter<TId>([DisallowNull] TId primaryId, HasManyAttribute relationship,
-        HasManyAttribute inverseRelationship)
+    private static HasExpression GetInverseHasManyRelationshipFilter<TId>([DisallowNull] TId primaryId, FilterExpression? primaryFilter,
+        HasManyAttribute relationship, HasManyAttribute inverseRelationship)
     {
         AttrAttribute idAttribute = GetIdAttribute(relationship.LeftType);
         var idChain = new ResourceFieldChainExpression(ImmutableArray.Create<ResourceFieldAttribute>(idAttribute));
         var idComparison = new ComparisonExpression(ComparisonOperator.Equals, idChain, new LiteralConstantExpression(primaryId));
 
-        return new HasExpression(new ResourceFieldChainExpression(inverseRelationship), idComparison);
+        FilterExpression filter = LogicalExpression.Compose(LogicalOperator.And, idComparison, primaryFilter)!;
+        return new HasExpression(new ResourceFieldChainExpression(inverseRelationship), filter);
     }
 
     /// <inheritdoc />
