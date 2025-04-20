@@ -17,6 +17,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     {
         _testContext = testContext;
 
+        testContext.UseController<ConstellationsController>();
         testContext.UseController<StarsController>();
         testContext.UseController<PlanetsController>();
         testContext.UseController<MoonsController>();
@@ -405,6 +406,198 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
             (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
             (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter)
+        }, options => options.WithStrictOrdering());
+    }
+
+    [Fact]
+    public async Task No_total_when_resource_definition_has_filter_on_inverse_ManyToOne_at_secondary_endpoint()
+    {
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.HideVeryLargeStars();
+
+        Star star = _fakers.Star.GenerateOne();
+        star.Planets = _fakers.Planet.GenerateSet(1);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Stars.Add(star);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/stars/{star.StringId}/planets";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(star.Planets.ElementAt(0).StringId);
+
+        responseDocument.Meta.Should().BeNull();
+
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+        {
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
+            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyPagination),
+            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
+            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySort),
+            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyIncludes),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
+            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Planet), ResourceDefinitionExtensibilityPoints.GetMeta)
+        }, options => options.WithStrictOrdering());
+    }
+
+    [Fact]
+    public async Task Has_total_when_resource_definition_has_filter_on_inverse_ManyToMany_at_secondary_endpoint()
+    {
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.HideConstellationsVisibleDuringWinter();
+
+        Constellation constellation = _fakers.Constellation.GenerateOne();
+        constellation.VisibleDuring = Season.Winter;
+        constellation.Stars = _fakers.Star.GenerateSet(1);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Constellations.Add(constellation);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/constellations/{constellation.StringId}/stars";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'constellations' with ID '{constellation.StringId}' does not exist.");
+
+        responseDocument.Meta.Should().ContainTotal(0);
+
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+        {
+            (typeof(Constellation), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyPagination),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySort),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyIncludes),
+            (typeof(Constellation), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Constellation), ResourceDefinitionExtensibilityPoints.OnApplyFilter)
+        }, options => options.WithStrictOrdering());
+    }
+
+    [Fact]
+    public async Task No_total_when_resource_definition_has_filter_on_inverse_ManyToOne_at_relationship_endpoint()
+    {
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.HideVeryLargeStars();
+
+        Star star = _fakers.Star.GenerateOne();
+        star.Planets = _fakers.Planet.GenerateSet(1);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Stars.Add(star);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/stars/{star.StringId}/relationships/planets";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(star.Planets.ElementAt(0).StringId);
+
+        responseDocument.Meta.Should().BeNull();
+
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+        {
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
+            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyPagination),
+            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
+            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySort),
+            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyIncludes),
+            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter)
+        }, options => options.WithStrictOrdering());
+    }
+
+    [Fact]
+    public async Task Has_total_when_resource_definition_has_filter_on_inverse_ManyToMany_at_relationship_endpoint()
+    {
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
+        settingsProvider.HideConstellationsVisibleDuringWinter();
+
+        Constellation constellation = _fakers.Constellation.GenerateOne();
+        constellation.VisibleDuring = Season.Winter;
+        constellation.Stars = _fakers.Star.GenerateSet(1);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Constellations.Add(constellation);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/constellations/{constellation.StringId}/relationships/stars";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'constellations' with ID '{constellation.StringId}' does not exist.");
+
+        responseDocument.Meta.Should().ContainTotal(0);
+
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+        {
+            (typeof(Constellation), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyPagination),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyFilter),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySort),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyIncludes),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Constellation), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Constellation), ResourceDefinitionExtensibilityPoints.OnApplyFilter)
         }, options => options.WithStrictOrdering());
     }
 
