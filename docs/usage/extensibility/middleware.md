@@ -3,9 +3,9 @@
 The default middleware validates incoming `Content-Type` and `Accept` HTTP headers.
 Based on routing configuration, it fills `IJsonApiRequest`, an injectable object that contains JSON:API-related information about the request being processed.
 
-It is possible to replace the built-in middleware components by configuring the IoC container and by configuring `MvcOptions`. 
+It is possible to replace the built-in middleware components by configuring the IoC container and by configuring `MvcOptions`.
 
-## Configuring the IoC container 
+## Configuring the IoC container
 
 The following example replaces the internal exception filter with a custom implementation.
 

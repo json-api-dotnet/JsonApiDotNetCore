@@ -261,8 +261,8 @@ public class TodoItem : Identifiable<int>
 
 _since v5.1_
 
-Default JSON:API relationship capabilities are specified in 
-@JsonApiDotNetCore.Configuration.JsonApiOptions#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultHasOneCapabilities and 
+Default JSON:API relationship capabilities are specified in
+@JsonApiDotNetCore.Configuration.JsonApiOptions#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultHasOneCapabilities and
 @JsonApiDotNetCore.Configuration.JsonApiOptions#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultHasManyCapabilities:
 
 ```c#

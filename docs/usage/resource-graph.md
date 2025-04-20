@@ -14,7 +14,7 @@ There are three ways the resource graph can be created:
 2. Specifying an entire DbContext
 3. Manually specifying each resource
 
-It is also possible to combine the three of them at once. Be aware that some configuration might overlap, 
+It is also possible to combine the three of them at once. Be aware that some configuration might overlap,
 for example one could manually add a resource to the graph which is also auto-discovered. In such a scenario, the configuration
 is prioritized by the list above in descending order.
 
