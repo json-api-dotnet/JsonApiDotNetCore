@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net8.0</TargetFrameworks>
     <IsPackable>true</IsPackable>
@@ -9,7 +9,7 @@
   <Import Project="..\..\package-versions.props" />
 
   <PropertyGroup>
-    <VersionPrefix>$(JsonApiDotNetCoreVersionPrefix)</VersionPrefix>
+    <Version Condition="'$(OpenApiPreviewNumber)' != '' AND '$(VersionSuffix)' == ''">$(VersionPrefix)-preview.$(OpenApiPreviewNumber)</Version>
     <PackageTags>jsonapidotnetcore;jsonapi;json:api;dotnet;asp.net;rest;web-api;openapi;swagger;client;nswag</PackageTags>
     <Description>Provides OpenAPI support for JSON:API generated clients using NSwag.</Description>
     <Authors>json-api-dotnet</Authors>
