@@ -15,7 +15,7 @@ public class OperationProcessorAccessor : IOperationProcessorAccessor
 
     public OperationProcessorAccessor(IServiceProvider serviceProvider)
     {
-        ArgumentGuard.NotNull(serviceProvider);
+        ArgumentNullException.ThrowIfNull(serviceProvider);
 
         _serviceProvider = serviceProvider;
     }
@@ -23,7 +23,7 @@ public class OperationProcessorAccessor : IOperationProcessorAccessor
     /// <inheritdoc />
     public Task<OperationContainer?> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(operation);
+        ArgumentNullException.ThrowIfNull(operation);
 
         IOperationProcessor processor = ResolveProcessor(operation);
         return processor.ProcessAsync(operation, cancellationToken);
@@ -31,6 +31,8 @@ public class OperationProcessorAccessor : IOperationProcessorAccessor
 
     protected virtual IOperationProcessor ResolveProcessor(OperationContainer operation)
     {
+        ArgumentNullException.ThrowIfNull(operation);
+
         Type processorInterface = GetProcessorInterface(operation.Request.WriteOperation!.Value);
         ResourceType resourceType = operation.Request.PrimaryResourceType!;
 

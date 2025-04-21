@@ -1,4 +1,6 @@
+using System.Data;
 using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 using Dapper;
 using DapperExample.AtomicOperations;
 using DapperExample.TranslationToSql;
@@ -89,7 +91,7 @@ namespace DapperExample.Repositories;
 /// </item>
 /// </list>
 /// </remarks>
-public sealed class DapperRepository<TResource, TId> : IResourceRepository<TResource, TId>, IRepositorySupportsTransaction
+public sealed partial class DapperRepository<TResource, TId> : IResourceRepository<TResource, TId>, IRepositorySupportsTransaction
     where TResource : class, IIdentifiable<TId>
 {
     private readonly ITargetedFields _targetedFields;
@@ -101,7 +103,6 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
     private readonly SqlCaptureStore _captureStore;
     private readonly ILoggerFactory _loggerFactory;
     private readonly ILogger<DapperRepository<TResource, TId>> _logger;
-    private readonly CollectionConverter _collectionConverter = new();
     private readonly ParameterFormatter _parameterFormatter = new();
     private readonly DapperFacade _dapperFacade;
 
@@ -113,14 +114,14 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
         IResourceDefinitionAccessor resourceDefinitionAccessor, AmbientTransactionFactory transactionFactory, IDataModelService dataModelService,
         SqlCaptureStore captureStore, ILoggerFactory loggerFactory)
     {
-        ArgumentGuard.NotNull(targetedFields);
-        ArgumentGuard.NotNull(resourceGraph);
-        ArgumentGuard.NotNull(resourceFactory);
-        ArgumentGuard.NotNull(resourceDefinitionAccessor);
-        ArgumentGuard.NotNull(transactionFactory);
-        ArgumentGuard.NotNull(dataModelService);
-        ArgumentGuard.NotNull(captureStore);
-        ArgumentGuard.NotNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(targetedFields);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(resourceFactory);
+        ArgumentNullException.ThrowIfNull(resourceDefinitionAccessor);
+        ArgumentNullException.ThrowIfNull(transactionFactory);
+        ArgumentNullException.ThrowIfNull(dataModelService);
+        ArgumentNullException.ThrowIfNull(captureStore);
+        ArgumentNullException.ThrowIfNull(loggerFactory);
 
         _targetedFields = targetedFields;
         _resourceGraph = resourceGraph;
@@ -137,7 +138,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
     /// <inheritdoc />
     public async Task<IReadOnlyCollection<TResource>> GetAsync(QueryLayer queryLayer, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(queryLayer);
+        ArgumentNullException.ThrowIfNull(queryLayer);
 
         var mapper = new ResultSetMapper<TResource, TId>(queryLayer.Include);
 
@@ -177,9 +178,9 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
     }
 
     /// <inheritdoc />
-    public Task<TResource> GetForCreateAsync(Type resourceClrType, TId id, CancellationToken cancellationToken)
+    public Task<TResource> GetForCreateAsync(Type resourceClrType, [DisallowNull] TId id, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(resourceClrType);
+        ArgumentNullException.ThrowIfNull(resourceClrType);
 
         var resource = (TResource)_resourceFactory.CreateInstance(resourceClrType);
         resource.Id = id;
@@ -190,8 +191,8 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
     /// <inheritdoc />
     public async Task CreateAsync(TResource resourceFromRequest, TResource resourceForDatabase, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(resourceFromRequest);
-        ArgumentGuard.NotNull(resourceForDatabase);
+        ArgumentNullException.ThrowIfNull(resourceFromRequest);
+        ArgumentNullException.ThrowIfNull(resourceForDatabase);
 
         var changeDetector = new ResourceChangeDetector(ResourceType, _dataModelService);
 
@@ -215,7 +216,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
 
                 if (rowsAffected > 1)
                 {
-                    throw new DataStoreUpdateException(new Exception("Multiple rows found."));
+                    throw new DataStoreUpdateException(new DataException("Multiple rows found."));
                 }
             }
 
@@ -232,7 +233,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
 
                 if (rowsAffected == 0)
                 {
-                    throw new DataStoreUpdateException(new Exception("Row does not exist."));
+                    throw new DataStoreUpdateException(new DataException("Row does not exist."));
                 }
             }
         }, cancellationToken);
@@ -268,12 +269,12 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
 
         if (relationship is HasManyAttribute hasManyRelationship)
         {
-            HashSet<IIdentifiable> rightResourceIds = _collectionConverter.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
+            HashSet<IIdentifiable> rightResourceIds = CollectionConverter.Instance.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
 
             await _resourceDefinitionAccessor.OnSetToManyRelationshipAsync(leftResource, hasManyRelationship, rightResourceIds, writeOperation,
                 cancellationToken);
 
-            return _collectionConverter.CopyToTypedCollection(rightResourceIds, relationship.Property.PropertyType);
+            return CollectionConverter.Instance.CopyToTypedCollection(rightResourceIds, relationship.Property.PropertyType);
         }
 
         return rightValue;
@@ -282,7 +283,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
     /// <inheritdoc />
     public async Task<TResource?> GetForUpdateAsync(QueryLayer queryLayer, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(queryLayer);
+        ArgumentNullException.ThrowIfNull(queryLayer);
 
         IReadOnlyCollection<TResource> resources = await GetAsync(queryLayer, cancellationToken);
         return resources.FirstOrDefault();
@@ -291,8 +292,8 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
     /// <inheritdoc />
     public async Task UpdateAsync(TResource resourceFromRequest, TResource resourceFromDatabase, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(resourceFromRequest);
-        ArgumentGuard.NotNull(resourceFromDatabase);
+        ArgumentNullException.ThrowIfNull(resourceFromRequest);
+        ArgumentNullException.ThrowIfNull(resourceFromDatabase);
 
         var changeDetector = new ResourceChangeDetector(ResourceType, _dataModelService);
         changeDetector.CaptureCurrentValues(resourceFromDatabase);
@@ -312,7 +313,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
         IReadOnlyCollection<CommandDefinition> postSqlCommands =
             _dapperFacade.BuildSqlCommandsForChangedRelationshipsHavingForeignKeyAtRightSide(changeDetector, resourceFromDatabase.Id, cancellationToken);
 
-        if (preSqlCommands.Any() || updateCommand != null || postSqlCommands.Any())
+        if (preSqlCommands.Count > 0 || updateCommand != null || postSqlCommands.Count > 0)
         {
             await ExecuteInTransactionAsync(async transaction =>
             {
@@ -323,7 +324,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
 
                     if (rowsAffected > 1)
                     {
-                        throw new DataStoreUpdateException(new Exception("Multiple rows found."));
+                        throw new DataStoreUpdateException(new DataException("Multiple rows found."));
                     }
                 }
 
@@ -334,7 +335,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
 
                     if (rowsAffected != 1)
                     {
-                        throw new DataStoreUpdateException(new Exception("Row does not exist or multiple rows found."));
+                        throw new DataStoreUpdateException(new DataException("Row does not exist or multiple rows found."));
                     }
                 }
 
@@ -345,7 +346,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
 
                     if (rowsAffected == 0)
                     {
-                        throw new DataStoreUpdateException(new Exception("Row does not exist."));
+                        throw new DataStoreUpdateException(new DataException("Row does not exist."));
                     }
                 }
             }, cancellationToken);
@@ -355,7 +356,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
     }
 
     /// <inheritdoc />
-    public async Task DeleteAsync(TResource? resourceFromDatabase, TId id, CancellationToken cancellationToken)
+    public async Task DeleteAsync(TResource? resourceFromDatabase, [DisallowNull] TId id, CancellationToken cancellationToken)
     {
         TResource placeholderResource = resourceFromDatabase ?? _resourceFactory.CreateInstance<TResource>();
         placeholderResource.Id = id;
@@ -363,7 +364,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
         await _resourceDefinitionAccessor.OnWritingAsync(placeholderResource, WriteOperationKind.DeleteResource, cancellationToken);
 
         var deleteBuilder = new DeleteResourceStatementBuilder(_dataModelService);
-        DeleteNode deleteNode = deleteBuilder.Build(ResourceType, placeholderResource.Id!);
+        DeleteNode deleteNode = deleteBuilder.Build(ResourceType, placeholderResource.Id);
         CommandDefinition sqlCommand = _dapperFacade.GetSqlCommand(deleteNode, cancellationToken);
 
         await ExecuteInTransactionAsync(async transaction =>
@@ -373,7 +374,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
 
             if (rowsAffected != 1)
             {
-                throw new DataStoreUpdateException(new Exception("Row does not exist or multiple rows found."));
+                throw new DataStoreUpdateException(new DataException("Row does not exist or multiple rows found."));
             }
         }, cancellationToken);
 
@@ -383,7 +384,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
     /// <inheritdoc />
     public async Task SetRelationshipAsync(TResource leftResource, object? rightValue, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(leftResource);
+        ArgumentNullException.ThrowIfNull(leftResource);
 
         RelationshipAttribute relationship = _targetedFields.Relationships.Single();
 
@@ -408,7 +409,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
         IReadOnlyCollection<CommandDefinition> postSqlCommands =
             _dapperFacade.BuildSqlCommandsForChangedRelationshipsHavingForeignKeyAtRightSide(changeDetector, leftResource.Id, cancellationToken);
 
-        if (preSqlCommands.Any() || updateCommand != null || postSqlCommands.Any())
+        if (preSqlCommands.Count > 0 || updateCommand != null || postSqlCommands.Count > 0)
         {
             await ExecuteInTransactionAsync(async transaction =>
             {
@@ -419,7 +420,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
 
                     if (rowsAffected > 1)
                     {
-                        throw new DataStoreUpdateException(new Exception("Multiple rows found."));
+                        throw new DataStoreUpdateException(new DataException("Multiple rows found."));
                     }
                 }
 
@@ -430,7 +431,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
 
                     if (rowsAffected != 1)
                     {
-                        throw new DataStoreUpdateException(new Exception("Row does not exist or multiple rows found."));
+                        throw new DataStoreUpdateException(new DataException("Row does not exist or multiple rows found."));
                     }
                 }
 
@@ -441,7 +442,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
 
                     if (rowsAffected == 0)
                     {
-                        throw new DataStoreUpdateException(new Exception("Row does not exist."));
+                        throw new DataStoreUpdateException(new DataException("Row does not exist."));
                     }
                 }
             }, cancellationToken);
@@ -451,10 +452,10 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
     }
 
     /// <inheritdoc />
-    public async Task AddToToManyRelationshipAsync(TResource? leftResource, TId leftId, ISet<IIdentifiable> rightResourceIds,
+    public async Task AddToToManyRelationshipAsync(TResource? leftResource, [DisallowNull] TId leftId, ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(rightResourceIds);
+        ArgumentNullException.ThrowIfNull(rightResourceIds);
 
         var relationship = (HasManyAttribute)_targetedFields.Relationships.Single();
 
@@ -462,11 +463,13 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
         leftPlaceholderResource.Id = leftId;
 
         await _resourceDefinitionAccessor.OnAddToRelationshipAsync(leftPlaceholderResource, relationship, rightResourceIds, cancellationToken);
-        relationship.SetValue(leftPlaceholderResource, _collectionConverter.CopyToTypedCollection(rightResourceIds, relationship.Property.PropertyType));
+
+        relationship.SetValue(leftPlaceholderResource,
+            CollectionConverter.Instance.CopyToTypedCollection(rightResourceIds, relationship.Property.PropertyType));
 
         await _resourceDefinitionAccessor.OnWritingAsync(leftPlaceholderResource, WriteOperationKind.AddToRelationship, cancellationToken);
 
-        if (rightResourceIds.Any())
+        if (rightResourceIds.Count > 0)
         {
             RelationshipForeignKey foreignKey = _dataModelService.GetForeignKey(relationship);
             object[] rightResourceIdValues = rightResourceIds.Select(resource => resource.GetTypedId()).ToArray();
@@ -481,7 +484,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
 
                 if (rowsAffected != rightResourceIdValues.Length)
                 {
-                    throw new DataStoreUpdateException(new Exception("Row does not exist or multiple rows found."));
+                    throw new DataStoreUpdateException(new DataException("Row does not exist or multiple rows found."));
                 }
             }, cancellationToken);
 
@@ -492,17 +495,17 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
     /// <inheritdoc />
     public async Task RemoveFromToManyRelationshipAsync(TResource leftResource, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(leftResource);
-        ArgumentGuard.NotNull(rightResourceIds);
+        ArgumentNullException.ThrowIfNull(leftResource);
+        ArgumentNullException.ThrowIfNull(rightResourceIds);
 
         var relationship = (HasManyAttribute)_targetedFields.Relationships.Single();
 
         await _resourceDefinitionAccessor.OnRemoveFromRelationshipAsync(leftResource, relationship, rightResourceIds, cancellationToken);
-        relationship.SetValue(leftResource, _collectionConverter.CopyToTypedCollection(rightResourceIds, relationship.Property.PropertyType));
+        relationship.SetValue(leftResource, CollectionConverter.Instance.CopyToTypedCollection(rightResourceIds, relationship.Property.PropertyType));
 
         await _resourceDefinitionAccessor.OnWritingAsync(leftResource, WriteOperationKind.RemoveFromRelationship, cancellationToken);
 
-        if (rightResourceIds.Any())
+        if (rightResourceIds.Count > 0)
         {
             RelationshipForeignKey foreignKey = _dataModelService.GetForeignKey(relationship);
             object[] rightResourceIdValues = rightResourceIds.Select(resource => resource.GetTypedId()).ToArray();
@@ -515,7 +518,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
 
                 if (rowsAffected != rightResourceIdValues.Length)
                 {
-                    throw new DataStoreUpdateException(new Exception("Row does not exist or multiple rows found."));
+                    throw new DataStoreUpdateException(new DataException("Row does not exist or multiple rows found."));
                 }
             }, cancellationToken);
 
@@ -529,19 +532,18 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
 
         _captureStore.Add(command.CommandText, parameters);
 
-        string message = GetLogText(command.CommandText, parameters);
-        _logger.LogInformation(message);
-    }
-
-    private string GetLogText(string statement, IDictionary<string, object?>? parameters)
-    {
-        if (parameters?.Any() == true)
+        if (_logger.IsEnabled(LogLevel.Information))
         {
-            string parametersText = string.Join(", ", parameters.Select(parameter => _parameterFormatter.Format(parameter.Key, parameter.Value)));
-            return $"Executing SQL with parameters: {parametersText}{Environment.NewLine}{statement}";
+            if (parameters?.Count > 0)
+            {
+                string parametersText = string.Join(", ", parameters.Select(parameter => _parameterFormatter.Format(parameter.Key, parameter.Value)));
+                LogExecuteWithParameters(Environment.NewLine, command.CommandText, parametersText);
+            }
+            else
+            {
+                LogExecute(Environment.NewLine, command.CommandText);
+            }
         }
-
-        return $"Executing SQL: {Environment.NewLine}{statement}";
     }
 
     private async Task<TResult> ExecuteQueryAsync<TResult>(Func<DbConnection, Task<TResult>> asyncAction, CancellationToken cancellationToken)
@@ -579,4 +581,10 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
             throw new DataStoreUpdateException(exception);
         }
     }
+
+    [LoggerMessage(Level = LogLevel.Information, SkipEnabledCheck = true, Message = "Executing SQL: {LineBreak}{Query}")]
+    private partial void LogExecute(string lineBreak, string query);
+
+    [LoggerMessage(Level = LogLevel.Information, SkipEnabledCheck = true, Message = "Executing SQL with parameters: {Parameters}{LineBreak}{Query}")]
+    private partial void LogExecuteWithParameters(string lineBreak, string query, string parameters);
 }

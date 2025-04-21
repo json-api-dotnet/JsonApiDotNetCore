@@ -2,9 +2,7 @@ using System.ComponentModel.Design;
 using System.Linq.Expressions;
 using FluentAssertions;
 using JetBrains.Annotations;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Resources;
-using TestBuildingBlocks;
 using Xunit;
 
 namespace UnitTests.Models;
@@ -15,7 +13,8 @@ public sealed class ResourceConstructionExpressionTests
     public void When_resource_has_default_constructor_it_must_succeed()
     {
         // Arrange
-        var factory = new ResourceFactory(new ServiceContainer());
+        using var serviceProvider = new ServiceContainer();
+        var factory = new ResourceFactory(serviceProvider);
 
         // Act
         NewExpression newExpression = factory.CreateNewExpression(typeof(ResourceWithoutConstructor));
@@ -24,14 +23,15 @@ public sealed class ResourceConstructionExpressionTests
         Func<ResourceWithoutConstructor> createFunction = Expression.Lambda<Func<ResourceWithoutConstructor>>(newExpression).Compile();
         ResourceWithoutConstructor resource = createFunction();
 
-        resource.ShouldNotBeNull();
+        resource.Should().NotBeNull();
     }
 
     [Fact]
     public void When_resource_has_constructor_with_string_parameter_it_must_fail()
     {
         // Arrange
-        var factory = new ResourceFactory(new ServiceContainer());
+        using var serviceProvider = new ServiceContainer();
+        var factory = new ResourceFactory(serviceProvider);
 
         // Act
         Action action = () => factory.CreateNewExpression(typeof(ResourceWithStringConstructor));
@@ -50,7 +50,7 @@ public sealed class ResourceConstructionExpressionTests
 
         public ResourceWithStringConstructor(string text)
         {
-            ArgumentGuard.NotNullNorEmpty(text);
+            ArgumentException.ThrowIfNullOrEmpty(text);
 
             Text = text;
         }

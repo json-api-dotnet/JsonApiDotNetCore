@@ -2,7 +2,6 @@
 
 using FluentAssertions;
 using JsonApiDotNetCore.Middleware;
-using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance;
 
@@ -10,8 +9,8 @@ public sealed class ResourceTypeCaptureStore<TResource, TId>
 {
     internal Type? LeftDeclaredType { get; set; }
     internal string? LeftReflectedTypeName { get; set; }
-    internal ISet<string> RightTypeNames { get; } = new HashSet<string>();
-    internal IJsonApiRequest? Request { get; set; }
+    internal HashSet<string> RightTypeNames { get; } = [];
+    internal JsonApiRequest? Request { get; set; }
 
     internal void Reset()
     {
@@ -23,18 +22,18 @@ public sealed class ResourceTypeCaptureStore<TResource, TId>
 
     internal void AssertLeftType<TLeft>()
     {
-        LeftDeclaredType.Should().Be(typeof(TLeft));
+        LeftDeclaredType.Should().Be<TLeft>();
         LeftReflectedTypeName.Should().Be(typeof(TLeft).Name);
 
-        Request.ShouldNotBeNull();
-        Request.PrimaryResourceType.ShouldNotBeNull();
-        Request.PrimaryResourceType.ClrType.Should().Be(typeof(TLeft));
-        Request.Relationship?.LeftType.ClrType.Should().Be(typeof(TLeft));
+        Request.Should().NotBeNull();
+        Request.PrimaryResourceType.Should().NotBeNull();
+        Request.PrimaryResourceType.ClrType.Should().Be<TLeft>();
+        Request.Relationship?.LeftType.ClrType.Should().Be<TLeft>();
     }
 
     internal void AssertRightTypes(params Type[] types)
     {
-        RightTypeNames.ShouldHaveCount(types.Length);
+        RightTypeNames.Should().HaveCount(types.Length);
 
         foreach (Type type in types)
         {

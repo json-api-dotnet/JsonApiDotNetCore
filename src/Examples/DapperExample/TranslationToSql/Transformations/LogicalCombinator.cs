@@ -14,7 +14,7 @@ internal sealed class LogicalCombinator : SqlTreeNodeVisitor<object?, SqlTreeNod
 
     public override SqlTreeNode VisitLogical(LogicalNode node, object? argument)
     {
-        var newTerms = new List<FilterNode>();
+        List<FilterNode> newTerms = [];
 
         foreach (FilterNode newTerm in node.Terms.Select(TypedVisit))
         {
@@ -28,7 +28,7 @@ internal sealed class LogicalCombinator : SqlTreeNodeVisitor<object?, SqlTreeNod
             }
         }
 
-        return new LogicalNode(node.Operator, newTerms);
+        return new LogicalNode(node.Operator, newTerms.AsReadOnly());
     }
 
     public override SqlTreeNode DefaultVisit(SqlTreeNode node, object? argument)

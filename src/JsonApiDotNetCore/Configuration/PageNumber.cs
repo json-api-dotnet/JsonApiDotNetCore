@@ -11,17 +11,14 @@ public sealed class PageNumber : IEquatable<PageNumber>
 
     public PageNumber(int oneBasedValue)
     {
-        if (oneBasedValue < 1)
-        {
-            throw new ArgumentOutOfRangeException(nameof(oneBasedValue));
-        }
+        ArgumentOutOfRangeException.ThrowIfLessThan(oneBasedValue, 1);
 
         OneBasedValue = oneBasedValue;
     }
 
     public bool Equals(PageNumber? other)
     {
-        if (ReferenceEquals(null, other))
+        if (other is null)
         {
             return false;
         }

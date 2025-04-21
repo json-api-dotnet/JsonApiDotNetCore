@@ -30,13 +30,13 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
     protected BaseJsonApiOperationsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
         IOperationsProcessor processor, IJsonApiRequest request, ITargetedFields targetedFields, IAtomicOperationFilter operationFilter)
     {
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(resourceGraph);
-        ArgumentGuard.NotNull(loggerFactory);
-        ArgumentGuard.NotNull(processor);
-        ArgumentGuard.NotNull(request);
-        ArgumentGuard.NotNull(targetedFields);
-        ArgumentGuard.NotNull(operationFilter);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(processor);
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(targetedFields);
+        ArgumentNullException.ThrowIfNull(operationFilter);
 
         _options = options;
         _resourceGraph = resourceGraph;
@@ -114,7 +114,7 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
             operations
         });
 
-        ArgumentGuard.NotNull(operations);
+        ArgumentNullException.ThrowIfNull(operations);
 
         ValidateEnabledOperations(operations);
 
@@ -129,16 +129,18 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
 
     protected virtual void ValidateEnabledOperations(IList<OperationContainer> operations)
     {
+        ArgumentNullException.ThrowIfNull(operations);
+
         List<ErrorObject> errors = [];
 
         for (int operationIndex = 0; operationIndex < operations.Count; operationIndex++)
         {
             IJsonApiRequest operationRequest = operations[operationIndex].Request;
-            WriteOperationKind operationKind = operationRequest.WriteOperation!.Value;
+            WriteOperationKind writeOperation = operationRequest.WriteOperation!.Value;
 
-            if (operationRequest.Relationship != null && !_operationFilter.IsEnabled(operationRequest.Relationship.LeftType, operationKind))
+            if (operationRequest.Relationship != null && !_operationFilter.IsEnabled(operationRequest.Relationship.LeftType, writeOperation))
             {
-                string operationCode = GetOperationCodeText(operationKind);
+                string operationCode = GetOperationCodeText(writeOperation);
 
                 errors.Add(new ErrorObject(HttpStatusCode.Forbidden)
                 {
@@ -151,9 +153,9 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
                     }
                 });
             }
-            else if (operationRequest.PrimaryResourceType != null && !_operationFilter.IsEnabled(operationRequest.PrimaryResourceType, operationKind))
+            else if (operationRequest.PrimaryResourceType != null && !_operationFilter.IsEnabled(operationRequest.PrimaryResourceType, writeOperation))
             {
-                string operationCode = GetOperationCodeText(operationKind);
+                string operationCode = GetOperationCodeText(writeOperation);
 
                 errors.Add(new ErrorObject(HttpStatusCode.Forbidden)
                 {
@@ -173,9 +175,9 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
         }
     }
 
-    private static string GetOperationCodeText(WriteOperationKind operationKind)
+    private static string GetOperationCodeText(WriteOperationKind writeOperation)
     {
-        AtomicOperationCode operationCode = operationKind switch
+        AtomicOperationCode operationCode = writeOperation switch
         {
             WriteOperationKind.CreateResource => AtomicOperationCode.Add,
             WriteOperationKind.UpdateResource => AtomicOperationCode.Update,
@@ -183,7 +185,7 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
             WriteOperationKind.AddToRelationship => AtomicOperationCode.Add,
             WriteOperationKind.SetRelationship => AtomicOperationCode.Update,
             WriteOperationKind.RemoveFromRelationship => AtomicOperationCode.Remove,
-            _ => throw new NotSupportedException($"Unknown operation kind '{operationKind}'.")
+            _ => throw new NotSupportedException($"Unknown operation kind '{writeOperation}'.")
         };
 
         return operationCode.ToString().ToLowerInvariant();
@@ -191,13 +193,15 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
 
     protected virtual void ValidateModelState(IList<OperationContainer> operations)
     {
+        ArgumentNullException.ThrowIfNull(operations);
+
         // We must validate the resource inside each operation manually, because they are typed as IIdentifiable.
         // Instead of validating IIdentifiable we need to validate the resource runtime-type.
 
         using IDisposable _ = new RevertRequestStateOnDispose(_request, _targetedFields);
 
         int operationIndex = 0;
-        var requestModelState = new List<(string key, ModelStateEntry? entry)>();
+        List<(string key, ModelStateEntry? entry)> requestModelState = [];
         int maxErrorsRemaining = ModelState.MaxAllowedErrors;
 
         foreach (OperationContainer operation in operations)
@@ -212,7 +216,7 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
             operationIndex++;
         }
 
-        if (requestModelState.Any())
+        if (requestModelState.Count > 0)
         {
             Dictionary<string, ModelStateEntry?> modelStateDictionary = requestModelState.ToDictionary(tuple => tuple.key, tuple => tuple.entry);
 

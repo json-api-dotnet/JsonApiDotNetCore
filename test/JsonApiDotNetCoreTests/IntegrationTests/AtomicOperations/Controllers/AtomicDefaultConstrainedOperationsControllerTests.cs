@@ -23,7 +23,7 @@ public sealed class AtomicDefaultConstrainedOperationsControllerTests
     public async Task Cannot_delete_resource_for_inaccessible_operation()
     {
         // Arrange
-        TextLanguage existingLanguage = _fakers.TextLanguage.Generate();
+        TextLanguage existingLanguage = _fakers.TextLanguage.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -55,13 +55,13 @@ public sealed class AtomicDefaultConstrainedOperationsControllerTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         error.Title.Should().Be("The requested operation is not accessible.");
         error.Detail.Should().Be("The 'remove' resource operation is not accessible for resource type 'textLanguages'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]");
     }
 
@@ -69,8 +69,8 @@ public sealed class AtomicDefaultConstrainedOperationsControllerTests
     public async Task Cannot_change_ToMany_relationship_for_inaccessible_operations()
     {
         // Arrange
-        TextLanguage existingLanguage = _fakers.TextLanguage.Generate();
-        Lyric existingLyric = _fakers.Lyric.Generate();
+        TextLanguage existingLanguage = _fakers.TextLanguage.GenerateOne();
+        Lyric existingLyric = _fakers.Lyric.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -147,27 +147,27 @@ public sealed class AtomicDefaultConstrainedOperationsControllerTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(3);
+        responseDocument.Errors.Should().HaveCount(3);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         error1.Title.Should().Be("The requested operation is not accessible.");
         error1.Detail.Should().Be("The 'update' relationship operation is not accessible for relationship 'lyrics' on resource type 'textLanguages'.");
-        error1.Source.ShouldNotBeNull();
+        error1.Source.Should().NotBeNull();
         error1.Source.Pointer.Should().Be("/atomic:operations[0]");
 
         ErrorObject error2 = responseDocument.Errors[1];
         error2.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         error2.Title.Should().Be("The requested operation is not accessible.");
         error2.Detail.Should().Be("The 'add' relationship operation is not accessible for relationship 'lyrics' on resource type 'textLanguages'.");
-        error2.Source.ShouldNotBeNull();
+        error2.Source.Should().NotBeNull();
         error2.Source.Pointer.Should().Be("/atomic:operations[1]");
 
         ErrorObject error3 = responseDocument.Errors[2];
         error3.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         error3.Title.Should().Be("The requested operation is not accessible.");
         error3.Detail.Should().Be("The 'remove' relationship operation is not accessible for relationship 'lyrics' on resource type 'textLanguages'.");
-        error3.Source.ShouldNotBeNull();
+        error3.Source.Should().NotBeNull();
         error3.Source.Pointer.Should().Be("/atomic:operations[2]");
     }
 }

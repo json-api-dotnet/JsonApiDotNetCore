@@ -6,7 +6,8 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.StringLength;
 
-internal sealed class LengthFilterParser(IResourceFactory resourceFactory) : FilterParser(resourceFactory)
+internal sealed class LengthFilterParser(IResourceFactory resourceFactory)
+    : FilterParser(resourceFactory)
 {
     protected override bool IsFunction(string name)
     {

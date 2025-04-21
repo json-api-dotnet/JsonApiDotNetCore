@@ -28,9 +28,9 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<DapperTest
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person existingPerson = _fakers.Person.Generate();
-        existingPerson.AssignedTodoItems = _fakers.TodoItem.Generate(3).ToHashSet();
-        existingPerson.AssignedTodoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.Generate());
+        Person existingPerson = _fakers.Person.GenerateOne();
+        existingPerson.AssignedTodoItems = _fakers.TodoItem.GenerateSet(3);
+        existingPerson.AssignedTodoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.GenerateOne());
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -70,7 +70,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<DapperTest
         {
             Person personInDatabase = await dbContext.People.Include(person => person.AssignedTodoItems).FirstWithIdAsync(existingPerson.Id);
 
-            personInDatabase.AssignedTodoItems.ShouldHaveCount(1);
+            personInDatabase.AssignedTodoItems.Should().HaveCount(1);
             personInDatabase.AssignedTodoItems.ElementAt(0).Id.Should().Be(existingPerson.AssignedTodoItems.ElementAt(1).Id);
 
             List<TodoItem> todoItemInDatabases = await dbContext.TodoItems.Where(todoItem => todoItem.Assignee == null).ToListAsync();
@@ -78,7 +78,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<DapperTest
             todoItemInDatabases.Should().HaveCount(2);
         });
 
-        store.SqlCommands.ShouldHaveCount(3);
+        store.SqlCommands.Should().HaveCount(3);
 
         store.SqlCommands[0].With(command =>
         {
@@ -93,7 +93,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<DapperTest
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(3);
+            command.Parameters.Should().HaveCount(3);
             command.Parameters.Should().Contain("@p1", existingPerson.Id);
             command.Parameters.Should().Contain("@p2", existingPerson.AssignedTodoItems.ElementAt(0).Id);
             command.Parameters.Should().Contain("@p3", existingPerson.AssignedTodoItems.ElementAt(2).Id);
@@ -107,7 +107,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<DapperTest
                 WHERE t1."Id" IN (@p1, @p2)
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", existingPerson.AssignedTodoItems.ElementAt(0).Id);
             command.Parameters.Should().Contain("@p2", existingPerson.AssignedTodoItems.ElementAt(2).Id);
         });
@@ -120,7 +120,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<DapperTest
                 WHERE "Id" IN (@p2, @p3)
                 """));
 
-            command.Parameters.ShouldHaveCount(3);
+            command.Parameters.Should().HaveCount(3);
             command.Parameters.Should().Contain("@p1", null);
             command.Parameters.Should().Contain("@p2", existingPerson.AssignedTodoItems.ElementAt(0).Id);
             command.Parameters.Should().Contain("@p3", existingPerson.AssignedTodoItems.ElementAt(2).Id);
@@ -134,8 +134,8 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<DapperTest
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person existingPerson = _fakers.Person.Generate();
-        existingPerson.OwnedTodoItems = _fakers.TodoItem.Generate(3).ToHashSet();
+        Person existingPerson = _fakers.Person.GenerateOne();
+        existingPerson.OwnedTodoItems = _fakers.TodoItem.GenerateSet(3);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -175,7 +175,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<DapperTest
         {
             Person personInDatabase = await dbContext.People.Include(person => person.OwnedTodoItems).FirstWithIdAsync(existingPerson.Id);
 
-            personInDatabase.OwnedTodoItems.ShouldHaveCount(1);
+            personInDatabase.OwnedTodoItems.Should().HaveCount(1);
             personInDatabase.OwnedTodoItems.ElementAt(0).Id.Should().Be(existingPerson.OwnedTodoItems.ElementAt(1).Id);
 
             List<TodoItem> todoItemInDatabases = await dbContext.TodoItems.ToListAsync();
@@ -183,7 +183,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<DapperTest
             todoItemInDatabases.Should().HaveCount(1);
         });
 
-        store.SqlCommands.ShouldHaveCount(3);
+        store.SqlCommands.Should().HaveCount(3);
 
         store.SqlCommands[0].With(command =>
         {
@@ -198,7 +198,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<DapperTest
                 WHERE t1."Id" = @p1
                 """));
 
-            command.Parameters.ShouldHaveCount(3);
+            command.Parameters.Should().HaveCount(3);
             command.Parameters.Should().Contain("@p1", existingPerson.Id);
             command.Parameters.Should().Contain("@p2", existingPerson.OwnedTodoItems.ElementAt(0).Id);
             command.Parameters.Should().Contain("@p3", existingPerson.OwnedTodoItems.ElementAt(2).Id);
@@ -212,7 +212,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<DapperTest
                 WHERE t1."Id" IN (@p1, @p2)
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", existingPerson.OwnedTodoItems.ElementAt(0).Id);
             command.Parameters.Should().Contain("@p2", existingPerson.OwnedTodoItems.ElementAt(2).Id);
         });
@@ -224,7 +224,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<DapperTest
                 WHERE "Id" IN (@p1, @p2)
                 """));
 
-            command.Parameters.ShouldHaveCount(2);
+            command.Parameters.Should().HaveCount(2);
             command.Parameters.Should().Contain("@p1", existingPerson.OwnedTodoItems.ElementAt(0).Id);
             command.Parameters.Should().Contain("@p2", existingPerson.OwnedTodoItems.ElementAt(2).Id);
         });

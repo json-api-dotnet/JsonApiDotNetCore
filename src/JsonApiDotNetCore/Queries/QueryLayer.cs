@@ -21,7 +21,7 @@ public sealed class QueryLayer
 
     public QueryLayer(ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         ResourceType = resourceType;
     }
@@ -42,7 +42,7 @@ public sealed class QueryLayer
 
         using (writer.Indent())
         {
-            if (Include != null && Include.Elements.Any())
+            if (Include is { Elements.Count: > 0 })
             {
                 writer.WriteLine($"{nameof(Include)}: {Include}");
             }

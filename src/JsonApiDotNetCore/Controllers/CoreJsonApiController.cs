@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +11,7 @@ public abstract class CoreJsonApiController : ControllerBase
 {
     protected IActionResult Error(ErrorObject error)
     {
-        ArgumentGuard.NotNull(error);
+        ArgumentNullException.ThrowIfNull(error);
 
         return new ObjectResult(error)
         {
@@ -20,17 +21,17 @@ public abstract class CoreJsonApiController : ControllerBase
 
     protected IActionResult Error(IEnumerable<ErrorObject> errors)
     {
-        IReadOnlyList<ErrorObject>? errorList = ToErrorList(errors);
-        ArgumentGuard.NotNullNorEmpty(errorList);
+        ReadOnlyCollection<ErrorObject>? errorCollection = ToCollection(errors);
+        ArgumentGuard.NotNullNorEmpty(errorCollection, nameof(errors));
 
-        return new ObjectResult(errorList)
+        return new ObjectResult(errorCollection)
         {
-            StatusCode = (int)ErrorObject.GetResponseStatusCode(errorList)
+            StatusCode = (int)ErrorObject.GetResponseStatusCode(errorCollection)
         };
     }
 
-    private static IReadOnlyList<ErrorObject>? ToErrorList(IEnumerable<ErrorObject>? errors)
+    private static ReadOnlyCollection<ErrorObject>? ToCollection(IEnumerable<ErrorObject>? errors)
     {
-        return errors?.ToArray();
+        return errors?.ToArray().AsReadOnly();
     }
 }

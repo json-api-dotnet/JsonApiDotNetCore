@@ -13,7 +13,7 @@ public class UpdateProcessor<TResource, TId> : IUpdateProcessor<TResource, TId>
 
     public UpdateProcessor(IUpdateService<TResource, TId> service)
     {
-        ArgumentGuard.NotNull(service);
+        ArgumentNullException.ThrowIfNull(service);
 
         _service = service;
     }
@@ -21,10 +21,10 @@ public class UpdateProcessor<TResource, TId> : IUpdateProcessor<TResource, TId>
     /// <inheritdoc />
     public virtual async Task<OperationContainer?> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(operation);
+        ArgumentNullException.ThrowIfNull(operation);
 
         var resource = (TResource)operation.Resource;
-        TResource? updated = await _service.UpdateAsync(resource.Id, resource, cancellationToken);
+        TResource? updated = await _service.UpdateAsync(resource.Id!, resource, cancellationToken);
 
         return updated == null ? null : operation.WithResource(updated);
     }

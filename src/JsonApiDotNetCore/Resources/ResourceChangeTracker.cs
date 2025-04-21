@@ -12,14 +12,14 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
     private readonly IJsonApiRequest _request;
     private readonly ITargetedFields _targetedFields;
 
-    private IDictionary<string, object?>? _initiallyStoredAttributeValues;
-    private IDictionary<string, object?>? _requestAttributeValues;
-    private IDictionary<string, object?>? _finallyStoredAttributeValues;
+    private Dictionary<string, object?>? _initiallyStoredAttributeValues;
+    private Dictionary<string, object?>? _requestAttributeValues;
+    private Dictionary<string, object?>? _finallyStoredAttributeValues;
 
     public ResourceChangeTracker(IJsonApiRequest request, ITargetedFields targetedFields)
     {
-        ArgumentGuard.NotNull(request);
-        ArgumentGuard.NotNull(targetedFields);
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(targetedFields);
 
         _request = request;
         _targetedFields = targetedFields;
@@ -28,7 +28,7 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
     /// <inheritdoc />
     public void SetInitiallyStoredAttributeValues(TResource resource)
     {
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
 
         _initiallyStoredAttributeValues = CreateAttributeDictionary(resource, _request.PrimaryResourceType!.Attributes);
     }
@@ -36,7 +36,7 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
     /// <inheritdoc />
     public void SetRequestAttributeValues(TResource resource)
     {
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
 
         _requestAttributeValues = CreateAttributeDictionary(resource, _targetedFields.Attributes);
     }
@@ -44,12 +44,12 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
     /// <inheritdoc />
     public void SetFinallyStoredAttributeValues(TResource resource)
     {
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
 
         _finallyStoredAttributeValues = CreateAttributeDictionary(resource, _request.PrimaryResourceType!.Attributes);
     }
 
-    private IDictionary<string, object?> CreateAttributeDictionary(TResource resource, IEnumerable<AttrAttribute> attributes)
+    private Dictionary<string, object?> CreateAttributeDictionary(TResource resource, IEnumerable<AttrAttribute> attributes)
     {
         var result = new Dictionary<string, object?>();
 

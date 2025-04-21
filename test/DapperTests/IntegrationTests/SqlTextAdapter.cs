@@ -5,10 +5,12 @@ namespace DapperTests.IntegrationTests;
 
 internal sealed class SqlTextAdapter(DatabaseProvider databaseProvider)
 {
+    private const RegexOptions Options = RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.NonBacktracking;
+
     private static readonly Dictionary<Regex, string> SqlServerReplacements = new()
     {
-        [new Regex("\"([^\"]+)\"", RegexOptions.Compiled)] = "[$+]",
-        [new Regex($@"(VALUES \([^)]*\)){Environment.NewLine}RETURNING \[Id\]", RegexOptions.Compiled)] = $"OUTPUT INSERTED.[Id]{Environment.NewLine}$1"
+        [new Regex("\"([^\"]+)\"", Options)] = "[$+]",
+        [new Regex($@"(VALUES \([^)]*\)){Environment.NewLine}RETURNING \[Id\]", Options)] = $"OUTPUT INSERTED.[Id]{Environment.NewLine}$1"
     };
 
     private readonly DatabaseProvider _databaseProvider = databaseProvider;

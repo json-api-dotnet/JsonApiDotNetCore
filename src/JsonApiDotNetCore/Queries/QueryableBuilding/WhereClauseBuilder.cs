@@ -13,12 +13,11 @@ namespace JsonApiDotNetCore.Queries.QueryableBuilding;
 [PublicAPI]
 public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
 {
-    private static readonly CollectionConverter CollectionConverter = new();
     private static readonly ConstantExpression NullConstant = Expression.Constant(null);
 
     public virtual Expression ApplyWhere(FilterExpression filter, QueryClauseBuilderContext context)
     {
-        ArgumentGuard.NotNull(filter);
+        ArgumentNullException.ThrowIfNull(filter);
 
         LambdaExpression lambda = GetPredicateLambda(filter, context);
 
@@ -31,7 +30,7 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
         return Expression.Lambda(body, context.LambdaScope.Parameter);
     }
 
-    private static Expression WhereExtensionMethodCall(LambdaExpression predicate, QueryClauseBuilderContext context)
+    private static MethodCallExpression WhereExtensionMethodCall(LambdaExpression predicate, QueryClauseBuilderContext context)
     {
         return Expression.Call(context.ExtensionType, "Where", [context.LambdaScope.Parameter.Type], context.Source, predicate);
     }
@@ -40,7 +39,7 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
     {
         Expression property = Visit(expression.TargetCollection, context);
 
-        Type? elementType = CollectionConverter.FindCollectionElementType(property.Type);
+        Type? elementType = CollectionConverter.Instance.FindCollectionElementType(property.Type);
 
         if (elementType == null)
         {
@@ -123,7 +122,7 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
         return ContainsExtensionMethodCall(collection, property);
     }
 
-    private static Expression ContainsExtensionMethodCall(Expression collection, Expression value)
+    private static MethodCallExpression ContainsExtensionMethodCall(Expression collection, Expression value)
     {
         return Expression.Call(typeof(Enumerable), "Contains", [value.Type], collection, value);
     }
@@ -147,7 +146,7 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
 
         BinaryExpression tempExpression = applyOperator(left, right);
 
-        while (argumentQueue.Any())
+        while (argumentQueue.Count > 0)
         {
             Expression nextArgument = argumentQueue.Dequeue();
             tempExpression = applyOperator(tempExpression, nextArgument);

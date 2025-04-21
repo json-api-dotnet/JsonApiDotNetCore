@@ -3,21 +3,24 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
+using JsonApiDotNetCore.OpenApi.Swashbuckle;
+using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-#if NET6_0
-using Microsoft.AspNetCore.Authentication;
-#endif
+using Scalar.AspNetCore;
 
 [assembly: ExcludeFromCodeCoverage]
 
 WebApplication app = CreateWebApplication(args);
 
-await CreateDatabaseAsync(app.Services);
+if (!IsGeneratingOpenApiDocumentAtBuildTime())
+{
+    await CreateDatabaseAsync(app.Services);
+}
 
-app.Run();
+await app.RunAsync();
 
 static WebApplication CreateWebApplication(string[] args)
 {
@@ -34,10 +37,10 @@ static WebApplication CreateWebApplication(string[] args)
     // Configure the HTTP request pipeline.
     ConfigurePipeline(app);
 
-    if (CodeTimingSessionManager.IsEnabled)
+    if (CodeTimingSessionManager.IsEnabled && app.Logger.IsEnabled(LogLevel.Information))
     {
         string timingResults = CodeTimingSessionManager.Current.GetResults();
-        app.Logger.LogInformation($"Measurement results for application startup:{Environment.NewLine}{timingResults}");
+        AppLog.LogStartupTimings(app.Logger, Environment.NewLine, timingResults);
     }
 
     return app;
@@ -47,11 +50,7 @@ static void ConfigureServices(WebApplicationBuilder builder)
 {
     using IDisposable _ = CodeTimingSessionManager.Current.Measure("Configure services");
 
-#if NET6_0
-    builder.Services.TryAddSingleton<ISystemClock, SystemClock>();
-#else
     builder.Services.TryAddSingleton(TimeProvider.System);
-#endif
 
     builder.Services.AddDbContext<AppDbContext>(options =>
     {
@@ -77,6 +76,13 @@ static void ConfigureServices(WebApplicationBuilder builder)
 #endif
         }, discovery => discovery.AddCurrentAssembly());
     }
+
+    using (CodeTimingSessionManager.Current.Measure("AddOpenApiForJsonApi()"))
+    {
+#pragma warning disable JADNC_OA_001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+        builder.Services.AddOpenApiForJsonApi(options => options.DocumentFilter<SetOpenApiServerAtBuildTimeFilter>());
+#pragma warning restore JADNC_OA_001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+    }
 }
 
 [Conditional("DEBUG")]
@@ -98,7 +104,17 @@ static void ConfigurePipeline(WebApplication app)
         app.UseJsonApi();
     }
 
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    app.UseReDoc();
+    app.MapScalarApiReference(options => options.OpenApiRoutePattern = "/swagger/{documentName}/swagger.json");
+
     app.MapControllers();
+}
+
+static bool IsGeneratingOpenApiDocumentAtBuildTime()
+{
+    return Environment.GetCommandLineArgs().Any(argument => argument.Contains("GetDocument.Insider"));
 }
 
 static async Task CreateDatabaseAsync(IServiceProvider serviceProvider)

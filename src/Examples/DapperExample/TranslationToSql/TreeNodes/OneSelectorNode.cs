@@ -8,7 +8,8 @@ namespace DapperExample.TranslationToSql.TreeNodes;
 /// SELECT 1 FROM Users
 /// ]]></code>.
 /// </summary>
-internal sealed class OneSelectorNode(string? alias) : SelectorNode(alias)
+internal sealed class OneSelectorNode(string? alias)
+    : SelectorNode(alias)
 {
     public override TResult Accept<TArgument, TResult>(SqlTreeNodeVisitor<TArgument, TResult> visitor, TArgument argument)
     {

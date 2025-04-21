@@ -1,5 +1,4 @@
 using JetBrains.Annotations;
-using JsonApiDotNetCore;
 
 namespace DapperExample.TranslationToSql;
 
@@ -14,8 +13,8 @@ public sealed class SqlCommand
 
     internal SqlCommand(string statement, IDictionary<string, object?> parameters)
     {
-        ArgumentGuard.NotNull(statement);
-        ArgumentGuard.NotNull(parameters);
+        ArgumentNullException.ThrowIfNull(statement);
+        ArgumentNullException.ThrowIfNull(parameters);
 
         Statement = statement;
         Parameters = parameters;

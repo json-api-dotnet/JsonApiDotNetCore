@@ -4,8 +4,6 @@ using DapperExample.Data;
 using DapperExample.Models;
 using DapperExample.Repositories;
 using DapperExample.TranslationToSql.DataModel;
-using FluentAssertions.Common;
-using FluentAssertions.Extensions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using Microsoft.AspNetCore.Hosting;
@@ -13,10 +11,10 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
 using Xunit.Abstractions;
-using IClock = DapperExample.IClock;
 
 namespace DapperTests.IntegrationTests;
 
@@ -29,7 +27,7 @@ public sealed class DapperTestContext : IntegrationTest
         EXEC sp_MSForEachTable 'ALTER TABLE ? CHECK CONSTRAINT ALL';
         """;
 
-    public static readonly DateTimeOffset FrozenTime = 29.September(2018).At(16, 41, 56).AsUtc().ToDateTimeOffset();
+    public static readonly DateTimeOffset FrozenTime = DefaultDateTimeUtc;
 
     private readonly Lazy<WebApplicationFactory<TodoItem>> _lazyFactory;
     private ITestOutputHelper? _testOutputHelper;
@@ -52,7 +50,10 @@ public sealed class DapperTestContext : IntegrationTest
 
     private WebApplicationFactory<TodoItem> CreateFactory()
     {
+#pragma warning disable CA2000 // Dispose objects before losing scope
+        // Justification: The child factory returned by WithWebHostBuilder() is owned by the parent factory, which disposes it.
         return new WebApplicationFactory<TodoItem>().WithWebHostBuilder(builder =>
+#pragma warning restore CA2000 // Dispose objects before losing scope
         {
             builder.UseSetting("ConnectionStrings:DapperExamplePostgreSql",
                 $"Host=localhost;Database=DapperExample-{Guid.NewGuid():N};User ID=postgres;Password=postgres;Include Error Detail=true");
@@ -79,10 +80,7 @@ public sealed class DapperTestContext : IntegrationTest
 
             builder.ConfigureServices(services =>
             {
-                services.AddSingleton<IClock>(new FrozenClock
-                {
-                    UtcNow = FrozenTime
-                });
+                services.Replace(ServiceDescriptor.Singleton<TimeProvider>(new FrozenTimeProvider(FrozenTime)));
 
                 ServiceDescriptor scopedCaptureStore = services.Single(descriptor => descriptor.ImplementationType == typeof(SqlCaptureStore));
                 services.Remove(scopedCaptureStore);

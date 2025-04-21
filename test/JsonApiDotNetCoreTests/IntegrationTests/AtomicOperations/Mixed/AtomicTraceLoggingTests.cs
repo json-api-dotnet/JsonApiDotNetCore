@@ -19,36 +19,35 @@ public sealed class AtomicTraceLoggingTests : IClassFixture<IntegrationTestConte
 
         testContext.UseController<OperationsController>();
 
-        var loggerFactory = new FakeLoggerFactory(LogLevel.Trace);
-
         testContext.ConfigureLogging(options =>
         {
-            options.ClearProviders();
-            options.AddProvider(loggerFactory);
-            options.SetMinimumLevel(LogLevel.Trace);
-            options.AddFilter((category, _) => category != null && category.StartsWith("JsonApiDotNetCore.", StringComparison.Ordinal));
-        });
+            var loggerProvider = new CapturingLoggerProvider((category, level) =>
+                level >= LogLevel.Trace && category.StartsWith("JsonApiDotNetCore.", StringComparison.Ordinal));
 
-        testContext.ConfigureServices(services => services.AddSingleton(loggerFactory));
+            options.AddProvider(loggerProvider);
+            options.SetMinimumLevel(LogLevel.Trace);
+
+            options.Services.AddSingleton(loggerProvider);
+        });
     }
 
     [Fact]
     public async Task Logs_execution_flow_at_Trace_level_on_operations_request()
     {
         // Arrange
-        var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
-        loggerFactory.Logger.Clear();
+        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        loggerProvider.Clear();
 
-        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-        existingTrack.Lyric = _fakers.Lyric.Generate();
-        existingTrack.OwnedBy = _fakers.RecordCompany.Generate();
-        existingTrack.Performers = _fakers.Performer.Generate(1);
+        MusicTrack existingTrack = _fakers.MusicTrack.GenerateOne();
+        existingTrack.Lyric = _fakers.Lyric.GenerateOne();
+        existingTrack.OwnedBy = _fakers.RecordCompany.GenerateOne();
+        existingTrack.Performers = _fakers.Performer.GenerateList(1);
 
-        string newGenre = _fakers.MusicTrack.Generate().Genre!;
+        string newGenre = _fakers.MusicTrack.GenerateOne().Genre!;
 
-        Lyric existingLyric = _fakers.Lyric.Generate();
-        RecordCompany existingCompany = _fakers.RecordCompany.Generate();
-        Performer existingPerformer = _fakers.Performer.Generate();
+        Lyric existingLyric = _fakers.Lyric.GenerateOne();
+        RecordCompany existingCompany = _fakers.RecordCompany.GenerateOne();
+        Performer existingPerformer = _fakers.Performer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -116,7 +115,7 @@ public sealed class AtomicTraceLoggingTests : IClassFixture<IntegrationTestConte
 
         responseDocument.Should().BeEmpty();
 
-        IReadOnlyList<string> logLines = loggerFactory.Logger.GetLines();
+        IReadOnlyList<string> logLines = loggerProvider.GetLines();
 
         logLines.Should().BeEquivalentTo(new[]
         {
@@ -201,7 +200,8 @@ public sealed class AtomicTraceLoggingTests : IClassFixture<IntegrationTestConte
                   "PrimaryResourceType": "musicTracks",
                   "IsCollection": false,
                   "IsReadOnly": false,
-                  "WriteOperation": "UpdateResource"
+                  "WriteOperation": "UpdateResource",
+                  "Extensions": []
                 }
               }
             ])

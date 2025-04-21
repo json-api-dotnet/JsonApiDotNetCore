@@ -1,5 +1,4 @@
 using System.Text;
-using JsonApiDotNetCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit.Abstractions;
@@ -9,13 +8,14 @@ namespace TestBuildingBlocks;
 // Based on https://www.meziantou.net/how-to-get-asp-net-core-logs-in-the-output-of-xunit-tests.htm.
 public sealed class XUnitLoggerProvider : ILoggerProvider
 {
+    private const LogOutputFields DefaultLogOutputFields = LogOutputFields.All & ~LogOutputFields.CategoryNamespace;
     private readonly ITestOutputHelper _testOutputHelper;
     private readonly LogOutputFields _outputFields;
     private readonly string? _categoryPrefixFilter;
 
-    public XUnitLoggerProvider(ITestOutputHelper testOutputHelper, string? categoryPrefixFilter, LogOutputFields outputFields = LogOutputFields.All)
+    public XUnitLoggerProvider(ITestOutputHelper testOutputHelper, string? categoryPrefixFilter, LogOutputFields outputFields = DefaultLogOutputFields)
     {
-        ArgumentGuard.NotNull(testOutputHelper);
+        ArgumentNullException.ThrowIfNull(testOutputHelper);
 
         _testOutputHelper = testOutputHelper;
         _categoryPrefixFilter = categoryPrefixFilter;
@@ -24,7 +24,7 @@ public sealed class XUnitLoggerProvider : ILoggerProvider
 
     public ILogger CreateLogger(string categoryName)
     {
-        ArgumentGuard.NotNull(categoryName);
+        ArgumentException.ThrowIfNullOrEmpty(categoryName);
 
         if (_categoryPrefixFilter == null || categoryName.StartsWith(_categoryPrefixFilter, StringComparison.Ordinal))
         {
@@ -42,7 +42,34 @@ public sealed class XUnitLoggerProvider : ILoggerProvider
     {
         private readonly ITestOutputHelper _testOutputHelper = testOutputHelper;
         private readonly LogOutputFields _outputFields = outputFields;
-        private readonly string _categoryName = categoryName;
+        private readonly string? _categoryText = GetCategoryText(categoryName, outputFields);
+
+        private static string? GetCategoryText(string categoryName, LogOutputFields outputFields)
+        {
+            if (outputFields.HasFlag(LogOutputFields.Category))
+            {
+                return categoryName;
+            }
+
+            bool hasName = outputFields.HasFlag(LogOutputFields.CategoryName);
+            bool hasNamespace = outputFields.HasFlag(LogOutputFields.CategoryNamespace);
+
+            if (hasName || hasNamespace)
+            {
+                // Microsoft.Extensions.Logging.LoggerFactory.CreateLogger(Type) removes generic type parameters
+                // and replaces '+' (nested class) with '.'.
+                int lastDotIndex = categoryName.LastIndexOf('.');
+
+                if (lastDotIndex == -1)
+                {
+                    return hasName ? categoryName : string.Empty;
+                }
+
+                return hasName ? categoryName[(lastDotIndex + 1)..] : categoryName[..lastDotIndex];
+            }
+
+            return null;
+        }
 
         public bool IsEnabled(LogLevel logLevel)
         {
@@ -69,7 +96,7 @@ public sealed class XUnitLoggerProvider : ILoggerProvider
                 builder.Append(logLevelString);
             }
 
-            if (_outputFields.HasFlag(LogOutputFields.Category))
+            if (_categoryText != null)
             {
                 if (builder.Length > 0)
                 {
@@ -77,7 +104,7 @@ public sealed class XUnitLoggerProvider : ILoggerProvider
                 }
 
                 builder.Append('[');
-                builder.Append(_categoryName);
+                builder.Append(_categoryText);
                 builder.Append(']');
             }
 

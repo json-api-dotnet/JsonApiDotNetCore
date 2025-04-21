@@ -1,7 +1,6 @@
 using System.Reflection;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
-using TestBuildingBlocks;
 using Xunit;
 
 namespace UnitTests.Graph;
@@ -22,27 +21,9 @@ public sealed class TypeLocatorTests
         (Type implementationType, Type serviceInterface)? result = typeLocator.GetContainerRegistrationFromAssembly(assembly, unboundInterface, typeArgument);
 
         // Assert
-        result.ShouldNotBeNull();
-        result.Value.implementationType.Should().Be(typeof(Implementation));
-        result.Value.serviceInterface.Should().Be(typeof(IGenericInterface<int>));
-    }
-
-    [Fact]
-    public void GetDerivedTypesForUnboundType_Gets_Implementation()
-    {
-        // Arrange
-        Assembly assembly = GetType().Assembly;
-        Type unboundType = typeof(BaseType<>);
-        Type typeArgument = typeof(int);
-
-        var typeLocator = new TypeLocator();
-
-        // Act
-        IReadOnlyCollection<Type> results = typeLocator.GetDerivedTypesForUnboundType(assembly, unboundType, typeArgument);
-
-        // Assert
-        results.ShouldHaveCount(1);
-        results.ElementAt(0).Should().Be(typeof(DerivedType));
+        result.Should().NotBeNull();
+        result.Value.implementationType.Should().Be<Implementation>();
+        result.Value.serviceInterface.Should().Be<IGenericInterface<int>>();
     }
 
     [Fact]
@@ -57,7 +38,7 @@ public sealed class TypeLocatorTests
         Type? idType = typeLocator.LookupIdType(type);
 
         // Assert
-        idType.Should().Be(typeof(int));
+        idType.Should().Be<int>();
     }
 
     [Fact]
@@ -87,9 +68,9 @@ public sealed class TypeLocatorTests
         ResourceDescriptor? descriptor = typeLocator.ResolveResourceDescriptor(resourceClrType);
 
         // Assert
-        descriptor.ShouldNotBeNull();
+        descriptor.Should().NotBeNull();
         descriptor.ResourceClrType.Should().Be(resourceClrType);
-        descriptor.IdClrType.Should().Be(typeof(int));
+        descriptor.IdClrType.Should().Be<int>();
     }
 
     [Fact]

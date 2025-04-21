@@ -10,17 +10,15 @@ namespace JsonApiDotNetCore.Resources;
 [PublicAPI]
 public sealed class OperationContainer
 {
-    private static readonly CollectionConverter CollectionConverter = new();
-
     public IIdentifiable Resource { get; }
     public ITargetedFields TargetedFields { get; }
     public IJsonApiRequest Request { get; }
 
     public OperationContainer(IIdentifiable resource, ITargetedFields targetedFields, IJsonApiRequest request)
     {
-        ArgumentGuard.NotNull(resource);
-        ArgumentGuard.NotNull(targetedFields);
-        ArgumentGuard.NotNull(request);
+        ArgumentNullException.ThrowIfNull(resource);
+        ArgumentNullException.ThrowIfNull(targetedFields);
+        ArgumentNullException.ThrowIfNull(request);
 
         Resource = resource;
         TargetedFields = targetedFields;
@@ -34,7 +32,7 @@ public sealed class OperationContainer
 
     public OperationContainer WithResource(IIdentifiable resource)
     {
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
 
         return new OperationContainer(resource, TargetedFields, Request);
     }
@@ -56,7 +54,7 @@ public sealed class OperationContainer
     private void AddSecondaryResources(RelationshipAttribute relationship, HashSet<IIdentifiable> secondaryResources)
     {
         object? rightValue = relationship.GetValue(Resource);
-        IReadOnlyCollection<IIdentifiable> rightResources = CollectionConverter.ExtractResources(rightValue);
+        IReadOnlyCollection<IIdentifiable> rightResources = CollectionConverter.Instance.ExtractResources(rightValue);
 
         secondaryResources.UnionWith(rightResources);
     }

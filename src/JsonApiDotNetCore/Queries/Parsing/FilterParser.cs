@@ -54,7 +54,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     public FilterParser(IResourceFactory resourceFactory)
     {
-        ArgumentGuard.NotNull(resourceFactory);
+        ArgumentNullException.ThrowIfNull(resourceFactory);
 
         _resourceFactory = resourceFactory;
     }
@@ -62,7 +62,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
     /// <inheritdoc />
     public FilterExpression Parse(string source, ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         Tokenize(source);
 
@@ -83,7 +83,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     protected virtual bool IsFunction(string name)
     {
-        ArgumentGuard.NotNullNorEmpty(name);
+        ArgumentException.ThrowIfNullOrEmpty(name);
 
         return name == Keywords.Count || FilterKeywords.Contains(name);
     }
@@ -179,6 +179,8 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     protected virtual LogicalExpression ParseLogical(string operatorName)
     {
+        ArgumentException.ThrowIfNullOrEmpty(operatorName);
+
         EatText(operatorName);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
@@ -208,6 +210,8 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     protected virtual ComparisonExpression ParseComparison(string operatorName)
     {
+        ArgumentException.ThrowIfNullOrEmpty(operatorName);
+
         var comparisonOperator = Enum.Parse<ComparisonOperator>(operatorName.Pascalize());
 
         EatText(operatorName);
@@ -311,6 +315,8 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     protected virtual MatchTextExpression ParseTextMatch(string operatorName)
     {
+        ArgumentException.ThrowIfNullOrEmpty(operatorName);
+
         EatText(operatorName);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
@@ -516,6 +522,8 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     protected virtual ConstantValueConverter GetConstantValueConverterForType(Type destinationType)
     {
+        ArgumentNullException.ThrowIfNull(destinationType);
+
         return (stringValue, position) =>
         {
             try
@@ -558,6 +566,8 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
     protected override void ValidateField(ResourceFieldAttribute field, int position)
     {
+        ArgumentNullException.ThrowIfNull(field);
+
         if (field.IsFilterBlocked())
         {
             string kind = field is AttrAttribute ? "attribute" : "relationship";
@@ -570,7 +580,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
     /// </summary>
     protected IDisposable InScopeOfResourceType(ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         _resourceTypeStack.Push(resourceType);
         return new PopResourceTypeOnDispose(_resourceTypeStack);

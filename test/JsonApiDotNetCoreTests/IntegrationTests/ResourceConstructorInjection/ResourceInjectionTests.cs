@@ -4,6 +4,7 @@ using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -11,6 +12,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection;
 
 public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext>>
 {
+    private static readonly DateTimeOffset CurrentTime = 31.January(2021).At(17, 1).AsUtc();
+    private static readonly DateTimeOffset OfficeIsOpenTime = 27.January(2021).At(13, 53).AsUtc();
+    private static readonly DateTimeOffset OfficeIsClosedTime = 30.January(2021).At(21, 43).AsUtc();
+
     private readonly IntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext> _testContext;
     private readonly InjectionFakers _fakers;
 
@@ -21,7 +26,10 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         testContext.UseController<GiftCertificatesController>();
         testContext.UseController<PostOfficesController>();
 
-        testContext.ConfigureServices(services => services.AddSingleton<ISystemClock, FrozenSystemClock>());
+        testContext.PostConfigureServices(services => services.Replace(ServiceDescriptor.Singleton<TimeProvider>(new FrozenTimeProvider(CurrentTime))));
+
+        var timeProvider = (FrozenTimeProvider)testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        timeProvider.Reset();
 
         _fakers = new InjectionFakers(testContext.Factory.Services);
     }
@@ -30,11 +38,8 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
     public async Task Can_get_resource_by_ID()
     {
         // Arrange
-        var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
-        clock.UtcNow = 27.January(2021).AsUtc();
-
-        GiftCertificate certificate = _fakers.GiftCertificate.Generate();
-        certificate.IssueDate = 28.January(2020).AsUtc();
+        GiftCertificate certificate = _fakers.GiftCertificate.GenerateOne();
+        certificate.IssueDate = CurrentTime.AddYears(-1).AddDays(1).UtcDateTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -50,20 +55,20 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(certificate.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("issueDate").With(value => value.Should().Be(certificate.IssueDate));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("hasExpired").With(value => value.Should().Be(false));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("issueDate").WhoseValue.Should().Be(certificate.IssueDate);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("hasExpired").WhoseValue.Should().Be(false);
     }
 
     [Fact]
     public async Task Can_filter_resources_by_ID()
     {
         // Arrange
-        var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
-        clock.UtcNow = 27.January(2021).At(13, 53).AsUtc();
+        var timeProvider = (FrozenTimeProvider)_testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        timeProvider.SetUtcNow(OfficeIsOpenTime);
 
-        List<PostOffice> postOffices = _fakers.PostOffice.Generate(2);
+        List<PostOffice> postOffices = _fakers.PostOffice.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -80,21 +85,21 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(postOffices[1].StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("address").With(value => value.Should().Be(postOffices[1].Address));
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("isOpen").With(value => value.Should().Be(true));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("address").WhoseValue.Should().Be(postOffices[1].Address);
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("isOpen").WhoseValue.Should().Be(true);
     }
 
     [Fact]
     public async Task Can_get_secondary_resource_with_fieldset()
     {
         // Arrange
-        var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
-        clock.UtcNow = 27.January(2021).At(13, 53).AsUtc();
+        var timeProvider = (FrozenTimeProvider)_testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        timeProvider.SetUtcNow(OfficeIsOpenTime);
 
-        GiftCertificate certificate = _fakers.GiftCertificate.Generate();
-        certificate.Issuer = _fakers.PostOffice.Generate();
+        GiftCertificate certificate = _fakers.GiftCertificate.GenerateOne();
+        certificate.Issuer = _fakers.PostOffice.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -110,22 +115,22 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(certificate.Issuer.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldHaveCount(1);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("isOpen").With(value => value.Should().Be(true));
+        responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("isOpen").WhoseValue.Should().Be(true);
     }
 
     [Fact]
     public async Task Can_create_resource_with_ToOne_relationship_and_include()
     {
         // Arrange
-        var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
-        clock.UtcNow = 19.March(1998).At(6, 34).AsUtc();
+        var timeProvider = (FrozenTimeProvider)_testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        timeProvider.SetUtcNow(OfficeIsClosedTime);
 
-        PostOffice existingOffice = _fakers.PostOffice.Generate();
+        PostOffice existingOffice = _fakers.PostOffice.GenerateOne();
 
-        DateTimeOffset newIssueDate = 18.March(1997).AsUtc();
+        DateTimeOffset newIssueDate = OfficeIsClosedTime.AddYears(-1).AddDays(-1).UtcDateTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -164,27 +169,27 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("issueDate").With(value => value.Should().Be(newIssueDate));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("hasExpired").With(value => value.Should().Be(true));
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("issueDate").WhoseValue.Should().Be(newIssueDate);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("hasExpired").WhoseValue.Should().Be(true);
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("issuer").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("issuer").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Id.Should().Be(existingOffice.StringId);
         });
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
 
         responseDocument.Included[0].With(resource =>
         {
             resource.Id.Should().Be(existingOffice.StringId);
-            resource.Attributes.ShouldContainKey("address").With(value => value.Should().Be(existingOffice.Address));
-            resource.Attributes.ShouldContainKey("isOpen").With(value => value.Should().Be(false));
+            resource.Attributes.Should().ContainKey("address").WhoseValue.Should().Be(existingOffice.Address);
+            resource.Attributes.Should().ContainKey("isOpen").WhoseValue.Should().Be(false);
         });
 
-        int newCertificateId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        int newCertificateId = int.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -193,7 +198,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
 
             certificateInDatabase.IssueDate.Should().Be(newIssueDate);
 
-            certificateInDatabase.Issuer.ShouldNotBeNull();
+            certificateInDatabase.Issuer.Should().NotBeNull();
             certificateInDatabase.Issuer.Id.Should().Be(existingOffice.Id);
         });
     }
@@ -202,13 +207,13 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
     public async Task Can_update_resource_with_ToMany_relationship()
     {
         // Arrange
-        var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
-        clock.UtcNow = 19.March(1998).At(6, 34).AsUtc();
+        var timeProvider = (FrozenTimeProvider)_testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        timeProvider.SetUtcNow(OfficeIsClosedTime);
 
-        PostOffice existingOffice = _fakers.PostOffice.Generate();
-        existingOffice.GiftCertificates = _fakers.GiftCertificate.Generate(1);
+        PostOffice existingOffice = _fakers.PostOffice.GenerateOne();
+        existingOffice.GiftCertificates = _fakers.GiftCertificate.GenerateList(1);
 
-        string newAddress = _fakers.PostOffice.Generate().Address;
+        string newAddress = _fakers.PostOffice.GenerateOne().Address;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -259,7 +264,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
 
             officeInDatabase.Address.Should().Be(newAddress);
 
-            officeInDatabase.GiftCertificates.ShouldHaveCount(1);
+            officeInDatabase.GiftCertificates.Should().HaveCount(1);
             officeInDatabase.GiftCertificates[0].Id.Should().Be(existingOffice.GiftCertificates[0].Id);
         });
     }
@@ -268,7 +273,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
     public async Task Can_delete_resource()
     {
         // Arrange
-        PostOffice existingOffice = _fakers.PostOffice.Generate();
+        PostOffice existingOffice = _fakers.PostOffice.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -308,7 +313,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -320,10 +325,10 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
     public async Task Can_add_to_ToMany_relationship()
     {
         // Arrange
-        PostOffice existingOffice = _fakers.PostOffice.Generate();
-        existingOffice.GiftCertificates = _fakers.GiftCertificate.Generate(1);
+        PostOffice existingOffice = _fakers.PostOffice.GenerateOne();
+        existingOffice.GiftCertificates = _fakers.GiftCertificate.GenerateList(1);
 
-        GiftCertificate existingCertificate = _fakers.GiftCertificate.Generate();
+        GiftCertificate existingCertificate = _fakers.GiftCertificate.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -357,7 +362,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         {
             PostOffice officeInDatabase = await dbContext.PostOffices.Include(postOffice => postOffice.GiftCertificates).FirstWithIdAsync(existingOffice.Id);
 
-            officeInDatabase.GiftCertificates.ShouldHaveCount(2);
+            officeInDatabase.GiftCertificates.Should().HaveCount(2);
         });
     }
 }

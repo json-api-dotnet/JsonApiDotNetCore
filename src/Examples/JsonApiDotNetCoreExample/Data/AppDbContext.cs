@@ -8,7 +8,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 namespace JsonApiDotNetCoreExample.Data;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
+    : DbContext(options)
 {
     public DbSet<TodoItem> TodoItems => Set<TodoItem>();
 

@@ -43,6 +43,8 @@ public abstract class QueryExpressionParser
     /// </remarks>
     protected virtual void Tokenize(string source)
     {
+        ArgumentNullException.ThrowIfNull(source);
+
         var tokenizer = new QueryTokenizer(source);
         TokenStack = new Stack<Token>(tokenizer.EnumerateTokens().Reverse());
         _endOfSourcePosition = source.Length;
@@ -54,8 +56,8 @@ public abstract class QueryExpressionParser
     protected ResourceFieldChainExpression ParseFieldChain(FieldChainPattern pattern, FieldChainPatternMatchOptions options, ResourceType resourceType,
         string? alternativeErrorMessage)
     {
-        ArgumentGuard.NotNull(pattern);
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(pattern);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         int startPosition = GetNextTokenPositionOrEnd();
 
@@ -118,6 +120,8 @@ public abstract class QueryExpressionParser
     /// </summary>
     protected void EatText(string text)
     {
+        ArgumentNullException.ThrowIfNull(text);
+
         if (!TokenStack.TryPop(out Token? token) || token.Kind != TokenKind.Text || token.Value != text)
         {
             int position = token?.Position ?? GetNextTokenPositionOrEnd();
@@ -158,7 +162,7 @@ public abstract class QueryExpressionParser
     /// </summary>
     protected int GetRelativePositionOfLastFieldInChain(ResourceFieldChainExpression fieldChain)
     {
-        ArgumentGuard.NotNull(fieldChain);
+        ArgumentNullException.ThrowIfNull(fieldChain);
 
         int position = 0;
 
@@ -176,7 +180,7 @@ public abstract class QueryExpressionParser
     /// </summary>
     protected void AssertTokenStackIsEmpty()
     {
-        if (TokenStack.Any())
+        if (TokenStack.Count > 0)
         {
             int position = GetNextTokenPositionOrEnd();
             throw new QueryParseException("End of expression expected.", position);

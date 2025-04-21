@@ -28,8 +28,8 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Can_clear_OneToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Subscribers = _fakers.UserAccount.Generate(2).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Subscribers = _fakers.UserAccount.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -61,7 +61,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -75,8 +75,8 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Can_clear_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Tags = _fakers.WorkTag.Generate(1).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Tags = _fakers.WorkTag.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -108,7 +108,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -122,10 +122,10 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Can_replace_OneToMany_relationship_with_already_assigned_resources()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Subscribers = _fakers.UserAccount.Generate(2).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Subscribers = _fakers.UserAccount.GenerateSet(2);
 
-        UserAccount existingSubscriber = _fakers.UserAccount.Generate();
+        UserAccount existingSubscriber = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -169,13 +169,13 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Subscribers).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Subscribers.ShouldHaveCount(2);
+            workItemInDatabase.Subscribers.Should().HaveCount(2);
             workItemInDatabase.Subscribers.Should().ContainSingle(userAccount => userAccount.Id == existingWorkItem.Subscribers.ElementAt(1).Id);
             workItemInDatabase.Subscribers.Should().ContainSingle(userAccount => userAccount.Id == existingSubscriber.Id);
         });
@@ -185,10 +185,10 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Can_replace_ManyToMany_relationship_with_already_assigned_resources()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Tags = _fakers.WorkTag.Generate(2).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Tags = _fakers.WorkTag.GenerateSet(2);
 
-        List<WorkTag> existingTags = _fakers.WorkTag.Generate(2);
+        List<WorkTag> existingTags = _fakers.WorkTag.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -238,13 +238,13 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Tags).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Tags.ShouldHaveCount(3);
+            workItemInDatabase.Tags.Should().HaveCount(3);
             workItemInDatabase.Tags.Should().ContainSingle(workTag => workTag.Id == existingWorkItem.Tags.ElementAt(0).Id);
             workItemInDatabase.Tags.Should().ContainSingle(workTag => workTag.Id == existingTags[0].Id);
             workItemInDatabase.Tags.Should().ContainSingle(workTag => workTag.Id == existingTags[1].Id);
@@ -255,8 +255,8 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Can_replace_OneToMany_relationship_with_include()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        UserAccount existingUserAccount = _fakers.UserAccount.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        UserAccount existingUserAccount = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -295,24 +295,24 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItems");
         responseDocument.Data.SingleValue.Id.Should().Be(existingWorkItem.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(existingWorkItem.Priority));
-        responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("priority").WhoseValue.Should().Be(existingWorkItem.Priority);
+        responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("userAccounts");
         responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("firstName").With(value => value.Should().Be(existingUserAccount.FirstName));
-        responseDocument.Included[0].Attributes.ShouldContainKey("lastName").With(value => value.Should().Be(existingUserAccount.LastName));
-        responseDocument.Included[0].Relationships.ShouldNotBeEmpty();
+        responseDocument.Included[0].Attributes.Should().ContainKey("firstName").WhoseValue.Should().Be(existingUserAccount.FirstName);
+        responseDocument.Included[0].Attributes.Should().ContainKey("lastName").WhoseValue.Should().Be(existingUserAccount.LastName);
+        responseDocument.Included[0].Relationships.Should().NotBeEmpty();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Subscribers).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Subscribers.ShouldHaveCount(1);
+            workItemInDatabase.Subscribers.Should().HaveCount(1);
             workItemInDatabase.Subscribers.Single().Id.Should().Be(existingUserAccount.Id);
         });
     }
@@ -321,8 +321,8 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Can_replace_ManyToMany_relationship_with_include_and_fieldsets()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        WorkTag existingTag = _fakers.WorkTag.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        WorkTag existingTag = _fakers.WorkTag.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -361,34 +361,34 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItems");
         responseDocument.Data.SingleValue.Id.Should().Be(existingWorkItem.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldHaveCount(1);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(existingWorkItem.Priority));
-        responseDocument.Data.SingleValue.Relationships.ShouldHaveCount(1);
+        responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("priority").WhoseValue.Should().Be(existingWorkItem.Priority);
+        responseDocument.Data.SingleValue.Relationships.Should().HaveCount(1);
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("tags").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("tags").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.ManyValue.ShouldHaveCount(1);
+            value.Should().NotBeNull();
+            value.Data.ManyValue.Should().HaveCount(1);
             value.Data.ManyValue[0].Id.Should().Be(existingTag.StringId);
         });
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("workTags");
         responseDocument.Included[0].Id.Should().Be(existingTag.StringId);
-        responseDocument.Included[0].Attributes.ShouldHaveCount(1);
-        responseDocument.Included[0].Attributes.ShouldContainKey("text").With(value => value.Should().Be(existingTag.Text));
+        responseDocument.Included[0].Attributes.Should().HaveCount(1);
+        responseDocument.Included[0].Attributes.Should().ContainKey("text").WhoseValue.Should().Be(existingTag.Text);
         responseDocument.Included[0].Relationships.Should().BeNull();
 
-        int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Tags).FirstWithIdAsync(newWorkItemId);
 
-            workItemInDatabase.Tags.ShouldHaveCount(1);
+            workItemInDatabase.Tags.Should().HaveCount(1);
             workItemInDatabase.Tags.Single().Id.Should().Be(existingTag.Id);
         });
     }
@@ -397,7 +397,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Cannot_replace_for_missing_relationship_type()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -435,22 +435,22 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/subscribers/data[0]");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
     public async Task Cannot_replace_for_unknown_relationship_type()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -489,22 +489,22 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
         error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/subscribers/data[0]/type");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
     public async Task Cannot_replace_for_missing_relationship_ID()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -542,22 +542,22 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'id' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/subscribers/data[0]");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
     public async Task Cannot_replace_with_unknown_relationship_IDs()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -623,7 +623,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(4);
+        responseDocument.Errors.Should().HaveCount(4);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -650,7 +650,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Cannot_replace_on_relationship_type_mismatch()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -689,25 +689,25 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
         error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
         error.Detail.Should().Be("Type 'rgbColors' is not convertible to type 'userAccounts' of relationship 'subscribers'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/subscribers/data[0]/type");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
     public async Task Can_replace_with_duplicates()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Subscribers = _fakers.UserAccount.Generate(1).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Subscribers = _fakers.UserAccount.GenerateSet(1);
 
-        UserAccount existingSubscriber = _fakers.UserAccount.Generate();
+        UserAccount existingSubscriber = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -751,13 +751,13 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Subscribers).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Subscribers.ShouldHaveCount(1);
+            workItemInDatabase.Subscribers.Should().HaveCount(1);
             workItemInDatabase.Subscribers.Single().Id.Should().Be(existingSubscriber.Id);
         });
     }
@@ -766,7 +766,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Cannot_replace_with_missing_data_in_OneToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -797,22 +797,22 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/subscribers");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
     public async Task Cannot_replace_with_null_data_in_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -844,22 +844,22 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Expected an array, instead of 'null'.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/tags/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
     public async Task Cannot_replace_with_object_data_in_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -893,22 +893,22 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Expected an array, instead of an object.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/tags/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
     [Fact]
     public async Task Can_clear_cyclic_OneToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -943,7 +943,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -957,7 +957,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Can_clear_cyclic_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -992,7 +992,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1016,7 +1016,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Can_assign_cyclic_OneToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1055,13 +1055,13 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Children).FirstWithIdAsync(existingWorkItem.Id);
 
-            workItemInDatabase.Children.ShouldHaveCount(1);
+            workItemInDatabase.Children.Should().HaveCount(1);
             workItemInDatabase.Children[0].Id.Should().Be(existingWorkItem.Id);
         });
     }
@@ -1070,7 +1070,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Can_assign_cyclic_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1109,7 +1109,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1124,10 +1124,10 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
             // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
-            workItemInDatabase.RelatedFrom.ShouldHaveCount(1);
+            workItemInDatabase.RelatedFrom.Should().HaveCount(1);
             workItemInDatabase.RelatedFrom[0].Id.Should().Be(existingWorkItem.Id);
 
-            workItemInDatabase.RelatedTo.ShouldHaveCount(1);
+            workItemInDatabase.RelatedTo.Should().HaveCount(1);
             workItemInDatabase.RelatedTo[0].Id.Should().Be(existingWorkItem.Id);
         });
     }
@@ -1136,7 +1136,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
     public async Task Cannot_assign_relationship_with_blocked_capability()
     {
         // Arrange
-        WorkItemGroup existingWorkItemGroup = _fakers.WorkItemGroup.Generate();
+        WorkItemGroup existingWorkItemGroup = _fakers.WorkItemGroup.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1175,14 +1175,14 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Relationship cannot be assigned.");
         error.Detail.Should().Be("The relationship 'items' on resource type 'workItemGroups' cannot be assigned to.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/items");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 }

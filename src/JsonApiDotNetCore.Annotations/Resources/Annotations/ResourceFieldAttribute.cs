@@ -43,7 +43,7 @@ public abstract class ResourceFieldAttribute : Attribute
         get => _property!;
         internal set
         {
-            ArgumentGuard.NotNull(value);
+            ArgumentNullException.ThrowIfNull(value);
             _property = value;
         }
     }
@@ -56,7 +56,7 @@ public abstract class ResourceFieldAttribute : Attribute
         get => _type!;
         internal set
         {
-            ArgumentGuard.NotNull(value);
+            ArgumentNullException.ThrowIfNull(value);
             _type = value;
         }
     }
@@ -67,7 +67,7 @@ public abstract class ResourceFieldAttribute : Attribute
     /// </summary>
     public object? GetValue(object resource)
     {
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
         AssertIsIdentifiable(resource);
 
         if (Property.GetMethod == null)
@@ -93,7 +93,7 @@ public abstract class ResourceFieldAttribute : Attribute
     /// </summary>
     public virtual void SetValue(object resource, object? newValue)
     {
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
         AssertIsIdentifiable(resource);
 
         if (Property.SetMethod == null)
@@ -115,9 +115,11 @@ public abstract class ResourceFieldAttribute : Attribute
 
     protected void AssertIsIdentifiable(object? resource)
     {
-        if (resource != null && resource is not IIdentifiable)
+        if (resource is not null and not IIdentifiable)
         {
+#pragma warning disable CA1062 // Validate arguments of public methods
             throw new InvalidOperationException($"Resource of type '{resource.GetType()}' does not implement {nameof(IIdentifiable)}.");
+#pragma warning restore CA1062 // Validate arguments of public methods
         }
     }
 

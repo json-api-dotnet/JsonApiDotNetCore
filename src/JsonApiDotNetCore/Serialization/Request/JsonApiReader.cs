@@ -5,7 +5,6 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCore.Errors;
-using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Request.Adapters;
 using Microsoft.AspNetCore.Http;
@@ -17,32 +16,36 @@ using SysNotNull = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 namespace JsonApiDotNetCore.Serialization.Request;
 
 /// <inheritdoc cref="IJsonApiReader" />
-public sealed class JsonApiReader : IJsonApiReader
+public sealed partial class JsonApiReader : IJsonApiReader
 {
     private readonly IJsonApiOptions _options;
     private readonly IDocumentAdapter _documentAdapter;
-    private readonly TraceLogWriter<JsonApiReader> _traceWriter;
+    private readonly ILogger<JsonApiReader> _logger;
 
-    public JsonApiReader(IJsonApiOptions options, IDocumentAdapter documentAdapter, ILoggerFactory loggerFactory)
+    public JsonApiReader(IJsonApiOptions options, IDocumentAdapter documentAdapter, ILogger<JsonApiReader> logger)
     {
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(documentAdapter);
-        ArgumentGuard.NotNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(documentAdapter);
+        ArgumentNullException.ThrowIfNull(logger);
 
         _options = options;
         _documentAdapter = documentAdapter;
-        _traceWriter = new TraceLogWriter<JsonApiReader>(loggerFactory);
+        _logger = logger;
     }
 
     /// <inheritdoc />
     public async Task<object?> ReadAsync(HttpRequest httpRequest)
     {
-        ArgumentGuard.NotNull(httpRequest);
+        ArgumentNullException.ThrowIfNull(httpRequest);
 
         string requestBody = await ReceiveRequestBodyAsync(httpRequest);
-        string method = httpRequest.Method.Replace(Environment.NewLine, "");
 
-        _traceWriter.LogMessage(() => $"Received {method} request at '{httpRequest.GetEncodedUrl()}' with body: <<{requestBody}>>");
+        if (_logger.IsEnabled(LogLevel.Trace))
+        {
+            string requestMethod = httpRequest.Method.Replace(Environment.NewLine, "");
+            string requestUrl = httpRequest.GetEncodedUrl();
+            LogRequest(requestMethod, requestUrl, requestBody);
+        }
 
         return GetModel(requestBody);
     }
@@ -94,6 +97,10 @@ public sealed class JsonApiReader : IJsonApiReader
             // https://github.com/dotnet/runtime/issues/50205#issuecomment-808401245
             throw new InvalidRequestBodyException(_options.IncludeRequestBodyInErrors ? requestBody : null, null, exception.Message, null, null, exception);
         }
+        catch (NotSupportedException exception) when (exception.HasJsonApiException())
+        {
+            throw exception.EnrichSourcePointer();
+        }
     }
 
     private void AssertHasDocument([SysNotNull] Document? document, string requestBody)
@@ -117,4 +124,8 @@ public sealed class JsonApiReader : IJsonApiReader
                 exception.SourcePointer, exception.StatusCode, exception);
         }
     }
+
+    [LoggerMessage(Level = LogLevel.Trace, SkipEnabledCheck = true,
+        Message = "Received {RequestMethod} request at '{RequestUrl}' with body: <<{RequestBody}>>")]
+    private partial void LogRequest(string requestMethod, string requestUrl, string requestBody);
 }

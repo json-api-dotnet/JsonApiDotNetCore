@@ -1,7 +1,6 @@
 using FluentAssertions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.ResourceGraph;
@@ -73,16 +72,13 @@ public sealed class HasManyAttributeTests
 
         var resource = new TestResource();
 
-        var children = new List<TestResource>
-        {
-            resource
-        };
+        List<TestResource> children = [resource];
 
         // Act
         attribute.SetValue(resource, children);
 
         // Assert
-        attribute.GetValue(resource).Should().BeOfType<List<TestResource>>().Subject.ShouldHaveCount(1);
+        attribute.GetValue(resource).Should().BeOfType<List<TestResource>>().Subject.Should().HaveCount(1);
     }
 
     [Fact]
@@ -96,11 +92,11 @@ public sealed class HasManyAttributeTests
 
         var resource = new TestResource();
 
-        var children = new List<TestResource>
-        {
+        List<TestResource> children =
+        [
             resource,
             null!
-        };
+        ];
 
         // Act
         Action action = () => attribute.SetValue(resource, children);
@@ -120,11 +116,11 @@ public sealed class HasManyAttributeTests
 
         var resource = new TestResource();
 
-        var children = new List<object>
-        {
+        List<object> children =
+        [
             resource,
             1
-        };
+        ];
 
         // Act
         Action action = () => attribute.SetValue(resource, children);
@@ -157,7 +153,7 @@ public sealed class HasManyAttributeTests
 
         // Assert
         List<TestResource> collection = attribute.GetValue(resource).Should().BeOfType<List<TestResource>>().Subject!;
-        collection.ShouldHaveCount(2);
+        collection.Should().HaveCount(2);
     }
 
     [Fact]
@@ -184,7 +180,7 @@ public sealed class HasManyAttributeTests
 
         // Assert
         List<TestResource> collection = attribute.GetValue(resource).Should().BeOfType<List<TestResource>>().Subject!;
-        collection.ShouldHaveCount(1);
+        collection.Should().HaveCount(1);
     }
 
     [Fact]
@@ -211,7 +207,7 @@ public sealed class HasManyAttributeTests
 
         // Assert
         HashSet<TestResource> collection = attribute.GetValue(resource).Should().BeOfType<HashSet<TestResource>>().Subject!;
-        collection.ShouldHaveCount(2);
+        collection.Should().HaveCount(2);
     }
 
     [Fact]
@@ -238,7 +234,7 @@ public sealed class HasManyAttributeTests
 
         // Assert
         HashSet<TestResource> collection = attribute.GetValue(resource).Should().BeOfType<HashSet<TestResource>>().Subject!;
-        collection.ShouldHaveCount(1);
+        collection.Should().HaveCount(1);
     }
 
     [Fact]
@@ -262,7 +258,7 @@ public sealed class HasManyAttributeTests
 
         // Assert
         HashSet<TestResource> collection = attribute.GetValue(resource).Should().BeOfType<HashSet<TestResource>>().Subject!;
-        collection.ShouldHaveCount(1);
+        collection.Should().HaveCount(1);
     }
 
     public sealed class TestResource : Identifiable<long>

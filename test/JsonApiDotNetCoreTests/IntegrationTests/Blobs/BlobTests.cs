@@ -26,7 +26,7 @@ public sealed class BlobTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Can_get_primary_resource_by_ID()
     {
         // Arrange
-        ImageContainer container = _fakers.ImageContainer.Generate();
+        ImageContainer container = _fakers.ImageContainer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -42,12 +42,12 @@ public sealed class BlobTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("imageContainers");
         responseDocument.Data.SingleValue.Id.Should().Be(container.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("fileName").With(value => value.Should().Be(container.FileName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("data").As<byte[]>().With(value => value.Should().Equal(container.Data));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("thumbnail").As<byte[]>().With(value => value.Should().Equal(container.Thumbnail));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("fileName").WhoseValue.Should().Be(container.FileName);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("data").WhoseValue.As<byte[]>().Should().Equal(container.Data);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("thumbnail").WhoseValue.As<byte[]>().Should().Equal(container.Thumbnail);
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
     }
 
@@ -55,7 +55,7 @@ public sealed class BlobTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Can_create_resource()
     {
         // Arrange
-        ImageContainer newContainer = _fakers.ImageContainer.Generate();
+        ImageContainer newContainer = _fakers.ImageContainer.GenerateOne();
 
         var requestBody = new
         {
@@ -79,14 +79,14 @@ public sealed class BlobTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("imageContainers");
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("fileName").With(value => value.Should().Be(newContainer.FileName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("data").As<byte[]>().With(value => value.Should().Equal(newContainer.Data));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("thumbnail").As<byte[]>().With(value => value.Should().Equal(newContainer.Thumbnail));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("fileName").WhoseValue.Should().Be(newContainer.FileName);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("data").WhoseValue.As<byte[]>().Should().Equal(newContainer.Data);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("thumbnail").WhoseValue.As<byte[]>().Should().Equal(newContainer.Thumbnail);
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
-        long newContainerId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        long newContainerId = long.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -102,10 +102,10 @@ public sealed class BlobTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Can_update_resource()
     {
         // Arrange
-        ImageContainer existingContainer = _fakers.ImageContainer.Generate();
+        ImageContainer existingContainer = _fakers.ImageContainer.GenerateOne();
 
-        byte[] newData = _fakers.ImageContainer.Generate().Data;
-        byte[] newThumbnail = _fakers.ImageContainer.Generate().Thumbnail!;
+        byte[] newData = _fakers.ImageContainer.GenerateOne().Data;
+        byte[] newThumbnail = _fakers.ImageContainer.GenerateOne().Thumbnail!;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -135,12 +135,12 @@ public sealed class BlobTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("imageContainers");
         responseDocument.Data.SingleValue.Id.Should().Be(existingContainer.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("fileName").With(value => value.Should().Be(existingContainer.FileName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("data").As<byte[]>().With(value => value.Should().Equal(newData));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("thumbnail").As<byte[]>().With(value => value.Should().Equal(newThumbnail));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("fileName").WhoseValue.Should().Be(existingContainer.FileName);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("data").WhoseValue.As<byte[]>().With(value => value.Should().Equal(newData));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("thumbnail").WhoseValue.As<byte[]>().With(value => value.Should().Equal(newThumbnail));
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -157,7 +157,7 @@ public sealed class BlobTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Can_update_resource_with_empty_blob()
     {
         // Arrange
-        ImageContainer existingContainer = _fakers.ImageContainer.Generate();
+        ImageContainer existingContainer = _fakers.ImageContainer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -186,11 +186,11 @@ public sealed class BlobTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("imageContainers");
         responseDocument.Data.SingleValue.Id.Should().Be(existingContainer.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("fileName").With(value => value.Should().Be(existingContainer.FileName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("data").As<byte[]>().With(value => value.Should().BeEmpty());
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("fileName").WhoseValue.Should().Be(existingContainer.FileName);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("data").WhoseValue.As<byte[]>().With(value => value.Should().BeEmpty());
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -206,7 +206,7 @@ public sealed class BlobTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Can_update_resource_with_null_blob()
     {
         // Arrange
-        ImageContainer existingContainer = _fakers.ImageContainer.Generate();
+        ImageContainer existingContainer = _fakers.ImageContainer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -235,11 +235,11 @@ public sealed class BlobTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("imageContainers");
         responseDocument.Data.SingleValue.Id.Should().Be(existingContainer.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("fileName").With(value => value.Should().Be(existingContainer.FileName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("thumbnail").With(value => value.Should().BeNull());
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("fileName").WhoseValue.Should().Be(existingContainer.FileName);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("thumbnail").WhoseValue.Should().BeNull();
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>

@@ -1,9 +1,7 @@
-<p align="center">
-  <a href="https://www.jsonapi.net"><img src="docs/home/assets/img/logo.svg" style="height: 345px; width: 345px"/></a>
-</p>
+<a href="https://www.jsonapi.net"><img src="docs/home/assets/img/logo.svg" style="height: 345px; width: 345px"/></a>
 
 # JsonApiDotNetCore
-A framework for building [JSON:API](http://jsonapi.org/) compliant REST APIs using .NET Core and Entity Framework Core. Includes support for the [Atomic Operations](https://jsonapi.org/ext/atomic/) extension.
+A framework for building [JSON:API](https://jsonapi.org/) compliant REST APIs using .NET Core and Entity Framework Core. Includes support for the [Atomic Operations](https://jsonapi.org/ext/atomic/) extension.
 
 The ultimate goal of this library is to eliminate as much boilerplate as possible by offering out-of-the-box features such as sorting, filtering, pagination, sparse fieldset selection, and side-loading related resources. You just need to focus on defining the resources and implementing your custom business logic. This library has been designed around dependency injection, making extensibility incredibly easy.
 
@@ -11,22 +9,24 @@ The ultimate goal of this library is to eliminate as much boilerplate as possibl
 [![Coverage](https://codecov.io/gh/json-api-dotnet/JsonApiDotNetCore/branch/master/graph/badge.svg?token=pn036tWV8T)](https://codecov.io/gh/json-api-dotnet/JsonApiDotNetCore)
 [![NuGet](https://img.shields.io/nuget/v/JsonApiDotNetCore.svg)](https://www.nuget.org/packages/JsonApiDotNetCore/)
 [![Chat](https://badges.gitter.im/json-api-dotnet-core/Lobby.svg)](https://gitter.im/json-api-dotnet-core/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![FIRST-TIMERS](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
+[![FIRST-TIMERS](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](https://www.firsttimersonly.com/)
 
 ## Getting Started
 
-First declare you models
+First, declare your models:
 
 ```c#
+#nullable enable
+
 [Resource]
-public class Article : Identifiable<int>
+public class Article : Identifiable<Guid>
 {
     [Attr]
     public string Name { get; set; } = null!;
 }
 ```
 
-then add the middlewares
+Then, add the middleware:
 
 ```c#
 // Program.cs
@@ -40,10 +40,10 @@ app.UseJsonApi();
 app.MapControllers();
 ```
 
-finally you can query your JSON:API
+Finally, you can query your JSON:API server:
 
 ```
-$ curl -i http://localhost:18574/authors
+$ curl -i http://localhost:5000/authors
 
 HTTP/1.1 200 OK
 Content-Type: application/vnd.api+json
@@ -51,25 +51,28 @@ ETag: "078F7A2A7D0B3C0B56952AD3E35E5908"
 
 {
   "links": {
-    "self": "http://localhost:18574/authors",
-    "first": "http://localhost:18574/authors"
+    "self": "http://localhost:5000/authors",
+    "first": "http://localhost:5000/authors"
   },
   "data": [
     {
       "type": "authors",
       "id": "8977e0ab-4af8-418b-8859-a3d7a22367d7",
       "attributes": { "name": "William Shakespeare" },
-      "links": { "self": "http://localhost:18574/authors/8977e0ab-4af8-418b-8859-a3d7a22367d7" }
+      "links": { "self": "http://localhost:5000/authors/8977e0ab-4af8-418b-8859-a3d7a22367d7" }
     }
   ]
 }
 ```
 
-See [our documentation](https://www.jsonapi.net/) for detailed usage and the [examples](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples) directory for up-to-date sample applications.
+See [our documentation](https://www.jsonapi.net/) for detailed usage. The [examples](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples) directory provides up-to-date sample applications. There is also a [Todo List App](https://github.com/json-api-dotnet/TodoListExample) that includes a JsonApiDotNetCore API and an EmberJs client with token authentication.
 
-## Resources
+## Learn More
+
+The following links explain what this project is, why it exists, and how you can use it.
 
 ### About
+
 - [What is JSON:API and why should I use it?](https://nordicapis.com/the-benefits-of-using-json-api/) (blog, 2017)
 - [Pragmatic JSON:API Design](https://www.youtube.com/watch?v=3jBJOga4e2Y) (video, 2017)
 - [JSON:API and JsonApiDotNetCore](https://www.youtube.com/watch?v=79Oq0HOxyeI) (video, 2021)
@@ -77,16 +80,17 @@ See [our documentation](https://www.jsonapi.net/) for detailed usage and the [ex
 - [JSON:API, .Net Core, EmberJS](https://youtu.be/KAMuo6K7VcE) (video, 2017)
 - [Embercasts: Full Stack Ember with ASP.NET Core](https://www.embercasts.com/course/full-stack-ember-with-dotnet/watch/whats-in-this-course-cs) (paid course, 2017)
 
-### Official documentation
+### Official Documentation
+
 - [The JSON:API specification](https://jsonapi.org/format/)
 - [JsonApiDotNetCore website](https://www.jsonapi.net/)
 - [Roadmap](ROADMAP.md)
 
 ### Related Projects
 
-- [Performance Reports](https://github.com/json-api-dotnet/PerformanceReports)
 - [JsonApiDotNetCore.MongoDb](https://github.com/json-api-dotnet/JsonApiDotNetCore.MongoDb)
 - [Ember.js Todo List App](https://github.com/json-api-dotnet/TodoListExample)
+- [Performance Reports](https://github.com/json-api-dotnet/PerformanceReports)
 
 ## Compatibility
 
@@ -104,13 +108,10 @@ See also our [versioning policy](./VERSIONING_POLICY.md).
 |                   |              | 7        | 7                     |
 | 5.5+              | Stable       | 6        | 6, 7                  |
 |                   |              | 7        | 7                     |
-|                   |              | 8        | 8                     |
-| master            | Preview      | 6        | 6, 7                  |
-|                   |              | 7        | 7                     |
-|                   |              | 8        | 8                     |
-| openapi           | Experimental | 6        | 6, 7                  |
-|                   |              | 7        | 7                     |
-|                   |              | 8        | 8                     |
+|                   |              | 8        | 8, 9                  |
+|                   |              | 9        | 9                     |
+| master            | Preview      | 8        | 8, 9                  |
+|                   |              | 9        | 9                     |
 
 ## Contributing
 
@@ -129,7 +130,7 @@ To try it out, follow the steps below:
    In the command above:
    - Replace YOUR-GITHUB-USERNAME with the username you use to login your GitHub account.
    - Replace YOUR-PAT-CLASSIC with the token your created above.
-   
+
    :warning: If the above command doesn't give you access in the next step, remove the package source by running:
    ```bash
    dotnet nuget remove source github-json-api

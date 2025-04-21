@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -10,6 +11,11 @@ namespace JsonApiDotNetCore.Repositories;
 /// </summary>
 public interface IResourceRepositoryAccessor
 {
+    /// <summary>
+    /// Uses the <see cref="IResourceGraph" /> to lookup the corresponding <see cref="ResourceType" /> for the specified CLR type.
+    /// </summary>
+    ResourceType LookupResourceType(Type resourceClrType);
+
     /// <summary>
     /// Invokes <see cref="IResourceReadRepository{TResource,TId}.GetAsync" /> for the specified resource type.
     /// </summary>
@@ -29,7 +35,7 @@ public interface IResourceRepositoryAccessor
     /// <summary>
     /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.GetForCreateAsync" /> for the specified resource type.
     /// </summary>
-    Task<TResource> GetForCreateAsync<TResource, TId>(Type resourceClrType, TId id, CancellationToken cancellationToken)
+    Task<TResource> GetForCreateAsync<TResource, TId>(Type resourceClrType, [DisallowNull] TId id, CancellationToken cancellationToken)
         where TResource : class, IIdentifiable<TId>;
 
     /// <summary>
@@ -53,7 +59,7 @@ public interface IResourceRepositoryAccessor
     /// <summary>
     /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.DeleteAsync" /> for the specified resource type.
     /// </summary>
-    Task DeleteAsync<TResource, TId>(TResource? resourceFromDatabase, TId id, CancellationToken cancellationToken)
+    Task DeleteAsync<TResource, TId>(TResource? resourceFromDatabase, [DisallowNull] TId id, CancellationToken cancellationToken)
         where TResource : class, IIdentifiable<TId>;
 
     /// <summary>
@@ -65,7 +71,7 @@ public interface IResourceRepositoryAccessor
     /// <summary>
     /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.AddToToManyRelationshipAsync" /> for the specified resource type.
     /// </summary>
-    Task AddToToManyRelationshipAsync<TResource, TId>(TResource? leftResource, TId leftId, ISet<IIdentifiable> rightResourceIds,
+    Task AddToToManyRelationshipAsync<TResource, TId>(TResource? leftResource, [DisallowNull] TId leftId, ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
         where TResource : class, IIdentifiable<TId>;
 

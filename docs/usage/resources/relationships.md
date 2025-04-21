@@ -1,7 +1,7 @@
 # Relationships
 
 A relationship is a named link between two resource types, including a direction.
-They are similar to [navigation properties in Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/modeling/relationships).
+They are similar to [navigation properties in Entity Framework Core](https://learn.microsoft.com/ef/core/modeling/relationships).
 
 Relationships come in two flavors: to-one and to-many.
 The left side of a relationship is where the relationship is declared, the right side is the resource type it points to.
@@ -113,7 +113,7 @@ For optional one-to-one relationships, Entity Framework Core uses `DeleteBehavio
 This means that Entity Framework Core tries to handle the cascading effects (by sending multiple SQL statements), instead of leaving it up to the database.
 Of course that's only going to work when all the related resources are loaded in the change tracker upfront, which is expensive because it requires fetching more data than necessary.
 
-The reason for this odd default is poor support in SQL Server, as explained [here](https://stackoverflow.com/questions/54326165/ef-core-why-clientsetnull-is-default-ondelete-behavior-for-optional-relations) and [here](https://learn.microsoft.com/en-us/ef/core/saving/cascade-delete#database-cascade-limitations).
+The reason for this odd default is poor support in SQL Server, as explained [here](https://stackoverflow.com/questions/54326165/ef-core-why-clientsetnull-is-default-ondelete-behavior-for-optional-relations) and [here](https://learn.microsoft.com/ef/core/saving/cascade-delete#database-cascade-limitations).
 
 **Our [testing](https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/1205) shows that these limitations don't exist when using PostgreSQL.
 Therefore the general advice is to map the delete behavior of optional one-to-one relationships explicitly with `.OnDelete(DeleteBehavior.SetNull)`. This is simpler and more efficient.**
@@ -261,8 +261,8 @@ public class TodoItem : Identifiable<int>
 
 _since v5.1_
 
-Default JSON:API relationship capabilities are specified in 
-@JsonApiDotNetCore.Configuration.JsonApiOptions#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultHasOneCapabilities and 
+Default JSON:API relationship capabilities are specified in
+@JsonApiDotNetCore.Configuration.JsonApiOptions#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultHasOneCapabilities and
 @JsonApiDotNetCore.Configuration.JsonApiOptions#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultHasManyCapabilities:
 
 ```c#

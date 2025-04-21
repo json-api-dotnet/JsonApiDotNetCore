@@ -21,18 +21,25 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
 
         testContext.UseController<WorkItemGroupsController>();
         testContext.UseController<RgbColorsController>();
+        testContext.UseController<UserAccountsController>();
 
-        testContext.ConfigureServices(services => services.AddResourceDefinition<ImplicitlyChangingWorkItemGroupDefinition>());
-
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.ClientIdGeneration = ClientIdGenerationMode.Required;
+        testContext.ConfigureServices(services =>
+        {
+            services.AddResourceDefinition<ImplicitlyChangingWorkItemGroupDefinition>();
+            services.AddResourceDefinition<AssignIdToRgbColorDefinition>();
+        });
     }
 
-    [Fact]
-    public async Task Can_create_resource_with_client_generated_guid_ID_having_side_effects()
+    [Theory]
+    [InlineData(ClientIdGenerationMode.Allowed)]
+    [InlineData(ClientIdGenerationMode.Required)]
+    public async Task Can_create_resource_with_client_generated_guid_ID_having_side_effects(ClientIdGenerationMode mode)
     {
         // Arrange
-        WorkItemGroup newGroup = _fakers.WorkItemGroup.Generate();
+        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.ClientIdGeneration = mode;
+
+        WorkItemGroup newGroup = _fakers.WorkItemGroup.GenerateOne();
         newGroup.Id = Guid.NewGuid();
 
         var requestBody = new
@@ -58,11 +65,11 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
 
         string groupName = $"{newGroup.Name}{ImplicitlyChangingWorkItemGroupDefinition.Suffix}";
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItemGroups");
         responseDocument.Data.SingleValue.Id.Should().Be(newGroup.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(groupName));
-        responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(groupName);
+        responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -72,15 +79,20 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         });
 
         PropertyInfo? property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable<object>.Id));
-        property.ShouldNotBeNull();
-        property.PropertyType.Should().Be(typeof(Guid));
+        property.Should().NotBeNull();
+        property.PropertyType.Should().Be<Guid>();
     }
 
-    [Fact]
-    public async Task Can_create_resource_with_client_generated_guid_ID_having_side_effects_with_fieldset()
+    [Theory]
+    [InlineData(ClientIdGenerationMode.Allowed)]
+    [InlineData(ClientIdGenerationMode.Required)]
+    public async Task Can_create_resource_with_client_generated_guid_ID_having_side_effects_with_fieldset(ClientIdGenerationMode mode)
     {
         // Arrange
-        WorkItemGroup newGroup = _fakers.WorkItemGroup.Generate();
+        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.ClientIdGeneration = mode;
+
+        WorkItemGroup newGroup = _fakers.WorkItemGroup.GenerateOne();
         newGroup.Id = Guid.NewGuid();
 
         var requestBody = new
@@ -106,11 +118,11 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
 
         string groupName = $"{newGroup.Name}{ImplicitlyChangingWorkItemGroupDefinition.Suffix}";
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItemGroups");
         responseDocument.Data.SingleValue.Id.Should().Be(newGroup.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldHaveCount(1);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(groupName));
+        responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("name").WhoseValue.Should().Be(groupName);
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -121,15 +133,25 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         });
 
         PropertyInfo? property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable<object>.Id));
-        property.ShouldNotBeNull();
-        property.PropertyType.Should().Be(typeof(Guid));
+        property.Should().NotBeNull();
+        property.PropertyType.Should().Be<Guid>();
     }
 
-    [Fact]
-    public async Task Can_create_resource_with_client_generated_string_ID_having_no_side_effects()
+    [Theory]
+    [InlineData(ClientIdGenerationMode.Allowed)]
+    [InlineData(ClientIdGenerationMode.Required)]
+    public async Task Can_create_resource_with_client_generated_string_ID_having_no_side_effects(ClientIdGenerationMode mode)
     {
         // Arrange
-        RgbColor newColor = _fakers.RgbColor.Generate();
+        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.ClientIdGeneration = mode;
+
+        RgbColor newColor = _fakers.RgbColor.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<RgbColor>();
+        });
 
         var requestBody = new
         {
@@ -162,15 +184,25 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         });
 
         PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
-        property.ShouldNotBeNull();
-        property.PropertyType.Should().Be(typeof(string));
+        property.Should().NotBeNull();
+        property.PropertyType.Should().Be<string>();
     }
 
-    [Fact]
-    public async Task Can_create_resource_with_client_generated_string_ID_having_no_side_effects_with_fieldset()
+    [Theory]
+    [InlineData(ClientIdGenerationMode.Allowed)]
+    [InlineData(ClientIdGenerationMode.Required)]
+    public async Task Can_create_resource_with_client_generated_string_ID_having_no_side_effects_with_fieldset(ClientIdGenerationMode mode)
     {
         // Arrange
-        RgbColor newColor = _fakers.RgbColor.Generate();
+        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.ClientIdGeneration = mode;
+
+        RgbColor newColor = _fakers.RgbColor.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<RgbColor>();
+        });
 
         var requestBody = new
         {
@@ -203,15 +235,80 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         });
 
         PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
-        property.ShouldNotBeNull();
-        property.PropertyType.Should().Be(typeof(string));
+        property.Should().NotBeNull();
+        property.PropertyType.Should().Be<string>();
     }
 
-    [Fact]
-    public async Task Cannot_create_resource_for_missing_client_generated_ID()
+    [Theory]
+    [InlineData(ClientIdGenerationMode.Allowed)]
+    public async Task Can_create_resource_for_missing_client_generated_ID_having_side_effects(ClientIdGenerationMode mode)
     {
         // Arrange
-        string newDisplayName = _fakers.RgbColor.Generate().DisplayName;
+        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.ClientIdGeneration = mode;
+
+        string newDisplayName = _fakers.RgbColor.GenerateOne().DisplayName;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<RgbColor>();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "rgbColors",
+                attributes = new
+                {
+                    displayName = newDisplayName
+                }
+            }
+        };
+
+        const string route = "/rgbColors";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
+
+        const string defaultId = AssignIdToRgbColorDefinition.DefaultId;
+        const string defaultName = AssignIdToRgbColorDefinition.DefaultName;
+
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Type.Should().Be("rgbColors");
+        responseDocument.Data.SingleValue.Id.Should().Be(defaultId);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("displayName").WhoseValue.Should().Be(defaultName);
+        responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            RgbColor colorInDatabase = await dbContext.RgbColors.FirstWithIdAsync((string?)defaultId);
+
+            colorInDatabase.DisplayName.Should().Be(defaultName);
+        });
+
+        PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
+        property.Should().NotBeNull();
+        property.PropertyType.Should().Be<string>();
+    }
+
+    [Theory]
+    [InlineData(ClientIdGenerationMode.Required)]
+    public async Task Cannot_create_resource_for_missing_client_generated_ID(ClientIdGenerationMode mode)
+    {
+        // Arrange
+        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.ClientIdGeneration = mode;
+
+        string newDisplayName = _fakers.RgbColor.GenerateOne().DisplayName;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<RgbColor>();
+        });
 
         var requestBody = new
         {
@@ -233,28 +330,259 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: The 'id' element is required.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        error.Meta.Should().HaveRequestBody();
     }
 
-    [Fact]
-    public async Task Cannot_create_resource_for_existing_client_generated_ID()
+    [Theory]
+    [InlineData(ClientIdGenerationMode.Allowed)]
+    [InlineData(ClientIdGenerationMode.Required)]
+    public async Task Cannot_create_resource_with_client_generated_zero_guid_ID(ClientIdGenerationMode mode)
     {
         // Arrange
-        RgbColor existingColor = _fakers.RgbColor.Generate();
+        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.ClientIdGeneration = mode;
 
-        RgbColor colorToCreate = _fakers.RgbColor.Generate();
-        colorToCreate.Id = existingColor.Id;
+        WorkItemGroup newGroup = _fakers.WorkItemGroup.GenerateOne();
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "workItemGroups",
+                id = Guid.Empty.ToString(),
+                attributes = new
+                {
+                    name = newGroup.Name
+                }
+            }
+        };
+
+        const string route = "/workItemGroups";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: The 'id' element is invalid.");
+        error.Detail.Should().BeNull();
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data");
+        error.Meta.Should().HaveRequestBody();
+    }
+
+    [Theory]
+    [InlineData(ClientIdGenerationMode.Allowed)]
+    [InlineData(ClientIdGenerationMode.Required)]
+    public async Task Cannot_create_resource_with_client_generated_empty_guid_ID(ClientIdGenerationMode mode)
+    {
+        // Arrange
+        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.ClientIdGeneration = mode;
+
+        WorkItemGroup newGroup = _fakers.WorkItemGroup.GenerateOne();
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "workItemGroups",
+                id = string.Empty,
+                attributes = new
+                {
+                    name = newGroup.Name
+                }
+            }
+        };
+
+        const string route = "/workItemGroups";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: The 'id' element is invalid.");
+        error.Detail.Should().BeNull();
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data");
+        error.Meta.Should().HaveRequestBody();
+    }
+
+    [Theory]
+    [InlineData(ClientIdGenerationMode.Allowed)]
+    [InlineData(ClientIdGenerationMode.Required)]
+    public async Task Can_create_resource_with_client_generated_empty_string_ID(ClientIdGenerationMode mode)
+    {
+        // Arrange
+        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.ClientIdGeneration = mode;
+
+        RgbColor newColor = _fakers.RgbColor.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
+            await dbContext.ClearTableAsync<RgbColor>();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "rgbColors",
+                id = string.Empty,
+                attributes = new
+                {
+                    displayName = newColor.DisplayName
+                }
+            }
+        };
+
+        const string route = "/rgbColors?fields[rgbColors]=id";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            RgbColor colorInDatabase = await dbContext.RgbColors.FirstWithIdAsync((string?)string.Empty);
+
+            colorInDatabase.DisplayName.Should().Be(newColor.DisplayName);
+        });
+
+        PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
+        property.Should().NotBeNull();
+        property.PropertyType.Should().Be<string>();
+    }
+
+    [Theory]
+    [InlineData(ClientIdGenerationMode.Allowed)]
+    [InlineData(ClientIdGenerationMode.Required)]
+    public async Task Cannot_create_resource_with_client_generated_zero_long_ID(ClientIdGenerationMode mode)
+    {
+        // Arrange
+        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.ClientIdGeneration = mode;
+
+        UserAccount newAccount = _fakers.UserAccount.GenerateOne();
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "userAccounts",
+                id = "0",
+                attributes = new
+                {
+                    firstName = newAccount.FirstName,
+                    lastName = newAccount.LastName
+                }
+            }
+        };
+
+        const string route = "/userAccounts";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: The 'id' element is invalid.");
+        error.Detail.Should().BeNull();
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data");
+        error.Meta.Should().HaveRequestBody();
+    }
+
+    [Theory]
+    [InlineData(ClientIdGenerationMode.Allowed)]
+    [InlineData(ClientIdGenerationMode.Required)]
+    public async Task Cannot_create_resource_with_client_generated_empty_long_ID(ClientIdGenerationMode mode)
+    {
+        // Arrange
+        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.ClientIdGeneration = mode;
+
+        UserAccount newAccount = _fakers.UserAccount.GenerateOne();
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "userAccounts",
+                id = string.Empty,
+                attributes = new
+                {
+                    firstName = newAccount.FirstName,
+                    lastName = newAccount.LastName
+                }
+            }
+        };
+
+        const string route = "/userAccounts";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: The 'id' element is invalid.");
+        error.Detail.Should().BeNull();
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data");
+        error.Meta.Should().HaveRequestBody();
+    }
+
+    [Theory]
+    [InlineData(ClientIdGenerationMode.Allowed)]
+    [InlineData(ClientIdGenerationMode.Required)]
+    public async Task Cannot_create_resource_for_existing_client_generated_ID(ClientIdGenerationMode mode)
+    {
+        // Arrange
+        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.ClientIdGeneration = mode;
+
+        RgbColor existingColor = _fakers.RgbColor.GenerateOne();
+
+        RgbColor newColor = _fakers.RgbColor.GenerateOne();
+        newColor.Id = existingColor.Id;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<RgbColor>();
             dbContext.RgbColors.Add(existingColor);
             await dbContext.SaveChangesAsync();
         });
@@ -264,10 +592,10 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
             data = new
             {
                 type = "rgbColors",
-                id = colorToCreate.StringId,
+                id = newColor.StringId,
                 attributes = new
                 {
-                    displayName = colorToCreate.DisplayName
+                    displayName = newColor.DisplayName
                 }
             }
         };
@@ -280,7 +608,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);

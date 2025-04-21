@@ -8,7 +8,7 @@ internal static class IdentifiableExtensions
 
     public static object GetTypedId(this IIdentifiable identifiable)
     {
-        ArgumentGuard.NotNull(identifiable);
+        ArgumentNullException.ThrowIfNull(identifiable);
 
         PropertyInfo? property = identifiable.GetClrType().GetProperty(IdPropertyName);
 
@@ -18,17 +18,12 @@ internal static class IdentifiableExtensions
         }
 
         object? propertyValue = property.GetValue(identifiable);
+        object? defaultValue = RuntimeTypeConverter.GetDefaultValue(property.PropertyType);
 
-        // PERF: We want to throw when 'Id' is unassigned without doing an expensive reflection call, unless this is likely the case.
-        if (identifiable.StringId == null)
+        if (Equals(propertyValue, defaultValue))
         {
-            object? defaultValue = RuntimeTypeConverter.GetDefaultValue(property.PropertyType);
-
-            if (Equals(propertyValue, defaultValue))
-            {
-                throw new InvalidOperationException($"Property '{identifiable.GetClrType().Name}.{IdPropertyName}' should " +
-                    $"have been assigned at this point, but it contains its default {property.PropertyType.Name} value '{propertyValue}'.");
-            }
+            throw new InvalidOperationException($"Property '{identifiable.GetClrType().Name}.{IdPropertyName}' should " +
+                $"have been assigned at this point, but it contains its default {property.PropertyType.Name} value '{propertyValue}'.");
         }
 
         return propertyValue!;
@@ -36,7 +31,7 @@ internal static class IdentifiableExtensions
 
     public static Type GetClrType(this IIdentifiable identifiable)
     {
-        ArgumentGuard.NotNull(identifiable);
+        ArgumentNullException.ThrowIfNull(identifiable);
 
         return identifiable is IAbstractResourceWrapper abstractResource ? abstractResource.AbstractType : identifiable.GetType();
     }

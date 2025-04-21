@@ -37,7 +37,7 @@ public sealed class ResourceMetaTests : IClassFixture<IntegrationTestContext<Tes
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        List<SupportTicket> tickets = _fakers.SupportTicket.Generate(3);
+        List<SupportTicket> tickets = _fakers.SupportTicket.GenerateList(3);
         tickets[0].Description = $"Critical: {tickets[0].Description}";
         tickets[2].Description = $"Critical: {tickets[2].Description}";
 
@@ -56,10 +56,10 @@ public sealed class ResourceMetaTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(3);
-        responseDocument.Data.ManyValue[0].Meta.ShouldContainKey("hasHighPriority");
+        responseDocument.Data.ManyValue.Should().HaveCount(3);
+        responseDocument.Data.ManyValue[0].Meta.Should().ContainKey("hasHighPriority");
         responseDocument.Data.ManyValue[1].Meta.Should().BeNull();
-        responseDocument.Data.ManyValue[2].Meta.ShouldContainKey("hasHighPriority");
+        responseDocument.Data.ManyValue[2].Meta.Should().ContainKey("hasHighPriority");
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
@@ -75,8 +75,8 @@ public sealed class ResourceMetaTests : IClassFixture<IntegrationTestContext<Tes
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        ProductFamily family = _fakers.ProductFamily.Generate();
-        family.Tickets = _fakers.SupportTicket.Generate(1);
+        ProductFamily family = _fakers.ProductFamily.GenerateOne();
+        family.Tickets = _fakers.SupportTicket.GenerateList(1);
         family.Tickets[0].Description = $"Critical: {family.Tickets[0].Description}";
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -94,9 +94,9 @@ public sealed class ResourceMetaTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Included.ShouldHaveCount(1);
-        responseDocument.Included[0].Meta.ShouldContainKey("hasHighPriority");
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Included.Should().HaveCount(1);
+        responseDocument.Included[0].Meta.Should().ContainKey("hasHighPriority");
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {

@@ -52,11 +52,11 @@ public sealed class QueryExpressionRewriterTests
         rewriter.Visit(expression, null);
 
         // Assert
-        List<string> visitedTypeNames = rewriter.ExpressionsVisited.Select(queryExpression => queryExpression.GetType().Name).ToList();
-        List<string> expectedTypeNames = expectedTypes.Split(',').Select(type => $"{type}Expression").ToList();
+        string[] visitedTypeNames = rewriter.ExpressionsVisited.Select(queryExpression => queryExpression.GetType().Name).ToArray();
+        string[] expectedTypeNames = expectedTypes.Split(',').Select(type => $"{type}Expression").ToArray();
 
         visitedTypeNames.Should().ContainInOrder(expectedTypeNames);
-        visitedTypeNames.Should().HaveCount(expectedTypeNames.Count);
+        visitedTypeNames.Should().HaveCount(expectedTypeNames.Length);
     }
 
     [Theory]
@@ -75,11 +75,11 @@ public sealed class QueryExpressionRewriterTests
         rewriter.Visit(expression, null);
 
         // Assert
-        List<string> visitedTypeNames = rewriter.ExpressionsVisited.Select(queryExpression => queryExpression.GetType().Name).ToList();
-        List<string> expectedTypeNames = expectedTypes.Split(',').Select(type => $"{type}Expression").ToList();
+        string[] visitedTypeNames = rewriter.ExpressionsVisited.Select(queryExpression => queryExpression.GetType().Name).ToArray();
+        string[] expectedTypeNames = expectedTypes.Split(',').Select(type => $"{type}Expression").ToArray();
 
         visitedTypeNames.Should().ContainInOrder(expectedTypeNames);
-        visitedTypeNames.Should().HaveCount(expectedTypeNames.Count);
+        visitedTypeNames.Should().HaveCount(expectedTypeNames.Length);
     }
 
     [Fact]
@@ -104,7 +104,7 @@ public sealed class QueryExpressionRewriterTests
         rewriter.Visit(expression, null);
 
         // Assert
-        List<string> visitedTypeNames = rewriter.ExpressionsVisited.Select(queryExpression => queryExpression.GetType().Name).ToList();
+        string[] visitedTypeNames = rewriter.ExpressionsVisited.Select(queryExpression => queryExpression.GetType().Name).ToArray();
 
         visitedTypeNames.Should().HaveCount(3);
         visitedTypeNames[0].Should().Be("SparseFieldTableExpression");
@@ -135,11 +135,11 @@ public sealed class QueryExpressionRewriterTests
         rewriter.Visit(expression, null);
 
         // Assert
-        List<string> visitedTypeNames = rewriter.ExpressionsVisited.Select(queryExpression => queryExpression.GetType().Name).ToList();
-        List<string> expectedTypeNames = expectedTypes.Split(',').Select(type => $"{type}Expression").ToList();
+        string[] visitedTypeNames = rewriter.ExpressionsVisited.Select(queryExpression => queryExpression.GetType().Name).ToArray();
+        string[] expectedTypeNames = expectedTypes.Split(',').Select(type => $"{type}Expression").ToArray();
 
         visitedTypeNames.Should().ContainInOrder(expectedTypeNames);
-        visitedTypeNames.Should().HaveCount(expectedTypeNames.Count);
+        visitedTypeNames.Should().HaveCount(expectedTypeNames.Length);
     }
 
     [Theory]
@@ -159,11 +159,11 @@ public sealed class QueryExpressionRewriterTests
         rewriter.Visit(expression, null);
 
         // Assert
-        List<string> visitedTypeNames = rewriter.ExpressionsVisited.Select(queryExpression => queryExpression.GetType().Name).ToList();
-        List<string> expectedTypeNames = expectedTypes.Split(',').Select(type => $"{type}Expression").ToList();
+        string[] visitedTypeNames = rewriter.ExpressionsVisited.Select(queryExpression => queryExpression.GetType().Name).ToArray();
+        string[] expectedTypeNames = expectedTypes.Split(',').Select(type => $"{type}Expression").ToArray();
 
         visitedTypeNames.Should().ContainInOrder(expectedTypeNames);
-        visitedTypeNames.Should().HaveCount(expectedTypeNames.Count);
+        visitedTypeNames.Should().HaveCount(expectedTypeNames.Length);
     }
 
     [Theory]
@@ -182,11 +182,11 @@ public sealed class QueryExpressionRewriterTests
         rewriter.Visit(expression, null);
 
         // Assert
-        List<string> visitedTypeNames = rewriter.ExpressionsVisited.Select(queryExpression => queryExpression.GetType().Name).ToList();
-        List<string> expectedTypeNames = expectedTypes.Split(',').Select(type => $"{type}Expression").ToList();
+        string[] visitedTypeNames = rewriter.ExpressionsVisited.Select(queryExpression => queryExpression.GetType().Name).ToArray();
+        string[] expectedTypeNames = expectedTypes.Split(',').Select(type => $"{type}Expression").ToArray();
 
         visitedTypeNames.Should().ContainInOrder(expectedTypeNames);
-        visitedTypeNames.Should().HaveCount(expectedTypeNames.Count);
+        visitedTypeNames.Should().HaveCount(expectedTypeNames.Length);
     }
 
     [Theory]
@@ -207,10 +207,10 @@ public sealed class QueryExpressionRewriterTests
         rewriter.Visit(expression, null);
 
         // Assert
-        List<string> visitedTypeNames = rewriter.ExpressionsVisited.Select(queryExpression => queryExpression.GetType().Name).ToList();
-        List<string> expectedTypeNames = expectedTypes.Split(',').Select(type => $"{type}Expression").ToList();
+        string[] visitedTypeNames = rewriter.ExpressionsVisited.Select(queryExpression => queryExpression.GetType().Name).ToArray();
+        string[] expectedTypeNames = expectedTypes.Split(',').Select(type => $"{type}Expression").ToArray();
 
         visitedTypeNames.Should().ContainInOrder(expectedTypeNames);
-        visitedTypeNames.Should().HaveCount(expectedTypeNames.Count);
+        visitedTypeNames.Should().HaveCount(expectedTypeNames.Length);
     }
 }

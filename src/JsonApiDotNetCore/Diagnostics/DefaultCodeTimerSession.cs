@@ -2,7 +2,7 @@ namespace JsonApiDotNetCore.Diagnostics;
 
 /// <summary>
 /// General code timing session management. Can be used with async/wait, but it cannot distinguish between concurrently running threads, so you'll need
-/// to pass an <see cref="CascadingCodeTimer" /> instance through the entire call chain in that case.
+/// to pass a <see cref="CascadingCodeTimer" /> instance through the entire call chain in that case.
 /// </summary>
 public sealed class DefaultCodeTimerSession : ICodeTimerSession
 {
@@ -27,10 +27,7 @@ public sealed class DefaultCodeTimerSession : ICodeTimerSession
 
     private void AssertNotDisposed()
     {
-        if (_codeTimerInContext.Value == null)
-        {
-            throw new ObjectDisposedException(nameof(DefaultCodeTimerSession));
-        }
+        ObjectDisposedException.ThrowIf(_codeTimerInContext.Value == null, this);
     }
 
     public void Dispose()

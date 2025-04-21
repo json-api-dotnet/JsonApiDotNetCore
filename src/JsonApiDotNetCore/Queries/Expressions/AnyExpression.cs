@@ -28,7 +28,7 @@ public class AnyExpression : FilterExpression
 
     public AnyExpression(ResourceFieldChainExpression targetAttribute, IImmutableSet<LiteralConstantExpression> constants)
     {
-        ArgumentGuard.NotNull(targetAttribute);
+        ArgumentNullException.ThrowIfNull(targetAttribute);
         ArgumentGuard.NotNullNorEmpty(constants);
 
         TargetAttribute = targetAttribute;

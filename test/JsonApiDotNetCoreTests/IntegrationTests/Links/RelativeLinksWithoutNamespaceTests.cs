@@ -35,7 +35,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
     public async Task Get_primary_resource_by_ID_returns_relative_links()
     {
         // Arrange
-        PhotoAlbum album = _fakers.PhotoAlbum.Generate();
+        PhotoAlbum album = _fakers.PhotoAlbum.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -51,7 +51,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.Related.Should().BeNull();
         responseDocument.Links.First.Should().BeNull();
@@ -60,14 +60,14 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         responseDocument.Links.Next.Should().BeNull();
         responseDocument.Links.DescribedBy.Should().BeNull();
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Links.Should().NotBeNull();
         responseDocument.Data.SingleValue.Links.Self.Should().Be($"{HostPrefix}{route}");
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("photos").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("photos").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Links.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Links.Should().NotBeNull();
             value.Links.Self.Should().Be($"{HostPrefix}{route}/relationships/photos");
             value.Links.Related.Should().Be($"{HostPrefix}{route}/photos");
         });
@@ -77,8 +77,8 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
     public async Task Get_primary_resources_with_include_returns_relative_links()
     {
         // Arrange
-        PhotoAlbum album = _fakers.PhotoAlbum.Generate();
-        album.Photos = _fakers.Photo.Generate(1).ToHashSet();
+        PhotoAlbum album = _fakers.PhotoAlbum.GenerateOne();
+        album.Photos = _fakers.Photo.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -95,7 +95,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.Related.Should().BeNull();
         responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
@@ -104,37 +104,37 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         responseDocument.Links.Next.Should().BeNull();
         responseDocument.Links.DescribedBy.Should().BeNull();
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
 
         responseDocument.Data.ManyValue[0].With(resource =>
         {
             string albumLink = $"{HostPrefix}{PathPrefix}/photoAlbums/{album.StringId}";
 
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be(albumLink);
 
-            resource.Relationships.ShouldContainKey("photos").With(value =>
+            resource.Relationships.Should().ContainKey("photos").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"{albumLink}/relationships/photos");
                 value.Links.Related.Should().Be($"{albumLink}/photos");
             });
         });
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
 
         responseDocument.Included[0].With(resource =>
         {
             string photoLink = $"{HostPrefix}{PathPrefix}/photos/{album.Photos.ElementAt(0).StringId}";
 
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be(photoLink);
 
-            resource.Relationships.ShouldContainKey("album").With(value =>
+            resource.Relationships.Should().ContainKey("album").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"{photoLink}/relationships/album");
                 value.Links.Related.Should().Be($"{photoLink}/album");
             });
@@ -145,8 +145,8 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
     public async Task Get_secondary_resource_returns_relative_links()
     {
         // Arrange
-        Photo photo = _fakers.Photo.Generate();
-        photo.Album = _fakers.PhotoAlbum.Generate();
+        Photo photo = _fakers.Photo.GenerateOne();
+        photo.Album = _fakers.PhotoAlbum.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -162,7 +162,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.Related.Should().BeNull();
         responseDocument.Links.First.Should().BeNull();
@@ -173,14 +173,14 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
 
         string albumLink = $"{HostPrefix}{PathPrefix}/photoAlbums/{photo.Album.StringId}";
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Links.Should().NotBeNull();
         responseDocument.Data.SingleValue.Links.Self.Should().Be(albumLink);
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("photos").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("photos").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Links.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Links.Should().NotBeNull();
             value.Links.Self.Should().Be($"{albumLink}/relationships/photos");
             value.Links.Related.Should().Be($"{albumLink}/photos");
         });
@@ -190,8 +190,8 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
     public async Task Get_secondary_resources_returns_relative_links()
     {
         // Arrange
-        PhotoAlbum album = _fakers.PhotoAlbum.Generate();
-        album.Photos = _fakers.Photo.Generate(1).ToHashSet();
+        PhotoAlbum album = _fakers.PhotoAlbum.GenerateOne();
+        album.Photos = _fakers.Photo.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -207,7 +207,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.Related.Should().BeNull();
         responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
@@ -216,19 +216,19 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         responseDocument.Links.Next.Should().BeNull();
         responseDocument.Links.DescribedBy.Should().BeNull();
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
 
         responseDocument.Data.ManyValue[0].With(resource =>
         {
             string photoLink = $"{HostPrefix}{PathPrefix}/photos/{album.Photos.ElementAt(0).StringId}";
 
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be(photoLink);
 
-            resource.Relationships.ShouldContainKey("album").With(value =>
+            resource.Relationships.Should().ContainKey("album").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"{photoLink}/relationships/album");
                 value.Links.Related.Should().Be($"{photoLink}/album");
             });
@@ -239,8 +239,8 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
     public async Task Get_ToOne_relationship_returns_relative_links()
     {
         // Arrange
-        Photo photo = _fakers.Photo.Generate();
-        photo.Album = _fakers.PhotoAlbum.Generate();
+        Photo photo = _fakers.Photo.GenerateOne();
+        photo.Album = _fakers.PhotoAlbum.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -256,7 +256,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.Related.Should().Be($"{HostPrefix}{PathPrefix}/photos/{photo.StringId}/album");
         responseDocument.Links.First.Should().BeNull();
@@ -265,7 +265,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         responseDocument.Links.Next.Should().BeNull();
         responseDocument.Links.DescribedBy.Should().BeNull();
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Links.Should().BeNull();
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
     }
@@ -274,8 +274,8 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
     public async Task Get_ToMany_relationship_returns_relative_links()
     {
         // Arrange
-        PhotoAlbum album = _fakers.PhotoAlbum.Generate();
-        album.Photos = _fakers.Photo.Generate(1).ToHashSet();
+        PhotoAlbum album = _fakers.PhotoAlbum.GenerateOne();
+        album.Photos = _fakers.Photo.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -291,7 +291,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.Related.Should().Be($"{HostPrefix}{PathPrefix}/photoAlbums/{album.StringId}/photos");
         responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
@@ -300,7 +300,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         responseDocument.Links.Next.Should().BeNull();
         responseDocument.Links.DescribedBy.Should().BeNull();
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Links.Should().BeNull();
         responseDocument.Data.ManyValue[0].Relationships.Should().BeNull();
     }
@@ -309,9 +309,9 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
     public async Task Create_resource_with_side_effects_and_include_returns_relative_links()
     {
         // Arrange
-        Photo existingPhoto = _fakers.Photo.Generate();
+        Photo existingPhoto = _fakers.Photo.GenerateOne();
 
-        string newAlbumName = _fakers.PhotoAlbum.Generate().Name;
+        string newAlbumName = _fakers.PhotoAlbum.GenerateOne().Name;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -353,7 +353,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.Related.Should().BeNull();
         responseDocument.Links.First.Should().BeNull();
@@ -362,34 +362,34 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         responseDocument.Links.Next.Should().BeNull();
         responseDocument.Links.DescribedBy.Should().BeNull();
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Links.Should().NotBeNull();
 
         string albumLink = $"{HostPrefix}{PathPrefix}/photoAlbums/{responseDocument.Data.SingleValue.Id}";
 
         responseDocument.Data.SingleValue.Links.Self.Should().Be(albumLink);
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("photos").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("photos").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Links.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Links.Should().NotBeNull();
             value.Links.Self.Should().Be($"{albumLink}/relationships/photos");
             value.Links.Related.Should().Be($"{albumLink}/photos");
         });
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
 
         responseDocument.Included[0].With(resource =>
         {
             string photoLink = $"{HostPrefix}{PathPrefix}/photos/{existingPhoto.StringId}";
 
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be(photoLink);
 
-            resource.Relationships.ShouldContainKey("album").With(value =>
+            resource.Relationships.Should().ContainKey("album").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"{photoLink}/relationships/album");
                 value.Links.Related.Should().Be($"{photoLink}/album");
             });
@@ -402,8 +402,8 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
     public async Task Update_resource_with_side_effects_and_include_returns_relative_links()
     {
         // Arrange
-        Photo existingPhoto = _fakers.Photo.Generate();
-        PhotoAlbum existingAlbum = _fakers.PhotoAlbum.Generate();
+        Photo existingPhoto = _fakers.Photo.GenerateOne();
+        PhotoAlbum existingAlbum = _fakers.PhotoAlbum.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -439,7 +439,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.Related.Should().BeNull();
         responseDocument.Links.First.Should().BeNull();
@@ -450,31 +450,31 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
 
         string photoLink = $"{HostPrefix}{PathPrefix}/photos/{existingPhoto.StringId}";
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Links.Should().NotBeNull();
         responseDocument.Data.SingleValue.Links.Self.Should().Be(photoLink);
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("album").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("album").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Links.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Links.Should().NotBeNull();
             value.Links.Self.Should().Be($"{photoLink}/relationships/album");
             value.Links.Related.Should().Be($"{photoLink}/album");
         });
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
 
         responseDocument.Included[0].With(resource =>
         {
             string albumLink = $"{HostPrefix}{PathPrefix}/photoAlbums/{existingAlbum.StringId}";
 
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be(albumLink);
 
-            resource.Relationships.ShouldContainKey("photos").With(value =>
+            resource.Relationships.Should().ContainKey("photos").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"{albumLink}/relationships/photos");
                 value.Links.Related.Should().Be($"{albumLink}/photos");
             });

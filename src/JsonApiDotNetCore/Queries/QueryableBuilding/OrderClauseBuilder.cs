@@ -10,7 +10,7 @@ public class OrderClauseBuilder : QueryClauseBuilder, IOrderClauseBuilder
 {
     public virtual Expression ApplyOrderBy(SortExpression expression, QueryClauseBuilderContext context)
     {
-        ArgumentGuard.NotNull(expression);
+        ArgumentNullException.ThrowIfNull(expression);
 
         return Visit(expression, context);
     }
@@ -54,7 +54,7 @@ public class OrderClauseBuilder : QueryClauseBuilder, IOrderClauseBuilder
         return isAscending ? "OrderBy" : "OrderByDescending";
     }
 
-    private static Expression ExtensionMethodCall(Expression source, string operationName, Type keyType, LambdaExpression keySelector,
+    private static MethodCallExpression ExtensionMethodCall(Expression source, string operationName, Type keyType, LambdaExpression keySelector,
         QueryClauseBuilderContext context)
     {
         Type[] typeArguments =

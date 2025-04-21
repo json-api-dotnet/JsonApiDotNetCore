@@ -32,7 +32,7 @@ public abstract class InMemoryResourceRepository<TResource, TId>(IResourceGraph 
         IEnumerable<TResource> dataSource = GetDataSource();
         IEnumerable<TResource> resources = _queryLayerToLinqConverter.ApplyQueryLayer(queryLayer, dataSource);
 
-        return Task.FromResult<IReadOnlyCollection<TResource>>(resources.ToList());
+        return Task.FromResult<IReadOnlyCollection<TResource>>(resources.ToArray().AsReadOnly());
     }
 
     /// <inheritdoc />

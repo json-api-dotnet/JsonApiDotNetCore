@@ -37,9 +37,9 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
 
     public ResourceObjectTreeNode(IIdentifiable resource, ResourceType resourceType, ResourceObject resourceObject)
     {
-        ArgumentGuard.NotNull(resource);
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(resourceObject);
+        ArgumentNullException.ThrowIfNull(resource);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceObject);
 
         Resource = resource;
         ResourceType = resourceType;
@@ -53,7 +53,7 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
 
     public void AttachDirectChild(ResourceObjectTreeNode treeNode)
     {
-        ArgumentGuard.NotNull(treeNode);
+        ArgumentNullException.ThrowIfNull(treeNode);
 
         _directChildren ??= [];
         _directChildren.Add(treeNode);
@@ -61,7 +61,7 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
 
     public void EnsureHasRelationship(RelationshipAttribute relationship)
     {
-        ArgumentGuard.NotNull(relationship);
+        ArgumentNullException.ThrowIfNull(relationship);
 
         _childrenByRelationship ??= [];
 
@@ -73,8 +73,8 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
 
     public void AttachRelationshipChild(RelationshipAttribute relationship, ResourceObjectTreeNode rightNode)
     {
-        ArgumentGuard.NotNull(relationship);
-        ArgumentGuard.NotNull(rightNode);
+        ArgumentNullException.ThrowIfNull(relationship);
+        ArgumentNullException.ThrowIfNull(rightNode);
 
         if (_childrenByRelationship == null)
         {
@@ -92,11 +92,11 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
     {
         AssertIsTreeRoot();
 
-        var visited = new HashSet<ResourceObjectTreeNode>();
+        HashSet<ResourceObjectTreeNode> visited = [];
 
         VisitSubtree(this, visited);
 
-        return visited;
+        return visited.AsReadOnly();
     }
 
     private static void VisitSubtree(ResourceObjectTreeNode treeNode, ISet<ResourceObjectTreeNode> visited)
@@ -151,7 +151,7 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
     public IReadOnlySet<ResourceObjectTreeNode>? GetRightNodesInRelationship(RelationshipAttribute relationship)
     {
         return _childrenByRelationship != null && _childrenByRelationship.TryGetValue(relationship, out HashSet<ResourceObjectTreeNode>? rightNodes)
-            ? rightNodes
+            ? rightNodes.AsReadOnly()
             : null;
     }
 
@@ -162,7 +162,7 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
     {
         AssertIsTreeRoot();
 
-        return GetDirectChildren().Select(child => child.ResourceObject).ToArray();
+        return GetDirectChildren().Select(child => child.ResourceObject).ToArray().AsReadOnly();
     }
 
     /// <summary>
@@ -174,14 +174,14 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
     {
         AssertIsTreeRoot();
 
-        var visited = new HashSet<ResourceObjectTreeNode>();
+        HashSet<ResourceObjectTreeNode> visited = [];
 
         foreach (ResourceObjectTreeNode child in GetDirectChildren())
         {
             VisitRelationshipChildrenInSubtree(child, visited);
         }
 
-        ISet<ResourceObject> primaryResourceObjectSet = GetDirectChildren().Select(node => node.ResourceObject).ToHashSet(ResourceObjectComparer.Instance);
+        HashSet<ResourceObject> primaryResourceObjectSet = GetDirectChildren().Select(node => node.ResourceObject).ToHashSet(ResourceObjectComparer.Instance);
         List<ResourceObject> includes = [];
 
         foreach (ResourceObject include in visited.Select(node => node.ResourceObject))
@@ -210,7 +210,7 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
 
     public bool Equals(ResourceObjectTreeNode? other)
     {
-        if (ReferenceEquals(null, other))
+        if (other is null)
         {
             return false;
         }

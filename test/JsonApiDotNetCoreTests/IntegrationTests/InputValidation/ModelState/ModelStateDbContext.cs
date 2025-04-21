@@ -7,7 +7,8 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class ModelStateDbContext(DbContextOptions<ModelStateDbContext> options) : TestableDbContext(options)
+public sealed class ModelStateDbContext(DbContextOptions<ModelStateDbContext> options)
+    : TestableDbContext(options)
 {
     public DbSet<SystemVolume> Volumes => Set<SystemVolume>();
     public DbSet<SystemDirectory> Directories => Set<SystemDirectory>();

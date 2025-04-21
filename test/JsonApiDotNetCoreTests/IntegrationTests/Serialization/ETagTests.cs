@@ -24,7 +24,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Returns_ETag_for_HEAD_request()
     {
         // Arrange
-        List<Meeting> meetings = _fakers.Meeting.Generate(2);
+        List<Meeting> meetings = _fakers.Meeting.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -41,9 +41,9 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        httpResponse.Headers.ETag.ShouldNotBeNull();
+        httpResponse.Headers.ETag.Should().NotBeNull();
         httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
-        httpResponse.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
+        httpResponse.Headers.ETag.Tag.Should().NotBeNullOrEmpty();
 
         responseDocument.Should().BeEmpty();
     }
@@ -52,7 +52,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Returns_ETag_for_GET_request()
     {
         // Arrange
-        List<Meeting> meetings = _fakers.Meeting.Generate(2);
+        List<Meeting> meetings = _fakers.Meeting.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -69,11 +69,11 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        httpResponse.Headers.ETag.ShouldNotBeNull();
+        httpResponse.Headers.ETag.Should().NotBeNull();
         httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
-        httpResponse.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
+        httpResponse.Headers.ETag.Tag.Should().NotBeNullOrEmpty();
 
-        responseDocument.ShouldNotBeEmpty();
+        responseDocument.Should().NotBeEmpty();
     }
 
     [Fact]
@@ -90,7 +90,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
 
         httpResponse.Headers.ETag.Should().BeNull();
 
-        responseDocument.ShouldNotBeEmpty();
+        responseDocument.Should().NotBeEmpty();
     }
 
     [Fact]
@@ -98,7 +98,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
     {
         // Arrange
         var newId = Guid.NewGuid();
-        string newTitle = _fakers.Meeting.Generate().Title;
+        string newTitle = _fakers.Meeting.GenerateOne().Title;
 
         var requestBody = new
         {
@@ -123,16 +123,16 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
 
         httpResponse.Headers.ETag.Should().BeNull();
 
-        responseDocument.ShouldNotBeEmpty();
+        responseDocument.Should().NotBeEmpty();
     }
 
     [Fact]
     public async Task Fails_on_ETag_in_PATCH_request()
     {
         // Arrange
-        Meeting existingMeeting = _fakers.Meeting.Generate();
+        Meeting existingMeeting = _fakers.Meeting.GenerateOne();
 
-        string newTitle = _fakers.Meeting.Generate().Title;
+        string newTitle = _fakers.Meeting.GenerateOne().Title;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -158,19 +158,18 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
         Action<HttpRequestHeaders> setRequestHeaders = headers => headers.IfMatch.ParseAdd("\"12345\"");
 
         // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) =
-            await _testContext.ExecutePatchAsync<Document>(route, requestBody, setRequestHeaders: setRequestHeaders);
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody, setRequestHeaders);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.PreconditionFailed);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.PreconditionFailed);
         error.Title.Should().Be("Detection of mid-air edit collisions using ETags is not supported.");
         error.Detail.Should().BeNull();
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be("If-Match");
     }
 
@@ -178,7 +177,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Returns_NotModified_for_matching_ETag()
     {
         // Arrange
-        List<Meeting> meetings = _fakers.Meeting.Generate(2);
+        List<Meeting> meetings = _fakers.Meeting.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -201,9 +200,9 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse2.ShouldHaveStatusCode(HttpStatusCode.NotModified);
 
-        httpResponse2.Headers.ETag.ShouldNotBeNull();
+        httpResponse2.Headers.ETag.Should().NotBeNull();
         httpResponse2.Headers.ETag.IsWeak.Should().BeFalse();
-        httpResponse2.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
+        httpResponse2.Headers.ETag.Tag.Should().NotBeNullOrEmpty();
 
         responseDocument2.Should().BeEmpty();
     }
@@ -212,7 +211,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Returns_content_for_mismatching_ETag()
     {
         // Arrange
-        List<Meeting> meetings = _fakers.Meeting.Generate(2);
+        List<Meeting> meetings = _fakers.Meeting.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -231,10 +230,10 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        httpResponse.Headers.ETag.ShouldNotBeNull();
+        httpResponse.Headers.ETag.Should().NotBeNull();
         httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
-        httpResponse.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
+        httpResponse.Headers.ETag.Tag.Should().NotBeNullOrEmpty();
 
-        responseDocument.ShouldNotBeEmpty();
+        responseDocument.Should().NotBeEmpty();
     }
 }

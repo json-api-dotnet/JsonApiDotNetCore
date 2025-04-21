@@ -42,7 +42,7 @@ public sealed class ResourceDefinitionSerializationTests
         var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        List<Student> students = _fakers.Student.Generate(2);
+        List<Student> students = _fakers.Student.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -59,19 +59,19 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(students[0].SocialSecurityNumber);
         });
 
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(students[1].SocialSecurityNumber);
@@ -91,9 +91,9 @@ public sealed class ResourceDefinitionSerializationTests
         var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        List<Scholarship> scholarships = _fakers.Scholarship.Generate(2);
-        scholarships[0].Participants = _fakers.Student.Generate(2);
-        scholarships[1].Participants = _fakers.Student.Generate(2);
+        List<Scholarship> scholarships = _fakers.Scholarship.GenerateList(2);
+        scholarships[0].Participants = _fakers.Student.GenerateList(2);
+        scholarships[1].Participants = _fakers.Student.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -110,37 +110,37 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
-        responseDocument.Included.ShouldHaveCount(4);
+        responseDocument.Included.Should().HaveCount(4);
 
-        responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Included[0].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(scholarships[0].Participants[0].SocialSecurityNumber);
         });
 
-        responseDocument.Included[1].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Included[1].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(scholarships[0].Participants[1].SocialSecurityNumber);
         });
 
-        responseDocument.Included[2].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Included[2].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(scholarships[1].Participants[0].SocialSecurityNumber);
         });
 
-        responseDocument.Included[3].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Included[3].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(scholarships[1].Participants[1].SocialSecurityNumber);
@@ -162,7 +162,7 @@ public sealed class ResourceDefinitionSerializationTests
         var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Student student = _fakers.Student.Generate();
+        Student student = _fakers.Student.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -178,11 +178,11 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(student.SocialSecurityNumber);
@@ -201,8 +201,8 @@ public sealed class ResourceDefinitionSerializationTests
         var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Scholarship scholarship = _fakers.Scholarship.Generate();
-        scholarship.Participants = _fakers.Student.Generate(2);
+        Scholarship scholarship = _fakers.Scholarship.GenerateOne();
+        scholarship.Participants = _fakers.Student.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -218,19 +218,19 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(scholarship.Participants[0].SocialSecurityNumber);
         });
 
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(scholarship.Participants[1].SocialSecurityNumber);
@@ -250,8 +250,8 @@ public sealed class ResourceDefinitionSerializationTests
         var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Scholarship scholarship = _fakers.Scholarship.Generate();
-        scholarship.PrimaryContact = _fakers.Student.Generate();
+        Scholarship scholarship = _fakers.Scholarship.GenerateOne();
+        scholarship.PrimaryContact = _fakers.Student.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -267,11 +267,11 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(scholarship.PrimaryContact.SocialSecurityNumber);
@@ -290,8 +290,8 @@ public sealed class ResourceDefinitionSerializationTests
         var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Scholarship scholarship = _fakers.Scholarship.Generate();
-        scholarship.PrimaryContact = _fakers.Student.Generate();
+        Scholarship scholarship = _fakers.Scholarship.GenerateOne();
+        scholarship.PrimaryContact = _fakers.Student.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -307,13 +307,13 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
 
-        responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Included[0].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(scholarship.PrimaryContact.SocialSecurityNumber);
@@ -332,8 +332,8 @@ public sealed class ResourceDefinitionSerializationTests
         var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        string newName = _fakers.Student.Generate().Name;
-        string newSocialSecurityNumber = _fakers.Student.Generate().SocialSecurityNumber;
+        string newName = _fakers.Student.GenerateOne().Name;
+        string newSocialSecurityNumber = _fakers.Student.GenerateOne().SocialSecurityNumber;
 
         var requestBody = new
         {
@@ -356,17 +356,17 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(newSocialSecurityNumber);
         });
 
-        int newStudentId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        int newStudentId = int.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -389,10 +389,10 @@ public sealed class ResourceDefinitionSerializationTests
         var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Student existingStudent = _fakers.Student.Generate();
+        Student existingStudent = _fakers.Student.GenerateOne();
 
-        string newProgramName = _fakers.Scholarship.Generate().ProgramName;
-        decimal newAmount = _fakers.Scholarship.Generate().Amount;
+        string newProgramName = _fakers.Scholarship.GenerateOne().ProgramName;
+        decimal newAmount = _fakers.Scholarship.GenerateOne().Amount;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -432,13 +432,13 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
 
-        responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Included[0].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(existingStudent.SocialSecurityNumber);
@@ -457,9 +457,9 @@ public sealed class ResourceDefinitionSerializationTests
         var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Student existingStudent = _fakers.Student.Generate();
+        Student existingStudent = _fakers.Student.GenerateOne();
 
-        string newSocialSecurityNumber = _fakers.Student.Generate().SocialSecurityNumber;
+        string newSocialSecurityNumber = _fakers.Student.GenerateOne().SocialSecurityNumber;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -488,11 +488,11 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(newSocialSecurityNumber);
@@ -519,10 +519,10 @@ public sealed class ResourceDefinitionSerializationTests
         var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Scholarship existingScholarship = _fakers.Scholarship.Generate();
-        existingScholarship.Participants = _fakers.Student.Generate(3);
+        Scholarship existingScholarship = _fakers.Scholarship.GenerateOne();
+        existingScholarship.Participants = _fakers.Student.GenerateList(3);
 
-        decimal newAmount = _fakers.Scholarship.Generate().Amount;
+        decimal newAmount = _fakers.Scholarship.GenerateOne().Amount;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -570,21 +570,21 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
 
-        responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Included[0].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(existingScholarship.Participants[0].SocialSecurityNumber);
         });
 
-        responseDocument.Included[1].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        responseDocument.Included[1].Attributes.Should().ContainKey("socialSecurityNumber").WhoseValue.With(value =>
         {
-            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string stringValue = value.Should().BeOfType<string?>().Subject.Should().NotBeNull().And.Subject;
             string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
             socialSecurityNumber.Should().Be(existingScholarship.Participants[2].SocialSecurityNumber);
@@ -603,8 +603,8 @@ public sealed class ResourceDefinitionSerializationTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Scholarship scholarship = _fakers.Scholarship.Generate();
-        scholarship.PrimaryContact = _fakers.Student.Generate();
+        Scholarship scholarship = _fakers.Scholarship.GenerateOne();
+        scholarship.PrimaryContact = _fakers.Student.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -620,7 +620,7 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(scholarship.PrimaryContact.StringId);
 
         hitCounter.HitExtensibilityPoints.Should().BeEmpty();
@@ -632,8 +632,8 @@ public sealed class ResourceDefinitionSerializationTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Scholarship scholarship = _fakers.Scholarship.Generate();
-        scholarship.Participants = _fakers.Student.Generate(2);
+        Scholarship scholarship = _fakers.Scholarship.GenerateOne();
+        scholarship.Participants = _fakers.Student.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -649,7 +649,7 @@ public sealed class ResourceDefinitionSerializationTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(scholarship.Participants[0].StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(scholarship.Participants[1].StringId);
 
@@ -662,8 +662,8 @@ public sealed class ResourceDefinitionSerializationTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Scholarship existingScholarship = _fakers.Scholarship.Generate();
-        Student existingStudent = _fakers.Student.Generate();
+        Scholarship existingScholarship = _fakers.Scholarship.GenerateOne();
+        Student existingStudent = _fakers.Student.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -699,8 +699,8 @@ public sealed class ResourceDefinitionSerializationTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Scholarship existingScholarship = _fakers.Scholarship.Generate();
-        List<Student> existingStudents = _fakers.Student.Generate(2);
+        Scholarship existingScholarship = _fakers.Scholarship.GenerateOne();
+        List<Student> existingStudents = _fakers.Student.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -745,8 +745,8 @@ public sealed class ResourceDefinitionSerializationTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Scholarship existingScholarship = _fakers.Scholarship.Generate();
-        List<Student> existingStudents = _fakers.Student.Generate(2);
+        Scholarship existingScholarship = _fakers.Scholarship.GenerateOne();
+        List<Student> existingStudents = _fakers.Student.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -791,8 +791,8 @@ public sealed class ResourceDefinitionSerializationTests
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        Scholarship existingScholarship = _fakers.Scholarship.Generate();
-        existingScholarship.Participants = _fakers.Student.Generate(2);
+        Scholarship existingScholarship = _fakers.Scholarship.GenerateOne();
+        existingScholarship.Participants = _fakers.Student.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

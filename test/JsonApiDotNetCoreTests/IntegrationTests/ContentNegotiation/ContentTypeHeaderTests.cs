@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Headers;
 using FluentAssertions;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -31,8 +32,8 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
-        httpResponse.Content.Headers.ContentType.ToString().Should().Be(HeaderConstants.MediaType);
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
     }
 
     [Fact]
@@ -66,8 +67,8 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
-        httpResponse.Content.Headers.ContentType.ToString().Should().Be(HeaderConstants.AtomicOperationsMediaType);
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.AtomicOperations.ToString());
     }
 
     [Fact]
@@ -94,16 +95,19 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         };
 
         const string route = "/operations";
-        const string contentType = HeaderConstants.RelaxedAtomicOperationsMediaType;
+        string contentType = JsonApiMediaType.RelaxedAtomicOperations.ToString();
+
+        Action<HttpRequestHeaders> setRequestHeaders = headers =>
+            headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(JsonApiMediaType.RelaxedAtomicOperations.ToString()));
 
         // Act
-        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody, contentType);
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType, setRequestHeaders);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
-        httpResponse.Content.Headers.ContentType.ToString().Should().Be(HeaderConstants.RelaxedAtomicOperationsMediaType);
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.RelaxedAtomicOperations.ToString());
     }
 
     [Fact]
@@ -131,13 +135,64 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
+
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         error.Title.Should().Be("The specified Content-Type header value is not supported.");
-        error.Detail.Should().Be("Please specify 'application/vnd.api+json' instead of 'text/html' for the Content-Type header value.");
-        error.Source.ShouldNotBeNull();
+        error.Detail.Should().Be($"Use '{JsonApiMediaType.Default}' instead of 'text/html' for the Content-Type header value.");
+        error.Source.Should().NotBeNull();
+        error.Source.Header.Should().Be("Content-Type");
+    }
+
+    [Fact]
+    public async Task Denies_unknown_ContentType_header_at_operations_endpoint()
+    {
+        // Arrange
+        var requestBody = new
+        {
+            atomic__operations = new[]
+            {
+                new
+                {
+                    op = "add",
+                    data = new
+                    {
+                        type = "policies",
+                        attributes = new
+                        {
+                            name = "some"
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/operations";
+        const string contentType = "text/html";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnsupportedMediaType);
+
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        string detail =
+            $"Use '{JsonApiMediaType.AtomicOperations}' or '{JsonApiMediaType.RelaxedAtomicOperations}' instead of 'text/html' for the Content-Type header value.";
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
+        error.Title.Should().Be("The specified Content-Type header value is not supported.");
+        error.Detail.Should().Be(detail);
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be("Content-Type");
     }
 
@@ -158,14 +213,45 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         };
 
         const string route = "/policies";
-        const string contentType = HeaderConstants.MediaType;
+        string contentType = JsonApiMediaType.Default.ToString();
 
         // Act
-        // ReSharper disable once RedundantArgumentDefaultValue
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
+
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
+    }
+
+    [Fact]
+    public async Task Permits_JsonApi_ContentType_header_in_upper_case()
+    {
+        // Arrange
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "policies",
+                attributes = new
+                {
+                    name = "some"
+                }
+            }
+        };
+
+        const string route = "/policies";
+        string contentType = JsonApiMediaType.Default.ToString().ToUpperInvariant();
+
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
+
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
     }
 
     [Fact]
@@ -192,13 +278,63 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         };
 
         const string route = "/operations";
-        const string contentType = HeaderConstants.AtomicOperationsMediaType;
 
         // Act
-        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.AtomicOperations.ToString());
+    }
+
+    [Fact]
+    public async Task Denies_JsonApi_ContentType_header_with_AtomicOperations_extension_at_operations_endpoint_in_upper_case()
+    {
+        // Arrange
+        var requestBody = new
+        {
+            atomic__operations = new[]
+            {
+                new
+                {
+                    op = "add",
+                    data = new
+                    {
+                        type = "policies",
+                        attributes = new
+                        {
+                            name = "some"
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/operations";
+        string contentType = JsonApiMediaType.AtomicOperations.ToString().ToUpperInvariant();
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnsupportedMediaType);
+
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        string detail =
+            $"Use '{JsonApiMediaType.AtomicOperations}' or '{JsonApiMediaType.RelaxedAtomicOperations}' instead of '{contentType}' for the Content-Type header value.";
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
+        error.Title.Should().Be("The specified Content-Type header value is not supported.");
+        error.Detail.Should().Be(detail);
+        error.Source.Should().NotBeNull();
+        error.Source.Header.Should().Be("Content-Type");
     }
 
     [Fact]
@@ -225,17 +361,23 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         };
 
         const string route = "/operations";
-        const string contentType = HeaderConstants.RelaxedAtomicOperationsMediaType;
+        string contentType = JsonApiMediaType.RelaxedAtomicOperations.ToString();
+
+        Action<HttpRequestHeaders> setRequestHeaders = headers =>
+            headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(JsonApiMediaType.RelaxedAtomicOperations.ToString()));
 
         // Act
-        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType, setRequestHeaders);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.RelaxedAtomicOperations.ToString());
     }
 
     [Fact]
-    public async Task Denies_JsonApi_ContentType_header_with_profile()
+    public async Task Denies_JsonApi_ContentType_header_with_unknown_extension()
     {
         // Arrange
         var requestBody = new
@@ -251,7 +393,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         };
 
         const string route = "/policies";
-        const string contentType = $"{HeaderConstants.MediaType}; profile=something";
+        string contentType = $"{JsonApiMediaType.Default}; ext=something";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
@@ -259,48 +401,16 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
+
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         error.Title.Should().Be("The specified Content-Type header value is not supported.");
-        error.Detail.Should().Be($"Please specify 'application/vnd.api+json' instead of '{contentType}' for the Content-Type header value.");
-        error.Source.ShouldNotBeNull();
-        error.Source.Header.Should().Be("Content-Type");
-    }
-
-    [Fact]
-    public async Task Denies_JsonApi_ContentType_header_with_extension()
-    {
-        // Arrange
-        var requestBody = new
-        {
-            data = new
-            {
-                type = "policies",
-                attributes = new
-                {
-                    name = "some"
-                }
-            }
-        };
-
-        const string route = "/policies";
-        const string contentType = $"{HeaderConstants.MediaType}; ext=something";
-
-        // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
-
-        // Assert
-        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnsupportedMediaType);
-
-        responseDocument.Errors.ShouldHaveCount(1);
-
-        ErrorObject error = responseDocument.Errors[0];
-        error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
-        error.Title.Should().Be("The specified Content-Type header value is not supported.");
-        error.Detail.Should().Be($"Please specify 'application/vnd.api+json' instead of '{contentType}' for the Content-Type header value.");
-        error.Source.ShouldNotBeNull();
+        error.Detail.Should().Be($"Use '{JsonApiMediaType.Default}' instead of '{contentType}' for the Content-Type header value.");
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be("Content-Type");
     }
 
@@ -321,7 +431,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         };
 
         const string route = "/policies";
-        const string contentType = HeaderConstants.AtomicOperationsMediaType;
+        string contentType = JsonApiMediaType.AtomicOperations.ToString();
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
@@ -329,13 +439,16 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
+
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         error.Title.Should().Be("The specified Content-Type header value is not supported.");
-        error.Detail.Should().Be($"Please specify 'application/vnd.api+json' instead of '{contentType}' for the Content-Type header value.");
-        error.Source.ShouldNotBeNull();
+        error.Detail.Should().Be($"Use '{JsonApiMediaType.Default}' instead of '{contentType}' for the Content-Type header value.");
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be("Content-Type");
     }
 
@@ -356,7 +469,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         };
 
         const string route = "/policies";
-        const string contentType = HeaderConstants.RelaxedAtomicOperationsMediaType;
+        string contentType = JsonApiMediaType.RelaxedAtomicOperations.ToString();
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
@@ -364,13 +477,54 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
+
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         error.Title.Should().Be("The specified Content-Type header value is not supported.");
-        error.Detail.Should().Be($"Please specify 'application/vnd.api+json' instead of '{contentType}' for the Content-Type header value.");
-        error.Source.ShouldNotBeNull();
+        error.Detail.Should().Be($"Use '{JsonApiMediaType.Default}' instead of '{contentType}' for the Content-Type header value.");
+        error.Source.Should().NotBeNull();
+        error.Source.Header.Should().Be("Content-Type");
+    }
+
+    [Fact]
+    public async Task Denies_JsonApi_ContentType_header_with_profile()
+    {
+        // Arrange
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "policies",
+                attributes = new
+                {
+                    name = "some"
+                }
+            }
+        };
+
+        const string route = "/policies";
+        string contentType = $"{JsonApiMediaType.Default}; profile=something";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnsupportedMediaType);
+
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
+        error.Title.Should().Be("The specified Content-Type header value is not supported.");
+        error.Detail.Should().Be($"Use '{JsonApiMediaType.Default}' instead of '{contentType}' for the Content-Type header value.");
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be("Content-Type");
     }
 
@@ -391,7 +545,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         };
 
         const string route = "/policies";
-        const string contentType = $"{HeaderConstants.MediaType}; charset=ISO-8859-4";
+        string contentType = $"{JsonApiMediaType.Default}; charset=ISO-8859-4";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
@@ -399,13 +553,16 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
+
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         error.Title.Should().Be("The specified Content-Type header value is not supported.");
-        error.Detail.Should().Be($"Please specify 'application/vnd.api+json' instead of '{contentType}' for the Content-Type header value.");
-        error.Source.ShouldNotBeNull();
+        error.Detail.Should().Be($"Use '{JsonApiMediaType.Default}' instead of '{contentType}' for the Content-Type header value.");
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be("Content-Type");
     }
 
@@ -426,7 +583,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         };
 
         const string route = "/policies";
-        const string contentType = $"{HeaderConstants.MediaType}; unknown=unexpected";
+        string contentType = $"{JsonApiMediaType.Default}; unknown=unexpected";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
@@ -434,13 +591,16 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
+
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         error.Title.Should().Be("The specified Content-Type header value is not supported.");
-        error.Detail.Should().Be($"Please specify 'application/vnd.api+json' instead of '{contentType}' for the Content-Type header value.");
-        error.Source.ShouldNotBeNull();
+        error.Detail.Should().Be($"Use '{JsonApiMediaType.Default}' instead of '{contentType}' for the Content-Type header value.");
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be("Content-Type");
     }
 
@@ -468,25 +628,27 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         };
 
         const string route = "/operations";
-        const string contentType = HeaderConstants.MediaType;
+        string contentType = JsonApiMediaType.Default.ToString();
 
         // Act
-        // ReSharper disable once RedundantArgumentDefaultValue
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        httpResponse.Content.Headers.ContentType.Should().NotBeNull();
+        httpResponse.Content.Headers.ContentType.ToString().Should().Be(JsonApiMediaType.Default.ToString());
 
-        const string detail =
-            $"Please specify '{HeaderConstants.AtomicOperationsMediaType}' or '{HeaderConstants.RelaxedAtomicOperationsMediaType}' instead of '{contentType}' for the Content-Type header value.";
+        responseDocument.Errors.Should().HaveCount(1);
+
+        string detail =
+            $"Use '{JsonApiMediaType.AtomicOperations}' or '{JsonApiMediaType.RelaxedAtomicOperations}' instead of '{contentType}' for the Content-Type header value.";
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         error.Title.Should().Be("The specified Content-Type header value is not supported.");
         error.Detail.Should().Be(detail);
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be("Content-Type");
     }
 }

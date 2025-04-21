@@ -31,7 +31,7 @@ public sealed class TopLevelCountTests : IClassFixture<IntegrationTestContext<Te
     public async Task Renders_resource_count_at_primary_resources_endpoint_with_filter()
     {
         // Arrange
-        List<SupportTicket> tickets = _fakers.SupportTicket.Generate(2);
+        List<SupportTicket> tickets = _fakers.SupportTicket.GenerateList(2);
 
         tickets[1].Description = "Update firmware version";
 
@@ -57,8 +57,8 @@ public sealed class TopLevelCountTests : IClassFixture<IntegrationTestContext<Te
     public async Task Renders_resource_count_at_secondary_resources_endpoint_with_filter()
     {
         // Arrange
-        ProductFamily family = _fakers.ProductFamily.Generate();
-        family.Tickets = _fakers.SupportTicket.Generate(2);
+        ProductFamily family = _fakers.ProductFamily.GenerateOne();
+        family.Tickets = _fakers.SupportTicket.GenerateList(2);
 
         family.Tickets[1].Description = "Update firmware version";
 
@@ -103,7 +103,7 @@ public sealed class TopLevelCountTests : IClassFixture<IntegrationTestContext<Te
     public async Task Hides_resource_count_in_create_resource_response()
     {
         // Arrange
-        string newDescription = _fakers.SupportTicket.Generate().Description;
+        string newDescription = _fakers.SupportTicket.GenerateOne().Description;
 
         var requestBody = new
         {
@@ -132,9 +132,9 @@ public sealed class TopLevelCountTests : IClassFixture<IntegrationTestContext<Te
     public async Task Hides_resource_count_in_update_resource_response()
     {
         // Arrange
-        SupportTicket existingTicket = _fakers.SupportTicket.Generate();
+        SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
 
-        string newDescription = _fakers.SupportTicket.Generate().Description;
+        string newDescription = _fakers.SupportTicket.GenerateOne().Description;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

@@ -22,7 +22,7 @@ internal sealed class RequestQueryStringAccessor : IRequestQueryStringAccessor
 
     public RequestQueryStringAccessor(IHttpContextAccessor httpContextAccessor)
     {
-        ArgumentGuard.NotNull(httpContextAccessor);
+        ArgumentNullException.ThrowIfNull(httpContextAccessor);
 
         _httpContextAccessor = httpContextAccessor;
     }

@@ -24,7 +24,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_filter_equality_in_primary_resources()
     {
         // Arrange
-        List<BankAccount> accounts = _fakers.BankAccount.Generate(2);
+        List<BankAccount> accounts = _fakers.BankAccount.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -41,7 +41,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[1].StringId);
     }
 
@@ -58,13 +58,13 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"The value 'not-a-hex-value' is not a valid hexadecimal value. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
 
@@ -72,7 +72,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_filter_any_in_primary_resources()
     {
         // Arrange
-        List<BankAccount> accounts = _fakers.BankAccount.Generate(2);
+        List<BankAccount> accounts = _fakers.BankAccount.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -90,7 +90,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[1].StringId);
     }
 
@@ -106,7 +106,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -118,8 +118,8 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_get_primary_resource_by_ID()
     {
         // Arrange
-        DebitCard card = _fakers.DebitCard.Generate();
-        card.Account = _fakers.BankAccount.Generate();
+        DebitCard card = _fakers.DebitCard.GenerateOne();
+        card.Account = _fakers.BankAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -135,7 +135,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(card.StringId);
     }
 
@@ -143,8 +143,8 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_get_secondary_resources()
     {
         // Arrange
-        BankAccount account = _fakers.BankAccount.Generate();
-        account.Cards = _fakers.DebitCard.Generate(2);
+        BankAccount account = _fakers.BankAccount.GenerateOne();
+        account.Cards = _fakers.DebitCard.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -160,7 +160,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(account.Cards[0].StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(account.Cards[1].StringId);
     }
@@ -169,8 +169,8 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_include_resource_with_sparse_fieldset()
     {
         // Arrange
-        BankAccount account = _fakers.BankAccount.Generate();
-        account.Cards = _fakers.DebitCard.Generate(1);
+        BankAccount account = _fakers.BankAccount.GenerateOne();
+        account.Cards = _fakers.DebitCard.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -186,12 +186,12 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(account.StringId);
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Id.Should().Be(account.Cards[0].StringId);
-        responseDocument.Included[0].Attributes.ShouldHaveCount(1);
+        responseDocument.Included[0].Attributes.Should().HaveCount(1);
         responseDocument.Included[0].Relationships.Should().BeNull();
     }
 
@@ -199,8 +199,8 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_get_relationship()
     {
         // Arrange
-        BankAccount account = _fakers.BankAccount.Generate();
-        account.Cards = _fakers.DebitCard.Generate(1);
+        BankAccount account = _fakers.BankAccount.GenerateOne();
+        account.Cards = _fakers.DebitCard.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -216,7 +216,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(account.Cards[0].StringId);
     }
 
@@ -224,8 +224,8 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_create_resource_with_relationship()
     {
         // Arrange
-        BankAccount existingAccount = _fakers.BankAccount.Generate();
-        DebitCard newCard = _fakers.DebitCard.Generate();
+        BankAccount existingAccount = _fakers.BankAccount.GenerateOne();
+        DebitCard newCard = _fakers.DebitCard.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -265,9 +265,9 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("ownerName").With(value => value.Should().Be(newCard.OwnerName));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("pinCode").With(value => value.Should().Be(newCard.PinCode));
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("ownerName").WhoseValue.Should().Be(newCard.OwnerName);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("pinCode").WhoseValue.Should().Be(newCard.PinCode);
 
         var codec = new HexadecimalCodec();
         int newCardId = codec.Decode(responseDocument.Data.SingleValue.Id);
@@ -279,7 +279,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
             cardInDatabase.OwnerName.Should().Be(newCard.OwnerName);
             cardInDatabase.PinCode.Should().Be(newCard.PinCode);
 
-            cardInDatabase.Account.ShouldNotBeNull();
+            cardInDatabase.Account.Should().NotBeNull();
             cardInDatabase.Account.Id.Should().Be(existingAccount.Id);
             cardInDatabase.Account.StringId.Should().Be(existingAccount.StringId);
         });
@@ -289,13 +289,13 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_update_resource_with_relationship()
     {
         // Arrange
-        BankAccount existingAccount = _fakers.BankAccount.Generate();
-        existingAccount.Cards = _fakers.DebitCard.Generate(1);
+        BankAccount existingAccount = _fakers.BankAccount.GenerateOne();
+        existingAccount.Cards = _fakers.DebitCard.GenerateList(1);
 
-        DebitCard existingCard = _fakers.DebitCard.Generate();
-        existingCard.Account = _fakers.BankAccount.Generate();
+        DebitCard existingCard = _fakers.DebitCard.GenerateOne();
+        existingCard.Account = _fakers.BankAccount.GenerateOne();
 
-        string newIban = _fakers.BankAccount.Generate().Iban;
+        string newIban = _fakers.BankAccount.GenerateOne().Iban;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -346,7 +346,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
 
             accountInDatabase.Iban.Should().Be(newIban);
 
-            accountInDatabase.Cards.ShouldHaveCount(1);
+            accountInDatabase.Cards.Should().HaveCount(1);
             accountInDatabase.Cards[0].Id.Should().Be(existingCard.Id);
             accountInDatabase.Cards[0].StringId.Should().Be(existingCard.StringId);
         });
@@ -356,11 +356,11 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_add_to_ToMany_relationship()
     {
         // Arrange
-        BankAccount existingAccount = _fakers.BankAccount.Generate();
-        existingAccount.Cards = _fakers.DebitCard.Generate(1);
+        BankAccount existingAccount = _fakers.BankAccount.GenerateOne();
+        existingAccount.Cards = _fakers.DebitCard.GenerateList(1);
 
-        DebitCard existingDebitCard = _fakers.DebitCard.Generate();
-        existingDebitCard.Account = _fakers.BankAccount.Generate();
+        DebitCard existingDebitCard = _fakers.DebitCard.GenerateOne();
+        existingDebitCard.Account = _fakers.BankAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -394,7 +394,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         {
             BankAccount accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdAsync(existingAccount.Id);
 
-            accountInDatabase.Cards.ShouldHaveCount(2);
+            accountInDatabase.Cards.Should().HaveCount(2);
         });
     }
 
@@ -402,8 +402,8 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_remove_from_ToMany_relationship()
     {
         // Arrange
-        BankAccount existingAccount = _fakers.BankAccount.Generate();
-        existingAccount.Cards = _fakers.DebitCard.Generate(2);
+        BankAccount existingAccount = _fakers.BankAccount.GenerateOne();
+        existingAccount.Cards = _fakers.DebitCard.GenerateList(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -437,7 +437,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         {
             BankAccount accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdAsync(existingAccount.Id);
 
-            accountInDatabase.Cards.ShouldHaveCount(1);
+            accountInDatabase.Cards.Should().HaveCount(1);
         });
     }
 
@@ -445,8 +445,8 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Can_delete_resource()
     {
         // Arrange
-        BankAccount existingAccount = _fakers.BankAccount.Generate();
-        existingAccount.Cards = _fakers.DebitCard.Generate(1);
+        BankAccount existingAccount = _fakers.BankAccount.GenerateOne();
+        existingAccount.Cards = _fakers.DebitCard.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -487,7 +487,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);

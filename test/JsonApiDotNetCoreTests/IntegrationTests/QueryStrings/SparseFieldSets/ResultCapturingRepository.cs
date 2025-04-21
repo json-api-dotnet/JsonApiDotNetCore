@@ -14,8 +14,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets;
 public sealed class ResultCapturingRepository<TResource, TId>(
     ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph, IResourceFactory resourceFactory,
     IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor,
-    ResourceCaptureStore captureStore) : EntityFrameworkCoreRepository<TResource, TId>(targetedFields, dbContextResolver, resourceGraph, resourceFactory,
-    constraintProviders, loggerFactory, resourceDefinitionAccessor)
+    ResourceCaptureStore captureStore)
+    : EntityFrameworkCoreRepository<TResource, TId>(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory,
+        resourceDefinitionAccessor)
     where TResource : class, IIdentifiable<TId>
 {
     private readonly ResourceCaptureStore _captureStore = captureStore;

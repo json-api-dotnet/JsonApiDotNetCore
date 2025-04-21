@@ -24,14 +24,14 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
         ImmutableDictionary.CreateBuilder<ResourceType, SparseFieldSetExpression>();
 
     /// <inheritdoc />
-    bool IQueryStringParameterReader.AllowEmptyValue => true;
+    public bool AllowEmptyValue => true;
 
     public SparseFieldSetQueryStringParameterReader(ISparseFieldTypeParser scopeParser, ISparseFieldSetParser sparseFieldSetParser, IJsonApiRequest request,
         IResourceGraph resourceGraph)
         : base(request, resourceGraph)
     {
-        ArgumentGuard.NotNull(scopeParser);
-        ArgumentGuard.NotNull(sparseFieldSetParser);
+        ArgumentNullException.ThrowIfNull(scopeParser);
+        ArgumentNullException.ThrowIfNull(sparseFieldSetParser);
 
         _scopeParser = scopeParser;
         _sparseFieldSetParser = sparseFieldSetParser;
@@ -40,7 +40,7 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
     /// <inheritdoc />
     public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
     {
-        ArgumentGuard.NotNull(disableQueryStringAttribute);
+        ArgumentNullException.ThrowIfNull(disableQueryStringAttribute);
 
         return !IsAtomicOperationsRequest && !disableQueryStringAttribute.ContainsParameter(JsonApiQueryStringParameters.Fields);
     }
@@ -48,7 +48,7 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
     /// <inheritdoc />
     public virtual bool CanRead(string parameterName)
     {
-        ArgumentGuard.NotNullNorEmpty(parameterName);
+        ArgumentException.ThrowIfNullOrEmpty(parameterName);
 
         return parameterName.StartsWith("fields[", StringComparison.Ordinal) && parameterName.EndsWith(']');
     }
@@ -95,7 +95,7 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
     /// <inheritdoc />
     public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
     {
-        return _sparseFieldTableBuilder.Any()
+        return _sparseFieldTableBuilder.Count > 0
             ? [new ExpressionInScope(null, new SparseFieldTableExpression(_sparseFieldTableBuilder.ToImmutable()))]
             : Array.Empty<ExpressionInScope>();
     }

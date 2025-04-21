@@ -14,7 +14,7 @@ public class SparseFieldSetParser : QueryExpressionParser, ISparseFieldSetParser
     /// <inheritdoc />
     public SparseFieldSetExpression? Parse(string source, ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         Tokenize(source);
 
@@ -27,9 +27,11 @@ public class SparseFieldSetParser : QueryExpressionParser, ISparseFieldSetParser
 
     protected virtual SparseFieldSetExpression? ParseSparseFieldSet(ResourceType resourceType)
     {
+        ArgumentNullException.ThrowIfNull(resourceType);
+
         ImmutableHashSet<ResourceFieldAttribute>.Builder fieldSetBuilder = ImmutableHashSet.CreateBuilder<ResourceFieldAttribute>();
 
-        while (TokenStack.Any())
+        while (TokenStack.Count > 0)
         {
             if (fieldSetBuilder.Count > 0)
             {
@@ -43,11 +45,13 @@ public class SparseFieldSetParser : QueryExpressionParser, ISparseFieldSetParser
             fieldSetBuilder.Add(nextField);
         }
 
-        return fieldSetBuilder.Any() ? new SparseFieldSetExpression(fieldSetBuilder.ToImmutable()) : null;
+        return fieldSetBuilder.Count > 0 ? new SparseFieldSetExpression(fieldSetBuilder.ToImmutable()) : null;
     }
 
     protected override void ValidateField(ResourceFieldAttribute field, int position)
     {
+        ArgumentNullException.ThrowIfNull(field);
+
         if (field.IsViewBlocked())
         {
             string kind = field is AttrAttribute ? "attribute" : "relationship";

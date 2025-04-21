@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using FluentAssertions;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
 using Xunit;
@@ -27,8 +28,8 @@ public sealed class ScopeOperationsTests : IClassFixture<IntegrationTestContext<
     public async Task Cannot_create_resources_without_scopes()
     {
         // Arrange
-        Genre newGenre = _fakers.Genre.Generate();
-        Movie newMovie = _fakers.Movie.Generate();
+        Genre newGenre = _fakers.Genre.GenerateOne();
+        Movie newMovie = _fakers.Movie.GenerateOne();
 
         const string genreLocalId = "genre-1";
 
@@ -85,13 +86,13 @@ public sealed class ScopeOperationsTests : IClassFixture<IntegrationTestContext<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: write:genres write:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -99,7 +100,7 @@ public sealed class ScopeOperationsTests : IClassFixture<IntegrationTestContext<
     public async Task Cannot_create_resource_with_read_scope()
     {
         // Arrange
-        Genre newGenre = _fakers.Genre.Generate();
+        Genre newGenre = _fakers.Genre.GenerateOne();
 
         var requestBody = new
         {
@@ -121,23 +122,28 @@ public sealed class ScopeOperationsTests : IClassFixture<IntegrationTestContext<
         };
 
         const string route = "/operations";
+        string contentType = JsonApiMediaType.AtomicOperations.ToString();
 
-        Action<HttpRequestHeaders> setRequestHeaders = headers => headers.Add(ScopeHeaderName, "read:genres");
+        Action<HttpRequestHeaders> setRequestHeaders = headers =>
+        {
+            headers.Add(ScopeHeaderName, "read:genres");
+            headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(JsonApiMediaType.AtomicOperations.ToString()));
+        };
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) =
-            await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody, setRequestHeaders: setRequestHeaders);
+            await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType, setRequestHeaders);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: write:genres.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -145,8 +151,8 @@ public sealed class ScopeOperationsTests : IClassFixture<IntegrationTestContext<
     public async Task Cannot_update_resources_without_scopes()
     {
         // Arrange
-        string newTitle = _fakers.Movie.Generate().Title;
-        DateTime newBornAt = _fakers.Actor.Generate().BornAt;
+        string newTitle = _fakers.Movie.GenerateOne().Title;
+        DateTime newBornAt = _fakers.Actor.GenerateOne().BornAt;
 
         var requestBody = new
         {
@@ -189,13 +195,13 @@ public sealed class ScopeOperationsTests : IClassFixture<IntegrationTestContext<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: write:actors write:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -203,7 +209,7 @@ public sealed class ScopeOperationsTests : IClassFixture<IntegrationTestContext<
     public async Task Cannot_update_resource_with_relationships_without_scopes()
     {
         // Arrange
-        string newTitle = _fakers.Movie.Generate().Title;
+        string newTitle = _fakers.Movie.GenerateOne().Title;
 
         var requestBody = new
         {
@@ -247,13 +253,13 @@ public sealed class ScopeOperationsTests : IClassFixture<IntegrationTestContext<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: write:actors write:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -294,13 +300,13 @@ public sealed class ScopeOperationsTests : IClassFixture<IntegrationTestContext<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: write:actors write:genres.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -334,13 +340,13 @@ public sealed class ScopeOperationsTests : IClassFixture<IntegrationTestContext<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: write:genres write:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -374,13 +380,13 @@ public sealed class ScopeOperationsTests : IClassFixture<IntegrationTestContext<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: write:actors write:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -414,13 +420,13 @@ public sealed class ScopeOperationsTests : IClassFixture<IntegrationTestContext<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: write:actors write:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 
@@ -454,13 +460,13 @@ public sealed class ScopeOperationsTests : IClassFixture<IntegrationTestContext<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Unauthorized);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         error.Title.Should().Be("Insufficient permissions to perform this request.");
         error.Detail.Should().Be("Performing this request requires the following scopes: write:actors write:movies.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Header.Should().Be(ScopeHeaderName);
     }
 }

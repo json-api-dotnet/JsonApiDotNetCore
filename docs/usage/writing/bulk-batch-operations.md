@@ -28,7 +28,7 @@ public sealed class OperationsController : JsonApiOperationsController
 }
 ```
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > Since v5.6.0, the set of exposed operations is based on
 > [`GenerateControllerEndpoints` usage](~/usage/extensibility/controllers.md#resource-access-control).
 > Earlier versions always exposed all operations for all resource types.

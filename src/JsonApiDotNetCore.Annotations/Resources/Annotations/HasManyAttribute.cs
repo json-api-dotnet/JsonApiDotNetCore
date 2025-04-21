@@ -59,7 +59,7 @@ public sealed class HasManyAttribute : RelationshipAttribute
     {
         if (InverseNavigationProperty != null)
         {
-            Type? elementType = CollectionConverter.FindCollectionElementType(InverseNavigationProperty.PropertyType);
+            Type? elementType = CollectionConverter.Instance.FindCollectionElementType(InverseNavigationProperty.PropertyType);
             return elementType != null;
         }
 
@@ -69,7 +69,7 @@ public sealed class HasManyAttribute : RelationshipAttribute
     /// <inheritdoc />
     public override void SetValue(object resource, object? newValue)
     {
-        ArgumentGuard.NotNull(newValue);
+        ArgumentNullException.ThrowIfNull(newValue);
         AssertIsIdentifiableCollection(newValue);
 
         base.SetValue(resource, newValue);
@@ -99,18 +99,18 @@ public sealed class HasManyAttribute : RelationshipAttribute
     /// </summary>
     public void AddValue(object resource, IIdentifiable resourceToAdd)
     {
-        ArgumentGuard.NotNull(resource);
-        ArgumentGuard.NotNull(resourceToAdd);
+        ArgumentNullException.ThrowIfNull(resource);
+        ArgumentNullException.ThrowIfNull(resourceToAdd);
 
         object? rightValue = GetValue(resource);
-        List<IIdentifiable> rightResources = CollectionConverter.ExtractResources(rightValue).ToList();
+        List<IIdentifiable> rightResources = CollectionConverter.Instance.ExtractResources(rightValue).ToList();
 
         if (!rightResources.Exists(nextResource => nextResource == resourceToAdd))
         {
             rightResources.Add(resourceToAdd);
 
             Type collectionType = rightValue?.GetType() ?? Property.PropertyType;
-            IEnumerable typedCollection = CollectionConverter.CopyToTypedCollection(rightResources, collectionType);
+            IEnumerable typedCollection = CollectionConverter.Instance.CopyToTypedCollection(rightResources, collectionType);
             base.SetValue(resource, typedCollection);
         }
     }

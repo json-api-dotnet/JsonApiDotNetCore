@@ -1,53 +1,68 @@
 {
-    "metadata": [
+  "metadata": [
+    {
+      "properties": {
+        "ProduceReferenceAssembly": "true"
+      },
+      "src": [
         {
-            "src": [
-                {
-                    "files": [ "**/JsonApiDotNetCore.csproj","**/JsonApiDotNetCore.Annotations.csproj" ],
-                    "src": "../"
-                }
-            ],
-            "dest": "api",
-            "disableGitFeatures": false
+          "files": [
+            "**/JsonApiDotNetCore.csproj",
+            "**/JsonApiDotNetCore.Annotations.csproj"
+          ],
+          "src": "../"
         }
-    ],
-    "build": {
-        "content": [
-            {
-                "files": [
-                    "api/**.yml",
-                    "api/index.md",
-                    "getting-started/**.md",
-                    "getting-started/**/toc.yml",
-                    "usage/**.md",
-                    "request-examples/**.md",
-                    "internals/**.md",
-                    "toc.yml",
-                    "*.md"
-                ],
-                "exclude": [
-                    "**/README.md"
-                ]
-            }
-        ],
-        "resource": [
-            {
-                "files": [ "diagrams/*.svg" ]
-            }
-        ],
-        "overwrite": [
-            {
-                "exclude": [ "obj/**", "_site/**" ]
-            }
-        ],
-        "dest": "_site",
-        "globalMetadataFiles": [],
-        "fileMetadataFiles": [],
-        "template": [ "default", "modern" ],
-        "postProcessors": [],
-        "noLangKeyword": false,
-        "keepFileLink": false,
-        "cleanupCacheHistory": false,
-        "disableGitFeatures": false
+      ],
+      "dest": "api",
+      "disableGitFeatures": false
     }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "api/**.yml",
+          "api/index.md",
+          "ext/openapi/index.md",
+          "getting-started/**.md",
+          "getting-started/**/toc.yml",
+          "usage/**.md",
+          "request-examples/**.md",
+          "internals/**.md",
+          "toc.yml",
+          "*.md"
+        ],
+        "exclude": [
+          "**/README.md"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "diagrams/*.svg"
+        ]
+      }
+    ],
+    "overwrite": [
+      {
+        "exclude": [
+          "obj/**",
+          "_site/**"
+        ]
+      }
+    ],
+    "dest": "_site",
+    "globalMetadataFiles": [],
+    "fileMetadataFiles": [],
+    "template": [
+      "default",
+      "modern"
+    ],
+    "postProcessors": [],
+    "noLangKeyword": false,
+    "keepFileLink": false,
+    "cleanupCacheHistory": false,
+    "disableGitFeatures": false
+  }
 }

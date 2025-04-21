@@ -23,7 +23,7 @@ public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIn
     public IncludeQueryStringParameterReader(IIncludeParser includeParser, IJsonApiRequest request, IResourceGraph resourceGraph)
         : base(request, resourceGraph)
     {
-        ArgumentGuard.NotNull(includeParser);
+        ArgumentNullException.ThrowIfNull(includeParser);
 
         _includeParser = includeParser;
     }
@@ -31,7 +31,7 @@ public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIn
     /// <inheritdoc />
     public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
     {
-        ArgumentGuard.NotNull(disableQueryStringAttribute);
+        ArgumentNullException.ThrowIfNull(disableQueryStringAttribute);
 
         return !IsAtomicOperationsRequest && !disableQueryStringAttribute.ContainsParameter(JsonApiQueryStringParameters.Include);
     }
@@ -39,6 +39,8 @@ public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIn
     /// <inheritdoc />
     public virtual bool CanRead(string parameterName)
     {
+        ArgumentException.ThrowIfNullOrEmpty(parameterName);
+
         return parameterName == "include";
     }
 

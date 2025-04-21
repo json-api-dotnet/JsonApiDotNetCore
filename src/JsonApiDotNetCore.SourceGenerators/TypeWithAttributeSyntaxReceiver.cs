@@ -30,7 +30,7 @@ internal sealed class TypeWithAttributeSyntaxReceiver : ISyntaxReceiver
 
     public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
     {
-        if (syntaxNode is TypeDeclarationSyntax typeDeclarationSyntax && typeDeclarationSyntax.AttributeLists.Any())
+        if (syntaxNode is TypeDeclarationSyntax { AttributeLists.Count: > 0 } typeDeclarationSyntax)
         {
             TypeDeclarations.Add(typeDeclarationSyntax);
         }

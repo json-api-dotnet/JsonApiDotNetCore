@@ -13,7 +13,7 @@ public class DeleteProcessor<TResource, TId> : IDeleteProcessor<TResource, TId>
 
     public DeleteProcessor(IDeleteService<TResource, TId> service)
     {
-        ArgumentGuard.NotNull(service);
+        ArgumentNullException.ThrowIfNull(service);
 
         _service = service;
     }
@@ -21,10 +21,10 @@ public class DeleteProcessor<TResource, TId> : IDeleteProcessor<TResource, TId>
     /// <inheritdoc />
     public virtual async Task<OperationContainer?> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(operation);
+        ArgumentNullException.ThrowIfNull(operation);
 
         var id = (TId)operation.Resource.GetTypedId();
-        await _service.DeleteAsync(id, cancellationToken);
+        await _service.DeleteAsync(id!, cancellationToken);
 
         return null;
     }

@@ -30,11 +30,11 @@ public sealed class SerializerIgnoreConditionTests : IntegrationTestContext<Test
         var options = (JsonApiOptions)Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.SerializerOptions.DefaultIgnoreCondition = configurationValue;
 
-        Calendar calendar = _fakers.Calendar.Generate();
+        Calendar calendar = _fakers.Calendar.GenerateOne();
         calendar.TimeZone = null;
-        calendar.DefaultAppointmentDurationInMinutes = default;
+        calendar.DefaultAppointmentDurationInMinutes = 0;
         calendar.ShowWeekNumbers = true;
-        calendar.MostRecentAppointment = _fakers.Appointment.Generate();
+        calendar.MostRecentAppointment = _fakers.Appointment.GenerateOne();
         calendar.MostRecentAppointment.Description = null;
         calendar.MostRecentAppointment.StartTime = default;
         calendar.MostRecentAppointment.EndTime = 1.January(2001).AsUtc();
@@ -53,13 +53,13 @@ public sealed class SerializerIgnoreConditionTests : IntegrationTestContext<Test
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Included.Should().HaveCount(1);
 
         if (expectNullValueInDocument)
         {
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("timeZone");
-            responseDocument.Included[0].Attributes.ShouldContainKey("description");
+            responseDocument.Data.SingleValue.Attributes.Should().ContainKey("timeZone");
+            responseDocument.Included[0].Attributes.Should().ContainKey("description");
         }
         else
         {
@@ -69,8 +69,8 @@ public sealed class SerializerIgnoreConditionTests : IntegrationTestContext<Test
 
         if (expectDefaultValueInDocument)
         {
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("defaultAppointmentDurationInMinutes");
-            responseDocument.Included[0].Attributes.ShouldContainKey("startTime");
+            responseDocument.Data.SingleValue.Attributes.Should().ContainKey("defaultAppointmentDurationInMinutes");
+            responseDocument.Included[0].Attributes.Should().ContainKey("startTime");
         }
         else
         {

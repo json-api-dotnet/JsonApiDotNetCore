@@ -6,12 +6,14 @@ This document provides an overview of the direction this project is heading and 
 
 We have an interest in the following topics. It's too soon yet to decide whether they'll make it into v5.x or in a later major version.
 
-- OpenAPI (Swagger): Generate documentation and typed clients [#1046](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1046)
+- Provide additional OpenAPI support [#1046](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1046)
 - Query strings on JSON-mapped columns [#1439](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1439)
+- Improved resource inheritance [#1642](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1642)
 - Improved SQL Server support [#1118](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1118)
+- Use incremental source generator [#1447](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1447)
 - Optimistic concurrency [#1119](https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/1119)
-- Fluent API [#776](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/776)
 - Idempotency [#1132](https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/1132)
+- Fluent API [#776](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/776)
 
 ## Feedback
 

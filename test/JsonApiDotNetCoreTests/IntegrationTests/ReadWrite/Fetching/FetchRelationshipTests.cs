@@ -22,8 +22,8 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
     [Fact]
     public async Task Can_get_ManyToOne_relationship()
     {
-        WorkItem workItem = _fakers.WorkItem.Generate();
-        workItem.Assignee = _fakers.UserAccount.Generate();
+        WorkItem workItem = _fakers.WorkItem.GenerateOne();
+        workItem.Assignee = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -39,7 +39,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("userAccounts");
         responseDocument.Data.SingleValue.Id.Should().Be(workItem.Assignee.StringId);
         responseDocument.Data.SingleValue.Attributes.Should().BeNull();
@@ -49,7 +49,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
     [Fact]
     public async Task Can_get_empty_ManyToOne_relationship()
     {
-        WorkItem workItem = _fakers.WorkItem.Generate();
+        WorkItem workItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -72,8 +72,8 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
     public async Task Can_get_OneToMany_relationship()
     {
         // Arrange
-        UserAccount userAccount = _fakers.UserAccount.Generate();
-        userAccount.AssignedItems = _fakers.WorkItem.Generate(2).ToHashSet();
+        UserAccount userAccount = _fakers.UserAccount.GenerateOne();
+        userAccount.AssignedItems = _fakers.WorkItem.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -89,7 +89,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
         ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(0).StringId);
         item1.Type.Should().Be("workItems");
@@ -106,7 +106,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
     public async Task Can_get_empty_OneToMany_relationship()
     {
         // Arrange
-        UserAccount userAccount = _fakers.UserAccount.Generate();
+        UserAccount userAccount = _fakers.UserAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -129,8 +129,8 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
     public async Task Can_get_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem workItem = _fakers.WorkItem.Generate();
-        workItem.Tags = _fakers.WorkTag.Generate(2).ToHashSet();
+        WorkItem workItem = _fakers.WorkItem.GenerateOne();
+        workItem.Tags = _fakers.WorkTag.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -146,7 +146,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
         ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItem.Tags.ElementAt(0).StringId);
         item1.Type.Should().Be("workTags");
@@ -163,7 +163,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
     public async Task Can_get_empty_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem workItem = _fakers.WorkItem.Generate();
+        WorkItem workItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -209,7 +209,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -220,7 +220,7 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
     [Fact]
     public async Task Cannot_get_relationship_for_unknown_relationship_type()
     {
-        WorkItem workItem = _fakers.WorkItem.Generate();
+        WorkItem workItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -236,11 +236,38 @@ public sealed class FetchRelationshipTests : IClassFixture<IntegrationTestContex
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
         error.Title.Should().Be("The requested relationship does not exist.");
         error.Detail.Should().Be($"Resource of type 'workItems' does not contain a relationship named '{Unknown.Relationship}'.");
+    }
+
+    [Fact]
+    public async Task Cannot_get_relationship_for_whitespace_relationship_name()
+    {
+        WorkItem workItem = _fakers.WorkItem.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.WorkItems.Add(workItem);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/workItems/{workItem.StringId}/relationships/%20%20";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Errors.Should().HaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested relationship does not exist.");
+        error.Detail.Should().Be("Resource of type 'workItems' does not contain a relationship named '  '.");
     }
 }

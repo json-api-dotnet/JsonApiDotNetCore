@@ -1,4 +1,6 @@
 using System.Collections.Immutable;
+using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
@@ -12,8 +14,7 @@ namespace JsonApiDotNetCore.Queries;
 [PublicAPI]
 public class QueryLayerComposer : IQueryLayerComposer
 {
-    private readonly CollectionConverter _collectionConverter = new();
-    private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
+    private readonly IQueryConstraintProvider[] _constraintProviders;
     private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
     private readonly IJsonApiOptions _options;
     private readonly IPaginationContext _paginationContext;
@@ -25,15 +26,15 @@ public class QueryLayerComposer : IQueryLayerComposer
         IJsonApiOptions options, IPaginationContext paginationContext, ITargetedFields targetedFields, IEvaluatedIncludeCache evaluatedIncludeCache,
         ISparseFieldSetCache sparseFieldSetCache)
     {
-        ArgumentGuard.NotNull(constraintProviders);
-        ArgumentGuard.NotNull(resourceDefinitionAccessor);
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(paginationContext);
-        ArgumentGuard.NotNull(targetedFields);
-        ArgumentGuard.NotNull(evaluatedIncludeCache);
-        ArgumentGuard.NotNull(sparseFieldSetCache);
+        ArgumentNullException.ThrowIfNull(constraintProviders);
+        ArgumentNullException.ThrowIfNull(resourceDefinitionAccessor);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(paginationContext);
+        ArgumentNullException.ThrowIfNull(targetedFields);
+        ArgumentNullException.ThrowIfNull(evaluatedIncludeCache);
+        ArgumentNullException.ThrowIfNull(sparseFieldSetCache);
 
-        _constraintProviders = constraintProviders;
+        _constraintProviders = constraintProviders as IQueryConstraintProvider[] ?? constraintProviders.ToArray();
         _resourceDefinitionAccessor = resourceDefinitionAccessor;
         _options = options;
         _paginationContext = paginationContext;
@@ -45,16 +46,16 @@ public class QueryLayerComposer : IQueryLayerComposer
     /// <inheritdoc />
     public FilterExpression? GetPrimaryFilterFromConstraints(ResourceType primaryResourceType)
     {
-        ExpressionInScope[] constraints = _constraintProviders.SelectMany(provider => provider.GetConstraints()).ToArray();
-
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        FilterExpression[] filtersInTopScope = constraints
+        ReadOnlyCollection<FilterExpression> filtersInTopScope = _constraintProviders
+            .SelectMany(provider => provider.GetConstraints())
             .Where(constraint => constraint.Scope == null)
             .Select(constraint => constraint.Expression)
             .OfType<FilterExpression>()
-            .ToArray();
+            .ToArray()
+            .AsReadOnly();
 
         // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
@@ -63,9 +64,9 @@ public class QueryLayerComposer : IQueryLayerComposer
     }
 
     /// <inheritdoc />
-    public FilterExpression? GetSecondaryFilterFromConstraints<TId>(TId primaryId, HasManyAttribute hasManyRelationship)
+    public FilterExpression? GetSecondaryFilterFromConstraints<TId>([DisallowNull] TId primaryId, HasManyAttribute hasManyRelationship)
     {
-        ArgumentGuard.NotNull(hasManyRelationship);
+        ArgumentNullException.ThrowIfNull(hasManyRelationship);
 
         if (hasManyRelationship.InverseNavigationProperty == null)
         {
@@ -80,58 +81,69 @@ public class QueryLayerComposer : IQueryLayerComposer
             return null;
         }
 
-        ExpressionInScope[] constraints = _constraintProviders.SelectMany(provider => provider.GetConstraints()).ToArray();
-
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        FilterExpression[] filtersInSecondaryScope = constraints
+        ReadOnlyCollection<FilterExpression> filtersInSecondaryScope = _constraintProviders
+            .SelectMany(provider => provider.GetConstraints())
             .Where(constraint => constraint.Scope == null)
             .Select(constraint => constraint.Expression)
             .OfType<FilterExpression>()
-            .ToArray();
+            .ToArray()
+            .AsReadOnly();
 
         // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         FilterExpression? primaryFilter = GetFilter(Array.Empty<QueryExpression>(), hasManyRelationship.LeftType);
+
+        if (primaryFilter != null && inverseRelationship is HasOneAttribute)
+        {
+            // We can't lift the field chains in a primary filter, because there's no way for a custom filter expression to express
+            // the scope of its chains. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1671.
+            return null;
+        }
+
         FilterExpression? secondaryFilter = GetFilter(filtersInSecondaryScope, hasManyRelationship.RightType);
+        FilterExpression inverseFilter = GetInverseRelationshipFilter(primaryId, primaryFilter, hasManyRelationship, inverseRelationship);
 
-        FilterExpression inverseFilter = GetInverseRelationshipFilter(primaryId, hasManyRelationship, inverseRelationship);
-
-        return LogicalExpression.Compose(LogicalOperator.And, inverseFilter, primaryFilter, secondaryFilter);
+        return LogicalExpression.Compose(LogicalOperator.And, inverseFilter, secondaryFilter);
     }
 
-    private static FilterExpression GetInverseRelationshipFilter<TId>(TId primaryId, HasManyAttribute relationship, RelationshipAttribute inverseRelationship)
+    private static FilterExpression GetInverseRelationshipFilter<TId>([DisallowNull] TId primaryId, FilterExpression? primaryFilter,
+        HasManyAttribute relationship, RelationshipAttribute inverseRelationship)
     {
         return inverseRelationship is HasManyAttribute hasManyInverseRelationship
-            ? GetInverseHasManyRelationshipFilter(primaryId, relationship, hasManyInverseRelationship)
+            ? GetInverseHasManyRelationshipFilter(primaryId, primaryFilter, relationship, hasManyInverseRelationship)
             : GetInverseHasOneRelationshipFilter(primaryId, relationship, (HasOneAttribute)inverseRelationship);
     }
 
-    private static FilterExpression GetInverseHasOneRelationshipFilter<TId>(TId primaryId, HasManyAttribute relationship, HasOneAttribute inverseRelationship)
+    private static ComparisonExpression GetInverseHasOneRelationshipFilter<TId>([DisallowNull] TId primaryId, HasManyAttribute relationship,
+        HasOneAttribute inverseRelationship)
     {
         AttrAttribute idAttribute = GetIdAttribute(relationship.LeftType);
         var idChain = new ResourceFieldChainExpression(ImmutableArray.Create<ResourceFieldAttribute>(inverseRelationship, idAttribute));
 
-        return new ComparisonExpression(ComparisonOperator.Equals, idChain, new LiteralConstantExpression(primaryId!));
+        return new ComparisonExpression(ComparisonOperator.Equals, idChain, new LiteralConstantExpression(primaryId));
     }
 
-    private static FilterExpression GetInverseHasManyRelationshipFilter<TId>(TId primaryId, HasManyAttribute relationship, HasManyAttribute inverseRelationship)
+    private static HasExpression GetInverseHasManyRelationshipFilter<TId>([DisallowNull] TId primaryId, FilterExpression? primaryFilter,
+        HasManyAttribute relationship, HasManyAttribute inverseRelationship)
     {
         AttrAttribute idAttribute = GetIdAttribute(relationship.LeftType);
         var idChain = new ResourceFieldChainExpression(ImmutableArray.Create<ResourceFieldAttribute>(idAttribute));
-        var idComparison = new ComparisonExpression(ComparisonOperator.Equals, idChain, new LiteralConstantExpression(primaryId!));
+        var idComparison = new ComparisonExpression(ComparisonOperator.Equals, idChain, new LiteralConstantExpression(primaryId));
 
-        return new HasExpression(new ResourceFieldChainExpression(inverseRelationship), idComparison);
+        FilterExpression filter = LogicalExpression.Compose(LogicalOperator.And, idComparison, primaryFilter)!;
+        return new HasExpression(new ResourceFieldChainExpression(inverseRelationship), filter);
     }
 
     /// <inheritdoc />
     public QueryLayer ComposeFromConstraints(ResourceType requestResourceType)
     {
-        ArgumentGuard.NotNull(requestResourceType);
+        ArgumentNullException.ThrowIfNull(requestResourceType);
 
-        ExpressionInScope[] constraints = _constraintProviders.SelectMany(provider => provider.GetConstraints()).ToArray();
+        ImmutableArray<ExpressionInScope> constraints = [.. _constraintProviders.SelectMany(provider => provider.GetConstraints())];
 
         QueryLayer topLayer = ComposeTopLayer(constraints, requestResourceType);
         topLayer.Include = ComposeChildren(topLayer, constraints);
@@ -141,17 +153,18 @@ public class QueryLayerComposer : IQueryLayerComposer
         return topLayer;
     }
 
-    private QueryLayer ComposeTopLayer(IEnumerable<ExpressionInScope> constraints, ResourceType resourceType)
+    private QueryLayer ComposeTopLayer(ImmutableArray<ExpressionInScope> constraints, ResourceType resourceType)
     {
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Top-level query composition");
 
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        QueryExpression[] expressionsInTopScope = constraints
+        ReadOnlyCollection<QueryExpression> expressionsInTopScope = constraints
             .Where(constraint => constraint.Scope == null)
             .Select(constraint => constraint.Expression)
-            .ToArray();
+            .ToArray()
+            .AsReadOnly();
 
         // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
@@ -169,7 +182,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         };
     }
 
-    private IncludeExpression ComposeChildren(QueryLayer topLayer, ICollection<ExpressionInScope> constraints)
+    private IncludeExpression ComposeChildren(QueryLayer topLayer, ImmutableArray<ExpressionInScope> constraints)
     {
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Nested query composition");
 
@@ -185,15 +198,16 @@ public class QueryLayerComposer : IQueryLayerComposer
         // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
-        IImmutableSet<IncludeElementExpression> includeElements = ProcessIncludeSet(include.Elements, topLayer, new List<RelationshipAttribute>(), constraints);
+        IImmutableSet<IncludeElementExpression> includeElements =
+            ProcessIncludeSet(include.Elements, topLayer, ImmutableArray<RelationshipAttribute>.Empty, constraints);
 
         return !ReferenceEquals(includeElements, include.Elements)
-            ? includeElements.Any() ? new IncludeExpression(includeElements) : IncludeExpression.Empty
+            ? includeElements.Count > 0 ? new IncludeExpression(includeElements) : IncludeExpression.Empty
             : include;
     }
 
     private IImmutableSet<IncludeElementExpression> ProcessIncludeSet(IImmutableSet<IncludeElementExpression> includeElements, QueryLayer parentLayer,
-        ICollection<RelationshipAttribute> parentRelationshipChain, ICollection<ExpressionInScope> constraints)
+        ImmutableArray<RelationshipAttribute> parentRelationshipChain, ImmutableArray<ExpressionInScope> constraints)
     {
         IImmutableSet<IncludeElementExpression> includeElementsEvaluated = GetIncludeElements(includeElements, parentLayer.ResourceType);
 
@@ -202,22 +216,20 @@ public class QueryLayerComposer : IQueryLayerComposer
         foreach (IncludeElementExpression includeElement in includeElementsEvaluated)
         {
             parentLayer.Selection ??= new FieldSelection();
-            FieldSelectors selectors = parentLayer.Selection.GetOrCreateSelectors(parentLayer.ResourceType);
+            FieldSelectors selectors = parentLayer.Selection.GetOrCreateSelectors(includeElement.Relationship.LeftType);
 
             if (!selectors.ContainsField(includeElement.Relationship))
             {
-                var relationshipChain = new List<RelationshipAttribute>(parentRelationshipChain)
-                {
-                    includeElement.Relationship
-                };
+                ImmutableArray<RelationshipAttribute> relationshipChain = parentRelationshipChain.Add(includeElement.Relationship);
 
                 // @formatter:wrap_chained_method_calls chop_always
                 // @formatter:wrap_before_first_method_call true
 
-                QueryExpression[] expressionsInCurrentScope = constraints
+                ReadOnlyCollection<QueryExpression> expressionsInCurrentScope = constraints
                     .Where(constraint => constraint.Scope != null && constraint.Scope.Fields.SequenceEqual(relationshipChain))
                     .Select(constraint => constraint.Expression)
-                    .ToArray();
+                    .ToArray()
+                    .AsReadOnly();
 
                 // @formatter:wrap_before_first_method_call restore
                 // @formatter:wrap_chained_method_calls restore
@@ -244,11 +256,11 @@ public class QueryLayerComposer : IQueryLayerComposer
             }
         }
 
-        return !updatesInChildren.Any() ? includeElementsEvaluated : ApplyIncludeElementUpdates(includeElementsEvaluated, updatesInChildren);
+        return updatesInChildren.Count == 0 ? includeElementsEvaluated : ApplyIncludeElementUpdates(includeElementsEvaluated, updatesInChildren);
     }
 
-    private static IImmutableSet<IncludeElementExpression> ApplyIncludeElementUpdates(IImmutableSet<IncludeElementExpression> includeElements,
-        IDictionary<IncludeElementExpression, IImmutableSet<IncludeElementExpression>> updatesInChildren)
+    private static ImmutableHashSet<IncludeElementExpression> ApplyIncludeElementUpdates(IImmutableSet<IncludeElementExpression> includeElements,
+        Dictionary<IncludeElementExpression, IImmutableSet<IncludeElementExpression>> updatesInChildren)
     {
         ImmutableHashSet<IncludeElementExpression>.Builder newElementsBuilder = ImmutableHashSet.CreateBuilder<IncludeElementExpression>();
         newElementsBuilder.UnionWith(includeElements);
@@ -263,9 +275,9 @@ public class QueryLayerComposer : IQueryLayerComposer
     }
 
     /// <inheritdoc />
-    public QueryLayer ComposeForGetById<TId>(TId id, ResourceType primaryResourceType, TopFieldSelection fieldSelection)
+    public QueryLayer ComposeForGetById<TId>([DisallowNull] TId id, ResourceType primaryResourceType, TopFieldSelection fieldSelection)
     {
-        ArgumentGuard.NotNull(primaryResourceType);
+        ArgumentNullException.ThrowIfNull(primaryResourceType);
 
         AttrAttribute idAttribute = GetIdAttribute(primaryResourceType);
 
@@ -293,7 +305,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     /// <inheritdoc />
     public QueryLayer ComposeSecondaryLayerForRelationship(ResourceType secondaryResourceType)
     {
-        ArgumentGuard.NotNull(secondaryResourceType);
+        ArgumentNullException.ThrowIfNull(secondaryResourceType);
 
         QueryLayer secondaryLayer = ComposeFromConstraints(secondaryResourceType);
         secondaryLayer.Selection = GetSelectionForRelationship(secondaryResourceType);
@@ -314,12 +326,12 @@ public class QueryLayerComposer : IQueryLayerComposer
     }
 
     /// <inheritdoc />
-    public QueryLayer WrapLayerForSecondaryEndpoint<TId>(QueryLayer secondaryLayer, ResourceType primaryResourceType, TId primaryId,
+    public QueryLayer WrapLayerForSecondaryEndpoint<TId>(QueryLayer secondaryLayer, ResourceType primaryResourceType, [DisallowNull] TId primaryId,
         RelationshipAttribute relationship)
     {
-        ArgumentGuard.NotNull(secondaryLayer);
-        ArgumentGuard.NotNull(primaryResourceType);
-        ArgumentGuard.NotNull(relationship);
+        ArgumentNullException.ThrowIfNull(secondaryLayer);
+        ArgumentNullException.ThrowIfNull(primaryResourceType);
+        ArgumentNullException.ThrowIfNull(relationship);
 
         IncludeExpression? innerInclude = secondaryLayer.Include;
         secondaryLayer.Include = null;
@@ -356,18 +368,18 @@ public class QueryLayerComposer : IQueryLayerComposer
         return new IncludeExpression(ImmutableHashSet.Create(parentElement));
     }
 
-    private FilterExpression? CreateFilterByIds<TId>(IReadOnlyCollection<TId> ids, AttrAttribute idAttribute, FilterExpression? existingFilter)
+    private FilterExpression? CreateFilterByIds<TId>(TId[] ids, AttrAttribute idAttribute, FilterExpression? existingFilter)
     {
         var idChain = new ResourceFieldChainExpression(idAttribute);
 
         FilterExpression? filter = null;
 
-        if (ids.Count == 1)
+        if (ids.Length == 1)
         {
             var constant = new LiteralConstantExpression(ids.Single()!);
             filter = new ComparisonExpression(ComparisonOperator.Equals, idChain, constant);
         }
-        else if (ids.Count > 1)
+        else if (ids.Length > 1)
         {
             ImmutableHashSet<LiteralConstantExpression> constants = ids.Select(id => new LiteralConstantExpression(id!)).ToImmutableHashSet();
             filter = new AnyExpression(idChain, constants);
@@ -377,17 +389,17 @@ public class QueryLayerComposer : IQueryLayerComposer
     }
 
     /// <inheritdoc />
-    public QueryLayer ComposeForUpdate<TId>(TId id, ResourceType primaryResourceType)
+    public QueryLayer ComposeForUpdate<TId>([DisallowNull] TId id, ResourceType primaryResourceType)
     {
-        ArgumentGuard.NotNull(primaryResourceType);
+        ArgumentNullException.ThrowIfNull(primaryResourceType);
 
-        IImmutableSet<IncludeElementExpression> includeElements = _targetedFields.Relationships
+        ImmutableHashSet<IncludeElementExpression> includeElements = _targetedFields.Relationships
             .Select(relationship => new IncludeElementExpression(relationship)).ToImmutableHashSet();
 
         AttrAttribute primaryIdAttribute = GetIdAttribute(primaryResourceType);
 
-        QueryLayer primaryLayer = ComposeTopLayer(Array.Empty<ExpressionInScope>(), primaryResourceType);
-        primaryLayer.Include = includeElements.Any() ? new IncludeExpression(includeElements) : IncludeExpression.Empty;
+        QueryLayer primaryLayer = ComposeTopLayer(ImmutableArray<ExpressionInScope>.Empty, primaryResourceType);
+        primaryLayer.Include = includeElements.Count > 0 ? new IncludeExpression(includeElements) : IncludeExpression.Empty;
         primaryLayer.Sort = null;
         primaryLayer.Pagination = null;
         primaryLayer.Filter = CreateFilterByIds([id], primaryIdAttribute, primaryLayer.Filter);
@@ -399,14 +411,14 @@ public class QueryLayerComposer : IQueryLayerComposer
     /// <inheritdoc />
     public IEnumerable<(QueryLayer, RelationshipAttribute)> ComposeForGetTargetedSecondaryResourceIds(IIdentifiable primaryResource)
     {
-        ArgumentGuard.NotNull(primaryResource);
+        ArgumentNullException.ThrowIfNull(primaryResource);
 
         foreach (RelationshipAttribute relationship in _targetedFields.Relationships)
         {
             object? rightValue = relationship.GetValue(primaryResource);
-            HashSet<IIdentifiable> rightResourceIds = _collectionConverter.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
+            HashSet<IIdentifiable> rightResourceIds = CollectionConverter.Instance.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
 
-            if (rightResourceIds.Any())
+            if (rightResourceIds.Count > 0)
             {
                 QueryLayer queryLayer = ComposeForGetRelationshipRightIds(relationship, rightResourceIds);
                 yield return (queryLayer, relationship);
@@ -417,12 +429,12 @@ public class QueryLayerComposer : IQueryLayerComposer
     /// <inheritdoc />
     public QueryLayer ComposeForGetRelationshipRightIds(RelationshipAttribute relationship, ICollection<IIdentifiable> rightResourceIds)
     {
-        ArgumentGuard.NotNull(relationship);
-        ArgumentGuard.NotNull(rightResourceIds);
+        ArgumentNullException.ThrowIfNull(relationship);
+        ArgumentNullException.ThrowIfNull(rightResourceIds);
 
         AttrAttribute rightIdAttribute = GetIdAttribute(relationship.RightType);
 
-        HashSet<object> typedIds = rightResourceIds.Select(resource => resource.GetTypedId()).ToHashSet();
+        object[] typedIds = rightResourceIds.Select(resource => resource.GetTypedId()).ToArray();
 
         FilterExpression? baseFilter = GetFilter(Array.Empty<QueryExpression>(), relationship.RightType);
         FilterExpression? filter = CreateFilterByIds(typedIds, rightIdAttribute, baseFilter);
@@ -440,14 +452,14 @@ public class QueryLayerComposer : IQueryLayerComposer
     }
 
     /// <inheritdoc />
-    public QueryLayer ComposeForHasMany<TId>(HasManyAttribute hasManyRelationship, TId leftId, ICollection<IIdentifiable> rightResourceIds)
+    public QueryLayer ComposeForHasMany<TId>(HasManyAttribute hasManyRelationship, [DisallowNull] TId leftId, ICollection<IIdentifiable> rightResourceIds)
     {
-        ArgumentGuard.NotNull(hasManyRelationship);
-        ArgumentGuard.NotNull(rightResourceIds);
+        ArgumentNullException.ThrowIfNull(hasManyRelationship);
+        ArgumentNullException.ThrowIfNull(rightResourceIds);
 
         AttrAttribute leftIdAttribute = GetIdAttribute(hasManyRelationship.LeftType);
         AttrAttribute rightIdAttribute = GetIdAttribute(hasManyRelationship.RightType);
-        HashSet<object> rightTypedIds = rightResourceIds.Select(resource => resource.GetTypedId()).ToHashSet();
+        object[] rightTypedIds = rightResourceIds.Select(resource => resource.GetTypedId()).ToArray();
 
         FilterExpression? leftFilter = CreateFilterByIds([leftId], leftIdAttribute, null);
         FilterExpression? rightFilter = CreateFilterByIds(rightTypedIds, rightIdAttribute, null);
@@ -478,15 +490,16 @@ public class QueryLayerComposer : IQueryLayerComposer
     protected virtual IImmutableSet<IncludeElementExpression> GetIncludeElements(IImmutableSet<IncludeElementExpression> includeElements,
         ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(includeElements);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         return _resourceDefinitionAccessor.OnApplyIncludes(resourceType, includeElements);
     }
 
     protected virtual FilterExpression? GetFilter(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(expressionsInScope);
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(expressionsInScope);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         FilterExpression[] filters = expressionsInScope.OfType<FilterExpression>().ToArray();
         FilterExpression? filter = LogicalExpression.Compose(LogicalOperator.And, filters);
@@ -496,8 +509,8 @@ public class QueryLayerComposer : IQueryLayerComposer
 
     protected virtual SortExpression GetSort(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(expressionsInScope);
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(expressionsInScope);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         SortExpression? sort = expressionsInScope.OfType<SortExpression>().FirstOrDefault();
 
@@ -515,8 +528,8 @@ public class QueryLayerComposer : IQueryLayerComposer
 
     protected virtual PaginationExpression GetPagination(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(expressionsInScope);
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(expressionsInScope);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         PaginationExpression? pagination = expressionsInScope.OfType<PaginationExpression>().FirstOrDefault();
 
@@ -531,7 +544,7 @@ public class QueryLayerComposer : IQueryLayerComposer
     protected virtual FieldSelection? GetSelectionForSparseAttributeSet(ResourceType resourceType)
 #pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         var selection = new FieldSelection();
 
@@ -542,7 +555,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         {
             IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForQuery(nextType);
 
-            if (!fieldSet.Any())
+            if (fieldSet.Count == 0)
             {
                 continue;
             }

@@ -22,7 +22,8 @@ public sealed class FilterParseTests : BaseParseTests
     {
         Options.EnableLegacyFilterNotation = false;
 
-        var resourceFactory = new ResourceFactory(new ServiceContainer());
+        using var serviceProvider = new ServiceContainer();
+        var resourceFactory = new ResourceFactory(serviceProvider);
         var scopeParser = new QueryStringParameterScopeParser();
         var valueParser = new FilterParser(resourceFactory);
         _reader = new FilterQueryStringParameterReader(scopeParser, valueParser, Request, ResourceGraph, Options);
@@ -81,13 +82,13 @@ public sealed class FilterParseTests : BaseParseTests
         InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
         exception.ParameterName.Should().Be(parameterNameSource.Text);
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"{errorMessage} {parameterNameSource}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be(parameterNameSource.Text);
     }
 
@@ -158,13 +159,13 @@ public sealed class FilterParseTests : BaseParseTests
         InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
         exception.ParameterName.Should().Be(parameterName);
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"{errorMessage} {parameterValueSource}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be(parameterName);
     }
 
@@ -221,7 +222,8 @@ public sealed class FilterParseTests : BaseParseTests
     public void Throws_When_ResourceType_Scope_Not_Disposed()
     {
         // Arrange
-        var resourceFactory = new ResourceFactory(new ServiceContainer());
+        using var serviceProvider = new ServiceContainer();
+        var resourceFactory = new ResourceFactory(serviceProvider);
         var parser = new NotDisposingFilterParser(resourceFactory);
 
         // Act
@@ -236,7 +238,8 @@ public sealed class FilterParseTests : BaseParseTests
     public void Throws_When_No_ResourceType_In_Scope()
     {
         // Arrange
-        var resourceFactory = new ResourceFactory(new ServiceContainer());
+        using var serviceProvider = new ServiceContainer();
+        var resourceFactory = new ResourceFactory(serviceProvider);
         var parser = new ResourceTypeAccessingFilterParser(resourceFactory);
 
         // Act
@@ -246,7 +249,8 @@ public sealed class FilterParseTests : BaseParseTests
         action.Should().ThrowExactly<InvalidOperationException>().WithMessage("No resource type is currently in scope. Call Parse() first.");
     }
 
-    private sealed class NotDisposingFilterParser(IResourceFactory resourceFactory) : FilterParser(resourceFactory)
+    private sealed class NotDisposingFilterParser(IResourceFactory resourceFactory)
+        : FilterParser(resourceFactory)
     {
         protected override FilterExpression ParseFilter()
         {
@@ -257,7 +261,8 @@ public sealed class FilterParseTests : BaseParseTests
         }
     }
 
-    private sealed class ResourceTypeAccessingFilterParser(IResourceFactory resourceFactory) : FilterParser(resourceFactory)
+    private sealed class ResourceTypeAccessingFilterParser(IResourceFactory resourceFactory)
+        : FilterParser(resourceFactory)
     {
         protected override void Tokenize(string source)
         {

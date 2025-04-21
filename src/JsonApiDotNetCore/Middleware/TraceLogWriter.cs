@@ -118,41 +118,27 @@ internal abstract class TraceLogWriter
     }
 }
 
-internal sealed class TraceLogWriter<T>(ILoggerFactory loggerFactory) : TraceLogWriter
+internal sealed partial class TraceLogWriter<T>(ILoggerFactory loggerFactory) : TraceLogWriter
 {
-    private readonly ILogger _logger = loggerFactory.CreateLogger(typeof(T));
-
-    private bool IsEnabled => _logger.IsEnabled(LogLevel.Trace);
+    private readonly ILogger _logger = loggerFactory.CreateLogger<T>();
 
     public void LogMethodStart(object? parameters = null, [CallerMemberName] string memberName = "")
     {
-        if (IsEnabled)
+        if (_logger.IsEnabled(LogLevel.Trace))
         {
-            string message = FormatMessage(memberName, parameters);
-            WriteMessageToLog(message);
+            var builder = new StringBuilder();
+            WriteProperties(builder, parameters);
+            string parameterValues = builder.ToString();
+
+            if (parameterValues.Length == 0)
+            {
+                LogEnteringMember(memberName);
+            }
+            else
+            {
+                LogEnteringMemberWithParameters(memberName, parameterValues);
+            }
         }
-    }
-
-    public void LogMessage(Func<string> messageFactory)
-    {
-        if (IsEnabled)
-        {
-            string message = messageFactory();
-            WriteMessageToLog(message);
-        }
-    }
-
-    private static string FormatMessage(string memberName, object? parameters)
-    {
-        var builder = new StringBuilder();
-
-        builder.Append("Entering ");
-        builder.Append(memberName);
-        builder.Append('(');
-        WriteProperties(builder, parameters);
-        builder.Append(')');
-
-        return builder.ToString();
     }
 
     private static void WriteProperties(StringBuilder builder, object? propertyContainer)
@@ -218,8 +204,9 @@ internal sealed class TraceLogWriter<T>(ILoggerFactory loggerFactory) : TraceLog
         }
     }
 
-    private void WriteMessageToLog(string message)
-    {
-        _logger.LogTrace(message);
-    }
+    [LoggerMessage(Level = LogLevel.Trace, SkipEnabledCheck = true, Message = "Entering {MemberName}({ParameterValues})")]
+    private partial void LogEnteringMemberWithParameters(string memberName, string parameterValues);
+
+    [LoggerMessage(Level = LogLevel.Trace, SkipEnabledCheck = true, Message = "Entering {MemberName}()")]
+    private partial void LogEnteringMember(string memberName);
 }

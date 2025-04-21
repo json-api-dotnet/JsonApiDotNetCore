@@ -28,7 +28,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_get_archived_resource_by_ID()
     {
         // Arrange
-        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.Generate();
+        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -44,16 +44,16 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(broadcast.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("archivedAt").With(value => value.Should().Be(broadcast.ArchivedAt));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("archivedAt").WhoseValue.Should().Be(broadcast.ArchivedAt);
     }
 
     [Fact]
     public async Task Can_get_unarchived_resource_by_ID()
     {
         // Arrange
-        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.Generate();
+        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.GenerateOne();
         broadcast.ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -70,16 +70,16 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(broadcast.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("archivedAt").WhoseValue.Should().BeNull();
     }
 
     [Fact]
     public async Task Get_primary_resources_excludes_archived()
     {
         // Arrange
-        List<TelevisionBroadcast> broadcasts = _fakers.TelevisionBroadcast.Generate(2);
+        List<TelevisionBroadcast> broadcasts = _fakers.TelevisionBroadcast.GenerateList(2);
         broadcasts[1].ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -97,16 +97,16 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(broadcasts[1].StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("archivedAt").WhoseValue.Should().BeNull();
     }
 
     [Fact]
     public async Task Get_primary_resources_with_filter_includes_archived()
     {
         // Arrange
-        List<TelevisionBroadcast> broadcasts = _fakers.TelevisionBroadcast.Generate(2);
+        List<TelevisionBroadcast> broadcasts = _fakers.TelevisionBroadcast.GenerateList(2);
         broadcasts[1].ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -124,20 +124,20 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(broadcasts[0].StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().Be(broadcasts[0].ArchivedAt));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("archivedAt").WhoseValue.Should().Be(broadcasts[0].ArchivedAt);
 
         responseDocument.Data.ManyValue[1].Id.Should().Be(broadcasts[1].StringId);
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("archivedAt").WhoseValue.Should().BeNull();
     }
 
     [Fact]
     public async Task Get_primary_resource_by_ID_with_include_excludes_archived()
     {
         // Arrange
-        TelevisionStation station = _fakers.TelevisionStation.Generate();
-        station.Broadcasts = _fakers.TelevisionBroadcast.Generate(2).ToHashSet();
+        TelevisionStation station = _fakers.TelevisionStation.GenerateOne();
+        station.Broadcasts = _fakers.TelevisionBroadcast.GenerateSet(2);
         station.Broadcasts.ElementAt(1).ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -154,20 +154,20 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(station.StringId);
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
+        responseDocument.Included[0].Attributes.Should().ContainKey("archivedAt").WhoseValue.Should().BeNull();
     }
 
     [Fact]
     public async Task Get_primary_resource_by_ID_with_include_and_filter_includes_archived()
     {
         // Arrange
-        TelevisionStation station = _fakers.TelevisionStation.Generate();
-        station.Broadcasts = _fakers.TelevisionBroadcast.Generate(2).ToHashSet();
+        TelevisionStation station = _fakers.TelevisionStation.GenerateOne();
+        station.Broadcasts = _fakers.TelevisionBroadcast.GenerateSet(2);
         station.Broadcasts.ElementAt(1).ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -184,22 +184,22 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(station.StringId);
 
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
         responseDocument.Included[0].Id.Should().Be(station.Broadcasts.ElementAt(0).StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().Be(station.Broadcasts.ElementAt(0).ArchivedAt));
+        responseDocument.Included[0].Attributes.Should().ContainKey("archivedAt").WhoseValue.Should().Be(station.Broadcasts.ElementAt(0).ArchivedAt);
         responseDocument.Included[1].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
-        responseDocument.Included[1].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
+        responseDocument.Included[1].Attributes.Should().ContainKey("archivedAt").WhoseValue.Should().BeNull();
     }
 
     [Fact]
     public async Task Get_secondary_resource_includes_archived()
     {
         // Arrange
-        BroadcastComment comment = _fakers.BroadcastComment.Generate();
-        comment.AppliesTo = _fakers.TelevisionBroadcast.Generate();
+        BroadcastComment comment = _fakers.BroadcastComment.GenerateOne();
+        comment.AppliesTo = _fakers.TelevisionBroadcast.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -215,17 +215,17 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(comment.AppliesTo.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("archivedAt").With(value => value.Should().Be(comment.AppliesTo.ArchivedAt));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("archivedAt").WhoseValue.Should().Be(comment.AppliesTo.ArchivedAt);
     }
 
     [Fact]
     public async Task Get_secondary_resources_excludes_archived()
     {
         // Arrange
-        TelevisionStation station = _fakers.TelevisionStation.Generate();
-        station.Broadcasts = _fakers.TelevisionBroadcast.Generate(2).ToHashSet();
+        TelevisionStation station = _fakers.TelevisionStation.GenerateOne();
+        station.Broadcasts = _fakers.TelevisionBroadcast.GenerateSet(2);
         station.Broadcasts.ElementAt(1).ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -242,17 +242,17 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("archivedAt").WhoseValue.Should().BeNull();
     }
 
     [Fact]
     public async Task Get_secondary_resources_with_filter_includes_archived()
     {
         // Arrange
-        TelevisionStation station = _fakers.TelevisionStation.Generate();
-        station.Broadcasts = _fakers.TelevisionBroadcast.Generate(2).ToHashSet();
+        TelevisionStation station = _fakers.TelevisionStation.GenerateOne();
+        station.Broadcasts = _fakers.TelevisionBroadcast.GenerateSet(2);
         station.Broadcasts.ElementAt(1).ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -271,21 +271,21 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
 
         DateTimeOffset archivedAt0 = station.Broadcasts.ElementAt(0).ArchivedAt!.Value;
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(station.Broadcasts.ElementAt(0).StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().Be(archivedAt0));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("archivedAt").WhoseValue.Should().Be(archivedAt0);
 
         responseDocument.Data.ManyValue[1].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
-        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
+        responseDocument.Data.ManyValue[1].Attributes.Should().ContainKey("archivedAt").WhoseValue.Should().BeNull();
     }
 
     [Fact]
     public async Task Get_secondary_resource_by_ID_with_include_excludes_archived()
     {
         // Arrange
-        TelevisionNetwork network = _fakers.TelevisionNetwork.Generate();
-        network.Stations = _fakers.TelevisionStation.Generate(1).ToHashSet();
-        network.Stations.ElementAt(0).Broadcasts = _fakers.TelevisionBroadcast.Generate(2).ToHashSet();
+        TelevisionNetwork network = _fakers.TelevisionNetwork.GenerateOne();
+        network.Stations = _fakers.TelevisionStation.GenerateSet(1);
+        network.Stations.ElementAt(0).Broadcasts = _fakers.TelevisionBroadcast.GenerateSet(2);
         network.Stations.ElementAt(0).Broadcasts.ElementAt(1).ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -302,20 +302,20 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(network.Stations.ElementAt(0).StringId);
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Id.Should().Be(network.Stations.ElementAt(0).Broadcasts.ElementAt(1).StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
+        responseDocument.Included[0].Attributes.Should().ContainKey("archivedAt").WhoseValue.Should().BeNull();
     }
 
     [Fact]
     public async Task Get_secondary_resource_by_ID_with_include_and_filter_includes_archived()
     {
-        TelevisionNetwork network = _fakers.TelevisionNetwork.Generate();
-        network.Stations = _fakers.TelevisionStation.Generate(1).ToHashSet();
-        network.Stations.ElementAt(0).Broadcasts = _fakers.TelevisionBroadcast.Generate(2).ToHashSet();
+        TelevisionNetwork network = _fakers.TelevisionNetwork.GenerateOne();
+        network.Stations = _fakers.TelevisionStation.GenerateSet(1);
+        network.Stations.ElementAt(0).Broadcasts = _fakers.TelevisionBroadcast.GenerateSet(2);
         network.Stations.ElementAt(0).Broadcasts.ElementAt(1).ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -335,22 +335,22 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
 
         DateTimeOffset archivedAt0 = network.Stations.ElementAt(0).Broadcasts.ElementAt(0).ArchivedAt!.Value;
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(network.Stations.ElementAt(0).StringId);
 
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
         responseDocument.Included[0].Id.Should().Be(network.Stations.ElementAt(0).Broadcasts.ElementAt(0).StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().Be(archivedAt0));
+        responseDocument.Included[0].Attributes.Should().ContainKey("archivedAt").WhoseValue.Should().Be(archivedAt0);
         responseDocument.Included[1].Id.Should().Be(network.Stations.ElementAt(0).Broadcasts.ElementAt(1).StringId);
-        responseDocument.Included[1].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
+        responseDocument.Included[1].Attributes.Should().ContainKey("archivedAt").WhoseValue.Should().BeNull();
     }
 
     [Fact]
     public async Task Get_ToMany_relationship_excludes_archived()
     {
         // Arrange
-        TelevisionStation station = _fakers.TelevisionStation.Generate();
-        station.Broadcasts = _fakers.TelevisionBroadcast.Generate(2).ToHashSet();
+        TelevisionStation station = _fakers.TelevisionStation.GenerateOne();
+        station.Broadcasts = _fakers.TelevisionBroadcast.GenerateSet(2);
         station.Broadcasts.ElementAt(1).ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -367,7 +367,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
     }
 
@@ -375,8 +375,8 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Get_ToMany_relationship_with_filter_includes_archived()
     {
         // Arrange
-        TelevisionStation station = _fakers.TelevisionStation.Generate();
-        station.Broadcasts = _fakers.TelevisionBroadcast.Generate(2).ToHashSet();
+        TelevisionStation station = _fakers.TelevisionStation.GenerateOne();
+        station.Broadcasts = _fakers.TelevisionBroadcast.GenerateSet(2);
         station.Broadcasts.ElementAt(1).ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -393,7 +393,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(station.Broadcasts.ElementAt(0).StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
     }
@@ -402,7 +402,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_create_unarchived_resource()
     {
         // Arrange
-        TelevisionBroadcast newBroadcast = _fakers.TelevisionBroadcast.Generate();
+        TelevisionBroadcast newBroadcast = _fakers.TelevisionBroadcast.GenerateOne();
 
         var requestBody = new
         {
@@ -425,17 +425,17 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newBroadcast.Title));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("airedAt").With(value => value.Should().Be(newBroadcast.AiredAt));
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
+        responseDocument.Data.SingleValue.Should().NotBeNull();
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("title").WhoseValue.Should().Be(newBroadcast.Title);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("airedAt").WhoseValue.Should().Be(newBroadcast.AiredAt);
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("archivedAt").WhoseValue.Should().BeNull();
     }
 
     [Fact]
     public async Task Cannot_create_archived_resource()
     {
         // Arrange
-        TelevisionBroadcast newBroadcast = _fakers.TelevisionBroadcast.Generate();
+        TelevisionBroadcast newBroadcast = _fakers.TelevisionBroadcast.GenerateOne();
 
         var requestBody = new
         {
@@ -459,7 +459,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -471,10 +471,10 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_archive_resource()
     {
         // Arrange
-        TelevisionBroadcast existingBroadcast = _fakers.TelevisionBroadcast.Generate();
+        TelevisionBroadcast existingBroadcast = _fakers.TelevisionBroadcast.GenerateOne();
         existingBroadcast.ArchivedAt = null;
 
-        DateTimeOffset newArchivedAt = _fakers.TelevisionBroadcast.Generate().ArchivedAt!.Value;
+        DateTimeOffset newArchivedAt = _fakers.TelevisionBroadcast.GenerateOne().ArchivedAt!.Value;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -517,7 +517,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_unarchive_resource()
     {
         // Arrange
-        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.Generate();
+        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -560,9 +560,9 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Cannot_shift_archive_date()
     {
         // Arrange
-        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.Generate();
+        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.GenerateOne();
 
-        DateTimeOffset? newArchivedAt = _fakers.TelevisionBroadcast.Generate().ArchivedAt;
+        DateTimeOffset? newArchivedAt = _fakers.TelevisionBroadcast.GenerateOne().ArchivedAt;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -591,7 +591,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -603,7 +603,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_delete_archived_resource()
     {
         // Arrange
-        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.Generate();
+        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -633,7 +633,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Cannot_delete_unarchived_resource()
     {
         // Arrange
-        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.Generate();
+        TelevisionBroadcast broadcast = _fakers.TelevisionBroadcast.GenerateOne();
         broadcast.ArchivedAt = null;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -650,7 +650,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);

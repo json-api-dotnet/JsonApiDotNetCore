@@ -18,7 +18,7 @@ internal sealed class FingerprintGenerator : IFingerprintGenerator
     /// <inheritdoc />
     public string Generate(IEnumerable<string> elements)
     {
-        ArgumentGuard.NotNull(elements);
+        ArgumentNullException.ThrowIfNull(elements);
 
         using var hasher = IncrementalHash.CreateHash(HashAlgorithmName.MD5);
 

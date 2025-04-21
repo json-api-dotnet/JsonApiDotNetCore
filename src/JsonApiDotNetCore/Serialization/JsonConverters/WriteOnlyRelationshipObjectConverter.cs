@@ -27,6 +27,9 @@ public sealed class WriteOnlyRelationshipObjectConverter : JsonObjectConverter<R
     /// </summary>
     public override void Write(Utf8JsonWriter writer, RelationshipObject value, JsonSerializerOptions options)
     {
+        ArgumentNullException.ThrowIfNull(writer);
+        ArgumentNullException.ThrowIfNull(value);
+
         writer.WriteStartObject();
 
         if (value.Links != null && value.Links.HasValue())

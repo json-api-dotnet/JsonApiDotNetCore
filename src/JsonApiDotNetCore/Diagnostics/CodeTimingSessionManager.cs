@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Diagnostics;
 /// </summary>
 public static class CodeTimingSessionManager
 {
-    public static readonly bool IsEnabled;
+    public static readonly bool IsEnabled = GetDefaultIsEnabled();
     private static ICodeTimerSession? _session;
 
     public static ICodeTimer Current
@@ -28,12 +28,12 @@ public static class CodeTimingSessionManager
         }
     }
 
-    static CodeTimingSessionManager()
+    private static bool GetDefaultIsEnabled()
     {
 #if DEBUG
-        IsEnabled = !IsRunningInTest() && !IsRunningInBenchmark();
+        return !IsRunningInTest() && !IsRunningInBenchmark() && !IsGeneratingOpenApiDocumentAtBuildTime();
 #else
-        IsEnabled = false;
+        return false;
 #endif
     }
 
@@ -52,6 +52,12 @@ public static class CodeTimingSessionManager
         return Assembly.GetEntryAssembly()?.GetName().Name == "Benchmarks";
     }
 
+    // ReSharper disable once UnusedMember.Local
+    private static bool IsGeneratingOpenApiDocumentAtBuildTime()
+    {
+        return Environment.GetCommandLineArgs().Any(argument => argument.Contains("GetDocument.Insider"));
+    }
+
     private static void AssertHasActiveSession()
     {
         if (_session == null)
@@ -62,7 +68,7 @@ public static class CodeTimingSessionManager
 
     public static void Capture(ICodeTimerSession session)
     {
-        ArgumentGuard.NotNull(session);
+        ArgumentNullException.ThrowIfNull(session);
 
         AssertNoActiveSession();
 

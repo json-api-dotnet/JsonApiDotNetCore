@@ -1,5 +1,3 @@
-using JsonApiDotNetCore;
-
 namespace DapperExample.TranslationToSql.TreeNodes;
 
 /// <summary>
@@ -13,7 +11,7 @@ internal sealed class WhereNode : SqlTreeNode
 
     public WhereNode(FilterNode filter)
     {
-        ArgumentGuard.NotNull(filter);
+        ArgumentNullException.ThrowIfNull(filter);
 
         Filter = filter;
     }

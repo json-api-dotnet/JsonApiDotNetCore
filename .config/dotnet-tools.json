@@ -3,28 +3,39 @@
   "isRoot": true,
   "tools": {
     "jetbrains.resharper.globaltools": {
-      "version": "2024.1.4",
+      "version": "2024.3.6",
       "commands": [
         "jb"
-      ]
+      ],
+      "rollForward": false
     },
     "regitlint": {
-      "version": "6.3.12",
+      "version": "6.3.13",
       "commands": [
         "regitlint"
-      ]
+      ],
+      "rollForward": false
     },
     "dotnet-reportgenerator-globaltool": {
-      "version": "5.3.6",
+      "version": "5.4.5",
       "commands": [
         "reportgenerator"
-      ]
+      ],
+      "rollForward": false
     },
     "docfx": {
-      "version": "2.76.0",
+      "version": "2.78.2",
       "commands": [
         "docfx"
-      ]
+      ],
+      "rollForward": false
+    },
+    "microsoft.openapi.kiota": {
+      "version": "1.25.1",
+      "commands": [
+        "kiota"
+      ],
+      "rollForward": false
     }
   }
 }

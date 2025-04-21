@@ -2,16 +2,15 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
-using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.TimeOffset;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public class FilterRewritingResourceDefinition<TResource, TId>(IResourceGraph resourceGraph, ISystemClock systemClock)
+public class FilterRewritingResourceDefinition<TResource, TId>(IResourceGraph resourceGraph, TimeProvider timeProvider)
     : JsonApiResourceDefinition<TResource, TId>(resourceGraph)
     where TResource : class, IIdentifiable<TId>
 {
-    private readonly FilterTimeOffsetRewriter _rewriter = new(systemClock);
+    private readonly FilterTimeOffsetRewriter _rewriter = new(timeProvider);
 
     public override FilterExpression? OnApplyFilter(FilterExpression? existingFilter)
     {

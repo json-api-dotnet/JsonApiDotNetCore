@@ -17,15 +17,15 @@ namespace JsonApiDotNetCore.Errors;
 [PublicAPI]
 public sealed class InvalidModelStateException(
     IReadOnlyDictionary<string, ModelStateEntry?> modelState, Type modelType, bool includeExceptionStackTraceInErrors, IResourceGraph resourceGraph,
-    Func<Type, int, Type?>? getCollectionElementTypeCallback = null) : JsonApiException(FromModelStateDictionary(modelState, modelType, resourceGraph,
-    includeExceptionStackTraceInErrors, getCollectionElementTypeCallback))
+    Func<Type, int, Type?>? getCollectionElementTypeCallback = null)
+    : JsonApiException(FromModelStateDictionary(modelState, modelType, resourceGraph, includeExceptionStackTraceInErrors, getCollectionElementTypeCallback))
 {
-    private static IEnumerable<ErrorObject> FromModelStateDictionary(IReadOnlyDictionary<string, ModelStateEntry?> modelState, Type modelType,
+    private static List<ErrorObject> FromModelStateDictionary(IReadOnlyDictionary<string, ModelStateEntry?> modelState, Type modelType,
         IResourceGraph resourceGraph, bool includeExceptionStackTraceInErrors, Func<Type, int, Type?>? getCollectionElementTypeCallback)
     {
-        ArgumentGuard.NotNull(modelState);
-        ArgumentGuard.NotNull(modelType);
-        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(modelState);
+        ArgumentNullException.ThrowIfNull(modelType);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
 
         List<ErrorObject> errorObjects = [];
 
@@ -186,7 +186,7 @@ public sealed class InvalidModelStateException(
             Exception exception = modelError.Exception.Demystify();
             string[] stackTraceLines = exception.ToString().Split(Environment.NewLine);
 
-            if (stackTraceLines.Any())
+            if (stackTraceLines.Length > 0)
             {
                 error.Meta ??= new Dictionary<string, object?>();
                 error.Meta["StackTrace"] = stackTraceLines;
@@ -231,8 +231,8 @@ public sealed class InvalidModelStateException(
         protected ModelStateKeySegment(Type modelType, bool isInComplexType, string nextKey, string? sourcePointer, ModelStateKeySegment? parent,
             Func<Type, int, Type?>? getCollectionElementTypeCallback)
         {
-            ArgumentGuard.NotNull(modelType);
-            ArgumentGuard.NotNull(nextKey);
+            ArgumentNullException.ThrowIfNull(modelType);
+            ArgumentNullException.ThrowIfNull(nextKey);
 
             ModelType = modelType;
             IsInComplexType = isInComplexType;
@@ -244,15 +244,15 @@ public sealed class InvalidModelStateException(
 
         public ModelStateKeySegment? GetNextSegment(Type modelType, bool isInComplexType, string? sourcePointer)
         {
-            ArgumentGuard.NotNull(modelType);
+            ArgumentNullException.ThrowIfNull(modelType);
 
-            return _nextKey == string.Empty ? null : CreateSegment(modelType, _nextKey, isInComplexType, this, sourcePointer, GetCollectionElementTypeCallback);
+            return _nextKey.Length == 0 ? null : CreateSegment(modelType, _nextKey, isInComplexType, this, sourcePointer, GetCollectionElementTypeCallback);
         }
 
         public static ModelStateKeySegment Create(Type modelType, string key, Func<Type, int, Type?>? getCollectionElementTypeCallback)
         {
-            ArgumentGuard.NotNull(modelType);
-            ArgumentGuard.NotNull(key);
+            ArgumentNullException.ThrowIfNull(modelType);
+            ArgumentNullException.ThrowIfNull(key);
 
             return CreateSegment(modelType, key, false, null, null, getCollectionElementTypeCallback);
         }
@@ -271,7 +271,7 @@ public sealed class InvalidModelStateException(
 
                 if (bracketCloseIndex != -1)
                 {
-                    segmentValue = key[1.. bracketCloseIndex];
+                    segmentValue = key[1..bracketCloseIndex];
 
                     int nextKeyStartIndex = key.Length > bracketCloseIndex + 1 && key[bracketCloseIndex + 1] == Dot
                         ? bracketCloseIndex + 2
@@ -316,11 +316,9 @@ public sealed class InvalidModelStateException(
     /// </summary>
     private sealed class ArrayIndexerSegment(
         int arrayIndex, Type modelType, bool isInComplexType, string nextKey, string? sourcePointer, ModelStateKeySegment? parent,
-        Func<Type, int, Type?>? getCollectionElementTypeCallback) : ModelStateKeySegment(modelType, isInComplexType, nextKey, sourcePointer, parent,
-        getCollectionElementTypeCallback)
+        Func<Type, int, Type?>? getCollectionElementTypeCallback)
+        : ModelStateKeySegment(modelType, isInComplexType, nextKey, sourcePointer, parent, getCollectionElementTypeCallback)
     {
-        private static readonly CollectionConverter CollectionConverter = new();
-
         public int ArrayIndex { get; } = arrayIndex;
 
         public Type GetCollectionElementType()
@@ -333,7 +331,7 @@ public sealed class InvalidModelStateException(
         {
             if (ModelType != typeof(string))
             {
-                Type? elementType = CollectionConverter.FindCollectionElementType(ModelType);
+                Type? elementType = CollectionConverter.Instance.FindCollectionElementType(ModelType);
 
                 if (elementType != null)
                 {
@@ -357,14 +355,14 @@ public sealed class InvalidModelStateException(
             Func<Type, int, Type?>? getCollectionElementTypeCallback)
             : base(modelType, isInComplexType, nextKey, sourcePointer, parent, getCollectionElementTypeCallback)
         {
-            ArgumentGuard.NotNull(propertyName);
+            ArgumentNullException.ThrowIfNull(propertyName);
 
             PropertyName = propertyName;
         }
 
         public static string GetPublicNameForProperty(PropertyInfo property)
         {
-            ArgumentGuard.NotNull(property);
+            ArgumentNullException.ThrowIfNull(property);
 
             var jsonNameAttribute = property.GetCustomAttribute<JsonPropertyNameAttribute>(true);
             return jsonNameAttribute?.Name ?? property.Name;

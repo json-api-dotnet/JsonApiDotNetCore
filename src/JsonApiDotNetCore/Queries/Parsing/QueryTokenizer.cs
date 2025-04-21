@@ -1,4 +1,3 @@
-using System.Collections.ObjectModel;
 using System.Text;
 using JetBrains.Annotations;
 
@@ -7,18 +6,17 @@ namespace JsonApiDotNetCore.Queries.Parsing;
 [PublicAPI]
 public sealed class QueryTokenizer
 {
-    public static readonly IReadOnlyDictionary<char, TokenKind> SingleCharacterToTokenKinds = new ReadOnlyDictionary<char, TokenKind>(
-        new Dictionary<char, TokenKind>
-        {
-            ['('] = TokenKind.OpenParen,
-            [')'] = TokenKind.CloseParen,
-            ['['] = TokenKind.OpenBracket,
-            [']'] = TokenKind.CloseBracket,
-            ['.'] = TokenKind.Period,
-            [','] = TokenKind.Comma,
-            [':'] = TokenKind.Colon,
-            ['-'] = TokenKind.Minus
-        });
+    public static readonly Dictionary<char, TokenKind> SingleCharacterToTokenKinds = new()
+    {
+        ['('] = TokenKind.OpenParen,
+        [')'] = TokenKind.CloseParen,
+        ['['] = TokenKind.OpenBracket,
+        [']'] = TokenKind.CloseBracket,
+        ['.'] = TokenKind.Period,
+        [','] = TokenKind.Comma,
+        [':'] = TokenKind.Colon,
+        ['-'] = TokenKind.Minus
+    };
 
     private readonly string _source;
     private readonly StringBuilder _textBuffer = new();
@@ -28,7 +26,7 @@ public sealed class QueryTokenizer
 
     public QueryTokenizer(string source)
     {
-        ArgumentGuard.NotNull(source);
+        ArgumentNullException.ThrowIfNull(source);
 
         _source = source;
     }

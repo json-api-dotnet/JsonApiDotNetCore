@@ -1,6 +1,7 @@
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Middleware;
 using Xunit;
 
@@ -12,14 +13,21 @@ namespace TestBuildingBlocks;
 /// </summary>
 public abstract class IntegrationTest : IAsyncLifetime
 {
-    private static readonly SemaphoreSlim ThrottleSemaphore;
+    private static readonly MediaTypeHeaderValue DefaultMediaType = MediaTypeHeaderValue.Parse(JsonApiMediaType.Default.ToString());
+
+    private static readonly MediaTypeWithQualityHeaderValue OperationsMediaType =
+        MediaTypeWithQualityHeaderValue.Parse(JsonApiMediaType.AtomicOperations.ToString());
+
+    private static readonly SemaphoreSlim ThrottleSemaphore = GetDefaultThrottleSemaphore();
+
+    public static DateTimeOffset DefaultDateTimeUtc { get; } = 1.January(2020).At(1, 2, 3).AsUtc();
 
     protected abstract JsonSerializerOptions SerializerOptions { get; }
 
-    static IntegrationTest()
+    private static SemaphoreSlim GetDefaultThrottleSemaphore()
     {
         int maxConcurrentTestRuns = OperatingSystem.IsWindows() && Environment.GetEnvironmentVariable("CI") != null ? 32 : 64;
-        ThrottleSemaphore = new SemaphoreSlim(maxConcurrentTestRuns);
+        return new SemaphoreSlim(maxConcurrentTestRuns);
     }
 
     public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteHeadAsync<TResponseDocument>(string requestUrl,
@@ -34,32 +42,38 @@ public abstract class IntegrationTest : IAsyncLifetime
         return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Get, requestUrl, null, null, setRequestHeaders);
     }
 
+#pragma warning disable AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
     public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecutePostAsync<TResponseDocument>(string requestUrl,
-        object requestBody, string contentType = HeaderConstants.MediaType, Action<HttpRequestHeaders>? setRequestHeaders = null)
+        object requestBody, string? contentType = null, Action<HttpRequestHeaders>? setRequestHeaders = null)
+#pragma warning restore AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
     {
-        return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Post, requestUrl, requestBody, contentType, setRequestHeaders);
+        MediaTypeHeaderValue mediaType = contentType == null ? DefaultMediaType : MediaTypeHeaderValue.Parse(contentType);
+
+        return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Post, requestUrl, requestBody, mediaType, setRequestHeaders);
     }
 
     public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecutePostAtomicAsync<TResponseDocument>(string requestUrl,
-        object requestBody, string contentType = HeaderConstants.AtomicOperationsMediaType, Action<HttpRequestHeaders>? setRequestHeaders = null)
+        object requestBody)
     {
-        return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Post, requestUrl, requestBody, contentType, setRequestHeaders);
+        Action<HttpRequestHeaders> setRequestHeaders = headers => headers.Accept.Add(OperationsMediaType);
+
+        return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Post, requestUrl, requestBody, OperationsMediaType, setRequestHeaders);
     }
 
     public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecutePatchAsync<TResponseDocument>(string requestUrl,
-        object requestBody, string contentType = HeaderConstants.MediaType, Action<HttpRequestHeaders>? setRequestHeaders = null)
+        object requestBody, Action<HttpRequestHeaders>? setRequestHeaders = null)
     {
-        return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Patch, requestUrl, requestBody, contentType, setRequestHeaders);
+        return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Patch, requestUrl, requestBody, DefaultMediaType, setRequestHeaders);
     }
 
     public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteDeleteAsync<TResponseDocument>(string requestUrl,
-        object? requestBody = null, string contentType = HeaderConstants.MediaType, Action<HttpRequestHeaders>? setRequestHeaders = null)
+        object? requestBody = null, Action<HttpRequestHeaders>? setRequestHeaders = null)
     {
-        return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Delete, requestUrl, requestBody, contentType, setRequestHeaders);
+        return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Delete, requestUrl, requestBody, DefaultMediaType, setRequestHeaders);
     }
 
     private async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteRequestAsync<TResponseDocument>(HttpMethod method,
-        string requestUrl, object? requestBody, string? contentType, Action<HttpRequestHeaders>? setRequestHeaders)
+        string requestUrl, object? requestBody, MediaTypeHeaderValue? contentType, Action<HttpRequestHeaders>? setRequestHeaders)
     {
         using var request = new HttpRequestMessage(method, requestUrl);
         string? requestText = SerializeRequest(requestBody);
@@ -72,7 +86,7 @@ public abstract class IntegrationTest : IAsyncLifetime
 
             if (contentType != null)
             {
-                request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);
+                request.Content.Headers.ContentType = contentType;
             }
         }
 

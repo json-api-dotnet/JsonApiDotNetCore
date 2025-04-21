@@ -43,7 +43,7 @@ public sealed class LogicalCombinatorTests
             conditionRight3
         }.Select(condition => condition.ToString());
 
-        string expectedText = '(' + string.Join(") AND (", terms) + ')';
+        string expectedText = $"({string.Join(") AND (", terms)})";
         result.ToString().Should().Be(expectedText);
     }
 }

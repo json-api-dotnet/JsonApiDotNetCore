@@ -4,10 +4,11 @@
 While the [documentation](~/usage/resources/index.md) covers basic features and a few runnable example projects are available [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples),
 many more advanced use cases are available as integration tests [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/test/JsonApiDotNetCoreTests/IntegrationTests), so be sure to check them out!
 
-#### Why can't I use OpenAPI?
-Due to the mismatch between the JSON:API structure and the shape of ASP.NET controller methods, this does not work out of the box.
-This is high on our agenda and we're steadily making progress, but it's quite complex and far from complete.
-See [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1046) for the current status, which includes instructions on trying out the latest build.
+#### Why don't you use the built-in OpenAPI support in ASP.NET Core?
+The structure of JSON:API request and response bodies differs significantly from the signature of JsonApiDotNetCore controllers.
+JsonApiDotNetCore provides OpenAPI support using [Swashbuckle](https://github.com/domaindrivendev/Swashbuckle.AspNetCore), a mature and feature-rich library that is highly extensible.
+The [OpenAPI support in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/openapi/overview) is still very young
+and doesn't provide the level of extensibility needed for JsonApiDotNetCore.
 
 #### What's available to implement a JSON:API client?
 It depends on the programming language used. There's an overwhelming list of client libraries at https://jsonapi.org/implementations/#client-libraries.
@@ -71,7 +72,7 @@ For example, if your primary key column is named "CustomerId" instead of "Id":
 builder.Entity<Customer>().Property(x => x.Id).HasColumnName("CustomerId");
 ```
 
-It certainly pays off to read up on these capabilities at [Creating and Configuring a Model](https://learn.microsoft.com/en-us/ef/core/modeling/).
+It certainly pays off to read up on these capabilities at [Creating and Configuring a Model](https://learn.microsoft.com/ef/core/modeling/).
 Another great resource is [Learn Entity Framework Core](https://www.learnentityframeworkcore.com/configuration).
 
 #### Can I share my resource models with .NET Framework projects?
@@ -80,7 +81,7 @@ This package contains just the JSON:API attributes and targets NetStandard 1.0, 
 At startup, use [Auto-discovery](~/usage/resource-graph.md#auto-discovery) and point it to your shared project.
 
 #### What's the best place to put my custom business/validation logic?
-For basic input validation, use the attributes from [ASP.NET ModelState Validation](https://learn.microsoft.com/en-us/aspnet/core/mvc/models/validation?source=recommendations&view=aspnetcore-7.0#built-in-attributes) to get the best experience.
+For basic input validation, use the attributes from [ASP.NET ModelState Validation](https://learn.microsoft.com/aspnet/core/mvc/models/validation?source=recommendations&view=aspnetcore-7.0#built-in-attributes) to get the best experience.
 JsonApiDotNetCore is aware of them and adjusts behavior accordingly. And it produces the best possible error responses.
 
 For non-trivial business rules that require custom code, the place to be is [Resource Definitions](~/usage/extensibility/resource-definitions.md).
@@ -148,7 +149,7 @@ And most resource definition callbacks are handled.
 That's because the built-in resource service translates all JSON:API query aspects of the request into a database-agnostic data structure called `QueryLayer`.
 Now the hard part for you becomes reading that data structure and producing data access calls from that.
 If your data store provides a LINQ provider, you can probably reuse [QueryableBuilder](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/QueryableBuilder.cs),
-which drives the translation into [System.Linq.Expressions](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/expression-trees/).
+which drives the translation into [System.Linq.Expressions](https://learn.microsoft.com/dotnet/csharp/programming-guide/concepts/expression-trees/).
 Note however, that it also produces calls to `.Include("")`, which is an Entity Framework Core-specific extension method, so you'll need to
 [prevent that from happening](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/QueryLayerIncludeConverter.cs).
 

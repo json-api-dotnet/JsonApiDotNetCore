@@ -7,43 +7,48 @@ using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Resources;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Middleware;
 
 /// <summary>
-/// The default routing convention registers the name of the resource as the route using the serializer naming convention. The default for this is a
-/// camel case formatter. If the controller directly inherits from <see cref="CoreJsonApiController" /> and there is no resource directly associated, it
-/// uses the name of the controller instead of the name of the type.
+/// Registers routes based on the JSON:API resource name, which defaults to camel-case pluralized form of the resource CLR type name. If unavailable (for
+/// example, when a controller directly inherits from <see cref="CoreJsonApiController" />), the serializer naming convention is applied on the
+/// controller type name (camel-case by default).
 /// </summary>
 /// <example><![CDATA[
-/// public class SomeResourceController : JsonApiController<SomeResource> { } // => /someResources/relationship/relatedResource
+/// // controller name is ignored when resource type is available:
+/// public class RandomNameController<SomeResource> : JsonApiController<SomeResource> { } // => /someResources
 /// 
-/// public class RandomNameController<SomeResource> : JsonApiController<SomeResource> { } // => /someResources/relationship/relatedResource
+/// // when using kebab-case naming convention in options:
+/// public class RandomNameController<SomeResource> : JsonApiController<SomeResource> { } // => /some-resources
 /// 
-/// // when using kebab-case naming convention:
-/// public class SomeResourceController<SomeResource> : JsonApiController<SomeResource> { } // => /some-resources/relationship/related-resource
-/// 
-/// public class SomeVeryCustomController<SomeResource> : CoreJsonApiController { } // => /someVeryCustoms/relationship/relatedResource
+/// // unable to determine resource type:
+/// public class SomeVeryCustomController<SomeResource> : CoreJsonApiController { } // => /someVeryCustom
 /// ]]></example>
 [PublicAPI]
-public sealed class JsonApiRoutingConvention : IJsonApiRoutingConvention
+public sealed partial class JsonApiRoutingConvention : IJsonApiRoutingConvention
 {
     private readonly IJsonApiOptions _options;
     private readonly IResourceGraph _resourceGraph;
+    private readonly IJsonApiEndpointFilter _jsonApiEndpointFilter;
     private readonly ILogger<JsonApiRoutingConvention> _logger;
     private readonly Dictionary<string, string> _registeredControllerNameByTemplate = [];
     private readonly Dictionary<Type, ResourceType> _resourceTypePerControllerTypeMap = [];
     private readonly Dictionary<ResourceType, ControllerModel> _controllerPerResourceTypeMap = [];
 
-    public JsonApiRoutingConvention(IJsonApiOptions options, IResourceGraph resourceGraph, ILogger<JsonApiRoutingConvention> logger)
+    public JsonApiRoutingConvention(IJsonApiOptions options, IResourceGraph resourceGraph, IJsonApiEndpointFilter jsonApiEndpointFilter,
+        ILogger<JsonApiRoutingConvention> logger)
     {
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(resourceGraph);
-        ArgumentGuard.NotNull(logger);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(jsonApiEndpointFilter);
+        ArgumentNullException.ThrowIfNull(logger);
 
         _options = options;
         _resourceGraph = resourceGraph;
+        _jsonApiEndpointFilter = jsonApiEndpointFilter;
         _logger = logger;
     }
 
@@ -64,7 +69,7 @@ public sealed class JsonApiRoutingConvention : IJsonApiRoutingConvention
     /// <inheritdoc />
     public void Apply(ApplicationModel application)
     {
-        ArgumentGuard.NotNull(application);
+        ArgumentNullException.ThrowIfNull(application);
 
         foreach (ControllerModel controller in application.Controllers)
         {
@@ -83,8 +88,7 @@ public sealed class JsonApiRoutingConvention : IJsonApiRoutingConvention
                 // ProblemDetails, where the origin of the error gets lost. As a result, we can't populate the source pointer in JSON:API error responses.
                 // For backwards-compatibility, we log a warning instead of throwing. But we can't think of any use cases where having [ApiController] makes sense.
 
-                _logger.LogWarning(
-                    $"Found JSON:API controller '{controller.ControllerType}' with [ApiController]. Please remove this attribute for optimal JSON:API compliance.");
+                LogApiControllerAttributeFound(controller.ControllerType);
             }
 
             if (!IsOperationsController(controller.ControllerType))
@@ -97,8 +101,8 @@ public sealed class JsonApiRoutingConvention : IJsonApiRoutingConvention
 
                     if (resourceType == null)
                     {
-                        throw new InvalidConfigurationException($"Controller '{controller.ControllerType}' depends on " +
-                            $"resource type '{resourceClrType}', which does not exist in the resource graph.");
+                        throw new InvalidConfigurationException(
+                            $"Controller '{controller.ControllerType}' depends on resource type '{resourceClrType}', which does not exist in the resource graph.");
                     }
 
                     if (_controllerPerResourceTypeMap.TryGetValue(resourceType, out ControllerModel? existingModel))
@@ -107,9 +111,16 @@ public sealed class JsonApiRoutingConvention : IJsonApiRoutingConvention
                             $"Multiple controllers found for resource type '{resourceType}': '{existingModel.ControllerType}' and '{controller.ControllerType}'.");
                     }
 
+                    RemoveDisabledActionMethods(controller, resourceType);
+
                     _resourceTypePerControllerTypeMap.Add(controller.ControllerType, resourceType);
                     _controllerPerResourceTypeMap.Add(resourceType, controller);
                 }
+            }
+            else
+            {
+                var options = (JsonApiOptions)_options;
+                options.IncludeExtensions(JsonApiMediaTypeExtension.AtomicOperations, JsonApiMediaTypeExtension.RelaxedAtomicOperations);
             }
 
             if (IsRoutingConventionDisabled(controller))
@@ -144,34 +155,10 @@ public sealed class JsonApiRoutingConvention : IJsonApiRoutingConvention
         return controller.ControllerType.GetCustomAttribute<ApiControllerAttribute>() != null;
     }
 
-    private static bool IsRoutingConventionDisabled(ControllerModel controller)
+    private static bool IsOperationsController(Type type)
     {
-        return controller.ControllerType.GetCustomAttribute<DisableRoutingConventionAttribute>(true) != null;
-    }
-
-    /// <summary>
-    /// Derives a template from the resource type, and checks if this template was already registered.
-    /// </summary>
-    private string? TemplateFromResource(ControllerModel model)
-    {
-        if (_resourceTypePerControllerTypeMap.TryGetValue(model.ControllerType, out ResourceType? resourceType))
-        {
-            return $"{_options.Namespace}/{resourceType.PublicName}";
-        }
-
-        return null;
-    }
-
-    /// <summary>
-    /// Derives a template from the controller name, and checks if this template was already registered.
-    /// </summary>
-    private string TemplateFromController(ControllerModel model)
-    {
-        string controllerName = _options.SerializerOptions.PropertyNamingPolicy == null
-            ? model.ControllerName
-            : _options.SerializerOptions.PropertyNamingPolicy.ConvertName(model.ControllerName);
-
-        return $"{_options.Namespace}/{controllerName}";
+        Type baseControllerType = typeof(BaseJsonApiOperationsController);
+        return baseControllerType.IsAssignableFrom(type);
     }
 
     /// <summary>
@@ -209,9 +196,50 @@ public sealed class JsonApiRoutingConvention : IJsonApiRoutingConvention
         return currentType?.GetGenericArguments().First();
     }
 
-    private static bool IsOperationsController(Type type)
+    private void RemoveDisabledActionMethods(ControllerModel controller, ResourceType resourceType)
     {
-        Type baseControllerType = typeof(BaseJsonApiOperationsController);
-        return baseControllerType.IsAssignableFrom(type);
+        foreach (ActionModel actionModel in controller.Actions.ToArray())
+        {
+            JsonApiEndpoints endpoint = actionModel.Attributes.OfType<HttpMethodAttribute>().GetJsonApiEndpoint();
+
+            if (endpoint != JsonApiEndpoints.None && !_jsonApiEndpointFilter.IsEnabled(resourceType, endpoint))
+            {
+                controller.Actions.Remove(actionModel);
+            }
+        }
     }
+
+    private static bool IsRoutingConventionDisabled(ControllerModel controller)
+    {
+        return controller.ControllerType.GetCustomAttribute<DisableRoutingConventionAttribute>(true) != null;
+    }
+
+    /// <summary>
+    /// Derives a template from the resource type, and checks if this template was already registered.
+    /// </summary>
+    private string? TemplateFromResource(ControllerModel model)
+    {
+        if (_resourceTypePerControllerTypeMap.TryGetValue(model.ControllerType, out ResourceType? resourceType))
+        {
+            return $"{_options.Namespace}/{resourceType.PublicName}";
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Derives a template from the controller name, and checks if this template was already registered.
+    /// </summary>
+    private string TemplateFromController(ControllerModel model)
+    {
+        string controllerName = _options.SerializerOptions.PropertyNamingPolicy == null
+            ? model.ControllerName
+            : _options.SerializerOptions.PropertyNamingPolicy.ConvertName(model.ControllerName);
+
+        return $"{_options.Namespace}/{controllerName}";
+    }
+
+    [LoggerMessage(Level = LogLevel.Warning,
+        Message = "Found JSON:API controller '{ControllerType}' with [ApiController]. Please remove this attribute for optimal JSON:API compliance.")]
+    private partial void LogApiControllerAttributeFound(TypeInfo controllerType);
 }

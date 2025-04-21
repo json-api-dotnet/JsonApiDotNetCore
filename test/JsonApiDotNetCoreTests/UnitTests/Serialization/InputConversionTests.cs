@@ -10,13 +10,14 @@ using JsonApiDotNetCore.Serialization.JsonConverters;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Request.Adapters;
 using Microsoft.Extensions.Logging.Abstractions;
-using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Serialization;
 
-public sealed class InputConversionTests
+public sealed class InputConversionTests : IDisposable
 {
+    private readonly ServiceContainer _serviceProvider = new();
+
     [Fact]
     public void Converts_various_data_types_with_values()
     {
@@ -56,8 +57,8 @@ public sealed class InputConversionTests
             Value = "Single"
         };
 
-        var complexObjectList = new List<ComplexObject>
-        {
+        List<ComplexObject> complexObjectList =
+        [
             new()
             {
                 Value = "One"
@@ -66,7 +67,7 @@ public sealed class InputConversionTests
             {
                 Value = "Two"
             }
-        };
+        ];
 
         var document = new Document
         {
@@ -107,7 +108,7 @@ public sealed class InputConversionTests
         var model = (ResourceWithVariousDataTypes?)documentAdapter.Convert(document);
 
         // Assert
-        model.ShouldNotBeNull();
+        model.Should().NotBeNull();
 
         model.Boolean.Should().Be(booleanValue);
         model.NullableBoolean.Should().Be(nullableBooleanValue);
@@ -132,10 +133,10 @@ public sealed class InputConversionTests
         model.Enum.Should().Be(enumValue);
         model.NullableEnum.Should().Be(nullableEnumValue);
 
-        model.ComplexObject.ShouldNotBeNull();
+        model.ComplexObject.Should().NotBeNull();
         model.ComplexObject.Value.Should().Be(complexObject.Value);
 
-        model.ComplexObjectList.ShouldHaveCount(2);
+        model.ComplexObjectList.Should().HaveCount(2);
         model.ComplexObjectList[0].Value.Should().Be(complexObjectList[0].Value);
         model.ComplexObjectList[1].Value.Should().Be(complexObjectList[1].Value);
     }
@@ -151,26 +152,26 @@ public sealed class InputConversionTests
             WriteOperation = WriteOperationKind.CreateResource
         });
 
-        const bool booleanValue = default;
-        const bool nullableBooleanValue = default;
-        const char charValue = default;
-        const char nullableCharValue = default;
-        const ulong unsignedLongValue = default;
-        const ulong nullableUnsignedLongValue = default;
-        const decimal decimalValue = default;
-        const decimal nullableDecimalValue = default;
-        const float floatValue = default;
-        const float nullableFloatValue = default;
-        const string stringValue = default!;
-        const string? nullableStringValue = default;
-        Guid guidValue = default;
-        Guid nullableGuidValue = default;
+        const bool booleanValue = false;
+        const bool nullableBooleanValue = false;
+        const char charValue = '\0';
+        const char nullableCharValue = '\0';
+        const ulong unsignedLongValue = 0;
+        const ulong nullableUnsignedLongValue = 0;
+        const decimal decimalValue = 0;
+        const decimal nullableDecimalValue = 0;
+        const float floatValue = 0;
+        const float nullableFloatValue = 0;
+        const string stringValue = null!;
+        const string? nullableStringValue = null;
+        var guidValue = Guid.Empty;
+        var nullableGuidValue = Guid.Empty;
         DateTime dateTimeValue = default;
         DateTime nullableDateTimeValue = default;
         DateTimeOffset dateTimeOffsetValue = default;
         DateTimeOffset nullableDateTimeOffsetValue = default;
-        TimeSpan timeSpanValue = default;
-        TimeSpan nullableTimeSpanValue = default;
+        TimeSpan timeSpanValue = TimeSpan.Zero;
+        TimeSpan nullableTimeSpanValue = TimeSpan.Zero;
         const DayOfWeek enumValue = default;
         const DayOfWeek nullableEnumValue = default;
 
@@ -213,7 +214,7 @@ public sealed class InputConversionTests
         var model = (ResourceWithVariousDataTypes?)documentAdapter.Convert(document);
 
         // Assert
-        model.ShouldNotBeNull();
+        model.Should().NotBeNull();
 
         model.Boolean.Should().Be(booleanValue);
         model.NullableBoolean.Should().Be(nullableBooleanValue);
@@ -241,19 +242,18 @@ public sealed class InputConversionTests
         model.ComplexObjectList.Should().BeNull();
     }
 
-    private static DocumentAdapter CreateDocumentAdapter<TResource>(Func<IResourceGraph, JsonApiRequest> createRequest)
+    private DocumentAdapter CreateDocumentAdapter<TResource>(Func<IResourceGraph, JsonApiRequest> createRequest)
         where TResource : Identifiable<int>
     {
         var options = new JsonApiOptions();
         IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<TResource, int>().Build();
         options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph));
 
-        var serviceContainer = new ServiceContainer();
-        var resourceFactory = new ResourceFactory(serviceContainer);
-        var resourceDefinitionAccessor = new ResourceDefinitionAccessor(resourceGraph, serviceContainer);
+        var resourceFactory = new ResourceFactory(_serviceProvider);
+        var resourceDefinitionAccessor = new ResourceDefinitionAccessor(resourceGraph, _serviceProvider);
 
-        serviceContainer.AddService(typeof(IResourceDefinitionAccessor), resourceDefinitionAccessor);
-        serviceContainer.AddService(typeof(IResourceDefinition<TResource, int>), new JsonApiResourceDefinition<TResource, int>(resourceGraph));
+        _serviceProvider.AddService(typeof(IResourceDefinitionAccessor), resourceDefinitionAccessor);
+        _serviceProvider.AddService(typeof(IResourceDefinition<TResource, int>), new JsonApiResourceDefinition<TResource, int>(resourceGraph));
 
         JsonApiRequest request = createRequest(resourceGraph);
         var targetedFields = new TargetedFields();
@@ -273,6 +273,11 @@ public sealed class InputConversionTests
         var operationsDocumentAdapter = new DocumentInOperationsRequestAdapter(options, atomicOperationObjectAdapter);
 
         return new DocumentAdapter(request, targetedFields, resourceDocumentAdapter, operationsDocumentAdapter);
+    }
+
+    public void Dispose()
+    {
+        _serviceProvider.Dispose();
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]

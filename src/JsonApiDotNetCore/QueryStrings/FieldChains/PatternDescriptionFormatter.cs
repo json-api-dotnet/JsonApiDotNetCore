@@ -11,7 +11,7 @@ internal sealed class PatternDescriptionFormatter
 
     public PatternDescriptionFormatter(FieldChainPattern pattern)
     {
-        ArgumentGuard.NotNull(pattern);
+        ArgumentNullException.ThrowIfNull(pattern);
 
         _pattern = pattern;
     }

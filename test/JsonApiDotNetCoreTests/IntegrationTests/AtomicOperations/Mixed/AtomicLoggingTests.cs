@@ -19,28 +19,24 @@ public sealed class AtomicLoggingTests : IClassFixture<IntegrationTestContext<Te
 
         testContext.UseController<OperationsController>();
 
-        var loggerFactory = new FakeLoggerFactory(LogLevel.Information);
-
         testContext.ConfigureLogging(options =>
         {
-            options.ClearProviders();
-            options.AddProvider(loggerFactory);
+            var loggerProvider = new CapturingLoggerProvider(LogLevel.Information);
+            options.AddProvider(loggerProvider);
             options.SetMinimumLevel(LogLevel.Information);
+
+            options.Services.AddSingleton(loggerProvider);
         });
 
-        testContext.ConfigureServices(services =>
-        {
-            services.AddSingleton(loggerFactory);
-            services.AddSingleton<IOperationsTransactionFactory, ThrowingOperationsTransactionFactory>();
-        });
+        testContext.ConfigureServices(services => services.AddSingleton<IOperationsTransactionFactory, ThrowingOperationsTransactionFactory>());
     }
 
     [Fact]
     public async Task Logs_unhandled_exception_at_Error_level()
     {
         // Arrange
-        var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
-        loggerFactory.Logger.Clear();
+        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        loggerProvider.Clear();
 
         var transactionFactory = (ThrowingOperationsTransactionFactory)_testContext.Factory.Services.GetRequiredService<IOperationsTransactionFactory>();
         transactionFactory.ThrowOnOperationStart = true;
@@ -71,28 +67,27 @@ public sealed class AtomicLoggingTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.InternalServerError);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         error.Title.Should().Be("An unhandled error occurred while processing an operation in this request.");
         error.Detail.Should().Be("Simulated failure.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]");
 
-        IReadOnlyList<FakeLogMessage> logMessages = loggerFactory.Logger.GetMessages();
-        logMessages.ShouldNotBeEmpty();
+        IReadOnlyList<LogMessage> logMessages = loggerProvider.GetMessages();
 
-        logMessages.Should().ContainSingle(message => message.LogLevel == LogLevel.Error &&
-            message.Text.Contains("Simulated failure.", StringComparison.Ordinal));
+        logMessages.Should().ContainSingle(message =>
+            message.LogLevel == LogLevel.Error && message.Text.Contains("Simulated failure.", StringComparison.Ordinal));
     }
 
     [Fact]
     public async Task Logs_invalid_request_body_error_at_Information_level()
     {
         // Arrange
-        var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
-        loggerFactory.Logger.Clear();
+        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        loggerProvider.Clear();
 
         var transactionFactory = (ThrowingOperationsTransactionFactory)_testContext.Factory.Services.GetRequiredService<IOperationsTransactionFactory>();
         transactionFactory.ThrowOnOperationStart = false;
@@ -116,10 +111,9 @@ public sealed class AtomicLoggingTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
-        IReadOnlyList<FakeLogMessage> logMessages = loggerFactory.Logger.GetMessages();
-        logMessages.ShouldNotBeEmpty();
+        IReadOnlyList<LogMessage> logMessages = loggerProvider.GetMessages();
 
         logMessages.Should().ContainSingle(message => message.LogLevel == LogLevel.Information &&
             message.Text.Contains("Failed to deserialize request body", StringComparison.Ordinal));
@@ -165,7 +159,7 @@ public sealed class AtomicLoggingTests : IClassFixture<IntegrationTestContext<Te
             {
                 if (_owner.ThrowOnOperationStart)
                 {
-                    throw new Exception("Simulated failure.");
+                    throw new InvalidOperationException("Simulated failure.");
                 }
 
                 return Task.CompletedTask;

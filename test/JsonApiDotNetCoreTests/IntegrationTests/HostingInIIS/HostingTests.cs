@@ -25,8 +25,8 @@ public sealed class HostingTests : IClassFixture<IntegrationTestContext<HostingS
     public async Task Get_primary_resources_with_include_returns_links()
     {
         // Arrange
-        ArtGallery gallery = _fakers.ArtGallery.Generate();
-        gallery.Paintings = _fakers.Painting.Generate(1).ToHashSet();
+        ArtGallery gallery = _fakers.ArtGallery.GenerateOne();
+        gallery.Paintings = _fakers.Painting.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -43,7 +43,7 @@ public sealed class HostingTests : IClassFixture<IntegrationTestContext<HostingS
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.Related.Should().BeNull();
         responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
@@ -51,19 +51,19 @@ public sealed class HostingTests : IClassFixture<IntegrationTestContext<HostingS
         responseDocument.Links.Prev.Should().BeNull();
         responseDocument.Links.Next.Should().BeNull();
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
 
         responseDocument.Data.ManyValue[0].With(resource =>
         {
             string galleryLink = $"{HostPrefix}/iis-application-virtual-directory/public-api/artGalleries/{gallery.StringId}";
 
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be(galleryLink);
 
-            resource.Relationships.ShouldContainKey("paintings").With(value =>
+            resource.Relationships.Should().ContainKey("paintings").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"{galleryLink}/relationships/paintings");
                 value.Links.Related.Should().Be($"{galleryLink}/paintings");
             });
@@ -71,17 +71,17 @@ public sealed class HostingTests : IClassFixture<IntegrationTestContext<HostingS
 
         string paintingLink = $"{HostPrefix}/iis-application-virtual-directory/custom/path/to/paintings-of-the-world/{gallery.Paintings.ElementAt(0).StringId}";
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
 
         responseDocument.Included[0].With(resource =>
         {
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be(paintingLink);
 
-            resource.Relationships.ShouldContainKey("exposedAt").With(value =>
+            resource.Relationships.Should().ContainKey("exposedAt").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"{paintingLink}/relationships/exposedAt");
                 value.Links.Related.Should().Be($"{paintingLink}/exposedAt");
             });
@@ -92,8 +92,8 @@ public sealed class HostingTests : IClassFixture<IntegrationTestContext<HostingS
     public async Task Get_primary_resources_with_include_on_custom_route_returns_links()
     {
         // Arrange
-        Painting painting = _fakers.Painting.Generate();
-        painting.ExposedAt = _fakers.ArtGallery.Generate();
+        Painting painting = _fakers.Painting.GenerateOne();
+        painting.ExposedAt = _fakers.ArtGallery.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -110,7 +110,7 @@ public sealed class HostingTests : IClassFixture<IntegrationTestContext<HostingS
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.Related.Should().BeNull();
         responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
@@ -118,37 +118,37 @@ public sealed class HostingTests : IClassFixture<IntegrationTestContext<HostingS
         responseDocument.Links.Prev.Should().BeNull();
         responseDocument.Links.Next.Should().BeNull();
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
 
         responseDocument.Data.ManyValue[0].With(resource =>
         {
             string paintingLink = $"{HostPrefix}/iis-application-virtual-directory/custom/path/to/paintings-of-the-world/{painting.StringId}";
 
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be(paintingLink);
 
-            resource.Relationships.ShouldContainKey("exposedAt").With(value =>
+            resource.Relationships.Should().ContainKey("exposedAt").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"{paintingLink}/relationships/exposedAt");
                 value.Links.Related.Should().Be($"{paintingLink}/exposedAt");
             });
         });
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
 
         responseDocument.Included[0].With(resource =>
         {
             string galleryLink = $"{HostPrefix}/iis-application-virtual-directory/public-api/artGalleries/{painting.ExposedAt.StringId}";
 
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be(galleryLink);
 
-            resource.Relationships.ShouldContainKey("paintings").With(value =>
+            resource.Relationships.Should().ContainKey("paintings").WhoseValue.With(value =>
             {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
+                value.Should().NotBeNull();
+                value.Links.Should().NotBeNull();
                 value.Links.Self.Should().Be($"{galleryLink}/relationships/paintings");
                 value.Links.Related.Should().Be($"{galleryLink}/paintings");
             });

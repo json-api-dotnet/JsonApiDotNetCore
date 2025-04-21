@@ -15,9 +15,9 @@ public sealed class DocumentInResourceOrRelationshipRequestAdapter : IDocumentIn
     public DocumentInResourceOrRelationshipRequestAdapter(IJsonApiOptions options, IResourceDataAdapter resourceDataAdapter,
         IRelationshipDataAdapter relationshipDataAdapter)
     {
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(resourceDataAdapter);
-        ArgumentGuard.NotNull(relationshipDataAdapter);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(resourceDataAdapter);
+        ArgumentNullException.ThrowIfNull(relationshipDataAdapter);
 
         _options = options;
         _resourceDataAdapter = resourceDataAdapter;
@@ -27,6 +27,9 @@ public sealed class DocumentInResourceOrRelationshipRequestAdapter : IDocumentIn
     /// <inheritdoc />
     public object? Convert(Document document, RequestAdapterState state)
     {
+        ArgumentNullException.ThrowIfNull(document);
+        ArgumentNullException.ThrowIfNull(state);
+
         state.WritableTargetedFields = new TargetedFields();
 
         switch (state.Request.WriteOperation)

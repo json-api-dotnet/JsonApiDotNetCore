@@ -13,7 +13,7 @@ public sealed class ServiceDiscoveryFacade
 
     internal ServiceDiscoveryFacade(ResourceDescriptorAssemblyCache assemblyCache)
     {
-        ArgumentGuard.NotNull(assemblyCache);
+        ArgumentNullException.ThrowIfNull(assemblyCache);
 
         _assemblyCache = assemblyCache;
     }
@@ -31,7 +31,7 @@ public sealed class ServiceDiscoveryFacade
     /// </summary>
     public ServiceDiscoveryFacade AddAssembly(Assembly assembly)
     {
-        ArgumentGuard.NotNull(assembly);
+        ArgumentNullException.ThrowIfNull(assembly);
 
         _assemblyCache.RegisterAssembly(assembly);
         return this;

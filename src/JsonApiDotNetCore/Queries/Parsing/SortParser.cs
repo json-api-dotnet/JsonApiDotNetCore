@@ -14,7 +14,7 @@ public class SortParser : QueryExpressionParser, ISortParser
     /// <inheritdoc />
     public SortExpression Parse(string source, ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         Tokenize(source);
 
@@ -27,12 +27,14 @@ public class SortParser : QueryExpressionParser, ISortParser
 
     protected virtual SortExpression ParseSort(ResourceType resourceType)
     {
+        ArgumentNullException.ThrowIfNull(resourceType);
+
         SortElementExpression firstElement = ParseSortElement(resourceType);
 
         ImmutableArray<SortElementExpression>.Builder elementsBuilder = ImmutableArray.CreateBuilder<SortElementExpression>();
         elementsBuilder.Add(firstElement);
 
-        while (TokenStack.Any())
+        while (TokenStack.Count > 0)
         {
             EatSingleCharacterToken(TokenKind.Comma);
 
@@ -45,6 +47,8 @@ public class SortParser : QueryExpressionParser, ISortParser
 
     protected virtual SortElementExpression ParseSortElement(ResourceType resourceType)
     {
+        ArgumentNullException.ThrowIfNull(resourceType);
+
         bool isAscending = true;
 
         if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Minus)
@@ -95,14 +99,14 @@ public class SortParser : QueryExpressionParser, ISortParser
 
     protected virtual bool IsFunction(string name)
     {
-        ArgumentGuard.NotNullNorEmpty(name);
+        ArgumentException.ThrowIfNullOrEmpty(name);
 
         return name == Keywords.Count;
     }
 
     protected virtual FunctionExpression ParseFunction(ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Text)
         {
@@ -134,6 +138,8 @@ public class SortParser : QueryExpressionParser, ISortParser
 
     protected override void ValidateField(ResourceFieldAttribute field, int position)
     {
+        ArgumentNullException.ThrowIfNull(field);
+
         if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowSort))
         {
             throw new QueryParseException($"Sorting on attribute '{attribute.PublicName}' is not allowed.", position);

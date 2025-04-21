@@ -28,11 +28,11 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<DapperTestConte
         var store = _testContext.Factory.Services.GetRequiredService<SqlCaptureStore>();
         store.Clear();
 
-        Person existingPerson = _fakers.Person.Generate();
-        existingPerson.OwnedTodoItems = _fakers.TodoItem.Generate(1).ToHashSet();
+        Person existingPerson = _fakers.Person.GenerateOne();
+        existingPerson.OwnedTodoItems = _fakers.TodoItem.GenerateSet(1);
 
-        List<TodoItem> existingTodoItems = _fakers.TodoItem.Generate(2);
-        existingTodoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.Generate());
+        List<TodoItem> existingTodoItems = _fakers.TodoItem.GenerateList(2);
+        existingTodoItems.ForEach(todoItem => todoItem.Owner = _fakers.Person.GenerateOne());
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -73,10 +73,10 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<DapperTestConte
         {
             Person personInDatabase = await dbContext.People.Include(person => person.OwnedTodoItems).FirstWithIdAsync(existingPerson.Id);
 
-            personInDatabase.OwnedTodoItems.ShouldHaveCount(3);
+            personInDatabase.OwnedTodoItems.Should().HaveCount(3);
         });
 
-        store.SqlCommands.ShouldHaveCount(1);
+        store.SqlCommands.Should().HaveCount(1);
 
         store.SqlCommands[0].With(command =>
         {
@@ -86,7 +86,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<DapperTestConte
                 WHERE "Id" IN (@p2, @p3)
                 """));
 
-            command.Parameters.ShouldHaveCount(3);
+            command.Parameters.Should().HaveCount(3);
             command.Parameters.Should().Contain("@p1", existingPerson.Id);
             command.Parameters.Should().Contain("@p2", existingTodoItems.ElementAt(0).Id);
             command.Parameters.Should().Contain("@p3", existingTodoItems.ElementAt(1).Id);

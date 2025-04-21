@@ -19,7 +19,7 @@ internal sealed class IsUpperCaseWhereClauseBuilder : WhereClauseBuilder
         return base.DefaultVisit(expression, context);
     }
 
-    private Expression VisitIsUpperCase(IsUpperCaseExpression expression, QueryClauseBuilderContext context)
+    private BinaryExpression VisitIsUpperCase(IsUpperCaseExpression expression, QueryClauseBuilderContext context)
     {
         Expression propertyAccess = Visit(expression.TargetAttribute, context);
         MethodCallExpression toUpperMethodCall = Expression.Call(propertyAccess, ToUpperMethod);

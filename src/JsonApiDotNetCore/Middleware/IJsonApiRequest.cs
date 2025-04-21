@@ -61,6 +61,11 @@ public interface IJsonApiRequest
     string? TransactionId { get; }
 
     /// <summary>
+    /// The JSON:API extensions enabled for the current request. This is always a subset of <see cref="IJsonApiOptions.Extensions" />.
+    /// </summary>
+    IReadOnlySet<JsonApiMediaTypeExtension> Extensions { get; }
+
+    /// <summary>
     /// Performs a shallow copy.
     /// </summary>
     void CopyFrom(IJsonApiRequest other);

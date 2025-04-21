@@ -30,7 +30,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_filter_by_empty_ID_on_primary_resources()
     {
         // Arrange
-        List<Map> maps = _fakers.Map.Generate(2);
+        List<Map> maps = _fakers.Map.GenerateList(2);
         maps[0].Id = Guid.Empty;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -48,12 +48,12 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be("00000000-0000-0000-0000-000000000000");
 
         responseDocument.Data.ManyValue[0].With(resource =>
         {
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be("/maps/00000000-0000-0000-0000-000000000000");
         });
     }
@@ -62,9 +62,9 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_get_primary_resource_by_empty_ID_with_include()
     {
         // Arrange
-        Map map = _fakers.Map.Generate();
+        Map map = _fakers.Map.GenerateOne();
         map.Id = Guid.Empty;
-        map.Game = _fakers.Game.Generate();
+        map.Game = _fakers.Game.GenerateOne();
         map.Game.Id = 0;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -82,12 +82,12 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be("00000000-0000-0000-0000-000000000000");
-        responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Links.Should().NotBeNull();
         responseDocument.Data.SingleValue.Links.Self.Should().Be("/maps/00000000-0000-0000-0000-000000000000");
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Id.Should().Be("0");
     }
 
@@ -95,7 +95,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_create_resource_with_empty_ID()
     {
         // Arrange
-        string newName = _fakers.Map.Generate().Name;
+        string newName = _fakers.Map.GenerateOne().Name;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -131,7 +131,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         {
             Map mapInDatabase = await dbContext.Maps.FirstWithIdAsync((Guid?)Guid.Empty);
 
-            mapInDatabase.ShouldNotBeNull();
+            mapInDatabase.Should().NotBeNull();
             mapInDatabase.Name.Should().Be(newName);
         });
     }
@@ -140,10 +140,10 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_update_resource_with_empty_ID()
     {
         // Arrange
-        Map existingMap = _fakers.Map.Generate();
+        Map existingMap = _fakers.Map.GenerateOne();
         existingMap.Id = Guid.Empty;
 
-        string newName = _fakers.Map.Generate().Name;
+        string newName = _fakers.Map.GenerateOne().Name;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -179,7 +179,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         {
             Map mapInDatabase = await dbContext.Maps.FirstWithIdAsync((Guid?)Guid.Empty);
 
-            mapInDatabase.ShouldNotBeNull();
+            mapInDatabase.Should().NotBeNull();
             mapInDatabase.Name.Should().Be(newName);
         });
     }
@@ -188,8 +188,8 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_clear_ToOne_relationship_with_empty_ID()
     {
         // Arrange
-        Game existingGame = _fakers.Game.Generate();
-        existingGame.ActiveMap = _fakers.Map.Generate();
+        Game existingGame = _fakers.Game.GenerateOne();
+        existingGame.ActiveMap = _fakers.Map.GenerateOne();
         existingGame.ActiveMap.Id = Guid.Empty;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -218,7 +218,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         {
             Game gameInDatabase = await dbContext.Games.Include(game => game.ActiveMap).FirstWithIdAsync(existingGame.Id);
 
-            gameInDatabase.ShouldNotBeNull();
+            gameInDatabase.Should().NotBeNull();
             gameInDatabase.ActiveMap.Should().BeNull();
         });
     }
@@ -227,9 +227,9 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_assign_ToOne_relationship_with_empty_ID()
     {
         // Arrange
-        Game existingGame = _fakers.Game.Generate();
+        Game existingGame = _fakers.Game.GenerateOne();
 
-        Map existingMap = _fakers.Map.Generate();
+        Map existingMap = _fakers.Map.GenerateOne();
         existingMap.Id = Guid.Empty;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -262,8 +262,8 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         {
             Game gameInDatabase = await dbContext.Games.Include(game => game.ActiveMap).FirstWithIdAsync(existingGame.Id);
 
-            gameInDatabase.ShouldNotBeNull();
-            gameInDatabase.ActiveMap.ShouldNotBeNull();
+            gameInDatabase.Should().NotBeNull();
+            gameInDatabase.ActiveMap.Should().NotBeNull();
             gameInDatabase.ActiveMap.Id.Should().Be(Guid.Empty);
         });
     }
@@ -272,10 +272,10 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_replace_ToOne_relationship_with_empty_ID()
     {
         // Arrange
-        Game existingGame = _fakers.Game.Generate();
-        existingGame.ActiveMap = _fakers.Map.Generate();
+        Game existingGame = _fakers.Game.GenerateOne();
+        existingGame.ActiveMap = _fakers.Map.GenerateOne();
 
-        Map existingMap = _fakers.Map.Generate();
+        Map existingMap = _fakers.Map.GenerateOne();
         existingMap.Id = Guid.Empty;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -308,8 +308,8 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         {
             Game gameInDatabase = await dbContext.Games.Include(game => game.ActiveMap).FirstWithIdAsync(existingGame.Id);
 
-            gameInDatabase.ShouldNotBeNull();
-            gameInDatabase.ActiveMap.ShouldNotBeNull();
+            gameInDatabase.Should().NotBeNull();
+            gameInDatabase.ActiveMap.Should().NotBeNull();
             gameInDatabase.ActiveMap.Id.Should().Be(Guid.Empty);
         });
     }
@@ -318,8 +318,8 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_clear_ToMany_relationship_with_empty_ID()
     {
         // Arrange
-        Game existingGame = _fakers.Game.Generate();
-        existingGame.Maps = _fakers.Map.Generate(2);
+        Game existingGame = _fakers.Game.GenerateOne();
+        existingGame.Maps = _fakers.Map.GenerateList(2);
         existingGame.Maps.ElementAt(0).Id = Guid.Empty;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -348,7 +348,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         {
             Game gameInDatabase = await dbContext.Games.Include(game => game.Maps).FirstWithIdAsync(existingGame.Id);
 
-            gameInDatabase.ShouldNotBeNull();
+            gameInDatabase.Should().NotBeNull();
             gameInDatabase.Maps.Should().BeEmpty();
         });
     }
@@ -357,9 +357,9 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_assign_ToMany_relationship_with_empty_ID()
     {
         // Arrange
-        Game existingGame = _fakers.Game.Generate();
+        Game existingGame = _fakers.Game.GenerateOne();
 
-        Map existingMap = _fakers.Map.Generate();
+        Map existingMap = _fakers.Map.GenerateOne();
         existingMap.Id = Guid.Empty;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -395,8 +395,8 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         {
             Game gameInDatabase = await dbContext.Games.Include(game => game.Maps).FirstWithIdAsync(existingGame.Id);
 
-            gameInDatabase.ShouldNotBeNull();
-            gameInDatabase.Maps.ShouldHaveCount(1);
+            gameInDatabase.Should().NotBeNull();
+            gameInDatabase.Maps.Should().HaveCount(1);
             gameInDatabase.Maps.ElementAt(0).Id.Should().Be(Guid.Empty);
         });
     }
@@ -405,10 +405,10 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_replace_ToMany_relationship_with_empty_ID()
     {
         // Arrange
-        Game existingGame = _fakers.Game.Generate();
-        existingGame.Maps = _fakers.Map.Generate(2);
+        Game existingGame = _fakers.Game.GenerateOne();
+        existingGame.Maps = _fakers.Map.GenerateList(2);
 
-        Map existingMap = _fakers.Map.Generate();
+        Map existingMap = _fakers.Map.GenerateOne();
         existingMap.Id = Guid.Empty;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -444,8 +444,8 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         {
             Game gameInDatabase = await dbContext.Games.Include(game => game.Maps).FirstWithIdAsync(existingGame.Id);
 
-            gameInDatabase.ShouldNotBeNull();
-            gameInDatabase.Maps.ShouldHaveCount(1);
+            gameInDatabase.Should().NotBeNull();
+            gameInDatabase.Maps.Should().HaveCount(1);
             gameInDatabase.Maps.ElementAt(0).Id.Should().Be(Guid.Empty);
         });
     }
@@ -454,10 +454,10 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_add_to_ToMany_relationship_with_empty_ID()
     {
         // Arrange
-        Game existingGame = _fakers.Game.Generate();
-        existingGame.Maps = _fakers.Map.Generate(1);
+        Game existingGame = _fakers.Game.GenerateOne();
+        existingGame.Maps = _fakers.Map.GenerateList(1);
 
-        Map existingMap = _fakers.Map.Generate();
+        Map existingMap = _fakers.Map.GenerateOne();
         existingMap.Id = Guid.Empty;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -493,8 +493,8 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         {
             Game gameInDatabase = await dbContext.Games.Include(game => game.Maps).FirstWithIdAsync(existingGame.Id);
 
-            gameInDatabase.ShouldNotBeNull();
-            gameInDatabase.Maps.ShouldHaveCount(2);
+            gameInDatabase.Should().NotBeNull();
+            gameInDatabase.Maps.Should().HaveCount(2);
             gameInDatabase.Maps.Should().ContainSingle(map => map.Id == Guid.Empty);
         });
     }
@@ -503,8 +503,8 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_remove_from_ToMany_relationship_with_empty_ID()
     {
         // Arrange
-        Game existingGame = _fakers.Game.Generate();
-        existingGame.Maps = _fakers.Map.Generate(2);
+        Game existingGame = _fakers.Game.GenerateOne();
+        existingGame.Maps = _fakers.Map.GenerateList(2);
         existingGame.Maps.ElementAt(0).Id = Guid.Empty;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -540,8 +540,8 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         {
             Game gameInDatabase = await dbContext.Games.Include(game => game.Maps).FirstWithIdAsync(existingGame.Id);
 
-            gameInDatabase.ShouldNotBeNull();
-            gameInDatabase.Maps.ShouldHaveCount(1);
+            gameInDatabase.Should().NotBeNull();
+            gameInDatabase.Maps.Should().HaveCount(1);
             gameInDatabase.Maps.Should().ContainSingle(map => map.Id != Guid.Empty);
         });
     }
@@ -550,7 +550,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_delete_resource_with_empty_ID()
     {
         // Arrange
-        Map existingMap = _fakers.Map.Generate();
+        Map existingMap = _fakers.Map.GenerateOne();
         existingMap.Id = Guid.Empty;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -572,9 +572,9 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            Map? gameInDatabase = await dbContext.Maps.FirstWithIdOrDefaultAsync(existingMap.Id);
+            Map? mapInDatabase = await dbContext.Maps.FirstWithIdOrDefaultAsync(existingMap.Id);
 
-            gameInDatabase.Should().BeNull();
+            mapInDatabase.Should().BeNull();
         });
     }
 }

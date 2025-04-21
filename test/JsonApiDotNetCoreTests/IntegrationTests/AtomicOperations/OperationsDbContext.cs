@@ -7,7 +7,8 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class OperationsDbContext(DbContextOptions<OperationsDbContext> options) : TestableDbContext(options)
+public sealed class OperationsDbContext(DbContextOptions<OperationsDbContext> options)
+    : TestableDbContext(options)
 {
     public DbSet<Playlist> Playlists => Set<Playlist>();
     public DbSet<MusicTrack> MusicTracks => Set<MusicTrack>();

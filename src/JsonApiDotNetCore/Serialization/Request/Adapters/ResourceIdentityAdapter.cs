@@ -18,8 +18,8 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
 
     protected ResourceIdentityAdapter(IResourceGraph resourceGraph, IResourceFactory resourceFactory)
     {
-        ArgumentGuard.NotNull(resourceGraph);
-        ArgumentGuard.NotNull(resourceFactory);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(resourceFactory);
 
         _resourceGraph = resourceGraph;
         _resourceFactory = resourceFactory;
@@ -28,9 +28,9 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
     protected (IIdentifiable resource, ResourceType resourceType) ConvertResourceIdentity(ResourceIdentity identity, ResourceIdentityRequirements requirements,
         RequestAdapterState state)
     {
-        ArgumentGuard.NotNull(identity);
-        ArgumentGuard.NotNull(requirements);
-        ArgumentGuard.NotNull(state);
+        ArgumentNullException.ThrowIfNull(identity);
+        ArgumentNullException.ThrowIfNull(requirements);
+        ArgumentNullException.ThrowIfNull(state);
 
         ResourceType resourceType = ResolveType(identity, requirements, state);
         IIdentifiable resource = CreateResource(identity, requirements, resourceType, state);
@@ -116,6 +116,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
             AssertHasNoId(identity, state);
         }
 
+        AssertNoBrokenId(identity, resourceType.IdentityClrType, state);
         AssertSameIdValue(identity, requirements.IdValue, state);
         AssertSameLidValue(identity, requirements.LidValue, state);
 
@@ -177,6 +178,25 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         }
     }
 
+    private static void AssertNoBrokenId(ResourceIdentity identity, Type resourceIdClrType, RequestAdapterState state)
+    {
+        if (identity.Id != null)
+        {
+            if (resourceIdClrType == typeof(string))
+            {
+                // Empty and whitespace strings are valid when TId is string.
+                return;
+            }
+
+            string? defaultIdValue = RuntimeTypeConverter.GetDefaultValue(resourceIdClrType)?.ToString();
+
+            if (string.IsNullOrWhiteSpace(identity.Id) || identity.Id == defaultIdValue)
+            {
+                throw new ModelConversionException(state.Position, "The 'id' element is invalid.", null);
+            }
+        }
+    }
+
     private static void AssertSameIdValue(ResourceIdentity identity, string? expected, RequestAdapterState state)
     {
         if (expected != null && identity.Id != expected)
@@ -218,6 +238,10 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
     protected static void AssertIsKnownRelationship([NotNull] RelationshipAttribute? relationship, string relationshipName, ResourceType resourceType,
         RequestAdapterState state)
     {
+        ArgumentNullException.ThrowIfNull(relationshipName);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(state);
+
         if (relationship == null)
         {
             throw new ModelConversionException(state.Position, "Unknown relationship found.",
@@ -227,6 +251,9 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
 
     protected internal static void AssertToManyInAddOrRemoveRelationship(RelationshipAttribute relationship, RequestAdapterState state)
     {
+        ArgumentNullException.ThrowIfNull(relationship);
+        ArgumentNullException.ThrowIfNull(state);
+
         bool requireToManyRelationship = state.Request.WriteOperation is WriteOperationKind.AddToRelationship or WriteOperationKind.RemoveFromRelationship;
 
         if (requireToManyRelationship && relationship is not HasManyAttribute)

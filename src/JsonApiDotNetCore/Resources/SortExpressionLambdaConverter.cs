@@ -11,18 +11,18 @@ namespace JsonApiDotNetCore.Resources;
 internal sealed class SortExpressionLambdaConverter
 {
     private readonly IResourceGraph _resourceGraph;
-    private readonly IList<ResourceFieldAttribute> _fields = new List<ResourceFieldAttribute>();
+    private readonly List<ResourceFieldAttribute> _fields = [];
 
     public SortExpressionLambdaConverter(IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
 
         _resourceGraph = resourceGraph;
     }
 
     public SortElementExpression FromLambda<TResource>(Expression<Func<TResource, object?>> keySelector, ListSortDirection sortDirection)
     {
-        ArgumentGuard.NotNull(keySelector);
+        ArgumentNullException.ThrowIfNull(keySelector);
 
         _fields.Clear();
 

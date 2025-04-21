@@ -27,7 +27,7 @@ public class PaginationQueryStringValueExpression : QueryExpression
 
     public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
     {
-        return visitor.PaginationQueryStringValue(this, argument);
+        return visitor.VisitPaginationQueryStringValue(this, argument);
     }
 
     public override string ToString()

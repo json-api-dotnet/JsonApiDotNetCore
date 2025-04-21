@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -24,7 +25,7 @@ public class JsonApiException : Exception
     public JsonApiException(ErrorObject error, Exception? innerException = null)
         : base(null, innerException)
     {
-        ArgumentGuard.NotNull(error);
+        ArgumentNullException.ThrowIfNull(error);
 
         Errors = [error];
     }
@@ -32,15 +33,15 @@ public class JsonApiException : Exception
     public JsonApiException(IEnumerable<ErrorObject> errors, Exception? innerException = null)
         : base(null, innerException)
     {
-        IReadOnlyList<ErrorObject>? errorList = ToErrorList(errors);
-        ArgumentGuard.NotNullNorEmpty(errorList);
+        ReadOnlyCollection<ErrorObject>? errorCollection = ToCollection(errors);
+        ArgumentGuard.NotNullNorEmpty(errorCollection, nameof(errors));
 
-        Errors = errorList;
+        Errors = errorCollection;
     }
 
-    private static IReadOnlyList<ErrorObject>? ToErrorList(IEnumerable<ErrorObject>? errors)
+    private static ReadOnlyCollection<ErrorObject>? ToCollection(IEnumerable<ErrorObject>? errors)
     {
-        return errors?.ToList();
+        return errors?.ToArray().AsReadOnly();
     }
 
     public string GetSummary()

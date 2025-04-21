@@ -22,19 +22,18 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
         testContext.UseController<ThrowingArticlesController>();
         testContext.UseController<ConsumerArticlesController>();
 
-        var loggerFactory = new FakeLoggerFactory(LogLevel.Warning);
-
         testContext.ConfigureLogging(options =>
         {
-            options.ClearProviders();
-            options.AddProvider(loggerFactory);
+            var loggerProvider = new CapturingLoggerProvider(LogLevel.Warning);
+            options.AddProvider(loggerProvider);
+
+            options.Services.AddSingleton(loggerProvider);
         });
 
         testContext.ConfigureServices(services =>
         {
             services.AddResourceService<ConsumerArticleService>();
 
-            services.AddSingleton(loggerFactory);
             services.AddScoped<IExceptionHandler, AlternateExceptionHandler>();
         });
     }
@@ -43,8 +42,8 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
     public async Task Logs_and_produces_error_response_for_custom_exception()
     {
         // Arrange
-        var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
-        loggerFactory.Logger.Clear();
+        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        loggerProvider.Clear();
 
         var consumerArticle = new ConsumerArticle
         {
@@ -65,14 +64,14 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Gone);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Gone);
         error.Title.Should().Be("The requested article is no longer available.");
         error.Detail.Should().Be("Article with code 'X123' is no longer available.");
 
-        error.Meta.ShouldContainKey("support").With(value =>
+        error.Meta.Should().ContainKey("support").WhoseValue.With(value =>
         {
             JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
             element.GetString().Should().Be("Please contact us for info about similar articles at company@email.com.");
@@ -80,8 +79,8 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
 
         responseDocument.Meta.Should().BeNull();
 
-        IReadOnlyList<FakeLogMessage> logMessages = loggerFactory.Logger.GetMessages();
-        logMessages.ShouldHaveCount(1);
+        IReadOnlyList<LogMessage> logMessages = loggerProvider.GetMessages();
+        logMessages.Should().HaveCount(1);
 
         logMessages[0].LogLevel.Should().Be(LogLevel.Warning);
         logMessages[0].Text.Should().Contain("Article with code 'X123' is no longer available.");
@@ -91,8 +90,8 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
     public async Task Logs_and_produces_error_response_on_deserialization_failure()
     {
         // Arrange
-        var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
-        loggerFactory.Logger.Clear();
+        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        loggerProvider.Clear();
 
         const string requestBody = """{ "data": { "type": "" } }""";
 
@@ -104,28 +103,16 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
         error.Detail.Should().Be("Resource type '' does not exist.");
+        error.Meta.Should().ContainRequestBody(requestBody);
+        error.Meta.Should().HaveStackTrace();
 
-        error.Meta.ShouldContainKey("requestBody").With(value =>
-        {
-            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
-            element.GetString().Should().Be(requestBody);
-        });
-
-        error.Meta.ShouldContainKey("stackTrace").With(value =>
-        {
-            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
-            IEnumerable<string?> stackTraceLines = element.EnumerateArray().Select(token => token.GetString());
-
-            stackTraceLines.ShouldNotBeEmpty();
-        });
-
-        IReadOnlyList<FakeLogMessage> logMessages = loggerFactory.Logger.GetMessages();
+        IReadOnlyList<LogMessage> logMessages = loggerProvider.GetMessages();
         logMessages.Should().BeEmpty();
     }
 
@@ -133,8 +120,8 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
     public async Task Logs_and_produces_error_response_on_serialization_failure()
     {
         // Arrange
-        var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
-        loggerFactory.Logger.Clear();
+        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        loggerProvider.Clear();
 
         var throwingArticle = new ThrowingArticle();
 
@@ -152,25 +139,18 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.InternalServerError);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         error.Title.Should().Be("An unhandled error occurred while processing this request.");
         error.Detail.Should().Be("Exception has been thrown by the target of an invocation.");
-
-        error.Meta.ShouldContainKey("stackTrace").With(value =>
-        {
-            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
-            IEnumerable<string?> stackTraceLines = element.EnumerateArray().Select(token => token.GetString());
-
-            stackTraceLines.Should().ContainMatch("*ThrowingArticle*");
-        });
+        error.Meta.Should().HaveInStackTrace("*ThrowingArticle*");
 
         responseDocument.Meta.Should().BeNull();
 
-        IReadOnlyList<FakeLogMessage> logMessages = loggerFactory.Logger.GetMessages();
-        logMessages.ShouldHaveCount(1);
+        IReadOnlyList<LogMessage> logMessages = loggerProvider.GetMessages();
+        logMessages.Should().HaveCount(1);
 
         logMessages[0].LogLevel.Should().Be(LogLevel.Error);
         logMessages[0].Text.Should().Contain("Exception has been thrown by the target of an invocation.");

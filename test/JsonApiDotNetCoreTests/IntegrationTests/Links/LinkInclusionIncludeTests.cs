@@ -22,9 +22,9 @@ public sealed class LinkInclusionIncludeTests : IClassFixture<IntegrationTestCon
     public async Task Hides_links_for_unregistered_controllers()
     {
         // Arrange
-        PhotoLocation location = _fakers.PhotoLocation.Generate();
-        location.Photo = _fakers.Photo.Generate();
-        location.Album = _fakers.PhotoAlbum.Generate();
+        PhotoLocation location = _fakers.PhotoLocation.GenerateOne();
+        location.Photo = _fakers.Photo.GenerateOne();
+        location.Album = _fakers.PhotoAlbum.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -40,15 +40,15 @@ public sealed class LinkInclusionIncludeTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("photo").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("photo").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Links.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Links.Should().NotBeNull();
         });
 
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
 
         responseDocument.Included.Should().ContainSingle(resource => resource.Type == "photos").Subject.With(resource =>
         {

@@ -1,5 +1,4 @@
 using System.Net;
-using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
@@ -24,8 +23,8 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
     public async Task Can_get_resources_with_include()
     {
         // Arrange
-        List<SwimmingPool> pools = _fakers.SwimmingPool.Generate(2);
-        pools[1].DivingBoards = _fakers.DivingBoard.Generate(1);
+        List<SwimmingPool> pools = _fakers.SwimmingPool.GenerateList(2);
+        pools[1].DivingBoards = _fakers.DivingBoard.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -42,34 +41,31 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
-        responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Type == "SwimmingPools");
-        responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Attributes.ShouldContainKey("IsIndoor") != null);
-        responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.ShouldContainKey("WaterSlides") != null);
-        responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.ShouldContainKey("DivingBoards") != null);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
+        responseDocument.Data.ManyValue.Should().OnlyContain(resource => resource.Type == "SwimmingPools");
+        responseDocument.Data.ManyValue.Should().OnlyContain(resource => resource.Attributes.Should().ContainKey2("IsIndoor").WhoseValue != null);
+        responseDocument.Data.ManyValue.Should().OnlyContain(resource => resource.Relationships.Should().ContainKey2("WaterSlides").WhoseValue != null);
+        responseDocument.Data.ManyValue.Should().OnlyContain(resource => resource.Relationships.Should().ContainKey2("DivingBoards").WhoseValue != null);
 
         decimal height = pools[1].DivingBoards[0].HeightInMeters;
+        string link = $"/PublicApi/DivingBoards/{pools[1].DivingBoards[0].StringId}";
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("DivingBoards");
         responseDocument.Included[0].Id.Should().Be(pools[1].DivingBoards[0].StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("HeightInMeters").With(value => value.As<decimal>().Should().BeApproximately(height));
+        responseDocument.Included[0].Attributes.Should().ContainKey("HeightInMeters").WhoseValue.As<decimal>().Should().BeApproximately(height);
         responseDocument.Included[0].Relationships.Should().BeNull();
-        responseDocument.Included[0].Links.ShouldNotBeNull().Self.Should().Be($"/PublicApi/DivingBoards/{pools[1].DivingBoards[0].StringId}");
+        responseDocument.Included[0].Links.RefShould().NotBeNull().And.Subject.Self.Should().Be(link);
 
-        responseDocument.Meta.ShouldContainKey("Total").With(value =>
-        {
-            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
-            element.GetInt32().Should().Be(2);
-        });
+        responseDocument.Meta.Should().ContainTotal(2, "Total");
     }
 
     [Fact]
     public async Task Can_filter_secondary_resources_with_sparse_fieldset()
     {
         // Arrange
-        SwimmingPool pool = _fakers.SwimmingPool.Generate();
-        pool.WaterSlides = _fakers.WaterSlide.Generate(2);
+        SwimmingPool pool = _fakers.SwimmingPool.GenerateOne();
+        pool.WaterSlides = _fakers.WaterSlide.GenerateList(2);
         pool.WaterSlides[0].LengthInMeters = 1;
         pool.WaterSlides[1].LengthInMeters = 5;
 
@@ -87,17 +83,17 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("WaterSlides");
         responseDocument.Data.ManyValue[0].Id.Should().Be(pool.WaterSlides[1].StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue[0].Attributes.Should().HaveCount(1);
     }
 
     [Fact]
     public async Task Can_create_resource()
     {
         // Arrange
-        SwimmingPool newPool = _fakers.SwimmingPool.Generate();
+        SwimmingPool newPool = _fakers.SwimmingPool.GenerateOne();
 
         var requestBody = new
         {
@@ -119,25 +115,25 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("SwimmingPools");
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("IsIndoor").With(value => value.Should().Be(newPool.IsIndoor));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("IsIndoor").WhoseValue.Should().Be(newPool.IsIndoor);
 
-        int newPoolId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        int newPoolId = int.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
         string poolLink = $"{route}/{newPoolId}";
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("WaterSlides").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("WaterSlides").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Links.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Links.Should().NotBeNull();
             value.Links.Self.Should().Be($"{poolLink}/relationships/WaterSlides");
             value.Links.Related.Should().Be($"{poolLink}/WaterSlides");
         });
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("DivingBoards").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("DivingBoards").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Links.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Links.Should().NotBeNull();
             value.Links.Self.Should().Be($"{poolLink}/relationships/DivingBoards");
             value.Links.Related.Should().Be($"{poolLink}/DivingBoards");
         });
@@ -164,19 +160,19 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body.");
-        error.Meta.ShouldContainKey("StackTrace");
+        error.Meta.Should().ContainKey("StackTrace");
     }
 
     [Fact]
     public async Task Applies_casing_convention_on_source_pointer_from_ModelState()
     {
         // Arrange
-        DivingBoard existingBoard = _fakers.DivingBoard.Generate();
+        DivingBoard existingBoard = _fakers.DivingBoard.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -205,13 +201,13 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Input validation failed.");
         error.Detail.Should().Be("The field HeightInMeters must be between 1 and 20.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/HeightInMeters");
     }
 }

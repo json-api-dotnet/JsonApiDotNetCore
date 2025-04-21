@@ -10,7 +10,7 @@ public class SkipTakeClauseBuilder : QueryClauseBuilder, ISkipTakeClauseBuilder
 {
     public virtual Expression ApplySkipTake(PaginationExpression expression, QueryClauseBuilderContext context)
     {
-        ArgumentGuard.NotNull(expression);
+        ArgumentNullException.ThrowIfNull(expression);
 
         return Visit(expression, context);
     }
@@ -34,7 +34,7 @@ public class SkipTakeClauseBuilder : QueryClauseBuilder, ISkipTakeClauseBuilder
         return skipTakeExpression;
     }
 
-    private static Expression ExtensionMethodCall(Expression source, string operationName, int value, QueryClauseBuilderContext context)
+    private static MethodCallExpression ExtensionMethodCall(Expression source, string operationName, int value, QueryClauseBuilderContext context)
     {
         Expression constant = SystemExpressionBuilder.CloseOver(value);
 

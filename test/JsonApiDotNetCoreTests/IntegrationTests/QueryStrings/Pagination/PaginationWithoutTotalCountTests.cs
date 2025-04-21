@@ -44,7 +44,7 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().BeNull();
         responseDocument.Links.Last.Should().BeNull();
@@ -73,7 +73,7 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().Be($"{HostPrefix}/blogPosts?page%5Bsize%5D=8&foo=bar");
         responseDocument.Links.Last.Should().BeNull();
@@ -99,7 +99,7 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().Be($"{HostPrefix}/blogPosts?foo=bar");
         responseDocument.Links.Last.Should().BeNull();
@@ -111,7 +111,7 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
     public async Task Renders_pagination_links_when_page_number_is_specified_in_query_string_with_partially_filled_page()
     {
         // Arrange
-        List<BlogPost> posts = _fakers.BlogPost.Generate(12);
+        List<BlogPost> posts = _fakers.BlogPost.GenerateList(12);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -130,7 +130,7 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
 
         responseDocument.Data.ManyValue.Should().HaveCountLessThan(DefaultPageSize);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().Be($"{HostPrefix}/blogPosts?foo=bar");
         responseDocument.Links.Last.Should().BeNull();
@@ -142,7 +142,7 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
     public async Task Renders_pagination_links_when_page_number_is_specified_in_query_string_with_full_page()
     {
         // Arrange
-        List<BlogPost> posts = _fakers.BlogPost.Generate(DefaultPageSize * 3);
+        List<BlogPost> posts = _fakers.BlogPost.GenerateList(DefaultPageSize * 3);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -159,9 +159,9 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(DefaultPageSize);
+        responseDocument.Data.ManyValue.Should().HaveCount(DefaultPageSize);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().Be($"{HostPrefix}/blogPosts?foo=bar");
         responseDocument.Links.Last.Should().BeNull();
@@ -173,8 +173,8 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
     public async Task Renders_pagination_links_when_page_number_is_specified_in_query_string_with_full_page_at_secondary_endpoint()
     {
         // Arrange
-        WebAccount account = _fakers.WebAccount.Generate();
-        account.Posts = _fakers.BlogPost.Generate(DefaultPageSize * 3);
+        WebAccount account = _fakers.WebAccount.GenerateOne();
+        account.Posts = _fakers.BlogPost.GenerateList(DefaultPageSize * 3);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -190,9 +190,9 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(DefaultPageSize);
+        responseDocument.Data.ManyValue.Should().HaveCount(DefaultPageSize);
 
-        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Should().NotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().Be($"{HostPrefix}/webAccounts/{account.StringId}/posts?foo=bar");
         responseDocument.Links.Last.Should().BeNull();

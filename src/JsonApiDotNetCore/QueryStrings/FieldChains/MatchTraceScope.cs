@@ -1,13 +1,11 @@
 using Microsoft.Extensions.Logging;
 
-#pragma warning disable CA2254 // Template should be a static expression
-
 namespace JsonApiDotNetCore.QueryStrings.FieldChains;
 
 /// <summary>
 /// Logs the pattern matching steps at <see cref="LogLevel.Trace" /> level.
 /// </summary>
-internal sealed class MatchTraceScope : IDisposable
+internal sealed partial class MatchTraceScope : IDisposable
 {
     private readonly FieldChainPattern? _pattern;
     private readonly bool _isEnabled;
@@ -25,32 +23,33 @@ internal sealed class MatchTraceScope : IDisposable
 
     public static MatchTraceScope CreateRoot(MatchState startState, ILogger logger)
     {
-        ArgumentGuard.NotNull(startState);
-        ArgumentGuard.NotNull(logger);
+        ArgumentNullException.ThrowIfNull(startState);
+        ArgumentNullException.ThrowIfNull(logger);
 
         bool isEnabled = logger.IsEnabled(LogLevel.Trace);
+        var scope = new MatchTraceScope(startState.Pattern, isEnabled, logger, 0);
 
         if (isEnabled)
         {
             string fieldsRemaining = FormatFieldsRemaining(startState);
-            string message = $"Start matching pattern '{startState.Pattern}' against the complete chain '{fieldsRemaining}'";
-            logger.LogTrace(message);
+            scope.LogMatchFirst(startState.Pattern, fieldsRemaining);
         }
 
-        return new MatchTraceScope(startState.Pattern, isEnabled, logger, 0);
+        return scope;
     }
 
     public MatchTraceScope CreateChild(MatchState startState)
     {
-        ArgumentGuard.NotNull(startState);
+        ArgumentNullException.ThrowIfNull(startState);
 
         int indentDepth = _indentDepth + 1;
         FieldChainPattern? patternSegment = startState.Pattern?.WithoutNext();
 
         if (_isEnabled)
         {
+            string indent = GetIndentText();
             string fieldsRemaining = FormatFieldsRemaining(startState);
-            LogMessage($"Start matching '{patternSegment}' against the remaining chain '{fieldsRemaining}'");
+            LogMatchNext(indent, patternSegment, fieldsRemaining);
         }
 
         return new MatchTraceScope(patternSegment, _isEnabled, _logger, indentDepth);
@@ -58,18 +57,20 @@ internal sealed class MatchTraceScope : IDisposable
 
     public void LogMatchResult(MatchState resultState)
     {
-        ArgumentGuard.NotNull(resultState);
+        ArgumentNullException.ThrowIfNull(resultState);
 
         if (_isEnabled)
         {
+            string indent = GetIndentText();
+
             if (resultState.Error == null)
             {
                 string fieldsMatched = FormatFieldsMatched(resultState);
-                LogMessage($"Match '{_pattern}' against '{fieldsMatched}': Success");
+                LogMatchSuccess(indent, _pattern, fieldsMatched);
             }
             else
             {
-                List<string> chain = [..resultState.FieldsMatched.Select(attribute => attribute.PublicName)];
+                List<string> chain = [.. resultState.FieldsMatched.Select(attribute => attribute.PublicName)];
 
                 if (resultState.FieldsRemaining != null)
                 {
@@ -77,25 +78,26 @@ internal sealed class MatchTraceScope : IDisposable
                 }
 
                 string chainText = string.Join('.', chain);
-                LogMessage($"Match '{_pattern}' against '{chainText}': Failed");
+                LogMatchFailed(indent, _pattern, chainText);
             }
         }
     }
 
     public void LogBacktrackTo(MatchState backtrackState)
     {
-        ArgumentGuard.NotNull(backtrackState);
+        ArgumentNullException.ThrowIfNull(backtrackState);
 
         if (_isEnabled)
         {
+            string indent = GetIndentText();
             string fieldsMatched = FormatFieldsMatched(backtrackState);
-            LogMessage($"Backtracking to successful match against '{fieldsMatched}'");
+            LogBacktrack(indent, fieldsMatched);
         }
     }
 
     public void SetResult(MatchState endState)
     {
-        ArgumentGuard.NotNull(endState);
+        ArgumentNullException.ThrowIfNull(endState);
 
         _endState = endState;
     }
@@ -109,7 +111,16 @@ internal sealed class MatchTraceScope : IDisposable
 
         if (_isEnabled)
         {
-            LogMessage(_endState.Error == null ? "Matching completed with success" : "Matching completed with failure");
+            string indent = GetIndentText();
+
+            if (_endState.Error == null)
+            {
+                LogCompletionSuccess(indent);
+            }
+            else
+            {
+                LogCompletionFailure(indent);
+            }
         }
     }
 
@@ -123,9 +134,30 @@ internal sealed class MatchTraceScope : IDisposable
         return string.Join('.', state.FieldsMatched);
     }
 
-    private void LogMessage(string message)
+    private string GetIndentText()
     {
-        string indent = new(' ', _indentDepth * 2);
-        _logger.LogTrace($"{indent}{message}");
+        return new string(' ', _indentDepth * 2);
     }
+
+    [LoggerMessage(Level = LogLevel.Trace, SkipEnabledCheck = true, Message = "Start matching pattern '{Pattern}' against the complete chain '{Chain}'.")]
+    private partial void LogMatchFirst(FieldChainPattern? pattern, string chain);
+
+    [LoggerMessage(Level = LogLevel.Trace, SkipEnabledCheck = true,
+        Message = "{Indent}Start matching pattern '{Pattern}' against the remaining chain '{Chain}'.")]
+    private partial void LogMatchNext(string indent, FieldChainPattern? pattern, string chain);
+
+    [LoggerMessage(Level = LogLevel.Trace, SkipEnabledCheck = true, Message = "{Indent}Match pattern '{Pattern}' against the chain '{Chain}': Success.")]
+    private partial void LogMatchSuccess(string indent, FieldChainPattern? pattern, string chain);
+
+    [LoggerMessage(Level = LogLevel.Trace, SkipEnabledCheck = true, Message = "{Indent}Match pattern '{Pattern}' against the chain '{Chain}': Failed.")]
+    private partial void LogMatchFailed(string indent, FieldChainPattern? pattern, string chain);
+
+    [LoggerMessage(Level = LogLevel.Trace, SkipEnabledCheck = true, Message = "{Indent}Backtracking to successful match against '{Chain}'.")]
+    private partial void LogBacktrack(string indent, string chain);
+
+    [LoggerMessage(Level = LogLevel.Trace, SkipEnabledCheck = true, Message = "{Indent}Matching completed with success.")]
+    private partial void LogCompletionSuccess(string indent);
+
+    [LoggerMessage(Level = LogLevel.Trace, SkipEnabledCheck = true, Message = "{Indent}Matching completed with failure.")]
+    private partial void LogCompletionFailure(string indent);
 }

@@ -1,5 +1,3 @@
-using JsonApiDotNetCore;
-
 namespace DapperExample.TranslationToSql.TreeNodes;
 
 /// <summary>
@@ -19,7 +17,7 @@ internal sealed class ColumnSelectorNode : SelectorNode
     public ColumnSelectorNode(ColumnNode column, string? alias)
         : base(alias)
     {
-        ArgumentGuard.NotNull(column);
+        ArgumentNullException.ThrowIfNull(column);
 
         Column = column;
     }

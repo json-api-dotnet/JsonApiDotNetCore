@@ -9,7 +9,7 @@ public sealed class AesEncryptionService : IEncryptionService
 
     public string Encrypt(string value)
     {
-        using SymmetricAlgorithm cipher = CreateCipher();
+        using Aes cipher = CreateCipher();
 
         using ICryptoTransform transform = cipher.CreateEncryptor();
         byte[] plaintext = Encoding.UTF8.GetBytes(value);
@@ -26,7 +26,7 @@ public sealed class AesEncryptionService : IEncryptionService
     {
         byte[] buffer = Convert.FromBase64String(value);
 
-        using SymmetricAlgorithm cipher = CreateCipher();
+        using Aes cipher = CreateCipher();
 
         byte[] initVector = new byte[cipher.IV.Length];
         Buffer.BlockCopy(buffer, 0, initVector, 0, initVector.Length);
@@ -38,7 +38,7 @@ public sealed class AesEncryptionService : IEncryptionService
         return Encoding.UTF8.GetString(plainBytes);
     }
 
-    private static SymmetricAlgorithm CreateCipher()
+    private static Aes CreateCipher()
     {
         var cipher = Aes.Create();
         cipher.Key = CryptoKey;

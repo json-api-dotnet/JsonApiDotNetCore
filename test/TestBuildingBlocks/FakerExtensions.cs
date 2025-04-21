@@ -7,7 +7,7 @@ namespace TestBuildingBlocks;
 
 public static class FakerExtensions
 {
-    public static Faker<T> MakeDeterministic<T>(this Faker<T> faker)
+    public static Faker<T> MakeDeterministic<T>(this Faker<T> faker, DateTime? systemTimeUtc = null)
         where T : class
     {
         int seed = GetFakerSeed();
@@ -15,12 +15,14 @@ public static class FakerExtensions
 
         // Setting the system DateTime to kind Utc, so that faker calls like PastOffset() don't depend on the system time zone.
         // See https://docs.microsoft.com/en-us/dotnet/api/system.datetimeoffset.op_implicit?view=net-6.0#remarks
-        faker.UseDateTimeReference(FrozenSystemClock.DefaultDateTimeUtc);
+        faker.UseDateTimeReference(systemTimeUtc ?? IntegrationTest.DefaultDateTimeUtc.UtcDateTime);
 
         return faker;
     }
 
-    private static int GetFakerSeed()
+#pragma warning disable AV1008 // Class should not be static
+    public static int GetFakerSeed()
+#pragma warning restore AV1008 // Class should not be static
     {
         // The goal here is to have stable data over multiple test runs, but at the same time different data per test case.
 
@@ -79,4 +81,34 @@ public static class FakerExtensions
             return hash1 + hash2 * 1566083941;
         }
     }
+
+    // The methods below exist so that a non-nullable return type is inferred.
+    // The Bogus NuGet package is not annotated for nullable reference types.
+
+    public static T GenerateOne<T>(this Faker<T> faker)
+        where T : class
+    {
+        return faker.Generate();
+    }
+
+#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
+    public static List<T> GenerateList<T>(this Faker<T> faker, int count)
+        where T : class
+    {
+        return faker.Generate(count);
+    }
+
+    public static HashSet<T> GenerateSet<T>(this Faker<T> faker, int count)
+        where T : class
+    {
+        return faker.Generate(count).ToHashSet();
+    }
+
+    public static HashSet<TOut> GenerateSet<TIn, TOut>(this Faker<TIn> faker, int count)
+        where TOut : class
+        where TIn : class, TOut
+    {
+        return faker.Generate(count).Cast<TOut>().ToHashSet();
+    }
+#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
 }

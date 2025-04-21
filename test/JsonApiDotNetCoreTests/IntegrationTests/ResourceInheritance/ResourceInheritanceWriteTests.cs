@@ -75,7 +75,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_create_abstract_resource_at_abstract_endpoint()
     {
         // Arrange
-        Tandem newTandem = _fakers.Tandem.Generate();
+        Tandem newTandem = _fakers.Tandem.GenerateOne();
 
         var requestBody = new
         {
@@ -97,28 +97,28 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Abstract resource type found.");
         error.Detail.Should().Be("Resource type 'vehicles' is abstract.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/type");
     }
 
     [Fact]
-    public async Task Can_create_concrete_base_resource_at_abstract_endpoint_with_relationships()
+    public async Task Can_create_concrete_base_resource_at_abstract_endpoint_with_relationships_and_includes()
     {
         // Arrange
         var bikeStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Bike, long>>();
 
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
-        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.Generate();
-        Box existingBox = _fakers.Box.Generate();
-        BicycleLight existingLight = _fakers.BicycleLight.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
+        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.GenerateOne();
+        Box existingBox = _fakers.Box.GenerateOne();
+        BicycleLight existingLight = _fakers.BicycleLight.GenerateOne();
 
-        Bike newBike = _fakers.Bike.Generate();
+        Bike newBike = _fakers.Bike.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -184,7 +184,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             }
         };
 
-        const string route = "/vehicles";
+        const string route = "/vehicles?include=manufacturer,wheels,engine,navigationSystem,features,sleepingArea,cargoBox,lights,foldingDimensions";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -192,12 +192,12 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("bikes");
-        responseDocument.Data.SingleValue.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "gearCount");
-        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights");
+        responseDocument.Data.SingleValue.Attributes.Should().OnlyContainKeys("weight", "requiresDriverLicense", "gearCount");
+        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights");
 
-        long newBikeId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        long newBikeId = long.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -219,17 +219,17 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             bikeInDatabase.RequiresDriverLicense.Should().Be(newBike.RequiresDriverLicense);
             bikeInDatabase.GearCount.Should().Be(newBike.GearCount);
 
-            bikeInDatabase.Manufacturer.ShouldNotBeNull();
+            bikeInDatabase.Manufacturer.Should().NotBeNull();
             bikeInDatabase.Manufacturer.Id.Should().Be(existingManufacturer.Id);
 
-            bikeInDatabase.Wheels.ShouldHaveCount(1);
+            bikeInDatabase.Wheels.Should().HaveCount(1);
             bikeInDatabase.Wheels.ElementAt(0).Should().BeOfType<ChromeWheel>();
             bikeInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingChromeWheel.Id);
 
-            bikeInDatabase.CargoBox.ShouldNotBeNull();
+            bikeInDatabase.CargoBox.Should().NotBeNull();
             bikeInDatabase.CargoBox.Id.Should().Be(existingBox.Id);
 
-            bikeInDatabase.Lights.ShouldHaveCount(1);
+            bikeInDatabase.Lights.Should().HaveCount(1);
             bikeInDatabase.Lights.ElementAt(0).Id.Should().Be(existingLight.Id);
         });
 
@@ -238,18 +238,18 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     }
 
     [Fact]
-    public async Task Can_create_concrete_derived_resource_at_abstract_endpoint_with_relationships()
+    public async Task Can_create_concrete_derived_resource_at_abstract_endpoint_with_relationships_and_includes()
     {
         // Arrange
         var carStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Car, long>>();
 
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
-        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.Generate();
-        GasolineEngine existingGasolineEngine = _fakers.GasolineEngine.Generate();
-        NavigationSystem existingNavigationSystem = _fakers.NavigationSystem.Generate();
-        GenericFeature existingFeature = _fakers.GenericFeature.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
+        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.GenerateOne();
+        GasolineEngine existingGasolineEngine = _fakers.GasolineEngine.GenerateOne();
+        NavigationSystem existingNavigationSystem = _fakers.NavigationSystem.GenerateOne();
+        GenericFeature existingFeature = _fakers.GenericFeature.GenerateOne();
 
-        Car newCar = _fakers.Car.Generate();
+        Car newCar = _fakers.Car.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -325,7 +325,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             }
         };
 
-        const string route = "/vehicles";
+        const string route = "/vehicles?include=manufacturer,wheels,engine,navigationSystem,features,sleepingArea,cargoBox,lights,foldingDimensions";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -333,12 +333,12 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("cars");
-        responseDocument.Data.SingleValue.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "licensePlate", "seatCount");
-        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "engine", "navigationSystem", "features");
+        responseDocument.Data.SingleValue.Attributes.Should().OnlyContainKeys("weight", "requiresDriverLicense", "licensePlate", "seatCount");
+        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("manufacturer", "wheels", "engine", "navigationSystem", "features");
 
-        long newCarId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        long newCarId = long.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -362,21 +362,21 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             carInDatabase.LicensePlate.Should().Be(newCar.LicensePlate);
             carInDatabase.SeatCount.Should().Be(newCar.SeatCount);
 
-            carInDatabase.Manufacturer.ShouldNotBeNull();
+            carInDatabase.Manufacturer.Should().NotBeNull();
             carInDatabase.Manufacturer.Id.Should().Be(existingManufacturer.Id);
 
-            carInDatabase.Wheels.ShouldHaveCount(1);
+            carInDatabase.Wheels.Should().HaveCount(1);
             carInDatabase.Wheels.ElementAt(0).Should().BeOfType<CarbonWheel>();
             carInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingCarbonWheel.Id);
 
-            carInDatabase.Engine.ShouldNotBeNull();
+            carInDatabase.Engine.Should().NotBeNull();
             carInDatabase.Engine.Should().BeOfType<GasolineEngine>();
             carInDatabase.Engine.Id.Should().Be(existingGasolineEngine.Id);
 
-            carInDatabase.NavigationSystem.ShouldNotBeNull();
+            carInDatabase.NavigationSystem.Should().NotBeNull();
             carInDatabase.NavigationSystem.Id.Should().Be(existingNavigationSystem.Id);
 
-            carInDatabase.Features.ShouldHaveCount(1);
+            carInDatabase.Features.Should().HaveCount(1);
             carInDatabase.Features.ElementAt(0).Id.Should().Be(existingFeature.Id);
         });
 
@@ -385,18 +385,18 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     }
 
     [Fact]
-    public async Task Can_create_concrete_derived_resource_at_concrete_base_endpoint_with_relationships()
+    public async Task Can_create_concrete_derived_resource_at_concrete_base_endpoint_with_relationships_and_includes()
     {
         // Arrange
         var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
-        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.Generate();
-        Box existingBox = _fakers.Box.Generate();
-        BicycleLight existingLight = _fakers.BicycleLight.Generate();
-        GenericFeature existingFeature = _fakers.GenericFeature.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
+        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.GenerateOne();
+        Box existingBox = _fakers.Box.GenerateOne();
+        BicycleLight existingLight = _fakers.BicycleLight.GenerateOne();
+        GenericFeature existingFeature = _fakers.GenericFeature.GenerateOne();
 
-        Tandem newTandem = _fakers.Tandem.Generate();
+        Tandem newTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -475,7 +475,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             }
         };
 
-        const string route = "/bikes";
+        const string route = "/bikes?include=manufacturer,wheels,cargoBox,lights,foldingDimensions,features";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -483,12 +483,14 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("tandems");
-        responseDocument.Data.SingleValue.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
-        responseDocument.Data.SingleValue.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights", "features");
+        responseDocument.Data.SingleValue.Attributes.Should().OnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
 
-        long newTandemId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys(
+            "manufacturer", "wheels", "cargoBox", "lights", "foldingDimensions", "features");
+
+        long newTandemId = long.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -512,20 +514,20 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             tandemInDatabase.GearCount.Should().Be(newTandem.GearCount);
             tandemInDatabase.PassengerCount.Should().Be(newTandem.PassengerCount);
 
-            tandemInDatabase.Manufacturer.ShouldNotBeNull();
+            tandemInDatabase.Manufacturer.Should().NotBeNull();
             tandemInDatabase.Manufacturer.Id.Should().Be(existingManufacturer.Id);
 
-            tandemInDatabase.Wheels.ShouldHaveCount(1);
+            tandemInDatabase.Wheels.Should().HaveCount(1);
             tandemInDatabase.Wheels.ElementAt(0).Should().BeOfType<ChromeWheel>();
             tandemInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingChromeWheel.Id);
 
-            tandemInDatabase.CargoBox.ShouldNotBeNull();
+            tandemInDatabase.CargoBox.Should().NotBeNull();
             tandemInDatabase.CargoBox.Id.Should().Be(existingBox.Id);
 
-            tandemInDatabase.Lights.ShouldHaveCount(1);
+            tandemInDatabase.Lights.Should().HaveCount(1);
             tandemInDatabase.Lights.ElementAt(0).Id.Should().Be(existingLight.Id);
 
-            tandemInDatabase.Features.ShouldHaveCount(1);
+            tandemInDatabase.Features.Should().HaveCount(1);
             tandemInDatabase.Features.ElementAt(0).Id.Should().Be(existingFeature.Id);
         });
 
@@ -537,7 +539,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_create_concrete_base_resource_at_concrete_derived_endpoint()
     {
         // Arrange
-        Bike newBike = _fakers.Bike.Generate();
+        Bike newBike = _fakers.Bike.GenerateOne();
 
         var requestBody = new
         {
@@ -561,13 +563,13 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
         error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
         error.Detail.Should().Be("Type 'bikes' is not convertible to type 'tandems'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/type");
     }
 
@@ -575,7 +577,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_create_resource_with_abstract_relationship_type()
     {
         // Arrange
-        DieselEngine existingEngine = _fakers.DieselEngine.Generate();
+        DieselEngine existingEngine = _fakers.DieselEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -610,76 +612,14 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Abstract resource type found.");
         error.Detail.Should().Be("Resource type 'engines' is abstract.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/engine/data/type");
-    }
-
-    [Fact]
-    public async Task Can_create_resource_with_concrete_base_relationship_type_stored_as_derived_type()
-    {
-        // Arrange
-        var carbonWheelStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<CarbonWheel, long>>();
-
-        Tandem existingTandem = _fakers.Tandem.Generate();
-
-        await _testContext.RunOnDatabaseAsync(async dbContext =>
-        {
-            dbContext.Vehicles.Add(existingTandem);
-            await dbContext.SaveChangesAsync();
-        });
-
-        var requestBody = new
-        {
-            data = new
-            {
-                type = "carbonWheels",
-                relationships = new
-                {
-                    vehicle = new
-                    {
-                        data = new
-                        {
-                            type = "bikes",
-                            id = existingTandem.StringId
-                        }
-                    }
-                }
-            }
-        };
-
-        const string route = "/carbonWheels";
-
-        // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
-
-        // Assert
-        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
-
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
-        responseDocument.Data.SingleValue.Type.Should().Be("carbonWheels");
-        responseDocument.Data.SingleValue.Attributes.ShouldNotBeEmpty();
-        responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
-
-        long newCarbonWheelId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
-
-        await _testContext.RunOnDatabaseAsync(async dbContext =>
-        {
-            CarbonWheel carbonWheelInDatabase = await dbContext.CarbonWheels.Include(wheel => wheel.Vehicle).FirstWithIdAsync(newCarbonWheelId);
-
-            carbonWheelInDatabase.Should().BeOfType<CarbonWheel>();
-            carbonWheelInDatabase.Vehicle.ShouldNotBeNull();
-            carbonWheelInDatabase.Vehicle.Should().BeOfType<Tandem>();
-            carbonWheelInDatabase.Vehicle.Id.Should().Be(existingTandem.Id);
-        });
-
-        carbonWheelStore.AssertLeftType<CarbonWheel>();
-        carbonWheelStore.AssertRightTypes(typeof(Tandem));
     }
 
     [Fact]
@@ -688,7 +628,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var carbonWheelStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<CarbonWheel, long>>();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -723,19 +663,19 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("carbonWheels");
-        responseDocument.Data.SingleValue.Attributes.ShouldNotBeEmpty();
-        responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
+        responseDocument.Data.SingleValue.Attributes.Should().NotBeEmpty();
+        responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-        long newCarbonWheelId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        long newCarbonWheelId = long.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             CarbonWheel carbonWheelInDatabase = await dbContext.CarbonWheels.Include(wheel => wheel.Vehicle).FirstWithIdAsync(newCarbonWheelId);
 
             carbonWheelInDatabase.Should().BeOfType<CarbonWheel>();
-            carbonWheelInDatabase.Vehicle.ShouldNotBeNull();
+            carbonWheelInDatabase.Vehicle.Should().NotBeNull();
             carbonWheelInDatabase.Vehicle.Should().BeOfType<Tandem>();
             carbonWheelInDatabase.Vehicle.Id.Should().Be(existingTandem.Id);
         });
@@ -750,7 +690,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var manufacturerStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<VehicleManufacturer, long>>();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -788,19 +728,19 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("vehicleManufacturers");
-        responseDocument.Data.SingleValue.Attributes.ShouldNotBeEmpty();
-        responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
+        responseDocument.Data.SingleValue.Attributes.Should().NotBeEmpty();
+        responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-        long newManufacturerId = long.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        long newManufacturerId = long.Parse(responseDocument.Data.SingleValue.Id.Should().NotBeNull().And.Subject);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             VehicleManufacturer manufacturerInDatabase = await dbContext.VehicleManufacturers.Include(manufacturer => manufacturer.Vehicles)
                 .FirstWithIdAsync(newManufacturerId);
 
-            manufacturerInDatabase.Vehicles.ShouldHaveCount(1);
+            manufacturerInDatabase.Vehicles.Should().HaveCount(1);
             manufacturerInDatabase.Vehicles.ElementAt(0).Should().BeOfType<Tandem>();
             manufacturerInDatabase.Vehicles.ElementAt(0).Id.Should().Be(existingTandem.Id);
         });
@@ -813,7 +753,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_create_resource_with_concrete_derived_ToOne_relationship_type_stored_as_sibling_derived_type_at_resource_endpoint()
     {
         // Arrange
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -848,7 +788,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -861,8 +801,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_create_resource_with_concrete_derived_ToMany_relationship_type_stored_as_sibling_derived_type_at_resource_endpoint()
     {
         // Arrange
-        Truck existingTruck = _fakers.Truck.Generate();
-        existingTruck.Engine = _fakers.DieselEngine.Generate();
+        Truck existingTruck = _fakers.Truck.GenerateOne();
+        existingTruck.Engine = _fakers.DieselEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -900,7 +840,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -942,7 +882,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -987,7 +927,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -1000,9 +940,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_update_abstract_resource_at_abstract_endpoint()
     {
         // Arrange
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
-        int newPassengerCount = _fakers.Tandem.Generate().PassengerCount;
+        int newPassengerCount = _fakers.Tandem.GenerateOne().PassengerCount;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1031,29 +971,29 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Abstract resource type found.");
         error.Detail.Should().Be("Resource type 'vehicles' is abstract.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/type");
     }
 
     [Fact]
-    public async Task Can_update_concrete_base_resource_at_abstract_endpoint_with_relationships()
+    public async Task Can_update_concrete_base_resource_at_abstract_endpoint_with_relationships_and_includes()
     {
         // Arrange
         var bikeStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Bike, long>>();
 
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
-        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.Generate();
-        Box existingBox = _fakers.Box.Generate();
-        BicycleLight existingLight = _fakers.BicycleLight.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
+        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.GenerateOne();
+        Box existingBox = _fakers.Box.GenerateOne();
+        BicycleLight existingLight = _fakers.BicycleLight.GenerateOne();
 
-        Bike existingBike = _fakers.Bike.Generate();
-        Bike newBike = _fakers.Bike.Generate();
+        Bike existingBike = _fakers.Bike.GenerateOne();
+        Bike newBike = _fakers.Bike.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1121,7 +1061,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             }
         };
 
-        string route = $"/vehicles/{existingBike.StringId}";
+        string route =
+            $"/vehicles/{existingBike.StringId}?include=manufacturer,wheels,engine,navigationSystem,features,sleepingArea,cargoBox,lights,foldingDimensions";
 
         // Act
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -1151,17 +1092,17 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             bikeInDatabase.RequiresDriverLicense.Should().Be(newBike.RequiresDriverLicense);
             bikeInDatabase.GearCount.Should().Be(newBike.GearCount);
 
-            bikeInDatabase.Manufacturer.ShouldNotBeNull();
+            bikeInDatabase.Manufacturer.Should().NotBeNull();
             bikeInDatabase.Manufacturer.Id.Should().Be(existingManufacturer.Id);
 
-            bikeInDatabase.Wheels.ShouldHaveCount(1);
+            bikeInDatabase.Wheels.Should().HaveCount(1);
             bikeInDatabase.Wheels.ElementAt(0).Should().BeOfType<ChromeWheel>();
             bikeInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingChromeWheel.Id);
 
-            bikeInDatabase.CargoBox.ShouldNotBeNull();
+            bikeInDatabase.CargoBox.Should().NotBeNull();
             bikeInDatabase.CargoBox.Id.Should().Be(existingBox.Id);
 
-            bikeInDatabase.Lights.ShouldHaveCount(1);
+            bikeInDatabase.Lights.Should().HaveCount(1);
             bikeInDatabase.Lights.ElementAt(0).Id.Should().Be(existingLight.Id);
         });
 
@@ -1170,18 +1111,18 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     }
 
     [Fact]
-    public async Task Can_update_concrete_base_resource_stored_as_concrete_derived_at_abstract_endpoint_with_relationships()
+    public async Task Can_update_concrete_base_resource_stored_as_concrete_derived_at_abstract_endpoint_with_relationships_and_includes()
     {
         // Arrange
         var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
-        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.Generate();
-        Box existingBox = _fakers.Box.Generate();
-        BicycleLight existingLight = _fakers.BicycleLight.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
+        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.GenerateOne();
+        Box existingBox = _fakers.Box.GenerateOne();
+        BicycleLight existingLight = _fakers.BicycleLight.GenerateOne();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
-        Bike newBike = _fakers.Bike.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
+        Bike newBike = _fakers.Bike.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1249,7 +1190,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             }
         };
 
-        string route = $"/vehicles/{existingTandem.StringId}";
+        string route =
+            $"/vehicles/{existingTandem.StringId}?include=manufacturer,wheels,engine,navigationSystem,features,sleepingArea,cargoBox,lights,foldingDimensions";
 
         // Act
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -1279,17 +1221,17 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             tandemInDatabase.RequiresDriverLicense.Should().Be(newBike.RequiresDriverLicense);
             tandemInDatabase.GearCount.Should().Be(newBike.GearCount);
 
-            tandemInDatabase.Manufacturer.ShouldNotBeNull();
+            tandemInDatabase.Manufacturer.Should().NotBeNull();
             tandemInDatabase.Manufacturer.Id.Should().Be(existingManufacturer.Id);
 
-            tandemInDatabase.Wheels.ShouldHaveCount(1);
+            tandemInDatabase.Wheels.Should().HaveCount(1);
             tandemInDatabase.Wheels.ElementAt(0).Should().BeOfType<ChromeWheel>();
             tandemInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingChromeWheel.Id);
 
-            tandemInDatabase.CargoBox.ShouldNotBeNull();
+            tandemInDatabase.CargoBox.Should().NotBeNull();
             tandemInDatabase.CargoBox.Id.Should().Be(existingBox.Id);
 
-            tandemInDatabase.Lights.ShouldHaveCount(1);
+            tandemInDatabase.Lights.Should().HaveCount(1);
             tandemInDatabase.Lights.ElementAt(0).Id.Should().Be(existingLight.Id);
         });
 
@@ -1301,9 +1243,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_update_concrete_base_resource_at_concrete_derived_endpoint()
     {
         // Arrange
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
-        int newPassengerCount = _fakers.Tandem.Generate().PassengerCount;
+        int newPassengerCount = _fakers.Tandem.GenerateOne().PassengerCount;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1332,13 +1274,13 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
         error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
         error.Detail.Should().Be("Type 'bikes' is not convertible to type 'tandems'.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/type");
     }
 
@@ -1346,10 +1288,10 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_update_resource_with_abstract_relationship_type()
     {
         // Arrange
-        Truck existingTruck = _fakers.Truck.Generate();
-        existingTruck.Engine = _fakers.GasolineEngine.Generate();
+        Truck existingTruck = _fakers.Truck.GenerateOne();
+        existingTruck.Engine = _fakers.GasolineEngine.GenerateOne();
 
-        DieselEngine existingEngine = _fakers.DieselEngine.Generate();
+        DieselEngine existingEngine = _fakers.DieselEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1386,13 +1328,13 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Failed to deserialize request body: Abstract resource type found.");
         error.Detail.Should().Be("Resource type 'engines' is abstract.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/engine/data/type");
     }
 
@@ -1402,9 +1344,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var carbonWheelStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<CarbonWheel, long>>();
 
-        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.Generate();
+        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.GenerateOne();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1448,7 +1390,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             CarbonWheel carbonWheelInDatabase = await dbContext.CarbonWheels.Include(wheel => wheel.Vehicle).FirstWithIdAsync(existingCarbonWheel.Id);
 
             carbonWheelInDatabase.Should().BeOfType<CarbonWheel>();
-            carbonWheelInDatabase.Vehicle.ShouldNotBeNull();
+            carbonWheelInDatabase.Vehicle.Should().NotBeNull();
             carbonWheelInDatabase.Vehicle.Should().BeOfType<Tandem>();
             carbonWheelInDatabase.Vehicle.Id.Should().Be(existingTandem.Id);
         });
@@ -1463,9 +1405,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var manufacturerStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<VehicleManufacturer, long>>();
 
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1512,7 +1454,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             VehicleManufacturer manufacturerInDatabase = await dbContext.VehicleManufacturers.Include(manufacturer => manufacturer.Vehicles)
                 .FirstWithIdAsync(existingManufacturer.Id);
 
-            manufacturerInDatabase.Vehicles.ShouldHaveCount(1);
+            manufacturerInDatabase.Vehicles.Should().HaveCount(1);
             manufacturerInDatabase.Vehicles.ElementAt(0).Should().BeOfType<Tandem>();
             manufacturerInDatabase.Vehicles.ElementAt(0).Id.Should().Be(existingTandem.Id);
         });
@@ -1525,9 +1467,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_update_resource_with_concrete_derived_ToOne_relationship_type_stored_as_sibling_derived_type_at_resource_endpoint()
     {
         // Arrange
-        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.Generate();
+        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.GenerateOne();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1564,7 +1506,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -1577,10 +1519,10 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_update_resource_with_concrete_derived_ToMany_relationship_type_stored_as_sibling_derived_type_at_resource_endpoint()
     {
         // Arrange
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
 
-        Truck existingTruck = _fakers.Truck.Generate();
-        existingTruck.Engine = _fakers.DieselEngine.Generate();
+        Truck existingTruck = _fakers.Truck.GenerateOne();
+        existingTruck.Engine = _fakers.DieselEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1620,7 +1562,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -1633,7 +1575,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_update_resource_with_unknown_resource_in_ToOne_relationship_at_resource_endpoint()
     {
         // Arrange
-        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.Generate();
+        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.GenerateOne();
 
         string unknownTruckId = Unknown.StringId.For<Truck, long>();
 
@@ -1671,7 +1613,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -1684,7 +1626,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_update_resource_with_unknown_resources_in_ToMany_relationship_at_resource_endpoint()
     {
         // Arrange
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
 
         string unknownTruckId = Unknown.StringId.For<Truck, long>();
 
@@ -1725,7 +1667,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -1740,7 +1682,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1766,14 +1708,14 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         });
 
         tandemStore.AssertLeftType<Tandem>();
-        tandemStore.AssertRightTypes([]);
+        tandemStore.AssertRightTypes();
     }
 
     [Fact]
     public async Task Cannot_delete_concrete_base_resource_at_concrete_derived_endpoint()
     {
         // Arrange
-        Bike existingBike = _fakers.Bike.Generate();
+        Bike existingBike = _fakers.Bike.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1789,7 +1731,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -1804,9 +1746,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var carbonWheelStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<CarbonWheel, long>>();
 
-        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.Generate();
+        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.GenerateOne();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1840,7 +1782,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
             wheelInDatabase.Should().BeOfType<CarbonWheel>();
 
-            wheelInDatabase.Vehicle.ShouldNotBeNull();
+            wheelInDatabase.Vehicle.Should().NotBeNull();
             wheelInDatabase.Vehicle.Should().BeOfType<Tandem>();
             wheelInDatabase.Vehicle.Id.Should().Be(existingTandem.Id);
         });
@@ -1855,9 +1797,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
-        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.Generate();
+        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1894,7 +1836,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
             vehicleInDatabase.Should().BeOfType<Tandem>();
 
-            vehicleInDatabase.Wheels.ShouldHaveCount(1);
+            vehicleInDatabase.Wheels.Should().HaveCount(1);
             vehicleInDatabase.Wheels.ElementAt(0).Should().BeOfType<ChromeWheel>();
             vehicleInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingChromeWheel.Id);
         });
@@ -1909,9 +1851,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var carbonWheelStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<CarbonWheel, long>>();
 
-        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.Generate();
+        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.GenerateOne();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1945,7 +1887,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
             wheelInDatabase.Should().BeOfType<CarbonWheel>();
 
-            wheelInDatabase.Vehicle.ShouldNotBeNull();
+            wheelInDatabase.Vehicle.Should().NotBeNull();
             wheelInDatabase.Vehicle.Should().BeOfType<Tandem>();
             wheelInDatabase.Vehicle.Id.Should().Be(existingTandem.Id);
         });
@@ -1960,9 +1902,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var manufacturerStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<VehicleManufacturer, long>>();
 
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1998,7 +1940,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             VehicleManufacturer manufacturerInDatabase = await dbContext.VehicleManufacturers.Include(manufacturer => manufacturer.Vehicles)
                 .FirstWithIdAsync(existingManufacturer.Id);
 
-            manufacturerInDatabase.Vehicles.ShouldHaveCount(1);
+            manufacturerInDatabase.Vehicles.Should().HaveCount(1);
             manufacturerInDatabase.Vehicles.ElementAt(0).Should().BeOfType<Tandem>();
             manufacturerInDatabase.Vehicles.ElementAt(0).Id.Should().Be(existingTandem.Id);
         });
@@ -2011,9 +1953,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_set_concrete_derived_resource_stored_as_concrete_base_at_abstract_ToOne_relationship_endpoint()
     {
         // Arrange
-        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.Generate();
+        CarbonWheel existingCarbonWheel = _fakers.CarbonWheel.GenerateOne();
 
-        Bike existingBike = _fakers.Bike.Generate();
+        Bike existingBike = _fakers.Bike.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2039,7 +1981,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -2052,10 +1994,10 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_set_concrete_derived_resources_stored_as_sibling_derived_at_ToMany_relationship_endpoint()
     {
         // Arrange
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
 
-        Truck existingTruck = _fakers.Truck.Generate();
-        existingTruck.Engine = _fakers.DieselEngine.Generate();
+        Truck existingTruck = _fakers.Truck.GenerateOne();
+        existingTruck.Engine = _fakers.DieselEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2084,7 +2026,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -2097,7 +2039,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_set_unknown_resources_at_ToMany_relationship_endpoint()
     {
         // Arrange
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
 
         string unknownTruckId = Unknown.StringId.For<Truck, long>();
 
@@ -2127,7 +2069,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -2139,8 +2081,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     [Fact]
     public async Task Cannot_clear_ToOne_relationship_for_left_type_stored_as_sibling_type()
     {
-        Truck existingTruck = _fakers.Truck.Generate();
-        existingTruck.Engine = _fakers.DieselEngine.Generate();
+        Truck existingTruck = _fakers.Truck.GenerateOne();
+        existingTruck.Engine = _fakers.DieselEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2161,7 +2103,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -2176,10 +2118,10 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
-        existingTandem.Wheels = _fakers.CarbonWheel.Generate(1).Cast<Wheel>().ToHashSet();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
+        existingTandem.Wheels = _fakers.CarbonWheel.GenerateSet<CarbonWheel, Wheel>(1);
 
-        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.Generate();
+        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2216,7 +2158,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
             vehicleInDatabase.Should().BeOfType<Tandem>();
 
-            vehicleInDatabase.Wheels.ShouldHaveCount(2);
+            vehicleInDatabase.Wheels.Should().HaveCount(2);
             vehicleInDatabase.Wheels.ElementAt(0).Should().BeOfType<CarbonWheel>();
             vehicleInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingTandem.Wheels.ElementAt(0).Id);
             vehicleInDatabase.Wheels.ElementAt(1).Should().BeOfType<ChromeWheel>();
@@ -2233,10 +2175,10 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
-        existingTandem.Wheels = _fakers.CarbonWheel.Generate(1).Cast<Wheel>().ToHashSet();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
+        existingTandem.Wheels = _fakers.CarbonWheel.GenerateSet<CarbonWheel, Wheel>(1);
 
-        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.Generate();
+        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2273,7 +2215,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
             vehicleInDatabase.Should().BeOfType<Tandem>();
 
-            vehicleInDatabase.Wheels.ShouldHaveCount(2);
+            vehicleInDatabase.Wheels.Should().HaveCount(2);
             vehicleInDatabase.Wheels.ElementAt(0).Should().BeOfType<CarbonWheel>();
             vehicleInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingTandem.Wheels.ElementAt(0).Id);
             vehicleInDatabase.Wheels.ElementAt(1).Should().BeOfType<ChromeWheel>();
@@ -2290,11 +2232,11 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var manufacturerStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<VehicleManufacturer, long>>();
 
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
-        existingManufacturer.Vehicles = _fakers.Car.Generate(1).Cast<Vehicle>().ToHashSet();
-        ((Car)existingManufacturer.Vehicles.ElementAt(0)).Engine = _fakers.GasolineEngine.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
+        existingManufacturer.Vehicles = _fakers.Car.GenerateSet<Car, Vehicle>(1);
+        ((Car)existingManufacturer.Vehicles.ElementAt(0)).Engine = _fakers.GasolineEngine.GenerateOne();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2337,7 +2279,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
-            manufacturerInDatabase.Vehicles.ShouldHaveCount(2);
+            manufacturerInDatabase.Vehicles.Should().HaveCount(2);
             manufacturerInDatabase.Vehicles.ElementAt(0).Should().BeOfType<Car>();
             manufacturerInDatabase.Vehicles.ElementAt(0).Id.Should().Be(existingManufacturer.Vehicles.ElementAt(0).Id);
             manufacturerInDatabase.Vehicles.ElementAt(1).Should().BeOfType<Tandem>();
@@ -2352,9 +2294,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_add_concrete_derived_resources_stored_as_sibling_derived_at_abstract_ToMany_relationship_endpoint()
     {
         // Arrange
-        Bike existingBike = _fakers.Bike.Generate();
+        Bike existingBike = _fakers.Bike.GenerateOne();
 
-        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.Generate();
+        ChromeWheel existingChromeWheel = _fakers.ChromeWheel.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2383,7 +2325,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -2396,7 +2338,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_add_unknown_resources_at_ToMany_relationship_endpoint()
     {
         // Arrange
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
 
         string unknownTruckId = Unknown.StringId.For<Truck, long>();
 
@@ -2426,7 +2368,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -2438,8 +2380,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     [Fact]
     public async Task Cannot_add_to_ToMany_relationship_for_left_type_stored_as_sibling_type()
     {
-        Truck existingTruck = _fakers.Truck.Generate();
-        existingTruck.Engine = _fakers.DieselEngine.Generate();
+        Truck existingTruck = _fakers.Truck.GenerateOne();
+        existingTruck.Engine = _fakers.DieselEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2460,7 +2402,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -2475,8 +2417,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
-        existingTandem.Wheels = _fakers.ChromeWheel.Generate(2).Cast<Wheel>().ToHashSet();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
+        existingTandem.Wheels = _fakers.ChromeWheel.GenerateSet<ChromeWheel, Wheel>(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2512,7 +2454,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
             vehicleInDatabase.Should().BeOfType<Tandem>();
 
-            vehicleInDatabase.Wheels.ShouldHaveCount(1);
+            vehicleInDatabase.Wheels.Should().HaveCount(1);
             vehicleInDatabase.Wheels.ElementAt(0).Should().BeOfType<ChromeWheel>();
             vehicleInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingTandem.Wheels.ElementAt(1).Id);
         });
@@ -2527,8 +2469,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var tandemStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<Tandem, long>>();
 
-        Tandem existingTandem = _fakers.Tandem.Generate();
-        existingTandem.Wheels = _fakers.ChromeWheel.Generate(2).Cast<Wheel>().ToHashSet();
+        Tandem existingTandem = _fakers.Tandem.GenerateOne();
+        existingTandem.Wheels = _fakers.ChromeWheel.GenerateSet<ChromeWheel, Wheel>(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2564,7 +2506,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
             vehicleInDatabase.Should().BeOfType<Tandem>();
 
-            vehicleInDatabase.Wheels.ShouldHaveCount(1);
+            vehicleInDatabase.Wheels.Should().HaveCount(1);
             vehicleInDatabase.Wheels.ElementAt(0).Should().BeOfType<ChromeWheel>();
             vehicleInDatabase.Wheels.ElementAt(0).Id.Should().Be(existingTandem.Wheels.ElementAt(1).Id);
         });
@@ -2579,9 +2521,9 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Arrange
         var manufacturerStore = _testContext.Factory.Services.GetRequiredService<ResourceTypeCaptureStore<VehicleManufacturer, long>>();
 
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
-        existingManufacturer.Vehicles = _fakers.Tandem.Generate(1).Cast<Vehicle>().Concat(_fakers.Car.Generate(1)).ToHashSet();
-        ((Car)existingManufacturer.Vehicles.ElementAt(1)).Engine = _fakers.GasolineEngine.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
+        existingManufacturer.Vehicles = _fakers.Tandem.GenerateSet<Tandem, Vehicle>(1).Concat(_fakers.Car.GenerateSet<Car, Vehicle>(1)).ToHashSet();
+        ((Car)existingManufacturer.Vehicles.ElementAt(1)).Engine = _fakers.GasolineEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2616,7 +2558,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
             VehicleManufacturer manufacturerInDatabase = await dbContext.VehicleManufacturers.Include(manufacturer => manufacturer.Vehicles)
                 .FirstWithIdAsync(existingManufacturer.Id);
 
-            manufacturerInDatabase.Vehicles.ShouldHaveCount(1);
+            manufacturerInDatabase.Vehicles.Should().HaveCount(1);
             manufacturerInDatabase.Vehicles.ElementAt(0).Should().BeOfType<Car>();
             manufacturerInDatabase.Vehicles.ElementAt(0).Id.Should().Be(existingManufacturer.Vehicles.ElementAt(1).Id);
         });
@@ -2629,8 +2571,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_remove_concrete_derived_resources_stored_as_sibling_derived_at_abstract_ToMany_relationship_endpoint()
     {
         // Arrange
-        Bike existingBike = _fakers.Bike.Generate();
-        existingBike.Wheels = _fakers.ChromeWheel.Generate(2).Cast<Wheel>().ToHashSet();
+        Bike existingBike = _fakers.Bike.GenerateOne();
+        existingBike.Wheels = _fakers.ChromeWheel.GenerateSet<ChromeWheel, Wheel>(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2658,7 +2600,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         string? chromeWheelId = existingBike.Wheels.ElementAt(0).StringId;
 
@@ -2673,7 +2615,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     public async Task Cannot_remove_unknown_resources_at_ToMany_relationship_endpoint()
     {
         // Arrange
-        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.Generate();
+        VehicleManufacturer existingManufacturer = _fakers.VehicleManufacturer.GenerateOne();
 
         string unknownTruckId = Unknown.StringId.For<Truck, long>();
 
@@ -2703,7 +2645,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -2715,8 +2657,8 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
     [Fact]
     public async Task Cannot_remove_from_ToMany_relationship_for_left_type_stored_as_sibling_type()
     {
-        Truck existingTruck = _fakers.Truck.Generate();
-        existingTruck.Engine = _fakers.DieselEngine.Generate();
+        Truck existingTruck = _fakers.Truck.GenerateOne();
+        existingTruck.Engine = _fakers.DieselEngine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -2737,7 +2679,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);

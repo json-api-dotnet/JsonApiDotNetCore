@@ -18,9 +18,6 @@ internal sealed class ResultSetMapper<TResource, TId>
     // Note we don't do full bidirectional relationship fix-up; this just avoids duplicate instances.
     private readonly Dictionary<Type, Dictionary<object, object>> _resourceByTypeCache = [];
 
-    // Optimization to avoid unneeded calls to expensive Activator.CreateInstance() method, which is needed multiple times per row.
-    private readonly Dictionary<Type, object?> _defaultValueByTypeCache = [];
-
     // Used to determine where in the tree of included relationships a join object belongs to.
     private readonly Dictionary<IncludeElementExpression, int> _includeElementToJoinObjectArrayIndexLookup = new(ReferenceEqualityComparer.Instance);
 
@@ -114,20 +111,8 @@ internal sealed class ResultSetMapper<TResource, TId>
 
     private bool HasDefaultValue(object value)
     {
-        object? defaultValue = GetDefaultValueCached(value.GetType());
+        object? defaultValue = RuntimeTypeConverter.GetDefaultValue(value.GetType());
         return Equals(defaultValue, value);
-    }
-
-    private object? GetDefaultValueCached(Type type)
-    {
-        if (_defaultValueByTypeCache.TryGetValue(type, out object? defaultValue))
-        {
-            return defaultValue;
-        }
-
-        defaultValue = RuntimeTypeConverter.GetDefaultValue(type);
-        _defaultValueByTypeCache[type] = defaultValue;
-        return defaultValue;
     }
 
     private void RecursiveSetRelationships(object leftResource, IEnumerable<IncludeElementExpression> includeElements, object?[] joinObjects)
@@ -139,7 +124,7 @@ internal sealed class ResultSetMapper<TResource, TId>
 
             SetRelationship(leftResource, includeElement.Relationship, rightResource);
 
-            if (rightResource != null && includeElement.Children.Any())
+            if (rightResource != null && includeElement.Children.Count > 0)
             {
                 RecursiveSetRelationships(rightResource, includeElement.Children, joinObjects);
             }
@@ -163,7 +148,7 @@ internal sealed class ResultSetMapper<TResource, TId>
 
     public IReadOnlyCollection<TResource> GetResources()
     {
-        return _primaryResourcesInOrder.DistinctBy(resource => resource.Id).ToList();
+        return _primaryResourcesInOrder.DistinctBy(resource => resource.Id).ToArray().AsReadOnly();
     }
 
     private sealed class IncludeElementWalker(IncludeExpression include)

@@ -24,9 +24,9 @@ public sealed class ResourceInheritanceChangeTrackerTests
     public async Task Can_detect_side_effects_in_derived_type_at_abstract_endpoint()
     {
         // Arrange
-        AlwaysMovingTandem existingMovingTandem = _fakers.AlwaysMovingTandem.Generate();
+        AlwaysMovingTandem existingMovingTandem = _fakers.AlwaysMovingTandem.GenerateOne();
 
-        int newGearCount = _fakers.AlwaysMovingTandem.Generate().GearCount;
+        int newGearCount = _fakers.AlwaysMovingTandem.GenerateOne().GearCount;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -55,8 +55,8 @@ public sealed class ResourceInheritanceChangeTrackerTests
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("alwaysMovingTandems");
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("locationToken").With(value => value.Should().NotBe(existingMovingTandem.LocationToken));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("locationToken").WhoseValue.Should().NotBe(existingMovingTandem.LocationToken);
     }
 }

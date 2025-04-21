@@ -18,7 +18,7 @@ internal sealed class SumWhereClauseBuilder : WhereClauseBuilder
         return base.DefaultVisit(expression, context);
     }
 
-    private Expression VisitSum(SumExpression expression, QueryClauseBuilderContext context)
+    private MethodCallExpression VisitSum(SumExpression expression, QueryClauseBuilderContext context)
     {
         Expression collectionPropertyAccess = Visit(expression.TargetToManyRelationship, context);
 
@@ -39,7 +39,7 @@ internal sealed class SumWhereClauseBuilder : WhereClauseBuilder
         return Expression.Lambda(body, context.LambdaScope.Parameter);
     }
 
-    private static Expression SumExtensionMethodCall(LambdaExpression selector, QueryClauseBuilderContext context)
+    private static MethodCallExpression SumExtensionMethodCall(LambdaExpression selector, QueryClauseBuilderContext context)
     {
         return Expression.Call(context.ExtensionType, "Sum", [context.LambdaScope.Parameter.Type], context.Source, selector);
     }

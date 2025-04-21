@@ -25,7 +25,7 @@ public sealed class DeleteResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_delete_existing_resource()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -65,7 +65,7 @@ public sealed class DeleteResourceTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -79,8 +79,8 @@ public sealed class DeleteResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_delete_resource_with_OneToOne_relationship_from_dependent_side()
     {
         // Arrange
-        RgbColor existingColor = _fakers.RgbColor.Generate();
-        existingColor.Group = _fakers.WorkItemGroup.Generate();
+        RgbColor existingColor = _fakers.RgbColor.GenerateOne();
+        existingColor.Group = _fakers.WorkItemGroup.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -114,8 +114,8 @@ public sealed class DeleteResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_delete_existing_resource_with_OneToOne_relationship_from_principal_side()
     {
         // Arrange
-        WorkItemGroup existingGroup = _fakers.WorkItemGroup.Generate();
-        existingGroup.Color = _fakers.RgbColor.Generate();
+        WorkItemGroup existingGroup = _fakers.WorkItemGroup.GenerateOne();
+        existingGroup.Color = _fakers.RgbColor.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -141,7 +141,7 @@ public sealed class DeleteResourceTests : IClassFixture<IntegrationTestContext<T
 
             RgbColor? colorInDatabase = await dbContext.RgbColors.FirstWithIdOrDefaultAsync(existingGroup.Color.Id);
 
-            colorInDatabase.ShouldNotBeNull();
+            colorInDatabase.Should().NotBeNull();
             colorInDatabase.Group.Should().BeNull();
         });
     }
@@ -150,8 +150,8 @@ public sealed class DeleteResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_delete_existing_resource_with_OneToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Subscribers = _fakers.UserAccount.Generate(2).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Subscribers = _fakers.UserAccount.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -186,8 +186,8 @@ public sealed class DeleteResourceTests : IClassFixture<IntegrationTestContext<T
     public async Task Can_delete_resource_with_ManyToMany_relationship()
     {
         // Arrange
-        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-        existingWorkItem.Tags = _fakers.WorkTag.Generate(1).ToHashSet();
+        WorkItem existingWorkItem = _fakers.WorkItem.GenerateOne();
+        existingWorkItem.Tags = _fakers.WorkTag.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -213,7 +213,7 @@ public sealed class DeleteResourceTests : IClassFixture<IntegrationTestContext<T
 
             WorkTag? tagInDatabase = await dbContext.WorkTags.FirstWithIdOrDefaultAsync(existingWorkItem.Tags.ElementAt(0).Id);
 
-            tagInDatabase.ShouldNotBeNull();
+            tagInDatabase.Should().NotBeNull();
         });
     }
 }

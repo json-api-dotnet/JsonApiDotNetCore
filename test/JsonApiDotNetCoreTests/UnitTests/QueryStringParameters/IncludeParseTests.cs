@@ -74,13 +74,13 @@ public sealed class IncludeParseTests : BaseParseTests
         InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
         exception.ParameterName.Should().Be(parameterName);
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
 
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified include is invalid.");
         error.Detail.Should().Be($"{errorMessage} {parameterValueSource}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be(parameterName);
     }
 
@@ -93,9 +93,9 @@ public sealed class IncludeParseTests : BaseParseTests
     [InlineData("includes", "posts.comments", "posts.comments")]
     [InlineData("includes", "posts,posts.comments", "posts.comments")]
     [InlineData("includes", "posts,posts.labels,posts.comments", "posts.comments,posts.labels")]
-    [InlineData("includes", "owner.person.children.husband", "owner.person.children.husband")]
+    [InlineData("includes", "owner.person.children.husband", "owner.person.children.husband,owner.person.children.husband")]
     [InlineData("includes", "owner.person.wife,owner.person.husband", "owner.person.husband,owner.person.wife")]
-    [InlineData("includes", "owner.person.father.children.wife", "owner.person.father.children.wife")]
+    [InlineData("includes", "owner.person.father.children.wife", "owner.person.father.children.wife,owner.person.father.children.wife")]
     [InlineData("includes", "owner.person.friends", "owner.person.friends,owner.person.friends")]
     [InlineData("includes", "owner.person.friends.friends",
         "owner.person.friends.friends,owner.person.friends.friends,owner.person.friends.friends,owner.person.friends.friends")]

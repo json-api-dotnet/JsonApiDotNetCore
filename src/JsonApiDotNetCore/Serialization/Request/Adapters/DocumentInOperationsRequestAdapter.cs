@@ -13,17 +13,19 @@ public sealed class DocumentInOperationsRequestAdapter : BaseAdapter, IDocumentI
 
     public DocumentInOperationsRequestAdapter(IJsonApiOptions options, IAtomicOperationObjectAdapter atomicOperationObjectAdapter)
     {
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(atomicOperationObjectAdapter);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(atomicOperationObjectAdapter);
 
         _options = options;
         _atomicOperationObjectAdapter = atomicOperationObjectAdapter;
     }
 
     /// <inheritdoc />
-    public IReadOnlyList<OperationContainer> Convert(Document document, RequestAdapterState state)
+    public IList<OperationContainer> Convert(Document document, RequestAdapterState state)
     {
-        ArgumentGuard.NotNull(state);
+        ArgumentNullException.ThrowIfNull(document);
+        ArgumentNullException.ThrowIfNull(state);
+
         AssertHasOperations(document.Operations, state);
 
         using IDisposable _ = state.Position.PushElement("atomic:operations");
@@ -40,19 +42,18 @@ public sealed class DocumentInOperationsRequestAdapter : BaseAdapter, IDocumentI
         }
     }
 
-    private void AssertMaxOperationsNotExceeded(ICollection<AtomicOperationObject?> atomicOperationObjects, RequestAdapterState state)
+    private void AssertMaxOperationsNotExceeded(IList<AtomicOperationObject?> atomicOperationObjects, RequestAdapterState state)
     {
         if (atomicOperationObjects.Count > _options.MaximumOperationsPerRequest)
         {
             throw new ModelConversionException(state.Position, "Too many operations in request.",
-                $"The number of operations in this request ({atomicOperationObjects.Count}) is higher " +
-                $"than the maximum of {_options.MaximumOperationsPerRequest}.");
+                $"The number of operations in this request ({atomicOperationObjects.Count}) is higher than the maximum of {_options.MaximumOperationsPerRequest}.");
         }
     }
 
-    private IReadOnlyList<OperationContainer> ConvertOperations(IEnumerable<AtomicOperationObject?> atomicOperationObjects, RequestAdapterState state)
+    private List<OperationContainer> ConvertOperations(IEnumerable<AtomicOperationObject?> atomicOperationObjects, RequestAdapterState state)
     {
-        var operations = new List<OperationContainer>();
+        List<OperationContainer> operations = [];
         int operationIndex = 0;
 
         foreach (AtomicOperationObject? atomicOperationObject in atomicOperationObjects)

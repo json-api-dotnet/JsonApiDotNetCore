@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -34,6 +35,7 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
     private readonly TestControllerProvider _testControllerProvider = new();
     private Action<ILoggingBuilder>? _loggingConfiguration;
     private Action<IServiceCollection>? _configureServices;
+    private Action<IServiceCollection>? _postConfigureServices;
 
     protected override JsonSerializerOptions SerializerOptions
     {
@@ -74,6 +76,8 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
         {
             _configureServices?.Invoke(services);
 
+            services.Replace(ServiceDescriptor.Singleton<TimeProvider>(new FrozenTimeProvider(DefaultDateTimeUtc)));
+
             services.ReplaceControllers(_testControllerProvider);
 
             services.AddDbContext<TDbContext>(options =>
@@ -83,16 +87,13 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
             });
         });
 
-        // We have placed an appsettings.json in the TestBuildingBlocks project directory and set the content root to there. Note that
-        // controllers are not discovered in the content root, but are registered manually using IntegrationTestContext.UseController.
-        WebApplicationFactory<TStartup> factoryWithConfiguredContentRoot =
-            factory.WithWebHostBuilder(builder => builder.UseSolutionRelativeContentRoot($"test/{nameof(TestBuildingBlocks)}"));
+        factory.PostConfigureServices(_postConfigureServices);
 
-        using IServiceScope scope = factoryWithConfiguredContentRoot.Services.CreateScope();
+        using IServiceScope scope = factory.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
         dbContext.Database.EnsureCreated();
 
-        return factoryWithConfiguredContentRoot;
+        return factory;
     }
 
     [Conditional("DEBUG")]
@@ -105,12 +106,32 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
 
     public void ConfigureLogging(Action<ILoggingBuilder> loggingConfiguration)
     {
+        if (_loggingConfiguration != null && _loggingConfiguration != loggingConfiguration)
+        {
+            throw new InvalidOperationException($"Do not call {nameof(ConfigureLogging)} multiple times.");
+        }
+
         _loggingConfiguration = loggingConfiguration;
     }
 
     public void ConfigureServices(Action<IServiceCollection> configureServices)
     {
+        if (_configureServices != null && _configureServices != configureServices)
+        {
+            throw new InvalidOperationException($"Do not call {nameof(ConfigureServices)} multiple times.");
+        }
+
         _configureServices = configureServices;
+    }
+
+    public void PostConfigureServices(Action<IServiceCollection> postConfigureServices)
+    {
+        if (_postConfigureServices != null && _postConfigureServices != postConfigureServices)
+        {
+            throw new InvalidOperationException($"Do not call {nameof(PostConfigureServices)} multiple times.");
+        }
+
+        _postConfigureServices = postConfigureServices;
     }
 
     public async Task RunOnDatabaseAsync(Func<TDbContext, Task> asyncAction)
@@ -141,6 +162,7 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
     {
         private Action<ILoggingBuilder>? _loggingConfiguration;
         private Action<IServiceCollection>? _configureServices;
+        private Action<IServiceCollection>? _postConfigureServices;
 
         public void ConfigureLogging(Action<ILoggingBuilder>? loggingConfiguration)
         {
@@ -150,6 +172,18 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
         public void ConfigureServices(Action<IServiceCollection>? configureServices)
         {
             _configureServices = configureServices;
+        }
+
+        public void PostConfigureServices(Action<IServiceCollection>? configureServices)
+        {
+            _postConfigureServices = configureServices;
+        }
+
+        protected override void ConfigureWebHost(IWebHostBuilder builder)
+        {
+            // We have placed an appsettings.json in the TestBuildingBlocks project directory and set the content root to there. Note that
+            // controllers are not discovered in the content root, but are registered manually using IntegrationTestContext.UseController.
+            builder.UseSolutionRelativeContentRoot($"test/{nameof(TestBuildingBlocks)}");
         }
 
         protected override IHostBuilder CreateHostBuilder()
@@ -172,6 +206,7 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
                 {
                     webBuilder.ConfigureServices(services => _configureServices?.Invoke(services));
                     webBuilder.UseStartup<TStartup>();
+                    webBuilder.ConfigureServices(services => _postConfigureServices?.Invoke(services));
                 })
                 .ConfigureLogging(options => _loggingConfiguration?.Invoke(options));
 

@@ -30,7 +30,7 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
     public async Task Can_filter_by_zero_ID_on_primary_resources()
     {
         // Arrange
-        List<Game> games = _fakers.Game.Generate(2);
+        List<Game> games = _fakers.Game.GenerateList(2);
         games[0].Id = 0;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -48,12 +48,12 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be("0");
 
         responseDocument.Data.ManyValue[0].With(resource =>
         {
-            resource.Links.ShouldNotBeNull();
+            resource.Links.Should().NotBeNull();
             resource.Links.Self.Should().Be("/games/0");
         });
     }
@@ -62,9 +62,9 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
     public async Task Can_get_primary_resource_by_zero_ID_with_include()
     {
         // Arrange
-        Game game = _fakers.Game.Generate();
+        Game game = _fakers.Game.GenerateOne();
         game.Id = 0;
-        game.ActivePlayers = _fakers.Player.Generate(1);
+        game.ActivePlayers = _fakers.Player.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -81,12 +81,12 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be("0");
-        responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Links.Should().NotBeNull();
         responseDocument.Data.SingleValue.Links.Self.Should().Be("/games/0");
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Id.Should().Be(game.ActivePlayers.ElementAt(0).StringId);
     }
 
@@ -94,7 +94,7 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
     public async Task Can_create_resource_with_zero_ID()
     {
         // Arrange
-        string newTitle = _fakers.Game.Generate().Title;
+        string newTitle = _fakers.Game.GenerateOne().Title;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -124,14 +124,14 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
 
         httpResponse.Headers.Location.Should().Be("/games/0");
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be("0");
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             Game gameInDatabase = await dbContext.Games.FirstWithIdAsync((int?)0);
 
-            gameInDatabase.ShouldNotBeNull();
+            gameInDatabase.Should().NotBeNull();
             gameInDatabase.Title.Should().Be(newTitle);
         });
     }
@@ -140,10 +140,10 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
     public async Task Can_update_resource_with_zero_ID()
     {
         // Arrange
-        Game existingGame = _fakers.Game.Generate();
+        Game existingGame = _fakers.Game.GenerateOne();
         existingGame.Id = 0;
 
-        string newTitle = _fakers.Game.Generate().Title;
+        string newTitle = _fakers.Game.GenerateOne().Title;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -173,15 +173,15 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be("0");
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTitle));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("title").WhoseValue.Should().Be(newTitle);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             Game gameInDatabase = await dbContext.Games.FirstWithIdAsync((int?)0);
 
-            gameInDatabase.ShouldNotBeNull();
+            gameInDatabase.Should().NotBeNull();
             gameInDatabase.Title.Should().Be(newTitle);
         });
     }
@@ -190,8 +190,8 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
     public async Task Can_clear_ToOne_relationship_with_zero_ID()
     {
         // Arrange
-        Player existingPlayer = _fakers.Player.Generate();
-        existingPlayer.ActiveGame = _fakers.Game.Generate();
+        Player existingPlayer = _fakers.Player.GenerateOne();
+        existingPlayer.ActiveGame = _fakers.Game.GenerateOne();
         existingPlayer.ActiveGame.Id = 0;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -220,7 +220,7 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
         {
             Player playerInDatabase = await dbContext.Players.Include(player => player.ActiveGame).FirstWithIdAsync(existingPlayer.Id);
 
-            playerInDatabase.ShouldNotBeNull();
+            playerInDatabase.Should().NotBeNull();
             playerInDatabase.ActiveGame.Should().BeNull();
         });
     }
@@ -229,9 +229,9 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
     public async Task Can_assign_ToOne_relationship_with_zero_ID()
     {
         // Arrange
-        Player existingPlayer = _fakers.Player.Generate();
+        Player existingPlayer = _fakers.Player.GenerateOne();
 
-        Game existingGame = _fakers.Game.Generate();
+        Game existingGame = _fakers.Game.GenerateOne();
         existingGame.Id = 0;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -264,8 +264,8 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
         {
             Player playerInDatabase = await dbContext.Players.Include(player => player.ActiveGame).FirstWithIdAsync(existingPlayer.Id);
 
-            playerInDatabase.ShouldNotBeNull();
-            playerInDatabase.ActiveGame.ShouldNotBeNull();
+            playerInDatabase.Should().NotBeNull();
+            playerInDatabase.ActiveGame.Should().NotBeNull();
             playerInDatabase.ActiveGame.Id.Should().Be(0);
         });
     }
@@ -274,10 +274,10 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
     public async Task Can_replace_ToOne_relationship_with_zero_ID()
     {
         // Arrange
-        Player existingPlayer = _fakers.Player.Generate();
-        existingPlayer.ActiveGame = _fakers.Game.Generate();
+        Player existingPlayer = _fakers.Player.GenerateOne();
+        existingPlayer.ActiveGame = _fakers.Game.GenerateOne();
 
-        Game existingGame = _fakers.Game.Generate();
+        Game existingGame = _fakers.Game.GenerateOne();
         existingGame.Id = 0;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -310,8 +310,8 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
         {
             Player playerInDatabase = await dbContext.Players.Include(player => player.ActiveGame).FirstWithIdAsync(existingPlayer.Id);
 
-            playerInDatabase.ShouldNotBeNull();
-            playerInDatabase.ActiveGame.ShouldNotBeNull();
+            playerInDatabase.Should().NotBeNull();
+            playerInDatabase.ActiveGame.Should().NotBeNull();
             playerInDatabase.ActiveGame.Id.Should().Be(0);
         });
     }
@@ -320,8 +320,8 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
     public async Task Can_clear_ToMany_relationship_with_zero_ID()
     {
         // Arrange
-        Player existingPlayer = _fakers.Player.Generate();
-        existingPlayer.RecentlyPlayed = _fakers.Game.Generate(2);
+        Player existingPlayer = _fakers.Player.GenerateOne();
+        existingPlayer.RecentlyPlayed = _fakers.Game.GenerateList(2);
         existingPlayer.RecentlyPlayed.ElementAt(0).Id = 0;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -350,7 +350,7 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
         {
             Player playerInDatabase = await dbContext.Players.Include(player => player.RecentlyPlayed).FirstWithIdAsync(existingPlayer.Id);
 
-            playerInDatabase.ShouldNotBeNull();
+            playerInDatabase.Should().NotBeNull();
             playerInDatabase.RecentlyPlayed.Should().BeEmpty();
         });
     }
@@ -359,9 +359,9 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
     public async Task Can_assign_ToMany_relationship_with_zero_ID()
     {
         // Arrange
-        Player existingPlayer = _fakers.Player.Generate();
+        Player existingPlayer = _fakers.Player.GenerateOne();
 
-        Game existingGame = _fakers.Game.Generate();
+        Game existingGame = _fakers.Game.GenerateOne();
         existingGame.Id = 0;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -397,8 +397,8 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
         {
             Player playerInDatabase = await dbContext.Players.Include(player => player.RecentlyPlayed).FirstWithIdAsync(existingPlayer.Id);
 
-            playerInDatabase.ShouldNotBeNull();
-            playerInDatabase.RecentlyPlayed.ShouldHaveCount(1);
+            playerInDatabase.Should().NotBeNull();
+            playerInDatabase.RecentlyPlayed.Should().HaveCount(1);
             playerInDatabase.RecentlyPlayed.ElementAt(0).Id.Should().Be(0);
         });
     }
@@ -407,10 +407,10 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
     public async Task Can_replace_ToMany_relationship_with_zero_ID()
     {
         // Arrange
-        Player existingPlayer = _fakers.Player.Generate();
-        existingPlayer.RecentlyPlayed = _fakers.Game.Generate(2);
+        Player existingPlayer = _fakers.Player.GenerateOne();
+        existingPlayer.RecentlyPlayed = _fakers.Game.GenerateList(2);
 
-        Game existingGame = _fakers.Game.Generate();
+        Game existingGame = _fakers.Game.GenerateOne();
         existingGame.Id = 0;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -446,8 +446,8 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
         {
             Player playerInDatabase = await dbContext.Players.Include(player => player.RecentlyPlayed).FirstWithIdAsync(existingPlayer.Id);
 
-            playerInDatabase.ShouldNotBeNull();
-            playerInDatabase.RecentlyPlayed.ShouldHaveCount(1);
+            playerInDatabase.Should().NotBeNull();
+            playerInDatabase.RecentlyPlayed.Should().HaveCount(1);
             playerInDatabase.RecentlyPlayed.ElementAt(0).Id.Should().Be(0);
         });
     }
@@ -456,10 +456,10 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
     public async Task Can_add_to_ToMany_relationship_with_zero_ID()
     {
         // Arrange
-        Player existingPlayer = _fakers.Player.Generate();
-        existingPlayer.RecentlyPlayed = _fakers.Game.Generate(1);
+        Player existingPlayer = _fakers.Player.GenerateOne();
+        existingPlayer.RecentlyPlayed = _fakers.Game.GenerateList(1);
 
-        Game existingGame = _fakers.Game.Generate();
+        Game existingGame = _fakers.Game.GenerateOne();
         existingGame.Id = 0;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -495,8 +495,8 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
         {
             Player playerInDatabase = await dbContext.Players.Include(player => player.RecentlyPlayed).FirstWithIdAsync(existingPlayer.Id);
 
-            playerInDatabase.ShouldNotBeNull();
-            playerInDatabase.RecentlyPlayed.ShouldHaveCount(2);
+            playerInDatabase.Should().NotBeNull();
+            playerInDatabase.RecentlyPlayed.Should().HaveCount(2);
             playerInDatabase.RecentlyPlayed.Should().ContainSingle(game => game.Id == 0);
         });
     }
@@ -505,8 +505,8 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
     public async Task Can_remove_from_ToMany_relationship_with_zero_ID()
     {
         // Arrange
-        Player existingPlayer = _fakers.Player.Generate();
-        existingPlayer.RecentlyPlayed = _fakers.Game.Generate(2);
+        Player existingPlayer = _fakers.Player.GenerateOne();
+        existingPlayer.RecentlyPlayed = _fakers.Game.GenerateList(2);
         existingPlayer.RecentlyPlayed.ElementAt(0).Id = 0;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -542,8 +542,8 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
         {
             Player playerInDatabase = await dbContext.Players.Include(player => player.RecentlyPlayed).FirstWithIdAsync(existingPlayer.Id);
 
-            playerInDatabase.ShouldNotBeNull();
-            playerInDatabase.RecentlyPlayed.ShouldHaveCount(1);
+            playerInDatabase.Should().NotBeNull();
+            playerInDatabase.RecentlyPlayed.Should().HaveCount(1);
             playerInDatabase.RecentlyPlayed.Should().ContainSingle(game => game.Id != 0);
         });
     }
@@ -552,7 +552,7 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
     public async Task Can_delete_resource_with_zero_ID()
     {
         // Arrange
-        Game existingGame = _fakers.Game.Generate();
+        Game existingGame = _fakers.Game.GenerateOne();
         existingGame.Id = 0;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>

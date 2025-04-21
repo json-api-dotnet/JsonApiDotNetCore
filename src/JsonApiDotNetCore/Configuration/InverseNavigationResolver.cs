@@ -11,15 +11,15 @@ namespace JsonApiDotNetCore.Configuration;
 public sealed class InverseNavigationResolver : IInverseNavigationResolver
 {
     private readonly IResourceGraph _resourceGraph;
-    private readonly IEnumerable<IDbContextResolver> _dbContextResolvers;
+    private readonly IDbContextResolver[] _dbContextResolvers;
 
     public InverseNavigationResolver(IResourceGraph resourceGraph, IEnumerable<IDbContextResolver> dbContextResolvers)
     {
-        ArgumentGuard.NotNull(resourceGraph);
-        ArgumentGuard.NotNull(dbContextResolvers);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(dbContextResolvers);
 
         _resourceGraph = resourceGraph;
-        _dbContextResolvers = dbContextResolvers;
+        _dbContextResolvers = dbContextResolvers as IDbContextResolver[] ?? dbContextResolvers.ToArray();
     }
 
     /// <inheritdoc />
@@ -34,19 +34,19 @@ public sealed class InverseNavigationResolver : IInverseNavigationResolver
 
     private void Resolve(DbContext dbContext)
     {
-        foreach (ResourceType resourceType in _resourceGraph.GetResourceTypes().Where(resourceType => resourceType.Relationships.Any()))
+        foreach (ResourceType resourceType in _resourceGraph.GetResourceTypes().Where(resourceType => resourceType.Relationships.Count > 0))
         {
             IEntityType? entityType = dbContext.Model.FindEntityType(resourceType.ClrType);
 
             if (entityType != null)
             {
-                IDictionary<string, INavigationBase> navigationMap = GetNavigations(entityType);
+                Dictionary<string, INavigationBase> navigationMap = GetNavigations(entityType);
                 ResolveRelationships(resourceType.Relationships, navigationMap);
             }
         }
     }
 
-    private static IDictionary<string, INavigationBase> GetNavigations(IEntityType entityType)
+    private static Dictionary<string, INavigationBase> GetNavigations(IEntityType entityType)
     {
         // @formatter:wrap_chained_method_calls chop_always
 
@@ -58,7 +58,7 @@ public sealed class InverseNavigationResolver : IInverseNavigationResolver
         // @formatter:wrap_chained_method_calls restore
     }
 
-    private void ResolveRelationships(IReadOnlyCollection<RelationshipAttribute> relationships, IDictionary<string, INavigationBase> navigationMap)
+    private void ResolveRelationships(IReadOnlyCollection<RelationshipAttribute> relationships, Dictionary<string, INavigationBase> navigationMap)
     {
         foreach (RelationshipAttribute relationship in relationships)
         {

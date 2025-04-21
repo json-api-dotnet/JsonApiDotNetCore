@@ -1,10 +1,10 @@
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Data.Common;
 using System.Reflection;
 using Dapper;
 using DapperExample.TranslationToSql.TreeNodes;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -16,7 +16,7 @@ namespace DapperExample.TranslationToSql.DataModel;
 /// </summary>
 public abstract class BaseDataModelService : IDataModelService
 {
-    private readonly Dictionary<ResourceType, IReadOnlyDictionary<string, ResourceFieldAttribute?>> _columnMappingsByType = [];
+    private readonly Dictionary<ResourceType, ReadOnlyDictionary<string, ResourceFieldAttribute?>> _columnMappingsByType = [];
 
     protected IResourceGraph ResourceGraph { get; }
 
@@ -24,7 +24,7 @@ public abstract class BaseDataModelService : IDataModelService
 
     protected BaseDataModelService(IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
 
         ResourceGraph = resourceGraph;
     }
@@ -52,7 +52,7 @@ public abstract class BaseDataModelService : IDataModelService
         }
     }
 
-    private IReadOnlyDictionary<string, ResourceFieldAttribute?> ScanColumnMappings(ResourceType resourceType)
+    private ReadOnlyDictionary<string, ResourceFieldAttribute?> ScanColumnMappings(ResourceType resourceType)
     {
         Dictionary<string, ResourceFieldAttribute?> mappings = [];
 
@@ -93,7 +93,7 @@ public abstract class BaseDataModelService : IDataModelService
             mappings[columnName] = field;
         }
 
-        return mappings;
+        return mappings.AsReadOnly();
     }
 
     private static bool IsMapped(PropertyInfo property)
@@ -103,7 +103,7 @@ public abstract class BaseDataModelService : IDataModelService
 
     public IReadOnlyDictionary<string, ResourceFieldAttribute?> GetColumnMappings(ResourceType resourceType)
     {
-        if (_columnMappingsByType.TryGetValue(resourceType, out IReadOnlyDictionary<string, ResourceFieldAttribute?>? columnMappings))
+        if (_columnMappingsByType.TryGetValue(resourceType, out ReadOnlyDictionary<string, ResourceFieldAttribute?>? columnMappings))
         {
             return columnMappings;
         }
@@ -113,10 +113,10 @@ public abstract class BaseDataModelService : IDataModelService
 
     public object? GetColumnValue(ResourceType resourceType, IIdentifiable resource, string columnName)
     {
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(resource);
         AssertSameType(resourceType, resource);
-        ArgumentGuard.NotNullNorEmpty(columnName);
+        ArgumentException.ThrowIfNullOrEmpty(columnName);
 
         IReadOnlyDictionary<string, ResourceFieldAttribute?> columnMappings = GetColumnMappings(resourceType);
 

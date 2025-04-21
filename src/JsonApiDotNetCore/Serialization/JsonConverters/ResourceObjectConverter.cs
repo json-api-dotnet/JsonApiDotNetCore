@@ -1,7 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 using System.Text.Json;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -13,7 +16,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters;
 /// Converts <see cref="ResourceObject" /> to/from JSON.
 /// </summary>
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
+public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
 {
     private static readonly JsonEncodedText TypeText = JsonEncodedText.Encode("type");
     private static readonly JsonEncodedText IdText = JsonEncodedText.Encode("id");
@@ -27,7 +30,7 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
 
     public ResourceObjectConverter(IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
 
         _resourceGraph = resourceGraph;
     }
@@ -44,9 +47,9 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
 
         var resourceObject = new ResourceObject
         {
-            // The 'attributes' element may occur before 'type', but we need to know the resource type before we can deserialize attributes
-            // into their corresponding CLR types.
-            Type = PeekType(ref reader)
+            // The 'attributes' or 'relationships' element may occur before 'type', but we need to know the resource type
+            // before we can deserialize attributes/relationships into their corresponding CLR types.
+            Type = PeekType(reader)
         };
 
         ResourceType? resourceType = resourceObject.Type != null ? _resourceGraph.FindResourceType(resourceObject.Type) : null;
@@ -99,7 +102,15 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
                         }
                         case "relationships":
                         {
-                            resourceObject.Relationships = ReadSubTree<IDictionary<string, RelationshipObject?>>(ref reader, options);
+                            if (resourceType != null)
+                            {
+                                resourceObject.Relationships = ReadRelationships(ref reader, options, resourceType);
+                            }
+                            else
+                            {
+                                reader.Skip();
+                            }
+
                             break;
                         }
                         case "links":
@@ -127,27 +138,27 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
         throw GetEndOfStreamError();
     }
 
-    private static string? PeekType(ref Utf8JsonReader reader)
+    private static string? PeekType(Utf8JsonReader reader)
     {
-        // https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-converters-how-to?pivots=dotnet-5-0#an-alternative-way-to-do-polymorphic-deserialization
-        Utf8JsonReader readerClone = reader;
+        // This method receives a clone of the reader (which is a struct, and there's no ref modifier on the parameter),
+        // so advancing here doesn't affect the reader position of the caller.
 
-        while (readerClone.Read())
+        while (reader.Read())
         {
-            if (readerClone.TokenType == JsonTokenType.PropertyName)
+            if (reader.TokenType == JsonTokenType.PropertyName)
             {
-                string? propertyName = readerClone.GetString();
-                readerClone.Read();
+                string? propertyName = reader.GetString();
+                reader.Read();
 
                 switch (propertyName)
                 {
                     case "type":
                     {
-                        return readerClone.GetString();
+                        return reader.GetString();
                     }
                     default:
                     {
-                        readerClone.Skip();
+                        reader.Skip();
                         break;
                     }
                 }
@@ -157,7 +168,7 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
         return null;
     }
 
-    private static IDictionary<string, object?> ReadAttributes(ref Utf8JsonReader reader, JsonSerializerOptions options, ResourceType resourceType)
+    private Dictionary<string, object?> ReadAttributes(ref Utf8JsonReader reader, JsonSerializerOptions options, ResourceType resourceType)
     {
         var attributes = new Dictionary<string, object?>();
 
@@ -173,6 +184,18 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
                 {
                     string attributeName = reader.GetString() ?? string.Empty;
                     reader.Read();
+
+                    int extensionSeparatorIndex = attributeName.IndexOf(':');
+
+                    if (extensionSeparatorIndex != -1)
+                    {
+                        string extensionNamespace = attributeName[..extensionSeparatorIndex];
+                        string extensionName = attributeName[(extensionSeparatorIndex + 1)..];
+
+                        ValidateExtensionInAttributes(extensionNamespace, extensionName, resourceType, reader);
+                        reader.Skip();
+                        continue;
+                    }
 
                     AttrAttribute? attribute = resourceType.FindAttributeByPublicName(attributeName);
                     PropertyInfo? property = attribute?.Property;
@@ -203,11 +226,11 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
                             }
                         }
 
-                        attributes.Add(attributeName, attributeValue);
+                        attributes[attributeName] = attributeValue;
                     }
                     else
                     {
-                        attributes.Add(attributeName, null);
+                        attributes[attributeName] = null;
                         reader.Skip();
                     }
 
@@ -219,11 +242,69 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
         throw GetEndOfStreamError();
     }
 
+    // Currently exposed for internal use only, so we don't need a breaking change when adding support for multiple extensions.
+    // ReSharper disable once UnusedParameter.Global
+    private protected virtual void ValidateExtensionInAttributes(string extensionNamespace, string extensionName, ResourceType resourceType,
+        Utf8JsonReader reader)
+    {
+        throw new JsonException($"Unsupported usage of JSON:API extension '{extensionNamespace}' in attributes.");
+    }
+
+    private Dictionary<string, RelationshipObject?> ReadRelationships(ref Utf8JsonReader reader, JsonSerializerOptions options, ResourceType resourceType)
+    {
+        var relationships = new Dictionary<string, RelationshipObject?>();
+
+        while (reader.Read())
+        {
+            switch (reader.TokenType)
+            {
+                case JsonTokenType.EndObject:
+                {
+                    return relationships;
+                }
+                case JsonTokenType.PropertyName:
+                {
+                    string relationshipName = reader.GetString() ?? string.Empty;
+                    reader.Read();
+
+                    int extensionSeparatorIndex = relationshipName.IndexOf(':');
+
+                    if (extensionSeparatorIndex != -1)
+                    {
+                        string extensionNamespace = relationshipName[..extensionSeparatorIndex];
+                        string extensionName = relationshipName[(extensionSeparatorIndex + 1)..];
+
+                        ValidateExtensionInRelationships(extensionNamespace, extensionName, resourceType, reader);
+                        reader.Skip();
+                        continue;
+                    }
+
+                    var relationshipObject = ReadSubTree<RelationshipObject?>(ref reader, options);
+                    relationships[relationshipName] = relationshipObject;
+                    break;
+                }
+            }
+        }
+
+        throw GetEndOfStreamError();
+    }
+
+    // Currently exposed for internal use only, so we don't need a breaking change when adding support for multiple extensions.
+    // ReSharper disable once UnusedParameter.Global
+    private protected virtual void ValidateExtensionInRelationships(string extensionNamespace, string extensionName, ResourceType resourceType,
+        Utf8JsonReader reader)
+    {
+        throw new JsonException($"Unsupported usage of JSON:API extension '{extensionNamespace}' in relationships.");
+    }
+
     /// <summary>
     /// Ensures that attribute values are not wrapped in <see cref="JsonElement" />s.
     /// </summary>
     public override void Write(Utf8JsonWriter writer, ResourceObject value, JsonSerializerOptions options)
     {
+        ArgumentNullException.ThrowIfNull(writer);
+        ArgumentNullException.ThrowIfNull(value);
+
         writer.WriteStartObject();
 
         writer.WriteString(TypeText, value.Type);
@@ -241,13 +322,33 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
         if (!value.Attributes.IsNullOrEmpty())
         {
             writer.WritePropertyName(AttributesText);
-            WriteSubTree(writer, value.Attributes, options);
+            writer.WriteStartObject();
+
+            WriteExtensionInAttributes(writer, value);
+
+            foreach ((string attributeName, object? attributeValue) in value.Attributes)
+            {
+                writer.WritePropertyName(attributeName);
+                WriteSubTree(writer, attributeValue, options);
+            }
+
+            writer.WriteEndObject();
         }
 
         if (!value.Relationships.IsNullOrEmpty())
         {
             writer.WritePropertyName(RelationshipsText);
-            WriteSubTree(writer, value.Relationships, options);
+            writer.WriteStartObject();
+
+            WriteExtensionInRelationships(writer, value);
+
+            foreach ((string relationshipName, RelationshipObject? relationshipValue) in value.Relationships)
+            {
+                writer.WritePropertyName(relationshipName);
+                WriteSubTree(writer, relationshipValue, options);
+            }
+
+            writer.WriteEndObject();
         }
 
         if (value.Links != null && value.Links.HasValue())
@@ -263,5 +364,33 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
         }
 
         writer.WriteEndObject();
+    }
+
+    // Currently exposed for internal use only, so we don't need a breaking change when adding support for multiple extensions.
+    private protected virtual void WriteExtensionInAttributes(Utf8JsonWriter writer, ResourceObject value)
+    {
+    }
+
+    // Currently exposed for internal use only, so we don't need a breaking change when adding support for multiple extensions.
+    private protected virtual void WriteExtensionInRelationships(Utf8JsonWriter writer, ResourceObject value)
+    {
+    }
+
+    /// <summary>
+    /// Throws a <see cref="JsonApiException" /> in such a way that <see cref="JsonApiReader" /> can reconstruct the source pointer.
+    /// </summary>
+    /// <param name="exception">
+    /// The <see cref="JsonApiException" /> to throw, which may contain a relative source pointer.
+    /// </param>
+    [DoesNotReturn]
+    [ContractAnnotation("=> halt")]
+    private protected static void CapturedThrow(JsonApiException exception)
+    {
+        ExceptionDispatchInfo.SetCurrentStackTrace(exception);
+
+        throw new NotSupportedException(null, exception)
+        {
+            Source = "System.Text.Json.Rethrowable"
+        };
     }
 }

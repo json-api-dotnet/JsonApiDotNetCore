@@ -17,14 +17,14 @@ internal sealed class DapperFacade
 
     public DapperFacade(IDataModelService dataModelService)
     {
-        ArgumentGuard.NotNull(dataModelService);
+        ArgumentNullException.ThrowIfNull(dataModelService);
 
         _dataModelService = dataModelService;
     }
 
     public CommandDefinition GetSqlCommand(SqlTreeNode node, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(node);
+        ArgumentNullException.ThrowIfNull(node);
 
         var queryBuilder = new SqlQueryBuilder(_dataModelService.DatabaseProvider);
         string statement = queryBuilder.GetCommand(node);
@@ -36,7 +36,7 @@ internal sealed class DapperFacade
     public IReadOnlyCollection<CommandDefinition> BuildSqlCommandsForOneToOneRelationshipsChangedToNotNull(ResourceChangeDetector changeDetector,
         CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(changeDetector);
+        ArgumentNullException.ThrowIfNull(changeDetector);
 
         List<CommandDefinition> sqlCommands = [];
 
@@ -73,13 +73,13 @@ internal sealed class DapperFacade
             }
         }
 
-        return sqlCommands;
+        return sqlCommands.AsReadOnly();
     }
 
     public IReadOnlyCollection<CommandDefinition> BuildSqlCommandsForChangedRelationshipsHavingForeignKeyAtRightSide<TId>(ResourceChangeDetector changeDetector,
         TId leftId, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(changeDetector);
+        ArgumentNullException.ThrowIfNull(changeDetector);
 
         List<CommandDefinition> sqlCommands = [];
 
@@ -107,26 +107,26 @@ internal sealed class DapperFacade
             object[] rightIdsToRemove = currentRightIds.Except(newRightIds).ToArray();
             object[] rightIdsToAdd = newRightIds.Except(currentRightIds).ToArray();
 
-            if (rightIdsToRemove.Any())
+            if (rightIdsToRemove.Length > 0)
             {
                 CommandDefinition sqlCommand = BuildSqlCommandForRemoveFromToMany(foreignKey, rightIdsToRemove, cancellationToken);
                 sqlCommands.Add(sqlCommand);
             }
 
-            if (rightIdsToAdd.Any())
+            if (rightIdsToAdd.Length > 0)
             {
                 CommandDefinition sqlCommand = BuildSqlCommandForAddToToMany(foreignKey, leftId!, rightIdsToAdd, cancellationToken);
                 sqlCommands.Add(sqlCommand);
             }
         }
 
-        return sqlCommands;
+        return sqlCommands.AsReadOnly();
     }
 
     public CommandDefinition BuildSqlCommandForRemoveFromToMany(RelationshipForeignKey foreignKey, object[] rightResourceIdValues,
         CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(foreignKey);
+        ArgumentNullException.ThrowIfNull(foreignKey);
         ArgumentGuard.NotNullNorEmpty(rightResourceIdValues);
 
         if (!foreignKey.IsNullable)
@@ -149,8 +149,8 @@ internal sealed class DapperFacade
     public CommandDefinition BuildSqlCommandForAddToToMany(RelationshipForeignKey foreignKey, object leftId, object[] rightResourceIdValues,
         CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(foreignKey);
-        ArgumentGuard.NotNull(leftId);
+        ArgumentNullException.ThrowIfNull(foreignKey);
+        ArgumentNullException.ThrowIfNull(leftId);
         ArgumentGuard.NotNullNorEmpty(rightResourceIdValues);
 
         var columnsToUpdate = new Dictionary<string, object?>
@@ -165,7 +165,7 @@ internal sealed class DapperFacade
 
     public CommandDefinition BuildSqlCommandForCreate(ResourceChangeDetector changeDetector, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(changeDetector);
+        ArgumentNullException.ThrowIfNull(changeDetector);
 
         IReadOnlyDictionary<string, object?> columnsToSet = changeDetector.GetChangedColumnValues();
 
@@ -176,11 +176,11 @@ internal sealed class DapperFacade
 
     public CommandDefinition? BuildSqlCommandForUpdate<TId>(ResourceChangeDetector changeDetector, TId leftId, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(changeDetector);
+        ArgumentNullException.ThrowIfNull(changeDetector);
 
         IReadOnlyDictionary<string, object?> columnsToUpdate = changeDetector.GetChangedColumnValues();
 
-        if (columnsToUpdate.Any())
+        if (columnsToUpdate.Count > 0)
         {
             var updateBuilder = new UpdateResourceStatementBuilder(_dataModelService);
             UpdateNode updateNode = updateBuilder.Build(changeDetector.ResourceType, columnsToUpdate, leftId!);

@@ -9,13 +9,11 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters;
 /// <inheritdoc cref="IRelationshipDataAdapter" />
 public sealed class RelationshipDataAdapter : BaseAdapter, IRelationshipDataAdapter
 {
-    private static readonly CollectionConverter CollectionConverter = new();
-
     private readonly IResourceIdentifierObjectAdapter _resourceIdentifierObjectAdapter;
 
     public RelationshipDataAdapter(IResourceIdentifierObjectAdapter resourceIdentifierObjectAdapter)
     {
-        ArgumentGuard.NotNull(resourceIdentifierObjectAdapter);
+        ArgumentNullException.ThrowIfNull(resourceIdentifierObjectAdapter);
 
         _resourceIdentifierObjectAdapter = resourceIdentifierObjectAdapter;
     }
@@ -62,8 +60,8 @@ public sealed class RelationshipDataAdapter : BaseAdapter, IRelationshipDataAdap
     public object? Convert(SingleOrManyData<ResourceIdentifierObject> data, RelationshipAttribute relationship, bool useToManyElementType,
         RequestAdapterState state)
     {
-        ArgumentGuard.NotNull(relationship);
-        ArgumentGuard.NotNull(state);
+        ArgumentNullException.ThrowIfNull(relationship);
+        ArgumentNullException.ThrowIfNull(state);
         AssertHasData(data, state);
 
         using IDisposable _ = state.Position.PushElement("data");
@@ -95,7 +93,7 @@ public sealed class RelationshipDataAdapter : BaseAdapter, IRelationshipDataAdap
         AssertDataHasManyValue(data, state);
 
         int arrayIndex = 0;
-        var rightResources = new List<IIdentifiable>();
+        List<IIdentifiable> rightResources = [];
 
         foreach (ResourceIdentifierObject resourceIdentifierObject in data.ManyValue!)
         {
@@ -109,7 +107,7 @@ public sealed class RelationshipDataAdapter : BaseAdapter, IRelationshipDataAdap
 
         if (useToManyElementType)
         {
-            return CollectionConverter.CopyToTypedCollection(rightResources, relationship.Property.PropertyType);
+            return CollectionConverter.Instance.CopyToTypedCollection(rightResources, relationship.Property.PropertyType);
         }
 
         var resourceSet = new HashSet<IIdentifiable>(IdentifiableComparer.Instance);

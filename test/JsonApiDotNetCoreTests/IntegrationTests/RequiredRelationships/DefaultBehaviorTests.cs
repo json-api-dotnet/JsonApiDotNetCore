@@ -31,7 +31,7 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     public async Task Cannot_create_dependent_side_of_required_ManyToOne_relationship_without_providing_principal_side()
     {
         // Arrange
-        Order order = _fakers.Order.Generate();
+        Order order = _fakers.Order.GenerateOne();
 
         var requestBody = new
         {
@@ -53,20 +53,20 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(2);
+        responseDocument.Errors.Should().HaveCount(2);
 
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error1.Title.Should().Be("Input validation failed.");
         error1.Detail.Should().Be("The Customer field is required.");
-        error1.Source.ShouldNotBeNull();
+        error1.Source.Should().NotBeNull();
         error1.Source.Pointer.Should().Be("/data/relationships/customer/data");
 
         ErrorObject error2 = responseDocument.Errors[1];
         error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error2.Title.Should().Be("Input validation failed.");
         error2.Detail.Should().Be("The Shipment field is required.");
-        error2.Source.ShouldNotBeNull();
+        error2.Source.Should().NotBeNull();
         error2.Source.Pointer.Should().Be("/data/relationships/shipment/data");
     }
 
@@ -74,7 +74,7 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     public async Task Cannot_create_dependent_side_of_required_OneToOne_relationship_without_providing_principal_side()
     {
         // Arrange
-        Shipment shipment = _fakers.Shipment.Generate();
+        Shipment shipment = _fakers.Shipment.GenerateOne();
 
         var requestBody = new
         {
@@ -96,13 +96,13 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Input validation failed.");
         error.Detail.Should().Be("The Order field is required.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/order/data");
     }
 
@@ -110,8 +110,8 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     public async Task Deleting_principal_side_of_required_OneToMany_relationship_triggers_cascading_delete()
     {
         // Arrange
-        Order existingOrder = _fakers.Order.Generate();
-        existingOrder.Customer = _fakers.Customer.Generate();
+        Order existingOrder = _fakers.Order.GenerateOne();
+        existingOrder.Customer = _fakers.Customer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -143,9 +143,9 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     public async Task Deleting_principal_side_of_required_OneToOne_relationship_triggers_cascading_delete()
     {
         // Arrange
-        Order existingOrder = _fakers.Order.Generate();
-        existingOrder.Shipment = _fakers.Shipment.Generate();
-        existingOrder.Customer = _fakers.Customer.Generate();
+        Order existingOrder = _fakers.Order.GenerateOne();
+        existingOrder.Shipment = _fakers.Shipment.GenerateOne();
+        existingOrder.Customer = _fakers.Customer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -172,7 +172,7 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
             shipmentInDatabase.Should().BeNull();
 
             Customer? customerInDatabase = await dbContext.Customers.FirstWithIdOrDefaultAsync(existingOrder.Customer.Id);
-            customerInDatabase.ShouldNotBeNull();
+            customerInDatabase.Should().NotBeNull();
         });
     }
 
@@ -180,9 +180,9 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     public async Task Cannot_clear_required_ManyToOne_relationship_at_primary_endpoint()
     {
         // Arrange
-        Order existingOrder = _fakers.Order.Generate();
-        existingOrder.Shipment = _fakers.Shipment.Generate();
-        existingOrder.Customer = _fakers.Customer.Generate();
+        Order existingOrder = _fakers.Order.GenerateOne();
+        existingOrder.Shipment = _fakers.Shipment.GenerateOne();
+        existingOrder.Customer = _fakers.Customer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -214,13 +214,13 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Input validation failed.");
         error.Detail.Should().Be("The Customer field is required.");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Pointer.Should().Be("/data/relationships/customer/data");
     }
 
@@ -228,9 +228,9 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     public async Task Cannot_clear_required_ManyToOne_relationship_at_relationship_endpoint()
     {
         // Arrange
-        Order existingOrder = _fakers.Order.Generate();
-        existingOrder.Shipment = _fakers.Shipment.Generate();
-        existingOrder.Customer = _fakers.Customer.Generate();
+        Order existingOrder = _fakers.Order.GenerateOne();
+        existingOrder.Shipment = _fakers.Shipment.GenerateOne();
+        existingOrder.Customer = _fakers.Customer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -251,7 +251,7 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -263,9 +263,9 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     public async Task Clearing_OneToMany_relationship_at_primary_endpoint_triggers_cascading_delete()
     {
         // Arrange
-        Order existingOrder = _fakers.Order.Generate();
-        existingOrder.Shipment = _fakers.Shipment.Generate();
-        existingOrder.Customer = _fakers.Customer.Generate();
+        Order existingOrder = _fakers.Order.GenerateOne();
+        existingOrder.Shipment = _fakers.Shipment.GenerateOne();
+        existingOrder.Customer = _fakers.Customer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -313,9 +313,9 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     public async Task Clearing_OneToMany_relationship_at_update_relationship_endpoint_triggers_cascading_delete()
     {
         // Arrange
-        Order existingOrder = _fakers.Order.Generate();
-        existingOrder.Shipment = _fakers.Shipment.Generate();
-        existingOrder.Customer = _fakers.Customer.Generate();
+        Order existingOrder = _fakers.Order.GenerateOne();
+        existingOrder.Shipment = _fakers.Shipment.GenerateOne();
+        existingOrder.Customer = _fakers.Customer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -352,9 +352,9 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     public async Task Clearing_OneToMany_relationship_at_delete_relationship_endpoint_triggers_cascading_delete()
     {
         // Arrange
-        Order existingOrder = _fakers.Order.Generate();
-        existingOrder.Shipment = _fakers.Shipment.Generate();
-        existingOrder.Customer = _fakers.Customer.Generate();
+        Order existingOrder = _fakers.Order.GenerateOne();
+        existingOrder.Shipment = _fakers.Shipment.GenerateOne();
+        existingOrder.Customer = _fakers.Customer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -398,12 +398,12 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     public async Task Can_reassign_dependent_side_of_ZeroOrOneToOne_relationship_at_primary_endpoint()
     {
         // Arrange
-        Order orderWithShipment = _fakers.Order.Generate();
-        orderWithShipment.Shipment = _fakers.Shipment.Generate();
-        orderWithShipment.Customer = _fakers.Customer.Generate();
+        Order orderWithShipment = _fakers.Order.GenerateOne();
+        orderWithShipment.Shipment = _fakers.Shipment.GenerateOne();
+        orderWithShipment.Customer = _fakers.Customer.GenerateOne();
 
-        Order orderWithoutShipment = _fakers.Order.Generate();
-        orderWithoutShipment.Customer = _fakers.Customer.Generate();
+        Order orderWithoutShipment = _fakers.Order.GenerateOne();
+        orderWithoutShipment.Customer = _fakers.Customer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -453,12 +453,12 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     public async Task Can_reassign_dependent_side_of_ZeroOrOneToOne_relationship_at_relationship_endpoint()
     {
         // Arrange
-        Order orderWithShipment = _fakers.Order.Generate();
-        orderWithShipment.Shipment = _fakers.Shipment.Generate();
-        orderWithShipment.Customer = _fakers.Customer.Generate();
+        Order orderWithShipment = _fakers.Order.GenerateOne();
+        orderWithShipment.Shipment = _fakers.Shipment.GenerateOne();
+        orderWithShipment.Customer = _fakers.Customer.GenerateOne();
 
-        Order orderWithoutShipment = _fakers.Order.Generate();
-        orderWithoutShipment.Customer = _fakers.Customer.Generate();
+        Order orderWithoutShipment = _fakers.Order.GenerateOne();
+        orderWithoutShipment.Customer = _fakers.Customer.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

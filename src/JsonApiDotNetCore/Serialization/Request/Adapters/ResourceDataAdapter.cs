@@ -12,8 +12,8 @@ public class ResourceDataAdapter : BaseAdapter, IResourceDataAdapter
 
     public ResourceDataAdapter(IResourceDefinitionAccessor resourceDefinitionAccessor, IResourceObjectAdapter resourceObjectAdapter)
     {
-        ArgumentGuard.NotNull(resourceDefinitionAccessor);
-        ArgumentGuard.NotNull(resourceObjectAdapter);
+        ArgumentNullException.ThrowIfNull(resourceDefinitionAccessor);
+        ArgumentNullException.ThrowIfNull(resourceObjectAdapter);
 
         _resourceDefinitionAccessor = resourceDefinitionAccessor;
         _resourceObjectAdapter = resourceObjectAdapter;
@@ -22,8 +22,8 @@ public class ResourceDataAdapter : BaseAdapter, IResourceDataAdapter
     /// <inheritdoc />
     public IIdentifiable Convert(SingleOrManyData<ResourceObject> data, ResourceIdentityRequirements requirements, RequestAdapterState state)
     {
-        ArgumentGuard.NotNull(requirements);
-        ArgumentGuard.NotNull(state);
+        ArgumentNullException.ThrowIfNull(requirements);
+        ArgumentNullException.ThrowIfNull(state);
 
         AssertHasData(data, state);
 
@@ -42,6 +42,9 @@ public class ResourceDataAdapter : BaseAdapter, IResourceDataAdapter
     protected virtual (IIdentifiable resource, ResourceType resourceType) ConvertResourceObject(SingleOrManyData<ResourceObject> data,
         ResourceIdentityRequirements requirements, RequestAdapterState state)
     {
+        ArgumentNullException.ThrowIfNull(requirements);
+        ArgumentNullException.ThrowIfNull(state);
+
         return _resourceObjectAdapter.Convert(data.SingleValue!, requirements, state);
     }
 }

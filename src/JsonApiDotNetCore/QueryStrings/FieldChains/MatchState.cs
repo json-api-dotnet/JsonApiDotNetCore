@@ -53,9 +53,9 @@ internal sealed class MatchState
 
     public static MatchState Create(FieldChainPattern pattern, string fieldChainText, ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(pattern);
-        ArgumentGuard.NotNull(fieldChainText);
-        ArgumentGuard.NotNull(resourceType);
+        ArgumentNullException.ThrowIfNull(pattern);
+        ArgumentNullException.ThrowIfNull(fieldChainText);
+        ArgumentNullException.ThrowIfNull(resourceType);
 
         try
         {
@@ -77,7 +77,7 @@ internal sealed class MatchState
     /// </summary>
     public MatchState SuccessMoveForwardOneField(ResourceFieldAttribute matchedValue)
     {
-        ArgumentGuard.NotNull(matchedValue);
+        ArgumentNullException.ThrowIfNull(matchedValue);
         AssertIsSuccess(this);
 
         IImmutableList<ResourceFieldAttribute> fieldsMatched = FieldsMatched.Add(matchedValue);
@@ -253,7 +253,7 @@ internal sealed class MatchState
             fields.AddRange(matches);
         }
 
-        return fields;
+        return fields.AsReadOnly();
     }
 
     private static void AssertIsSuccess(MatchState state)

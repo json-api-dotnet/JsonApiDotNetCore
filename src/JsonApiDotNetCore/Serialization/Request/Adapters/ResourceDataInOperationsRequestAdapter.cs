@@ -11,6 +11,9 @@ public sealed class ResourceDataInOperationsRequestAdapter(IResourceDefinitionAc
     protected override (IIdentifiable resource, ResourceType resourceType) ConvertResourceObject(SingleOrManyData<ResourceObject> data,
         ResourceIdentityRequirements requirements, RequestAdapterState state)
     {
+        ArgumentNullException.ThrowIfNull(requirements);
+        ArgumentNullException.ThrowIfNull(state);
+
         // This override ensures that we enrich IJsonApiRequest before calling into IResourceDefinition, so it is ready for consumption there.
 
         (IIdentifiable resource, ResourceType resourceType) = base.ConvertResourceObject(data, requirements, state);

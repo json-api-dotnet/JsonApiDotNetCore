@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using JsonApiDotNetCore.Resources;
 
 // ReSharper disable UnusedTypeParameter
@@ -11,5 +12,5 @@ public interface IDeleteService<TResource, in TId>
     /// <summary>
     /// Handles a JSON:API request to delete an existing resource.
     /// </summary>
-    Task DeleteAsync(TId id, CancellationToken cancellationToken);
+    Task DeleteAsync([DisallowNull] TId id, CancellationToken cancellationToken);
 }

@@ -41,9 +41,9 @@ public sealed partial class OutboxTests : IClassFixture<IntegrationTestContext<T
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-        DomainGroup existingGroup = _fakers.DomainGroup.Generate();
+        DomainGroup existingGroup = _fakers.DomainGroup.GenerateOne();
 
-        DomainUser existingUser = _fakers.DomainUser.Generate();
+        DomainUser existingUser = _fakers.DomainUser.GenerateOne();
 
         string unknownUserId = Unknown.StringId.For<DomainUser, Guid>();
 
@@ -79,7 +79,7 @@ public sealed partial class OutboxTests : IClassFixture<IntegrationTestContext<T
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);

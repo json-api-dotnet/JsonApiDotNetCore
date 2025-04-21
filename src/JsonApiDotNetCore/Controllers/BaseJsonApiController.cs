@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
@@ -65,9 +66,9 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
         IUpdateService<TResource, TId>? update = null, ISetRelationshipService<TResource, TId>? setRelationship = null,
         IDeleteService<TResource, TId>? delete = null, IRemoveFromRelationshipService<TResource, TId>? removeFromRelationship = null)
     {
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(resourceGraph);
-        ArgumentGuard.NotNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(resourceGraph);
+        ArgumentNullException.ThrowIfNull(loggerFactory);
 
         _options = options;
         _resourceGraph = resourceGraph;
@@ -108,7 +109,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     /// GET /articles/1 HTTP/1.1
     /// ]]></code>
     /// </summary>
-    public virtual async Task<IActionResult> GetAsync(TId id, CancellationToken cancellationToken)
+    public virtual async Task<IActionResult> GetAsync([DisallowNull] TId id, CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
@@ -133,7 +134,8 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     /// GET /articles/1/revisions HTTP/1.1
     /// ]]></code>
     /// </summary>
-    public virtual async Task<IActionResult> GetSecondaryAsync(TId id, string relationshipName, CancellationToken cancellationToken)
+    public virtual async Task<IActionResult> GetSecondaryAsync([DisallowNull] TId id, [PreserveEmptyString] string relationshipName,
+        CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
@@ -141,7 +143,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
             relationshipName
         });
 
-        ArgumentGuard.NotNullNorEmpty(relationshipName);
+        ArgumentNullException.ThrowIfNull(relationshipName);
 
         if (_getSecondary == null)
         {
@@ -162,7 +164,8 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     /// GET /articles/1/relationships/revisions HTTP/1.1
     /// ]]></code>
     /// </summary>
-    public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName, CancellationToken cancellationToken)
+    public virtual async Task<IActionResult> GetRelationshipAsync([DisallowNull] TId id, [PreserveEmptyString] string relationshipName,
+        CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
@@ -170,7 +173,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
             relationshipName
         });
 
-        ArgumentGuard.NotNullNorEmpty(relationshipName);
+        ArgumentNullException.ThrowIfNull(relationshipName);
 
         if (_getRelationship == null)
         {
@@ -194,7 +197,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
             resource
         });
 
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
 
         if (_create == null)
         {
@@ -213,7 +216,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
 
         if (newResource == null)
         {
-            HttpContext.Response.Headers["Location"] = locationUrl;
+            HttpContext.Response.Headers.Location = locationUrl;
             return NoContent();
         }
 
@@ -246,8 +249,8 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     /// <param name="cancellationToken">
     /// Propagates notification that request handling should be canceled.
     /// </param>
-    public virtual async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> rightResourceIds,
-        CancellationToken cancellationToken)
+    public virtual async Task<IActionResult> PostRelationshipAsync([DisallowNull] TId id, [PreserveEmptyString] string relationshipName,
+        [FromBody] ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
@@ -256,8 +259,8 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
             rightResourceIds
         });
 
-        ArgumentGuard.NotNullNorEmpty(relationshipName);
-        ArgumentGuard.NotNull(rightResourceIds);
+        ArgumentNullException.ThrowIfNull(relationshipName);
+        ArgumentNullException.ThrowIfNull(rightResourceIds);
 
         if (_addToRelationship == null)
         {
@@ -275,7 +278,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     /// PATCH /articles/1 HTTP/1.1
     /// ]]></code>
     /// </summary>
-    public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] TResource resource, CancellationToken cancellationToken)
+    public virtual async Task<IActionResult> PatchAsync([DisallowNull] TId id, [FromBody] TResource resource, CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
@@ -283,7 +286,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
             resource
         });
 
-        ArgumentGuard.NotNull(resource);
+        ArgumentNullException.ThrowIfNull(resource);
 
         if (_update == null)
         {
@@ -321,8 +324,8 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     /// <param name="cancellationToken">
     /// Propagates notification that request handling should be canceled.
     /// </param>
-    public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object? rightValue,
-        CancellationToken cancellationToken)
+    public virtual async Task<IActionResult> PatchRelationshipAsync([DisallowNull] TId id, [PreserveEmptyString] string relationshipName,
+        [FromBody] object? rightValue, CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
@@ -331,7 +334,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
             rightValue
         });
 
-        ArgumentGuard.NotNullNorEmpty(relationshipName);
+        ArgumentNullException.ThrowIfNull(relationshipName);
 
         if (_setRelationship == null)
         {
@@ -348,7 +351,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     /// DELETE /articles/1 HTTP/1.1
     /// ]]></code>
     /// </summary>
-    public virtual async Task<IActionResult> DeleteAsync(TId id, CancellationToken cancellationToken)
+    public virtual async Task<IActionResult> DeleteAsync([DisallowNull] TId id, CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
@@ -382,8 +385,8 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     /// <param name="cancellationToken">
     /// Propagates notification that request handling should be canceled.
     /// </param>
-    public virtual async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> rightResourceIds,
-        CancellationToken cancellationToken)
+    public virtual async Task<IActionResult> DeleteRelationshipAsync([DisallowNull] TId id, [PreserveEmptyString] string relationshipName,
+        [FromBody] ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
@@ -392,8 +395,8 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
             rightResourceIds
         });
 
-        ArgumentGuard.NotNullNorEmpty(relationshipName);
-        ArgumentGuard.NotNull(rightResourceIds);
+        ArgumentNullException.ThrowIfNull(relationshipName);
+        ArgumentNullException.ThrowIfNull(rightResourceIds);
 
         if (_removeFromRelationship == null)
         {

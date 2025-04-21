@@ -66,9 +66,9 @@ internal sealed class TypeLocator
     public (Type implementationType, Type serviceInterface)? GetContainerRegistrationFromAssembly(Assembly assembly, Type unboundInterface,
         params Type[] interfaceTypeArguments)
     {
-        ArgumentGuard.NotNull(assembly);
-        ArgumentGuard.NotNull(unboundInterface);
-        ArgumentGuard.NotNull(interfaceTypeArguments);
+        ArgumentNullException.ThrowIfNull(assembly);
+        ArgumentNullException.ThrowIfNull(unboundInterface);
+        ArgumentNullException.ThrowIfNull(interfaceTypeArguments);
 
         if (!unboundInterface.IsInterface || !unboundInterface.IsGenericType || unboundInterface != unboundInterface.GetGenericTypeDefinition())
         {
@@ -111,33 +111,6 @@ internal sealed class TypeLocator
     }
 
     /// <summary>
-    /// Scans for types in the specified assembly that derive from the specified unbound generic type.
-    /// </summary>
-    /// <param name="assembly">
-    /// The assembly to search for derived types.
-    /// </param>
-    /// <param name="unboundType">
-    /// The unbound generic type to match against.
-    /// </param>
-    /// <param name="typeArguments">
-    /// Generic type arguments to construct <paramref name="unboundType" />.
-    /// </param>
-    /// <example>
-    /// <code><![CDATA[
-    /// GetDerivedTypesForUnboundType(assembly, typeof(ResourceDefinition<,>), typeof(Article), typeof(int))
-    /// ]]></code>
-    /// </example>
-    public IReadOnlyCollection<Type> GetDerivedTypesForUnboundType(Assembly assembly, Type unboundType, params Type[] typeArguments)
-    {
-        ArgumentGuard.NotNull(assembly);
-        ArgumentGuard.NotNull(unboundType);
-        ArgumentGuard.NotNull(typeArguments);
-
-        Type closedType = unboundType.MakeGenericType(typeArguments);
-        return GetDerivedTypes(assembly, closedType).ToArray();
-    }
-
-    /// <summary>
     /// Gets all derivatives of the specified type.
     /// </summary>
     /// <param name="assembly">
@@ -153,8 +126,8 @@ internal sealed class TypeLocator
     /// </example>
     public IEnumerable<Type> GetDerivedTypes(Assembly assembly, Type baseType)
     {
-        ArgumentGuard.NotNull(assembly);
-        ArgumentGuard.NotNull(baseType);
+        ArgumentNullException.ThrowIfNull(assembly);
+        ArgumentNullException.ThrowIfNull(baseType);
 
         foreach (Type type in assembly.GetTypes())
         {

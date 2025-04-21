@@ -1,6 +1,5 @@
 using System.Net;
 using FluentAssertions;
-using FluentAssertions.Extensions;
 using Humanizer;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Parsing;
@@ -27,7 +26,6 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         testContext.ConfigureServices(services =>
         {
             services.AddTransient<IFilterParser, TimeOffsetFilterParser>();
-            services.AddSingleton<ISystemClock, FrozenSystemClock>();
             services.AddScoped(typeof(IResourceDefinition<,>), typeof(FilterRewritingResourceDefinition<,>));
         });
     }
@@ -46,16 +44,17 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
     public async Task Can_filter_comparison_on_relative_time(string filterValue, ComparisonOperator comparisonOperator, string matchingRowsExpected)
     {
         // Arrange
-        var clock = _testContext.Factory.Services.GetRequiredService<ISystemClock>();
+        var timeProvider = _testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        DateTimeOffset utcNow = timeProvider.GetUtcNow();
 
-        List<Reminder> reminders = _fakers.Reminder.Generate(7);
-        reminders[0].RemindsAt = clock.UtcNow.Add(TimeSpan.FromMinutes(-15)).DateTime.AsUtc();
-        reminders[1].RemindsAt = clock.UtcNow.Add(TimeSpan.FromMinutes(-10)).DateTime.AsUtc();
-        reminders[2].RemindsAt = clock.UtcNow.Add(TimeSpan.FromMinutes(-5)).DateTime.AsUtc();
-        reminders[3].RemindsAt = clock.UtcNow.Add(TimeSpan.FromMinutes(0)).DateTime.AsUtc();
-        reminders[4].RemindsAt = clock.UtcNow.Add(TimeSpan.FromMinutes(5)).DateTime.AsUtc();
-        reminders[5].RemindsAt = clock.UtcNow.Add(TimeSpan.FromMinutes(10)).DateTime.AsUtc();
-        reminders[6].RemindsAt = clock.UtcNow.Add(TimeSpan.FromMinutes(15)).DateTime.AsUtc();
+        List<Reminder> reminders = _fakers.Reminder.GenerateList(7);
+        reminders[0].RemindsAt = utcNow.Add(TimeSpan.FromMinutes(-15)).UtcDateTime;
+        reminders[1].RemindsAt = utcNow.Add(TimeSpan.FromMinutes(-10)).UtcDateTime;
+        reminders[2].RemindsAt = utcNow.Add(TimeSpan.FromMinutes(-5)).UtcDateTime;
+        reminders[3].RemindsAt = utcNow.Add(TimeSpan.FromMinutes(0)).UtcDateTime;
+        reminders[4].RemindsAt = utcNow.Add(TimeSpan.FromMinutes(5)).UtcDateTime;
+        reminders[5].RemindsAt = utcNow.Add(TimeSpan.FromMinutes(10)).UtcDateTime;
+        reminders[6].RemindsAt = utcNow.Add(TimeSpan.FromMinutes(15)).UtcDateTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -73,7 +72,7 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         int[] matchingRowIndices = matchingRowsExpected.Split(',').Select(int.Parse).ToArray();
-        responseDocument.Data.ManyValue.ShouldHaveCount(matchingRowIndices.Length);
+        responseDocument.Data.ManyValue.Should().HaveCount(matchingRowIndices.Length);
 
         foreach (int rowIndex in matchingRowIndices)
         {
@@ -94,13 +93,13 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"Time offset between quotes expected. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
 
@@ -117,13 +116,13 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"Failed to convert '*' of type 'String' to type 'TimeSpan'. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
 
@@ -140,13 +139,13 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"The 'timeOffset' function can only be used at the right side of comparisons. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
 
@@ -163,13 +162,13 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"Value between quotes expected. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
 
@@ -186,13 +185,13 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be($"Attribute of type 'String' expected. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
 
@@ -200,16 +199,17 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
     public async Task Can_filter_comparison_on_relative_time_in_nested_expression()
     {
         // Arrange
-        var clock = _testContext.Factory.Services.GetRequiredService<ISystemClock>();
+        var timeProvider = _testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        DateTimeOffset utcNow = timeProvider.GetUtcNow();
 
-        Calendar calendar = _fakers.Calendar.Generate();
-        calendar.Appointments = _fakers.Appointment.Generate(2).ToHashSet();
+        Calendar calendar = _fakers.Calendar.GenerateOne();
+        calendar.Appointments = _fakers.Appointment.GenerateSet(2);
 
-        calendar.Appointments.ElementAt(0).Reminders = _fakers.Reminder.Generate(1);
-        calendar.Appointments.ElementAt(0).Reminders[0].RemindsAt = clock.UtcNow.DateTime.AsUtc();
+        calendar.Appointments.ElementAt(0).Reminders = _fakers.Reminder.GenerateList(1);
+        calendar.Appointments.ElementAt(0).Reminders[0].RemindsAt = utcNow.UtcDateTime;
 
-        calendar.Appointments.ElementAt(1).Reminders = _fakers.Reminder.Generate(1);
-        calendar.Appointments.ElementAt(1).Reminders[0].RemindsAt = clock.UtcNow.Add(TimeSpan.FromMinutes(30)).DateTime.AsUtc();
+        calendar.Appointments.ElementAt(1).Reminders = _fakers.Reminder.GenerateList(1);
+        calendar.Appointments.ElementAt(1).Reminders[0].RemindsAt = utcNow.Add(TimeSpan.FromMinutes(30)).UtcDateTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -225,7 +225,7 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
 
         responseDocument.Data.ManyValue[0].Id.Should().Be(calendar.Appointments.ElementAt(1).StringId);
     }

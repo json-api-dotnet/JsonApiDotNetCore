@@ -12,8 +12,8 @@ public class QueryStringParameterScopeParser : QueryExpressionParser, IQueryStri
     /// <inheritdoc />
     public QueryStringParameterScopeExpression Parse(string source, ResourceType resourceType, FieldChainPattern pattern, FieldChainPatternMatchOptions options)
     {
-        ArgumentGuard.NotNull(resourceType);
-        ArgumentGuard.NotNull(pattern);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(pattern);
 
         Tokenize(source);
 
@@ -27,6 +27,9 @@ public class QueryStringParameterScopeParser : QueryExpressionParser, IQueryStri
     protected virtual QueryStringParameterScopeExpression ParseQueryStringParameterScope(ResourceType resourceType, FieldChainPattern pattern,
         FieldChainPatternMatchOptions options)
     {
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(pattern);
+
         int position = GetNextTokenPositionOrEnd();
 
         if (!TokenStack.TryPop(out Token? token) || token.Kind != TokenKind.Text)

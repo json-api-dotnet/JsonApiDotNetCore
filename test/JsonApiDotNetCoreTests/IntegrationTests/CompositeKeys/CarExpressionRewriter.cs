@@ -89,14 +89,14 @@ internal sealed class CarExpressionRewriter : QueryExpressionRewriter<object?>
                 StringId = carStringId
             };
 
-            FilterExpression keyComparison = CreateEqualityComparisonOnCompositeKey(existingCarIdChain, tempCar.RegionId, tempCar.LicensePlate!);
+            LogicalExpression keyComparison = CreateEqualityComparisonOnCompositeKey(existingCarIdChain, tempCar.RegionId, tempCar.LicensePlate!);
             outerTermsBuilder.Add(keyComparison);
         }
 
         return outerTermsBuilder.Count == 1 ? outerTermsBuilder[0] : new LogicalExpression(LogicalOperator.Or, outerTermsBuilder.ToImmutable());
     }
 
-    private FilterExpression CreateEqualityComparisonOnCompositeKey(ResourceFieldChainExpression existingCarIdChain, long regionIdValue,
+    private LogicalExpression CreateEqualityComparisonOnCompositeKey(ResourceFieldChainExpression existingCarIdChain, long regionIdValue,
         string licensePlateValue)
     {
         ResourceFieldChainExpression regionIdChain = ReplaceLastAttributeInChain(existingCarIdChain, _regionIdAttribute);

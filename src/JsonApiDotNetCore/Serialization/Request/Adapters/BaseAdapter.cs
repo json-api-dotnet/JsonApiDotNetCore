@@ -13,6 +13,8 @@ public abstract class BaseAdapter
     protected static void AssertHasData<T>(SingleOrManyData<T> data, RequestAdapterState state)
         where T : ResourceIdentifierObject, new()
     {
+        ArgumentNullException.ThrowIfNull(state);
+
         if (!data.IsAssigned)
         {
             throw new ModelConversionException(state.Position, "The 'data' element is required.", null);
@@ -23,6 +25,8 @@ public abstract class BaseAdapter
     protected static void AssertDataHasSingleValue<T>(SingleOrManyData<T> data, bool allowNull, RequestAdapterState state)
         where T : ResourceIdentifierObject, new()
     {
+        ArgumentNullException.ThrowIfNull(state);
+
         if (data.SingleValue == null)
         {
             if (!allowNull)
@@ -46,6 +50,8 @@ public abstract class BaseAdapter
     protected static void AssertDataHasManyValue<T>(SingleOrManyData<T> data, RequestAdapterState state)
         where T : ResourceIdentifierObject, new()
     {
+        ArgumentNullException.ThrowIfNull(state);
+
         if (data.ManyValue == null)
         {
             throw new ModelConversionException(state.Position,
@@ -56,6 +62,8 @@ public abstract class BaseAdapter
     protected static void AssertObjectIsNotNull<T>([SysNotNull] T? value, RequestAdapterState state)
         where T : class
     {
+        ArgumentNullException.ThrowIfNull(state);
+
         if (value is null)
         {
             throw new ModelConversionException(state.Position, "Expected an object, instead of 'null'.", null);

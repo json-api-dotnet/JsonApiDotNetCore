@@ -30,9 +30,9 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
         IResourceGraph resourceGraph, IJsonApiOptions options)
         : base(request, resourceGraph)
     {
-        ArgumentGuard.NotNull(scopeParser);
-        ArgumentGuard.NotNull(filterParser);
-        ArgumentGuard.NotNull(options);
+        ArgumentNullException.ThrowIfNull(scopeParser);
+        ArgumentNullException.ThrowIfNull(filterParser);
+        ArgumentNullException.ThrowIfNull(options);
 
         _options = options;
         _scopeParser = scopeParser;
@@ -42,7 +42,7 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
     /// <inheritdoc />
     public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
     {
-        ArgumentGuard.NotNull(disableQueryStringAttribute);
+        ArgumentNullException.ThrowIfNull(disableQueryStringAttribute);
 
         return !IsAtomicOperationsRequest && !disableQueryStringAttribute.ContainsParameter(JsonApiQueryStringParameters.Filter);
     }
@@ -50,7 +50,7 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
     /// <inheritdoc />
     public virtual bool CanRead(string parameterName)
     {
-        ArgumentGuard.NotNullNorEmpty(parameterName);
+        ArgumentException.ThrowIfNullOrEmpty(parameterName);
 
         bool isNested = parameterName.StartsWith("filter[", StringComparison.Ordinal) && parameterName.EndsWith(']');
         return parameterName == "filter" || isNested;
@@ -140,24 +140,25 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
         }
         else
         {
-            if (!_filtersPerScope.ContainsKey(scope))
+            if (!_filtersPerScope.TryGetValue(scope, out ImmutableArray<FilterExpression>.Builder? builder))
             {
-                _filtersPerScope[scope] = ImmutableArray.CreateBuilder<FilterExpression>();
+                builder = ImmutableArray.CreateBuilder<FilterExpression>();
+                _filtersPerScope[scope] = builder;
             }
 
-            _filtersPerScope[scope].Add(filter);
+            builder.Add(filter);
         }
     }
 
     /// <inheritdoc />
     public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
     {
-        return EnumerateFiltersInScopes().ToArray();
+        return EnumerateFiltersInScopes().ToArray().AsReadOnly();
     }
 
     private IEnumerable<ExpressionInScope> EnumerateFiltersInScopes()
     {
-        if (_filtersInGlobalScope.Any())
+        if (_filtersInGlobalScope.Count > 0)
         {
             FilterExpression filter = MergeFilters(_filtersInGlobalScope.ToImmutable());
             yield return new ExpressionInScope(null, filter);
@@ -172,6 +173,6 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
 
     private static FilterExpression MergeFilters(IImmutableList<FilterExpression> filters)
     {
-        return filters.Count > 1 ? new LogicalExpression(LogicalOperator.Or, filters) : filters.First();
+        return filters.Count > 1 ? new LogicalExpression(LogicalOperator.Or, filters) : filters[0];
     }
 }

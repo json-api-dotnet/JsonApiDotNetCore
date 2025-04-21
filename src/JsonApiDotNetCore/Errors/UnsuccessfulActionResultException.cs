@@ -27,11 +27,11 @@ public sealed class UnsuccessfulActionResultException : JsonApiException
 
     private static IEnumerable<ErrorObject> ToErrorObjects(ProblemDetails problemDetails)
     {
-        ArgumentGuard.NotNull(problemDetails);
+        ArgumentNullException.ThrowIfNull(problemDetails);
 
         HttpStatusCode status = problemDetails.Status != null ? (HttpStatusCode)problemDetails.Status.Value : HttpStatusCode.InternalServerError;
 
-        if (problemDetails is HttpValidationProblemDetails validationProblemDetails && validationProblemDetails.Errors.Any())
+        if (problemDetails is HttpValidationProblemDetails { Errors.Count: > 0 } validationProblemDetails)
         {
             foreach (string errorMessage in validationProblemDetails.Errors.SelectMany(pair => pair.Value))
             {

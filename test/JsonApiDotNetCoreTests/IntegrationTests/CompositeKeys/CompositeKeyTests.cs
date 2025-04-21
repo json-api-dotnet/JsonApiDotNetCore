@@ -32,7 +32,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_filter_on_ID_in_primary_resources()
     {
         // Arrange
-        Car car = _fakers.Car.Generate();
+        Car car = _fakers.Car.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -49,7 +49,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(car.StringId);
     }
 
@@ -57,7 +57,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_get_primary_resource_by_ID()
     {
         // Arrange
-        Car car = _fakers.Car.Generate();
+        Car car = _fakers.Car.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -74,7 +74,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(car.StringId);
     }
 
@@ -82,7 +82,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_sort_on_ID()
     {
         // Arrange
-        Car car = _fakers.Car.Generate();
+        Car car = _fakers.Car.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -99,7 +99,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(car.StringId);
     }
 
@@ -107,7 +107,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_select_ID()
     {
         // Arrange
-        Car car = _fakers.Car.Generate();
+        Car car = _fakers.Car.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -124,7 +124,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(car.StringId);
     }
 
@@ -132,9 +132,9 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_create_resource()
     {
         // Arrange
-        Engine existingEngine = _fakers.Engine.Generate();
+        Engine existingEngine = _fakers.Engine.GenerateOne();
 
-        Car newCar = _fakers.Car.Generate();
+        Car newCar = _fakers.Car.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -181,7 +181,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         {
             Car? carInDatabase = await dbContext.Cars.FirstOrDefaultAsync(car => car.RegionId == newCar.RegionId && car.LicensePlate == newCar.LicensePlate);
 
-            carInDatabase.ShouldNotBeNull();
+            carInDatabase.Should().NotBeNull();
             carInDatabase.Id.Should().Be($"{newCar.RegionId}:{newCar.LicensePlate}");
         });
     }
@@ -190,8 +190,8 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_create_OneToOne_relationship()
     {
         // Arrange
-        Car existingCar = _fakers.Car.Generate();
-        Engine existingEngine = _fakers.Engine.Generate();
+        Car existingCar = _fakers.Car.GenerateOne();
+        Engine existingEngine = _fakers.Engine.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -234,7 +234,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         {
             Engine engineInDatabase = await dbContext.Engines.Include(engine => engine.Car).FirstWithIdAsync(existingEngine.Id);
 
-            engineInDatabase.Car.ShouldNotBeNull();
+            engineInDatabase.Car.Should().NotBeNull();
             engineInDatabase.Car.Id.Should().Be(existingCar.StringId);
         });
     }
@@ -243,8 +243,8 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_clear_OneToOne_relationship()
     {
         // Arrange
-        Engine existingEngine = _fakers.Engine.Generate();
-        existingEngine.Car = _fakers.Car.Generate();
+        Engine existingEngine = _fakers.Engine.GenerateOne();
+        existingEngine.Car = _fakers.Car.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -291,8 +291,8 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_remove_from_OneToMany_relationship()
     {
         // Arrange
-        Dealership existingDealership = _fakers.Dealership.Generate();
-        existingDealership.Inventory = _fakers.Car.Generate(2).ToHashSet();
+        Dealership existingDealership = _fakers.Dealership.GenerateOne();
+        existingDealership.Inventory = _fakers.Car.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -327,7 +327,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         {
             Dealership dealershipInDatabase = await dbContext.Dealerships.Include(dealership => dealership.Inventory).FirstWithIdAsync(existingDealership.Id);
 
-            dealershipInDatabase.Inventory.ShouldHaveCount(1);
+            dealershipInDatabase.Inventory.Should().HaveCount(1);
             dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingDealership.Inventory.ElementAt(1).Id);
         });
     }
@@ -336,8 +336,8 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_add_to_OneToMany_relationship()
     {
         // Arrange
-        Dealership existingDealership = _fakers.Dealership.Generate();
-        Car existingCar = _fakers.Car.Generate();
+        Dealership existingDealership = _fakers.Dealership.GenerateOne();
+        Car existingCar = _fakers.Car.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -372,7 +372,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         {
             Dealership dealershipInDatabase = await dbContext.Dealerships.Include(dealership => dealership.Inventory).FirstWithIdAsync(existingDealership.Id);
 
-            dealershipInDatabase.Inventory.ShouldHaveCount(1);
+            dealershipInDatabase.Inventory.Should().HaveCount(1);
             dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingCar.Id);
         });
     }
@@ -381,10 +381,10 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_replace_OneToMany_relationship()
     {
         // Arrange
-        Dealership existingDealership = _fakers.Dealership.Generate();
-        existingDealership.Inventory = _fakers.Car.Generate(2).ToHashSet();
+        Dealership existingDealership = _fakers.Dealership.GenerateOne();
+        existingDealership.Inventory = _fakers.Car.GenerateSet(2);
 
-        Car existingCar = _fakers.Car.Generate();
+        Car existingCar = _fakers.Car.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -424,7 +424,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         {
             Dealership dealershipInDatabase = await dbContext.Dealerships.Include(dealership => dealership.Inventory).FirstWithIdAsync(existingDealership.Id);
 
-            dealershipInDatabase.Inventory.ShouldHaveCount(2);
+            dealershipInDatabase.Inventory.Should().HaveCount(2);
             dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingCar.Id);
             dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingDealership.Inventory.ElementAt(0).Id);
         });
@@ -434,9 +434,9 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_remove_from_ManyToOne_relationship_for_unknown_relationship_ID()
     {
         // Arrange
-        Dealership existingDealership = _fakers.Dealership.Generate();
+        Dealership existingDealership = _fakers.Dealership.GenerateOne();
 
-        string unknownCarId = _fakers.Car.Generate().StringId!;
+        string unknownCarId = _fakers.Car.GenerateOne().StringId!;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -465,7 +465,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -477,7 +477,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_delete_resource()
     {
         // Arrange
-        Car existingCar = _fakers.Car.Generate();
+        Car existingCar = _fakers.Car.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -509,8 +509,8 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_remove_from_ManyToMany_relationship()
     {
         // Arrange
-        Dealership existingDealership = _fakers.Dealership.Generate();
-        existingDealership.SoldCars = _fakers.Car.Generate(2).ToHashSet();
+        Dealership existingDealership = _fakers.Dealership.GenerateOne();
+        existingDealership.SoldCars = _fakers.Car.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -545,11 +545,11 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         {
             Dealership dealershipInDatabase = await dbContext.Dealerships.Include(dealership => dealership.SoldCars).FirstWithIdAsync(existingDealership.Id);
 
-            dealershipInDatabase.SoldCars.ShouldHaveCount(1);
+            dealershipInDatabase.SoldCars.Should().HaveCount(1);
             dealershipInDatabase.SoldCars.Single().Id.Should().Be(existingDealership.SoldCars.ElementAt(0).Id);
 
             List<Car> carsInDatabase = await dbContext.Cars.ToListAsync();
-            carsInDatabase.ShouldHaveCount(2);
+            carsInDatabase.Should().HaveCount(2);
         });
     }
 }

@@ -18,8 +18,6 @@ namespace JsonApiDotNetCore.Serialization.Response;
 [PublicAPI]
 public class ResponseModelAdapter : IResponseModelAdapter
 {
-    private static readonly CollectionConverter CollectionConverter = new();
-
     private readonly IJsonApiRequest _request;
     private readonly IJsonApiOptions _options;
     private readonly ILinkBuilder _linkBuilder;
@@ -36,14 +34,14 @@ public class ResponseModelAdapter : IResponseModelAdapter
         IResourceDefinitionAccessor resourceDefinitionAccessor, IEvaluatedIncludeCache evaluatedIncludeCache, ISparseFieldSetCache sparseFieldSetCache,
         IRequestQueryStringAccessor requestQueryStringAccessor)
     {
-        ArgumentGuard.NotNull(request);
-        ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(linkBuilder);
-        ArgumentGuard.NotNull(metaBuilder);
-        ArgumentGuard.NotNull(resourceDefinitionAccessor);
-        ArgumentGuard.NotNull(evaluatedIncludeCache);
-        ArgumentGuard.NotNull(sparseFieldSetCache);
-        ArgumentGuard.NotNull(requestQueryStringAccessor);
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(linkBuilder);
+        ArgumentNullException.ThrowIfNull(metaBuilder);
+        ArgumentNullException.ThrowIfNull(resourceDefinitionAccessor);
+        ArgumentNullException.ThrowIfNull(evaluatedIncludeCache);
+        ArgumentNullException.ThrowIfNull(sparseFieldSetCache);
+        ArgumentNullException.ThrowIfNull(requestQueryStringAccessor);
 
         _request = request;
         _options = options;
@@ -103,11 +101,12 @@ public class ResponseModelAdapter : IResponseModelAdapter
         }
         else if (model is IEnumerable<ErrorObject> errorObjects)
         {
-            document.Errors = errorObjects.ToArray();
+            document.Errors = errorObjects.ToList();
         }
         else if (model is ErrorObject errorObject)
         {
-            document.Errors = [errorObject];
+            List<ErrorObject> errors = [errorObject];
+            document.Errors = errors;
         }
         else
         {
@@ -124,6 +123,8 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
     protected virtual AtomicResultObject ConvertOperation(OperationContainer? operation, IImmutableSet<IncludeElementExpression> includeElements)
     {
+        ArgumentNullException.ThrowIfNull(includeElements);
+
         ResourceObject? resourceObject = null;
 
         if (operation != null)
@@ -205,6 +206,9 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
     protected virtual ResourceObject ConvertResource(IIdentifiable resource, ResourceType resourceType, EndpointKind kind)
     {
+        ArgumentNullException.ThrowIfNull(resource);
+        ArgumentNullException.ThrowIfNull(resourceType);
+
         bool isRelationship = kind == EndpointKind.Relationship;
 
         if (!isRelationship)
@@ -235,6 +239,10 @@ public class ResponseModelAdapter : IResponseModelAdapter
 #pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
         IImmutableSet<ResourceFieldAttribute> fieldSet)
     {
+        ArgumentNullException.ThrowIfNull(resource);
+        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(fieldSet);
+
         var attrMap = new Dictionary<string, object?>(resourceType.Attributes.Count);
 
         foreach (AttrAttribute attr in resourceType.Attributes)
@@ -260,7 +268,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
             attrMap.Add(attr.PublicName, value);
         }
 
-        return attrMap.Any() ? attrMap : null;
+        return attrMap.Count > 0 ? attrMap : null;
     }
 
     private void TraverseRelationships(IIdentifiable leftResource, ResourceObjectTreeNode leftTreeNode, IImmutableSet<IncludeElementExpression> includeElements,
@@ -294,7 +302,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
         }
 
         object? rightValue = effectiveRelationship.GetValue(leftResource);
-        IReadOnlyCollection<IIdentifiable> rightResources = CollectionConverter.ExtractResources(rightValue);
+        IReadOnlyCollection<IIdentifiable> rightResources = CollectionConverter.Instance.ExtractResources(rightValue);
 
         leftTreeNode.EnsureHasRelationship(effectiveRelationship);
 
@@ -393,7 +401,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
     {
         IList<ResourceObject> resourceObjects = rootNode.GetResponseIncluded();
 
-        if (resourceObjects.Any())
+        if (resourceObjects.Count > 0)
         {
             return resourceObjects;
         }

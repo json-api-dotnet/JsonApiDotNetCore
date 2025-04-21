@@ -17,7 +17,7 @@ public sealed class LambdaScopeFactory
     /// </summary>
     public LambdaScope CreateScope(Type elementType, Expression? accessorExpression = null)
     {
-        ArgumentGuard.NotNull(elementType);
+        ArgumentNullException.ThrowIfNull(elementType);
 
         string parameterName = elementType.Name.Camelize();
         parameterName = EnsureUniqueName(parameterName);
@@ -48,7 +48,7 @@ public sealed class LambdaScopeFactory
 
     internal void Release(LambdaScope lambdaScope)
     {
-        ArgumentGuard.NotNull(lambdaScope);
+        ArgumentNullException.ThrowIfNull(lambdaScope);
 
         _namesInScope.Remove(lambdaScope.Parameter.Name!);
     }

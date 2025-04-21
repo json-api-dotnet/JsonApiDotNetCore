@@ -31,7 +31,7 @@ public sealed class LengthSortTests : IClassFixture<IntegrationTestContext<Testa
     public async Task Can_sort_on_length_at_primary_endpoint()
     {
         // Arrange
-        List<Blog> blogs = _fakers.Blog.Generate(2);
+        List<Blog> blogs = _fakers.Blog.GenerateList(2);
 
         blogs[0].Title = "X";
         blogs[1].Title = "XXX";
@@ -51,7 +51,7 @@ public sealed class LengthSortTests : IClassFixture<IntegrationTestContext<Testa
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
         responseDocument.Data.ManyValue[0].Type.Should().Be("blogs");
         responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
@@ -64,8 +64,8 @@ public sealed class LengthSortTests : IClassFixture<IntegrationTestContext<Testa
     public async Task Can_sort_on_length_at_secondary_endpoint()
     {
         // Arrange
-        Blog blog = _fakers.Blog.Generate();
-        blog.Posts = _fakers.BlogPost.Generate(3);
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Posts = _fakers.BlogPost.GenerateList(3);
 
         blog.Posts[0].Caption = "XXX";
         blog.Posts[0].Url = "YYY";
@@ -90,7 +90,7 @@ public sealed class LengthSortTests : IClassFixture<IntegrationTestContext<Testa
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(3);
+        responseDocument.Data.ManyValue.Should().HaveCount(3);
 
         responseDocument.Data.ManyValue[0].Type.Should().Be("blogPosts");
         responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[2].StringId);
@@ -106,11 +106,11 @@ public sealed class LengthSortTests : IClassFixture<IntegrationTestContext<Testa
     public async Task Can_sort_on_length_in_included_resources()
     {
         // Arrange
-        List<Blog> blogs = _fakers.Blog.Generate(2);
+        List<Blog> blogs = _fakers.Blog.GenerateList(2);
         blogs[0].Title = "XXX";
         blogs[1].Title = "X";
 
-        blogs[1].Posts = _fakers.BlogPost.Generate(2);
+        blogs[1].Posts = _fakers.BlogPost.GenerateList(2);
         blogs[1].Posts[0].Caption = "YYY";
         blogs[1].Posts[1].Caption = "Y";
 
@@ -129,7 +129,7 @@ public sealed class LengthSortTests : IClassFixture<IntegrationTestContext<Testa
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
         responseDocument.Data.ManyValue[0].Type.Should().Be("blogs");
         responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
@@ -137,7 +137,7 @@ public sealed class LengthSortTests : IClassFixture<IntegrationTestContext<Testa
         responseDocument.Data.ManyValue[1].Type.Should().Be("blogs");
         responseDocument.Data.ManyValue[1].Id.Should().Be(blogs[0].StringId);
 
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
 
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(blogs[1].Posts[1].StringId);

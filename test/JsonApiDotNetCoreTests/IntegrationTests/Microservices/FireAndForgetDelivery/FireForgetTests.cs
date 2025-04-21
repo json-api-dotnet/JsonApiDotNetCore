@@ -53,7 +53,7 @@ public sealed partial class FireForgetTests : IClassFixture<IntegrationTestConte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -77,7 +77,7 @@ public sealed partial class FireForgetTests : IClassFixture<IntegrationTestConte
         var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
         messageBroker.SimulateFailure = true;
 
-        DomainUser existingUser = _fakers.DomainUser.Generate();
+        DomainUser existingUser = _fakers.DomainUser.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -94,7 +94,7 @@ public sealed partial class FireForgetTests : IClassFixture<IntegrationTestConte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.ServiceUnavailable);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.ServiceUnavailable);
@@ -107,7 +107,7 @@ public sealed partial class FireForgetTests : IClassFixture<IntegrationTestConte
             (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
         }, options => options.WithStrictOrdering());
 
-        messageBroker.SentMessages.ShouldHaveCount(1);
+        messageBroker.SentMessages.Should().HaveCount(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

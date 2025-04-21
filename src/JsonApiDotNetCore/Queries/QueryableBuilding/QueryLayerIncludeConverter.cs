@@ -12,7 +12,7 @@ public sealed class QueryLayerIncludeConverter : QueryExpressionVisitor<QueryLay
 
     public QueryLayerIncludeConverter(QueryLayer queryLayer)
     {
-        ArgumentGuard.NotNull(queryLayer);
+        ArgumentNullException.ThrowIfNull(queryLayer);
 
         _queryLayer = queryLayer;
     }

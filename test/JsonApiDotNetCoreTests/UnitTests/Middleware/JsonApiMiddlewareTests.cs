@@ -7,10 +7,8 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Logging.Abstractions;
-using TestBuildingBlocks;
 using Xunit;
 
 #pragma warning disable AV1561 // Signature contains too many parameters
@@ -48,6 +46,8 @@ public sealed class JsonApiMiddlewareTests
     {
         // Arrange
         var options = new JsonApiOptions();
+        options.IncludeExtensions(JsonApiMediaTypeExtension.AtomicOperations);
+
         var request = new JsonApiRequest();
 
         // @formatter:wrap_chained_method_calls chop_always
@@ -63,15 +63,20 @@ public sealed class JsonApiMiddlewareTests
         // @formatter:wrap_chained_method_calls restore
 
         var httpContext = new DefaultHttpContext();
-        IControllerResourceMapping controllerResourceMapping = SetupRoutes(httpContext, resourceGraph, requestMethod, requestPath);
+        FakeControllerResourceMapping controllerResourceMapping = SetupRoutes(httpContext, resourceGraph, requestMethod, requestPath);
 
-        var middleware = new JsonApiMiddleware(null, new HttpContextAccessor
+        var httpContextAccessor = new HttpContextAccessor
         {
             HttpContext = httpContext
-        });
+        };
+
+        var contentNegotiator = new JsonApiContentNegotiator(options, httpContextAccessor);
+
+        var middleware = new JsonApiMiddleware(null, httpContextAccessor, controllerResourceMapping, options, contentNegotiator,
+            NullLogger<JsonApiMiddleware>.Instance);
 
         // Act
-        await middleware.InvokeAsync(httpContext, controllerResourceMapping, options, request, NullLogger<JsonApiMiddleware>.Instance);
+        await middleware.InvokeAsync(httpContext, request);
 
         // Assert
         request.Kind.Should().Be(expectKind);
@@ -83,7 +88,7 @@ public sealed class JsonApiMiddlewareTests
         }
         else
         {
-            request.PrimaryResourceType.ShouldNotBeNull();
+            request.PrimaryResourceType.Should().NotBeNull();
             request.PrimaryResourceType.PublicName.Should().Be(expectPrimaryResourceType);
         }
 
@@ -93,7 +98,7 @@ public sealed class JsonApiMiddlewareTests
         }
         else
         {
-            request.SecondaryResourceType.ShouldNotBeNull();
+            request.SecondaryResourceType.Should().NotBeNull();
             request.SecondaryResourceType.PublicName.Should().Be(expectSecondaryResourceType);
         }
 
@@ -103,7 +108,7 @@ public sealed class JsonApiMiddlewareTests
         }
         else
         {
-            request.Relationship.ShouldNotBeNull();
+            request.Relationship.Should().NotBeNull();
             request.Relationship.PublicName.Should().Be(expectRelationshipName);
         }
 
@@ -112,7 +117,7 @@ public sealed class JsonApiMiddlewareTests
         request.WriteOperation.Should().Be(expectWriteOperation);
     }
 
-    private static IControllerResourceMapping SetupRoutes(HttpContext httpContext, IResourceGraph resourceGraph, string requestMethod, string requestPath)
+    private static FakeControllerResourceMapping SetupRoutes(HttpContext httpContext, IResourceGraph resourceGraph, string requestMethod, string requestPath)
     {
         httpContext.Request.Method = requestMethod;
 
@@ -144,6 +149,7 @@ public sealed class JsonApiMiddlewareTests
         else if (pathSegments.Contains("operations"))
         {
             feature.RouteValues["action"] = "PostOperations";
+            httpContext.Request.Headers.Accept = JsonApiMediaType.AtomicOperations.ToString();
         }
 
         httpContext.Features.Set<IRouteValuesFeature>(feature);
@@ -156,7 +162,7 @@ public sealed class JsonApiMiddlewareTests
         httpContext.SetEndpoint(new Endpoint(null, new EndpointMetadataCollection(controllerActionDescriptor), null));
 
         string? resourceTypePublicName = pathSegments.Length > 0 ? pathSegments[0] : null;
-        return new FakeJsonApiRoutingConvention(resourceGraph, resourceTypePublicName);
+        return new FakeControllerResourceMapping(resourceGraph, resourceTypePublicName);
     }
 
     public enum IsReadOnly
@@ -165,7 +171,9 @@ public sealed class JsonApiMiddlewareTests
         No
     }
 
+#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
     public enum IsCollection
+#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
     {
         Yes,
         No
@@ -191,15 +199,10 @@ public sealed class JsonApiMiddlewareTests
         public ISet<ItemTag> Tags { get; set; } = new HashSet<ItemTag>();
     }
 
-    private sealed class FakeJsonApiRoutingConvention(IResourceGraph resourceGraph, string? resourceTypePublicName) : IJsonApiRoutingConvention
+    private sealed class FakeControllerResourceMapping(IResourceGraph resourceGraph, string? resourceTypePublicName) : IControllerResourceMapping
     {
         private readonly IResourceGraph _resourceGraph = resourceGraph;
         private readonly string? _resourceTypePublicName = resourceTypePublicName;
-
-        public void Apply(ApplicationModel application)
-        {
-            throw new NotImplementedException();
-        }
 
         public ResourceType? GetResourceTypeForController(Type? controllerType)
         {

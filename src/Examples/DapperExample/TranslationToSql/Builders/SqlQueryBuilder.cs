@@ -1,6 +1,5 @@
 using System.Text;
 using DapperExample.TranslationToSql.TreeNodes;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Queries.Expressions;
 
 namespace DapperExample.TranslationToSql.Builders;
@@ -37,7 +36,7 @@ internal sealed class SqlQueryBuilder(DatabaseProvider databaseProvider) : SqlTr
 
     public string GetCommand(SqlTreeNode node)
     {
-        ArgumentGuard.NotNull(node);
+        ArgumentNullException.ThrowIfNull(node);
 
         ResetState();
 
@@ -307,7 +306,7 @@ internal sealed class SqlQueryBuilder(DatabaseProvider databaseProvider) : SqlTr
         {
             foreach (char specialCharacter in SpecialCharactersInLike)
             {
-                safeValue = safeValue.Replace(specialCharacter.ToString(), @"\" + specialCharacter);
+                safeValue = safeValue.Replace(specialCharacter.ToString(), $@"\{specialCharacter}");
             }
         }
 
@@ -477,7 +476,7 @@ internal sealed class SqlQueryBuilder(DatabaseProvider databaseProvider) : SqlTr
         };
     }
 
-    private IDisposable Indent()
+    private RevertIndentOnDispose Indent()
     {
         _indentDepth++;
         return new RevertIndentOnDispose(this);

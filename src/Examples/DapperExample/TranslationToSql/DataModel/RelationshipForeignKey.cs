@@ -2,7 +2,6 @@ using System.Text;
 using DapperExample.TranslationToSql.Builders;
 using Humanizer;
 using JetBrains.Annotations;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -38,8 +37,8 @@ public sealed class RelationshipForeignKey
 
     public RelationshipForeignKey(DatabaseProvider databaseProvider, RelationshipAttribute relationship, bool isAtLeftSide, string columnName, bool isNullable)
     {
-        ArgumentGuard.NotNull(relationship);
-        ArgumentGuard.NotNullNorEmpty(columnName);
+        ArgumentNullException.ThrowIfNull(relationship);
+        ArgumentException.ThrowIfNullOrEmpty(columnName);
 
         _databaseProvider = databaseProvider;
         Relationship = relationship;

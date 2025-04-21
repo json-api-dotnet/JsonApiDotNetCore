@@ -1,5 +1,4 @@
 using System.Text;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.StringLength;
@@ -31,7 +30,7 @@ internal sealed class LengthExpression : FunctionExpression
 
     public LengthExpression(ResourceFieldChainExpression targetAttribute)
     {
-        ArgumentGuard.NotNull(targetAttribute);
+        ArgumentNullException.ThrowIfNull(targetAttribute);
 
         TargetAttribute = targetAttribute;
     }

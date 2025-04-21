@@ -35,7 +35,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
     public async Task Can_get_resource()
     {
         // Arrange
-        Bed bed = _fakers.Bed.Generate();
+        Bed bed = _fakers.Bed.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -56,7 +56,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
     public async Task Can_get_secondary_resources()
     {
         // Arrange
-        Bed bed = _fakers.Bed.Generate();
+        Bed bed = _fakers.Bed.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -77,7 +77,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
     public async Task Can_get_secondary_resource()
     {
         // Arrange
-        Bed bed = _fakers.Bed.Generate();
+        Bed bed = _fakers.Bed.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -98,7 +98,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
     public async Task Can_get_relationship()
     {
         // Arrange
-        Bed bed = _fakers.Bed.Generate();
+        Bed bed = _fakers.Bed.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -138,7 +138,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -150,7 +150,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
     public async Task Cannot_update_resource()
     {
         // Arrange
-        Bed existingBed = _fakers.Bed.Generate();
+        Bed existingBed = _fakers.Bed.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -178,7 +178,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -190,7 +190,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
     public async Task Cannot_delete_resource()
     {
         // Arrange
-        Bed existingBed = _fakers.Bed.Generate();
+        Bed existingBed = _fakers.Bed.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -206,7 +206,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -218,7 +218,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
     public async Task Cannot_update_relationship()
     {
         // Arrange
-        Bed existingBed = _fakers.Bed.Generate();
+        Bed existingBed = _fakers.Bed.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -239,7 +239,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -251,7 +251,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
     public async Task Cannot_add_to_ToMany_relationship()
     {
         // Arrange
-        Bed existingBed = _fakers.Bed.Generate();
+        Bed existingBed = _fakers.Bed.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -272,7 +272,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -284,7 +284,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
     public async Task Cannot_remove_from_ToMany_relationship()
     {
         // Arrange
-        Bed existingBed = _fakers.Bed.Generate();
+        Bed existingBed = _fakers.Bed.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -305,7 +305,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);

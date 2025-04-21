@@ -5,15 +5,21 @@ namespace JsonApiDotNetCore;
 
 internal sealed class CollectionConverter
 {
-    private static readonly ISet<Type> HashSetCompatibleCollectionTypes = new HashSet<Type>
-    {
+    private static readonly HashSet<Type> HashSetCompatibleCollectionTypes =
+    [
         typeof(HashSet<>),
         typeof(ISet<>),
         typeof(IReadOnlySet<>),
         typeof(ICollection<>),
         typeof(IReadOnlyCollection<>),
         typeof(IEnumerable<>)
-    };
+    ];
+
+    public static CollectionConverter Instance { get; } = new();
+
+    private CollectionConverter()
+    {
+    }
 
     /// <summary>
     /// Creates a collection instance based on the specified collection type and copies the specified elements into it.
@@ -22,12 +28,16 @@ internal sealed class CollectionConverter
     /// Source to copy from.
     /// </param>
     /// <param name="collectionType">
-    /// Target collection type, for example: typeof(List{Article}) or typeof(ISet{Person}).
+    /// Target collection type, for example: <code><![CDATA[
+    /// typeof(List<Article>)
+    /// ]]></code> or <code><![CDATA[
+    /// typeof(ISet<Person>)
+    /// ]]></code>.
     /// </param>
     public IEnumerable CopyToTypedCollection(IEnumerable source, Type collectionType)
     {
-        ArgumentGuard.NotNull(source);
-        ArgumentGuard.NotNull(collectionType);
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(collectionType);
 
         Type concreteCollectionType = ToConcreteCollectionType(collectionType);
         dynamic concreteCollectionInstance = Activator.CreateInstance(concreteCollectionType)!;
@@ -41,7 +51,12 @@ internal sealed class CollectionConverter
     }
 
     /// <summary>
-    /// Returns a compatible collection type that can be instantiated, for example IList{Article} -> List{Article} or ISet{Article} -> HashSet{Article}
+    /// Returns a compatible collection type that can be instantiated, for example: <code><![CDATA[
+    /// IList<Article> -> List<Article>
+    /// ]]></code> or
+    /// <code><![CDATA[
+    /// ISet<Article> -> HashSet<Article>
+    /// ]]></code>.
     /// </summary>
     private Type ToConcreteCollectionType(Type collectionType)
     {
@@ -70,17 +85,22 @@ internal sealed class CollectionConverter
     {
         return value switch
         {
-            List<IIdentifiable> resourceList => resourceList,
-            HashSet<IIdentifiable> resourceSet => resourceSet,
+            List<IIdentifiable> resourceList => resourceList.AsReadOnly(),
+            HashSet<IIdentifiable> resourceSet => resourceSet.AsReadOnly(),
             IReadOnlyCollection<IIdentifiable> resourceCollection => resourceCollection,
-            IEnumerable<IIdentifiable> resources => resources.ToList(),
+            IEnumerable<IIdentifiable> resources => resources.ToArray().AsReadOnly(),
             IIdentifiable resource => [resource],
             _ => Array.Empty<IIdentifiable>()
         };
     }
 
     /// <summary>
-    /// Returns the element type if the specified type is a generic collection, for example: IList{string} -> string or IList -> null.
+    /// Returns the element type if the specified type is a generic collection, for example: <code><![CDATA[
+    /// IList<string> -> string
+    /// ]]></code> or
+    /// <code><![CDATA[
+    /// IList -> null
+    /// ]]></code>.
     /// </summary>
     public Type? FindCollectionElementType(Type? type)
     {
@@ -96,12 +116,16 @@ internal sealed class CollectionConverter
     }
 
     /// <summary>
-    /// Indicates whether a <see cref="HashSet{T}" /> instance can be assigned to the specified type, for example IList{Article} -> false or ISet{Article} ->
-    /// true.
+    /// Indicates whether a <see cref="HashSet{T}" /> instance can be assigned to the specified type, for example:
+    /// <code><![CDATA[
+    /// IList<Article> -> false
+    /// ]]></code> or <code><![CDATA[
+    /// ISet<Article> -> true
+    /// ]]></code>.
     /// </summary>
     public bool TypeCanContainHashSet(Type collectionType)
     {
-        ArgumentGuard.NotNull(collectionType);
+        ArgumentNullException.ThrowIfNull(collectionType);
 
         if (collectionType.IsGenericType)
         {

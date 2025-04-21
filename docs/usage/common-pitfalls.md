@@ -50,7 +50,7 @@ Did you notice the missing type of the `LoginAccount.Customer` property? We must
 This is only one of the issues you'll run into. Just don't go there.
 
 The right way to model this is by having only `Customer` instead of `WebCustomer` and `AdminCustomer`. And then:
-- Hide the `CreditRating` property for web users using [this](https://www.jsonapi.net/usage/extensibility/resource-definitions.html#excluding-fields) approach.
+- Hide the `CreditRating` property for web users using [this](~/usage/extensibility/resource-definitions.md#excluding-fields) approach.
 - Block web users from setting the `CreditRating` property from POST/PATCH resource endpoints by either:
   - Detecting if the `CreditRating` property has changed, such as done [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/test/JsonApiDotNetCoreTests/IntegrationTests/InputValidation/RequestBody/WorkflowDefinition.cs).
   - Injecting `ITargetedFields`, throwing an error when it contains the `CreditRating` property.
@@ -61,7 +61,7 @@ This paradigm [doesn't work well](https://github.com/json-api-dotnet/JsonApiDotN
 So if your API needs to guard invariants such as "the sum of all orders must never exceed 500 dollars", then you're better off with an RPC-style API instead of the REST paradigm that JSON:API follows.
 
 Adding constructors to resource classes that validate incoming parameters before assigning them to properties does not work.
-Entity Framework Core [supports](https://learn.microsoft.com/en-us/ef/core/modeling/constructors#binding-to-mapped-properties) that,
+Entity Framework Core [supports](https://learn.microsoft.com/ef/core/modeling/constructors#binding-to-mapped-properties) that,
 but does so via internal implementation details that are inaccessible by JsonApiDotNetCore.
 
 In JsonApiDotNetCore, resources are what DDD calls [anemic models](https://thedomaindrivendesign.io/anemic-model/).
@@ -84,8 +84,13 @@ With stored procedures, you're either going to have a lot of work to do, or you'
 Neither sounds very compelling. If stored procedures is what you need, you're better off creating an RPC-style API that doesn't use JsonApiDotNetCore.
 
 #### Do not use `[ApiController]` on JSON:API controllers
-Although recommended by Microsoft for hard-written controllers, the opinionated behavior of [`[ApiController]`](https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-7.0#apicontroller-attribute) violates the JSON:API specification.
+Although recommended by Microsoft for hard-written controllers, the opinionated behavior of [`[ApiController]`](https://learn.microsoft.com/aspnet/core/web-api/#apicontroller-attribute) violates the JSON:API specification.
 Despite JsonApiDotNetCore trying its best to deal with it, the experience won't be as good as leaving it out.
+
+#### Don't use auto-generated controllers with shared models
+
+When model classes are defined in a separate project, the controllers are generated in that project as well, which is probably not what you want.
+For details, see [here](~/usage/extensibility/controllers.md#auto-generated-controllers).
 
 #### Register/override injectable services
 Register your JSON:API resource services, resource definitions and repositories with `services.AddResourceService/AddResourceDefinition/AddResourceRepository()` instead of `services.AddScoped()`.
@@ -102,7 +107,7 @@ If you're in need of a quick setup, use [SQLite](https://www.sqlite.org/). After
 builder.Services.AddSqlite<AppDbContext>("Data Source=temp.db");
 ```
 Which creates `temp.db` on disk. Simply deleting the file gives you a clean slate.
-This is a lot more convenient compared to using [SqlLocalDB](https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb), which runs a background service that breaks if you delete its underlying storage files.
+This is a lot more convenient compared to using [SqlLocalDB](https://learn.microsoft.com/sql/database-engine/configure-windows/sql-server-express-localdb), which runs a background service that breaks if you delete its underlying storage files.
 
 However, even SQLite does not support all queries produced by Entity Framework Core. You'll get the best (and fastest) experience with [PostgreSQL in a docker container](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/run-docker-postgres.ps1).
 
@@ -140,6 +145,6 @@ If you need such side effects, it's easiest to inject your `DbContext` in the co
 A better way is to inject your `DbContext` in a [Resource Definition](~/usage/extensibility/resource-definitions.md) and apply the changes there.
 
 #### Concurrency tokens (timestamp/rowversion/xmin) won't work
-While we'd love to support such [tokens for optimistic concurrency](https://learn.microsoft.com/en-us/ef/core/saving/concurrency?tabs=data-annotations),
+While we'd love to support such [tokens for optimistic concurrency](https://learn.microsoft.com/ef/core/saving/concurrency),
 it turns out that the implementation is far from trivial. We've come a long way, but aren't sure how it should work when relationship endpoints and atomic operations are involved.
 If you're interested, we welcome your feedback at https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/1119.

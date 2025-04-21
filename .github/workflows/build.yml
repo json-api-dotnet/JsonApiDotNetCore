@@ -21,7 +21,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
 
 jobs:
@@ -46,8 +46,8 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: |
-          6.0.x
-          8.0.x
+          8.0.*
+          9.0.*
     - name: Show installed versions
       shell: pwsh
       run: |
@@ -72,14 +72,14 @@ jobs:
             $versionSuffix = $segments.Length -eq 1 ? '' : $segments[1..$($segments.Length - 1)] -join '-'
 
             [xml]$xml = Get-Content Directory.Build.props
-            $configuredVersionPrefix = $xml.Project.PropertyGroup.JsonApiDotNetCoreVersionPrefix | Select-Object -First 1
+            $configuredVersionPrefix = $xml.Project.PropertyGroup.VersionPrefix | Select-Object -First 1
 
             if ($configuredVersionPrefix -ne $versionPrefix) {
                 Write-Error "Version prefix from git release tag '$versionPrefix' does not match version prefix '$configuredVersionPrefix' stored in Directory.Build.props."
                 # To recover from this:
                 # - Delete the GitHub release
                 # - Run: git push --delete origin the-invalid-tag-name
-                # - Adjust JsonApiDotNetCoreVersionPrefix in Directory.Build.props, commit and push
+                # - Adjust VersionPrefix in Directory.Build.props, commit and push
                 # - Recreate the GitHub release
             }
         }
@@ -110,7 +110,7 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
       with:
         fail_ci_if_error: true
         verbose: true
@@ -132,7 +132,7 @@ jobs:
       run: |
         cd docs
         & ./generate-examples.ps1
-        dotnet docfx docfx.json
+        dotnet docfx docfx.json --warningsAsErrors true
         if ($LastExitCode -ne 0) {
             Write-Error "docfx failed with exit code $LastExitCode."
         }
@@ -164,8 +164,8 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: |
-          6.0.x
-          8.0.x
+          8.0.*
+          9.0.*
     - name: Git checkout
       uses: actions/checkout@v4
     - name: Restore tools
@@ -219,8 +219,8 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: |
-          6.0.x
-          8.0.x
+          8.0.*
+          9.0.*
     - name: Git checkout
       uses: actions/checkout@v4
       with:
@@ -284,4 +284,4 @@ jobs:
         NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}
       shell: pwsh
       run: |
-        dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:NUGET_ORG_API_KEY" --source 'nuget.org'
+        dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:NUGET_ORG_API_KEY" --source 'nuget.org' --skip-duplicate

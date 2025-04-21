@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -12,10 +13,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion;
 
 public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<TestableStartup<SoftDeletionDbContext>, SoftDeletionDbContext>>
 {
+    private static readonly DateTimeOffset CurrentTime = 1.January(2005).AsUtc();
     private static readonly DateTimeOffset SoftDeletionTime = 1.January(2001).AsUtc();
 
     private readonly IntegrationTestContext<TestableStartup<SoftDeletionDbContext>, SoftDeletionDbContext> _testContext;
-    private readonly SoftDeletionFakers _fakers = new();
+    private readonly SoftDeletionFakers _fakers = new(CurrentTime);
 
     public SoftDeletionTests(IntegrationTestContext<TestableStartup<SoftDeletionDbContext>, SoftDeletionDbContext> testContext)
     {
@@ -28,19 +30,19 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         {
             services.AddResourceService<SoftDeletionAwareResourceService<Company, int>>();
             services.AddResourceService<SoftDeletionAwareResourceService<Department, int>>();
-
-            services.AddSingleton<ISystemClock>(new FrozenSystemClock
-            {
-                UtcNow = 1.January(2005).AsUtc()
-            });
         });
+
+        testContext.PostConfigureServices(services => services.Replace(ServiceDescriptor.Singleton<TimeProvider>(new FrozenTimeProvider(CurrentTime))));
+
+        var timeProvider = (FrozenTimeProvider)testContext.Factory.Services.GetRequiredService<TimeProvider>();
+        timeProvider.Reset();
     }
 
     [Fact]
     public async Task Get_primary_resources_excludes_soft_deleted()
     {
         // Arrange
-        List<Department> departments = _fakers.Department.Generate(2);
+        List<Department> departments = _fakers.Department.GenerateList(2);
         departments[0].SoftDeletedAt = SoftDeletionTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -58,7 +60,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(departments[1].StringId);
     }
 
@@ -66,7 +68,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Filter_on_primary_resources_excludes_soft_deleted()
     {
         // Arrange
-        List<Department> departments = _fakers.Department.Generate(3);
+        List<Department> departments = _fakers.Department.GenerateList(3);
 
         departments[0].Name = "Support";
 
@@ -90,7 +92,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(departments[0].StringId);
     }
 
@@ -98,12 +100,12 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Get_primary_resources_with_include_excludes_soft_deleted()
     {
         // Arrange
-        List<Company> companies = _fakers.Company.Generate(2);
+        List<Company> companies = _fakers.Company.GenerateList(2);
 
         companies[0].SoftDeletedAt = SoftDeletionTime;
-        companies[0].Departments = _fakers.Department.Generate(1);
+        companies[0].Departments = _fakers.Department.GenerateList(1);
 
-        companies[1].Departments = _fakers.Department.Generate(2);
+        companies[1].Departments = _fakers.Department.GenerateList(2);
         companies[1].Departments.ElementAt(1).SoftDeletedAt = SoftDeletionTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -121,11 +123,11 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("companies");
         responseDocument.Data.ManyValue[0].Id.Should().Be(companies[1].StringId);
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("departments");
         responseDocument.Included[0].Id.Should().Be(companies[1].Departments.ElementAt(0).StringId);
     }
@@ -134,7 +136,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_get_soft_deleted_primary_resource_by_ID()
     {
         // Arrange
-        Department department = _fakers.Department.Generate();
+        Department department = _fakers.Department.GenerateOne();
         department.SoftDeletedAt = SoftDeletionTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -151,7 +153,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -163,9 +165,9 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_get_secondary_resources_for_soft_deleted_parent()
     {
         // Arrange
-        Company company = _fakers.Company.Generate();
+        Company company = _fakers.Company.GenerateOne();
         company.SoftDeletedAt = SoftDeletionTime;
-        company.Departments = _fakers.Department.Generate(1);
+        company.Departments = _fakers.Department.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -181,7 +183,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -193,8 +195,8 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Get_secondary_resources_excludes_soft_deleted()
     {
         // Arrange
-        Company company = _fakers.Company.Generate();
-        company.Departments = _fakers.Department.Generate(2);
+        Company company = _fakers.Company.GenerateOne();
+        company.Departments = _fakers.Department.GenerateList(2);
         company.Departments.ElementAt(0).SoftDeletedAt = SoftDeletionTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -211,7 +213,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(company.Departments.ElementAt(1).StringId);
     }
 
@@ -219,9 +221,9 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_get_secondary_resource_for_soft_deleted_parent()
     {
         // Arrange
-        Department department = _fakers.Department.Generate();
+        Department department = _fakers.Department.GenerateOne();
         department.SoftDeletedAt = SoftDeletionTime;
-        department.Company = _fakers.Company.Generate();
+        department.Company = _fakers.Company.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -237,7 +239,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -249,8 +251,8 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_get_soft_deleted_secondary_resource()
     {
         // Arrange
-        Department department = _fakers.Department.Generate();
-        department.Company = _fakers.Company.Generate();
+        Department department = _fakers.Department.GenerateOne();
+        department.Company = _fakers.Company.GenerateOne();
         department.Company.SoftDeletedAt = SoftDeletionTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -274,9 +276,9 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_get_ToMany_relationship_for_soft_deleted_parent()
     {
         // Arrange
-        Company company = _fakers.Company.Generate();
+        Company company = _fakers.Company.GenerateOne();
         company.SoftDeletedAt = SoftDeletionTime;
-        company.Departments = _fakers.Department.Generate(1);
+        company.Departments = _fakers.Department.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -292,7 +294,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -304,8 +306,8 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Get_ToMany_relationship_excludes_soft_deleted()
     {
         // Arrange
-        Company company = _fakers.Company.Generate();
-        company.Departments = _fakers.Department.Generate(2);
+        Company company = _fakers.Company.GenerateOne();
+        company.Departments = _fakers.Department.GenerateList(2);
         company.Departments.ElementAt(0).SoftDeletedAt = SoftDeletionTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -322,7 +324,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(company.Departments.ElementAt(1).StringId);
     }
 
@@ -330,9 +332,9 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_get_ToOne_relationship_for_soft_deleted_parent()
     {
         // Arrange
-        Department department = _fakers.Department.Generate();
+        Department department = _fakers.Department.GenerateOne();
         department.SoftDeletedAt = SoftDeletionTime;
-        department.Company = _fakers.Company.Generate();
+        department.Company = _fakers.Company.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -348,7 +350,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -360,8 +362,8 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Get_ToOne_relationship_excludes_soft_deleted()
     {
         // Arrange
-        Department department = _fakers.Department.Generate();
-        department.Company = _fakers.Company.Generate();
+        Department department = _fakers.Department.GenerateOne();
+        department.Company = _fakers.Company.GenerateOne();
         department.Company.SoftDeletedAt = SoftDeletionTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -385,10 +387,10 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_create_resource_with_ToMany_relationship_to_soft_deleted()
     {
         // Arrange
-        Department existingDepartment = _fakers.Department.Generate();
+        Department existingDepartment = _fakers.Department.GenerateOne();
         existingDepartment.SoftDeletedAt = SoftDeletionTime;
 
-        string newCompanyName = _fakers.Company.Generate().Name;
+        string newCompanyName = _fakers.Company.GenerateOne().Name;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -430,7 +432,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -444,10 +446,10 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_create_resource_with_ToOne_relationship_to_soft_deleted()
     {
         // Arrange
-        Company existingCompany = _fakers.Company.Generate();
+        Company existingCompany = _fakers.Company.GenerateOne();
         existingCompany.SoftDeletedAt = SoftDeletionTime;
 
-        string newDepartmentName = _fakers.Department.Generate().Name;
+        string newDepartmentName = _fakers.Department.GenerateOne().Name;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -486,7 +488,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -498,10 +500,10 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_update_soft_deleted_resource()
     {
         // Arrange
-        Company existingCompany = _fakers.Company.Generate();
+        Company existingCompany = _fakers.Company.GenerateOne();
         existingCompany.SoftDeletedAt = SoftDeletionTime;
 
-        string newCompanyName = _fakers.Company.Generate().Name;
+        string newCompanyName = _fakers.Company.GenerateOne().Name;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -530,7 +532,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -542,9 +544,9 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_update_resource_with_ToMany_relationship_to_soft_deleted()
     {
         // Arrange
-        Company existingCompany = _fakers.Company.Generate();
+        Company existingCompany = _fakers.Company.GenerateOne();
 
-        Department existingDepartment = _fakers.Department.Generate();
+        Department existingDepartment = _fakers.Department.GenerateOne();
         existingDepartment.SoftDeletedAt = SoftDeletionTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -584,7 +586,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -598,9 +600,9 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_update_resource_with_ToOne_relationship_to_soft_deleted()
     {
         // Arrange
-        Department existingDepartment = _fakers.Department.Generate();
+        Department existingDepartment = _fakers.Department.GenerateOne();
 
-        Company existingCompany = _fakers.Company.Generate();
+        Company existingCompany = _fakers.Company.GenerateOne();
         existingCompany.SoftDeletedAt = SoftDeletionTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -637,7 +639,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -649,9 +651,9 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_update_ToMany_relationship_for_soft_deleted_parent()
     {
         // Arrange
-        Company existingCompany = _fakers.Company.Generate();
+        Company existingCompany = _fakers.Company.GenerateOne();
         existingCompany.SoftDeletedAt = SoftDeletionTime;
-        existingCompany.Departments = _fakers.Department.Generate(1);
+        existingCompany.Departments = _fakers.Department.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -672,7 +674,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -684,9 +686,9 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_update_ToMany_relationship_to_soft_deleted()
     {
         // Arrange
-        Company existingCompany = _fakers.Company.Generate();
+        Company existingCompany = _fakers.Company.GenerateOne();
 
-        Department existingDepartment = _fakers.Department.Generate();
+        Department existingDepartment = _fakers.Department.GenerateOne();
         existingDepartment.SoftDeletedAt = SoftDeletionTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -715,7 +717,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -729,7 +731,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_update_ToOne_relationship_for_soft_deleted_parent()
     {
         // Arrange
-        Department existingDepartment = _fakers.Department.Generate();
+        Department existingDepartment = _fakers.Department.GenerateOne();
         existingDepartment.SoftDeletedAt = SoftDeletionTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -751,7 +753,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -763,9 +765,9 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_update_ToOne_relationship_to_soft_deleted()
     {
         // Arrange
-        Department existingDepartment = _fakers.Department.Generate();
+        Department existingDepartment = _fakers.Department.GenerateOne();
 
-        Company existingCompany = _fakers.Company.Generate();
+        Company existingCompany = _fakers.Company.GenerateOne();
         existingCompany.SoftDeletedAt = SoftDeletionTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -791,7 +793,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -803,10 +805,10 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_add_to_ToMany_relationship_for_soft_deleted_parent()
     {
         // Arrange
-        Company existingCompany = _fakers.Company.Generate();
+        Company existingCompany = _fakers.Company.GenerateOne();
         existingCompany.SoftDeletedAt = SoftDeletionTime;
 
-        Department existingDepartment = _fakers.Department.Generate();
+        Department existingDepartment = _fakers.Department.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -834,7 +836,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -846,9 +848,9 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_add_to_ToMany_relationship_with_soft_deleted()
     {
         // Arrange
-        Company existingCompany = _fakers.Company.Generate();
+        Company existingCompany = _fakers.Company.GenerateOne();
 
-        Department existingDepartment = _fakers.Department.Generate();
+        Department existingDepartment = _fakers.Department.GenerateOne();
         existingDepartment.SoftDeletedAt = SoftDeletionTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -877,7 +879,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -891,9 +893,9 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_remove_from_ToMany_relationship_for_soft_deleted_parent()
     {
         // Arrange
-        Company existingCompany = _fakers.Company.Generate();
+        Company existingCompany = _fakers.Company.GenerateOne();
         existingCompany.SoftDeletedAt = SoftDeletionTime;
-        existingCompany.Departments = _fakers.Department.Generate(1);
+        existingCompany.Departments = _fakers.Department.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -921,7 +923,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -933,8 +935,8 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_remove_from_ToMany_relationship_with_soft_deleted()
     {
         // Arrange
-        Company existingCompany = _fakers.Company.Generate();
-        existingCompany.Departments = _fakers.Department.Generate(1);
+        Company existingCompany = _fakers.Company.GenerateOne();
+        existingCompany.Departments = _fakers.Department.GenerateList(1);
         existingCompany.Departments.ElementAt(0).SoftDeletedAt = SoftDeletionTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -963,7 +965,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -977,7 +979,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Can_soft_delete_resource()
     {
         // Arrange
-        Company existingCompany = _fakers.Company.Generate();
+        Company existingCompany = _fakers.Company.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1000,7 +1002,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
             Company companyInDatabase = await dbContext.Companies.IgnoreQueryFilters().FirstWithIdAsync(existingCompany.Id);
 
             companyInDatabase.Name.Should().Be(existingCompany.Name);
-            companyInDatabase.SoftDeletedAt.ShouldNotBeNull();
+            companyInDatabase.SoftDeletedAt.Should().NotBeNull();
         });
     }
 
@@ -1008,7 +1010,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_delete_soft_deleted_resource()
     {
         // Arrange
-        Department existingDepartment = _fakers.Department.Generate();
+        Department existingDepartment = _fakers.Department.GenerateOne();
         existingDepartment.SoftDeletedAt = SoftDeletionTime;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -1025,7 +1027,7 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);

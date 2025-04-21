@@ -9,17 +9,14 @@ public sealed class PageSize : IEquatable<PageSize>
 
     public PageSize(int value)
     {
-        if (value < 1)
-        {
-            throw new ArgumentOutOfRangeException(nameof(value));
-        }
+        ArgumentOutOfRangeException.ThrowIfLessThan(value, 1);
 
         Value = value;
     }
 
     public bool Equals(PageSize? other)
     {
-        if (ReferenceEquals(null, other))
+        if (other is null)
         {
             return false;
         }

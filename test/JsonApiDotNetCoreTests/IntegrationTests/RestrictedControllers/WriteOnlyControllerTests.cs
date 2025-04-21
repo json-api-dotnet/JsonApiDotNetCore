@@ -30,7 +30,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -42,7 +42,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
     public async Task Cannot_get_resource()
     {
         // Arrange
-        Table table = _fakers.Table.Generate();
+        Table table = _fakers.Table.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -58,7 +58,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -70,7 +70,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
     public async Task Cannot_get_secondary_resources()
     {
         // Arrange
-        Table table = _fakers.Table.Generate();
+        Table table = _fakers.Table.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -86,7 +86,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -98,7 +98,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
     public async Task Cannot_get_secondary_resource()
     {
         // Arrange
-        Table table = _fakers.Table.Generate();
+        Table table = _fakers.Table.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -114,7 +114,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -126,7 +126,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
     public async Task Cannot_get_relationship()
     {
         // Arrange
-        Table table = _fakers.Table.Generate();
+        Table table = _fakers.Table.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -142,7 +142,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -178,7 +178,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
     public async Task Can_update_resource()
     {
         // Arrange
-        Table existingTable = _fakers.Table.Generate();
+        Table existingTable = _fakers.Table.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -211,7 +211,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
     public async Task Can_delete_resource()
     {
         // Arrange
-        Table existingTable = _fakers.Table.Generate();
+        Table existingTable = _fakers.Table.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -232,7 +232,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
     public async Task Can_update_relationship()
     {
         // Arrange
-        Table existingTable = _fakers.Table.Generate();
+        Table existingTable = _fakers.Table.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -258,7 +258,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
     public async Task Can_add_to_ToMany_relationship()
     {
         // Arrange
-        Table existingTable = _fakers.Table.Generate();
+        Table existingTable = _fakers.Table.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -284,7 +284,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
     public async Task Can_remove_from_ToMany_relationship()
     {
         // Arrange
-        Table existingTable = _fakers.Table.Generate();
+        Table existingTable = _fakers.Table.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

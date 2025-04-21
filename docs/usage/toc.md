@@ -25,6 +25,10 @@
 # [Caching](caching.md)
 # [Common Pitfalls](common-pitfalls.md)
 
+# [OpenAPI](openapi.md)
+## [Documentation](openapi-documentation.md)
+## [Clients](openapi-client.md)
+
 # Extensibility
 ## [Layer Overview](extensibility/layer-overview.md)
 ## [Resource Definitions](extensibility/resource-definitions.md)

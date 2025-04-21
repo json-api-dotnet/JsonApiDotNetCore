@@ -8,7 +8,6 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.Logging.Abstractions;
-using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.ResourceDefinitions;
@@ -120,7 +119,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
 
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
         exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         exception.Errors[0].Title.Should().StartWith("Invalid lambda expression for sorting from resource definition. It should ");
         exception.Errors[0].Detail.Should().StartWith("The lambda expression 'file => Convert(file.IsCompressed, Object)' is invalid. ");
@@ -142,7 +141,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
 
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
         exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         exception.Errors[0].Title.Should().StartWith("Invalid lambda expression for sorting from resource definition. It should ");
         exception.Errors[0].Detail.Should().StartWith("The lambda expression 'file => Convert(file.Content.Length, Object)' is invalid. ");
@@ -164,7 +163,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
 
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
         exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         exception.Errors[0].Title.Should().StartWith("Invalid lambda expression for sorting from resource definition. It should ");
         exception.Errors[0].Detail.Should().StartWith("The lambda expression 'file => file.ParentDirectory.Name' is invalid. ");
@@ -186,7 +185,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
 
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
         exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         exception.Errors[0].Title.Should().StartWith("Invalid lambda expression for sorting from resource definition. It should ");
         exception.Errors[0].Detail.Should().StartWith("The lambda expression 'entry => Convert(entry, FileEntry).Content' is invalid. ");
@@ -208,7 +207,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
 
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
         exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         exception.Errors[0].Title.Should().StartWith("Invalid lambda expression for sorting from resource definition. It should ");
         exception.Errors[0].Detail.Should().StartWith("The lambda expression 'directory => Convert(directory.Files.Count(_ => True), Object)' is invalid. ");
@@ -230,7 +229,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
 
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
         exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         exception.Errors[0].Title.Should().StartWith("Invalid lambda expression for sorting from resource definition. It should ");
         exception.Errors[0].Detail.Should().Be("The lambda expression '_ => null' is invalid. Unsupported expression body 'null'.");
@@ -251,7 +250,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
 
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
         exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         exception.Errors[0].Title.Should().StartWith("Invalid lambda expression for sorting from resource definition. It should ");
         exception.Errors[0].Detail.Should().Be("The lambda expression 'entry => entry' is invalid. Unsupported expression body 'entry'.");
@@ -273,7 +272,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
 
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
         exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         exception.Errors[0].Title.Should().StartWith("Invalid lambda expression for sorting from resource definition. It should ");
         exception.Errors[0].Detail.Should().Match("The lambda expression '*' is invalid. Unsupported expression body '*'.");
@@ -294,7 +293,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
 
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
         exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         exception.Errors[0].Title.Should().StartWith("Invalid lambda expression for sorting from resource definition. It should ");
         exception.Errors[0].Detail.Should().Match("The lambda expression '*' is invalid. Unsupported expression body '*'.");
@@ -321,7 +320,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
 
-        exception.Errors.ShouldHaveCount(1);
+        exception.Errors.Should().HaveCount(1);
         exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         exception.Errors[0].Title.Should().StartWith("Invalid lambda expression for sorting from resource definition. It should ");
         exception.Errors[0].Detail.Should().Match("The lambda expression '*' is invalid. Unsupported expression body '*'.");
@@ -345,7 +344,8 @@ public sealed class CreateSortExpressionFromLambdaTests
         // @formatter:wrap_before_first_method_call restore
     }
 
-    private sealed class WrapperResourceDefinition<TResource, TId>(IResourceGraph resourceGraph) : JsonApiResourceDefinition<TResource, TId>(resourceGraph)
+    private sealed class WrapperResourceDefinition<TResource, TId>(IResourceGraph resourceGraph)
+        : JsonApiResourceDefinition<TResource, TId>(resourceGraph)
         where TResource : class, IIdentifiable<TId>
     {
         public SortExpression GetSortExpressionFromLambda(PropertySortOrder sortOrder)
@@ -364,17 +364,17 @@ public sealed class CreateSortExpressionFromLambdaTests
         public FileSystemEntry Parent { get; set; } = null!;
 
         [HasMany]
-        public IList<FileSystemEntry> Children { get; set; } = new List<FileSystemEntry>();
+        public List<FileSystemEntry> Children { get; set; } = [];
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     private sealed class DirectoryEntry : FileSystemEntry
     {
         [HasMany]
-        public IList<DirectoryEntry> Subdirectories { get; set; } = new List<DirectoryEntry>();
+        public List<DirectoryEntry> Subdirectories { get; set; } = [];
 
         [HasMany]
-        public IList<FileEntry> Files { get; set; } = new List<FileEntry>();
+        public List<FileEntry> Files { get; set; } = [];
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]

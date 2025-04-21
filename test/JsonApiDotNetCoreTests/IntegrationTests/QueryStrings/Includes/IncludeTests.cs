@@ -31,8 +31,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Can_include_in_primary_resources()
     {
         // Arrange
-        BlogPost post = _fakers.BlogPost.Generate();
-        post.Author = _fakers.WebAccount.Generate();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
+        post.Author = _fakers.WebAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -49,22 +49,22 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(post.StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(post.Caption));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(post.Caption);
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("webAccounts");
         responseDocument.Included[0].Id.Should().Be(post.Author.StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(post.Author.DisplayName));
+        responseDocument.Included[0].Attributes.Should().ContainKey("displayName").WhoseValue.Should().Be(post.Author.DisplayName);
     }
 
     [Fact]
     public async Task Can_include_in_primary_resource_by_ID()
     {
         // Arrange
-        BlogPost post = _fakers.BlogPost.Generate();
-        post.Author = _fakers.WebAccount.Generate();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
+        post.Author = _fakers.WebAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -80,23 +80,23 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("caption").With(value => value.Should().Be(post.Caption));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(post.Caption);
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("webAccounts");
         responseDocument.Included[0].Id.Should().Be(post.Author.StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(post.Author.DisplayName));
+        responseDocument.Included[0].Attributes.Should().ContainKey("displayName").WhoseValue.Should().Be(post.Author.DisplayName);
     }
 
     [Fact]
     public async Task Can_include_in_secondary_resource()
     {
         // Arrange
-        Blog blog = _fakers.Blog.Generate();
-        blog.Owner = _fakers.WebAccount.Generate();
-        blog.Owner.Posts = _fakers.BlogPost.Generate(1);
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Owner = _fakers.WebAccount.GenerateOne();
+        blog.Owner.Posts = _fakers.BlogPost.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -112,23 +112,23 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(blog.Owner.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(blog.Owner.DisplayName));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("displayName").WhoseValue.Should().Be(blog.Owner.DisplayName);
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(blog.Owner.Posts[0].StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(blog.Owner.Posts[0].Caption));
+        responseDocument.Included[0].Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(blog.Owner.Posts[0].Caption);
     }
 
     [Fact]
     public async Task Can_include_in_secondary_resources()
     {
         // Arrange
-        Blog blog = _fakers.Blog.Generate();
-        blog.Posts = _fakers.BlogPost.Generate(1);
-        blog.Posts[0].Author = _fakers.WebAccount.Generate();
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Posts = _fakers.BlogPost.GenerateList(1);
+        blog.Posts[0].Author = _fakers.WebAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -144,23 +144,23 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(blog.Posts[0].Caption));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(blog.Posts[0].Caption);
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("webAccounts");
         responseDocument.Included[0].Id.Should().Be(blog.Posts[0].Author!.StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(blog.Posts[0].Author!.DisplayName));
+        responseDocument.Included[0].Attributes.Should().ContainKey("displayName").WhoseValue.Should().Be(blog.Posts[0].Author!.DisplayName);
     }
 
     [Fact]
     public async Task Can_include_ToOne_relationships()
     {
         // Arrange
-        Comment comment = _fakers.Comment.Generate();
-        comment.Author = _fakers.WebAccount.Generate();
-        comment.Parent = _fakers.BlogPost.Generate();
+        Comment comment = _fakers.Comment.GenerateOne();
+        comment.Author = _fakers.WebAccount.GenerateOne();
+        comment.Parent = _fakers.BlogPost.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -176,27 +176,27 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(comment.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Text));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("text").WhoseValue.Should().Be(comment.Text);
 
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
 
         responseDocument.Included[0].Type.Should().Be("webAccounts");
         responseDocument.Included[0].Id.Should().Be(comment.Author.StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("userName").With(value => value.Should().Be(comment.Author.UserName));
+        responseDocument.Included[0].Attributes.Should().ContainKey("userName").WhoseValue.Should().Be(comment.Author.UserName);
 
         responseDocument.Included[1].Type.Should().Be("blogPosts");
         responseDocument.Included[1].Id.Should().Be(comment.Parent.StringId);
-        responseDocument.Included[1].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(comment.Parent.Caption));
+        responseDocument.Included[1].Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(comment.Parent.Caption);
     }
 
     [Fact]
     public async Task Can_include_OneToMany_relationship()
     {
         // Arrange
-        BlogPost post = _fakers.BlogPost.Generate();
-        post.Comments = _fakers.Comment.Generate(1).ToHashSet();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
+        post.Comments = _fakers.Comment.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -212,24 +212,24 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("caption").With(value => value.Should().Be(post.Caption));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(post.Caption);
 
         DateTime createdAt = post.Comments.Single().CreatedAt;
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("comments");
         responseDocument.Included[0].Id.Should().Be(post.Comments.Single().StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("createdAt").With(value => value.Should().Be(createdAt));
+        responseDocument.Included[0].Attributes.Should().ContainKey("createdAt").WhoseValue.Should().Be(createdAt);
     }
 
     [Fact]
     public async Task Can_include_ManyToMany_relationship()
     {
         // Arrange
-        BlogPost post = _fakers.BlogPost.Generate();
-        post.Labels = _fakers.Label.Generate(1).ToHashSet();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
+        post.Labels = _fakers.Label.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -245,22 +245,22 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("caption").With(value => value.Should().Be(post.Caption));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(post.Caption);
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("labels");
         responseDocument.Included[0].Id.Should().Be(post.Labels.Single().StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be(post.Labels.Single().Name));
+        responseDocument.Included[0].Attributes.Should().ContainKey("name").WhoseValue.Should().Be(post.Labels.Single().Name);
     }
 
     [Fact]
     public async Task Can_include_ManyToMany_relationship_at_secondary_endpoint()
     {
         // Arrange
-        BlogPost post = _fakers.BlogPost.Generate();
-        post.Labels = _fakers.Label.Generate(1).ToHashSet();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
+        post.Labels = _fakers.Label.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -276,25 +276,25 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Type.Should().Be("labels");
         responseDocument.Data.ManyValue[0].Id.Should().Be(post.Labels.ElementAt(0).StringId);
-        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be(post.Labels.Single().Name));
+        responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("name").WhoseValue.Should().Be(post.Labels.Single().Name);
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(post.StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(post.Caption));
+        responseDocument.Included[0].Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(post.Caption);
     }
 
     [Fact]
     public async Task Can_include_chain_of_ToOne_relationships()
     {
         // Arrange
-        Comment comment = _fakers.Comment.Generate();
-        comment.Parent = _fakers.BlogPost.Generate();
-        comment.Parent.Author = _fakers.WebAccount.Generate();
-        comment.Parent.Author.Preferences = _fakers.AccountPreferences.Generate();
+        Comment comment = _fakers.Comment.GenerateOne();
+        comment.Parent = _fakers.BlogPost.GenerateOne();
+        comment.Parent.Author = _fakers.WebAccount.GenerateOne();
+        comment.Parent.Author.Preferences = _fakers.AccountPreferences.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -310,34 +310,34 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(comment.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Text));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("text").WhoseValue.Should().Be(comment.Text);
 
-        responseDocument.Included.ShouldHaveCount(3);
+        responseDocument.Included.Should().HaveCount(3);
 
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(comment.Parent.StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(comment.Parent.Caption));
+        responseDocument.Included[0].Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(comment.Parent.Caption);
 
         responseDocument.Included[1].Type.Should().Be("webAccounts");
         responseDocument.Included[1].Id.Should().Be(comment.Parent.Author.StringId);
-        responseDocument.Included[1].Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(comment.Parent.Author.DisplayName));
+        responseDocument.Included[1].Attributes.Should().ContainKey("displayName").WhoseValue.Should().Be(comment.Parent.Author.DisplayName);
 
         bool useDarkTheme = comment.Parent.Author.Preferences.UseDarkTheme;
 
         responseDocument.Included[2].Type.Should().Be("accountPreferences");
         responseDocument.Included[2].Id.Should().Be(comment.Parent.Author.Preferences.StringId);
-        responseDocument.Included[2].Attributes.ShouldContainKey("useDarkTheme").With(value => value.Should().Be(useDarkTheme));
+        responseDocument.Included[2].Attributes.Should().ContainKey("useDarkTheme").WhoseValue.Should().Be(useDarkTheme);
     }
 
     [Fact]
     public async Task Can_include_chain_of_OneToMany_relationships()
     {
         // Arrange
-        Blog blog = _fakers.Blog.Generate();
-        blog.Posts = _fakers.BlogPost.Generate(1);
-        blog.Posts[0].Comments = _fakers.Comment.Generate(1).ToHashSet();
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Posts = _fakers.BlogPost.GenerateList(1);
+        blog.Posts[0].Comments = _fakers.Comment.GenerateSet(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -353,32 +353,32 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(blog.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("title").With(value => value.Should().Be(blog.Title));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("title").WhoseValue.Should().Be(blog.Title);
 
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
 
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(blog.Posts[0].StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(blog.Posts[0].Caption));
+        responseDocument.Included[0].Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(blog.Posts[0].Caption);
 
         DateTime createdAt = blog.Posts[0].Comments.Single().CreatedAt;
 
         responseDocument.Included[1].Type.Should().Be("comments");
         responseDocument.Included[1].Id.Should().Be(blog.Posts[0].Comments.Single().StringId);
-        responseDocument.Included[1].Attributes.ShouldContainKey("createdAt").With(value => value.Should().Be(createdAt));
+        responseDocument.Included[1].Attributes.Should().ContainKey("createdAt").WhoseValue.Should().Be(createdAt);
     }
 
     [Fact]
     public async Task Can_include_chain_of_recursive_relationships()
     {
         // Arrange
-        Comment comment = _fakers.Comment.Generate();
-        comment.Parent = _fakers.BlogPost.Generate();
-        comment.Parent.Author = _fakers.WebAccount.Generate();
-        comment.Parent.Comments = _fakers.Comment.Generate(2).ToHashSet();
-        comment.Parent.Comments.ElementAt(0).Author = _fakers.WebAccount.Generate();
+        Comment comment = _fakers.Comment.GenerateOne();
+        comment.Parent = _fakers.BlogPost.GenerateOne();
+        comment.Parent.Author = _fakers.WebAccount.GenerateOne();
+        comment.Parent.Comments = _fakers.Comment.GenerateSet(2);
+        comment.Parent.Comments.ElementAt(0).Author = _fakers.WebAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -394,42 +394,42 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(comment.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Text));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("text").WhoseValue.Should().Be(comment.Text);
 
-        responseDocument.Included.ShouldHaveCount(4);
+        responseDocument.Included.Should().HaveCount(4);
 
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(comment.Parent.StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(comment.Parent.Caption));
+        responseDocument.Included[0].Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(comment.Parent.Caption);
 
         responseDocument.Included[1].Type.Should().Be("comments");
         responseDocument.Included[1].Id.Should().Be(comment.Parent.Comments.ElementAt(0).StringId);
-        responseDocument.Included[1].Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Parent.Comments.ElementAt(0).Text));
+        responseDocument.Included[1].Attributes.Should().ContainKey("text").WhoseValue.Should().Be(comment.Parent.Comments.ElementAt(0).Text);
 
         string userName = comment.Parent.Comments.ElementAt(0).Author!.UserName;
 
         responseDocument.Included[2].Type.Should().Be("webAccounts");
         responseDocument.Included[2].Id.Should().Be(comment.Parent.Comments.ElementAt(0).Author!.StringId);
-        responseDocument.Included[2].Attributes.ShouldContainKey("userName").With(value => value.Should().Be(userName));
+        responseDocument.Included[2].Attributes.Should().ContainKey("userName").WhoseValue.Should().Be(userName);
 
         responseDocument.Included[3].Type.Should().Be("comments");
         responseDocument.Included[3].Id.Should().Be(comment.Parent.Comments.ElementAt(1).StringId);
-        responseDocument.Included[3].Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Parent.Comments.ElementAt(1).Text));
+        responseDocument.Included[3].Attributes.Should().ContainKey("text").WhoseValue.Should().Be(comment.Parent.Comments.ElementAt(1).Text);
     }
 
     [Fact]
     public async Task Can_include_chain_of_relationships_with_multiple_paths()
     {
         // Arrange
-        Blog blog = _fakers.Blog.Generate();
-        blog.Posts = _fakers.BlogPost.Generate(1);
-        blog.Posts[0].Author = _fakers.WebAccount.Generate();
-        blog.Posts[0].Author!.Preferences = _fakers.AccountPreferences.Generate();
-        blog.Posts[0].Comments = _fakers.Comment.Generate(2).ToHashSet();
-        blog.Posts[0].Comments.ElementAt(0).Author = _fakers.WebAccount.Generate();
-        blog.Posts[0].Comments.ElementAt(0).Author!.Posts = _fakers.BlogPost.Generate(1);
+        Blog blog = _fakers.Blog.GenerateOne();
+        blog.Posts = _fakers.BlogPost.GenerateList(1);
+        blog.Posts[0].Author = _fakers.WebAccount.GenerateOne();
+        blog.Posts[0].Author!.Preferences = _fakers.AccountPreferences.GenerateOne();
+        blog.Posts[0].Comments = _fakers.Comment.GenerateSet(2);
+        blog.Posts[0].Comments.ElementAt(0).Author = _fakers.WebAccount.GenerateOne();
+        blog.Posts[0].Comments.ElementAt(0).Author!.Posts = _fakers.BlogPost.GenerateList(1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -445,34 +445,34 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(blog.StringId);
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("posts").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("posts").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.ManyValue.ShouldNotBeEmpty();
+            value.Should().NotBeNull();
+            value.Data.ManyValue.Should().NotBeEmpty();
             value.Data.ManyValue[0].Type.Should().Be("blogPosts");
             value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
         });
 
-        responseDocument.Included.ShouldHaveCount(7);
+        responseDocument.Included.Should().HaveCount(7);
 
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(blog.Posts[0].StringId);
 
-        responseDocument.Included[0].Relationships.ShouldContainKey("author").With(value =>
+        responseDocument.Included[0].Relationships.Should().ContainKey("author").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("webAccounts");
             value.Data.SingleValue.Id.Should().Be(blog.Posts[0].Author!.StringId);
         });
 
-        responseDocument.Included[0].Relationships.ShouldContainKey("comments").With(value =>
+        responseDocument.Included[0].Relationships.Should().ContainKey("comments").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.ManyValue.ShouldNotBeEmpty();
+            value.Should().NotBeNull();
+            value.Data.ManyValue.Should().NotBeEmpty();
             value.Data.ManyValue[0].Type.Should().Be("comments");
             value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).StringId);
         });
@@ -480,17 +480,17 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Included[1].Type.Should().Be("webAccounts");
         responseDocument.Included[1].Id.Should().Be(blog.Posts[0].Author!.StringId);
 
-        responseDocument.Included[1].Relationships.ShouldContainKey("preferences").With(value =>
+        responseDocument.Included[1].Relationships.Should().ContainKey("preferences").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("accountPreferences");
             value.Data.SingleValue.Id.Should().Be(blog.Posts[0].Author!.Preferences!.StringId);
         });
 
-        responseDocument.Included[1].Relationships.ShouldContainKey("posts").With(value =>
+        responseDocument.Included[1].Relationships.Should().ContainKey("posts").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
         });
 
@@ -500,10 +500,10 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Included[3].Type.Should().Be("comments");
         responseDocument.Included[3].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).StringId);
 
-        responseDocument.Included[3].Relationships.ShouldContainKey("author").With(value =>
+        responseDocument.Included[3].Relationships.Should().ContainKey("author").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("webAccounts");
             value.Data.SingleValue.Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author!.StringId);
         });
@@ -511,41 +511,41 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Included[4].Type.Should().Be("webAccounts");
         responseDocument.Included[4].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author!.StringId);
 
-        responseDocument.Included[4].Relationships.ShouldContainKey("posts").With(value =>
+        responseDocument.Included[4].Relationships.Should().ContainKey("posts").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.ManyValue.ShouldNotBeEmpty();
+            value.Should().NotBeNull();
+            value.Data.ManyValue.Should().NotBeEmpty();
             value.Data.ManyValue[0].Type.Should().Be("blogPosts");
             value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author!.Posts[0].StringId);
         });
 
-        responseDocument.Included[4].Relationships.ShouldContainKey("preferences").With(value =>
+        responseDocument.Included[4].Relationships.Should().ContainKey("preferences").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
         });
 
         responseDocument.Included[5].Type.Should().Be("blogPosts");
         responseDocument.Included[5].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author!.Posts[0].StringId);
 
-        responseDocument.Included[5].Relationships.ShouldContainKey("author").With(value =>
+        responseDocument.Included[5].Relationships.Should().ContainKey("author").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
         });
 
-        responseDocument.Included[5].Relationships.ShouldContainKey("comments").With(value =>
+        responseDocument.Included[5].Relationships.Should().ContainKey("comments").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
         });
 
         responseDocument.Included[6].Type.Should().Be("comments");
         responseDocument.Included[6].Id.Should().Be(blog.Posts[0].Comments.ElementAt(1).StringId);
 
-        responseDocument.Included[5].Relationships.ShouldContainKey("author").With(value =>
+        responseDocument.Included[5].Relationships.Should().ContainKey("author").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
         });
     }
@@ -553,23 +553,23 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     [Fact]
     public async Task Can_include_chain_of_relationships_with_reused_resources()
     {
-        WebAccount author = _fakers.WebAccount.Generate();
-        author.Preferences = _fakers.AccountPreferences.Generate();
-        author.LoginAttempts = _fakers.LoginAttempt.Generate(1);
+        WebAccount author = _fakers.WebAccount.GenerateOne();
+        author.Preferences = _fakers.AccountPreferences.GenerateOne();
+        author.LoginAttempts = _fakers.LoginAttempt.GenerateList(1);
 
-        WebAccount reviewer = _fakers.WebAccount.Generate();
-        reviewer.Preferences = _fakers.AccountPreferences.Generate();
-        reviewer.LoginAttempts = _fakers.LoginAttempt.Generate(1);
+        WebAccount reviewer = _fakers.WebAccount.GenerateOne();
+        reviewer.Preferences = _fakers.AccountPreferences.GenerateOne();
+        reviewer.LoginAttempts = _fakers.LoginAttempt.GenerateList(1);
 
-        BlogPost post1 = _fakers.BlogPost.Generate();
+        BlogPost post1 = _fakers.BlogPost.GenerateOne();
         post1.Author = author;
         post1.Reviewer = reviewer;
 
-        WebAccount person = _fakers.WebAccount.Generate();
-        person.Preferences = _fakers.AccountPreferences.Generate();
-        person.LoginAttempts = _fakers.LoginAttempt.Generate(1);
+        WebAccount person = _fakers.WebAccount.GenerateOne();
+        person.Preferences = _fakers.AccountPreferences.GenerateOne();
+        person.LoginAttempts = _fakers.LoginAttempt.GenerateList(1);
 
-        BlogPost post2 = _fakers.BlogPost.Generate();
+        BlogPost post2 = _fakers.BlogPost.GenerateOne();
         post2.Author = person;
         post2.Reviewer = person;
 
@@ -588,23 +588,23 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
         responseDocument.Data.ManyValue[0].Type.Should().Be("blogPosts");
         responseDocument.Data.ManyValue[0].Id.Should().Be(post1.StringId);
 
-        responseDocument.Data.ManyValue[0].Relationships.ShouldContainKey("author").With(value =>
+        responseDocument.Data.ManyValue[0].Relationships.Should().ContainKey("author").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("webAccounts");
             value.Data.SingleValue.Id.Should().Be(author.StringId);
         });
 
-        responseDocument.Data.ManyValue[0].Relationships.ShouldContainKey("reviewer").With(value =>
+        responseDocument.Data.ManyValue[0].Relationships.Should().ContainKey("reviewer").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("webAccounts");
             value.Data.SingleValue.Id.Should().Be(reviewer.StringId);
         });
@@ -612,38 +612,38 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Data.ManyValue[1].Type.Should().Be("blogPosts");
         responseDocument.Data.ManyValue[1].Id.Should().Be(post2.StringId);
 
-        responseDocument.Data.ManyValue[1].Relationships.ShouldContainKey("author").With(value =>
+        responseDocument.Data.ManyValue[1].Relationships.Should().ContainKey("author").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("webAccounts");
             value.Data.SingleValue.Id.Should().Be(person.StringId);
         });
 
-        responseDocument.Data.ManyValue[1].Relationships.ShouldContainKey("reviewer").With(value =>
+        responseDocument.Data.ManyValue[1].Relationships.Should().ContainKey("reviewer").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("webAccounts");
             value.Data.SingleValue.Id.Should().Be(person.StringId);
         });
 
-        responseDocument.Included.ShouldHaveCount(7);
+        responseDocument.Included.Should().HaveCount(7);
 
         responseDocument.Included[0].Type.Should().Be("webAccounts");
         responseDocument.Included[0].Id.Should().Be(author.StringId);
 
-        responseDocument.Included[0].Relationships.ShouldContainKey("preferences").With(value =>
+        responseDocument.Included[0].Relationships.Should().ContainKey("preferences").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("accountPreferences");
             value.Data.SingleValue.Id.Should().Be(author.Preferences.StringId);
         });
 
-        responseDocument.Included[0].Relationships.ShouldContainKey("loginAttempts").With(value =>
+        responseDocument.Included[0].Relationships.Should().ContainKey("loginAttempts").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
         });
 
@@ -653,16 +653,16 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Included[2].Type.Should().Be("webAccounts");
         responseDocument.Included[2].Id.Should().Be(reviewer.StringId);
 
-        responseDocument.Included[2].Relationships.ShouldContainKey("preferences").With(value =>
+        responseDocument.Included[2].Relationships.Should().ContainKey("preferences").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
+            value.Should().NotBeNull();
             value.Data.Value.Should().BeNull();
         });
 
-        responseDocument.Included[2].Relationships.ShouldContainKey("loginAttempts").With(value =>
+        responseDocument.Included[2].Relationships.Should().ContainKey("loginAttempts").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.ManyValue.ShouldNotBeEmpty();
+            value.Should().NotBeNull();
+            value.Data.ManyValue.Should().NotBeEmpty();
             value.Data.ManyValue[0].Type.Should().Be("loginAttempts");
             value.Data.ManyValue[0].Id.Should().Be(reviewer.LoginAttempts[0].StringId);
         });
@@ -673,18 +673,18 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Included[4].Type.Should().Be("webAccounts");
         responseDocument.Included[4].Id.Should().Be(person.StringId);
 
-        responseDocument.Included[4].Relationships.ShouldContainKey("preferences").With(value =>
+        responseDocument.Included[4].Relationships.Should().ContainKey("preferences").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("accountPreferences");
             value.Data.SingleValue.Id.Should().Be(person.Preferences.StringId);
         });
 
-        responseDocument.Included[4].Relationships.ShouldContainKey("loginAttempts").With(value =>
+        responseDocument.Included[4].Relationships.Should().ContainKey("loginAttempts").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.ManyValue.ShouldNotBeEmpty();
+            value.Should().NotBeNull();
+            value.Data.ManyValue.Should().NotBeEmpty();
             value.Data.ManyValue[0].Type.Should().Be("loginAttempts");
             value.Data.ManyValue[0].Id.Should().Be(person.LoginAttempts[0].StringId);
         });
@@ -699,11 +699,11 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     [Fact]
     public async Task Can_include_chain_with_cyclic_dependency()
     {
-        List<BlogPost> posts = _fakers.BlogPost.Generate(1);
+        List<BlogPost> posts = _fakers.BlogPost.GenerateList(1);
 
-        Blog blog = _fakers.Blog.Generate();
+        Blog blog = _fakers.Blog.GenerateOne();
         blog.Posts = posts;
-        blog.Posts[0].Author = _fakers.WebAccount.Generate();
+        blog.Posts[0].Author = _fakers.WebAccount.GenerateOne();
         blog.Posts[0].Author!.Posts = posts;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -720,27 +720,27 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("blogs");
         responseDocument.Data.SingleValue.Id.Should().Be(blog.StringId);
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("posts").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("posts").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.ManyValue.ShouldNotBeEmpty();
+            value.Should().NotBeNull();
+            value.Data.ManyValue.Should().NotBeEmpty();
             value.Data.ManyValue[0].Type.Should().Be("blogPosts");
             value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
         });
 
-        responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.Should().HaveCount(2);
 
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(blog.Posts[0].StringId);
 
-        responseDocument.Included[0].Relationships.ShouldContainKey("author").With(value =>
+        responseDocument.Included[0].Relationships.Should().ContainKey("author").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("webAccounts");
             value.Data.SingleValue.Id.Should().Be(blog.Posts[0].Author!.StringId);
         });
@@ -748,10 +748,10 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Included[1].Type.Should().Be("webAccounts");
         responseDocument.Included[1].Id.Should().Be(blog.Posts[0].Author!.StringId);
 
-        responseDocument.Included[1].Relationships.ShouldContainKey("posts").With(value =>
+        responseDocument.Included[1].Relationships.Should().ContainKey("posts").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.ManyValue.ShouldNotBeEmpty();
+            value.Should().NotBeNull();
+            value.Data.ManyValue.Should().NotBeEmpty();
             value.Data.ManyValue[0].Type.Should().Be("blogPosts");
             value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
         });
@@ -761,9 +761,9 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Prevents_duplicate_includes_over_single_resource()
     {
         // Arrange
-        WebAccount account = _fakers.WebAccount.Generate();
+        WebAccount account = _fakers.WebAccount.GenerateOne();
 
-        BlogPost post = _fakers.BlogPost.Generate();
+        BlogPost post = _fakers.BlogPost.GenerateOne();
         post.Author = account;
         post.Reviewer = account;
 
@@ -781,23 +781,23 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
-        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("caption").With(value => value.Should().Be(post.Caption));
+        responseDocument.Data.SingleValue.Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(post.Caption);
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("webAccounts");
         responseDocument.Included[0].Id.Should().Be(account.StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("userName").With(value => value.Should().Be(account.UserName));
+        responseDocument.Included[0].Attributes.Should().ContainKey("userName").WhoseValue.Should().Be(account.UserName);
     }
 
     [Fact]
     public async Task Prevents_duplicate_includes_over_multiple_resources()
     {
         // Arrange
-        WebAccount account = _fakers.WebAccount.Generate();
+        WebAccount account = _fakers.WebAccount.GenerateOne();
 
-        List<BlogPost> posts = _fakers.BlogPost.Generate(2);
+        List<BlogPost> posts = _fakers.BlogPost.GenerateList(2);
         posts[0].Author = account;
         posts[1].Author = account;
 
@@ -816,19 +816,19 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("webAccounts");
         responseDocument.Included[0].Id.Should().Be(account.StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("userName").With(value => value.Should().Be(account.UserName));
+        responseDocument.Included[0].Attributes.Should().ContainKey("userName").WhoseValue.Should().Be(account.UserName);
     }
 
     [Fact]
     public async Task Can_select_empty_includes()
     {
         // Arrange
-        WebAccount account = _fakers.WebAccount.Generate();
+        WebAccount account = _fakers.WebAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -844,7 +844,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
 
         responseDocument.Included.Should().BeEmpty();
     }
@@ -862,13 +862,13 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified include is invalid.");
         error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'webAccounts'. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("include");
     }
 
@@ -885,13 +885,13 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified include is invalid.");
         error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'blogPosts'. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("include");
     }
 
@@ -908,13 +908,13 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified include is invalid.");
         error.Detail.Should().Be($"Including the relationship 'parent' on 'blogPosts' is not allowed. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("include");
     }
 
@@ -931,13 +931,13 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified include is invalid.");
         error.Detail.Should().Be($"Including the relationship 'parent' on 'blogPosts' is not allowed. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("include");
     }
 
@@ -945,8 +945,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Hides_relationship_and_related_resources_when_viewing_blocked()
     {
         // Arrange
-        Calendar calendar = _fakers.Calendar.Generate();
-        calendar.Appointments = _fakers.Appointment.Generate(2).ToHashSet();
+        Calendar calendar = _fakers.Calendar.GenerateOne();
+        calendar.Appointments = _fakers.Appointment.GenerateSet(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -962,11 +962,11 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("calendars");
         responseDocument.Data.SingleValue.Id.Should().Be(calendar.StringId);
 
-        responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
+        responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
         responseDocument.Data.SingleValue.Relationships.Should().NotContainKey("appointments");
 
         responseDocument.Included.Should().BeEmpty();
@@ -976,8 +976,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Hides_relationship_but_includes_related_resource_when_viewing_blocked_but_accessible_via_other_path()
     {
         // Arrange
-        Calendar calendar = _fakers.Calendar.Generate();
-        calendar.MostRecentAppointment = _fakers.Appointment.Generate();
+        Calendar calendar = _fakers.Calendar.GenerateOne();
+        calendar.MostRecentAppointment = _fakers.Appointment.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -986,7 +986,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
             calendar.Appointments = new[]
             {
-                _fakers.Appointment.Generate(),
+                _fakers.Appointment.GenerateOne(),
                 calendar.MostRecentAppointment
             }.ToHashSet();
 
@@ -1001,21 +1001,21 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("calendars");
         responseDocument.Data.SingleValue.Id.Should().Be(calendar.StringId);
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("mostRecentAppointment").With(value =>
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("mostRecentAppointment").WhoseValue.With(value =>
         {
-            value.ShouldNotBeNull();
-            value.Data.SingleValue.ShouldNotBeNull();
+            value.Should().NotBeNull();
+            value.Data.SingleValue.Should().NotBeNull();
             value.Data.SingleValue.Type.Should().Be("appointments");
             value.Data.SingleValue.Id.Should().Be(calendar.MostRecentAppointment.StringId);
         });
 
         responseDocument.Data.SingleValue.Relationships.Should().NotContainKey("appointments");
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("appointments");
         responseDocument.Included[0].Id.Should().Be(calendar.MostRecentAppointment.StringId);
     }
@@ -1024,8 +1024,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Ignores_null_parent_in_nested_include()
     {
         // Arrange
-        List<BlogPost> posts = _fakers.BlogPost.Generate(2);
-        posts[0].Reviewer = _fakers.WebAccount.Generate();
+        List<BlogPost> posts = _fakers.BlogPost.GenerateList(2);
+        posts[0].Reviewer = _fakers.WebAccount.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1042,26 +1042,26 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue.Should().HaveCount(2);
 
-        responseDocument.Data.ManyValue.Should().OnlyContain(resource => resource.Relationships.ShouldContainKey("reviewer") != null);
+        responseDocument.Data.ManyValue.Should().OnlyContain(resource => resource.Relationships.Should().ContainKey2("reviewer").WhoseValue != null);
 
         ResourceObject[] postWithReviewer = responseDocument.Data.ManyValue
             .Where(resource => resource.Relationships!.First(pair => pair.Key == "reviewer").Value!.Data.SingleValue != null).ToArray();
 
-        postWithReviewer.ShouldHaveCount(1);
-        postWithReviewer[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(posts[0].Caption));
+        postWithReviewer.Should().HaveCount(1);
+        postWithReviewer[0].Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(posts[0].Caption);
 
         ResourceObject[] postWithoutReviewer = responseDocument.Data.ManyValue
             .Where(resource => resource.Relationships!.First(pair => pair.Key == "reviewer").Value!.Data.SingleValue == null).ToArray();
 
-        postWithoutReviewer.ShouldHaveCount(1);
-        postWithoutReviewer[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(posts[1].Caption));
+        postWithoutReviewer.Should().HaveCount(1);
+        postWithoutReviewer[0].Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(posts[1].Caption);
 
-        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included.Should().HaveCount(1);
         responseDocument.Included[0].Type.Should().Be("webAccounts");
         responseDocument.Included[0].Id.Should().Be(posts[0].Reviewer!.StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("userName").With(value => value.Should().Be(posts[0].Reviewer!.UserName));
+        responseDocument.Included[0].Attributes.Should().ContainKey("userName").WhoseValue.Should().Be(posts[0].Reviewer!.UserName);
     }
 
     [Fact]
@@ -1071,7 +1071,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.MaximumIncludeDepth = 1;
 
-        Blog blog = _fakers.Blog.Generate();
+        Blog blog = _fakers.Blog.GenerateOne();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -1104,13 +1104,13 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
-        responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.Should().HaveCount(1);
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified include is invalid.");
         error.Detail.Should().Be($"Including 'posts.comments' exceeds the maximum inclusion depth of 1. {parameterValue}");
-        error.Source.ShouldNotBeNull();
+        error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be("include");
     }
 }

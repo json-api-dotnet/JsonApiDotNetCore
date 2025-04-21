@@ -567,7 +567,8 @@ public sealed class ServiceCollectionExtensionsTests
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class TestDbContext(DbContextOptions<TestDbContext> options) : TestableDbContext(options)
+    private sealed class TestDbContext(DbContextOptions<TestDbContext> options)
+        : TestableDbContext(options)
     {
         public DbSet<ResourceOfInt32> ResourcesOfInt32 => Set<ResourceOfInt32>();
         public DbSet<ResourceOfGuid> ResourcesOfGuid => Set<ResourceOfGuid>();
