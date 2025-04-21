@@ -207,7 +207,7 @@ And they won't match up with the current endpoint when switching to a different 
 <p>If you need such side effects, it's easiest to inject your <code>DbContext</code> in the controller, directly apply the changes on it and save.
 A better way is to inject your <code>DbContext</code> in a <a href="extensibility/resource-definitions.html">Resource Definition</a> and apply the changes there.</p>
 <h4 id="concurrency-tokens-timestamprowversionxmin-wont-work">Concurrency tokens (timestamp/rowversion/xmin) won't work</h4>
-<p>While we'd love to support such <a href="https://learn.microsoft.com/ef/core/saving/concurrency?tabs=data-annotations">tokens for optimistic concurrency</a>,
+<p>While we'd love to support such <a href="https://learn.microsoft.com/ef/core/saving/concurrency">tokens for optimistic concurrency</a>,
 it turns out that the implementation is far from trivial. We've come a long way, but aren't sure how it should work when relationship endpoints and atomic operations are involved.
 If you're interested, we welcome your feedback at <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/1119">https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/1119</a>.</p>
 

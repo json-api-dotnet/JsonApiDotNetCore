@@ -86,10 +86,11 @@
 <h4 id="where-can-i-find-documentation-and-examples">Where can I find documentation and examples?</h4>
 <p>While the <a href="../usage/resources/index.html">documentation</a> covers basic features and a few runnable example projects are available <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples">here</a>,
 many more advanced use cases are available as integration tests <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/test/JsonApiDotNetCoreTests/IntegrationTests">here</a>, so be sure to check them out!</p>
-<h4 id="why-cant-i-use-openapi">Why can't I use OpenAPI?</h4>
-<p>Due to the mismatch between the JSON:API structure and the shape of ASP.NET controller methods, this does not work out of the box.
-This is high on our agenda and we're steadily making progress, but it's quite complex and far from complete.
-See <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1046">here</a> for the current status, which includes instructions on trying out the latest build.</p>
+<h4 id="why-dont-you-use-the-built-in-openapi-support-in-aspnet-core">Why don't you use the built-in OpenAPI support in ASP.NET Core?</h4>
+<p>The structure of JSON:API request and response bodies differs significantly from the signature of JsonApiDotNetCore controllers.
+JsonApiDotNetCore provides OpenAPI support using <a href="https://github.com/domaindrivendev/Swashbuckle.AspNetCore">Swashbuckle</a>, a mature and feature-rich library that is highly extensible.
+The <a href="https://learn.microsoft.com/en-us/aspnet/core/fundamentals/openapi/overview">OpenAPI support in ASP.NET Core</a> is still very young
+and doesn't provide the level of extensibility needed for JsonApiDotNetCore.</p>
 <h4 id="whats-available-to-implement-a-jsonapi-client">What's available to implement a JSON:API client?</h4>
 <p>It depends on the programming language used. There's an overwhelming list of client libraries at <a href="https://jsonapi.org/implementations/#client-libraries">https://jsonapi.org/implementations/#client-libraries</a>.</p>
 <p>The JSON object model inside JsonApiDotNetCore is tweaked for server-side handling (be tolerant at inputs and strict at outputs).
