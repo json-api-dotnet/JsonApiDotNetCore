@@ -4,10 +4,11 @@
 While the [documentation](~/usage/resources/index.md) covers basic features and a few runnable example projects are available [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples),
 many more advanced use cases are available as integration tests [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/test/JsonApiDotNetCoreTests/IntegrationTests), so be sure to check them out!
 
-#### Why can't I use OpenAPI?
-Due to the mismatch between the JSON:API structure and the shape of ASP.NET controller methods, this does not work out of the box.
-This is high on our agenda and we're steadily making progress, but it's quite complex and far from complete.
-See [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1046) for the current status, which includes instructions on trying out the latest build.
+#### Why don't you use the built-in OpenAPI support in ASP.NET Core?
+The structure of JSON:API request and response bodies differs significantly from the signature of JsonApiDotNetCore controllers.
+JsonApiDotNetCore provides OpenAPI support using [Swashbuckle](https://github.com/domaindrivendev/Swashbuckle.AspNetCore), a mature and feature-rich library that is highly extensible.
+The [OpenAPI support in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/openapi/overview) is still very young
+and doesn't provide the level of extensibility needed for JsonApiDotNetCore.
 
 #### What's available to implement a JSON:API client?
 It depends on the programming language used. There's an overwhelming list of client libraries at https://jsonapi.org/implementations/#client-libraries.

@@ -145,6 +145,6 @@ If you need such side effects, it's easiest to inject your `DbContext` in the co
 A better way is to inject your `DbContext` in a [Resource Definition](~/usage/extensibility/resource-definitions.md) and apply the changes there.
 
 #### Concurrency tokens (timestamp/rowversion/xmin) won't work
-While we'd love to support such [tokens for optimistic concurrency](https://learn.microsoft.com/ef/core/saving/concurrency?tabs=data-annotations),
+While we'd love to support such [tokens for optimistic concurrency](https://learn.microsoft.com/ef/core/saving/concurrency),
 it turns out that the implementation is far from trivial. We've come a long way, but aren't sure how it should work when relationship endpoints and atomic operations are involved.
 If you're interested, we welcome your feedback at https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/1119.
