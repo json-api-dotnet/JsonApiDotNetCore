@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>OpenAPI clients </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="OpenAPI clients ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/openapi-client.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+
+<div class="WARNING">
+<h5>Warning</h5>
+<p>OpenAPI support for JSON:API is currently experimental. The API and the structure of the OpenAPI document may change in future versions.</p>
+</div>
+<h1 id="openapi-clients">OpenAPI clients</h1>
+<p>After <a href="openapi.html">enabling OpenAPI</a>, you can generate a typed JSON:API client for your API in various programming languages.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>If you prefer a generic JSON:API client instead of a typed one, choose from the existing
+<a href="https://jsonapi.org/implementations/#client-libraries">client libraries</a>.</p>
+</div>
+<p>The following code generators are supported, though you may try others as well:</p>
+<ul>
+<li><a href="https://github.com/RicoSuter/NSwag">NSwag</a> (v14.1 or higher): Produces clients for C# (requires <code>Newtonsoft.Json</code>) and TypeScript</li>
+<li><a href="https://learn.microsoft.com/openapi/kiota/overview">Kiota</a>: Produces clients for C#, Go, Java, PHP, Python, Ruby, Swift and TypeScript</li>
+</ul>
+<div class="tabGroup" id="tabgroup_1">
+<ul role="tablist">
+<li role="presentation">
+<a href="#tabpanel_1_nswag" role="tab" aria-controls="tabpanel_1_nswag" data-tab="nswag" tabindex="0" aria-selected="true">NSwag</a>
+</li>
+<li role="presentation">
+<a href="#tabpanel_1_kiota" role="tab" aria-controls="tabpanel_1_kiota" data-tab="kiota" tabindex="-1">Kiota</a>
+</li>
+</ul>
+<section id="tabpanel_1_nswag" role="tabpanel" data-tab="nswag">
+
+<p>For C# clients, we provide an additional package that provides workarounds for bugs in NSwag and enables using partial POST/PATCH requests.</p>
+<p>To add it to your project, run the following command:</p>
+<pre><code>dotnet add package JsonApiDotNetCore.OpenApi.Client.NSwag
+</code></pre>
+</section>
+<section id="tabpanel_1_kiota" role="tabpanel" data-tab="kiota" aria-hidden="true" hidden="hidden">
+
+<p>For C# clients, we provide an additional package that provides workarounds for bugs in Kiota, as well as MSBuild integration.</p>
+<p>To add it to your project, run the following command:</p>
+<pre><code>dotnet add package JsonApiDotNetCore.OpenApi.Client.Kiota
+</code></pre>
+</section>
+</div>
+<h2 id="getting-started">Getting started</h2>
+<p>To generate your C# client, follow the steps below.</p>
+<div class="tabGroup" id="tabgroup_2">
+<ul role="tablist">
+<li role="presentation">
+<a href="#tabpanel_2_nswag" role="tab" aria-controls="tabpanel_2_nswag" data-tab="nswag" tabindex="0" aria-selected="true">NSwag</a>
+</li>
+<li role="presentation">
+<a href="#tabpanel_2_kiota" role="tab" aria-controls="tabpanel_2_kiota" data-tab="kiota" tabindex="-1">Kiota</a>
+</li>
+</ul>
+<section id="tabpanel_2_nswag" role="tabpanel" data-tab="nswag">
+<h3 id="visual-studio">Visual Studio</h3>
+<p>The easiest way to get started is by using the built-in capabilities of Visual Studio.
+The following steps describe how to generate and use a JSON:API client in C#, combined with our NuGet package.</p>
+<ol>
+<li><p>In <strong>Solution Explorer</strong>, right-click your client project, select <strong>Add</strong> &gt; <strong>Service Reference</strong> and choose <strong>OpenAPI</strong>.</p>
+</li>
+<li><p>On the next page, specify the OpenAPI URL to your JSON:API server, for example: <code>http://localhost:14140/swagger/v1/swagger.json</code>.
+Specify <code>ExampleApiClient</code> as the class name, optionally provide a namespace and click <strong>Finish</strong>.
+Visual Studio now downloads your swagger.json and updates your project file.
+This adds a pre-build step that generates the client code.</p>
+<div class="TIP">
+<h5>Tip</h5>
+<p>To later re-download swagger.json and regenerate the client code,
+right-click <strong>Dependencies</strong> &gt; <strong>Manage Connected Services</strong> and click the <strong>Refresh</strong> icon.</p>
+</div>
+</li>
+<li><p>Run package update now, which fixes incompatibilities and bugs from older versions.</p>
+</li>
+<li><p>Add our client package to your project:</p>
+<pre><code>dotnet add package JsonApiDotNetCore.OpenApi.Client.NSwag
+</code></pre>
+</li>
+<li><p>Add code that calls one of your JSON:API endpoints.</p>
+<pre><code class="lang-c#">using var httpClient = new HttpClient();
+var apiClient = new ExampleApiClient(httpClient);
+
+var getResponse = await apiClient.GetPersonCollectionAsync(new Dictionary&lt;string, string?&gt;
+{
+    [&quot;filter&quot;] = &quot;has(assignedTodoItems)&quot;,
+    [&quot;sort&quot;] = &quot;-lastName&quot;,
+    [&quot;page[size]&quot;] = &quot;5&quot;
+});
+
+foreach (var person in getResponse.Data)
+{
+    Console.WriteLine($&quot;Found person {person.Id}: {person.Attributes!.DisplayName}&quot;);
+}
+</code></pre>
+</li>
+<li><p>Extend the demo code to send a partial PATCH request with the help of our package:</p>
+<pre><code class="lang-c#">var updatePersonRequest = new UpdatePersonRequestDocument
+{
+    Data = new DataInUpdatePersonRequest
+    {
+        Id = &quot;1&quot;,
+        // Using TrackChangesFor to send &quot;firstName: null&quot; instead of omitting it.
+        Attributes = new TrackChangesFor&lt;AttributesInUpdatePersonRequest&gt;(_apiClient)
+        {
+            Initializer =
+            {
+                FirstName = null,
+                LastName = &quot;Doe&quot;
+            }
+        }.Initializer
+    }
+};
+
+await ApiResponse.TranslateAsync(async () =&gt;
+    await _apiClient.PatchPersonAsync(updatePersonRequest.Data.Id, updatePersonRequest));
+
+// The sent request looks like this:
+// {
+//   &quot;data&quot;: {
+//     &quot;type&quot;: &quot;people&quot;,
+//     &quot;id&quot;: &quot;1&quot;,
+//     &quot;attributes&quot;: {
+//       &quot;firstName&quot;: null,
+//       &quot;lastName&quot;: &quot;Doe&quot;
+//     }
+//   }
+// }
+</code></pre>
+</li>
+</ol>
+<div class="TIP">
+<h5>Tip</h5>
+<p>The <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples/OpenApiNSwagClientExample">example project</a> contains an enhanced version
+that uses <code>IHttpClientFactory</code> for <a href="https://learn.microsoft.com/dotnet/core/extensions/httpclient-factory">scalability</a> and
+<a href="https://learn.microsoft.com/aspnet/core/fundamentals/http-requests#use-polly-based-handlers">resiliency</a> and logs the HTTP requests and responses.
+Additionally, the example shows how to write the swagger.json file to disk when building the server, which is imported from the client project.
+This keeps the server and client automatically in sync, which is handy when both are in the same solution.</p>
+</div>
+<h3 id="other-ides">Other IDEs</h3>
+<p>The following section shows what to add to your client project file directly:</p>
+<pre><code class="lang-xml">&lt;ItemGroup&gt;
+  &lt;PackageReference Include=&quot;Microsoft.Extensions.ApiDescription.Client&quot; Version=&quot;8.0.*&quot; PrivateAssets=&quot;all&quot; /&gt;
+  &lt;PackageReference Include=&quot;Newtonsoft.Json&quot; Version=&quot;13.0.*&quot; /&gt;
+  &lt;PackageReference Include=&quot;NSwag.ApiDescription.Client&quot; Version=&quot;14.1.*&quot; PrivateAssets=&quot;all&quot; /&gt;
+&lt;/ItemGroup&gt;
+
+&lt;ItemGroup&gt;
+  &lt;OpenApiReference Include=&quot;OpenAPIs\swagger.json&quot;&gt;
+    &lt;SourceUri&gt;http://localhost:14140/swagger/v1/swagger.json&lt;/SourceUri&gt;
+    &lt;ClassName&gt;ExampleApiClient&lt;/ClassName&gt;
+    &lt;OutputPath&gt;%(ClassName).cs&lt;/OutputPath&gt;
+  &lt;/OpenApiReference&gt;
+&lt;/ItemGroup&gt;
+</code></pre>
+<p>From here, continue from step 3 in the list of steps for Visual Studio.</p>
+</section>
+<section id="tabpanel_2_kiota" role="tabpanel" data-tab="kiota" aria-hidden="true" hidden="hidden">
+
+<p>To generate your C# client, first add the Kiota tool to your solution:</p>
+<pre><code>dotnet tool install microsoft.openapi.kiota
+</code></pre>
+<p>After adding the <code>JsonApiDotNetCore.OpenApi.Client.Kiota</code> package to your project, add a <code>KiotaReference</code> element
+to your project file to import your OpenAPI file. For example:</p>
+<pre><code class="lang-xml">&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+  &lt;ItemGroup&gt;
+    &lt;KiotaReference Include=&quot;path/to/openapi.json&quot;&gt;
+      &lt;NamespaceName&gt;$(MSBuildProjectName).GeneratedCode&lt;/NamespaceName&gt;
+      &lt;ClassName&gt;ExampleApiClient&lt;/ClassName&gt;
+      &lt;OutputPath&gt;./GeneratedCode&lt;/OutputPath&gt;
+      &lt;ExtraArguments&gt;$(JsonApiExtraArguments)&lt;/ExtraArguments&gt;
+    &lt;/KiotaReference&gt;
+  &lt;/ItemGroup&gt;
+&lt;/Project&gt;
+</code></pre>
+<div class="NOTE">
+<h5>Note</h5>
+<p>The <code>ExtraArguments</code> parameter is required for compatibility with JSON:API.</p>
+</div>
+<p>Next, build your project. It runs the kiota command-line tool, which generates files in the <code>GeneratedCode</code> subdirectory.</p>
+<div class="CAUTION">
+<h5>Caution</h5>
+<p>If you're not using <code>&lt;KiotaReference&gt;</code>, at least make sure you're passing the <code>--backing-store</code> switch to the command-line tool,
+which is needed for JSON:API partial POST/PATCH requests to work correctly.</p>
+</div>
+<p>Kiota is pretty young and therefore still rough around the edges. At the time of writing, there are various bugs, for which we have workarounds
+in place. For a full example, see the <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples/OpenApiKiotaClientExample">example project</a>.</p>
+</section>
+</div>
+<h2 id="configuration">Configuration</h2>
+<p>Various switches enable you to tweak the client generation to your needs. See the section below for an overview.</p>
+<div class="tabGroup" id="tabgroup_3">
+<ul role="tablist">
+<li role="presentation">
+<a href="#tabpanel_3_nswag" role="tab" aria-controls="tabpanel_3_nswag" data-tab="nswag" tabindex="0" aria-selected="true">NSwag</a>
+</li>
+<li role="presentation">
+<a href="#tabpanel_3_kiota" role="tab" aria-controls="tabpanel_3_kiota" data-tab="kiota" tabindex="-1">Kiota</a>
+</li>
+</ul>
+<section id="tabpanel_3_nswag" role="tabpanel" data-tab="nswag">
+
+<p>The <code>OpenApiReference</code> element can be customized using various <a href="https://github.com/RicoSuter/NSwag/blob/7d6df3af95081f3f0ed6dee04be8d27faa86f91a/src/NSwag.ApiDescription.Client/NSwag.ApiDescription.Client.props">NSwag-specific MSBuild properties</a>.
+See <a href="https://github.com/RicoSuter/NSwag/blob/master/src/NSwag.Commands/Commands/CodeGeneration/OpenApiToCSharpClientCommand.cs">the source code</a> for their meaning.
+The <code>JsonApiDotNetCore.OpenApi.Client.NSwag</code> package sets various of these for optimal JSON:API support.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>Earlier versions of NSwag required the use of <code>&lt;Options&gt;</code> to specify command-line switches directly.
+This is no longer recommended and may conflict with the new MSBuild properties.</p>
+</div>
+<p>For example, the following section puts the generated code in a namespace, makes the client class internal and generates an interface (handy when writing tests):</p>
+<pre><code class="lang-xml">&lt;OpenApiReference Include=&quot;swagger.json&quot;&gt;
+  &lt;Namespace&gt;ExampleProject.GeneratedCode&lt;/Namespace&gt;
+  &lt;NSwagClientClassAccessModifier&gt;internal&lt;/NSwagClientClassAccessModifier&gt;
+  &lt;NSwagGenerateClientInterfaces&gt;true&lt;/NSwagGenerateClientInterfaces&gt;
+&lt;/OpenApiReference&gt;
+</code></pre>
+</section>
+<section id="tabpanel_3_kiota" role="tabpanel" data-tab="kiota" aria-hidden="true" hidden="hidden">
+
+<p>The available command-line switches for Kiota are described <a href="https://learn.microsoft.com/openapi/kiota/using#client-generation">here</a>.</p>
+<p>At the time of writing, Kiota provides <a href="https://github.com/microsoft/kiota/issues/3005">no official integration</a> with MSBuild.
+Our <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples/OpenApiKiotaClientExample">example project</a> takes a stab at it,
+which seems to work. If you're an MSBuild expert, please help out!</p>
+<pre><code class="lang-xml">&lt;Target Name=&quot;ExcludeKiotaGeneratedCode&quot; BeforeTargets=&quot;BeforeCompile;CoreCompile&quot; Condition=&quot;$(DesignTimeBuild) != true And $(BuildingProject) == true&quot;&gt;
+  &lt;ItemGroup&gt;
+    &lt;Compile Remove=&quot;**\GeneratedCode\**\*.cs&quot; /&gt;
+  &lt;/ItemGroup&gt;
+&lt;/Target&gt;
+
+&lt;Target Name=&quot;KiotaRunTool&quot; BeforeTargets=&quot;BeforeCompile;CoreCompile&quot; AfterTargets=&quot;ExcludeKiotaGeneratedCode&quot;
+  Condition=&quot;$(DesignTimeBuild) != true And $(BuildingProject) == true&quot;&gt;
+  &lt;Exec
+    Command=&quot;dotnet kiota generate --language CSharp --class-name ExampleApiClient --namespace-name OpenApiKiotaClientExample.GeneratedCode --output ./GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../JsonApiDotNetCoreExample/GeneratedSwagger/JsonApiDotNetCoreExample.json&quot; /&gt;
+&lt;/Target&gt;
+
+&lt;Target Name=&quot;IncludeKiotaGeneratedCode&quot; BeforeTargets=&quot;BeforeCompile;CoreCompile&quot; AfterTargets=&quot;KiotaRunTool&quot;
+  Condition=&quot;$(DesignTimeBuild) != true And $(BuildingProject) == true&quot;&gt;
+  &lt;ItemGroup&gt;
+    &lt;Compile Include=&quot;**\GeneratedCode\**\*.cs&quot; /&gt;
+  &lt;/ItemGroup&gt;
+&lt;/Target&gt;
+</code></pre>
+</section>
+</div>
+<h2 id="headers-and-caching">Headers and caching</h2>
+<p>The use of HTTP headers varies per client generator. To use <a href="caching.html">ETags for caching</a>, see the notes below.</p>
+<div class="tabGroup" id="tabgroup_4">
+<ul role="tablist">
+<li role="presentation">
+<a href="#tabpanel_4_nswag" role="tab" aria-controls="tabpanel_4_nswag" data-tab="nswag" tabindex="0" aria-selected="true">NSwag</a>
+</li>
+<li role="presentation">
+<a href="#tabpanel_4_kiota" role="tab" aria-controls="tabpanel_4_kiota" data-tab="kiota" tabindex="-1">Kiota</a>
+</li>
+</ul>
+<section id="tabpanel_4_nswag" role="tabpanel" data-tab="nswag">
+
+<p>To gain access to HTTP response headers, add the following in a <code>PropertyGroup</code> or directly in the <code>OpenApiReference</code>:</p>
+<pre><code>&lt;NSwagWrapResponses&gt;true&lt;/NSwagWrapResponses&gt;
+</code></pre>
+<p>This enables the following code, which is explained below:</p>
+<pre><code class="lang-c#">var getResponse = await ApiResponse.TranslateAsync(() =&gt; apiClient.GetPersonCollectionAsync());
+string eTag = getResponse.Headers[&quot;ETag&quot;].Single();
+Console.WriteLine($&quot;Retrieved {getResponse.Result?.Data.Count ?? 0} people.&quot;);
+
+// wait some time...
+
+getResponse = await ApiResponse.TranslateAsync(() =&gt; apiClient.GetPersonCollectionAsync(if_None_Match: eTag));
+
+if (getResponse is { StatusCode: (int)HttpStatusCode.NotModified, Result: null })
+{
+    Console.WriteLine(&quot;The HTTP response hasn't changed, so no response body was returned.&quot;);
+}
+</code></pre>
+<p>The response of the first API call contains both data and an ETag header, which is a fingerprint of the response.
+That ETag gets passed to the second API call. This enables the server to detect if something changed, which optimizes
+network usage: no data is sent back, unless is has changed.
+If you only want to ask whether data has changed without fetching it, use a HEAD request instead.</p>
+</section>
+<section id="tabpanel_4_kiota" role="tabpanel" data-tab="kiota" aria-hidden="true" hidden="hidden">
+
+<p>Use <code>HeadersInspectionHandlerOption</code> to gain access to HTTP response headers. For example:</p>
+<pre><code class="lang-c#">var headerInspector = new HeadersInspectionHandlerOption
+{
+    InspectResponseHeaders = true
+};
+
+var responseDocument = await apiClient.Api.People.GetAsync(configuration =&gt; configuration.Options.Add(headerInspector));
+
+string eTag = headerInspector.ResponseHeaders[&quot;ETag&quot;].Single();
+</code></pre>
+<p>Due to a <a href="https://github.com/microsoft/kiota/issues/4190">bug in Kiota</a>, a try/catch block is needed additionally to make this work.</p>
+<p>For a full example, see the <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples/OpenApiKiotaClientExample">example project</a>.</p>
+</section>
+</div>
+<h2 id="atomic-operations">Atomic operations</h2>
+<div class="tabGroup" id="tabgroup_5">
+<ul role="tablist">
+<li role="presentation">
+<a href="#tabpanel_5_nswag" role="tab" aria-controls="tabpanel_5_nswag" data-tab="nswag" tabindex="0" aria-selected="true">NSwag</a>
+</li>
+<li role="presentation">
+<a href="#tabpanel_5_kiota" role="tab" aria-controls="tabpanel_5_kiota" data-tab="kiota" tabindex="-1">Kiota</a>
+</li>
+</ul>
+<section id="tabpanel_5_nswag" role="tabpanel" data-tab="nswag">
+
+<p><a href="writing/bulk-batch-operations.html">Atomic operations</a> are fully supported.
+The <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples/OpenApiNSwagClientExample">example project</a>
+demonstrates how to use them. It uses local IDs to:</p>
+<ul>
+<li>Create a new tag</li>
+<li>Create a new person</li>
+<li>Update the person to clear an attribute (using <code>TrackChangesFor</code>)</li>
+<li>Create a new todo-item, tagged with the new tag, and owned by the new person</li>
+<li>Assign the todo-item to the created person</li>
+</ul>
+</section>
+<section id="tabpanel_5_kiota" role="tabpanel" data-tab="kiota" aria-hidden="true" hidden="hidden">
+
+<p><a href="writing/bulk-batch-operations.html">Atomic operations</a> are fully supported.
+See the <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples/OpenApiKiotaClientExample">example project</a>
+demonstrates how to use them. It uses local IDs to:</p>
+<ul>
+<li>Create a new tag</li>
+<li>Create a new person</li>
+<li>Update the person to clear an attribute (using built-in backing-store)</li>
+<li>Create a new todo-item, tagged with the new tag, and owned by the new person</li>
+<li>Assign the todo-item to the created person</li>
+</ul>
+</section>
+</div>
+<h2 id="known-limitations">Known limitations</h2>
+<div class="tabGroup" id="tabgroup_6">
+<ul role="tablist">
+<li role="presentation">
+<a href="#tabpanel_6_nswag" role="tab" aria-controls="tabpanel_6_nswag" data-tab="nswag" tabindex="0" aria-selected="true">NSwag</a>
+</li>
+<li role="presentation">
+<a href="#tabpanel_6_kiota" role="tab" aria-controls="tabpanel_6_kiota" data-tab="kiota" tabindex="-1">Kiota</a>
+</li>
+</ul>
+<section id="tabpanel_6_nswag" role="tabpanel" data-tab="nswag">
+
+<table>
+<thead>
+<tr>
+<th>Limitation</th>
+<th>Workaround</th>
+<th>Links</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Partial POST/PATCH sends incorrect request</td>
+<td>Use <code>TrackChangesFor</code> from <code>JsonApiDotNetCore.OpenApi.Client.NSwag</code> package</td>
+<td></td>
+</tr>
+<tr>
+<td>Exception thrown on successful HTTP status</td>
+<td>Use <code>TranslateAsync</code> from <code>JsonApiDotNetCore.OpenApi.Client.NSwag</code> package</td>
+<td><a href="https://github.com/RicoSuter/NSwag/issues/2499">https://github.com/RicoSuter/NSwag/issues/2499</a></td>
+</tr>
+<tr>
+<td>No <code>Accept</code> header sent when only error responses define <code>Content-Type</code></td>
+<td><code>JsonApiDotNetCore.OpenApi.Swashbuckle</code> package contains workaround</td>
+<td></td>
+</tr>
+<tr>
+<td>Schema type not always inferred with <code>allOf</code></td>
+<td><code>JsonApiDotNetCore.OpenApi.Swashbuckle</code> package contains workaround</td>
+<td></td>
+</tr>
+<tr>
+<td>Generated code for JSON:API extensions does not compile</td>
+<td><code>JsonApiDotNetCore.OpenApi.Swashbuckle</code> package contains workaround</td>
+<td></td>
+</tr>
+<tr>
+<td>A project can't contain both JSON:API clients and regular OpenAPI clients</td>
+<td>Use separate projects</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tabpanel_6_kiota" role="tabpanel" data-tab="kiota" aria-hidden="true" hidden="hidden">
+
+<table>
+<thead>
+<tr>
+<th>Limitation</th>
+<th>Workaround</th>
+<th>Links</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Properties are always nullable</td>
+<td>-</td>
+<td><a href="https://github.com/microsoft/kiota/issues/3911">https://github.com/microsoft/kiota/issues/3911</a></td>
+</tr>
+<tr>
+<td>JSON:API query strings are inaccessible</td>
+<td>Use <code>SetQueryStringHttpMessageHandler.CreateScope</code> from <code>JsonApiDotNetCore.OpenApi.Client.Kiota</code> package</td>
+<td><a href="https://github.com/microsoft/kiota/issues/3800">https://github.com/microsoft/kiota/issues/3800</a></td>
+</tr>
+<tr>
+<td>Properties set to <code>null</code> are sent twice</td>
+<td>-</td>
+<td><a href="https://github.com/microsoft/kiota-dotnet/issues/535">https://github.com/microsoft/kiota-dotnet/issues/535</a></td>
+</tr>
+<tr>
+<td>HTTP 304 (Not Modified) is not properly recognized</td>
+<td>Catch <code>ApiException</code> and inspect the response status code</td>
+<td><a href="https://github.com/microsoft/kiota/issues/4190">https://github.com/microsoft/kiota/issues/4190</a>, <a href="https://github.com/microsoft/kiota-dotnet/issues/531">https://github.com/microsoft/kiota-dotnet/issues/531</a></td>
+</tr>
+<tr>
+<td>Generator warns about unsupported formats</td>
+<td>Use <code>JsonApiDotNetCore.OpenApi.Client.Kiota</code> package</td>
+<td><a href="https://github.com/microsoft/kiota/issues/4227">https://github.com/microsoft/kiota/issues/4227</a></td>
+</tr>
+<tr>
+<td><code>Stream</code> response for HEAD request</td>
+<td>-</td>
+<td><a href="https://github.com/microsoft/kiota/issues/4245">https://github.com/microsoft/kiota/issues/4245</a></td>
+</tr>
+<tr>
+<td>Unhelpful exception messages</td>
+<td>-</td>
+<td><a href="https://github.com/microsoft/kiota/issues/4349">https://github.com/microsoft/kiota/issues/4349</a></td>
+</tr>
+<tr>
+<td>Discriminator properties aren't being set automatically</td>
+<td>-</td>
+<td><a href="https://github.com/microsoft/kiota/issues/4618">https://github.com/microsoft/kiota/issues/4618</a></td>
+</tr>
+<tr>
+<td>Discriminator mappings must be repeated in every derived type used in responses</td>
+<td><code>JsonApiDotNetCore.OpenApi.Swashbuckle</code> package contains workaround</td>
+<td><a href="https://github.com/microsoft/kiota/issues/2432">https://github.com/microsoft/kiota/issues/2432</a></td>
+</tr>
+<tr>
+<td><code>x-abstract</code> in <code>openapi.json</code> is ignored</td>
+<td>-</td>
+<td></td>
+</tr>
+<tr>
+<td>No MSBuild / IDE support</td>
+<td>Use <code>KiotaReference</code> from <code>JsonApiDotNetCore.OpenApi.Client.Kiota</code> package</td>
+<td><a href="https://github.com/microsoft/kiota/issues/3005">https://github.com/microsoft/kiota/issues/3005</a></td>
+</tr>
+<tr>
+<td>Incorrect nullability in API methods</td>
+<td>Use <code>KiotaReference</code> from <code>JsonApiDotNetCore.OpenApi.Client.Kiota</code> package</td>
+<td><a href="https://github.com/microsoft/kiota/issues/3944">https://github.com/microsoft/kiota/issues/3944</a></td>
+</tr>
+<tr>
+<td>Generated code for JSON:API extensions does not compile</td>
+<td><code>JsonApiDotNetCore.OpenApi.Swashbuckle</code> package contains workaround</td>
+<td></td>
+</tr>
+<tr>
+<td>Properties are always sent in alphabetic order</td>
+<td>-</td>
+<td><a href="https://github.com/microsoft/kiota/issues/4680">https://github.com/microsoft/kiota/issues/4680</a></td>
+</tr>
+</tbody>
+</table>
+</section>
+</div>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/openapi-client.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

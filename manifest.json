@@ -3637,6 +3637,16 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "ext/openapi/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "ext/openapi/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "getting-started/faq.md",
       "output": {
         ".html": {
@@ -3863,6 +3873,36 @@
       "output": {
         ".html": {
           "relative_path": "usage/meta.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/openapi-client.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/openapi-client.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/openapi-documentation.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/openapi-documentation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/openapi.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/openapi.html"
         }
       },
       "version": ""

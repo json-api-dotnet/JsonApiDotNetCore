@@ -84,7 +84,7 @@
 <h1 id="relationships">Relationships</h1>
 
 <p>A relationship is a named link between two resource types, including a direction.
-They are similar to <a href="https://docs.microsoft.com/en-us/ef/core/modeling/relationships">navigation properties in Entity Framework Core</a>.</p>
+They are similar to <a href="https://learn.microsoft.com/ef/core/modeling/relationships">navigation properties in Entity Framework Core</a>.</p>
 <p>Relationships come in two flavors: to-one and to-many.
 The left side of a relationship is where the relationship is declared, the right side is the resource type it points to.</p>
 <h2 id="hasone">HasOne</h2>
@@ -172,7 +172,7 @@ CREATE UNIQUE INDEX &quot;IX_Cars_EngineId&quot; ON &quot;Cars&quot; (&quot;Engi
 <p>For optional one-to-one relationships, Entity Framework Core uses <code>DeleteBehavior.ClientSetNull</code> by default, instead of <code>DeleteBehavior.SetNull</code>.
 This means that Entity Framework Core tries to handle the cascading effects (by sending multiple SQL statements), instead of leaving it up to the database.
 Of course that's only going to work when all the related resources are loaded in the change tracker upfront, which is expensive because it requires fetching more data than necessary.</p>
-<p>The reason for this odd default is poor support in SQL Server, as explained <a href="https://stackoverflow.com/questions/54326165/ef-core-why-clientsetnull-is-default-ondelete-behavior-for-optional-relations">here</a> and <a href="https://learn.microsoft.com/en-us/ef/core/saving/cascade-delete#database-cascade-limitations">here</a>.</p>
+<p>The reason for this odd default is poor support in SQL Server, as explained <a href="https://stackoverflow.com/questions/54326165/ef-core-why-clientsetnull-is-default-ondelete-behavior-for-optional-relations">here</a> and <a href="https://learn.microsoft.com/ef/core/saving/cascade-delete#database-cascade-limitations">here</a>.</p>
 <p><strong>Our <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/1205">testing</a> shows that these limitations don't exist when using PostgreSQL.
 Therefore the general advice is to map the delete behavior of optional one-to-one relationships explicitly with <code>.OnDelete(DeleteBehavior.SetNull)</code>. This is simpler and more efficient.</strong></p>
 <p>The next example defines that each car optionally has an engine, while an engine is optionally linked to a car.</p>

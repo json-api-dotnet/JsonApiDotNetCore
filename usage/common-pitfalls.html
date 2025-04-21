@@ -142,7 +142,7 @@ This is only one of the issues you'll run into. Just don't go there.</p>
 This paradigm <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1092#issuecomment-932749676">doesn't work well</a> with JSON:API, because each resource can be changed in isolation.
 So if your API needs to guard invariants such as &quot;the sum of all orders must never exceed 500 dollars&quot;, then you're better off with an RPC-style API instead of the REST paradigm that JSON:API follows.</p>
 <p>Adding constructors to resource classes that validate incoming parameters before assigning them to properties does not work.
-Entity Framework Core <a href="https://learn.microsoft.com/en-us/ef/core/modeling/constructors#binding-to-mapped-properties">supports</a> that,
+Entity Framework Core <a href="https://learn.microsoft.com/ef/core/modeling/constructors#binding-to-mapped-properties">supports</a> that,
 but does so via internal implementation details that are inaccessible by JsonApiDotNetCore.</p>
 <p>In JsonApiDotNetCore, resources are what DDD calls <a href="https://thedomaindrivendesign.io/anemic-model/">anemic models</a>.
 Validation and business rules are typically implemented in <a href="extensibility/resource-definitions.html">Resource Definitions</a>.</p>
@@ -160,7 +160,7 @@ the number of required stored procedures to support all that either explodes, or
 With stored procedures, you're either going to have a lot of work to do, or you'll end up with an API that has very limited capabilities.
 Neither sounds very compelling. If stored procedures is what you need, you're better off creating an RPC-style API that doesn't use JsonApiDotNetCore.</p>
 <h4 id="do-not-use-apicontroller-on-jsonapi-controllers">Do not use <code>[ApiController]</code> on JSON:API controllers</h4>
-<p>Although recommended by Microsoft for hard-written controllers, the opinionated behavior of <a href="https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-7.0#apicontroller-attribute"><code>[ApiController]</code></a> violates the JSON:API specification.
+<p>Although recommended by Microsoft for hard-written controllers, the opinionated behavior of <a href="https://learn.microsoft.com/aspnet/core/web-api/#apicontroller-attribute"><code>[ApiController]</code></a> violates the JSON:API specification.
 Despite JsonApiDotNetCore trying its best to deal with it, the experience won't be as good as leaving it out.</p>
 <h4 id="dont-use-auto-generated-controllers-with-shared-models">Don't use auto-generated controllers with shared models</h4>
 <p>When model classes are defined in a separate project, the controllers are generated in that project as well, which is probably not what you want.
@@ -179,7 +179,7 @@ If you're in need of a quick setup, use <a href="https://www.sqlite.org/">SQLite
 builder.Services.AddSqlite&lt;AppDbContext&gt;(&quot;Data Source=temp.db&quot;);
 </code></pre>
 <p>Which creates <code>temp.db</code> on disk. Simply deleting the file gives you a clean slate.
-This is a lot more convenient compared to using <a href="https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb">SqlLocalDB</a>, which runs a background service that breaks if you delete its underlying storage files.</p>
+This is a lot more convenient compared to using <a href="https://learn.microsoft.com/sql/database-engine/configure-windows/sql-server-express-localdb">SqlLocalDB</a>, which runs a background service that breaks if you delete its underlying storage files.</p>
 <p>However, even SQLite does not support all queries produced by Entity Framework Core. You'll get the best (and fastest) experience with <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/run-docker-postgres.ps1">PostgreSQL in a docker container</a>.</p>
 <h4 id="one-to-one-relationships-require-custom-entity-framework-core-mappings">One-to-one relationships require custom Entity Framework Core mappings</h4>
 <p>Entity Framework Core has great conventions and sane mapping defaults. But two of them are problematic for JSON:API: identifying foreign keys and default delete behavior.
@@ -207,7 +207,7 @@ And they won't match up with the current endpoint when switching to a different 
 <p>If you need such side effects, it's easiest to inject your <code>DbContext</code> in the controller, directly apply the changes on it and save.
 A better way is to inject your <code>DbContext</code> in a <a href="extensibility/resource-definitions.html">Resource Definition</a> and apply the changes there.</p>
 <h4 id="concurrency-tokens-timestamprowversionxmin-wont-work">Concurrency tokens (timestamp/rowversion/xmin) won't work</h4>
-<p>While we'd love to support such <a href="https://learn.microsoft.com/en-us/ef/core/saving/concurrency?tabs=data-annotations">tokens for optimistic concurrency</a>,
+<p>While we'd love to support such <a href="https://learn.microsoft.com/ef/core/saving/concurrency?tabs=data-annotations">tokens for optimistic concurrency</a>,
 it turns out that the implementation is far from trivial. We've come a long way, but aren't sure how it should work when relationship endpoints and atomic operations are involved.
 If you're interested, we welcome your feedback at <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/1119">https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/1119</a>.</p>
 

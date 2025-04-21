@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Caching with ETags </title>
+      <title>OpenAPI documentation </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Caching with ETags ">
+      <meta name="title" content="OpenAPI documentation ">
       
       
       <link rel="icon" href="../favicon.ico">
@@ -16,7 +16,7 @@
       
       
       
-      <meta name="docfx:docurl" content="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/caching.md/#L1">
+      <meta name="docfx:docurl" content="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/openapi-documentation.md/#L1">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -81,67 +81,42 @@
         </div>
 
         <article data-uid="">
-<h1 id="caching-with-etags">Caching with ETags</h1>
 
-<p><em>since v4.2</em></p>
-<p>GET requests return an <a href="https://developer.mozilla.org/docs/Web/HTTP/Headers/ETag">ETag</a> HTTP header, which can be used by the client in subsequent requests to save network bandwidth.</p>
-<p>Be aware that the returned ETag represents the entire response body (a 'resource' in HTTP terminology) for a request URL that includes the query string.
-This is unrelated to JSON:API resources. Therefore, we do not use ETags for optimistic concurrency.</p>
-<p>Getting a list of resources returns an ETag:</p>
-<pre><code class="lang-http">GET /articles?sort=-lastModifiedAt HTTP/1.1
-Host: localhost:5000
-</code></pre>
-<pre><code class="lang-http">HTTP/1.1 200 OK
-Content-Type: application/vnd.api+json
-Server: Kestrel
-Transfer-Encoding: chunked
-ETag: &quot;7FFF010786E2CE8FC901896E83870E00&quot;
-
-{
-  &quot;data&quot;: [ ... ]
-}
-</code></pre>
-<p>The request is later resent using the received ETag. The server data has not changed at this point.</p>
-<pre><code class="lang-http">GET /articles?sort=-lastModifiedAt HTTP/1.1
-Host: localhost:5000
-If-None-Match: &quot;7FFF010786E2CE8FC901896E83870E00&quot;
-</code></pre>
-<pre><code class="lang-http">HTTP/1.1 304 Not Modified
-Server: Kestrel
-ETag: &quot;7FFF010786E2CE8FC901896E83870E00&quot;
-</code></pre>
-<p>After some time, the server data has changed.</p>
-<pre><code class="lang-http">GET /articles?sort=-lastModifiedAt HTTP/1.1
-Host: localhost:5000
-If-None-Match: &quot;7FFF010786E2CE8FC901896E83870E00&quot;
-</code></pre>
-<pre><code class="lang-http">HTTP/1.1 200 OK
-Content-Type: application/vnd.api+json
-Server: Kestrel
-Transfer-Encoding: chunked
-ETag: &quot;356075D903B8FE8D9921201A7E7CD3F9&quot;
-
-{
-  &quot;data&quot;: [ ... ]
-}
-</code></pre>
-<div class="TIP">
-<h5>Tip</h5>
-<p>To just poll for changes (without fetching them), send a HEAD request instead.</p>
+<div class="WARNING">
+<h5>Warning</h5>
+<p>OpenAPI support for JSON:API is currently experimental. The API and the structure of the OpenAPI document may change in future versions.</p>
 </div>
-<pre><code class="lang-http">HEAD /articles?sort=-lastModifiedAt HTTP/1.1
-Host: localhost:5000
-If-None-Match: &quot;7FFF010786E2CE8FC901896E83870E00&quot;
+<h1 id="openapi-documentation">OpenAPI documentation</h1>
+<p>After <a href="openapi.html">enabling OpenAPI</a>, you can expose a documentation website with SwaggerUI, Redoc and/or Scalar.</p>
+<h2 id="swaggerui">SwaggerUI</h2>
+<p><a href="https://swagger.io/tools/swagger-ui/">SwaggerUI</a> enables to visualize and interact with the JSON:API endpoints through a web page.
+While it conveniently provides the ability to execute requests, it doesn't show properties of derived types when component schema inheritance is used.</p>
+<p>SwaggerUI can be enabled by installing the <code>Swashbuckle.AspNetCore.SwaggerUI</code> NuGet package and adding the following to your <code>Program.cs</code> file:</p>
+<pre><code class="lang-c#">app.UseSwaggerUI();
 </code></pre>
-<pre><code class="lang-http">HTTP/1.1 200 OK
-Server: Kestrel
-ETag: &quot;356075D903B8FE8D9921201A7E7CD3F9&quot;
+<p>Then run your app and open <code>/swagger</code> in your browser.</p>
+<h2 id="redoc">Redoc</h2>
+<p><a href="https://github.com/Redocly/redoc">Redoc</a> is another popular tool that generates a documentation website from an OpenAPI document.
+It lists the endpoints and their schemas, but doesn't provide the ability to execute requests.
+However, this tool most accurately reflects properties when component schema inheritance is used; choosing a different &quot;type&quot; from the
+dropdown box dynamically adapts the list of schema properties.</p>
+<p>The <code>Swashbuckle.AspNetCore.ReDoc</code> NuGet package provides integration with Swashbuckle.
+After installing the package, add the following to your <code>Program.cs</code> file:</p>
+<pre><code class="lang-c#">app.UseReDoc();
 </code></pre>
+<p>Next, run your app and navigate to <code>/api-docs</code> to view the documentation.</p>
+<h2 id="scalar">Scalar</h2>
+<p><a href="https://scalar.com/">Scalar</a> is a modern documentation website generator, which includes the ability to execute requests.
+It shows component schemas in a low-level way (not collapsing <code>allOf</code> nodes), but does a poor job in handling component schema inheritance.</p>
+<p>After installing the <code>Scalar.AspNetCore</code> NuGet package, add the following to your <code>Program.cs</code> to make it use the OpenAPI document produced by Swashbuckle:</p>
+<pre><code class="lang-c#">app.MapScalarApiReference(options =&gt; options.OpenApiRoutePattern = &quot;/swagger/{documentName}/swagger.json&quot;);
+</code></pre>
+<p>Then run your app and navigate to <code>/scalar/v1</code> to view the documentation.</p>
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/caching.md/#L1" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/openapi-documentation.md/#L1" class="edit-link">Edit this page</a>
         </div>
 
         <div class="next-article d-print-none border-top" id="nextArticle"></div>

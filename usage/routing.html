@@ -147,7 +147,7 @@ public class OrderLineController : JsonApiController&lt;OrderLine, int&gt;
 }
 </code></pre>
 <h2 id="advanced-usage-custom-routing-convention">Advanced usage: custom routing convention</h2>
-<p>It is possible to replace the built-in routing convention with a <a href="https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/application-model?view=aspnetcore-3.1#sample-custom-routing-convention">custom routing convention</a> by registering an implementation of <code>IJsonApiRoutingConvention</code>.</p>
+<p>It is possible to replace the built-in routing convention with a <a href="https://learn.microsoft.com/aspnet/core/mvc/controllers/application-model#custom-routing-convention">custom routing convention</a> by registering an implementation of <code>IJsonApiRoutingConvention</code>.</p>
 <pre><code class="lang-c#">// Program.cs
 builder.Services.AddSingleton&lt;IJsonApiRoutingConvention, CustomRoutingConvention&gt;();
 </code></pre>

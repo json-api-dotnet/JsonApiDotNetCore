@@ -163,7 +163,7 @@ options.SerializerOptions.DictionaryKeyPolicy = null;
 </code></pre>
 <p>Because we copy resource properties into an intermediate object before serialization, JSON annotations such as <code>[JsonPropertyName]</code> and <code>[JsonIgnore]</code> on <code>[Attr]</code> properties are ignored.</p>
 <h2 id="modelstate-validation">ModelState Validation</h2>
-<p><a href="https://docs.microsoft.com/en-us/aspnet/core/mvc/models/validation">ASP.NET ModelState validation</a> can be used to validate incoming request bodies when creating and updating resources. Since v5.0, this is enabled by default.
+<p><a href="https://learn.microsoft.com/aspnet/web-api/overview/formats-and-model-binding/model-validation-in-aspnet-web-api">ASP.NET ModelState validation</a> can be used to validate incoming request bodies when creating and updating resources. Since v5.0, this is enabled by default.
 When <code>ValidateModelState</code> is set to <code>false</code>, no model validation is performed.</p>
 <p>How nullability affects ModelState validation is described <a href="resources/nullability.html">here</a>.</p>
 <pre><code class="lang-c#">options.ValidateModelState = true;

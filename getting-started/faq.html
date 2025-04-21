@@ -144,14 +144,14 @@ The good news is that there's an easier solution most of the time: configure Ent
 <p>For example, if your primary key column is named &quot;CustomerId&quot; instead of &quot;Id&quot;:</p>
 <pre><code class="lang-c#">builder.Entity&lt;Customer&gt;().Property(x =&gt; x.Id).HasColumnName(&quot;CustomerId&quot;);
 </code></pre>
-<p>It certainly pays off to read up on these capabilities at <a href="https://learn.microsoft.com/en-us/ef/core/modeling/">Creating and Configuring a Model</a>.
+<p>It certainly pays off to read up on these capabilities at <a href="https://learn.microsoft.com/ef/core/modeling/">Creating and Configuring a Model</a>.
 Another great resource is <a href="https://www.learnentityframeworkcore.com/configuration">Learn Entity Framework Core</a>.</p>
 <h4 id="can-i-share-my-resource-models-with-net-framework-projects">Can I share my resource models with .NET Framework projects?</h4>
 <p>Yes, you can. Put your model classes in a separate project that only references <a href="https://www.nuget.org/packages/JsonApiDotNetCore.Annotations/">JsonApiDotNetCore.Annotations</a>.
 This package contains just the JSON:API attributes and targets NetStandard 1.0, which makes it flexible to consume.
 At startup, use <a href="../usage/resource-graph.html#auto-discovery">Auto-discovery</a> and point it to your shared project.</p>
 <h4 id="whats-the-best-place-to-put-my-custom-businessvalidation-logic">What's the best place to put my custom business/validation logic?</h4>
-<p>For basic input validation, use the attributes from <a href="https://learn.microsoft.com/en-us/aspnet/core/mvc/models/validation?source=recommendations&amp;view=aspnetcore-7.0#built-in-attributes">ASP.NET ModelState Validation</a> to get the best experience.
+<p>For basic input validation, use the attributes from <a href="https://learn.microsoft.com/aspnet/core/mvc/models/validation?source=recommendations&amp;view=aspnetcore-7.0#built-in-attributes">ASP.NET ModelState Validation</a> to get the best experience.
 JsonApiDotNetCore is aware of them and adjusts behavior accordingly. And it produces the best possible error responses.</p>
 <p>For non-trivial business rules that require custom code, the place to be is <a href="../usage/extensibility/resource-definitions.html">Resource Definitions</a>.
 They provide a callback-based model where you can respond to everything going on.
@@ -211,7 +211,7 @@ And most resource definition callbacks are handled.
 That's because the built-in resource service translates all JSON:API query aspects of the request into a database-agnostic data structure called <code>QueryLayer</code>.
 Now the hard part for you becomes reading that data structure and producing data access calls from that.
 If your data store provides a LINQ provider, you can probably reuse <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/QueryableBuilder.cs">QueryableBuilder</a>,
-which drives the translation into <a href="https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/expression-trees/">System.Linq.Expressions</a>.
+which drives the translation into <a href="https://learn.microsoft.com/dotnet/csharp/programming-guide/concepts/expression-trees/">System.Linq.Expressions</a>.
 Note however, that it also produces calls to <code>.Include(&quot;&quot;)</code>, which is an Entity Framework Core-specific extension method, so you'll need to
 <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/QueryLayerIncludeConverter.cs">prevent that from happening</a>.</p>
 <p>The example <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/Examples/NoEntityFrameworkExample/Repositories/InMemoryResourceRepository.cs">here</a> compiles and executes

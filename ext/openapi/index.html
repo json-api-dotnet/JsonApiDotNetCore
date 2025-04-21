@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>JSON:API Extension for OpenAPI </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="JSON:API Extension for OpenAPI ">
+      
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../../toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/ext/openapi/index.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+
+      <div class="content">
+        <div class="actionbar">
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="jsonapi-extension-for-openapi">JSON:API Extension for OpenAPI</h1>
+
+<p>This extension facilitates using OpenAPI client generators targeting JSON:API documents.</p>
+<p>In JSON:API, a resource object contains the <code>type</code> member, which defines the structure of nested <a href="https://jsonapi.org/format/#document-resource-object-attributes">attributes</a> and <a href="https://jsonapi.org/format/#document-resource-object-relationships">relationships</a> objects.
+While OpenAPI supports such constraints using <code>allOf</code> inheritance with a discriminator property for the <code>data</code> member,
+it provides no way to express that the discriminator recursively applies to nested objects.</p>
+<p>This extension addresses that limitation by defining additional discriminator properties to guide code generation tools.</p>
+<h2 id="uri">URI</h2>
+<p>This extension has the URI <code>https://www.jsonapi.net/ext/openapi</code>.
+Because code generators often choke on the double quotes in <code>Accept</code> and <code>Content-Type</code> HTTP header values, a relaxed form is also permitted: <code>openapi</code>.</p>
+<p>For example, the following <code>Content-Type</code> header:</p>
+<pre><code class="lang-http">Content-Type: application/vnd.api+json; ext=&quot;https://www.jsonapi.net/ext/openapi&quot;
+</code></pre>
+<p>is equivalent to:</p>
+<pre><code class="lang-http">Content-Type: application/vnd.api+json; ext=openapi
+</code></pre>
+<p>To avoid the need for double quotes when multiple extensions are used, the following relaxed form can be used:</p>
+<pre><code class="lang-http">Content-Type: application/vnd.api+json; ext=openapi; ext=atomic
+</code></pre>
+<div class="NOTE">
+<h5>Note</h5>
+<p>The <a href="https://jsonapi.org/format/#media-type-parameter-rules">base specification</a> <em>forbids</em> the use of multiple <code>ext</code> parameters
+and <em>requires</em> that each extension name must be a URI.
+This extension relaxes both constraints for practical reasons, to workaround bugs in client generators that produce broken code otherwise.</p>
+</div>
+<h2 id="namespace">Namespace</h2>
+<p>This extension uses the namespace <code>openapi</code>.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>JSON:API extensions can only introduce new document members using a reserved namespace as a prefix.</p>
+</div>
+<h2 id="document-structure">Document Structure</h2>
+<p>A document that supports this extension MAY include any of the top-level members allowed by the base specification,
+including any members defined in the <a href="https://jsonapi.org/ext/atomic/">Atomic Operations extension</a>.</p>
+<h3 id="resource-objects">Resource Objects</h3>
+<p>In addition to the members allowed by the base specification, the following member MAY be included
+in <a href="https://jsonapi.org/format/#document-resource-object-attributes">attributes</a> and <a href="https://jsonapi.org/format/#document-resource-object-relationships">relationships</a> objects:</p>
+<ul>
+<li><code>openapi:discriminator</code> - A string that MUST be identical to the <code>type</code> member in the containing <a href="https://jsonapi.org/format/#document-resource-objects">resource object</a>.</li>
+</ul>
+<p>Here's how an article (i.e. a resource of type &quot;articles&quot;) might appear in a document:</p>
+<pre><code class="lang-json">{
+  &quot;data&quot;: {
+    &quot;type&quot;: &quot;articles&quot;,
+    &quot;id&quot;: &quot;1&quot;,
+    &quot;attributes&quot;: {
+      &quot;openapi:discriminator&quot;: &quot;articles&quot;,
+      &quot;title&quot;: &quot;Rails is Omakase&quot;
+    },
+    &quot;relationships&quot;: {
+      &quot;openapi:discriminator&quot;: &quot;articles&quot;,
+      &quot;author&quot;: {
+        &quot;data&quot;: { &quot;type&quot;: &quot;people&quot;, &quot;id&quot;: &quot;9&quot; }
+      }
+    }
+  }
+}
+</code></pre>
+<h3 id="atomic-operations">Atomic Operations</h3>
+<p>In addition to the members allowed by the <a href="https://jsonapi.org/ext/atomic/">Atomic Operations extension</a>,
+the following member MAY be included in elements of an <code>atomic:operations</code> array:</p>
+<ul>
+<li><code>openapi:discriminator</code> - A free-format string to facilitate generation of client code.</li>
+</ul>
+<p>For example:</p>
+<pre><code class="lang-http">POST /operations HTTP/1.1
+Host: example.org
+Content-Type: application/vnd.api+json; ext=&quot;https://www.jsonapi.net/ext/openapi https://jsonapi.org/ext/atomic&quot;
+Accept: application/vnd.api+json; ext=&quot;https://www.jsonapi.net/ext/openapi https://jsonapi.org/ext/atomic&quot;
+
+{
+  &quot;atomic:operations&quot;: [{
+    &quot;openapi:discriminator&quot;: &quot;add-article&quot;,
+    &quot;op&quot;: &quot;add&quot;,
+    &quot;data&quot;: {
+      &quot;type&quot;: &quot;articles&quot;,
+      &quot;attributes&quot;: {
+        &quot;openapi:discriminator&quot;: &quot;articles&quot;,
+        &quot;title&quot;: &quot;JSON API paints my bikeshed!&quot;
+      }
+    }
+  }]
+}
+</code></pre>
+<h2 id="processing">Processing</h2>
+<p>A server MAY ignore the <code>openapi:discriminator</code> member in <a href="https://jsonapi.org/format/#document-resource-object-attributes">attributes</a> and <a href="https://jsonapi.org/format/#document-resource-object-relationships">relationships</a> objects from incoming requests.
+A server SHOULD ignore the <code>openapi:discriminator</code> member in elements of an <code>atomic:operations</code> array.</p>
+<p>A server MUST include the <code>openapi:discriminator</code> member in <a href="https://jsonapi.org/format/#document-resource-object-attributes">attributes</a> and <a href="https://jsonapi.org/format/#document-resource-object-relationships">relationships</a> objects in outgoing responses.
+The member value MUST be the same as the <code>type</code> member value of the containing resource object.</p>
+<p>A client MAY include the <code>openapi:discriminator</code> member in <a href="https://jsonapi.org/format/#document-resource-object-attributes">attributes</a> and <a href="https://jsonapi.org/format/#document-resource-object-relationships">relationships</a> objects in outgoing requests.
+The member value MUST be the same as the <code>type</code> member value of the containing resource object.</p>
+<p>A client MAY include the <code>openapi:discriminator</code> member in elements of an <code>atomic:operations</code> array.</p>
+<h3 id="processing-errors">Processing Errors</h3>
+<p>A server SHOULD validate that the value of the <code>openapi:discriminator</code> member in
+<a href="https://jsonapi.org/format/#document-resource-object-attributes">attributes</a> and <a href="https://jsonapi.org/format/#document-resource-object-relationships">relationships</a> objects
+is identical to the <code>type</code> member in the containing resource object. When validation fails, the server MUST respond with a <code>409 Conflict</code>
+and SHOULD include a document with a top-level <code>errors</code> member that contains an error object.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/ext/openapi/index.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
