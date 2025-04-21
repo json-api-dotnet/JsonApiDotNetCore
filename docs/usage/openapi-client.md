@@ -119,7 +119,7 @@ The following steps describe how to generate and use a JSON:API client in C#, co
     ```
 
 > [!TIP]
-> The [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/openapi/src/Examples/OpenApiNSwagClientExample) contains an enhanced version
+> The [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples/OpenApiNSwagClientExample) contains an enhanced version
 > that uses `IHttpClientFactory` for [scalability](https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory) and
 > [resiliency](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/http-requests#use-polly-based-handlers) and logs the HTTP requests and responses.
 > Additionally, the example shows how to write the swagger.json file to disk when building the server, which is imported from the client project.
@@ -181,7 +181,7 @@ Next, build your project. It runs the kiota command-line tool, which generates f
 > which is needed for JSON:API partial POST/PATCH requests to work correctly.
 
 Kiota is pretty young and therefore still rough around the edges. At the time of writing, there are various bugs, for which we have workarounds
-in place. For a full example, see the [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/openapi/src/Examples/OpenApiKiotaClientExample).
+in place. For a full example, see the [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples/OpenApiKiotaClientExample).
 
 ---
 
@@ -214,7 +214,7 @@ For example, the following section puts the generated code in a namespace, makes
 The available command-line switches for Kiota are described [here](https://learn.microsoft.com/en-us/openapi/kiota/using#client-generation).
 
 At the time of writing, Kiota provides [no official integration](https://github.com/microsoft/kiota/issues/3005) with MSBuild.
-Our [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/openapi/src/Examples/OpenApiKiotaClientExample) takes a stab at it,
+Our [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples/OpenApiKiotaClientExample) takes a stab at it,
 which seems to work. If you're an MSBuild expert, please help out!
 
 ```xml
@@ -291,7 +291,7 @@ string eTag = headerInspector.ResponseHeaders["ETag"].Single();
 
 Due to a [bug in Kiota](https://github.com/microsoft/kiota/issues/4190), a try/catch block is needed additionally to make this work.
 
-For a full example, see the [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/openapi/src/Examples/OpenApiKiotaClientExample).
+For a full example, see the [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples/OpenApiKiotaClientExample).
 
 ---
 
@@ -300,7 +300,7 @@ For a full example, see the [example project](https://github.com/json-api-dotnet
 # [NSwag](#tab/nswag)
 
 [Atomic operations](~/usage/writing/bulk-batch-operations.md) are fully supported.
-The [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/openapi/src/Examples/OpenApiNSwagClientExample)
+The [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples/OpenApiNSwagClientExample)
 demonstrates how to use them. It uses local IDs to:
 - Create a new tag
 - Create a new person
@@ -311,7 +311,7 @@ demonstrates how to use them. It uses local IDs to:
 # [Kiota](#tab/kiota)
 
 [Atomic operations](~/usage/writing/bulk-batch-operations.md) are fully supported.
-See the [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/openapi/src/Examples/OpenApiKiotaClientExample)
+See the [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples/OpenApiKiotaClientExample)
 demonstrates how to use them. It uses local IDs to:
 - Create a new tag
 - Create a new person
