@@ -592,9 +592,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
             await dbContext.SaveChangesAsync();
         });
 
-        string routePrefix = $"/blogPosts?filter=equals(author.userName,'{account.UserName}')" +
-            "&fields[webAccounts]=userName&include=author&sort=id&foo=bar,baz";
-
+        string routePrefix = $"/blogPosts?filter=equals(author.userName,'{account.UserName}')&fields[webAccounts]=userName&include=author&sort=id&foo=bar,baz";
         string route = $"{routePrefix}&page[number]={pageNumber}";
 
         // Act

@@ -40,6 +40,6 @@ public sealed class ParameterNodeTests
         string text = parameter.ToString();
 
         // Assert
-        text.Should().Be("@name = " + formattedValueExpected);
+        text.Should().Be($"@name = {formattedValueExpected}");
     }
 }

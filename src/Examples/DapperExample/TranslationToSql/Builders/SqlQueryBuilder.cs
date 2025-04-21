@@ -306,7 +306,7 @@ internal sealed class SqlQueryBuilder(DatabaseProvider databaseProvider) : SqlTr
         {
             foreach (char specialCharacter in SpecialCharactersInLike)
             {
-                safeValue = safeValue.Replace(specialCharacter.ToString(), @"\" + specialCharacter);
+                safeValue = safeValue.Replace(specialCharacter.ToString(), $@"\{specialCharacter}");
             }
         }
 

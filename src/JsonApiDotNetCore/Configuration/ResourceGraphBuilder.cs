@@ -72,8 +72,8 @@ public partial class ResourceGraphBuilder
 
             if (rightType == null)
             {
-                throw new InvalidConfigurationException($"Resource type '{relationship.LeftType.ClrType}' depends on " +
-                    $"'{rightClrType}', which was not added to the resource graph.");
+                throw new InvalidConfigurationException(
+                    $"Resource type '{relationship.LeftType.ClrType}' depends on '{rightClrType}', which was not added to the resource graph.");
             }
 
             relationship.RightType = rightType;
@@ -129,8 +129,8 @@ public partial class ResourceGraphBuilder
         {
             if (resourceType.FindAttributeByPublicName(attribute.PublicName) == null)
             {
-                throw new InvalidConfigurationException($"Attribute '{attribute.PublicName}' from base type " +
-                    $"'{resourceType.BaseType.ClrType}' does not exist in derived type '{resourceType.ClrType}'.");
+                throw new InvalidConfigurationException(
+                    $"Attribute '{attribute.PublicName}' from base type '{resourceType.BaseType.ClrType}' does not exist in derived type '{resourceType.ClrType}'.");
             }
         }
     }
@@ -141,8 +141,8 @@ public partial class ResourceGraphBuilder
         {
             if (resourceType.FindRelationshipByPublicName(relationship.PublicName) == null)
             {
-                throw new InvalidConfigurationException($"Relationship '{relationship.PublicName}' from base type " +
-                    $"'{resourceType.BaseType.ClrType}' does not exist in derived type '{resourceType.ClrType}'.");
+                throw new InvalidConfigurationException(
+                    $"Relationship '{relationship.PublicName}' from base type '{resourceType.BaseType.ClrType}' does not exist in derived type '{resourceType.ClrType}'.");
             }
         }
     }
