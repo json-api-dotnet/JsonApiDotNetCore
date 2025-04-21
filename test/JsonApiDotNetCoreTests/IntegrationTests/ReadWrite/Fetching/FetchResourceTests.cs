@@ -62,7 +62,7 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Te
     public async Task Cannot_get_primary_resources_for_unknown_type()
     {
         // Arrange
-        const string route = "/" + Unknown.ResourceType;
+        const string route = $"/{Unknown.ResourceType}";
 
         // Act
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);

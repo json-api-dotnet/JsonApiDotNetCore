@@ -71,7 +71,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
             value.Links.Related.Should().NotBeNull();
         });
 
-        var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).And.Subject.Single();
+        var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).Which;
         postCaptured.Caption.Should().Be(post.Caption);
         postCaptured.Url.Should().BeNull();
     }
@@ -106,7 +106,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(post.Caption);
         responseDocument.Data.ManyValue[0].Relationships.Should().BeNull();
 
-        var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).And.Subject.Single();
+        var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).Which;
         postCaptured.Caption.Should().Be(post.Caption);
         postCaptured.Url.Should().BeNull();
     }
@@ -149,7 +149,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
             value.Links.Related.Should().NotBeNull();
         });
 
-        var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).And.Subject.Single();
+        var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).Which;
         postCaptured.Caption.Should().BeNull();
         postCaptured.Url.Should().BeNull();
     }
@@ -193,7 +193,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
             value.Links.Related.Should().NotBeNull();
         });
 
-        var blogCaptured = (Blog)store.Resources.Should().ContainSingle(resource => resource is Blog).And.Subject.Single();
+        var blogCaptured = (Blog)store.Resources.Should().ContainSingle(resource => resource is Blog).Which;
         blogCaptured.Id.Should().Be(blog.Id);
         blogCaptured.Title.Should().BeNull();
 
@@ -240,7 +240,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
             value.Links.Related.Should().NotBeNull();
         });
 
-        var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).And.Subject.Single();
+        var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).Which;
         postCaptured.Url.Should().Be(post.Url);
         postCaptured.Caption.Should().BeNull();
     }
@@ -299,7 +299,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
             value.Links.Related.Should().NotBeNull();
         });
 
-        var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).And.Subject.Single();
+        var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).Which;
         postCaptured.Id.Should().Be(post.Id);
         postCaptured.Caption.Should().Be(post.Caption);
 
@@ -361,7 +361,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
             value.Links.Related.Should().NotBeNull();
         });
 
-        var accountCaptured = (WebAccount)store.Resources.Should().ContainSingle(resource => resource is WebAccount).And.Subject.Single();
+        var accountCaptured = (WebAccount)store.Resources.Should().ContainSingle(resource => resource is WebAccount).Which;
         accountCaptured.Id.Should().Be(account.Id);
         accountCaptured.DisplayName.Should().Be(account.DisplayName);
 
@@ -423,7 +423,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
             value.Links.Related.Should().NotBeNull();
         });
 
-        var blogCaptured = (Blog)store.Resources.Should().ContainSingle(resource => resource is Blog).And.Subject.Single();
+        var blogCaptured = (Blog)store.Resources.Should().ContainSingle(resource => resource is Blog).Which;
         blogCaptured.Id.Should().Be(blog.Id);
         blogCaptured.Owner.Should().NotBeNull();
         blogCaptured.Owner.DisplayName.Should().Be(blog.Owner.DisplayName);
@@ -476,7 +476,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         responseDocument.Included[0].Attributes.Should().ContainKey("color").WhoseValue.Should().Be(post.Labels.Single().Color);
         responseDocument.Included[0].Relationships.Should().BeNull();
 
-        var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).And.Subject.Single();
+        var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).Which;
         postCaptured.Id.Should().Be(post.Id);
         postCaptured.Caption.Should().Be(post.Caption);
 
@@ -532,7 +532,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         responseDocument.Included[1].Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(blog.Owner.Posts[0].Caption);
         responseDocument.Included[1].Relationships.Should().BeNull();
 
-        var blogCaptured = (Blog)store.Resources.Should().ContainSingle(resource => resource is Blog).And.Subject.Single();
+        var blogCaptured = (Blog)store.Resources.Should().ContainSingle(resource => resource is Blog).Which;
         blogCaptured.Id.Should().Be(blog.Id);
         blogCaptured.Title.Should().Be(blog.Title);
         blogCaptured.PlatformName.Should().BeNull();
@@ -620,7 +620,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
             value.Links.Related.Should().NotBeNull();
         });
 
-        var blogCaptured = (Blog)store.Resources.Should().ContainSingle(resource => resource is Blog).And.Subject.Single();
+        var blogCaptured = (Blog)store.Resources.Should().ContainSingle(resource => resource is Blog).Which;
         blogCaptured.Id.Should().Be(blog.Id);
         blogCaptured.Title.Should().Be(blog.Title);
         blogCaptured.PlatformName.Should().BeNull();
@@ -656,7 +656,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         responseDocument.Data.ManyValue[0].Attributes.Should().ContainKey("caption").WhoseValue.Should().Be(post.Caption);
         responseDocument.Data.ManyValue[0].Relationships.Should().BeNull();
 
-        var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).And.Subject.Single();
+        var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).Which;
         postCaptured.Id.Should().Be(post.Id);
         postCaptured.Caption.Should().Be(post.Caption);
         postCaptured.Url.Should().BeNull();
@@ -691,7 +691,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         responseDocument.Data.ManyValue[0].Attributes.Should().BeNull();
         responseDocument.Data.ManyValue[0].Relationships.Should().BeNull();
 
-        var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).And.Subject.Single();
+        var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).Which;
         postCaptured.Id.Should().Be(post.Id);
         postCaptured.Url.Should().BeNull();
     }
@@ -824,7 +824,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("showAdvertisements").WhoseValue.Should().Be(blog.ShowAdvertisements);
         responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
-        var blogCaptured = (Blog)store.Resources.Should().ContainSingle(resource => resource is Blog).And.Subject.Single();
+        var blogCaptured = (Blog)store.Resources.Should().ContainSingle(resource => resource is Blog).Which;
         blogCaptured.ShowAdvertisements.Should().Be(blog.ShowAdvertisements);
         blogCaptured.IsPublished.Should().Be(blog.IsPublished);
         blogCaptured.Title.Should().Be(blog.Title);
@@ -869,7 +869,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
             value.Links.Related.Should().NotBeNull();
         });
 
-        var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).And.Subject.Single();
+        var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).Which;
         postCaptured.Id.Should().Be(post.Id);
         postCaptured.Caption.Should().Be(post.Caption);
         postCaptured.Url.Should().Be(post.Url);
