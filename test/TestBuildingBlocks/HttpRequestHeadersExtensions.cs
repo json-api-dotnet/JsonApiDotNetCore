@@ -1,8 +1,10 @@
 using System.Net.Http.Headers;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Primitives;
 
 namespace TestBuildingBlocks;
 
+[PublicAPI]
 public static class HttpRequestHeadersExtensions
 {
     /// <summary>

@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 
 namespace TestBuildingBlocks;
 
+[PublicAPI]
 public static class FluentJsonElementExtensions
 {
     private const string ComponentSchemaPrefix = "#/components/schemas/";
@@ -43,6 +44,7 @@ public static class FluentJsonElementExtensions
         continuation(schemaReferenceId);
     }
 
+    [PublicAPI]
     public sealed class SchemaReferenceIdContainer
     {
         public string SchemaReferenceId { get; }
@@ -61,6 +63,7 @@ public static class FluentJsonElementExtensions
         }
     }
 
+    [PublicAPI]
     public class JsonElementAssertions<TAssertions>
         where TAssertions : JsonElementAssertions<TAssertions>
     {

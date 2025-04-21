@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;
 
@@ -6,6 +7,7 @@ namespace TestBuildingBlocks;
 /// <summary>
 /// Writes incoming and outgoing HTTP messages to the test output window.
 /// </summary>
+[PublicAPI]
 public sealed partial class XUnitLogHttpMessageHandler : DelegatingHandler
 {
     private static readonly string BodySeparator = $"{Environment.NewLine}{Environment.NewLine}";

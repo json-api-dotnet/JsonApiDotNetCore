@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.OpenApi.Client.NSwag;
 
@@ -8,6 +9,7 @@ namespace JsonApiDotNetCore.OpenApi.Client.NSwag;
 /// <typeparam name="T">
 /// The type whose property assignments to track.
 /// </typeparam>
+[PublicAPI]
 public sealed class TrackChangesFor<T>
     where T : INotifyPropertyChanged, new()
 {

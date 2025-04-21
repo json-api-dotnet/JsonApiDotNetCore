@@ -1,5 +1,9 @@
 <!-- Loosely based on https://github.com/kimbell/Kiota.Testing, related to https://github.com/microsoft/kiota/issues/3005 -->
-<Project>
+<Project InitialTargets="FailTheBuild">
+  <Target Name="FailTheBuild">
+    <Error Text="This package is no longer being maintained on the GitHub feed. Please use the version from nuget.org." />
+  </Target>
+
   <UsingTask TaskName="KiotaPatchGeneratedCodeFiles" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
     <ParameterGroup>
       <StartDirectory ParameterType="System.String" Required="true" />

@@ -20,9 +20,7 @@ public static class FakerExtensions
         return faker;
     }
 
-#pragma warning disable AV1008 // Class should not be static
-    public static int GetFakerSeed()
-#pragma warning restore AV1008 // Class should not be static
+    private static int GetFakerSeed()
     {
         // The goal here is to have stable data over multiple test runs, but at the same time different data per test case.
 

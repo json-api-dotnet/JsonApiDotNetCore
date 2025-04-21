@@ -1,0 +1,5 @@
+<Project InitialTargets="FailTheBuild">
+  <Target Name="FailTheBuild">
+    <Error Text="This package is no longer being maintained on the GitHub feed. Please use the version from nuget.org." />
+  </Target>
+</Project>

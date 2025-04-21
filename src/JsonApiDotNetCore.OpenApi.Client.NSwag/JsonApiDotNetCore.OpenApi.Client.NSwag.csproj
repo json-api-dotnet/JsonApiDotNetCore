@@ -27,6 +27,7 @@
     <None Include="..\..\package-icon.png" Visible="false" Pack="True" PackagePath="" />
     <None Include="..\..\PackageReadme.md" Visible="false" Pack="True" PackagePath="" />
     <None Include="Build\*.props" Pack="True" PackagePath="build" />
+    <None Include="Build\*.targets" Pack="True" PackagePath="build" />
     <None Include="Templates\*.liquid" Pack="True" PackagePath="Templates" />
   </ItemGroup>
 
