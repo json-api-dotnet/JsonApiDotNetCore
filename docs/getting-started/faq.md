@@ -71,7 +71,7 @@ For example, if your primary key column is named "CustomerId" instead of "Id":
 builder.Entity<Customer>().Property(x => x.Id).HasColumnName("CustomerId");
 ```
 
-It certainly pays off to read up on these capabilities at [Creating and Configuring a Model](https://learn.microsoft.com/en-us/ef/core/modeling/).
+It certainly pays off to read up on these capabilities at [Creating and Configuring a Model](https://learn.microsoft.com/ef/core/modeling/).
 Another great resource is [Learn Entity Framework Core](https://www.learnentityframeworkcore.com/configuration).
 
 #### Can I share my resource models with .NET Framework projects?
@@ -80,7 +80,7 @@ This package contains just the JSON:API attributes and targets NetStandard 1.0, 
 At startup, use [Auto-discovery](~/usage/resource-graph.md#auto-discovery) and point it to your shared project.
 
 #### What's the best place to put my custom business/validation logic?
-For basic input validation, use the attributes from [ASP.NET ModelState Validation](https://learn.microsoft.com/en-us/aspnet/core/mvc/models/validation?source=recommendations&view=aspnetcore-7.0#built-in-attributes) to get the best experience.
+For basic input validation, use the attributes from [ASP.NET ModelState Validation](https://learn.microsoft.com/aspnet/core/mvc/models/validation?source=recommendations&view=aspnetcore-7.0#built-in-attributes) to get the best experience.
 JsonApiDotNetCore is aware of them and adjusts behavior accordingly. And it produces the best possible error responses.
 
 For non-trivial business rules that require custom code, the place to be is [Resource Definitions](~/usage/extensibility/resource-definitions.md).
@@ -148,7 +148,7 @@ And most resource definition callbacks are handled.
 That's because the built-in resource service translates all JSON:API query aspects of the request into a database-agnostic data structure called `QueryLayer`.
 Now the hard part for you becomes reading that data structure and producing data access calls from that.
 If your data store provides a LINQ provider, you can probably reuse [QueryableBuilder](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/QueryableBuilder.cs),
-which drives the translation into [System.Linq.Expressions](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/expression-trees/).
+which drives the translation into [System.Linq.Expressions](https://learn.microsoft.com/dotnet/csharp/programming-guide/concepts/expression-trees/).
 Note however, that it also produces calls to `.Include("")`, which is an Entity Framework Core-specific extension method, so you'll need to
 [prevent that from happening](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/QueryLayerIncludeConverter.cs).
 

@@ -11,7 +11,7 @@ After [enabling OpenAPI](~/usage/openapi.md), you can generate a typed JSON:API 
 
 The following code generators are supported, though you may try others as well:
 - [NSwag](https://github.com/RicoSuter/NSwag) (v14.1 or higher): Produces clients for C# (requires `Newtonsoft.Json`) and TypeScript
-- [Kiota](https://learn.microsoft.com/en-us/openapi/kiota/overview): Produces clients for C#, Go, Java, PHP, Python, Ruby, Swift and TypeScript
+- [Kiota](https://learn.microsoft.com/openapi/kiota/overview): Produces clients for C#, Go, Java, PHP, Python, Ruby, Swift and TypeScript
 
 # [NSwag](#tab/nswag)
 
@@ -120,8 +120,8 @@ The following steps describe how to generate and use a JSON:API client in C#, co
 
 > [!TIP]
 > The [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples/OpenApiNSwagClientExample) contains an enhanced version
-> that uses `IHttpClientFactory` for [scalability](https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory) and
-> [resiliency](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/http-requests#use-polly-based-handlers) and logs the HTTP requests and responses.
+> that uses `IHttpClientFactory` for [scalability](https://learn.microsoft.com/dotnet/core/extensions/httpclient-factory) and
+> [resiliency](https://learn.microsoft.com/aspnet/core/fundamentals/http-requests#use-polly-based-handlers) and logs the HTTP requests and responses.
 > Additionally, the example shows how to write the swagger.json file to disk when building the server, which is imported from the client project.
 > This keeps the server and client automatically in sync, which is handy when both are in the same solution.
 
@@ -211,7 +211,7 @@ For example, the following section puts the generated code in a namespace, makes
 
 # [Kiota](#tab/kiota)
 
-The available command-line switches for Kiota are described [here](https://learn.microsoft.com/en-us/openapi/kiota/using#client-generation).
+The available command-line switches for Kiota are described [here](https://learn.microsoft.com/openapi/kiota/using#client-generation).
 
 At the time of writing, Kiota provides [no official integration](https://github.com/microsoft/kiota/issues/3005) with MSBuild.
 Our [example project](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples/OpenApiKiotaClientExample) takes a stab at it,
