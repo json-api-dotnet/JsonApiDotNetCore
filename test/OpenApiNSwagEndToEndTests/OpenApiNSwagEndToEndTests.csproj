@@ -1,0 +1,99 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- TargetFrameworks does not work, see https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/2706 -->
+    <TargetFramework>net9.0</TargetFramework>
+  </PropertyGroup>
+
+  <Import Project="..\..\package-versions.props" />
+  <Import Project="..\..\src\JsonApiDotNetCore.OpenApi.Client.NSwag\Build\JsonApiDotNetCore.OpenApi.Client.NSwag.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\JsonApiDotNetCore.OpenApi.Client.NSwag\JsonApiDotNetCore.OpenApi.Client.NSwag.csproj" />
+    <ProjectReference Include="..\OpenApiTests\OpenApiTests.csproj" />
+    <ProjectReference Include="..\TestBuildingBlocks\TestBuildingBlocks.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="$(CoverletVersion)" PrivateAssets="All" />
+    <PackageReference Include="GitHubActionsTestLogger" Version="$(GitHubActionsTestLoggerVersion)" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
+    <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
+    <PackageReference Include="NSwag.ApiDescription.Client" Version="$(NSwagApiClientVersion)" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="$(MicrosoftApiClientVersion)" PrivateAssets="All" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <NSwagClientClassAccessModifier>internal</NSwagClientClassAccessModifier>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <OpenApiReference Include="..\OpenApiTests\ClientIdGenerationModes\GeneratedSwagger\swagger.g.json">
+      <Name>ClientIdGenerationModes</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\ModelStateValidation\GeneratedSwagger\swagger.g.json">
+      <Name>ModelStateValidation</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\Headers\GeneratedSwagger\swagger.g.json">
+      <Name>Headers</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+      <NSwagWrapResponses>true</NSwagWrapResponses>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\QueryStrings\GeneratedSwagger\swagger.g.json">
+      <Name>QueryStrings</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\RestrictedControllers\GeneratedSwagger\swagger.g.json">
+      <Name>RestrictedControllers</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\Links\Enabled\GeneratedSwagger\swagger.g.json">
+      <Name>Links</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\AtomicOperations\GeneratedSwagger\swagger.g.json">
+      <Name>AtomicOperations</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\ResourceInheritance\OnlyRelationships\GeneratedSwagger\swagger.g.json">
+      <Name>OnlyRelationshipsInheritance</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\ResourceInheritance\SubsetOfVarious\GeneratedSwagger\swagger.g.json">
+      <Name>SubsetOfVariousInheritance</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\ResourceInheritance\SubsetOfOperations\GeneratedSwagger\swagger.g.json">
+      <Name>SubsetOfOperationsInheritance</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\ResourceInheritance\NoOperations\GeneratedSwagger\swagger.g.json">
+      <Name>NoOperationsInheritance</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+  </ItemGroup>
+</Project>

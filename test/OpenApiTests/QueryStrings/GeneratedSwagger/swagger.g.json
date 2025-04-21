@@ -1,0 +1,4997 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "OpenApiTests",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost"
+    }
+  ],
+  "paths": {
+    "/nameValuePairs": {
+      "get": {
+        "tags": [
+          "nameValuePairs"
+        ],
+        "summary": "Retrieves a collection of nameValuePairs.",
+        "operationId": "getNameValuePairCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found nameValuePairs, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/nameValuePairCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "nameValuePairs"
+        ],
+        "summary": "Retrieves a collection of nameValuePairs without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headNameValuePairCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "nameValuePairs"
+        ],
+        "summary": "Creates a new nameValuePair.",
+        "operationId": "postNameValuePair",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the nameValuePair to create.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/createNameValuePairRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The nameValuePair was successfully created, which resulted in additional changes. The newly created nameValuePair is returned.",
+            "headers": {
+              "Location": {
+                "description": "The URL at which the newly created nameValuePair can be retrieved.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/primaryNameValuePairResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The nameValuePair was successfully created, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/nameValuePairs/{id}": {
+      "get": {
+        "tags": [
+          "nameValuePairs"
+        ],
+        "summary": "Retrieves an individual nameValuePair by its identifier.",
+        "operationId": "getNameValuePair",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the nameValuePair to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found nameValuePair.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/primaryNameValuePairResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The nameValuePair does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "nameValuePairs"
+        ],
+        "summary": "Retrieves an individual nameValuePair by its identifier without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headNameValuePair",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the nameValuePair to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The nameValuePair does not exist."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "nameValuePairs"
+        ],
+        "summary": "Updates an existing nameValuePair.",
+        "operationId": "patchNameValuePair",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the nameValuePair to update.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the nameValuePair to update. Omitted fields are left unchanged.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateNameValuePairRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The nameValuePair was successfully updated, which resulted in additional changes. The updated nameValuePair is returned.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/primaryNameValuePairResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The nameValuePair was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The nameValuePair or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "nameValuePairs"
+        ],
+        "summary": "Deletes an existing nameValuePair by its identifier.",
+        "operationId": "deleteNameValuePair",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the nameValuePair to delete.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The nameValuePair was successfully deleted."
+          },
+          "404": {
+            "description": "The nameValuePair does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/nameValuePairs/{id}/owner": {
+      "get": {
+        "tags": [
+          "nameValuePairs"
+        ],
+        "summary": "Retrieves the related node of an individual nameValuePair's owner relationship.",
+        "operationId": "getNameValuePairOwner",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the nameValuePair whose related node to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found node, or `null` if it was not found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/secondaryNodeResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The nameValuePair does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "nameValuePairs"
+        ],
+        "summary": "Retrieves the related node of an individual nameValuePair's owner relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headNameValuePairOwner",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the nameValuePair whose related node to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The nameValuePair does not exist."
+          }
+        }
+      }
+    },
+    "/nameValuePairs/{id}/relationships/owner": {
+      "get": {
+        "tags": [
+          "nameValuePairs"
+        ],
+        "summary": "Retrieves the related node identity of an individual nameValuePair's owner relationship.",
+        "operationId": "getNameValuePairOwnerRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the nameValuePair whose related node identity to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found node identity, or `null` if it was not found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/nodeIdentifierResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The nameValuePair does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "nameValuePairs"
+        ],
+        "summary": "Retrieves the related node identity of an individual nameValuePair's owner relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headNameValuePairOwnerRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the nameValuePair whose related node identity to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The nameValuePair does not exist."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "nameValuePairs"
+        ],
+        "summary": "Assigns an existing node to the owner relationship of an individual nameValuePair.",
+        "operationId": "patchNameValuePairOwnerRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the nameValuePair whose owner relationship to assign.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identity of the node to assign to the owner relationship.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneNodeInRequest"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "The owner relationship was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The nameValuePair or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/nodes": {
+      "get": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Retrieves a collection of nodes.",
+        "operationId": "getNodeCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found nodes, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/nodeCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Retrieves a collection of nodes without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headNodeCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Creates a new node.",
+        "operationId": "postNode",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the node to create.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/createNodeRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The node was successfully created, which resulted in additional changes. The newly created node is returned.",
+            "headers": {
+              "Location": {
+                "description": "The URL at which the newly created node can be retrieved.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/primaryNodeResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The node was successfully created, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/nodes/{id}": {
+      "get": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Retrieves an individual node by its identifier.",
+        "operationId": "getNode",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found node.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/primaryNodeResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The node does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Retrieves an individual node by its identifier without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headNode",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The node does not exist."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Updates an existing node.",
+        "operationId": "patchNode",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node to update.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the node to update. Omitted fields are left unchanged.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateNodeRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The node was successfully updated, which resulted in additional changes. The updated node is returned.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/primaryNodeResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The node was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The node or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Deletes an existing node by its identifier.",
+        "operationId": "deleteNode",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node to delete.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The node was successfully deleted."
+          },
+          "404": {
+            "description": "The node does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/nodes/{id}/children": {
+      "get": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Retrieves the related nodes of an individual node's children relationship.",
+        "operationId": "getNodeChildren",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node whose related nodes to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found nodes, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/nodeCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The node does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Retrieves the related nodes of an individual node's children relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headNodeChildren",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node whose related nodes to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The node does not exist."
+          }
+        }
+      }
+    },
+    "/nodes/{id}/relationships/children": {
+      "get": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Retrieves the related node identities of an individual node's children relationship.",
+        "operationId": "getNodeChildrenRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node whose related node identities to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found node identities, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/nodeIdentifierCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The node does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Retrieves the related node identities of an individual node's children relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headNodeChildrenRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node whose related node identities to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The node does not exist."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Adds existing nodes to the children relationship of an individual node.",
+        "operationId": "postNodeChildrenRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node to add nodes to.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identities of the nodes to add to the children relationship.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyNodeInRequest"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "The nodes were successfully added, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The node or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Assigns existing nodes to the children relationship of an individual node.",
+        "operationId": "patchNodeChildrenRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node whose children relationship to assign.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identities of the nodes to assign to the children relationship, or an empty array to clear the relationship.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyNodeInRequest"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "The children relationship was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The node or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Removes existing nodes from the children relationship of an individual node.",
+        "operationId": "deleteNodeChildrenRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node to remove nodes from.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identities of the nodes to remove from the children relationship.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyNodeInRequest"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "The nodes were successfully removed, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The node or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/nodes/{id}/parent": {
+      "get": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Retrieves the related node of an individual node's parent relationship.",
+        "operationId": "getNodeParent",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node whose related node to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found node, or `null` if it was not found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullableSecondaryNodeResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The node does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Retrieves the related node of an individual node's parent relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headNodeParent",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node whose related node to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The node does not exist."
+          }
+        }
+      }
+    },
+    "/nodes/{id}/relationships/parent": {
+      "get": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Retrieves the related node identity of an individual node's parent relationship.",
+        "operationId": "getNodeParentRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node whose related node identity to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found node identity, or `null` if it was not found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullableNodeIdentifierResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The node does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Retrieves the related node identity of an individual node's parent relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headNodeParentRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node whose related node identity to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The node does not exist."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Clears or assigns an existing node to the parent relationship of an individual node.",
+        "operationId": "patchNodeParentRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node whose parent relationship to assign or clear.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identity of the node to assign to the parent relationship, or `null` to clear the relationship.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOneNodeInRequest"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "The parent relationship was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The node or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/nodes/{id}/values": {
+      "get": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Retrieves the related nameValuePairs of an individual node's values relationship.",
+        "operationId": "getNodeValues",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node whose related nameValuePairs to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found nameValuePairs, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/nameValuePairCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The node does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Retrieves the related nameValuePairs of an individual node's values relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headNodeValues",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node whose related nameValuePairs to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The node does not exist."
+          }
+        }
+      }
+    },
+    "/nodes/{id}/relationships/values": {
+      "get": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Retrieves the related nameValuePair identities of an individual node's values relationship.",
+        "operationId": "getNodeValuesRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node whose related nameValuePair identities to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found nameValuePair identities, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/nameValuePairIdentifierCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The node does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Retrieves the related nameValuePair identities of an individual node's values relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headNodeValuesRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node whose related nameValuePair identities to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The node does not exist."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Adds existing nameValuePairs to the values relationship of an individual node.",
+        "operationId": "postNodeValuesRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node to add nameValuePairs to.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identities of the nameValuePairs to add to the values relationship.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyNameValuePairInRequest"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "The nameValuePairs were successfully added, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The node or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Assigns existing nameValuePairs to the values relationship of an individual node.",
+        "operationId": "patchNodeValuesRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node whose values relationship to assign.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identities of the nameValuePairs to assign to the values relationship, or an empty array to clear the relationship.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyNameValuePairInRequest"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "The values relationship was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The node or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "nodes"
+        ],
+        "summary": "Removes existing nameValuePairs from the values relationship of an individual node.",
+        "operationId": "deleteNodeValuesRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the node to remove nameValuePairs from.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identities of the nameValuePairs to remove from the values relationship.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyNameValuePairInRequest"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "The nameValuePairs were successfully removed, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The node or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "attributesInCreateNameValuePairRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRequest"
+          },
+          {
+            "required": [
+              "name"
+            ],
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInCreateNodeRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRequest"
+          },
+          {
+            "required": [
+              "name"
+            ],
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "comment": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInCreateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "nameValuePairs": "#/components/schemas/attributesInCreateNameValuePairRequest",
+            "nodes": "#/components/schemas/attributesInCreateNodeRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInNameValuePairResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInNodeResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "comment": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInResponse": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "nameValuePairs": "#/components/schemas/attributesInNameValuePairResponse",
+            "nodes": "#/components/schemas/attributesInNodeResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInUpdateNameValuePairRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInUpdateNodeRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "comment": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInUpdateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "nameValuePairs": "#/components/schemas/attributesInUpdateNameValuePairRequest",
+            "nodes": "#/components/schemas/attributesInUpdateNodeRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "createNameValuePairRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreateNameValuePairRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "createNodeRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreateNodeRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInCreateNameValuePairRequest": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInCreateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCreateNameValuePairRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInCreateNameValuePairRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInCreateNodeRequest": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInCreateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCreateNodeRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInCreateNodeRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInNameValuePairResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInNameValuePairResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInNameValuePairResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInNodeResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInNodeResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInNodeResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInUpdateNameValuePairRequest": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInUpdateRequest"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInUpdateNameValuePairRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInUpdateNameValuePairRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInUpdateNodeRequest": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInUpdateRequest"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInUpdateNodeRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInUpdateNodeRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "errorLinks": {
+        "type": "object",
+        "properties": {
+          "about": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/errorLinks"
+              }
+            ],
+            "nullable": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "source": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/errorSource"
+              }
+            ],
+            "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorResponseDocument": {
+        "required": [
+          "errors",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/errorTopLevelLinks"
+              }
+            ]
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/errorObject"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorSource": {
+        "type": "object",
+        "properties": {
+          "pointer": {
+            "type": "string",
+            "nullable": true
+          },
+          "parameter": {
+            "type": "string",
+            "nullable": true
+          },
+          "header": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "identifierInRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "nameValuePairs": "#/components/schemas/nameValuePairIdentifierInRequest",
+            "nodes": "#/components/schemas/nodeIdentifierInRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "meta": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        }
+      },
+      "nameValuePairCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInNameValuePairResponse"
+            }
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "nameValuePairIdentifierCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceIdentifierCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/nameValuePairIdentifierInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "nameValuePairIdentifierInRequest": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/identifierInRequest"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "nameValuePairIdentifierInResponse": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nameValuePairResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "nameValuePairResourceType": {
+        "enum": [
+          "nameValuePairs"
+        ],
+        "type": "string"
+      },
+      "nodeCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInNodeResponse"
+            }
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "nodeIdentifierCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceIdentifierCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/nodeIdentifierInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "nodeIdentifierInRequest": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/identifierInRequest"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "nodeIdentifierInResponse": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nodeResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int64"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "nodeIdentifierResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceIdentifierTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nodeIdentifierInResponse"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "nodeResourceType": {
+        "enum": [
+          "nodes"
+        ],
+        "type": "string"
+      },
+      "nullableNodeIdentifierResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceIdentifierTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nodeIdentifierInResponse"
+              }
+            ],
+            "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullableSecondaryNodeResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInNodeResponse"
+              }
+            ],
+            "nullable": true
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullableToOneNodeInRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nodeIdentifierInRequest"
+              }
+            ],
+            "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullableToOneNodeInResponse": {
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nodeIdentifierInResponse"
+              }
+            ],
+            "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "primaryNameValuePairResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInNameValuePairResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "primaryNodeResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInNodeResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "relationshipLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "related": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "relationshipsInCreateNameValuePairRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInCreateRequest"
+          },
+          {
+            "required": [
+              "owner"
+            ],
+            "type": "object",
+            "properties": {
+              "owner": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneNodeInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInCreateNodeRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInCreateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "values": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyNameValuePairInRequest"
+                  }
+                ]
+              },
+              "parent": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOneNodeInRequest"
+                  }
+                ]
+              },
+              "children": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyNodeInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInCreateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "nameValuePairs": "#/components/schemas/relationshipsInCreateNameValuePairRequest",
+            "nodes": "#/components/schemas/relationshipsInCreateNodeRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInNameValuePairResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "owner": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneNodeInResponse"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInNodeResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "values": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyNameValuePairInResponse"
+                  }
+                ]
+              },
+              "parent": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOneNodeInResponse"
+                  }
+                ]
+              },
+              "children": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyNodeInResponse"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInResponse": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "nameValuePairs": "#/components/schemas/relationshipsInNameValuePairResponse",
+            "nodes": "#/components/schemas/relationshipsInNodeResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInUpdateNameValuePairRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "owner": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneNodeInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInUpdateNodeRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "values": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyNameValuePairInRequest"
+                  }
+                ]
+              },
+              "parent": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOneNodeInRequest"
+                  }
+                ]
+              },
+              "children": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyNodeInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInUpdateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "nameValuePairs": "#/components/schemas/relationshipsInUpdateNameValuePairRequest",
+            "nodes": "#/components/schemas/relationshipsInUpdateNodeRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "resourceCollectionTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "first": {
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          },
+          "prev": {
+            "type": "string"
+          },
+          "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceIdentifierCollectionTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "related": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "first": {
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          },
+          "prev": {
+            "type": "string"
+          },
+          "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceIdentifierTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "related": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceInCreateRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "nameValuePairs": "#/components/schemas/dataInCreateNameValuePairRequest",
+            "nodes": "#/components/schemas/dataInCreateNodeRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "resourceInResponse": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "nameValuePairs": "#/components/schemas/dataInNameValuePairResponse",
+            "nodes": "#/components/schemas/dataInNodeResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "resourceInUpdateRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "nameValuePairs": "#/components/schemas/dataInUpdateNameValuePairRequest",
+            "nodes": "#/components/schemas/dataInUpdateNodeRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "resourceLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceType": {
+        "enum": [
+          "nameValuePairs",
+          "nodes"
+        ],
+        "type": "string"
+      },
+      "secondaryNodeResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInNodeResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "toManyNameValuePairInRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/nameValuePairIdentifierInRequest"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "toManyNameValuePairInResponse": {
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/nameValuePairIdentifierInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "toManyNodeInRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/nodeIdentifierInRequest"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "toManyNodeInResponse": {
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/nodeIdentifierInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "toOneNodeInRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nodeIdentifierInRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "toOneNodeInResponse": {
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nodeIdentifierInResponse"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "updateNameValuePairRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInUpdateNameValuePairRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "updateNodeRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInUpdateNodeRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

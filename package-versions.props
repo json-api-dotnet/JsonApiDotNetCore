@@ -4,18 +4,28 @@
     <CodeAnalysisFrozenVersion>4.1.0</CodeAnalysisFrozenVersion>
     <DemystifierFrozenVersion>0.4.1</DemystifierFrozenVersion>
     <HumanizerFrozenVersion>2.14.1</HumanizerFrozenVersion>
+    <SwashbuckleFrozenVersion>8.0.0</SwashbuckleFrozenVersion>
+    <NewtonsoftJsonFrozenVersion>13.0.3</NewtonsoftJsonFrozenVersion>
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
     <BenchmarkDotNetVersion>0.14.*</BenchmarkDotNetVersion>
+    <BlushingPenguinVersion>1.0.*</BlushingPenguinVersion>
     <BogusVersion>35.6.*</BogusVersion>
-    <CodeAnalysisVersion>4.12.*</CodeAnalysisVersion>
+    <CodeAnalysisVersion>4.13.*</CodeAnalysisVersion>
     <CoverletVersion>6.0.*</CoverletVersion>
     <DapperVersion>2.1.*</DapperVersion>
     <FluentAssertionsVersion>7.2.*</FluentAssertionsVersion>
     <GitHubActionsTestLoggerVersion>2.4.*</GitHubActionsTestLoggerVersion>
     <InheritDocVersion>2.0.*</InheritDocVersion>
+    <KiotaVersion>1.*</KiotaVersion>
+    <MicrosoftApiClientVersion>9.0.*</MicrosoftApiClientVersion>
+    <MicrosoftApiServerVersion>9.0.*</MicrosoftApiServerVersion>
+    <NSwagApiClientVersion>14.3.*</NSwagApiClientVersion>
+    <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
+    <ScalarAspNetCoreVersion>2.1.*</ScalarAspNetCoreVersion>
+    <SwashbuckleVersion>8.*-*</SwashbuckleVersion>
     <SystemTextJsonVersion>9.0.*</SystemTextJsonVersion>
-    <TestSdkVersion>17.12.*</TestSdkVersion>
+    <TestSdkVersion>17.13.*</TestSdkVersion>
     <XunitVersion>2.9.*</XunitVersion>
     <XunitVisualStudioVersion>2.8.*</XunitVisualStudioVersion>
   </PropertyGroup>

@@ -3,7 +3,10 @@
 	<s:Int64 x:Key="/Default/CodeEditing/NullCheckPatterns/PatternTypeNamesToPriority/=JetBrains_002EReSharper_002EFeature_002EServices_002ECSharp_002ENullChecking_002EIfThenThrowPattern/@EntryIndexedValue">2000</s:Int64>
 	<s:Int64 x:Key="/Default/CodeEditing/NullCheckPatterns/PatternTypeNamesToPriority/=JetBrains_002EReSharper_002EFeature_002EServices_002ECSharp_002ENullChecking_002EThrowExpressionNullCheckPattern/@EntryIndexedValue">3000</s:Int64>
 	<s:Boolean x:Key="/Default/CodeInspection/CodeAnnotations/PropagateAnnotations/@EntryValue">False</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/ExcludedFiles/FileMasksToSkip/=swagger_002Ejson/@EntryIndexedValue">True</s:Boolean>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=83FF097C_002DC8C6_002D477B_002D9FAB_002DDF99B84978B5_002Ff_003AReadOnlySet_002Ecs/@EntryIndexedValue">83FF097C-C8C6-477B-9FAB-DF99B84978B5/f:ReadOnlySet.cs</s:String>
+	<s:String x:Key="/Default/CodeInspection/GeneratedCode/GeneratedFileMasks/=swagger_002Eg_002Ejson/@EntryIndexedValue">swagger.g.json</s:String>
+	<s:String x:Key="/Default/CodeInspection/GeneratedCode/GeneratedFileMasks/=swagger_002Ejson/@EntryIndexedValue">swagger.json</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/AnalysisEnabled/@EntryValue">SOLUTION</s:String>
 	<s:Boolean x:Key="/Default/CodeInspection/Highlighting/IdentifierHighlightingEnabled/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/Highlighting/IncludeWarningsInSwea/@EntryValue">True</s:Boolean>
@@ -661,6 +664,7 @@ $left$ = $right$;</s:String>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Contoso/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Injectables/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=jsonapi/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Kiota/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=linebreaks/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Microservices/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=navigations/@EntryIndexedValue">True</s:Boolean>

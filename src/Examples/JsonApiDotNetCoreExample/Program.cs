@@ -3,17 +3,22 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
+using JsonApiDotNetCore.OpenApi.Swashbuckle;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Scalar.AspNetCore;
 
 [assembly: ExcludeFromCodeCoverage]
 
 WebApplication app = CreateWebApplication(args);
 
-await CreateDatabaseAsync(app.Services);
+if (!IsGeneratingOpenApiDocumentAtBuildTime())
+{
+    await CreateDatabaseAsync(app.Services);
+}
 
 await app.RunAsync();
 
@@ -71,6 +76,13 @@ static void ConfigureServices(WebApplicationBuilder builder)
 #endif
         }, discovery => discovery.AddCurrentAssembly());
     }
+
+    using (CodeTimingSessionManager.Current.Measure("AddOpenApiForJsonApi()"))
+    {
+#pragma warning disable JADNC_OA_001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+        builder.Services.AddOpenApiForJsonApi(options => options.DocumentFilter<SetOpenApiServerAtBuildTimeFilter>());
+#pragma warning restore JADNC_OA_001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+    }
 }
 
 [Conditional("DEBUG")]
@@ -92,7 +104,17 @@ static void ConfigurePipeline(WebApplication app)
         app.UseJsonApi();
     }
 
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    app.UseReDoc();
+    app.MapScalarApiReference(options => options.OpenApiRoutePattern = "/swagger/{documentName}/swagger.json");
+
     app.MapControllers();
+}
+
+static bool IsGeneratingOpenApiDocumentAtBuildTime()
+{
+    return Environment.GetCommandLineArgs().Any(argument => argument.Contains("GetDocument.Insider"));
 }
 
 static async Task CreateDatabaseAsync(IServiceProvider serviceProvider)

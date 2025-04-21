@@ -1,0 +1,94 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- TargetFrameworks does not work, see https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/2706 -->
+    <TargetFramework>net9.0</TargetFramework>
+  </PropertyGroup>
+
+  <Import Project="..\..\package-versions.props" />
+  <Import Project="..\..\src\JsonApiDotNetCore.OpenApi.Client.NSwag\Build\JsonApiDotNetCore.OpenApi.Client.NSwag.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\JsonApiDotNetCore.OpenApi.Client.NSwag\JsonApiDotNetCore.OpenApi.Client.NSwag.csproj" />
+    <ProjectReference Include="..\TestBuildingBlocks\TestBuildingBlocks.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoBogus" Version="2.13.1" />
+    <PackageReference Include="coverlet.collector" Version="$(CoverletVersion)" PrivateAssets="All" />
+    <PackageReference Include="GitHubActionsTestLogger" Version="$(GitHubActionsTestLoggerVersion)" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
+    <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
+    <PackageReference Include="NSwag.ApiDescription.Client" Version="$(NSwagApiClientVersion)" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="$(MicrosoftApiClientVersion)" PrivateAssets="All" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <NSwagClientClassAccessModifier>internal</NSwagClientClassAccessModifier>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <OpenApiReference Include="..\OpenApiTests\LegacyOpenApi\GeneratedSwagger\swagger.g.json">
+      <Namespace>$(MSBuildProjectName).LegacyOpenApi.GeneratedCode</Namespace>
+      <ClassName>LegacyClient</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+      <NSwagGenerateNullableReferenceTypes>false</NSwagGenerateNullableReferenceTypes>
+      <NSwagGenerateOptionalPropertiesAsNullable>false</NSwagGenerateOptionalPropertiesAsNullable>
+      <NSwagGenerateOptionalParameters>false</NSwagGenerateOptionalParameters>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\NamingConventions\KebabCase\GeneratedSwagger\swagger.g.json">
+      <Name>KebabCase</Name>
+      <Namespace>$(MSBuildProjectName).NamingConventions.%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\NamingConventions\CamelCase\GeneratedSwagger\swagger.g.json">
+      <Name>CamelCase</Name>
+      <Namespace>$(MSBuildProjectName).NamingConventions.%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\NamingConventions\PascalCase\GeneratedSwagger\swagger.g.json">
+      <Name>PascalCase</Name>
+      <Namespace>$(MSBuildProjectName).NamingConventions.%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\ResourceFieldValidation\NullableReferenceTypesOff\ModelStateValidationOff\GeneratedSwagger\swagger.g.json">
+      <Name>NrtOffMsvOff</Name>
+      <Namespace>$(MSBuildProjectName).ResourceFieldValidation.NullableReferenceTypesOff.ModelStateValidationOff.GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+      <NSwagGenerateNullableReferenceTypes>false</NSwagGenerateNullableReferenceTypes>
+      <NSwagGenerateOptionalPropertiesAsNullable>false</NSwagGenerateOptionalPropertiesAsNullable>
+      <NSwagGenerateOptionalParameters>false</NSwagGenerateOptionalParameters>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\ResourceFieldValidation\NullableReferenceTypesOff\ModelStateValidationOn\GeneratedSwagger\swagger.g.json">
+      <Name>NrtOffMsvOn</Name>
+      <Namespace>$(MSBuildProjectName).ResourceFieldValidation.NullableReferenceTypesOff.ModelStateValidationOn.GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+      <NSwagGenerateNullableReferenceTypes>false</NSwagGenerateNullableReferenceTypes>
+      <NSwagGenerateOptionalPropertiesAsNullable>false</NSwagGenerateOptionalPropertiesAsNullable>
+      <NSwagGenerateOptionalParameters>false</NSwagGenerateOptionalParameters>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\ResourceFieldValidation\NullableReferenceTypesOn\ModelStateValidationOff\GeneratedSwagger\swagger.g.json">
+      <Name>NrtOnMsvOff</Name>
+      <Namespace>$(MSBuildProjectName).ResourceFieldValidation.NullableReferenceTypesOn.ModelStateValidationOff.GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+      <NSwagGenerateNullableReferenceTypes>true</NSwagGenerateNullableReferenceTypes>
+      <NSwagGenerateOptionalPropertiesAsNullable>false</NSwagGenerateOptionalPropertiesAsNullable>
+      <NSwagGenerateOptionalParameters>false</NSwagGenerateOptionalParameters>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\ResourceFieldValidation\NullableReferenceTypesOn\ModelStateValidationOn\GeneratedSwagger\swagger.g.json">
+      <Name>NrtOnMsvOn</Name>
+      <Namespace>$(MSBuildProjectName).ResourceFieldValidation.NullableReferenceTypesOn.ModelStateValidationOn.GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
+      <NSwagGenerateNullableReferenceTypes>true</NSwagGenerateNullableReferenceTypes>
+      <NSwagGenerateOptionalPropertiesAsNullable>false</NSwagGenerateOptionalPropertiesAsNullable>
+      <NSwagGenerateOptionalParameters>false</NSwagGenerateOptionalParameters>
+    </OpenApiReference>
+  </ItemGroup>
+</Project>

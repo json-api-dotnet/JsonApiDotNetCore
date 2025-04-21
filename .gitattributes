@@ -1,0 +1,5 @@
+# When running OpenAPI tests, these committed files are downloaded and written to disk (so we'll know when something changes).
+# On Windows, these text files are auto-converted to crlf on git fetch, while the written downloaded files use lf line endings.
+# Therefore, running the tests on Windows creates local changes. Staging them auto-converts back to crlf, which undoes the changes.
+# To avoid this annoyance, the next line opts out of the auto-conversion and forces line endings to lf.
+**/GeneratedSwagger/**/*.json text eol=lf

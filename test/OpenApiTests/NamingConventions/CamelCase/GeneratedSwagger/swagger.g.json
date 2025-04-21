@@ -1,0 +1,5079 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "OpenApiTests",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost"
+    }
+  ],
+  "paths": {
+    "/operations": {
+      "post": {
+        "tags": [
+          "operations"
+        ],
+        "summary": "Performs multiple mutations in a linear and atomic manner.",
+        "operationId": "postOperations",
+        "requestBody": {
+          "description": "An array of mutation operations. For syntax, see the [Atomic Operations documentation](https://jsonapi.org/ext/atomic/).",
+          "content": {
+            "application/vnd.api+json; ext=atomic; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/operationsRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "All operations were successfully applied, which resulted in additional changes.",
+            "content": {
+              "application/vnd.api+json; ext=atomic; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/operationsResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "All operations were successfully applied, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=atomic; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "An operation is not accessible or a client-generated ID is used.",
+            "content": {
+              "application/vnd.api+json; ext=atomic; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A resource or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=atomic; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=atomic; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=atomic; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/staffMembers": {
+      "get": {
+        "tags": [
+          "staffMembers"
+        ],
+        "summary": "Retrieves a collection of staffMembers.",
+        "operationId": "getStaffMemberCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found staffMembers, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/staffMemberCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "staffMembers"
+        ],
+        "summary": "Retrieves a collection of staffMembers without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headStaffMemberCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "staffMembers"
+        ],
+        "summary": "Creates a new staffMember.",
+        "operationId": "postStaffMember",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the staffMember to create.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/createStaffMemberRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The staffMember was successfully created, which resulted in additional changes. The newly created staffMember is returned.",
+            "headers": {
+              "Location": {
+                "description": "The URL at which the newly created staffMember can be retrieved.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/primaryStaffMemberResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The staffMember was successfully created, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/staffMembers/{id}": {
+      "get": {
+        "tags": [
+          "staffMembers"
+        ],
+        "summary": "Retrieves an individual staffMember by its identifier.",
+        "operationId": "getStaffMember",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the staffMember to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found staffMember.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/primaryStaffMemberResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The staffMember does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "staffMembers"
+        ],
+        "summary": "Retrieves an individual staffMember by its identifier without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headStaffMember",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the staffMember to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The staffMember does not exist."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "staffMembers"
+        ],
+        "summary": "Updates an existing staffMember.",
+        "operationId": "patchStaffMember",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the staffMember to update.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the staffMember to update. Omitted fields are left unchanged.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateStaffMemberRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The staffMember was successfully updated, which resulted in additional changes. The updated staffMember is returned.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/primaryStaffMemberResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The staffMember was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The staffMember or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "staffMembers"
+        ],
+        "summary": "Deletes an existing staffMember by its identifier.",
+        "operationId": "deleteStaffMember",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the staffMember to delete.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The staffMember was successfully deleted."
+          },
+          "404": {
+            "description": "The staffMember does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/supermarkets": {
+      "get": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Retrieves a collection of supermarkets.",
+        "operationId": "getSupermarketCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found supermarkets, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/supermarketCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Retrieves a collection of supermarkets without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headSupermarketCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Creates a new supermarket.",
+        "operationId": "postSupermarket",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the supermarket to create.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/createSupermarketRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The supermarket was successfully created, which resulted in additional changes. The newly created supermarket is returned.",
+            "headers": {
+              "Location": {
+                "description": "The URL at which the newly created supermarket can be retrieved.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/primarySupermarketResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The supermarket was successfully created, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/supermarkets/{id}": {
+      "get": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Retrieves an individual supermarket by its identifier.",
+        "operationId": "getSupermarket",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the supermarket to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found supermarket.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/primarySupermarketResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The supermarket does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Retrieves an individual supermarket by its identifier without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headSupermarket",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the supermarket to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Updates an existing supermarket.",
+        "operationId": "patchSupermarket",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the supermarket to update.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the supermarket to update. Omitted fields are left unchanged.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateSupermarketRequestDocument"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The supermarket was successfully updated, which resulted in additional changes. The updated supermarket is returned.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/primarySupermarketResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The supermarket was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The supermarket or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Deletes an existing supermarket by its identifier.",
+        "operationId": "deleteSupermarket",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the supermarket to delete.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The supermarket was successfully deleted."
+          },
+          "404": {
+            "description": "The supermarket does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/supermarkets/{id}/backupStoreManager": {
+      "get": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Retrieves the related staffMember of an individual supermarket's backupStoreManager relationship.",
+        "operationId": "getSupermarketBackupStoreManager",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the supermarket whose related staffMember to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found staffMember, or `null` if it was not found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullableSecondaryStaffMemberResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The supermarket does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Retrieves the related staffMember of an individual supermarket's backupStoreManager relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headSupermarketBackupStoreManager",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the supermarket whose related staffMember to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
+          }
+        }
+      }
+    },
+    "/supermarkets/{id}/relationships/backupStoreManager": {
+      "get": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Retrieves the related staffMember identity of an individual supermarket's backupStoreManager relationship.",
+        "operationId": "getSupermarketBackupStoreManagerRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the supermarket whose related staffMember identity to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found staffMember identity, or `null` if it was not found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullableStaffMemberIdentifierResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The supermarket does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Retrieves the related staffMember identity of an individual supermarket's backupStoreManager relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headSupermarketBackupStoreManagerRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the supermarket whose related staffMember identity to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Clears or assigns an existing staffMember to the backupStoreManager relationship of an individual supermarket.",
+        "operationId": "patchSupermarketBackupStoreManagerRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the supermarket whose backupStoreManager relationship to assign or clear.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identity of the staffMember to assign to the backupStoreManager relationship, or `null` to clear the relationship.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOneStaffMemberInRequest"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "The backupStoreManager relationship was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The supermarket or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/supermarkets/{id}/cashiers": {
+      "get": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Retrieves the related staffMembers of an individual supermarket's cashiers relationship.",
+        "operationId": "getSupermarketCashiers",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the supermarket whose related staffMembers to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found staffMembers, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/staffMemberCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The supermarket does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Retrieves the related staffMembers of an individual supermarket's cashiers relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headSupermarketCashiers",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the supermarket whose related staffMembers to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
+          }
+        }
+      }
+    },
+    "/supermarkets/{id}/relationships/cashiers": {
+      "get": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Retrieves the related staffMember identities of an individual supermarket's cashiers relationship.",
+        "operationId": "getSupermarketCashiersRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the supermarket whose related staffMember identities to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found staffMember identities, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/staffMemberIdentifierCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The supermarket does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Retrieves the related staffMember identities of an individual supermarket's cashiers relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headSupermarketCashiersRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the supermarket whose related staffMember identities to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Adds existing staffMembers to the cashiers relationship of an individual supermarket.",
+        "operationId": "postSupermarketCashiersRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the supermarket to add staffMembers to.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identities of the staffMembers to add to the cashiers relationship.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyStaffMemberInRequest"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "The staffMembers were successfully added, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The supermarket or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Assigns existing staffMembers to the cashiers relationship of an individual supermarket.",
+        "operationId": "patchSupermarketCashiersRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the supermarket whose cashiers relationship to assign.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identities of the staffMembers to assign to the cashiers relationship, or an empty array to clear the relationship.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyStaffMemberInRequest"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "The cashiers relationship was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The supermarket or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Removes existing staffMembers from the cashiers relationship of an individual supermarket.",
+        "operationId": "deleteSupermarketCashiersRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the supermarket to remove staffMembers from.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identities of the staffMembers to remove from the cashiers relationship.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyStaffMemberInRequest"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "The staffMembers were successfully removed, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The supermarket or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/supermarkets/{id}/storeManager": {
+      "get": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Retrieves the related staffMember of an individual supermarket's storeManager relationship.",
+        "operationId": "getSupermarketStoreManager",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the supermarket whose related staffMember to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found staffMember, or `null` if it was not found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/secondaryStaffMemberResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The supermarket does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Retrieves the related staffMember of an individual supermarket's storeManager relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headSupermarketStoreManager",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the supermarket whose related staffMember to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
+          }
+        }
+      }
+    },
+    "/supermarkets/{id}/relationships/storeManager": {
+      "get": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Retrieves the related staffMember identity of an individual supermarket's storeManager relationship.",
+        "operationId": "getSupermarketStoreManagerRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the supermarket whose related staffMember identity to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found staffMember identity, or `null` if it was not found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/staffMemberIdentifierResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The supermarket does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Retrieves the related staffMember identity of an individual supermarket's storeManager relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headSupermarketStoreManagerRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the supermarket whose related staffMember identity to retrieve.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "supermarkets"
+        ],
+        "summary": "Assigns an existing staffMember to the storeManager relationship of an individual supermarket.",
+        "operationId": "patchSupermarketStoreManagerRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the supermarket whose storeManager relationship to assign.",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identity of the staffMember to assign to the storeManager relationship.",
+          "content": {
+            "application/vnd.api+json; ext=openapi": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneStaffMemberInRequest"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "The storeManager relationship was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The supermarket or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "addOperationCode": {
+        "enum": [
+          "add"
+        ],
+        "type": "string"
+      },
+      "addToSupermarketCashiersRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/addOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/supermarketCashiersRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/staffMemberIdentifierInRequest"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "atomicOperation": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "type": "string"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "addStaffMember": "#/components/schemas/createStaffMemberOperation",
+            "addSupermarket": "#/components/schemas/createSupermarketOperation",
+            "addToSupermarketCashiers": "#/components/schemas/addToSupermarketCashiersRelationshipOperation",
+            "removeFromSupermarketCashiers": "#/components/schemas/removeFromSupermarketCashiersRelationshipOperation",
+            "removeStaffMember": "#/components/schemas/deleteStaffMemberOperation",
+            "removeSupermarket": "#/components/schemas/deleteSupermarketOperation",
+            "updateStaffMember": "#/components/schemas/updateStaffMemberOperation",
+            "updateSupermarket": "#/components/schemas/updateSupermarketOperation",
+            "updateSupermarketBackupStoreManager": "#/components/schemas/updateSupermarketBackupStoreManagerRelationshipOperation",
+            "updateSupermarketCashiers": "#/components/schemas/updateSupermarketCashiersRelationshipOperation",
+            "updateSupermarketStoreManager": "#/components/schemas/updateSupermarketStoreManagerRelationshipOperation"
+          }
+        },
+        "x-abstract": true
+      },
+      "atomicResult": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceInResponse"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "attributesInCreateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "staffMembers": "#/components/schemas/attributesInCreateStaffMemberRequest",
+            "supermarkets": "#/components/schemas/attributesInCreateSupermarketRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInCreateStaffMemberRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRequest"
+          },
+          {
+            "required": [
+              "name"
+            ],
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "age": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInCreateSupermarketRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInCreateRequest"
+          },
+          {
+            "required": [
+              "nameOfCity"
+            ],
+            "type": "object",
+            "properties": {
+              "nameOfCity": {
+                "type": "string"
+              },
+              "kind": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/supermarketType"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInResponse": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "staffMembers": "#/components/schemas/attributesInStaffMemberResponse",
+            "supermarkets": "#/components/schemas/attributesInSupermarketResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInStaffMemberResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "age": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInSupermarketResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "nameOfCity": {
+                "type": "string"
+              },
+              "kind": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/supermarketType"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInUpdateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "staffMembers": "#/components/schemas/attributesInUpdateStaffMemberRequest",
+            "supermarkets": "#/components/schemas/attributesInUpdateSupermarketRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "attributesInUpdateStaffMemberRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "age": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "attributesInUpdateSupermarketRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "nameOfCity": {
+                "type": "string"
+              },
+              "kind": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/supermarketType"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "createStaffMemberOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/addOperationCode"
+                  }
+                ]
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/dataInCreateStaffMemberRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "createStaffMemberRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreateStaffMemberRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "createSupermarketOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/addOperationCode"
+                  }
+                ]
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/dataInCreateSupermarketRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "createSupermarketRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCreateSupermarketRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataInCreateStaffMemberRequest": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInCreateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "lid": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCreateStaffMemberRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInCreateSupermarketRequest": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInCreateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "lid": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCreateSupermarketRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInCreateSupermarketRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInStaffMemberResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int32"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInStaffMemberResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInSupermarketResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int32"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInSupermarketResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInSupermarketResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInUpdateStaffMemberRequest": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int32"
+              },
+              "lid": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInUpdateStaffMemberRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "dataInUpdateSupermarketRequest": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int32"
+              },
+              "lid": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInUpdateSupermarketRequest"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/relationshipsInUpdateSupermarketRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "deleteStaffMemberOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/removeOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/staffMemberIdentifierInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "deleteSupermarketOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/removeOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/supermarketIdentifierInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "errorLinks": {
+        "type": "object",
+        "properties": {
+          "about": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/errorLinks"
+              }
+            ],
+            "nullable": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "source": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/errorSource"
+              }
+            ],
+            "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorResponseDocument": {
+        "required": [
+          "errors",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "jsonapi": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi"
+              }
+            ]
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/errorTopLevelLinks"
+              }
+            ]
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/errorObject"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorSource": {
+        "type": "object",
+        "properties": {
+          "pointer": {
+            "type": "string",
+            "nullable": true
+          },
+          "parameter": {
+            "type": "string",
+            "nullable": true
+          },
+          "header": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "identifierInRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "staffMembers": "#/components/schemas/staffMemberIdentifierInRequest",
+            "supermarkets": "#/components/schemas/supermarketIdentifierInRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "jsonapi": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "ext": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "profile": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "meta": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        }
+      },
+      "nullableSecondaryStaffMemberResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "jsonapi": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi"
+              }
+            ]
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInStaffMemberResponse"
+              }
+            ],
+            "nullable": true
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullableStaffMemberIdentifierResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "jsonapi": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi"
+              }
+            ]
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceIdentifierTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/staffMemberIdentifierInResponse"
+              }
+            ],
+            "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullableToOneStaffMemberInRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/staffMemberIdentifierInRequest"
+              }
+            ],
+            "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullableToOneStaffMemberInResponse": {
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/staffMemberIdentifierInResponse"
+              }
+            ],
+            "nullable": true
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "operationsRequestDocument": {
+        "required": [
+          "atomic:operations"
+        ],
+        "type": "object",
+        "properties": {
+          "atomic:operations": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/atomicOperation"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "operationsResponseDocument": {
+        "required": [
+          "atomic:results",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "jsonapi": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi"
+              }
+            ]
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "atomic:results": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/atomicResult"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "primaryStaffMemberResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "jsonapi": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi"
+              }
+            ]
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInStaffMemberResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "primarySupermarketResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "jsonapi": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi"
+              }
+            ]
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInSupermarketResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "relationshipLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "related": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "relationshipsInCreateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "supermarkets": "#/components/schemas/relationshipsInCreateSupermarketRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInCreateSupermarketRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInCreateRequest"
+          },
+          {
+            "required": [
+              "storeManager"
+            ],
+            "type": "object",
+            "properties": {
+              "storeManager": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneStaffMemberInRequest"
+                  }
+                ]
+              },
+              "backupStoreManager": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOneStaffMemberInRequest"
+                  }
+                ]
+              },
+              "cashiers": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyStaffMemberInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInResponse": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "supermarkets": "#/components/schemas/relationshipsInSupermarketResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInSupermarketResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "storeManager": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneStaffMemberInResponse"
+                  }
+                ]
+              },
+              "backupStoreManager": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOneStaffMemberInResponse"
+                  }
+                ]
+              },
+              "cashiers": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyStaffMemberInResponse"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "relationshipsInUpdateRequest": {
+        "required": [
+          "openapi:discriminator"
+        ],
+        "type": "object",
+        "properties": {
+          "openapi:discriminator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "openapi:discriminator",
+          "mapping": {
+            "supermarkets": "#/components/schemas/relationshipsInUpdateSupermarketRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "relationshipsInUpdateSupermarketRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/relationshipsInUpdateRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "storeManager": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneStaffMemberInRequest"
+                  }
+                ]
+              },
+              "backupStoreManager": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOneStaffMemberInRequest"
+                  }
+                ]
+              },
+              "cashiers": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyStaffMemberInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "removeFromSupermarketCashiersRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/removeOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/supermarketCashiersRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/staffMemberIdentifierInRequest"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "removeOperationCode": {
+        "enum": [
+          "remove"
+        ],
+        "type": "string"
+      },
+      "resourceCollectionTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "first": {
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          },
+          "prev": {
+            "type": "string"
+          },
+          "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceIdentifierCollectionTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "related": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "first": {
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          },
+          "prev": {
+            "type": "string"
+          },
+          "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceIdentifierTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "related": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceInCreateRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "staffMembers": "#/components/schemas/dataInCreateStaffMemberRequest",
+            "supermarkets": "#/components/schemas/dataInCreateSupermarketRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "resourceInResponse": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "staffMembers": "#/components/schemas/dataInStaffMemberResponse",
+            "supermarkets": "#/components/schemas/dataInSupermarketResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "resourceInUpdateRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceType"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "staffMembers": "#/components/schemas/dataInUpdateStaffMemberRequest",
+            "supermarkets": "#/components/schemas/dataInUpdateSupermarketRequest"
+          }
+        },
+        "x-abstract": true
+      },
+      "resourceLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceType": {
+        "enum": [
+          "staffMembers",
+          "supermarkets"
+        ],
+        "type": "string"
+      },
+      "secondaryStaffMemberResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "jsonapi": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi"
+              }
+            ]
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInStaffMemberResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "staffMemberCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "jsonapi": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi"
+              }
+            ]
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInStaffMemberResponse"
+            }
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "staffMemberIdentifierCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "jsonapi": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi"
+              }
+            ]
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceIdentifierCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/staffMemberIdentifierInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "staffMemberIdentifierInRequest": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/identifierInRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int32"
+              },
+              "lid": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "staffMemberIdentifierInResponse": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/staffMemberResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int32"
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "staffMemberIdentifierResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "jsonapi": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi"
+              }
+            ]
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceIdentifierTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/staffMemberIdentifierInResponse"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "staffMemberResourceType": {
+        "enum": [
+          "staffMembers"
+        ],
+        "type": "string"
+      },
+      "supermarketBackupStoreManagerRelationshipIdentifier": {
+        "required": [
+          "relationship",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/supermarketResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int32"
+          },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "relationship": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/supermarketBackupStoreManagerRelationshipName"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "supermarketBackupStoreManagerRelationshipName": {
+        "enum": [
+          "backupStoreManager"
+        ],
+        "type": "string"
+      },
+      "supermarketCashiersRelationshipIdentifier": {
+        "required": [
+          "relationship",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/supermarketResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int32"
+          },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "relationship": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/supermarketCashiersRelationshipName"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "supermarketCashiersRelationshipName": {
+        "enum": [
+          "cashiers"
+        ],
+        "type": "string"
+      },
+      "supermarketCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "jsonapi": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi"
+              }
+            ]
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceCollectionTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInSupermarketResponse"
+            }
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "supermarketIdentifierInRequest": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/identifierInRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int32"
+              },
+              "lid": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "supermarketResourceType": {
+        "enum": [
+          "supermarkets"
+        ],
+        "type": "string"
+      },
+      "supermarketStoreManagerRelationshipIdentifier": {
+        "required": [
+          "relationship",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/supermarketResourceType"
+              }
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "format": "int32"
+          },
+          "lid": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "relationship": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/supermarketStoreManagerRelationshipName"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "supermarketStoreManagerRelationshipName": {
+        "enum": [
+          "storeManager"
+        ],
+        "type": "string"
+      },
+      "supermarketType": {
+        "enum": [
+          "Traditional",
+          "Budget",
+          "Warehouse"
+        ],
+        "type": "string"
+      },
+      "toManyStaffMemberInRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/staffMemberIdentifierInRequest"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "toManyStaffMemberInResponse": {
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipLinks"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/staffMemberIdentifierInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "toOneStaffMemberInRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/staffMemberIdentifierInRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "toOneStaffMemberInResponse": {
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/relationshipLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/staffMemberIdentifierInResponse"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "updateOperationCode": {
+        "enum": [
+          "update"
+        ],
+        "type": "string"
+      },
+      "updateStaffMemberOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/staffMemberIdentifierInRequest"
+                  }
+                ]
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/dataInUpdateStaffMemberRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateStaffMemberRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInUpdateStaffMemberRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "updateSupermarketBackupStoreManagerRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/supermarketBackupStoreManagerRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/staffMemberIdentifierInRequest"
+                  }
+                ],
+                "nullable": true
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateSupermarketCashiersRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/supermarketCashiersRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/staffMemberIdentifierInRequest"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateSupermarketOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/supermarketIdentifierInRequest"
+                  }
+                ]
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/dataInUpdateSupermarketRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "updateSupermarketRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInUpdateSupermarketRequest"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "updateSupermarketStoreManagerRelationshipOperation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/atomicOperation"
+          },
+          {
+            "required": [
+              "data",
+              "op",
+              "ref"
+            ],
+            "type": "object",
+            "properties": {
+              "op": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/updateOperationCode"
+                  }
+                ]
+              },
+              "ref": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/supermarketStoreManagerRelationshipIdentifier"
+                  }
+                ]
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/staffMemberIdentifierInRequest"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -106,17 +106,32 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
 
     public void ConfigureLogging(Action<ILoggingBuilder> loggingConfiguration)
     {
+        if (_loggingConfiguration != null && _loggingConfiguration != loggingConfiguration)
+        {
+            throw new InvalidOperationException($"Do not call {nameof(ConfigureLogging)} multiple times.");
+        }
+
         _loggingConfiguration = loggingConfiguration;
     }
 
     public void ConfigureServices(Action<IServiceCollection> configureServices)
     {
+        if (_configureServices != null && _configureServices != configureServices)
+        {
+            throw new InvalidOperationException($"Do not call {nameof(ConfigureServices)} multiple times.");
+        }
+
         _configureServices = configureServices;
     }
 
-    public void PostConfigureServices(Action<IServiceCollection> configureServices)
+    public void PostConfigureServices(Action<IServiceCollection> postConfigureServices)
     {
-        _postConfigureServices = configureServices;
+        if (_postConfigureServices != null && _postConfigureServices != postConfigureServices)
+        {
+            throw new InvalidOperationException($"Do not call {nameof(PostConfigureServices)} multiple times.");
+        }
+
+        _postConfigureServices = postConfigureServices;
     }
 
     public async Task RunOnDatabaseAsync(Func<TDbContext, Task> asyncAction)

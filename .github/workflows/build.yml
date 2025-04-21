@@ -72,14 +72,14 @@ jobs:
             $versionSuffix = $segments.Length -eq 1 ? '' : $segments[1..$($segments.Length - 1)] -join '-'
 
             [xml]$xml = Get-Content Directory.Build.props
-            $configuredVersionPrefix = $xml.Project.PropertyGroup.JsonApiDotNetCoreVersionPrefix | Select-Object -First 1
+            $configuredVersionPrefix = $xml.Project.PropertyGroup.VersionPrefix | Select-Object -First 1
 
             if ($configuredVersionPrefix -ne $versionPrefix) {
                 Write-Error "Version prefix from git release tag '$versionPrefix' does not match version prefix '$configuredVersionPrefix' stored in Directory.Build.props."
                 # To recover from this:
                 # - Delete the GitHub release
                 # - Run: git push --delete origin the-invalid-tag-name
-                # - Adjust JsonApiDotNetCoreVersionPrefix in Directory.Build.props, commit and push
+                # - Adjust VersionPrefix in Directory.Build.props, commit and push
                 # - Recreate the GitHub release
             }
         }
@@ -284,4 +284,4 @@ jobs:
         NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}
       shell: pwsh
       run: |
-        dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:NUGET_ORG_API_KEY" --source 'nuget.org'
+        dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:NUGET_ORG_API_KEY" --source 'nuget.org' --skip-duplicate

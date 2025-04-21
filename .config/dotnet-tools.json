@@ -17,7 +17,7 @@
       "rollForward": false
     },
     "dotnet-reportgenerator-globaltool": {
-      "version": "5.4.4",
+      "version": "5.4.5",
       "commands": [
         "reportgenerator"
       ],
@@ -27,6 +27,13 @@
       "version": "2.78.2",
       "commands": [
         "docfx"
+      ],
+      "rollForward": false
+    },
+    "microsoft.openapi.kiota": {
+      "version": "1.25.1",
+      "commands": [
+        "kiota"
       ],
       "rollForward": false
     }

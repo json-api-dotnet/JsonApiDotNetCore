@@ -1,0 +1,49 @@
+<!-- Loosely based on https://github.com/kimbell/Kiota.Testing, related to https://github.com/microsoft/kiota/issues/3005 -->
+<Project>
+  <PropertyGroup>
+    <!-- For convenience, we provide extra arguments that work best with JSON:API -->
+    <JsonApiExtraArguments>--backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Warning --disable-validation-rules KnownAndNotSupportedFormats,InconsistentTypeFormatPair</JsonApiExtraArguments>
+
+    <!-- Runs 'dotnet tool restore' to make kiota command available, assumes global tool is installed otherwise -->
+    <KiotaAutoRestoreTools Condition="'$(KiotaAutoRestoreTools)' == ''">true</KiotaAutoRestoreTools>
+
+    <!-- Fixes nullability in generated output, see https://github.com/microsoft/kiota/issues/3944#issuecomment-2597201229 -->
+    <KiotaPatchOutput Condition="'$(KiotaPatchOutput)' == ''">true</KiotaPatchOutput>
+  </PropertyGroup>
+
+  <!-- Well-known metadata of the code generator item groups -->
+  <ItemGroup>
+    <AvailableItemName Include="KiotaReference" />
+  </ItemGroup>
+  <ItemDefinitionGroup>
+    <KiotaReference>
+      <!-- This is the only required argument required by the CLI -->
+      <Language></Language>
+
+      <!-- If these are not specified, the CLI will use default values -->
+      <OutputPath></OutputPath>
+      <ClassName></ClassName>
+      <NamespaceName></NamespaceName>
+      <LogLevel></LogLevel>
+      <BackingStore></BackingStore>
+      <ExcludeBackwardCompatible></ExcludeBackwardCompatible>
+      <AdditionalData></AdditionalData>
+      <Serializer></Serializer>
+      <Deserializer></Deserializer>
+      <CleanOutput></CleanOutput>
+      <ClearCache></ClearCache>
+      <MimeTypes></MimeTypes>
+      <IncludePath></IncludePath>
+      <ExcludePath></ExcludePath>
+      <DisableValidationRules></DisableValidationRules>
+      <DisableSslValidation></DisableSslValidation>
+      <TypeAccessModifier></TypeAccessModifier>
+
+      <!-- Enables to pass additional command-line arguments to the CLI -->
+      <ExtraArguments></ExtraArguments>
+
+      <!-- This is automatically populated based on the values of the other properties; it is passed directly to the CLI -->
+      <Arguments></Arguments>
+    </KiotaReference>
+  </ItemDefinitionGroup>
+</Project>
