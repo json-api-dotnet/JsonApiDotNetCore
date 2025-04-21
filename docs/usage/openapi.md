@@ -15,7 +15,7 @@ provides OpenAPI support for JSON:API by integrating with [Swashbuckle](https://
 1.  Install the `JsonApiDotNetCore.OpenApi.Swashbuckle` NuGet package:
 
     ```
-    dotnet add package JsonApiDotNetCore.OpenApi.Swashbuckle
+    dotnet add package JsonApiDotNetCore.OpenApi.Swashbuckle --prerelease
     ```
 
     > [!NOTE]

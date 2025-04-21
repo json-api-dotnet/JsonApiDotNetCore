@@ -19,7 +19,7 @@ For C# clients, we provide an additional package that provides workarounds for b
 
 To add it to your project, run the following command:
 ```
-dotnet add package JsonApiDotNetCore.OpenApi.Client.NSwag
+dotnet add package JsonApiDotNetCore.OpenApi.Client.NSwag --prerelease
 ```
 
 # [Kiota](#tab/kiota)
@@ -28,7 +28,7 @@ For C# clients, we provide an additional package that provides workarounds for b
 
 To add it to your project, run the following command:
 ```
-dotnet add package JsonApiDotNetCore.OpenApi.Client.Kiota
+dotnet add package JsonApiDotNetCore.OpenApi.Client.Kiota --prerelease
 ```
 
 ---
@@ -60,7 +60,7 @@ The following steps describe how to generate and use a JSON:API client in C#, co
 1.  Add our client package to your project:
 
     ```
-    dotnet add package JsonApiDotNetCore.OpenApi.Client.NSwag
+    dotnet add package JsonApiDotNetCore.OpenApi.Client.NSwag --prerelease
     ```
 
 1.  Add code that calls one of your JSON:API endpoints.
