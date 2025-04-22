@@ -205,19 +205,21 @@ See also our [versioning policy](./VERSIONING_POLICY.md).
 
 | JsonApiDotNetCore | Status       | .NET     | Entity Framework Core |
 | ----------------- | ------------ | -------- | --------------------- |
-| 3.x               | Stable       | Core 2.x | 2.x                   |
-| 4.x               | Stable       | Core 3.1 | 3.1, 5                |
-|                   |              | 5        | 5                     |
-|                   |              | 6        | 5                     |
-| 5.0.0-5.0.2       | Stable       | 6        | 6                     |
-| 5.0.3-5.4.0       | Stable       | 6        | 6, 7                  |
-|                   |              | 7        | 7                     |
-| 5.5+              | Stable       | 6        | 6, 7                  |
-|                   |              | 7        | 7                     |
+| master            | Preview      | 9        | 9                     |
 |                   |              | 8        | 8, 9                  |
-|                   |              | 9        | 9                     |
-| master            | Preview      | 8        | 8, 9                  |
-|                   |              | 9        | 9                     |
+| 5.7.0+            | Stable       | 9        | 9                     |
+|                   |              | 8        | 8, 9                  |
+| 5.5.0-5.6.0       | Stable       | 9        | 9                     |
+|                   |              | 8        | 8, 9                  |
+|                   |              | 7        | 7                     |
+|                   |              | 6        | 6, 7                  |
+| 5.0.3-5.4.0       | Stable       | 7        | 7                     |
+|                   |              | 6        | 6, 7                  |
+| 5.0.0-5.0.2       | Stable       | 6        | 6                     |
+| 4.x               | Stable       | 6        | 5                     |
+|                   |              | 5        | 5                     |
+|                   |              | Core 3.1 | 3.1, 5                |
+| 3.x               | Stable       | Core 2.x | 2.x                   |
 
 ## Trying out the latest build
 
