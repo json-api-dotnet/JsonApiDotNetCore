@@ -97,11 +97,6 @@ provides OpenAPI support for JSON:API by integrating with <a href="https://githu
 <li><p>Install the <code>JsonApiDotNetCore.OpenApi.Swashbuckle</code> NuGet package:</p>
 <pre><code>dotnet add package JsonApiDotNetCore.OpenApi.Swashbuckle --prerelease
 </code></pre>
-<div class="NOTE">
-<h5>Note</h5>
-<p>Because this package is still experimental, it's not yet available on NuGet.
-Use the steps <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore?tab=readme-ov-file#trying-out-the-latest-build">here</a> to install.</p>
-</div>
 </li>
 <li><p>Add the JSON:API support to your <code>Program.cs</code> file.</p>
 <pre><code class="lang-c#">builder.Services.AddJsonApi&lt;AppDbContext&gt;();
