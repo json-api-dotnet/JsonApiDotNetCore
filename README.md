@@ -105,6 +105,9 @@ The following steps describe how to create a JSON:API project.
    GET http://localhost:5000/people?filter=equals(firstName,'John')&include=children HTTP/1.1
    ```
 
+   <details>
+   <summary>Expand to view the JSON response</summary>
+
    ```json
    {
      "links": {
@@ -165,6 +168,8 @@ The following steps describe how to create a JSON:API project.
      }
    }
    ```
+
+</details>
 
 ## Learn more
 
