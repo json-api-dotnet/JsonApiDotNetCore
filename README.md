@@ -228,24 +228,21 @@ See also our [versioning policy](./VERSIONING_POLICY.md).
 
 ## Trying out the latest build
 
-After each commit to the master branch, a new pre-release NuGet package is automatically published to [GitHub Packages](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry).
+After each commit to the master branch, a new pre-release NuGet package is automatically published to [feedz.io](https://feedz.io/docs/package-types/nuget).
 To try it out, follow the steps below:
 
-1. [Create a Personal Access Token (classic)](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic) with at least `read:packages` scope.
-1. Add our package source to your local user-specific `nuget.config` file by running:
-   ```bash
-   dotnet nuget add source https://nuget.pkg.github.com/json-api-dotnet/index.json --name github-json-api --username YOUR-GITHUB-USERNAME --password YOUR-PAT-CLASSIC
+1. Create a `nuget.config` file in the same directory as your .sln file, with the following contents:
+   ```xml
+   <?xml version="1.0" encoding="utf-8"?>
+   <configuration>
+     <packageSources>
+       <add key="json-api-dotnet" value="https://f.feedz.io/json-api-dotnet/jsonapidotnetcore/nuget/index.json" />
+       <add key="NuGet" value="https://api.nuget.org/v3/index.json" />
+     </packageSources>
+   </configuration>
    ```
-   In the command above:
-   - Replace YOUR-GITHUB-USERNAME with the username you use to login your GitHub account.
-   - Replace YOUR-PAT-CLASSIC with the token your created above.
 
-   :warning: If the above command doesn't give you access in the next step, remove the package source by running:
-   ```bash
-   dotnet nuget remove source github-json-api
-   ```
-   and retry with the `--store-password-in-clear-text` switch added.
-1. Restart your IDE, open your project, and browse the list of packages from the github-json-api feed (make sure pre-release packages are included).
+1. In your IDE, browse the list of packages from the `json-api-dotnet` feed. Make sure pre-release packages are included in the list.
 
 ## Contributing
 
