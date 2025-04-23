@@ -13,7 +13,6 @@
     <VersionSuffix>pre</VersionSuffix>
     <OpenApiPreviewNumber>1</OpenApiPreviewNumber>
     <NuGetAuditMode>direct</NuGetAuditMode>
-    <NoWarn>$(NoWarn);NETSDK1215</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>

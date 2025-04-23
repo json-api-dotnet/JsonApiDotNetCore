@@ -270,6 +270,14 @@ jobs:
       run: |
         dotnet nuget add source --username 'json-api-dotnet' --password "$env:GITHUB_TOKEN" --store-password-in-clear-text --name 'github' 'https://nuget.pkg.github.com/json-api-dotnet/index.json'
         dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:GITHUB_TOKEN" --source 'github'
+    - name: Publish to feedz.io
+      if: github.event_name == 'push' || github.event_name == 'release'
+      env:
+        FEEDZ_IO_API_KEY: ${{ secrets.FEEDZ_IO_API_KEY }}
+      shell: pwsh
+      run: |
+        dotnet nuget add source --name 'feedz-io' 'https://f.feedz.io/json-api-dotnet/jsonapidotnetcore/nuget/index.json'
+        dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:FEEDZ_IO_API_KEY" --source 'feedz-io'
     - name: Publish documentation
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       uses: peaceiris/actions-gh-pages@v4
