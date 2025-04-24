@@ -104,15 +104,24 @@ internal sealed class CollectionConverter
     /// </summary>
     public Type? FindCollectionElementType(Type? type)
     {
-        if (type is { IsGenericType: true, GenericTypeArguments.Length: 1 })
+        if (type != null)
         {
-            if (type.IsOrImplementsInterface<IEnumerable>())
+            Type? enumerableClosedType = IsEnumerableClosedType(type) ? type : null;
+            enumerableClosedType ??= type.GetInterfaces().FirstOrDefault(IsEnumerableClosedType);
+
+            if (enumerableClosedType != null)
             {
-                return type.GenericTypeArguments[0];
+                return enumerableClosedType.GenericTypeArguments[0];
             }
         }
 
         return null;
+    }
+
+    private static bool IsEnumerableClosedType(Type type)
+    {
+        bool isClosedType = type is { IsGenericType: true, ContainsGenericParameters: false };
+        return isClosedType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>);
     }
 
     /// <summary>
