@@ -396,8 +396,8 @@ public partial class ResourceGraphBuilder
                 continue;
             }
 
-            Type innerType = TypeOrElementType(property.PropertyType);
-            eagerLoad.Children = GetEagerLoads(innerType, recursionDepth + 1);
+            Type rightType = CollectionConverter.Instance.FindCollectionElementType(property.PropertyType) ?? property.PropertyType;
+            eagerLoad.Children = GetEagerLoads(rightType, recursionDepth + 1);
             eagerLoad.Property = property;
 
             eagerLoads.Add(eagerLoad);
@@ -457,14 +457,6 @@ public partial class ResourceGraphBuilder
         {
             throw new InvalidOperationException("Infinite recursion detected in eager-load chain.");
         }
-    }
-
-    private Type TypeOrElementType(Type type)
-    {
-        Type[] interfaces = type.GetInterfaces().Where(@interface => @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IEnumerable<>))
-            .ToArray();
-
-        return interfaces.Length == 1 ? interfaces.Single().GenericTypeArguments[0] : type;
     }
 
     private string FormatResourceName(Type resourceClrType)
