@@ -149,8 +149,8 @@
   </Target>
 
   <!-- Include **/*.cs from output directory afterward, so that MSBuild properly refreshes if .cs files appear/disappear when openapi.json file changed -->
-  <Target Name="_KiotaIncludeGeneratedCode" Condition="'$(DesignTimeBuild)' != 'true' And '$(BuildingProject)' == 'true'" DependsOnTargets="_KiotaRunTool"
-    BeforeTargets="BeforeCompile;CoreCompile">
+  <Target Name="_KiotaIncludeGeneratedCode" Condition="'$(DesignTimeBuild)' != 'true' And '$(BuildingProject)' == 'true' And '@(KiotaReference)' != ''"
+    DependsOnTargets="_KiotaRunTool" BeforeTargets="BeforeCompile;CoreCompile">
     <ItemGroup>
       <_WildcardGroup Include="%2A%2A/%2A.cs">
         <GeneratedCodeDirectory>%(KiotaReference._NonEmptyOutputPath)</GeneratedCodeDirectory>

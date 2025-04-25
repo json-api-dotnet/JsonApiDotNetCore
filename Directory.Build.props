@@ -11,7 +11,7 @@
     <RunSettingsFilePath>$(MSBuildThisFileDirectory)tests.runsettings</RunSettingsFilePath>
     <VersionPrefix>5.7.1</VersionPrefix>
     <VersionSuffix>pre</VersionSuffix>
-    <OpenApiPreviewNumber>1</OpenApiPreviewNumber>
+    <OpenApiPreviewNumber>2</OpenApiPreviewNumber>
     <NuGetAuditMode>direct</NuGetAuditMode>
   </PropertyGroup>
 
