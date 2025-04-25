@@ -133,7 +133,7 @@ public class PersonDefinition : JsonApiResourceDefinition&lt;Person, int&gt;
         {
             return new Dictionary&lt;string, object?&gt;
             {
-                [&quot;notice&quot;] = &quot;Check our intranet at http://www.example.com/employees/&quot; +
+                [&quot;notice&quot;] = &quot;Check our intranet at https://www.example.com/employees/&quot; +
                     $&quot;{person.StringId} for personal details.&quot;
             };
         }
@@ -151,7 +151,7 @@ public class PersonDefinition : JsonApiResourceDefinition&lt;Person, int&gt;
         ...
       },
       &quot;meta&quot;: {
-        &quot;notice&quot;: &quot;Check our intranet at http://www.example.com/employees/1 for personal details.&quot;
+        &quot;notice&quot;: &quot;Check our intranet at https://www.example.com/employees/1 for personal details.&quot;
       }
     }
   ]
