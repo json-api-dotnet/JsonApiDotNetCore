@@ -82,8 +82,16 @@ internal sealed class TypeLocator
                 $"instead of {interfaceTypeArguments.Length}.", nameof(interfaceTypeArguments));
         }
 
-        return assembly.GetTypes().Select(type => GetContainerRegistrationFromType(type, unboundInterface, interfaceTypeArguments))
+        // @formatter:wrap_chained_method_calls chop_always
+        // @formatter:wrap_before_first_method_call true
+
+        return assembly
+            .GetTypes()
+            .Select(type => GetContainerRegistrationFromType(type, unboundInterface, interfaceTypeArguments))
             .FirstOrDefault(result => result != null);
+
+        // @formatter:wrap_before_first_method_call restore
+        // @formatter:wrap_chained_method_calls restore
     }
 
     private static (Type implementationType, Type serviceInterface)? GetContainerRegistrationFromType(Type nextType, Type unboundInterface,
