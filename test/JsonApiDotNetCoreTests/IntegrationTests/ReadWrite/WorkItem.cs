@@ -18,8 +18,8 @@ public sealed class WorkItem : Identifiable<int>
     [Attr]
     public WorkItemPriority Priority { get; set; }
 
-    [NotMapped]
     [Attr(Capabilities = AttrCapabilities.All & ~(AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange))]
+    [NotMapped]
     public bool IsImportant
     {
         get => Priority == WorkItemPriority.High;

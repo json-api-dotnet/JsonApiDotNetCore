@@ -9,8 +9,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.Models;
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance", GenerateControllerEndpoints = JsonApiEndpoints.None)]
 public sealed class AlwaysMovingTandem : Bike
 {
-    [NotMapped]
     [Attr]
+    [NotMapped]
     public Guid LocationToken
     {
         get => Guid.NewGuid();
