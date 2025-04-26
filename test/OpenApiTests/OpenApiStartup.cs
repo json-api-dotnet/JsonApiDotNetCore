@@ -14,10 +14,7 @@ public class OpenApiStartup<TDbContext> : TestableStartup<TDbContext>
     public override void ConfigureServices(IServiceCollection services)
     {
         base.ConfigureServices(services);
-
-#pragma warning disable JADNC_OA_001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
         services.AddOpenApiForJsonApi(SetupSwaggerGenAction);
-#pragma warning restore JADNC_OA_001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
     }
 
     protected override void SetJsonApiOptions(JsonApiOptions options)
