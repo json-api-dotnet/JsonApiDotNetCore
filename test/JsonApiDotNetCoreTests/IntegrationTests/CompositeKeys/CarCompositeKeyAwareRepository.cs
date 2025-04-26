@@ -39,11 +39,21 @@ public class CarCompositeKeyAwareRepository<TResource, TId>(
 
         if (queryLayer.Selection is { IsEmpty: false })
         {
-            foreach (QueryLayer? nextLayer in queryLayer.Selection.GetResourceTypes().Select(queryLayer.Selection.GetOrCreateSelectors)
-                .SelectMany(selectors => selectors.Select(selector => selector.Value).Where(layer => layer != null)))
+            // @formatter:wrap_chained_method_calls chop_always
+            // @formatter:keep_existing_linebreaks true
+
+            foreach (QueryLayer? nextLayer in queryLayer.Selection
+                .GetResourceTypes()
+                .Select(queryLayer.Selection.GetOrCreateSelectors)
+                .SelectMany(selectors => selectors
+                    .Select(selector => selector.Value)
+                    .Where(layer => layer != null)))
             {
                 RecursiveRewriteFilterInLayer(nextLayer!);
             }
+
+            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_chained_method_calls restore
         }
     }
 }
