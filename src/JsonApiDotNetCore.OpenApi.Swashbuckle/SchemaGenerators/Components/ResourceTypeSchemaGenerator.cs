@@ -25,12 +25,12 @@ internal sealed class ResourceTypeSchemaGenerator
         ArgumentNullException.ThrowIfNull(resourceType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        if (schemaRepository.TryLookupByType(resourceType.ClrType, out OpenApiSchema? referenceSchema))
+        if (schemaRepository.TryLookupByType(resourceType.ClrType, out var referenceSchema))
         {
             return referenceSchema;
         }
 
-        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, resourceType.ClrType);
+        using var traceScope = _schemaGenerationTracer.TraceStart(this, resourceType.ClrType);
 
         var fullSchema = new OpenApiSchema
         {
@@ -42,12 +42,12 @@ internal sealed class ResourceTypeSchemaGenerator
             }
         };
 
-        foreach (ResourceType derivedType in resourceType.GetAllConcreteDerivedTypes())
+        foreach (var derivedType in resourceType.GetAllConcreteDerivedTypes())
         {
             fullSchema.Enum.Add(new OpenApiString(derivedType.PublicName));
         }
 
-        string schemaId = _schemaIdSelector.GetResourceTypeSchemaId(resourceType);
+        var schemaId = _schemaIdSelector.GetResourceTypeSchemaId(resourceType);
 
         referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
         schemaRepository.RegisterType(resourceType.ClrType, schemaId);
@@ -58,7 +58,7 @@ internal sealed class ResourceTypeSchemaGenerator
 
     public OpenApiSchema GenerateSchema(SchemaRepository schemaRepository)
     {
-        string schemaId = _schemaIdSelector.GetResourceTypeSchemaId(null);
+        var schemaId = _schemaIdSelector.GetResourceTypeSchemaId(null);
 
         if (schemaRepository.Schemas.ContainsKey(schemaId))
         {
@@ -72,7 +72,7 @@ internal sealed class ResourceTypeSchemaGenerator
             };
         }
 
-        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this);
+        using var traceScope = _schemaGenerationTracer.TraceStart(this);
 
         var fullSchema = new OpenApiSchema
         {
@@ -83,7 +83,7 @@ internal sealed class ResourceTypeSchemaGenerator
             }
         };
 
-        OpenApiSchema referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
+        var referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
 
         traceScope.TraceSucceeded(schemaId);
         return referenceSchema;

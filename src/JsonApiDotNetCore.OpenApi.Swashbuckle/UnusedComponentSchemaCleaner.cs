@@ -23,7 +23,7 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
 
         document.Components.Schemas.Remove(GenerationCacheSchemaGenerator.SchemaId);
 
-        HashSet<string> unusedSchemaIds = GetUnusedSchemaIds(document);
+        var unusedSchemaIds = GetUnusedSchemaIds(document);
         AssertNoUnknownSchemasFound(unusedSchemaIds);
 
         RemoveUnusedComponentSchemas(document, unusedSchemaIds);
@@ -31,7 +31,7 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
 
     private static HashSet<string> GetUnusedSchemaIds(OpenApiDocument document)
     {
-        HashSet<string> reachableSchemaIds = ReachableRootsCollector.Instance.CollectReachableSchemaIds(document);
+        var reachableSchemaIds = ReachableRootsCollector.Instance.CollectReachableSchemaIds(document);
 
         ComponentSchemaUsageCollector collector = new(document);
         return collector.CollectUnusedSchemaIds(reachableSchemaIds);
@@ -48,7 +48,7 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
 
     private static void RemoveUnusedComponentSchemas(OpenApiDocument document, HashSet<string> unusedSchemaIds)
     {
-        foreach (string schemaId in unusedSchemaIds)
+        foreach (var schemaId in unusedSchemaIds)
         {
             document.Components.Schemas.Remove(schemaId);
         }
@@ -107,12 +107,12 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
         {
             _schemaIdsInUse.Clear();
 
-            foreach (string schemaId in reachableSchemaIds)
+            foreach (var schemaId in reachableSchemaIds)
             {
                 WalkSchemaId(schemaId);
             }
 
-            HashSet<string> unusedSchemaIds = _componentSchemas.Keys.ToHashSet();
+            var unusedSchemaIds = _componentSchemas.Keys.ToHashSet();
             unusedSchemaIds.ExceptWith(_schemaIdsInUse);
             return unusedSchemaIds;
         }
@@ -121,7 +121,7 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
         {
             if (_schemaIdsInUse.Add(schemaId))
             {
-                if (_componentSchemas.TryGetValue(schemaId, out OpenApiSchema? schema))
+                if (_componentSchemas.TryGetValue(schemaId, out var schema))
                 {
                     WalkSchema(schema);
                 }
@@ -137,22 +137,22 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
                 WalkSchema(schema.Items);
                 WalkSchema(schema.Not);
 
-                foreach (OpenApiSchema? subSchema in schema.AllOf)
+                foreach (var subSchema in schema.AllOf)
                 {
                     WalkSchema(subSchema);
                 }
 
-                foreach (OpenApiSchema? subSchema in schema.AnyOf)
+                foreach (var subSchema in schema.AnyOf)
                 {
                     WalkSchema(subSchema);
                 }
 
-                foreach (OpenApiSchema? subSchema in schema.OneOf)
+                foreach (var subSchema in schema.OneOf)
                 {
                     WalkSchema(subSchema);
                 }
 
-                foreach (OpenApiSchema? subSchema in schema.Properties.Values)
+                foreach (var subSchema in schema.Properties.Values)
                 {
                     WalkSchema(subSchema);
                 }
@@ -171,11 +171,11 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
 
             if (schema.Discriminator != null)
             {
-                foreach (string mappingValue in schema.Discriminator.Mapping.Values)
+                foreach (var mappingValue in schema.Discriminator.Mapping.Values)
                 {
                     if (mappingValue.StartsWith(ComponentSchemaPrefix, StringComparison.Ordinal))
                     {
-                        string schemaId = mappingValue[ComponentSchemaPrefix.Length..];
+                        var schemaId = mappingValue[ComponentSchemaPrefix.Length..];
                         WalkSchemaId(schemaId);
                     }
                 }

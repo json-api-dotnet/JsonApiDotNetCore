@@ -36,17 +36,17 @@ internal abstract class DocumentSchemaGenerator
         ArgumentNullException.ThrowIfNull(schemaType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        if (schemaRepository.TryLookupByType(schemaType, out OpenApiSchema? referenceSchema))
+        if (schemaRepository.TryLookupByType(schemaType, out var referenceSchema))
         {
             return referenceSchema;
         }
 
-        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, schemaType);
+        using var traceScope = _schemaGenerationTracer.TraceStart(this, schemaType);
 
         _metaSchemaGenerator.GenerateSchema(schemaRepository);
 
         referenceSchema = GenerateDocumentSchema(schemaType, schemaRepository);
-        OpenApiSchema fullSchema = schemaRepository.Schemas[referenceSchema.Reference.Id];
+        var fullSchema = schemaRepository.Schemas[referenceSchema.Reference.Id];
 
         _linksVisibilitySchemaGenerator.UpdateSchemaForTopLevel(schemaType, fullSchema, schemaRepository);
 

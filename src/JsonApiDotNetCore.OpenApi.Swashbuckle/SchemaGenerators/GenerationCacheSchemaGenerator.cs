@@ -36,7 +36,7 @@ internal sealed class GenerationCacheSchemaGenerator
     {
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        OpenApiSchema fullSchema = GenerateFullSchema(schemaRepository);
+        var fullSchema = GenerateFullSchema(schemaRepository);
 
         var hasAtomicOperationsEndpoint = (OpenApiBoolean)fullSchema.Properties[HasAtomicOperationsEndpointPropertyName].Default;
         return hasAtomicOperationsEndpoint.Value;
@@ -44,14 +44,14 @@ internal sealed class GenerationCacheSchemaGenerator
 
     private OpenApiSchema GenerateFullSchema(SchemaRepository schemaRepository)
     {
-        if (schemaRepository.Schemas.TryGetValue(SchemaId, out OpenApiSchema? fullSchema))
+        if (schemaRepository.Schemas.TryGetValue(SchemaId, out var fullSchema))
         {
             return fullSchema;
         }
 
-        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this);
+        using var traceScope = _schemaGenerationTracer.TraceStart(this);
 
-        bool hasAtomicOperationsEndpoint = EvaluateHasAtomicOperationsEndpoint();
+        var hasAtomicOperationsEndpoint = EvaluateHasAtomicOperationsEndpoint();
 
         fullSchema = new OpenApiSchema
         {
@@ -74,13 +74,13 @@ internal sealed class GenerationCacheSchemaGenerator
 
     private bool EvaluateHasAtomicOperationsEndpoint()
     {
-        IEnumerable<ActionDescriptor> actionDescriptors =
+        var actionDescriptors =
             _defaultProvider.ActionDescriptors.Items.Where(JsonApiActionDescriptorCollectionProvider.IsVisibleJsonApiEndpoint);
 
-        foreach (ActionDescriptor actionDescriptor in actionDescriptors)
+        foreach (var actionDescriptor in actionDescriptors)
         {
-            MethodInfo actionMethod = actionDescriptor.GetActionMethod();
-            JsonApiEndpointMetadataContainer endpointMetadataContainer = _jsonApiEndpointMetadataProvider.Get(actionMethod);
+            var actionMethod = actionDescriptor.GetActionMethod();
+            var endpointMetadataContainer = _jsonApiEndpointMetadataProvider.Get(actionMethod);
 
             if (endpointMetadataContainer.RequestMetadata is AtomicOperationsRequestMetadata)
             {

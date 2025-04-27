@@ -13,12 +13,12 @@ internal sealed partial class EndpointOrderingFilter : IDocumentFilter
         ArgumentNullException.ThrowIfNull(swaggerDoc);
         ArgumentNullException.ThrowIfNull(context);
 
-        KeyValuePair<string, OpenApiPathItem>[] endpointsInOrder = swaggerDoc.Paths.OrderBy(GetPrimaryResourcePublicName)
+        var endpointsInOrder = swaggerDoc.Paths.OrderBy(GetPrimaryResourcePublicName)
             .ThenBy(GetRelationshipName).ThenBy(IsSecondaryEndpoint).ToArray();
 
         swaggerDoc.Paths.Clear();
 
-        foreach ((string url, OpenApiPathItem path) in endpointsInOrder)
+        foreach ((var url, var path) in endpointsInOrder)
         {
             swaggerDoc.Paths.Add(url, path);
         }
@@ -36,7 +36,7 @@ internal sealed partial class EndpointOrderingFilter : IDocumentFilter
 
     private static string GetRelationshipName(KeyValuePair<string, OpenApiPathItem> entry)
     {
-        Match match = RelationshipNameInUrlRegex().Match(entry.Key);
+        var match = RelationshipNameInUrlRegex().Match(entry.Key);
 
         return match.Success ? match.Groups["RelationshipName"].Value : string.Empty;
     }

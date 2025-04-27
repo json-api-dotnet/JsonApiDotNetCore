@@ -27,7 +27,7 @@ internal sealed class ResourceIdSchemaGenerator
         ArgumentNullException.ThrowIfNull(resourceIdClrType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        OpenApiSchema idSchema = _defaultSchemaGenerator.GenerateSchema(resourceIdClrType, schemaRepository);
+        var idSchema = _defaultSchemaGenerator.GenerateSchema(resourceIdClrType, schemaRepository);
         ConsistencyGuard.ThrowIf(idSchema.Reference != null);
 
         idSchema.Type = "string";

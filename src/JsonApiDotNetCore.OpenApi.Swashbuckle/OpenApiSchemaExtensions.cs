@@ -11,9 +11,9 @@ internal static class OpenApiSchemaExtensions
 
         var propertiesInOrder = new Dictionary<string, OpenApiSchema>();
 
-        foreach (string propertyName in propertyNamesInOrder)
+        foreach (var propertyName in propertyNamesInOrder)
         {
-            if (fullSchema.Properties.TryGetValue(propertyName, out OpenApiSchema? schema))
+            if (fullSchema.Properties.TryGetValue(propertyName, out var schema))
             {
                 propertiesInOrder.Add(propertyName, schema);
             }

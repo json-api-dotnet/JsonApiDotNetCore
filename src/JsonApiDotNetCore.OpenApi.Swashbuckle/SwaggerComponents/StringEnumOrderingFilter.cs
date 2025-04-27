@@ -40,12 +40,12 @@ internal sealed class StringEnumOrderingFilter : IDocumentFilter
         private static bool HasSortAnnotation(OpenApiSchema schema)
         {
             // Order our own enums, but don't touch enums from user-defined resource attributes.
-            return schema.Extensions.TryGetValue(RequiresSortKey, out IOpenApiExtension? extension) && extension is OpenApiBoolean { Value: true };
+            return schema.Extensions.TryGetValue(RequiresSortKey, out var extension) && extension is OpenApiBoolean { Value: true };
         }
 
         private static void OrderEnumMembers(OpenApiSchema schema)
         {
-            List<IOpenApiAny> ordered = schema.Enum.OfType<OpenApiString>().OrderBy(openApiString => openApiString.Value).Cast<IOpenApiAny>().ToList();
+            var ordered = schema.Enum.OfType<OpenApiString>().OrderBy(openApiString => openApiString.Value).Cast<IOpenApiAny>().ToList();
             ConsistencyGuard.ThrowIf(ordered.Count != schema.Enum.Count);
 
             schema.Enum = ordered;

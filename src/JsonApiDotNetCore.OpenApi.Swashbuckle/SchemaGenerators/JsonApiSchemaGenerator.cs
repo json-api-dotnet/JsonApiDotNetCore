@@ -33,8 +33,8 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
             return _resourceIdSchemaGenerator.GenerateSchema(schemaType, schemaRepository);
         }
 
-        DocumentSchemaGenerator schemaGenerator = GetDocumentSchemaGenerator(schemaType);
-        OpenApiSchema referenceSchema = schemaGenerator.GenerateSchema(schemaType, schemaRepository);
+        var schemaGenerator = GetDocumentSchemaGenerator(schemaType);
+        var referenceSchema = schemaGenerator.GenerateSchema(schemaType, schemaRepository);
 
         if (memberInfo != null || parameterInfo != null)
         {
@@ -55,7 +55,7 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
     {
         DocumentSchemaGenerator? generator = null;
 
-        foreach (DocumentSchemaGenerator documentSchemaGenerator in _documentSchemaGenerators)
+        foreach (var documentSchemaGenerator in _documentSchemaGenerators)
         {
             if (documentSchemaGenerator.CanGenerate(schemaType))
             {

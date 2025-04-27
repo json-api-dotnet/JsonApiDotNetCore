@@ -53,7 +53,7 @@ internal sealed class ResourceOrRelationshipDocumentSchemaGenerator : DocumentSc
 
     public override bool CanGenerate(Type schemaType)
     {
-        Type schemaOpenType = schemaType.ConstructedToOpenType();
+        var schemaOpenType = schemaType.ConstructedToOpenType();
         return RequestDocumentSchemaTypes.Contains(schemaOpenType) || ResponseDocumentSchemaTypes.Contains(schemaOpenType);
     }
 
@@ -63,12 +63,12 @@ internal sealed class ResourceOrRelationshipDocumentSchemaGenerator : DocumentSc
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
         var resourceSchemaType = ResourceSchemaType.Create(schemaType, _resourceGraph);
-        bool isRequestSchema = RequestDocumentSchemaTypes.Contains(resourceSchemaType.SchemaOpenType);
+        var isRequestSchema = RequestDocumentSchemaTypes.Contains(resourceSchemaType.SchemaOpenType);
 
         _ = _dataContainerSchemaGenerator.GenerateSchema(schemaType, resourceSchemaType.ResourceType, isRequestSchema, !isRequestSchema, schemaRepository);
 
-        OpenApiSchema? referenceSchemaForDocument = _defaultSchemaGenerator.GenerateSchema(schemaType, schemaRepository);
-        OpenApiSchema inlineSchemaForDocument = schemaRepository.Schemas[referenceSchemaForDocument.Reference.Id].UnwrapLastExtendedSchema();
+        var referenceSchemaForDocument = _defaultSchemaGenerator.GenerateSchema(schemaType, schemaRepository);
+        var inlineSchemaForDocument = schemaRepository.Schemas[referenceSchemaForDocument.Reference.Id].UnwrapLastExtendedSchema();
 
         if (JsonApiSchemaFacts.HasNullableDataProperty(resourceSchemaType.SchemaOpenType))
         {

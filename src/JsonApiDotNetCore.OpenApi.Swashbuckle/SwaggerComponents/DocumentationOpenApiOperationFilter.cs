@@ -74,16 +74,16 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         ArgumentNullException.ThrowIfNull(operation);
         ArgumentNullException.ThrowIfNull(context);
 
-        bool hasHeadVerb = context.ApiDescription.HttpMethod == "HEAD";
+        var hasHeadVerb = context.ApiDescription.HttpMethod == "HEAD";
 
         if (hasHeadVerb)
         {
             operation.Responses.Clear();
         }
 
-        MethodInfo actionMethod = context.ApiDescription.ActionDescriptor.GetActionMethod();
-        string actionName = context.MethodInfo.Name;
-        ResourceType? resourceType = _controllerResourceMapping.GetResourceTypeForController(actionMethod.ReflectedType);
+        var actionMethod = context.ApiDescription.ActionDescriptor.GetActionMethod();
+        var actionName = context.MethodInfo.Name;
+        var resourceType = _controllerResourceMapping.GetResourceTypeForController(actionMethod.ReflectedType);
 
         if (resourceType != null)
         {
@@ -119,7 +119,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
                 }
                 case GetSecondaryName or GetRelationshipName or PostRelationshipName or PatchRelationshipName or DeleteRelationshipName:
                 {
-                    RelationshipAttribute relationship = GetRelationshipFromRoute(context.ApiDescription, resourceType);
+                    var relationship = GetRelationshipFromRoute(context.ApiDescription, resourceType);
 
                     switch (actionName)
                     {
@@ -192,7 +192,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         }
         else if (operation.Parameters.Count == 1)
         {
-            string singularName = resourceType.PublicName.Singularize();
+            var singularName = resourceType.PublicName.Singularize();
 
             if (hasHeadVerb)
             {
@@ -223,7 +223,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 
     private void ApplyPostResource(OpenApiOperation operation, ResourceType resourceType)
     {
-        string singularName = resourceType.PublicName.Singularize();
+        var singularName = resourceType.PublicName.Singularize();
 
         SetOperationSummary(operation, $"Creates a new {singularName}.");
         AddQueryStringParameters(operation, false);
@@ -239,7 +239,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringOrRequestBodyBad);
 
-        ClientIdGenerationMode clientIdGeneration = resourceType.ClientIdGeneration ?? _options.ClientIdGeneration;
+        var clientIdGeneration = resourceType.ClientIdGeneration ?? _options.ClientIdGeneration;
 
         if (clientIdGeneration == ClientIdGenerationMode.Forbidden)
         {
@@ -253,7 +253,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 
     private void ApplyPatchResource(OpenApiOperation operation, ResourceType resourceType)
     {
-        string singularName = resourceType.PublicName.Singularize();
+        var singularName = resourceType.PublicName.Singularize();
 
         SetOperationSummary(operation, $"Updates an existing {singularName}.");
         SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularName} to update.");
@@ -276,7 +276,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 
     private void ApplyDeleteResource(OpenApiOperation operation, ResourceType resourceType)
     {
-        string singularName = resourceType.PublicName.Singularize();
+        var singularName = resourceType.PublicName.Singularize();
 
         SetOperationSummary(operation, $"Deletes an existing {singularName} by its identifier.");
         SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularName} to delete.");
@@ -286,8 +286,8 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 
     private static void ApplyGetSecondary(OpenApiOperation operation, RelationshipAttribute relationship, bool hasHeadVerb)
     {
-        string singularLeftName = relationship.LeftType.PublicName.Singularize();
-        string rightName = relationship is HasOneAttribute ? relationship.RightType.PublicName.Singularize() : relationship.RightType.PublicName;
+        var singularLeftName = relationship.LeftType.PublicName.Singularize();
+        var rightName = relationship is HasOneAttribute ? relationship.RightType.PublicName.Singularize() : relationship.RightType.PublicName;
 
         if (hasHeadVerb)
         {
@@ -326,9 +326,9 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 
     private static void ApplyGetRelationship(OpenApiOperation operation, RelationshipAttribute relationship, bool hasHeadVerb)
     {
-        string singularLeftName = relationship.LeftType.PublicName.Singularize();
-        string singularRightName = relationship.RightType.PublicName.Singularize();
-        string ident = relationship is HasOneAttribute ? "identity" : "identities";
+        var singularLeftName = relationship.LeftType.PublicName.Singularize();
+        var singularRightName = relationship.RightType.PublicName.Singularize();
+        var ident = relationship is HasOneAttribute ? "identity" : "identities";
 
         if (hasHeadVerb)
         {
@@ -368,8 +368,8 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 
     private void ApplyPostRelationship(OpenApiOperation operation, RelationshipAttribute relationship)
     {
-        string singularLeftName = relationship.LeftType.PublicName.Singularize();
-        string rightName = relationship.RightType.PublicName;
+        var singularLeftName = relationship.LeftType.PublicName.Singularize();
+        var rightName = relationship.RightType.PublicName;
 
         SetOperationSummary(operation, $"Adds existing {rightName} to the {relationship} relationship of an individual {singularLeftName}.");
         SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularLeftName} to add {rightName} to.");
@@ -386,9 +386,9 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 
     private void ApplyPatchRelationship(OpenApiOperation operation, RelationshipAttribute relationship)
     {
-        bool isOptional = _resourceFieldValidationMetadataProvider.IsNullable(relationship);
-        string singularLeftName = relationship.LeftType.PublicName.Singularize();
-        string rightName = relationship is HasOneAttribute ? relationship.RightType.PublicName.Singularize() : relationship.RightType.PublicName;
+        var isOptional = _resourceFieldValidationMetadataProvider.IsNullable(relationship);
+        var singularLeftName = relationship.LeftType.PublicName.Singularize();
+        var rightName = relationship is HasOneAttribute ? relationship.RightType.PublicName.Singularize() : relationship.RightType.PublicName;
 
         SetOperationSummary(operation,
             relationship is HasOneAttribute
@@ -420,8 +420,8 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 
     private void ApplyDeleteRelationship(OpenApiOperation operation, RelationshipAttribute relationship)
     {
-        string singularLeftName = relationship.LeftType.PublicName.Singularize();
-        string rightName = relationship.RightType.PublicName;
+        var singularLeftName = relationship.LeftType.PublicName.Singularize();
+        var rightName = relationship.RightType.PublicName;
 
         SetOperationSummary(operation, $"Removes existing {rightName} from the {relationship} relationship of an individual {singularLeftName}.");
         SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularLeftName} to remove {rightName} from.");
@@ -440,7 +440,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
     {
         ConsistencyGuard.ThrowIf(apiDescription.RelativePath == null);
 
-        string relationshipName = apiDescription.RelativePath.Split('/').Last();
+        var relationshipName = apiDescription.RelativePath.Split('/').Last();
         return resourceType.GetRelationshipByPublicName(relationshipName);
     }
 
@@ -466,13 +466,13 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 
     private static void SetResponseDescription(OpenApiResponses responses, HttpStatusCode statusCode, string description)
     {
-        OpenApiResponse response = GetOrAddResponse(responses, statusCode);
+        var response = GetOrAddResponse(responses, statusCode);
         response.Description = XmlCommentsTextHelper.Humanize(description);
     }
 
     private static void SetResponseHeaderETag(OpenApiResponses responses, HttpStatusCode statusCode)
     {
-        OpenApiResponse response = GetOrAddResponse(responses, statusCode);
+        var response = GetOrAddResponse(responses, statusCode);
 
         response.Headers[HeaderNames.ETag] = new OpenApiHeader
         {
@@ -487,7 +487,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 
     private static void SetResponseHeaderContentLength(OpenApiResponses responses, HttpStatusCode statusCode)
     {
-        OpenApiResponse response = GetOrAddResponse(responses, statusCode);
+        var response = GetOrAddResponse(responses, statusCode);
 
         response.Headers[HeaderNames.ContentLength] = new OpenApiHeader
         {
@@ -503,7 +503,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 
     private static void SetResponseHeaderLocation(OpenApiResponses responses, HttpStatusCode statusCode, string resourceName)
     {
-        OpenApiResponse response = GetOrAddResponse(responses, statusCode);
+        var response = GetOrAddResponse(responses, statusCode);
 
         response.Headers[HeaderNames.Location] = new OpenApiHeader
         {
@@ -519,9 +519,9 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 
     private static OpenApiResponse GetOrAddResponse(OpenApiResponses responses, HttpStatusCode statusCode)
     {
-        string responseCode = ((int)statusCode).ToString();
+        var responseCode = ((int)statusCode).ToString();
 
-        if (!responses.TryGetValue(responseCode, out OpenApiResponse? response))
+        if (!responses.TryGetValue(responseCode, out var response))
         {
             response = new OpenApiResponse();
             responses.Add(responseCode, response);

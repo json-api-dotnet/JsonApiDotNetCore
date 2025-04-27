@@ -24,7 +24,7 @@ internal sealed class RelationshipNameSchemaGenerator
         ArgumentNullException.ThrowIfNull(relationship);
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        string schemaId = _schemaIdSelector.GetRelationshipNameSchemaId(relationship);
+        var schemaId = _schemaIdSelector.GetRelationshipNameSchemaId(relationship);
 
         if (schemaRepository.Schemas.ContainsKey(schemaId))
         {
@@ -38,7 +38,7 @@ internal sealed class RelationshipNameSchemaGenerator
             };
         }
 
-        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, relationship);
+        using var traceScope = _schemaGenerationTracer.TraceStart(this, relationship);
 
         var fullSchema = new OpenApiSchema
         {
@@ -46,7 +46,7 @@ internal sealed class RelationshipNameSchemaGenerator
             Enum = [new OpenApiString(relationship.PublicName)]
         };
 
-        OpenApiSchema referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
+        var referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
 
         traceScope.TraceSucceeded(schemaId);
         return referenceSchema;

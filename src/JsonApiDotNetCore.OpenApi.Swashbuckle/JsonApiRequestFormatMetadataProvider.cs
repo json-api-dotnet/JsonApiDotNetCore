@@ -28,7 +28,7 @@ internal sealed class JsonApiRequestFormatMetadataProvider : IInputFormatter, IA
         ArgumentException.ThrowIfNullOrEmpty(contentType);
         ArgumentNullException.ThrowIfNull(objectType);
 
-        if (JsonApiSchemaFacts.IsRequestBodySchemaType(objectType) && MediaTypeHeaderValue.TryParse(contentType, out MediaTypeHeaderValue? headerValue) &&
+        if (JsonApiSchemaFacts.IsRequestBodySchemaType(objectType) && MediaTypeHeaderValue.TryParse(contentType, out var headerValue) &&
             headerValue.MediaType.Equals(DefaultMediaType, StringComparison.OrdinalIgnoreCase))
         {
             return new MediaTypeCollection

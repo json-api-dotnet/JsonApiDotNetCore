@@ -30,9 +30,9 @@ internal sealed class ResourceSchemaType
         ArgumentNullException.ThrowIfNull(schemaConstructedType);
         ArgumentNullException.ThrowIfNull(resourceGraph);
 
-        Type schemaOpenType = schemaConstructedType.GetGenericTypeDefinition();
-        Type resourceClrType = schemaConstructedType.GenericTypeArguments[0];
-        ResourceType resourceType = resourceGraph.GetResourceType(resourceClrType);
+        var schemaOpenType = schemaConstructedType.GetGenericTypeDefinition();
+        var resourceClrType = schemaConstructedType.GenericTypeArguments[0];
+        var resourceType = resourceGraph.GetResourceType(resourceClrType);
 
         return new ResourceSchemaType(schemaConstructedType, schemaOpenType, resourceType);
     }
@@ -41,7 +41,7 @@ internal sealed class ResourceSchemaType
     {
         ArgumentNullException.ThrowIfNull(resourceType);
 
-        Type schemaConstructedType = SchemaOpenType.MakeGenericType(resourceType.ClrType);
+        var schemaConstructedType = SchemaOpenType.MakeGenericType(resourceType.ClrType);
         return new ResourceSchemaType(schemaConstructedType, SchemaOpenType, resourceType);
     }
 

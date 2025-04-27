@@ -11,7 +11,7 @@ internal static class SchemaRepositoryExtensions
 
     private static FieldInfo GetReservedIdsField()
     {
-        FieldInfo? field = typeof(SchemaRepository).GetField(ReservedIdsFieldName, BindingFlags.Instance | BindingFlags.NonPublic);
+        var field = typeof(SchemaRepository).GetField(ReservedIdsFieldName, BindingFlags.Instance | BindingFlags.NonPublic);
 
         if (field == null)
         {
@@ -33,7 +33,7 @@ internal static class SchemaRepositoryExtensions
         ArgumentNullException.ThrowIfNull(schemaRepository);
         ArgumentNullException.ThrowIfNull(schemaType);
 
-        if (!schemaRepository.TryLookupByType(schemaType, out OpenApiSchema? referenceSchema))
+        if (!schemaRepository.TryLookupByType(schemaType, out var referenceSchema))
         {
             throw new InvalidOperationException($"Reference schema for '{schemaType.Name}' does not exist.");
         }
@@ -47,11 +47,11 @@ internal static class SchemaRepositoryExtensions
         ArgumentNullException.ThrowIfNull(oldSchemaType);
         ArgumentException.ThrowIfNullOrEmpty(newSchemaId);
 
-        if (schemaRepository.TryLookupByType(oldSchemaType, out OpenApiSchema? referenceSchema))
+        if (schemaRepository.TryLookupByType(oldSchemaType, out var referenceSchema))
         {
-            string oldSchemaId = referenceSchema.Reference.Id;
+            var oldSchemaId = referenceSchema.Reference.Id;
 
-            OpenApiSchema fullSchema = schemaRepository.Schemas[oldSchemaId];
+            var fullSchema = schemaRepository.Schemas[oldSchemaId];
 
             schemaRepository.Schemas.Remove(oldSchemaId);
             schemaRepository.Schemas.Add(newSchemaId, fullSchema);

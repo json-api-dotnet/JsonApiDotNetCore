@@ -23,7 +23,7 @@ internal sealed class AtomicOperationCodeSchemaGenerator
     {
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        string schemaId = _schemaIdSelector.GetAtomicOperationCodeSchemaId(operationCode);
+        var schemaId = _schemaIdSelector.GetAtomicOperationCodeSchemaId(operationCode);
 
         if (schemaRepository.Schemas.ContainsKey(schemaId))
         {
@@ -37,9 +37,9 @@ internal sealed class AtomicOperationCodeSchemaGenerator
             };
         }
 
-        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, operationCode);
+        using var traceScope = _schemaGenerationTracer.TraceStart(this, operationCode);
 
-        string enumValue = operationCode.ToString().ToLowerInvariant();
+        var enumValue = operationCode.ToString().ToLowerInvariant();
 
         var fullSchema = new OpenApiSchema
         {
@@ -47,7 +47,7 @@ internal sealed class AtomicOperationCodeSchemaGenerator
             Enum = [new OpenApiString(enumValue)]
         };
 
-        OpenApiSchema referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
+        var referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
 
         traceScope.TraceSucceeded(schemaId);
         return referenceSchema;

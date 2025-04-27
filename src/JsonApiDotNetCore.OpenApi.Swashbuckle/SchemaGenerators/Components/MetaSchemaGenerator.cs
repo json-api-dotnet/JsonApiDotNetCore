@@ -23,12 +23,12 @@ internal sealed class MetaSchemaGenerator
     {
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        if (schemaRepository.TryLookupByType(SchemaType, out OpenApiSchema? referenceSchema))
+        if (schemaRepository.TryLookupByType(SchemaType, out var referenceSchema))
         {
             return referenceSchema;
         }
 
-        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, SchemaType);
+        using var traceScope = _schemaGenerationTracer.TraceStart(this, SchemaType);
 
         var fullSchema = new OpenApiSchema
         {
@@ -39,7 +39,7 @@ internal sealed class MetaSchemaGenerator
             }
         };
 
-        string schemaId = _schemaIdSelector.GetMetaSchemaId();
+        var schemaId = _schemaIdSelector.GetMetaSchemaId();
 
         referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
         schemaRepository.RegisterType(SchemaType, schemaId);

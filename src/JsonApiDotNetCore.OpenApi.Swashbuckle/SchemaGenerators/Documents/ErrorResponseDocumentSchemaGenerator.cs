@@ -39,10 +39,10 @@ internal sealed class ErrorResponseDocumentSchemaGenerator : DocumentSchemaGener
         ArgumentNullException.ThrowIfNull(schemaType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        OpenApiSchema referenceSchemaForErrorObject = GenerateSchemaForErrorObject(schemaRepository);
-        OpenApiSchema fullSchemaForErrorObject = schemaRepository.Schemas[referenceSchemaForErrorObject.Reference.Id];
+        var referenceSchemaForErrorObject = GenerateSchemaForErrorObject(schemaRepository);
+        var fullSchemaForErrorObject = schemaRepository.Schemas[referenceSchemaForErrorObject.Reference.Id];
 
-        OpenApiSchema referenceSchemaForMeta = _metaSchemaGenerator.GenerateSchema(schemaRepository);
+        var referenceSchemaForMeta = _metaSchemaGenerator.GenerateSchema(schemaRepository);
         fullSchemaForErrorObject.Properties[JsonApiPropertyName.Meta] = referenceSchemaForMeta.WrapInExtendedSchema();
 
         return _defaultSchemaGenerator.GenerateSchema(schemaType, schemaRepository);
@@ -50,9 +50,9 @@ internal sealed class ErrorResponseDocumentSchemaGenerator : DocumentSchemaGener
 
     private OpenApiSchema GenerateSchemaForErrorObject(SchemaRepository schemaRepository)
     {
-        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, ErrorObjectType);
+        using var traceScope = _schemaGenerationTracer.TraceStart(this, ErrorObjectType);
 
-        OpenApiSchema referenceSchema = _defaultSchemaGenerator.GenerateSchema(ErrorObjectType, schemaRepository);
+        var referenceSchema = _defaultSchemaGenerator.GenerateSchema(ErrorObjectType, schemaRepository);
 
         traceScope.TraceSucceeded(referenceSchema.Reference.Id);
         return referenceSchema;
