@@ -1,5 +1,6 @@
 using System.Reflection;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
@@ -28,7 +29,7 @@ internal static class SchemaRepositoryExtensions
         return field;
     }
 
-    public static OpenApiSchema LookupByType(this SchemaRepository schemaRepository, Type schemaType)
+    public static OpenApiSchemaReference LookupByType(this SchemaRepository schemaRepository, Type schemaType)
     {
         ArgumentNullException.ThrowIfNull(schemaRepository);
         ArgumentNullException.ThrowIfNull(schemaType);

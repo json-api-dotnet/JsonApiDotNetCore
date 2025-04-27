@@ -3,6 +3,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
@@ -27,14 +28,14 @@ internal sealed class DataContainerSchemaGenerator
         _resourceGraph = resourceGraph;
     }
 
-    public OpenApiSchema GenerateSchemaForCommonResourceDataInResponse(SchemaRepository schemaRepository)
+    public OpenApiSchemaReference GenerateSchemaForCommonResourceDataInResponse(SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
         return _dataSchemaGenerator.GenerateSchemaForCommonData(typeof(ResourceInResponse), schemaRepository);
     }
 
-    public OpenApiSchema GenerateSchema(Type dataContainerSchemaType, ResourceType resourceType, bool forRequestSchema, bool canIncludeRelated,
+    public OpenApiSchemaReference GenerateSchema(Type dataContainerSchemaType, ResourceType resourceType, bool forRequestSchema, bool canIncludeRelated,
         SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(dataContainerSchemaType);

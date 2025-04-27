@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
@@ -454,12 +455,12 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         operation.Description = XmlCommentsTextHelper.Humanize(description);
     }
 
-    private static void SetParameterDescription(OpenApiParameter parameter, string description)
+    private static void SetParameterDescription(IOpenApiParameter parameter, string description)
     {
         parameter.Description = XmlCommentsTextHelper.Humanize(description);
     }
 
-    private static void SetRequestBodyDescription(OpenApiRequestBody requestBody, string description)
+    private static void SetRequestBodyDescription(IOpenApiRequestBody requestBody, string description)
     {
         requestBody.Description = XmlCommentsTextHelper.Humanize(description);
     }
@@ -480,7 +481,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
             Required = true,
             Schema = new OpenApiSchema
             {
-                Type = "string"
+                Type = JsonSchemaType.String
             }
         };
     }
@@ -495,7 +496,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
             Required = true,
             Schema = new OpenApiSchema
             {
-                Type = "integer",
+                Type = JsonSchemaType.Integer,
                 Format = "int64"
             }
         };
@@ -511,13 +512,13 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
             Required = true,
             Schema = new OpenApiSchema
             {
-                Type = "string",
+                Type = JsonSchemaType.String,
                 Format = "uri"
             }
         };
     }
 
-    private static OpenApiResponse GetOrAddResponse(OpenApiResponses responses, HttpStatusCode statusCode)
+    private static IOpenApiResponse GetOrAddResponse(OpenApiResponses responses, HttpStatusCode statusCode)
     {
         var responseCode = ((int)statusCode).ToString();
 
@@ -542,20 +543,21 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         // - This makes NSwag produce a C# client with method signature: GetAsync(IDictionary<string, string?>? query)
         //     when combined with <NSwagGenerateNullableReferenceTypes>true</NSwagGenerateNullableReferenceTypes> in the project file.
 
+        operation.Parameters ??= new List<IOpenApiParameter>();
+
         operation.Parameters.Add(new OpenApiParameter
         {
             In = ParameterLocation.Query,
             Name = "query",
             Schema = new OpenApiSchema
             {
-                Type = "object",
+                Type = JsonSchemaType.Object,
                 AdditionalProperties = new OpenApiSchema
                 {
-                    Type = "string",
-                    Nullable = true
+                    Type = JsonSchemaType.String|JsonSchemaType.Null,
                 },
                 // Prevent SwaggerUI from producing sample, which fails when used because unknown query string parameters are blocked by default.
-                Example = new OpenApiString(string.Empty)
+                Example = string.Empty
             },
             Description = isRelationshipEndpoint ? RelationshipQueryStringParameters : ResourceQueryStringParameters
         });
@@ -563,6 +565,8 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 
     private static void AddRequestHeaderIfNoneMatch(OpenApiOperation operation)
     {
+        operation.Parameters ??= new List<IOpenApiParameter>();
+
         operation.Parameters.Add(new OpenApiParameter
         {
             In = ParameterLocation.Header,
@@ -570,7 +574,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
             Description = "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             Schema = new OpenApiSchema
             {
-                Type = "string"
+                Type = JsonSchemaType.String
             }
         });
     }

@@ -1,6 +1,7 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
@@ -31,7 +32,7 @@ internal abstract class DocumentSchemaGenerator
 
     public abstract bool CanGenerate(Type schemaType);
 
-    public OpenApiSchema GenerateSchema(Type schemaType, SchemaRepository schemaRepository)
+    public OpenApiSchemaReference GenerateSchema(Type schemaType, SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(schemaType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
@@ -46,7 +47,7 @@ internal abstract class DocumentSchemaGenerator
         _metaSchemaGenerator.GenerateSchema(schemaRepository);
 
         referenceSchema = GenerateDocumentSchema(schemaType, schemaRepository);
-        var fullSchema = schemaRepository.Schemas[referenceSchema.Reference.Id];
+        var fullSchema = (OpenApiSchema)schemaRepository.Schemas[referenceSchema.Reference.Id];
 
         _linksVisibilitySchemaGenerator.UpdateSchemaForTopLevel(schemaType, fullSchema, schemaRepository);
 
@@ -56,7 +57,7 @@ internal abstract class DocumentSchemaGenerator
         return referenceSchema;
     }
 
-    protected abstract OpenApiSchema GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository);
+    protected abstract OpenApiSchemaReference GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository);
 
     private void SetJsonApiVersion(OpenApiSchema fullSchema, SchemaRepository schemaRepository)
     {

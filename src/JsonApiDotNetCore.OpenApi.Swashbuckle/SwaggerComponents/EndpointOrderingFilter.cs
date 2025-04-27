@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
@@ -24,17 +25,17 @@ internal sealed partial class EndpointOrderingFilter : IDocumentFilter
         }
     }
 
-    private static string GetPrimaryResourcePublicName(KeyValuePair<string, OpenApiPathItem> entry)
+    private static string GetPrimaryResourcePublicName(KeyValuePair<string, IOpenApiPathItem> entry)
     {
         return entry.Value.Operations.First().Value.Tags.First().Name;
     }
 
-    private static bool IsSecondaryEndpoint(KeyValuePair<string, OpenApiPathItem> entry)
+    private static bool IsSecondaryEndpoint(KeyValuePair<string, IOpenApiPathItem> entry)
     {
         return entry.Key.Contains("/relationships");
     }
 
-    private static string GetRelationshipName(KeyValuePair<string, OpenApiPathItem> entry)
+    private static string GetRelationshipName(KeyValuePair<string, IOpenApiPathItem> entry)
     {
         var match = RelationshipNameInUrlRegex().Match(entry.Key);
 

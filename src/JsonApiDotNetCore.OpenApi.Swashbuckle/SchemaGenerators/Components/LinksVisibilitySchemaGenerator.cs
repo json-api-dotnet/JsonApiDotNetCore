@@ -5,6 +5,7 @@ using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
@@ -110,7 +111,7 @@ internal sealed class LinksVisibilitySchemaGenerator
     private void UpdateLinksProperty(OpenApiSchema fullSchemaForLinksContainer, LinkTypes visibleLinkTypes, LinkTypes possibleLinkTypes,
         SchemaRepository schemaRepository)
     {
-        var referenceSchemaForLinks = fullSchemaForLinksContainer.Properties[JsonApiPropertyName.Links].UnwrapLastExtendedSchema();
+        var referenceSchemaForLinks = (OpenApiSchemaReference)fullSchemaForLinksContainer.Properties[JsonApiPropertyName.Links].UnwrapLastExtendedSchema();
 
         if ((visibleLinkTypes & possibleLinkTypes) == 0)
         {
@@ -125,7 +126,7 @@ internal sealed class LinksVisibilitySchemaGenerator
 
             if (schemaRepository.Schemas.TryGetValue(linksSchemaId, out var fullSchemaForLinks))
             {
-                UpdateLinkProperties(fullSchemaForLinks, visibleLinkTypes);
+                UpdateLinkProperties((OpenApiSchema)fullSchemaForLinks, visibleLinkTypes);
             }
         }
     }

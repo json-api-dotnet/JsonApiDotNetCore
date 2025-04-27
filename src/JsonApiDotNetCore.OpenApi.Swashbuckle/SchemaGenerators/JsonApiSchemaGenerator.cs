@@ -4,6 +4,8 @@ using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
+using Microsoft.OpenApi.Models.References;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators;
@@ -22,7 +24,7 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         _documentSchemaGenerators = documentSchemaGenerators as DocumentSchemaGenerator[] ?? documentSchemaGenerators.ToArray();
     }
 
-    public OpenApiSchema GenerateSchema(Type schemaType, SchemaRepository schemaRepository, MemberInfo? memberInfo = null, ParameterInfo? parameterInfo = null,
+    public IOpenApiSchema GenerateSchema(Type schemaType, SchemaRepository schemaRepository, MemberInfo? memberInfo = null, ParameterInfo? parameterInfo = null,
         ApiParameterRouteInfo? routeInfo = null)
     {
         ArgumentNullException.ThrowIfNull(schemaType);
@@ -40,7 +42,7 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         {
             // For unknown reasons, Swashbuckle chooses to wrap request bodies in allOf, but not response bodies.
             // We just replicate that behavior here. See https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/861#issuecomment-1373631712.
-            referenceSchema = referenceSchema.WrapInExtendedSchema();
+            return referenceSchema.WrapInExtendedSchema();
         }
 
         return referenceSchema;

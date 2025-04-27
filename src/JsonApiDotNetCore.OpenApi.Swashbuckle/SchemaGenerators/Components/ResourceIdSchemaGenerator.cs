@@ -1,5 +1,6 @@
 using JsonApiDotNetCore.Configuration;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
@@ -27,10 +28,11 @@ internal sealed class ResourceIdSchemaGenerator
         ArgumentNullException.ThrowIfNull(resourceIdClrType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        var idSchema = _defaultSchemaGenerator.GenerateSchema(resourceIdClrType, schemaRepository);
-        ConsistencyGuard.ThrowIf(idSchema.Reference != null);
+        var schema = _defaultSchemaGenerator.GenerateSchema(resourceIdClrType, schemaRepository);
+        ConsistencyGuard.ThrowIf(schema is OpenApiSchemaReference);
 
-        idSchema.Type = "string";
+        var idSchema = (OpenApiSchema)schema;
+        idSchema.Type = JsonSchemaType.String;
 
         if (resourceIdClrType != typeof(string))
         {
