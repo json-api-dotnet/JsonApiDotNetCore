@@ -9,9 +9,9 @@
     <AnalysisMode>Recommended</AnalysisMode>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
     <RunSettingsFilePath>$(MSBuildThisFileDirectory)tests.runsettings</RunSettingsFilePath>
-    <VersionPrefix>5.7.1</VersionPrefix>
+    <VersionPrefix>5.7.2</VersionPrefix>
     <VersionSuffix>pre</VersionSuffix>
-    <OpenApiPreviewNumber>2</OpenApiPreviewNumber>
+    <OpenApiPreviewNumber>3</OpenApiPreviewNumber>
     <NuGetAuditMode>direct</NuGetAuditMode>
   </PropertyGroup>
 
