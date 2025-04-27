@@ -3,6 +3,7 @@ using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Documents;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
@@ -34,7 +35,7 @@ internal sealed class ErrorResponseDocumentSchemaGenerator : DocumentSchemaGener
         return schemaType == typeof(ErrorResponseDocument);
     }
 
-    protected override OpenApiSchema GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository)
+    protected override OpenApiSchemaReference GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(schemaType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
@@ -45,14 +46,14 @@ internal sealed class ErrorResponseDocumentSchemaGenerator : DocumentSchemaGener
         var referenceSchemaForMeta = _metaSchemaGenerator.GenerateSchema(schemaRepository);
         fullSchemaForErrorObject.Properties[JsonApiPropertyName.Meta] = referenceSchemaForMeta.WrapInExtendedSchema();
 
-        return _defaultSchemaGenerator.GenerateSchema(schemaType, schemaRepository);
+        return (OpenApiSchemaReference)_defaultSchemaGenerator.GenerateSchema(schemaType, schemaRepository);
     }
 
-    private OpenApiSchema GenerateSchemaForErrorObject(SchemaRepository schemaRepository)
+    private OpenApiSchemaReference GenerateSchemaForErrorObject(SchemaRepository schemaRepository)
     {
         using var traceScope = _schemaGenerationTracer.TraceStart(this, ErrorObjectType);
 
-        var referenceSchema = _defaultSchemaGenerator.GenerateSchema(ErrorObjectType, schemaRepository);
+        var referenceSchema = (OpenApiSchemaReference)_defaultSchemaGenerator.GenerateSchema(ErrorObjectType, schemaRepository);
 
         traceScope.TraceSucceeded(referenceSchema.Reference.Id);
         return referenceSchema;

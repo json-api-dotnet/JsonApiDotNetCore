@@ -19,6 +19,8 @@ internal sealed class ServerDocumentFilter : IDocumentFilter
 
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
+        swaggerDoc.Servers ??= new List<OpenApiServer>();
+
         if (swaggerDoc.Servers.Count == 0 && _httpContextAccessor.HttpContext != null)
         {
             var httpRequest = _httpContextAccessor.HttpContext.Request;

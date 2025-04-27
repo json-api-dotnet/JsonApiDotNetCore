@@ -2,6 +2,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
@@ -34,7 +35,7 @@ internal sealed class RelationshipIdentifierSchemaGenerator
         _schemaIdSelector = schemaIdSelector;
     }
 
-    public OpenApiSchema GenerateSchema(RelationshipAttribute relationship, SchemaRepository schemaRepository)
+    public OpenApiSchemaReference GenerateSchema(RelationshipAttribute relationship, SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(relationship);
         ArgumentNullException.ThrowIfNull(schemaRepository);
@@ -43,14 +44,7 @@ internal sealed class RelationshipIdentifierSchemaGenerator
 
         if (schemaRepository.Schemas.ContainsKey(schemaId))
         {
-            return new OpenApiSchema
-            {
-                Reference = new OpenApiReference
-                {
-                    Id = schemaId,
-                    Type = ReferenceType.Schema
-                }
-            };
+            return new OpenApiSchemaReference(schemaId);
         }
 
         using var traceScope = _schemaGenerationTracer.TraceStart(this, relationship);
@@ -58,8 +52,8 @@ internal sealed class RelationshipIdentifierSchemaGenerator
         var relationshipIdentifierConstructedType = typeof(RelationshipIdentifier<>).MakeGenericType(relationship.LeftType.ClrType);
         ConsistencyGuard.ThrowIf(schemaRepository.TryLookupByType(relationshipIdentifierConstructedType, out _));
 
-        var referenceSchemaForIdentifier = _defaultSchemaGenerator.GenerateSchema(relationshipIdentifierConstructedType, schemaRepository);
-        var fullSchemaForIdentifier = schemaRepository.Schemas[referenceSchemaForIdentifier.Reference.Id];
+        var referenceSchemaForIdentifier = (OpenApiSchemaReference)_defaultSchemaGenerator.GenerateSchema(relationshipIdentifierConstructedType, schemaRepository);
+        var fullSchemaForIdentifier = (OpenApiSchema)schemaRepository.Schemas[referenceSchemaForIdentifier.Reference.Id];
 
         fullSchemaForIdentifier.Properties.Remove(JsonApiPropertyName.Meta);
 
@@ -68,7 +62,7 @@ internal sealed class RelationshipIdentifierSchemaGenerator
         SetRelationship(fullSchemaForIdentifier, relationship, schemaRepository);
 
         schemaRepository.ReplaceSchemaId(relationshipIdentifierConstructedType, schemaId);
-        referenceSchemaForIdentifier.Reference.Id = schemaId;
+        referenceSchemaForIdentifier = new OpenApiSchemaReference(schemaId);
 
         traceScope.TraceSucceeded(schemaId);
         return referenceSchemaForIdentifier;

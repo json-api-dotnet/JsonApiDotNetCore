@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 
@@ -9,7 +10,7 @@ internal static class OpenApiSchemaExtensions
         ArgumentNullException.ThrowIfNull(fullSchema);
         ArgumentNullException.ThrowIfNull(propertyNamesInOrder);
 
-        var propertiesInOrder = new Dictionary<string, OpenApiSchema>();
+        var propertiesInOrder = new Dictionary<string, IOpenApiSchema>();
 
         foreach (var propertyName in propertyNamesInOrder)
         {
@@ -24,7 +25,7 @@ internal static class OpenApiSchemaExtensions
         fullSchema.Properties = propertiesInOrder;
     }
 
-    public static OpenApiSchema WrapInExtendedSchema(this OpenApiSchema source)
+    public static OpenApiSchema WrapInExtendedSchema(this IOpenApiSchema source)
     {
         ArgumentNullException.ThrowIfNull(source);
 
@@ -34,11 +35,11 @@ internal static class OpenApiSchemaExtensions
         };
     }
 
-    public static OpenApiSchema UnwrapLastExtendedSchema(this OpenApiSchema source)
+    public static IOpenApiSchema UnwrapLastExtendedSchema(this IOpenApiSchema source)
     {
         ArgumentNullException.ThrowIfNull(source);
 
-        if (source.AllOf is { Count: > 0 })
+        if (source is OpenApiSchema && source.AllOf is { Count: > 0 })
         {
             return source.AllOf.Last();
         }

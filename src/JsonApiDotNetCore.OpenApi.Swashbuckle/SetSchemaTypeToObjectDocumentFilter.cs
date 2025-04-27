@@ -11,12 +11,15 @@ internal sealed class SetSchemaTypeToObjectDocumentFilter : IDocumentFilter
 
     public void Apply(OpenApiDocument document, DocumentFilterContext context)
     {
-        foreach (var schema in document.Components.Schemas.Values)
+        if (document.Components?.Schemas != null)
         {
-            if (schema.Extensions.ContainsKey(RequiresRootObjectTypeKey))
+            foreach (var schema in document.Components.Schemas.Values)
             {
-                schema.Type = "object";
-                schema.Extensions.Remove(RequiresRootObjectTypeKey);
+                if (schema.Extensions.ContainsKey(RequiresRootObjectTypeKey))
+                {
+                    ((OpenApiSchema)schema).Type = JsonSchemaType.Object;
+                    schema.Extensions.Remove(RequiresRootObjectTypeKey);
+                }
             }
         }
     }

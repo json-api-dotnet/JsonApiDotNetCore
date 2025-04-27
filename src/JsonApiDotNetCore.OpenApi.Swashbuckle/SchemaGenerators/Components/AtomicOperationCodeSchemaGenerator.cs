@@ -1,6 +1,7 @@
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
@@ -19,7 +20,7 @@ internal sealed class AtomicOperationCodeSchemaGenerator
         _schemaIdSelector = schemaIdSelector;
     }
 
-    public OpenApiSchema GenerateSchema(AtomicOperationCode operationCode, SchemaRepository schemaRepository)
+    public OpenApiSchemaReference GenerateSchema(AtomicOperationCode operationCode, SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
@@ -27,14 +28,7 @@ internal sealed class AtomicOperationCodeSchemaGenerator
 
         if (schemaRepository.Schemas.ContainsKey(schemaId))
         {
-            return new OpenApiSchema
-            {
-                Reference = new OpenApiReference
-                {
-                    Id = schemaId,
-                    Type = ReferenceType.Schema
-                }
-            };
+            return new OpenApiSchemaReference(schemaId);
         }
 
         using var traceScope = _schemaGenerationTracer.TraceStart(this, operationCode);
@@ -43,8 +37,8 @@ internal sealed class AtomicOperationCodeSchemaGenerator
 
         var fullSchema = new OpenApiSchema
         {
-            Type = "string",
-            Enum = [new OpenApiString(enumValue)]
+            Type = JsonSchemaType.String,
+            Enum = [enumValue]
         };
 
         var referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);

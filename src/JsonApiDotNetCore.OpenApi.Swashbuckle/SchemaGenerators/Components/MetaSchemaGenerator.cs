@@ -1,5 +1,6 @@
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
@@ -19,7 +20,7 @@ internal sealed class MetaSchemaGenerator
         _schemaIdSelector = schemaIdSelector;
     }
 
-    public OpenApiSchema GenerateSchema(SchemaRepository schemaRepository)
+    public OpenApiSchemaReference GenerateSchema(SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
@@ -32,10 +33,10 @@ internal sealed class MetaSchemaGenerator
 
         var fullSchema = new OpenApiSchema
         {
-            Type = "object",
+            Type = JsonSchemaType.Object,
             AdditionalProperties = new OpenApiSchema
             {
-                Nullable = true
+                Type = JsonSchemaType.Null
             }
         };
 
