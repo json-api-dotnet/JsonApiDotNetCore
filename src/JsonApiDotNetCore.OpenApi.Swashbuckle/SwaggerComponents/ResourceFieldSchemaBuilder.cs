@@ -88,6 +88,7 @@ internal sealed class ResourceFieldSchemaBuilder
                     }
                 }
 
+                ((OpenApiSchema)schemaForResourceField).AllOf ??= [];
                 var isInlineSchemaType = schemaForResourceField.AllOf.Count == 0;
 
                 // Schemas for types like enum and complex attributes are handled as reference schemas.

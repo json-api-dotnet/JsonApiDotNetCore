@@ -15,7 +15,7 @@ internal sealed class SetSchemaTypeToObjectDocumentFilter : IDocumentFilter
         {
             foreach (var schema in document.Components.Schemas.Values)
             {
-                if (schema.Extensions.ContainsKey(RequiresRootObjectTypeKey))
+                if (schema.Extensions != null && schema.Extensions.ContainsKey(RequiresRootObjectTypeKey))
                 {
                     ((OpenApiSchema)schema).Type = JsonSchemaType.Object;
                     schema.Extensions.Remove(RequiresRootObjectTypeKey);

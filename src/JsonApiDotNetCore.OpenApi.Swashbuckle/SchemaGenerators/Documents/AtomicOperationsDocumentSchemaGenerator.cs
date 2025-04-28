@@ -8,6 +8,7 @@ using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
@@ -113,7 +114,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
         var fullSchema = new OpenApiSchema
         {
             Type = JsonSchemaType.Object,
-            Required = new SortedSet<string>([OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName]),
+            Required = new HashSet<string>([OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName]),
             Properties = new Dictionary<string, IOpenApiSchema>
             {
                 [OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName] = new OpenApiSchema()
@@ -126,9 +127,9 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
             Discriminator = new OpenApiDiscriminator
             {
                 PropertyName = OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName,
-                Mapping = new SortedDictionary<string, string>(StringComparer.Ordinal)
+                Mapping = new Dictionary<string, OpenApiSchemaReference>(StringComparer.Ordinal)
             },
-            Extensions =
+            Extensions = new Dictionary<string, IOpenApiExtension>()
             {
                 ["x-abstract"] = new OpenApiAny(true)
             }
@@ -270,7 +271,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
     {
         var referenceSchemaForAbstractOperation = schemaRepository.LookupByType(AtomicOperationAbstractType);
         var fullSchemaForAbstractOperation = schemaRepository.Schemas[referenceSchemaForAbstractOperation.Reference.Id];
-        fullSchemaForAbstractOperation.Discriminator.Mapping.Add(discriminatorValue, referenceSchemaForOperation.Reference.ReferenceV3);
+        fullSchemaForAbstractOperation.Discriminator.Mapping.Add(discriminatorValue, new OpenApiSchemaReference(referenceSchemaForOperation.Reference.Id));
     }
 
     private static HashSet<RelationshipAttribute> GetRelationshipsInTypeHierarchy(ResourceType baseType)

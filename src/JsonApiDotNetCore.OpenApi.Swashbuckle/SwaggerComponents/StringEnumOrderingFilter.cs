@@ -31,19 +31,22 @@ internal sealed class StringEnumOrderingFilter : IDocumentFilter
         {
             if (schema is OpenApiSchema concreteSchema && HasSortAnnotation(concreteSchema))
             {
-                if (schema.Enum.Count > 1)
+                if (schema.Enum != null && schema.Enum.Count > 1)
                 {
                     OrderEnumMembers(concreteSchema);
                 }
             }
 
-            schema.Extensions.Remove(RequiresSortKey);
+            if (schema.Extensions != null)
+            {
+                schema.Extensions.Remove(RequiresSortKey);
+            }
         }
 
         private static bool HasSortAnnotation(OpenApiSchema schema)
         {
             // Order our own enums, but don't touch enums from user-defined resource attributes.
-            return schema.Extensions.TryGetValue(RequiresSortKey, out var extension) && extension is OpenApiAny any && any.Node is JsonValue value && value.GetValueKind() == JsonValueKind.True;
+            return schema.Extensions != null && schema.Extensions.TryGetValue(RequiresSortKey, out var extension) && extension is OpenApiAny any && any.Node is JsonValue value && value.GetValueKind() == JsonValueKind.True;
         }
 
         private static void OrderEnumMembers(OpenApiSchema schema)

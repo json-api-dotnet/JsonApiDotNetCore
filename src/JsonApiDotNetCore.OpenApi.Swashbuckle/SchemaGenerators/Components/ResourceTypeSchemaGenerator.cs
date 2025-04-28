@@ -1,6 +1,7 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -37,7 +38,7 @@ internal sealed class ResourceTypeSchemaGenerator
         {
             Type = JsonSchemaType.String,
             Enum = resourceType.ClrType.IsAbstract ? [] : [resourceType.PublicName],
-            Extensions =
+            Extensions = new Dictionary<string, IOpenApiExtension>()
             {
                 [StringEnumOrderingFilter.RequiresSortKey] = new OpenApiAny(true)
             }
@@ -71,7 +72,7 @@ internal sealed class ResourceTypeSchemaGenerator
         var fullSchema = new OpenApiSchema
         {
             Type = JsonSchemaType.String,
-            Extensions =
+            Extensions = new Dictionary<string, IOpenApiExtension>()
             {
                 [StringEnumOrderingFilter.RequiresSortKey] = new OpenApiAny(true)
             }

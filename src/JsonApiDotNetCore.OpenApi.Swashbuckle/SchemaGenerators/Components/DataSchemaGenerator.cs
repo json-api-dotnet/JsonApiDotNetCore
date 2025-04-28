@@ -8,6 +8,7 @@ using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.Interfaces;
 using Microsoft.OpenApi.Models.References;
@@ -146,6 +147,7 @@ internal sealed class DataSchemaGenerator
 
         if (RequiresRootObjectTypeInDataSchema(resourceSchemaType, forRequestSchema))
         {
+            fullSchemaForData.Extensions ??= [];
             fullSchemaForData.Extensions[SetSchemaTypeToObjectDocumentFilter.RequiresRootObjectTypeKey] = new OpenApiAny(true);
         }
 
@@ -224,7 +226,7 @@ internal sealed class DataSchemaGenerator
         var fullSchema = new OpenApiSchema
         {
             Type = JsonSchemaType.Object,
-            Required = new SortedSet<string>([JsonApiPropertyName.Type]),
+            Required = new HashSet<string>([JsonApiPropertyName.Type]),
             Properties = new Dictionary<string, IOpenApiSchema>
             {
                 [JsonApiPropertyName.Type] = referenceSchemaForResourceType.WrapInExtendedSchema(),
@@ -234,9 +236,9 @@ internal sealed class DataSchemaGenerator
             Discriminator = new OpenApiDiscriminator
             {
                 PropertyName = JsonApiPropertyName.Type,
-                Mapping = new SortedDictionary<string, string>(StringComparer.Ordinal)
+                Mapping = new Dictionary<string, OpenApiSchemaReference>(StringComparer.Ordinal)
             },
-            Extensions =
+            Extensions = new Dictionary<string, IOpenApiExtension>()
             {
                 ["x-abstract"] = new OpenApiAny(true)
             }
@@ -455,7 +457,7 @@ internal sealed class DataSchemaGenerator
         var fullSchema = new OpenApiSchema
         {
             Type = JsonSchemaType.Object,
-            Required = new SortedSet<string>([OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName]),
+            Required = new HashSet<string>([OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName]),
             Properties = new Dictionary<string, IOpenApiSchema>
             {
                 [OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName] = referenceSchemaForResourceType.WrapInExtendedSchema()
@@ -464,9 +466,9 @@ internal sealed class DataSchemaGenerator
             Discriminator = new OpenApiDiscriminator
             {
                 PropertyName = OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName,
-                Mapping = new SortedDictionary<string, string>(StringComparer.Ordinal)
+                Mapping = new Dictionary<string, OpenApiSchemaReference>(StringComparer.Ordinal)
             },
-            Extensions =
+            Extensions = new Dictionary<string, IOpenApiExtension>()
             {
                 ["x-abstract"] = new OpenApiAny(true)
             }
@@ -498,7 +500,7 @@ internal sealed class DataSchemaGenerator
             inlineSchemaForBase.Discriminator ??= new OpenApiDiscriminator
             {
                 PropertyName = discriminatorPropertyName,
-                Mapping = new SortedDictionary<string, string>(StringComparer.Ordinal)
+                Mapping = new Dictionary<string, OpenApiSchemaReference>(StringComparer.Ordinal)
             };
 
             if (RepeatDiscriminatorInResponseDerivedTypes && !forRequestSchema)
@@ -508,7 +510,7 @@ internal sealed class DataSchemaGenerator
 
             var publicName = resourceSchemaType.ResourceType.PublicName;
 
-            if (inlineSchemaForBase.Discriminator.Mapping.TryAdd(publicName, referenceSchemaForDerived.Reference.ReferenceV3) && baseResourceType == null)
+            if (inlineSchemaForBase.Discriminator.Mapping.TryAdd(publicName, new OpenApiSchemaReference(referenceSchemaForDerived.Reference.Id)) && baseResourceType == null)
             {
                 MapResourceTypeInEnum(publicName, schemaRepository);
             }
@@ -547,7 +549,8 @@ internal sealed class DataSchemaGenerator
     private void MapResourceTypeInEnum(string publicName, SchemaRepository schemaRepository)
     {
         var schemaId = _schemaIdSelector.GetResourceTypeSchemaId(null);
-        var fullSchema = schemaRepository.Schemas[schemaId];
+        var fullSchema = (OpenApiSchema)schemaRepository.Schemas[schemaId];
+        fullSchema.Enum ??= [];
 
         if (!fullSchema.Enum.Any(openApiAny => openApiAny is JsonValue openApiString && openApiString.GetValueKind() == JsonValueKind.String && openApiString.GetValue<string>() == publicName))
         {

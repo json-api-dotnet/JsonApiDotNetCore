@@ -29,11 +29,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Swashbuckle.AspNetCore\src\Swashbuckle.AspNetCore.SwaggerGen\Swashbuckle.AspNetCore.SwaggerGen.csproj" />
     <ProjectReference Include="..\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="SauceControl.InheritDoc" Version="$(InheritDocVersion)" PrivateAssets="All" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="$(SwashbuckleFrozenVersion)" />
   </ItemGroup>
 </Project>

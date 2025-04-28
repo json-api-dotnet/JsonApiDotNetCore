@@ -528,6 +528,14 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
             responses.Add(responseCode, response);
         }
 
+        foreach (var nextResponse in responses.Values)
+        {
+            if (nextResponse is OpenApiResponse concreteResponse)
+            {
+                concreteResponse.Headers ??= [];
+            }
+        }
+
         return response;
     }
 

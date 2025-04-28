@@ -145,28 +145,31 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
                 WalkSchema(schema.Items);
                 WalkSchema(schema.Not);
 
-                foreach (var subSchema in schema?.AllOf ?? [])
+                foreach (var subSchema in schema.AllOf ?? [])
                 {
                     WalkSchema(subSchema);
                 }
 
-                foreach (var subSchema in schema?.AnyOf ?? [])
+                foreach (var subSchema in schema.AnyOf ?? [])
                 {
                     WalkSchema(subSchema);
                 }
 
-                foreach (var subSchema in schema?.OneOf ?? [])
+                foreach (var subSchema in schema.OneOf ?? [])
                 {
                     WalkSchema(subSchema);
                 }
 
-                foreach (var subSchema in schema?.Properties?.Values ?? [])
+                if (schema.Properties?.Values != null)
                 {
-                    WalkSchema(subSchema);
+                    foreach (var subSchema in schema.Properties.Values)
+                    {
+                        WalkSchema(subSchema);
+                    }
                 }
 
                 // ReSharper disable once TailRecursiveCall
-                WalkSchema(schema?.AdditionalProperties);
+                WalkSchema(schema.AdditionalProperties);
             }
         }
 
@@ -177,15 +180,12 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
                 WalkSchemaId(refSchema.Reference.Id);
             }
 
-            if (schema.Discriminator != null)
+            if (schema.Discriminator?.Mapping != null)
             {
                 foreach (var mappingValue in schema.Discriminator.Mapping.Values)
                 {
-                    if (mappingValue.StartsWith(ComponentSchemaPrefix, StringComparison.Ordinal))
-                    {
-                        var schemaId = mappingValue[ComponentSchemaPrefix.Length..];
-                        WalkSchemaId(schemaId);
-                    }
+                    var schemaId = mappingValue.Reference.Id;
+                    WalkSchemaId(schemaId);
                 }
             }
         }
