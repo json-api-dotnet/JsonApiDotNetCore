@@ -37,7 +37,7 @@ internal sealed class IncludeDependencyScanner
 
     private static void IncludeDerivedTypes(ResourceType resourceType, ISet<ResourceType> resourceTypesFound)
     {
-        foreach (ResourceType derivedType in resourceType.DirectlyDerivedTypes)
+        foreach (var derivedType in resourceType.DirectlyDerivedTypes)
         {
             IncludeResourceType(derivedType, resourceTypesFound);
         }
@@ -45,7 +45,7 @@ internal sealed class IncludeDependencyScanner
 
     private static void IncludeRelatedTypes(ResourceType resourceType, ISet<ResourceType> resourceTypesFound)
     {
-        foreach (RelationshipAttribute relationship in resourceType.Relationships)
+        foreach (var relationship in resourceType.Relationships)
         {
             IncludeResourceType(relationship.RightType, resourceTypesFound);
         }

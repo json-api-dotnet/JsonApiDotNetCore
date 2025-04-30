@@ -31,7 +31,7 @@ internal sealed class RelationshipTypeFactory
 
         // @formatter:nested_ternary_style expanded
 
-        Type relationshipDataOpenType = relationship is HasManyAttribute
+        var relationshipDataOpenType = relationship is HasManyAttribute
             ? typeof(ToManyInResponse<>)
             : _resourceFieldValidationMetadataProvider.IsNullable(relationship)
                 ? typeof(NullableToOneInResponse<>)

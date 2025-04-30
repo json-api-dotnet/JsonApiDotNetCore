@@ -34,7 +34,7 @@ internal static class JsonApiSchemaFacts
 
     public static bool IsRequestBodySchemaType(Type schemaType)
     {
-        Type lookupType = schemaType.ConstructedToOpenType();
+        var lookupType = schemaType.ConstructedToOpenType();
         return RequestBodySchemaTypes.Contains(lookupType);
     }
 
@@ -42,13 +42,13 @@ internal static class JsonApiSchemaFacts
     {
         // Swashbuckle infers non-nullable because our Data properties are [Required].
 
-        Type lookupType = schemaType.ConstructedToOpenType();
+        var lookupType = schemaType.ConstructedToOpenType();
         return SchemaTypesHavingNullableDataProperty.Contains(lookupType);
     }
 
     public static bool IsRelationshipInResponseType(Type schemaType)
     {
-        Type lookupType = schemaType.ConstructedToOpenType();
+        var lookupType = schemaType.ConstructedToOpenType();
         return RelationshipInResponseSchemaTypes.Contains(lookupType);
     }
 }

@@ -41,13 +41,13 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
 
     private ActionDescriptorCollection GetActionDescriptors()
     {
-        List<ActionDescriptor> newDescriptors = _defaultProvider.ActionDescriptors.Items.ToList();
-        ActionDescriptor[] endpoints = newDescriptors.Where(IsVisibleJsonApiEndpoint).ToArray();
+        var newDescriptors = _defaultProvider.ActionDescriptors.Items.ToList();
+        var endpoints = newDescriptors.Where(IsVisibleJsonApiEndpoint).ToArray();
 
-        foreach (ActionDescriptor endpoint in endpoints)
+        foreach (var endpoint in endpoints)
         {
-            MethodInfo actionMethod = endpoint.GetActionMethod();
-            JsonApiEndpointMetadataContainer endpointMetadataContainer = _jsonApiEndpointMetadataProvider.Get(actionMethod);
+            var actionMethod = endpoint.GetActionMethod();
+            var endpointMetadataContainer = _jsonApiEndpointMetadataProvider.Get(actionMethod);
 
             List<ActionDescriptor> replacementDescriptorsForEndpoint =
             [
@@ -62,7 +62,7 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
             }
         }
 
-        int descriptorVersion = _defaultProvider.ActionDescriptors.Version;
+        var descriptorVersion = _defaultProvider.ActionDescriptors.Version;
         return new ActionDescriptorCollection(newDescriptors.AsReadOnly(), descriptorVersion);
     }
 
@@ -136,9 +136,9 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
 
         if (produces != null)
         {
-            foreach (string contentType in produces.ContentTypes)
+            foreach (var contentType in produces.ContentTypes)
             {
-                if (MediaTypeHeaderValue.TryParse(contentType, out MediaTypeHeaderValue? headerValue))
+                if (MediaTypeHeaderValue.TryParse(contentType, out var headerValue))
                 {
                     if (headerValue.MediaType.Equals(DefaultMediaType, StringComparison.OrdinalIgnoreCase))
                     {
@@ -156,14 +156,14 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
     {
         List<ActionDescriptor> expansion = [];
 
-        foreach ((string relationshipName, Type documentType) in metadata.DocumentTypesByRelationshipName)
+        foreach ((var relationshipName, var documentType) in metadata.DocumentTypesByRelationshipName)
         {
             if (genericEndpoint.AttributeRouteInfo == null)
             {
                 throw new NotSupportedException("Only attribute routing is supported for JsonApiDotNetCore endpoints.");
             }
 
-            ActionDescriptor expandedEndpoint = Clone(genericEndpoint);
+            var expandedEndpoint = Clone(genericEndpoint);
 
             RemovePathParameter(expandedEndpoint.Parameters, "relationshipName");
 
@@ -179,11 +179,11 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
 
     private static void UpdateBodyParameterDescriptor(ActionDescriptor endpoint, Type documentType, string? parameterName)
     {
-        ControllerParameterDescriptor? requestBodyDescriptor = endpoint.GetBodyParameterDescriptor();
+        var requestBodyDescriptor = endpoint.GetBodyParameterDescriptor();
 
         if (requestBodyDescriptor == null)
         {
-            MethodInfo actionMethod = endpoint.GetActionMethod();
+            var actionMethod = endpoint.GetActionMethod();
 
             throw new InvalidConfigurationException(
                 $"The action method '{actionMethod}' on type '{actionMethod.ReflectedType?.FullName}' contains no parameter with a [FromBody] attribute.");
@@ -195,7 +195,7 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
 
     private static ActionDescriptor Clone(ActionDescriptor descriptor)
     {
-        ActionDescriptor clone = descriptor.MemberwiseClone();
+        var clone = descriptor.MemberwiseClone();
         clone.AttributeRouteInfo = descriptor.AttributeRouteInfo!.MemberwiseClone();
         clone.FilterDescriptors = descriptor.FilterDescriptors.Select(Clone).ToList();
         clone.Parameters = descriptor.Parameters.Select(parameter => parameter.MemberwiseClone()).ToList();
@@ -204,7 +204,7 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
 
     private static FilterDescriptor Clone(FilterDescriptor descriptor)
     {
-        IFilterMetadata clone = descriptor.Filter.MemberwiseClone();
+        var clone = descriptor.Filter.MemberwiseClone();
 
         return new FilterDescriptor(clone, descriptor.Scope)
         {
@@ -214,7 +214,7 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
 
     private static void RemovePathParameter(ICollection<ParameterDescriptor> parameters, string parameterName)
     {
-        ParameterDescriptor descriptor = parameters.Single(parameterDescriptor => parameterDescriptor.Name == parameterName);
+        var descriptor = parameters.Single(parameterDescriptor => parameterDescriptor.Name == parameterName);
         parameters.Remove(descriptor);
     }
 

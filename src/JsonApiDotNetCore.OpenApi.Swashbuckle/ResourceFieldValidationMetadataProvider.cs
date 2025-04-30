@@ -30,7 +30,7 @@ internal sealed class ResourceFieldValidationMetadataProvider
             return false;
         }
 
-        bool hasRequiredAttribute = field.Property.HasAttribute<RequiredAttribute>();
+        var hasRequiredAttribute = field.Property.HasAttribute<RequiredAttribute>();
 
         if (_options.ValidateModelState && hasRequiredAttribute)
         {
@@ -38,7 +38,7 @@ internal sealed class ResourceFieldValidationMetadataProvider
         }
 
         NullabilityInfoContext nullabilityContext = new();
-        NullabilityInfo nullabilityInfo = nullabilityContext.Create(field.Property);
+        var nullabilityInfo = nullabilityContext.Create(field.Property);
         return nullabilityInfo.ReadState != NullabilityState.NotNull;
     }
 
@@ -46,7 +46,7 @@ internal sealed class ResourceFieldValidationMetadataProvider
     {
         ArgumentNullException.ThrowIfNull(field);
 
-        bool hasRequiredAttribute = field.Property.HasAttribute<RequiredAttribute>();
+        var hasRequiredAttribute = field.Property.HasAttribute<RequiredAttribute>();
 
         if (!_options.ValidateModelState)
         {
@@ -59,8 +59,8 @@ internal sealed class ResourceFieldValidationMetadataProvider
         }
 
         NullabilityInfoContext nullabilityContext = new();
-        NullabilityInfo nullabilityInfo = nullabilityContext.Create(field.Property);
-        bool isRequiredValueType = field.Property.PropertyType.IsValueType && hasRequiredAttribute && nullabilityInfo.ReadState == NullabilityState.NotNull;
+        var nullabilityInfo = nullabilityContext.Create(field.Property);
+        var isRequiredValueType = field.Property.PropertyType.IsValueType && hasRequiredAttribute && nullabilityInfo.ReadState == NullabilityState.NotNull;
 
         if (isRequiredValueType)
         {
@@ -73,7 +73,7 @@ internal sealed class ResourceFieldValidationMetadataProvider
 
     private bool IsModelStateValidationRequired(ResourceFieldAttribute field)
     {
-        ModelMetadata modelMetadata = _modelMetadataProvider.GetMetadataForProperty(field.Type.ClrType, field.Property.Name);
+        var modelMetadata = _modelMetadataProvider.GetMetadataForProperty(field.Type.ClrType, field.Property.Name);
 
         // Non-nullable reference types are implicitly required, unless SuppressImplicitRequiredAttributeForNonNullableReferenceTypes is set.
         return modelMetadata.ValidatorMetadata.Any(validatorMetadata => validatorMetadata is RequiredAttribute);

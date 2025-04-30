@@ -33,7 +33,7 @@ internal sealed class JsonApiDataContractResolver : ISerializerDataContractResol
             return DataContract.ForDynamic(typeof(object));
         }
 
-        DataContract dataContract = _dataContractResolver.GetDataContractForType(type);
+        var dataContract = _dataContractResolver.GetDataContractForType(type);
 
         IList<DataProperty>? replacementProperties = null;
 
@@ -58,10 +58,10 @@ internal sealed class JsonApiDataContractResolver : ISerializerDataContractResol
 
     private List<DataProperty> GetDataPropertiesThatExistInResourceClrType(Type resourceClrType, DataContract dataContract)
     {
-        ResourceType resourceType = _resourceGraph.GetResourceType(resourceClrType);
+        var resourceType = _resourceGraph.GetResourceType(resourceClrType);
         List<DataProperty> dataProperties = [];
 
-        foreach (DataProperty property in dataContract.ObjectProperties)
+        foreach (var property in dataContract.ObjectProperties)
         {
             if (property.MemberInfo.Name == nameof(Identifiable<object>.Id))
             {
@@ -69,12 +69,12 @@ internal sealed class JsonApiDataContractResolver : ISerializerDataContractResol
                 continue;
             }
 
-            ResourceFieldAttribute? matchingField = resourceType.Fields.SingleOrDefault(field =>
+            var matchingField = resourceType.Fields.SingleOrDefault(field =>
                 IsPropertyCompatibleWithMember(field.Property, property.MemberInfo));
 
             if (matchingField != null)
             {
-                DataProperty matchingProperty = matchingField.PublicName != property.Name
+                var matchingProperty = matchingField.PublicName != property.Name
                     ? ChangeDataPropertyName(property, matchingField.PublicName)
                     : property;
 

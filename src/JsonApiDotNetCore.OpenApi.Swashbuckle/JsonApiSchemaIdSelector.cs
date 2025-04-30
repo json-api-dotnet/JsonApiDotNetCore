@@ -87,20 +87,20 @@ internal sealed class JsonApiSchemaIdSelector
     {
         ArgumentNullException.ThrowIfNull(type);
 
-        ResourceType? resourceType = _resourceGraph.FindResourceType(type);
+        var resourceType = _resourceGraph.FindResourceType(type);
 
         if (resourceType != null)
         {
             return resourceType.PublicName.Singularize();
         }
 
-        Type openType = type.ConstructedToOpenType();
+        var openType = type.ConstructedToOpenType();
 
         if (openType != type)
         {
-            if (SchemaTypeToTemplateMap.TryGetValue(openType, out string? schemaTemplate))
+            if (SchemaTypeToTemplateMap.TryGetValue(openType, out var schemaTemplate))
             {
-                Type resourceClrType = type.GetGenericArguments().First();
+                var resourceClrType = type.GetGenericArguments().First();
                 resourceType = _resourceGraph.GetResourceType(resourceClrType);
 
                 return ApplySchemaTemplate(schemaTemplate, resourceType, null, null);
@@ -108,7 +108,7 @@ internal sealed class JsonApiSchemaIdSelector
         }
         else
         {
-            if (SchemaTypeToTemplateMap.TryGetValue(type, out string? schemaTemplate))
+            if (SchemaTypeToTemplateMap.TryGetValue(type, out var schemaTemplate))
             {
                 return ApplySchemaTemplate(schemaTemplate, null, null, null);
             }
@@ -120,7 +120,7 @@ internal sealed class JsonApiSchemaIdSelector
 
     private string ApplySchemaTemplate(string schemaTemplate, ResourceType? resourceType, string? relationshipName, AtomicOperationCode? operationCode)
     {
-        string schemaId = schemaTemplate;
+        var schemaId = schemaTemplate;
 
         schemaId = resourceType != null
             ? schemaId.Replace("[ResourceName]", resourceType.PublicName.Singularize()).Pascalize()
@@ -136,9 +136,9 @@ internal sealed class JsonApiSchemaIdSelector
             schemaId = schemaId.Replace("[OperationCode]", operationCode.Value.ToString().Pascalize());
         }
 
-        string pascalCaseSchemaId = schemaId.Pascalize();
+        var pascalCaseSchemaId = schemaId.Pascalize();
 
-        JsonNamingPolicy? namingPolicy = _options.SerializerOptions.PropertyNamingPolicy;
+        var namingPolicy = _options.SerializerOptions.PropertyNamingPolicy;
         return namingPolicy != null ? namingPolicy.ConvertName(pascalCaseSchemaId) : pascalCaseSchemaId;
     }
 
@@ -168,7 +168,7 @@ internal sealed class JsonApiSchemaIdSelector
     {
         ArgumentNullException.ThrowIfNull(relationship);
 
-        string schemaIdTemplate = operationCode switch
+        var schemaIdTemplate = operationCode switch
         {
             AtomicOperationCode.Add => AddToRelationshipAtomicOperationDiscriminatorValueTemplate,
             AtomicOperationCode.Remove => RemoveFromRelationshipAtomicOperationDiscriminatorValueTemplate,
@@ -182,7 +182,7 @@ internal sealed class JsonApiSchemaIdSelector
     {
         ArgumentNullException.ThrowIfNull(relationship);
 
-        string schemaIdTemplate = operationCode switch
+        var schemaIdTemplate = operationCode switch
         {
             AtomicOperationCode.Add => AddToRelationshipAtomicOperationSchemaIdTemplate,
             AtomicOperationCode.Remove => RemoveFromRelationshipAtomicOperationSchemaIdTemplate,

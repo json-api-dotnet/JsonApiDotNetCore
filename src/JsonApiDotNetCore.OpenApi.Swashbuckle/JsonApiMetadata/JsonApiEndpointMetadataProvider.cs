@@ -34,18 +34,18 @@ internal sealed class JsonApiEndpointMetadataProvider
             return new JsonApiEndpointMetadataContainer(AtomicOperationsRequestMetadata.Instance, AtomicOperationsResponseMetadata.Instance);
         }
 
-        JsonApiEndpoints endpoint = EndpointResolver.Instance.GetEndpoint(controllerAction);
+        var endpoint = EndpointResolver.Instance.GetEndpoint(controllerAction);
 
         if (endpoint == JsonApiEndpoints.None)
         {
             throw new NotSupportedException($"Unable to provide metadata for non-JSON:API endpoint '{controllerAction.ReflectedType!.FullName}'.");
         }
 
-        ResourceType? primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(controllerAction.ReflectedType);
+        var primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(controllerAction.ReflectedType);
         ConsistencyGuard.ThrowIf(primaryResourceType == null);
 
-        IJsonApiRequestMetadata? requestMetadata = GetRequestMetadata(endpoint, primaryResourceType);
-        IJsonApiResponseMetadata? responseMetadata = GetResponseMetadata(endpoint, primaryResourceType);
+        var requestMetadata = GetRequestMetadata(endpoint, primaryResourceType);
+        var responseMetadata = GetResponseMetadata(endpoint, primaryResourceType);
         return new JsonApiEndpointMetadataContainer(requestMetadata, responseMetadata);
     }
 
@@ -63,21 +63,21 @@ internal sealed class JsonApiEndpointMetadataProvider
 
     private static PrimaryRequestMetadata GetPostResourceRequestMetadata(Type resourceClrType)
     {
-        Type documentType = typeof(CreateRequestDocument<>).MakeGenericType(resourceClrType);
+        var documentType = typeof(CreateRequestDocument<>).MakeGenericType(resourceClrType);
 
         return new PrimaryRequestMetadata(documentType);
     }
 
     private static PrimaryRequestMetadata GetPatchResourceRequestMetadata(Type resourceClrType)
     {
-        Type documentType = typeof(UpdateRequestDocument<>).MakeGenericType(resourceClrType);
+        var documentType = typeof(UpdateRequestDocument<>).MakeGenericType(resourceClrType);
 
         return new PrimaryRequestMetadata(documentType);
     }
 
     private RelationshipRequestMetadata GetRelationshipRequestMetadata(IEnumerable<RelationshipAttribute> relationships, bool ignoreHasOneRelationships)
     {
-        IEnumerable<RelationshipAttribute> relationshipsOfEndpoint = ignoreHasOneRelationships ? relationships.OfType<HasManyAttribute>() : relationships;
+        var relationshipsOfEndpoint = ignoreHasOneRelationships ? relationships.OfType<HasManyAttribute>() : relationships;
 
         IDictionary<string, Type> requestDocumentTypesByRelationshipName = relationshipsOfEndpoint.ToDictionary(relationship => relationship.PublicName,
             _nonPrimaryDocumentTypeFactory.GetForRelationshipRequest);
@@ -99,8 +99,8 @@ internal sealed class JsonApiEndpointMetadataProvider
 
     private static PrimaryResponseMetadata GetPrimaryResponseMetadata(Type resourceClrType, bool endpointReturnsCollection)
     {
-        Type documentOpenType = endpointReturnsCollection ? typeof(CollectionResponseDocument<>) : typeof(PrimaryResponseDocument<>);
-        Type documentType = documentOpenType.MakeGenericType(resourceClrType);
+        var documentOpenType = endpointReturnsCollection ? typeof(CollectionResponseDocument<>) : typeof(PrimaryResponseDocument<>);
+        var documentType = documentOpenType.MakeGenericType(resourceClrType);
 
         return new PrimaryResponseMetadata(documentType);
     }

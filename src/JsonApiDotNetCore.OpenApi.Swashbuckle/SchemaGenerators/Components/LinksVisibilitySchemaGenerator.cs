@@ -5,6 +5,7 @@ using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
@@ -75,9 +76,9 @@ internal sealed class LinksVisibilitySchemaGenerator
         ArgumentNullException.ThrowIfNull(schemaType);
         ArgumentNullException.ThrowIfNull(fullSchemaForLinksContainer);
 
-        Type lookupType = schemaType.ConstructedToOpenType();
+        var lookupType = schemaType.ConstructedToOpenType();
 
-        if (LinksInJsonApiSchemaTypes.TryGetValue(lookupType, out LinkTypes possibleLinkTypes))
+        if (LinksInJsonApiSchemaTypes.TryGetValue(lookupType, out var possibleLinkTypes))
         {
             UpdateLinksProperty(fullSchemaForLinksContainer, _lazyLinksVisibility.Value.TopLevelLinks, possibleLinkTypes, schemaRepository);
         }
@@ -88,7 +89,7 @@ internal sealed class LinksVisibilitySchemaGenerator
         ArgumentNullException.ThrowIfNull(resourceSchemaType);
         ArgumentNullException.ThrowIfNull(fullSchemaForResourceData);
 
-        if (LinksInJsonApiSchemaTypes.TryGetValue(resourceSchemaType.SchemaOpenType, out LinkTypes possibleLinkTypes))
+        if (LinksInJsonApiSchemaTypes.TryGetValue(resourceSchemaType.SchemaOpenType, out var possibleLinkTypes))
         {
             UpdateLinksProperty(fullSchemaForResourceData, _lazyLinksVisibility.Value.ResourceLinks, possibleLinkTypes, schemaRepository);
         }
@@ -99,9 +100,9 @@ internal sealed class LinksVisibilitySchemaGenerator
         ArgumentNullException.ThrowIfNull(schemaType);
         ArgumentNullException.ThrowIfNull(fullSchemaForRelationship);
 
-        Type lookupType = schemaType.ConstructedToOpenType();
+        var lookupType = schemaType.ConstructedToOpenType();
 
-        if (LinksInJsonApiSchemaTypes.TryGetValue(lookupType, out LinkTypes possibleLinkTypes))
+        if (LinksInJsonApiSchemaTypes.TryGetValue(lookupType, out var possibleLinkTypes))
         {
             UpdateLinksProperty(fullSchemaForRelationship, _lazyLinksVisibility.Value.RelationshipLinks, possibleLinkTypes, schemaRepository);
         }
@@ -110,7 +111,7 @@ internal sealed class LinksVisibilitySchemaGenerator
     private void UpdateLinksProperty(OpenApiSchema fullSchemaForLinksContainer, LinkTypes visibleLinkTypes, LinkTypes possibleLinkTypes,
         SchemaRepository schemaRepository)
     {
-        OpenApiSchema referenceSchemaForLinks = fullSchemaForLinksContainer.Properties[JsonApiPropertyName.Links].UnwrapLastExtendedSchema();
+        var referenceSchemaForLinks = (OpenApiSchemaReference)fullSchemaForLinksContainer.Properties[JsonApiPropertyName.Links].UnwrapLastExtendedSchema();
 
         if ((visibleLinkTypes & possibleLinkTypes) == 0)
         {
@@ -121,18 +122,18 @@ internal sealed class LinksVisibilitySchemaGenerator
         }
         else if (visibleLinkTypes != possibleLinkTypes)
         {
-            string linksSchemaId = referenceSchemaForLinks.Reference.Id;
+            var linksSchemaId = referenceSchemaForLinks.Reference.Id;
 
-            if (schemaRepository.Schemas.TryGetValue(linksSchemaId, out OpenApiSchema? fullSchemaForLinks))
+            if (schemaRepository.Schemas.TryGetValue(linksSchemaId, out var fullSchemaForLinks))
             {
-                UpdateLinkProperties(fullSchemaForLinks, visibleLinkTypes);
+                UpdateLinkProperties((OpenApiSchema)fullSchemaForLinks, visibleLinkTypes);
             }
         }
     }
 
     private void UpdateLinkProperties(OpenApiSchema fullSchemaForLinks, LinkTypes availableLinkTypes)
     {
-        foreach (string propertyName in LinkTypeToPropertyNamesMap.Where(pair => !availableLinkTypes.HasFlag(pair.Key)).SelectMany(pair => pair.Value))
+        foreach (var propertyName in LinkTypeToPropertyNamesMap.Where(pair => !availableLinkTypes.HasFlag(pair.Key)).SelectMany(pair => pair.Value))
         {
             fullSchemaForLinks.Required.Remove(propertyName);
             fullSchemaForLinks.Properties.Remove(propertyName);
@@ -154,15 +155,15 @@ internal sealed class LinksVisibilitySchemaGenerator
             var unionResourceLinks = LinkTypes.None;
             var unionRelationshipLinks = LinkTypes.None;
 
-            foreach (ResourceType resourceType in resourceGraph.GetResourceTypes())
+            foreach (var resourceType in resourceGraph.GetResourceTypes())
             {
-                LinkTypes topLevelLinks = GetTopLevelLinks(resourceType, options);
+                var topLevelLinks = GetTopLevelLinks(resourceType, options);
                 unionTopLevelLinks |= topLevelLinks;
 
-                LinkTypes resourceLinks = GetResourceLinks(resourceType, options);
+                var resourceLinks = GetResourceLinks(resourceType, options);
                 unionResourceLinks |= resourceLinks;
 
-                LinkTypes relationshipLinks = GetRelationshipLinks(resourceType, options);
+                var relationshipLinks = GetRelationshipLinks(resourceType, options);
                 unionRelationshipLinks |= relationshipLinks;
             }
 
@@ -185,12 +186,12 @@ internal sealed class LinksVisibilitySchemaGenerator
 
         private LinkTypes GetRelationshipLinks(ResourceType resourceType, IJsonApiOptions options)
         {
-            LinkTypes unionRelationshipLinks = resourceType.RelationshipLinks != LinkTypes.NotConfigured ? resourceType.RelationshipLinks :
+            var unionRelationshipLinks = resourceType.RelationshipLinks != LinkTypes.NotConfigured ? resourceType.RelationshipLinks :
                 options.RelationshipLinks == LinkTypes.NotConfigured ? LinkTypes.None : options.RelationshipLinks;
 
-            foreach (RelationshipAttribute relationship in resourceType.Relationships)
+            foreach (var relationship in resourceType.Relationships)
             {
-                LinkTypes relationshipLinks = relationship.Links != LinkTypes.NotConfigured ? relationship.Links :
+                var relationshipLinks = relationship.Links != LinkTypes.NotConfigured ? relationship.Links :
                     relationship.LeftType.RelationshipLinks != LinkTypes.NotConfigured ? relationship.LeftType.RelationshipLinks :
                     options.RelationshipLinks == LinkTypes.NotConfigured ? LinkTypes.None : options.RelationshipLinks;
 

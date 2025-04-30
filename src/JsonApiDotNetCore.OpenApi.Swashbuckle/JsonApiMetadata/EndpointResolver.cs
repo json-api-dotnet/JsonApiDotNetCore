@@ -22,7 +22,7 @@ internal sealed class EndpointResolver
             return JsonApiEndpoints.None;
         }
 
-        IEnumerable<HttpMethodAttribute> httpMethodAttributes = controllerAction.GetCustomAttributes<HttpMethodAttribute>(true);
+        var httpMethodAttributes = controllerAction.GetCustomAttributes<HttpMethodAttribute>(true);
         return httpMethodAttributes.GetJsonApiEndpoint();
     }
 
