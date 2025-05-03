@@ -35,6 +35,8 @@ if (-Not $NoBuild -Or -Not (Test-Path -Path _site)) {
     VerifySuccessExitCode
 
     Invoke-Expression ./generate-examples.ps1
+} else {
+    Remove-Item _site/xrefmap.yml -ErrorAction Ignore
 }
 
 dotnet tool restore
