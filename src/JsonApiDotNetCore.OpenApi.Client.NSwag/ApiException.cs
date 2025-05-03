@@ -5,6 +5,13 @@ using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.OpenApi.Client.NSwag;
 
+/// <summary>
+/// Replacement for the auto-generated
+/// <c>
+/// ApiException
+/// </c>
+/// class from NSwag.
+/// </summary>
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public class ApiException(string message, int statusCode, string? response, IReadOnlyDictionary<string, IEnumerable<string>> headers, Exception? innerException)
     : Exception($"HTTP {statusCode}: {message}", innerException)
@@ -14,6 +21,13 @@ public class ApiException(string message, int statusCode, string? response, IRea
     public IReadOnlyDictionary<string, IEnumerable<string>> Headers { get; } = headers;
 }
 
+/// <summary>
+/// Replacement for the auto-generated
+/// <c>
+/// ApiException&lt;TResult&gt;
+/// </c>
+/// class from NSwag.
+/// </summary>
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public sealed class ApiException<TResult>(
     string message, int statusCode, string? response, IReadOnlyDictionary<string, IEnumerable<string>> headers, TResult result, Exception? innerException)

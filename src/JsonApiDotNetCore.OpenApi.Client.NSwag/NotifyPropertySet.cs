@@ -11,7 +11,8 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.OpenApi.Client.NSwag;
 
 /// <summary>
-/// Implementation of <see cref="INotifyPropertyChanged" /> that doesn't detect changes.
+/// Implementation of <see cref="INotifyPropertyChanged" /> that unconditionally raises the <see cref="PropertyChanged" /> event when a property is
+/// assigned. Exists to support JSON:API partial POST/PATCH.
 /// </summary>
 [PublicAPI]
 public abstract class NotifyPropertySet : INotifyPropertyChanged

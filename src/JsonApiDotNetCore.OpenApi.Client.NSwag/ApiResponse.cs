@@ -3,6 +3,13 @@ using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.OpenApi.Client.NSwag;
 
+/// <summary>
+/// Replacement for the auto-generated
+/// <c>
+/// SwaggerResponse
+/// </c>
+/// class from NSwag.
+/// </summary>
 [PublicAPI]
 public class ApiResponse(int statusCode, IReadOnlyDictionary<string, IEnumerable<string>> headers)
 {
@@ -71,6 +78,13 @@ public class ApiResponse(int statusCode, IReadOnlyDictionary<string, IEnumerable
     }
 }
 
+/// <summary>
+/// Replacement for the auto-generated
+/// <c>
+/// SwaggerResponse&lt;TResult&gt;
+/// </c>
+/// class from NSwag.
+/// </summary>
 [PublicAPI]
 public class ApiResponse<TResult>(int statusCode, IReadOnlyDictionary<string, IEnumerable<string>> headers, TResult result)
     : ApiResponse(statusCode, headers)

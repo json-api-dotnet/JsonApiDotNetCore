@@ -4,6 +4,13 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.OpenApi.Client.NSwag;
 
 // Referenced from liquid template, to ensure the built-in JsonInheritanceConverter from NSwag is never used.
+/// <summary>
+/// Exists to block usage of the default
+/// <c>
+/// JsonInheritanceConverter
+/// </c>
+/// from NSwag, which is incompatible with JSON:API.
+/// </summary>
 [PublicAPI]
 public abstract class BlockedJsonInheritanceConverter : JsonConverter
 {
@@ -31,11 +38,17 @@ public abstract class BlockedJsonInheritanceConverter : JsonConverter
         return true;
     }
 
+    /// <summary>
+    /// Always throws an <see cref="InvalidOperationException" />.
+    /// </summary>
     public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
     {
         throw new InvalidOperationException("JsonInheritanceConverter is incompatible with JSON:API and must not be used.");
     }
 
+    /// <summary>
+    /// Always throws an <see cref="InvalidOperationException" />.
+    /// </summary>
     public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
     {
         throw new InvalidOperationException("JsonInheritanceConverter is incompatible with JSON:API and must not be used.");
