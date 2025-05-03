@@ -1,0 +1,30 @@
+- name: Resources
+  href: resources/toc.yml
+  topicHref: resources/index.md
+- name: Reading data
+  href: reading/toc.yml
+- name: Writing data
+  href: writing/toc.yml
+- name: Resource Graph
+  href: resource-graph.md
+- name: Options
+  href: options.md
+- name: Routing
+  href: routing.md
+- name: Errors
+  href: errors.md
+- name: Metadata
+  href: meta.md
+- name: Caching
+  href: caching.md
+- name: Common Pitfalls
+  href: common-pitfalls.md
+- name: OpenAPI
+  href: openapi.md
+  items:
+  - name: Documentation
+    href: openapi-documentation.md
+  - name: Clients
+    href: openapi-client.md
+- name: Extensibility
+  href: extensibility/toc.yml
