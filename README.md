@@ -256,7 +256,7 @@ To build the code from this repository locally, run:
 dotnet build
 ```
 
-Running tests locally requires access to a PostgreSQL database. If you have docker installed, this can started via:
+Running tests locally requires access to a PostgreSQL database. If you have docker installed, this can be started via:
 
 ```bash
 pwsh run-docker-postgres.ps1

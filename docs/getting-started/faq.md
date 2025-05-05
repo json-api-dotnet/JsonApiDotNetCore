@@ -11,13 +11,13 @@ The [OpenAPI support in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/c
 and doesn't provide the level of extensibility needed for JsonApiDotNetCore.
 
 #### What's available to implement a JSON:API client?
-It depends on the programming language used. There's an overwhelming list of client libraries at https://jsonapi.org/implementations/#client-libraries.
+To generate a typed client (specific to the resource types in your project), consider using our [OpenAPI](https://www.jsonapi.net/usage/openapi.html) NuGet package.
+
+If you need a generic client, it depends on the programming language used. There's an overwhelming list of client libraries at https://jsonapi.org/implementations/#client-libraries.
 
 The JSON object model inside JsonApiDotNetCore is tweaked for server-side handling (be tolerant at inputs and strict at outputs).
-While you technically *could* use our `JsonSerializer` converters from a .NET client application with some hacks, we don't recommend it.
+While you technically *could* use our `JsonSerializer` converters from a .NET client application with some hacks, we don't recommend doing so.
 You'll need to build the resource graph on the client and rely on internal implementation details that are subject to change in future versions.
-
-In the long term, we'd like to solve this through OpenAPI, which enables the generation of a (statically typed) client library in various languages.
 
 #### How can I debug my API project?
 Due to auto-generated controllers, you may find it hard to determine where to put your breakpoints.

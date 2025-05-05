@@ -2,17 +2,18 @@
 
 Runnable example projects can be found [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples):
 
-- GettingStarted: A simple project with minimal configuration to have a runnable project in minutes.
+- GettingStarted: A simple project with minimal configuration to develop a runnable project in minutes.
 - JsonApiDotNetCoreExample: Showcases commonly-used features, such as resource definitions, atomic operations, and OpenAPI.
   - OpenApiNSwagClientExample: Uses [NSwag](https://github.com/RicoSuter/NSwag) to generate a typed OpenAPI client.
   - OpenApiKiotaClientExample: Uses [Kiota](https://learn.microsoft.com/en-us/openapi/kiota/) to generate a typed OpenAPI client.
 - MultiDbContextExample: Shows how to use multiple `DbContext` classes, for connecting to multiple databases.
-- DatabasePerTenantExample: Uses a different database per tenant. See [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/test/JsonApiDotNetCoreTests/IntegrationTests/MultiTenancy) for using multiple tenants in the same database.
-- NoEntityFrameworkExample: Uses a read-only in-memory repository instead of a real database.
+- DatabasePerTenantExample: Uses a different database per tenant. See [here](~/usage/advanced/multi-tenancy.md) for using multiple tenants in the same database.
+- NoEntityFrameworkExample: Uses a read-only in-memory repository, instead of a real database.
 - DapperExample: Uses [Dapper](https://github.com/DapperLib/Dapper) to execute SQL queries.
 - ReportsExample: Uses a resource service that returns aggregated data.
 
-Additional use cases are provided as integration tests [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/test/JsonApiDotNetCoreTests/IntegrationTests).
+> [!NOTE]
+> The example projects only cover highly-requested features. More advanced use cases can be found [here](~/usage/advanced/index.md).
 
 # Example requests
 

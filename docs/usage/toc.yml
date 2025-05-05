@@ -28,3 +28,6 @@
     href: openapi-client.md
 - name: Extensibility
   href: extensibility/toc.yml
+- name: Advanced
+  href: advanced/toc.yml
+  topicHref: advanced/index.md
