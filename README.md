@@ -290,6 +290,6 @@ pwsh Build.ps1
 We are very grateful to the sponsors below, who have provided us with a no-cost license for their tools.
 
 <a href="https://jb.gg/OpenSourceSupport"><img align="middle" src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="JetBrains Logo" style="width:150px"></a> &nbsp;
-<a href="https://www.araxis.com/buy/open-source"><img align="middle" src="https://www.araxis.com/theme/37/img/araxis-logo-lg.svg" alt="Araxis Logo" style="width:150px"></a>
+<a href="https://www.araxis.com/buy/open-source"><img align="middle" src="https://jsonapi.net/styles/img/araxis-logo.png" alt="Araxis Logo" style="width:150px"></a>
 
 Do you like this project? Consider to [sponsor](https://github.com/sponsors/json-api-dotnet), or just reward us by giving our repository a star.
