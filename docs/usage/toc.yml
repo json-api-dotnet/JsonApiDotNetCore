@@ -1,3 +1,7 @@
+- name: FAQ
+  href: faq.md
+- name: Common Pitfalls
+  href: common-pitfalls.md
 - name: Resources
   href: resources/toc.yml
   topicHref: resources/index.md
@@ -17,8 +21,6 @@
   href: meta.md
 - name: Caching
   href: caching.md
-- name: Common Pitfalls
-  href: common-pitfalls.md
 - name: OpenAPI
   href: openapi.md
   items:

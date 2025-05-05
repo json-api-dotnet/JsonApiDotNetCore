@@ -20,16 +20,23 @@ The ultimate goal of this library is to eliminate as much boilerplate as possibl
 
 The following steps describe how to create a JSON:API project.
 
+1. Create a new ASP.NET Core Web API project:
+
+   ```bash
+   dotnet new webapi --no-openapi --use-controllers --name ExampleJsonApi
+   cd ExampleJsonApi
+   ```
+
 1. Install the JsonApiDotNetCore package, along with your preferred Entity Framework Core provider:
+
    ```bash
    dotnet add package JsonApiDotNetCore
    dotnet add package Microsoft.EntityFrameworkCore.Sqlite
    ```
 
 1. Declare your entities, annotated with JsonApiDotNetCore attributes:
-   ```c#
-   #nullable enable
 
+   ```c#
    [Resource]
    public class Person : Identifiable<long>
    {
@@ -40,6 +47,7 @@ The following steps describe how to create a JSON:API project.
    ```
 
 1. Define your `DbContext`, seeding the database with sample data:
+
    ```c#
    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
    {
@@ -70,6 +78,7 @@ The following steps describe how to create a JSON:API project.
    ```
 
 1. Configure Entity Framework Core and JsonApiDotNetCore in `Program.cs`:
+
    ```c#
    var builder = WebApplication.CreateBuilder(args);
    builder.Services.AddDbContext<AppDbContext>();
@@ -96,11 +105,13 @@ The following steps describe how to create a JSON:API project.
    ```
 
 1. Start your API
+
    ```bash
    dotnet run
    ```
 
 1. Send a GET request to retrieve data:
+
    ```bash
    GET http://localhost:5000/people?filter=equals(firstName,'John')&include=children HTTP/1.1
    ```
