@@ -1,4 +1,9 @@
 {
+  "sitemap": {
+    "baseUrl": "https://www.jsonapi.net/",
+    "changefreq": "weekly",
+    "priority": 0.5
+  },
   "source_base_path": "/home/runner/work/JsonApiDotNetCore/JsonApiDotNetCore/docs",
   "xrefmap": "xrefmap.yml",
   "files": [
