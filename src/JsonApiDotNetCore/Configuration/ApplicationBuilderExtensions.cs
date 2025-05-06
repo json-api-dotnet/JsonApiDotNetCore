@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -60,7 +61,7 @@ public static class ApplicationBuilderExtensions
 
             if (configureInstance != null)
             {
-                throw new InvalidOperationException("JsonApiDotNetCore is incompatible with ASP.NET OpenAPI. " +
+                throw new InvalidConfigurationException("JsonApiDotNetCore is incompatible with ASP.NET OpenAPI. " +
                     "Replace 'services.AddOpenApi()' with 'services.AddOpenApiForJsonApi()' from the JsonApiDotNetCore.OpenApi.Swashbuckle NuGet package.");
             }
         }

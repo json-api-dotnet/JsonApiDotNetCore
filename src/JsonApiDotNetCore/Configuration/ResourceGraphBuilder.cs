@@ -455,7 +455,7 @@ public partial class ResourceGraphBuilder
     {
         if (recursionDepth >= 500)
         {
-            throw new InvalidOperationException("Infinite recursion detected in eager-load chain.");
+            throw new InvalidConfigurationException("Infinite recursion detected in eager-load chain.");
         }
     }
 
