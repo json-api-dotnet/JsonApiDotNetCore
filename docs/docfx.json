@@ -45,6 +45,11 @@
     "globalMetadata": {
       "_appLogoPath": "styles/img/favicon.png",
       "_googleAnalyticsTagId": "G-78GTGF1FM2"
+    },
+    "sitemap": {
+      "baseUrl": "https://www.jsonapi.net",
+      "priority": 0.5,
+      "changefreq": "weekly"
     }
   }
 }
