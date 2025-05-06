@@ -143,7 +143,7 @@ GET /humans HTTP/1.1
 }
 ```
 
-### Spare fieldsets
+### Sparse fieldsets
 
 If you only want to retrieve the fields from the base type, you can use [sparse fieldsets](~/usage/reading/sparse-fieldset-selection.md).
 

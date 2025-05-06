@@ -4,8 +4,8 @@ _since v4.2_
 
 GET requests return an [ETag](https://developer.mozilla.org/docs/Web/HTTP/Headers/ETag) HTTP header, which can be used by the client in subsequent requests to save network bandwidth.
 
-Be aware that the returned ETag represents the entire response body (a 'resource' in HTTP terminology) for a request URL that includes the query string.
-This is unrelated to JSON:API resources. Therefore, we do not use ETags for optimistic concurrency.
+Be aware that the returned ETag represents the entire response body (a "resource" in HTTP terminology) for the full request URL, including the query string.
+A resource in HTTP is unrelated to a JSON:API resource. Therefore, we do not use ETags for optimistic concurrency.
 
 Getting a list of resources returns an ETag:
 
@@ -26,7 +26,7 @@ ETag: "7FFF010786E2CE8FC901896E83870E00"
 }
 ```
 
-The request is later resent using the received ETag. The server data has not changed at this point.
+The request is later resent using the same ETag received earlier. The server data has not changed at this point.
 
 ```http
 GET /articles?sort=-lastModifiedAt HTTP/1.1

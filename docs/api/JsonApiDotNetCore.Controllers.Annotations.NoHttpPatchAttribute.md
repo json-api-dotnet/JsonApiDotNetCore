@@ -1,0 +1,3 @@
+---
+redirect_url: JsonApiDotNetCore.Resources.Annotations.ResourceAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceAttribute_GenerateControllerEndpoints
+---

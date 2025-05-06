@@ -29,12 +29,14 @@ EnsureHttpServerIsInstalled
 VerifySuccessExitCode
 
 if (-Not $NoBuild -Or -Not (Test-Path -Path _site)) {
-    Remove-Item _site -Recurse -ErrorAction Ignore
+    Remove-Item _site\* -Recurse -ErrorAction Ignore
 
     dotnet build .. --configuration Release
     VerifySuccessExitCode
 
     Invoke-Expression ./generate-examples.ps1
+} else {
+    Remove-Item _site\* -Recurse -ErrorAction Ignore
 }
 
 dotnet tool restore
@@ -58,4 +60,4 @@ Write-Host "Web server started. Press Enter to close."
 $key = [Console]::ReadKey()
 
 Stop-Job -Id $webServerJob.Id
-Get-job | Remove-Job
+Get-job | Remove-Job -Force

@@ -22,10 +22,9 @@ public class Person : Identifiable<int>
 }
 ```
 
-If your resource must inherit from another class,
-you can always implement the interface yourself.
-In this example, `ApplicationUser` inherits from `IdentityUser`
-which already contains an Id property of type string.
+If your resource must inherit from another class, you can always implement the interface yourself.
+In this example, `ApplicationUser` inherits from [`IdentityUser`](https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.identity.entityframeworkcore.identityuser),
+which already contains an `Id` property of type `string`.
 
 ```c#
 public class ApplicationUser : IdentityUser, IIdentifiable<string>

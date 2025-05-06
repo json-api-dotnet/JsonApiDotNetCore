@@ -1,4 +1,5 @@
 {
+  "$schema": "https://raw.githubusercontent.com/dotnet/docfx/main/schemas/docfx.schema.json",
   "metadata": [
     {
       "properties": {
@@ -8,30 +9,21 @@
         {
           "files": [
             "**/JsonApiDotNetCore.csproj",
-            "**/JsonApiDotNetCore.Annotations.csproj"
+            "**/JsonApiDotNetCore.Annotations.csproj",
+            "**/JsonApiDotNetCore.OpenApi.Swashbuckle.csproj",
+            "**/JsonApiDotNetCore.OpenApi.Client.NSwag.csproj",
+            "**/JsonApiDotNetCore.OpenApi.Client.Kiota"
           ],
           "src": "../"
         }
       ],
-      "dest": "api",
-      "disableGitFeatures": false
+      "output": "api"
     }
   ],
   "build": {
     "content": [
       {
-        "files": [
-          "api/**.yml",
-          "api/index.md",
-          "ext/openapi/index.md",
-          "getting-started/**.md",
-          "getting-started/**/toc.yml",
-          "usage/**.md",
-          "request-examples/**.md",
-          "internals/**.md",
-          "toc.yml",
-          "*.md"
-        ],
+        "files": "**.{md|yml}",
         "exclude": [
           "**/README.md"
         ]
@@ -44,25 +36,15 @@
         ]
       }
     ],
-    "overwrite": [
-      {
-        "exclude": [
-          "obj/**",
-          "_site/**"
-        ]
-      }
-    ],
-    "dest": "_site",
-    "globalMetadataFiles": [],
-    "fileMetadataFiles": [],
+    "output": "_site",
     "template": [
       "default",
-      "modern"
+      "modern",
+      "template"
     ],
-    "postProcessors": [],
-    "noLangKeyword": false,
-    "keepFileLink": false,
-    "cleanupCacheHistory": false,
-    "disableGitFeatures": false
+    "globalMetadata": {
+      "_appLogoPath": "styles/img/favicon.png",
+      "_googleAnalyticsTagId": "G-78GTGF1FM2"
+    }
   }
 }

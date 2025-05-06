@@ -1,0 +1,38 @@
+- name: Authorization Scopes
+  href: auth-scopes.md
+- name: BLOBs
+  href: blobs.md
+- name: Microservices
+  href: microservices.md
+- name: Multi-tenancy
+  href: multi-tenancy.md
+- name: Atomic Operations
+  href: operations.md
+- name: Query String Functions
+  href: query-string-functions.md
+- name: Alternate Routes
+  href: alternate-routes.md
+- name: Content Negotiation
+  href: content-negotiation.md
+- name: Error Handling
+  href: error-handling.md
+- name: Hosting in IIS
+  href: hosting-iis.md
+- name: ID Obfuscation
+  href: id-obfuscation.md
+- name: Soft Deletion
+  href: soft-deletion.md
+- name: Archiving
+  href: archiving.md
+- name: ASP.NET Model Validation
+  href: model-state.md
+- name: State Transitions in Resource Updates
+  href: state-machine.md
+- name: Links
+  href: links.md
+- name: Composite Keys
+  href: composite-keys.md
+- name: Eager Loading
+  href: eager-loading.md
+- name: Injecting services in resource types
+  href: resource-injection.md

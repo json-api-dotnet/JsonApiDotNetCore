@@ -20,16 +20,23 @@ The ultimate goal of this library is to eliminate as much boilerplate as possibl
 
 The following steps describe how to create a JSON:API project.
 
+1. Create a new ASP.NET Core Web API project:
+
+   ```bash
+   dotnet new webapi --no-openapi --use-controllers --name ExampleJsonApi
+   cd ExampleJsonApi
+   ```
+
 1. Install the JsonApiDotNetCore package, along with your preferred Entity Framework Core provider:
+
    ```bash
    dotnet add package JsonApiDotNetCore
    dotnet add package Microsoft.EntityFrameworkCore.Sqlite
    ```
 
 1. Declare your entities, annotated with JsonApiDotNetCore attributes:
-   ```c#
-   #nullable enable
 
+   ```c#
    [Resource]
    public class Person : Identifiable<long>
    {
@@ -40,6 +47,7 @@ The following steps describe how to create a JSON:API project.
    ```
 
 1. Define your `DbContext`, seeding the database with sample data:
+
    ```c#
    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
    {
@@ -70,6 +78,7 @@ The following steps describe how to create a JSON:API project.
    ```
 
 1. Configure Entity Framework Core and JsonApiDotNetCore in `Program.cs`:
+
    ```c#
    var builder = WebApplication.CreateBuilder(args);
    builder.Services.AddDbContext<AppDbContext>();
@@ -96,11 +105,13 @@ The following steps describe how to create a JSON:API project.
    ```
 
 1. Start your API
+
    ```bash
    dotnet run
    ```
 
 1. Send a GET request to retrieve data:
+
    ```bash
    GET http://localhost:5000/people?filter=equals(firstName,'John')&include=children HTTP/1.1
    ```
@@ -256,7 +267,7 @@ To build the code from this repository locally, run:
 dotnet build
 ```
 
-Running tests locally requires access to a PostgreSQL database. If you have docker installed, this can started via:
+Running tests locally requires access to a PostgreSQL database. If you have docker installed, this can be started via:
 
 ```bash
 pwsh run-docker-postgres.ps1
@@ -279,6 +290,6 @@ pwsh Build.ps1
 We are very grateful to the sponsors below, who have provided us with a no-cost license for their tools.
 
 <a href="https://jb.gg/OpenSourceSupport"><img align="middle" src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="JetBrains Logo" style="width:150px"></a> &nbsp;
-<a href="https://www.araxis.com/buy/open-source"><img align="middle" src="https://www.araxis.com/theme/37/img/araxis-logo-lg.svg" alt="Araxis Logo" style="width:150px"></a>
+<a href="https://www.araxis.com/buy/open-source"><img align="middle" src="https://jsonapi.net/styles/img/araxis-logo.png" alt="Araxis Logo" style="width:150px"></a>
 
 Do you like this project? Consider to [sponsor](https://github.com/sponsors/json-api-dotnet), or just reward us by giving our repository a star.
