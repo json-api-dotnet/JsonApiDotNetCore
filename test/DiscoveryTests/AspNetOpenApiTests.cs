@@ -1,6 +1,7 @@
 #if !NET8_0
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,8 +25,9 @@ public sealed class AspNetOpenApiTests
         Action action = app.UseJsonApi;
 
         // Assert
-        action.Should().ThrowExactly<InvalidOperationException>().WithMessage("JsonApiDotNetCore is incompatible with ASP.NET OpenAPI. " +
-            "Replace 'services.AddOpenApi()' with 'services.AddOpenApiForJsonApi()' from the JsonApiDotNetCore.OpenApi.Swashbuckle NuGet package.");
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage("JsonApiDotNetCore is incompatible with ASP.NET OpenAPI. " +
+            "Remove 'services.AddOpenApi()', or replace it by calling 'services.AddOpenApiForJsonApi()' after 'services.AddJsonApi()' " +
+            "from the JsonApiDotNetCore.OpenApi.Swashbuckle NuGet package.");
     }
 }
 #endif

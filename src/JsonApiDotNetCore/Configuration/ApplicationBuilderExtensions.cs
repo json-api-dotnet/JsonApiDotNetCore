@@ -62,7 +62,8 @@ public static class ApplicationBuilderExtensions
             if (configureInstance != null)
             {
                 throw new InvalidConfigurationException("JsonApiDotNetCore is incompatible with ASP.NET OpenAPI. " +
-                    "Replace 'services.AddOpenApi()' with 'services.AddOpenApiForJsonApi()' from the JsonApiDotNetCore.OpenApi.Swashbuckle NuGet package.");
+                    "Remove 'services.AddOpenApi()', or replace it by calling 'services.AddOpenApiForJsonApi()' after 'services.AddJsonApi()' " +
+                    "from the JsonApiDotNetCore.OpenApi.Swashbuckle NuGet package.");
             }
         }
     }
