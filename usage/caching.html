@@ -37,6 +37,13 @@
         document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
       </script>
 
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-78GTGF1FM2"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-78GTGF1FM2');
+      </script>
   </head>
 
   <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
@@ -44,7 +51,7 @@
       <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
         <div class="container-xxl flex-nowrap">
           <a class="navbar-brand" href="../index.html">
-            <img id="logo" class="svg" src="../logo.svg" alt="">
+            <img id="logo" class="svg" src="../styles/img/favicon.png" alt="">
             
           </a>
           <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,8 +92,8 @@
 
 <p><em>since v4.2</em></p>
 <p>GET requests return an <a href="https://developer.mozilla.org/docs/Web/HTTP/Headers/ETag">ETag</a> HTTP header, which can be used by the client in subsequent requests to save network bandwidth.</p>
-<p>Be aware that the returned ETag represents the entire response body (a 'resource' in HTTP terminology) for a request URL that includes the query string.
-This is unrelated to JSON:API resources. Therefore, we do not use ETags for optimistic concurrency.</p>
+<p>Be aware that the returned ETag represents the entire response body (a &quot;resource&quot; in HTTP terminology) for the full request URL, including the query string.
+A resource in HTTP is unrelated to a JSON:API resource. Therefore, we do not use ETags for optimistic concurrency.</p>
 <p>Getting a list of resources returns an ETag:</p>
 <pre><code class="lang-http">GET /articles?sort=-lastModifiedAt HTTP/1.1
 Host: localhost:5000
@@ -101,7 +108,7 @@ ETag: &quot;7FFF010786E2CE8FC901896E83870E00&quot;
   &quot;data&quot;: [ ... ]
 }
 </code></pre>
-<p>The request is later resent using the received ETag. The server data has not changed at this point.</p>
+<p>The request is later resent using the same ETag received earlier. The server data has not changed at this point.</p>
 <pre><code class="lang-http">GET /articles?sort=-lastModifiedAt HTTP/1.1
 Host: localhost:5000
 If-None-Match: &quot;7FFF010786E2CE8FC901896E83870E00&quot;

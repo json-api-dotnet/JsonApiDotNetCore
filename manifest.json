@@ -463,6 +463,16 @@
       "version": ""
     },
     {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.Annotations.NoHttpPatchAttribute.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.Annotations.NoHttpPatchAttribute.html"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Controllers.Annotations.yml",
       "output": {
@@ -498,6 +508,16 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Controllers.CoreJsonApiController.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiCommandController-1.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiCommandController-1.html"
         }
       },
       "version": ""
@@ -553,6 +573,16 @@
       "version": ""
     },
     {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.ModelStateViolation.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.ModelStateViolation.html"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Controllers.PreserveEmptyStringAttribute.yml",
       "output": {
@@ -578,6 +608,16 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Diagnostics.AspNetCodeTimerSession.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Diagnostics.CascadingCodeTimer.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Diagnostics.CascadingCodeTimer.html"
         }
       },
       "version": ""
@@ -793,11 +833,31 @@
       "version": ""
     },
     {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Errors.ResourceIdInCreateResourceNotAllowedException.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Errors.ResourceIdInCreateResourceNotAllowedException.html"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Errors.ResourceNotFoundException.yml",
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.ResourceNotFoundException.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Errors.ResourceTypeMismatchException.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Errors.ResourceTypeMismatchException.html"
         }
       },
       "version": ""
@@ -848,6 +908,66 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.Internal.Discovery.IHooksDiscovery.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.Internal.Discovery.IHooksDiscovery.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet-1.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet-1.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.Internal.ICreateHookExecutor.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.Internal.ICreateHookExecutor.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.Internal.IUpdateHookExecutor.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.Internal.IUpdateHookExecutor.html"
         }
       },
       "version": ""
@@ -1043,6 +1163,16 @@
       "version": ""
     },
     {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiExtension.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiExtension.html"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiInputFormatter.yml",
       "output": {
@@ -1134,6 +1264,116 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.OpenApi.Client.NSwag.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Swashbuckle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.OpenApi.Swashbuckle.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Queries.ExpressionInScope.yml",
       "output": {
         ".html": {
@@ -1148,6 +1388,16 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Queries.Expressions.AnyExpression.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.html"
         }
       },
       "version": ""
@@ -1538,6 +1788,96 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Queries.ISparseFieldSetCache.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.IEvaluatedIncludeCache.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.IEvaluatedIncludeCache.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.IncludeParser.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.IncludeParser.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.Keywords.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.Keywords.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.QueryExpressionParser.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.QueryExpressionParser.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.QueryStringParameterScopeParser.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.QueryStringParameterScopeParser.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.QueryTokenizer.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.QueryTokenizer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.html"
         }
       },
       "version": ""
@@ -2073,6 +2413,16 @@
       "version": ""
     },
     {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.IDefaultsQueryStringParameterReader.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryStrings.IDefaultsQueryStringParameterReader.html"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.IFilterQueryStringParameterReader.yml",
       "output": {
@@ -2168,6 +2518,66 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.QueryStrings.IncludeQueryStringParameterReader.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.DefaultsQueryStringParameterReader.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.DefaultsQueryStringParameterReader.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.FilterQueryStringParameterReader.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.FilterQueryStringParameterReader.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.IncludeQueryStringParameterReader.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.IncludeQueryStringParameterReader.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.PaginationQueryStringParameterReader.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.PaginationQueryStringParameterReader.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.html"
         }
       },
       "version": ""
@@ -2613,6 +3023,16 @@
       "version": ""
     },
     {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Resources.Internal.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Resources.Internal.html"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.PropertySortOrder.yml",
       "output": {
@@ -2673,6 +3093,16 @@
       "version": ""
     },
     {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Resources.RuntimeTypeConverter.yml",
       "output": {
@@ -2698,6 +3128,106 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Resources.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Serialization.BaseDeserializer.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Serialization.BaseDeserializer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Serialization.BaseSerializer.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Serialization.BaseSerializer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Serialization.Building.IIncludedResourceObjectBuilder.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Serialization.Building.IIncludedResourceObjectBuilder.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Serialization.Building.IResourceObjectBuilder.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Serialization.Building.IResourceObjectBuilder.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Serialization.Building.ResourceObjectBuilderSettings.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Serialization.Building.ResourceObjectBuilderSettings.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Serialization.Client.Internal.ManyResponse-1.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Serialization.Client.Internal.ManyResponse-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Serialization.Client.Internal.RequestSerializer.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Serialization.Client.Internal.RequestSerializer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Serialization.Client.Internal.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Serialization.Client.Internal.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Serialization.IJsonApiDeserializer.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Serialization.IJsonApiDeserializer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Serialization.IJsonApiWriter.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Serialization.IJsonApiWriter.html"
         }
       },
       "version": ""
@@ -2838,6 +3368,16 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Objects.ErrorSource.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Serialization.Objects.IResourceIdentity.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Serialization.Objects.IResourceIdentity.html"
         }
       },
       "version": ""
@@ -3413,6 +3953,16 @@
       "version": ""
     },
     {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Serialization.ResponseSerializerFactory.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Serialization.ResponseSerializerFactory.html"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Services.AsyncCollectionExtensions.yml",
       "output": {
@@ -3448,6 +3998,16 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Services.IDeleteService-2.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IGetAllService-1.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IGetAllService-1.html"
         }
       },
       "version": ""
@@ -3493,6 +4053,16 @@
       "version": ""
     },
     {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IRemoveFromRelationshipService-1.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IRemoveFromRelationshipService-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Services.IRemoveFromRelationshipService-2.yml",
       "output": {
@@ -3503,11 +4073,31 @@
       "version": ""
     },
     {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IResourceCommandService-1.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IResourceCommandService-1.html"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Services.IResourceCommandService-2.yml",
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Services.IResourceCommandService-2.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IResourceQueryService-1.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IResourceQueryService-1.html"
         }
       },
       "version": ""
@@ -3548,6 +4138,16 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Services.IUpdateService-2.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.JsonApiResourceService-1.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.JsonApiResourceService-1.html"
         }
       },
       "version": ""
@@ -3646,7 +4246,7 @@
       "version": ""
     },
     {
-      "type": "Conceptual",
+      "type": "Redirection",
       "source_relative_path": "getting-started/faq.md",
       "output": {
         ".html": {
@@ -3657,6 +4257,16 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "getting-started/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "getting-started/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
       "source_relative_path": "getting-started/install.md",
       "output": {
         ".html": {
@@ -3666,24 +4276,11 @@
       "version": ""
     },
     {
-      "type": "Conceptual",
+      "type": "Redirection",
       "source_relative_path": "getting-started/step-by-step.md",
       "output": {
         ".html": {
           "relative_path": "getting-started/step-by-step.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Toc",
-      "source_relative_path": "getting-started/toc.md",
-      "output": {
-        ".html": {
-          "relative_path": "getting-started/toc.html"
-        },
-        ".json": {
-          "relative_path": "getting-started/toc.json"
         }
       },
       "version": ""
@@ -3710,7 +4307,7 @@
     },
     {
       "type": "Toc",
-      "source_relative_path": "internals/toc.md",
+      "source_relative_path": "internals/toc.yml",
       "output": {
         ".html": {
           "relative_path": "internals/toc.html"
@@ -3733,19 +4330,6 @@
     },
     {
       "type": "Toc",
-      "source_relative_path": "request-examples/toc.md",
-      "output": {
-        ".html": {
-          "relative_path": "request-examples/toc.html"
-        },
-        ".json": {
-          "relative_path": "request-examples/toc.json"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Toc",
       "source_relative_path": "toc.yml",
       "output": {
         ".html": {
@@ -3753,6 +4337,219 @@
         },
         ".json": {
           "relative_path": "toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/advanced/alternate-routes.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/advanced/alternate-routes.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/advanced/archiving.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/advanced/archiving.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/advanced/auth-scopes.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/advanced/auth-scopes.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/advanced/blobs.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/advanced/blobs.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/advanced/composite-keys.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/advanced/composite-keys.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/advanced/content-negotiation.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/advanced/content-negotiation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/advanced/eager-loading.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/advanced/eager-loading.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/advanced/error-handling.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/advanced/error-handling.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/advanced/hosting-iis.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/advanced/hosting-iis.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/advanced/id-obfuscation.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/advanced/id-obfuscation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/advanced/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/advanced/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/advanced/links.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/advanced/links.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/advanced/microservices.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/advanced/microservices.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/advanced/model-state.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/advanced/model-state.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/advanced/multi-tenancy.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/advanced/multi-tenancy.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/advanced/operations.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/advanced/operations.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/advanced/query-string-functions.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/advanced/query-string-functions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/advanced/resource-injection.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/advanced/resource-injection.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/advanced/soft-deletion.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/advanced/soft-deletion.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/advanced/state-machine.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/advanced/state-machine.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "usage/advanced/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "usage/advanced/toc.html"
+        },
+        ".json": {
+          "relative_path": "usage/advanced/toc.json"
         }
       },
       "version": ""
@@ -3853,6 +4650,29 @@
       "output": {
         ".html": {
           "relative_path": "usage/extensibility/services.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "usage/extensibility/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "usage/extensibility/toc.html"
+        },
+        ".json": {
+          "relative_path": "usage/extensibility/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "usage/faq.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/faq.html"
         }
       },
       "version": ""
@@ -3968,6 +4788,19 @@
       "version": ""
     },
     {
+      "type": "Toc",
+      "source_relative_path": "usage/reading/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "usage/reading/toc.html"
+        },
+        ".json": {
+          "relative_path": "usage/reading/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "Conceptual",
       "source_relative_path": "usage/resource-graph.md",
       "output": {
@@ -4028,6 +4861,19 @@
       "version": ""
     },
     {
+      "type": "Toc",
+      "source_relative_path": "usage/resources/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "usage/resources/toc.html"
+        },
+        ".json": {
+          "relative_path": "usage/resources/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "Conceptual",
       "source_relative_path": "usage/routing.md",
       "output": {
@@ -4039,7 +4885,7 @@
     },
     {
       "type": "Toc",
-      "source_relative_path": "usage/toc.md",
+      "source_relative_path": "usage/toc.yml",
       "output": {
         ".html": {
           "relative_path": "usage/toc.html"
@@ -4076,6 +4922,19 @@
       "output": {
         ".html": {
           "relative_path": "usage/writing/deleting.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "usage/writing/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "usage/writing/toc.html"
+        },
+        ".json": {
+          "relative_path": "usage/writing/toc.json"
         }
       },
       "version": ""

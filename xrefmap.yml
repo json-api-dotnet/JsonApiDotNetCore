@@ -5734,6 +5734,586 @@ references:
   commentId: F:JsonApiDotNetCore.Middleware.WriteOperationKind.UpdateResource
   fullName: JsonApiDotNetCore.Middleware.WriteOperationKind.UpdateResource
   nameWithType: WriteOperationKind.UpdateResource
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag
+  name: JsonApiDotNetCore.OpenApi.Client.NSwag
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.html
+  commentId: N:JsonApiDotNetCore.OpenApi.Client.NSwag
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag
+  nameWithType: JsonApiDotNetCore.OpenApi.Client.NSwag
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException
+  name: ApiException
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.html
+  commentId: T:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException
+  nameWithType: ApiException
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.#ctor(System.String,System.Int32,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Collections.Generic.IEnumerable{System.String}},System.Exception)
+  name: ApiException(string, int, string?, IReadOnlyDictionary<string, IEnumerable<string>>, Exception?)
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiException__ctor_System_String_System_Int32_System_String_System_Collections_Generic_IReadOnlyDictionary_System_String_System_Collections_Generic_IEnumerable_System_String___System_Exception_
+  commentId: M:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.#ctor(System.String,System.Int32,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Collections.Generic.IEnumerable{System.String}},System.Exception)
+  name.vb: New(String, Integer, String, IReadOnlyDictionary(Of String, IEnumerable(Of String)), Exception)
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.ApiException(string, int, string?, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>>, System.Exception?)
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.New(String, Integer, String, System.Collections.Generic.IReadOnlyDictionary(Of String, System.Collections.Generic.IEnumerable(Of String)), System.Exception)
+  nameWithType: ApiException.ApiException(string, int, string?, IReadOnlyDictionary<string, IEnumerable<string>>, Exception?)
+  nameWithType.vb: ApiException.New(String, Integer, String, IReadOnlyDictionary(Of String, IEnumerable(Of String)), Exception)
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.#ctor*
+  name: ApiException
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiException__ctor_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.ApiException
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.New
+  nameWithType: ApiException.ApiException
+  nameWithType.vb: ApiException.New
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.Headers
+  name: Headers
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiException_Headers
+  commentId: P:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.Headers
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.Headers
+  nameWithType: ApiException.Headers
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.Headers*
+  name: Headers
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiException_Headers_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.Headers
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.Headers
+  nameWithType: ApiException.Headers
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.Response
+  name: Response
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiException_Response
+  commentId: P:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.Response
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.Response
+  nameWithType: ApiException.Response
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.Response*
+  name: Response
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiException_Response_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.Response
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.Response
+  nameWithType: ApiException.Response
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.StatusCode
+  name: StatusCode
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiException_StatusCode
+  commentId: P:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.StatusCode
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.StatusCode
+  nameWithType: ApiException.StatusCode
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.StatusCode*
+  name: StatusCode
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiException_StatusCode_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.StatusCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException.StatusCode
+  nameWithType: ApiException.StatusCode
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException`1
+  name: ApiException<TResult>
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException-1.html
+  commentId: T:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException`1
+  name.vb: ApiException(Of TResult)
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException<TResult>
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException(Of TResult)
+  nameWithType: ApiException<TResult>
+  nameWithType.vb: ApiException(Of TResult)
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException`1.#ctor(System.String,System.Int32,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Collections.Generic.IEnumerable{System.String}},`0,System.Exception)
+  name: ApiException(string, int, string?, IReadOnlyDictionary<string, IEnumerable<string>>, TResult, Exception?)
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException-1.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiException_1__ctor_System_String_System_Int32_System_String_System_Collections_Generic_IReadOnlyDictionary_System_String_System_Collections_Generic_IEnumerable_System_String____0_System_Exception_
+  commentId: M:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException`1.#ctor(System.String,System.Int32,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Collections.Generic.IEnumerable{System.String}},`0,System.Exception)
+  name.vb: New(String, Integer, String, IReadOnlyDictionary(Of String, IEnumerable(Of String)), TResult, Exception)
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException<TResult>.ApiException(string, int, string?, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>>, TResult, System.Exception?)
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException(Of TResult).New(String, Integer, String, System.Collections.Generic.IReadOnlyDictionary(Of String, System.Collections.Generic.IEnumerable(Of String)), TResult, System.Exception)
+  nameWithType: ApiException<TResult>.ApiException(string, int, string?, IReadOnlyDictionary<string, IEnumerable<string>>, TResult, Exception?)
+  nameWithType.vb: ApiException(Of TResult).New(String, Integer, String, IReadOnlyDictionary(Of String, IEnumerable(Of String)), TResult, Exception)
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException`1.#ctor*
+  name: ApiException
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException-1.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiException_1__ctor_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException`1.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException<TResult>.ApiException
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException(Of TResult).New
+  nameWithType: ApiException<TResult>.ApiException
+  nameWithType.vb: ApiException(Of TResult).New
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException`1.Response
+  name: Response
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException-1.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiException_1_Response
+  commentId: P:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException`1.Response
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException<TResult>.Response
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException(Of TResult).Response
+  nameWithType: ApiException<TResult>.Response
+  nameWithType.vb: ApiException(Of TResult).Response
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException`1.Response*
+  name: Response
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException-1.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiException_1_Response_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException`1.Response
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException<TResult>.Response
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException(Of TResult).Response
+  nameWithType: ApiException<TResult>.Response
+  nameWithType.vb: ApiException(Of TResult).Response
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException`1.Result
+  name: Result
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException-1.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiException_1_Result
+  commentId: P:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException`1.Result
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException<TResult>.Result
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException(Of TResult).Result
+  nameWithType: ApiException<TResult>.Result
+  nameWithType.vb: ApiException(Of TResult).Result
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException`1.Result*
+  name: Result
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException-1.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiException_1_Result_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException`1.Result
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException<TResult>.Result
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiException(Of TResult).Result
+  nameWithType: ApiException<TResult>.Result
+  nameWithType.vb: ApiException(Of TResult).Result
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse
+  name: ApiResponse
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.html
+  commentId: T:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse
+  nameWithType: ApiResponse
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.#ctor(System.Int32,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Collections.Generic.IEnumerable{System.String}})
+  name: ApiResponse(int, IReadOnlyDictionary<string, IEnumerable<string>>)
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiResponse__ctor_System_Int32_System_Collections_Generic_IReadOnlyDictionary_System_String_System_Collections_Generic_IEnumerable_System_String___
+  commentId: M:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.#ctor(System.Int32,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Collections.Generic.IEnumerable{System.String}})
+  name.vb: New(Integer, IReadOnlyDictionary(Of String, IEnumerable(Of String)))
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.ApiResponse(int, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>>)
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.New(Integer, System.Collections.Generic.IReadOnlyDictionary(Of String, System.Collections.Generic.IEnumerable(Of String)))
+  nameWithType: ApiResponse.ApiResponse(int, IReadOnlyDictionary<string, IEnumerable<string>>)
+  nameWithType.vb: ApiResponse.New(Integer, IReadOnlyDictionary(Of String, IEnumerable(Of String)))
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.#ctor*
+  name: ApiResponse
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiResponse__ctor_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.ApiResponse
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.New
+  nameWithType: ApiResponse.ApiResponse
+  nameWithType.vb: ApiResponse.New
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.Headers
+  name: Headers
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiResponse_Headers
+  commentId: P:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.Headers
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.Headers
+  nameWithType: ApiResponse.Headers
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.Headers*
+  name: Headers
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiResponse_Headers_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.Headers
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.Headers
+  nameWithType: ApiResponse.Headers
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.StatusCode
+  name: StatusCode
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiResponse_StatusCode
+  commentId: P:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.StatusCode
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.StatusCode
+  nameWithType: ApiResponse.StatusCode
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.StatusCode*
+  name: StatusCode
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiResponse_StatusCode_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.StatusCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.StatusCode
+  nameWithType: ApiResponse.StatusCode
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.TranslateAsync(System.Func{System.Threading.Tasks.Task{JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse}})
+  name: TranslateAsync(Func<Task<ApiResponse>>)
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiResponse_TranslateAsync_System_Func_System_Threading_Tasks_Task_JsonApiDotNetCore_OpenApi_Client_NSwag_ApiResponse___
+  commentId: M:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.TranslateAsync(System.Func{System.Threading.Tasks.Task{JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse}})
+  name.vb: TranslateAsync(Func(Of Task(Of ApiResponse)))
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.TranslateAsync(System.Func<System.Threading.Tasks.Task<JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse>>)
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.TranslateAsync(System.Func(Of System.Threading.Tasks.Task(Of JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse)))
+  nameWithType: ApiResponse.TranslateAsync(Func<Task<ApiResponse>>)
+  nameWithType.vb: ApiResponse.TranslateAsync(Func(Of Task(Of ApiResponse)))
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.TranslateAsync(System.Func{System.Threading.Tasks.Task})
+  name: TranslateAsync(Func<Task>)
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiResponse_TranslateAsync_System_Func_System_Threading_Tasks_Task__
+  commentId: M:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.TranslateAsync(System.Func{System.Threading.Tasks.Task})
+  name.vb: TranslateAsync(Func(Of Task))
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.TranslateAsync(System.Func<System.Threading.Tasks.Task>)
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.TranslateAsync(System.Func(Of System.Threading.Tasks.Task))
+  nameWithType: ApiResponse.TranslateAsync(Func<Task>)
+  nameWithType.vb: ApiResponse.TranslateAsync(Func(Of Task))
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.TranslateAsync*
+  name: TranslateAsync
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiResponse_TranslateAsync_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.TranslateAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.TranslateAsync
+  nameWithType: ApiResponse.TranslateAsync
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.TranslateAsync``1(System.Func{System.Threading.Tasks.Task{JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse{``0}}})
+  name: TranslateAsync<TResult>(Func<Task<ApiResponse<TResult>>>)
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiResponse_TranslateAsync__1_System_Func_System_Threading_Tasks_Task_JsonApiDotNetCore_OpenApi_Client_NSwag_ApiResponse___0____
+  commentId: M:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.TranslateAsync``1(System.Func{System.Threading.Tasks.Task{JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse{``0}}})
+  name.vb: TranslateAsync(Of TResult)(Func(Of Task(Of ApiResponse(Of TResult))))
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.TranslateAsync<TResult>(System.Func<System.Threading.Tasks.Task<JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse<TResult>>>)
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.TranslateAsync(Of TResult)(System.Func(Of System.Threading.Tasks.Task(Of JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse(Of TResult))))
+  nameWithType: ApiResponse.TranslateAsync<TResult>(Func<Task<ApiResponse<TResult>>>)
+  nameWithType.vb: ApiResponse.TranslateAsync(Of TResult)(Func(Of Task(Of ApiResponse(Of TResult))))
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.TranslateAsync``1(System.Func{System.Threading.Tasks.Task{``0}})
+  name: TranslateAsync<TResponse>(Func<Task<TResponse>>)
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiResponse_TranslateAsync__1_System_Func_System_Threading_Tasks_Task___0___
+  commentId: M:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.TranslateAsync``1(System.Func{System.Threading.Tasks.Task{``0}})
+  name.vb: TranslateAsync(Of TResponse)(Func(Of Task(Of TResponse)))
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.TranslateAsync<TResponse>(System.Func<System.Threading.Tasks.Task<TResponse>>)
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse.TranslateAsync(Of TResponse)(System.Func(Of System.Threading.Tasks.Task(Of TResponse)))
+  nameWithType: ApiResponse.TranslateAsync<TResponse>(Func<Task<TResponse>>)
+  nameWithType.vb: ApiResponse.TranslateAsync(Of TResponse)(Func(Of Task(Of TResponse)))
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse`1
+  name: ApiResponse<TResult>
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse-1.html
+  commentId: T:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse`1
+  name.vb: ApiResponse(Of TResult)
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse<TResult>
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse(Of TResult)
+  nameWithType: ApiResponse<TResult>
+  nameWithType.vb: ApiResponse(Of TResult)
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse`1.#ctor(System.Int32,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Collections.Generic.IEnumerable{System.String}},`0)
+  name: ApiResponse(int, IReadOnlyDictionary<string, IEnumerable<string>>, TResult)
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse-1.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiResponse_1__ctor_System_Int32_System_Collections_Generic_IReadOnlyDictionary_System_String_System_Collections_Generic_IEnumerable_System_String____0_
+  commentId: M:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse`1.#ctor(System.Int32,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Collections.Generic.IEnumerable{System.String}},`0)
+  name.vb: New(Integer, IReadOnlyDictionary(Of String, IEnumerable(Of String)), TResult)
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse<TResult>.ApiResponse(int, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>>, TResult)
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse(Of TResult).New(Integer, System.Collections.Generic.IReadOnlyDictionary(Of String, System.Collections.Generic.IEnumerable(Of String)), TResult)
+  nameWithType: ApiResponse<TResult>.ApiResponse(int, IReadOnlyDictionary<string, IEnumerable<string>>, TResult)
+  nameWithType.vb: ApiResponse(Of TResult).New(Integer, IReadOnlyDictionary(Of String, IEnumerable(Of String)), TResult)
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse`1.#ctor*
+  name: ApiResponse
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse-1.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiResponse_1__ctor_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse`1.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse<TResult>.ApiResponse
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse(Of TResult).New
+  nameWithType: ApiResponse<TResult>.ApiResponse
+  nameWithType.vb: ApiResponse(Of TResult).New
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse`1.Result
+  name: Result
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse-1.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiResponse_1_Result
+  commentId: P:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse`1.Result
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse<TResult>.Result
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse(Of TResult).Result
+  nameWithType: ApiResponse<TResult>.Result
+  nameWithType.vb: ApiResponse(Of TResult).Result
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse`1.Result*
+  name: Result
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse-1.html#JsonApiDotNetCore_OpenApi_Client_NSwag_ApiResponse_1_Result_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse`1.Result
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse<TResult>.Result
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.ApiResponse(Of TResult).Result
+  nameWithType: ApiResponse<TResult>.Result
+  nameWithType.vb: ApiResponse(Of TResult).Result
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter
+  name: BlockedJsonInheritanceConverter
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.html
+  commentId: T:JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter
+  nameWithType: BlockedJsonInheritanceConverter
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.#ctor
+  name: BlockedJsonInheritanceConverter()
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.html#JsonApiDotNetCore_OpenApi_Client_NSwag_BlockedJsonInheritanceConverter__ctor
+  commentId: M:JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.#ctor
+  name.vb: New()
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.BlockedJsonInheritanceConverter()
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.New()
+  nameWithType: BlockedJsonInheritanceConverter.BlockedJsonInheritanceConverter()
+  nameWithType.vb: BlockedJsonInheritanceConverter.New()
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.#ctor(System.String)
+  name: BlockedJsonInheritanceConverter(string)
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.html#JsonApiDotNetCore_OpenApi_Client_NSwag_BlockedJsonInheritanceConverter__ctor_System_String_
+  commentId: M:JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.#ctor(System.String)
+  name.vb: New(String)
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.BlockedJsonInheritanceConverter(string)
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.New(String)
+  nameWithType: BlockedJsonInheritanceConverter.BlockedJsonInheritanceConverter(string)
+  nameWithType.vb: BlockedJsonInheritanceConverter.New(String)
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.#ctor*
+  name: BlockedJsonInheritanceConverter
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.html#JsonApiDotNetCore_OpenApi_Client_NSwag_BlockedJsonInheritanceConverter__ctor_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.BlockedJsonInheritanceConverter
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.New
+  nameWithType: BlockedJsonInheritanceConverter.BlockedJsonInheritanceConverter
+  nameWithType.vb: BlockedJsonInheritanceConverter.New
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.CanConvert(System.Type)
+  name: CanConvert(Type)
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.html#JsonApiDotNetCore_OpenApi_Client_NSwag_BlockedJsonInheritanceConverter_CanConvert_System_Type_
+  commentId: M:JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.CanConvert(System.Type)
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.CanConvert(System.Type)
+  nameWithType: BlockedJsonInheritanceConverter.CanConvert(Type)
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.CanConvert*
+  name: CanConvert
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.html#JsonApiDotNetCore_OpenApi_Client_NSwag_BlockedJsonInheritanceConverter_CanConvert_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.CanConvert
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.CanConvert
+  nameWithType: BlockedJsonInheritanceConverter.CanConvert
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.CanRead
+  name: CanRead
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.html#JsonApiDotNetCore_OpenApi_Client_NSwag_BlockedJsonInheritanceConverter_CanRead
+  commentId: P:JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.CanRead
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.CanRead
+  nameWithType: BlockedJsonInheritanceConverter.CanRead
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.CanRead*
+  name: CanRead
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.html#JsonApiDotNetCore_OpenApi_Client_NSwag_BlockedJsonInheritanceConverter_CanRead_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.CanRead
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.CanRead
+  nameWithType: BlockedJsonInheritanceConverter.CanRead
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.CanWrite
+  name: CanWrite
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.html#JsonApiDotNetCore_OpenApi_Client_NSwag_BlockedJsonInheritanceConverter_CanWrite
+  commentId: P:JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.CanWrite
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.CanWrite
+  nameWithType: BlockedJsonInheritanceConverter.CanWrite
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.CanWrite*
+  name: CanWrite
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.html#JsonApiDotNetCore_OpenApi_Client_NSwag_BlockedJsonInheritanceConverter_CanWrite_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.CanWrite
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.CanWrite
+  nameWithType: BlockedJsonInheritanceConverter.CanWrite
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.DiscriminatorName
+  name: DiscriminatorName
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.html#JsonApiDotNetCore_OpenApi_Client_NSwag_BlockedJsonInheritanceConverter_DiscriminatorName
+  commentId: P:JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.DiscriminatorName
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.DiscriminatorName
+  nameWithType: BlockedJsonInheritanceConverter.DiscriminatorName
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.DiscriminatorName*
+  name: DiscriminatorName
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.html#JsonApiDotNetCore_OpenApi_Client_NSwag_BlockedJsonInheritanceConverter_DiscriminatorName_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.DiscriminatorName
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.DiscriminatorName
+  nameWithType: BlockedJsonInheritanceConverter.DiscriminatorName
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
+  name: ReadJson(JsonReader, Type, object?, JsonSerializer)
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.html#JsonApiDotNetCore_OpenApi_Client_NSwag_BlockedJsonInheritanceConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_System_Object_Newtonsoft_Json_JsonSerializer_
+  commentId: M:JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
+  name.vb: ReadJson(JsonReader, Type, Object, JsonSerializer)
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader, System.Type, object?, Newtonsoft.Json.JsonSerializer)
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader, System.Type, Object, Newtonsoft.Json.JsonSerializer)
+  nameWithType: BlockedJsonInheritanceConverter.ReadJson(JsonReader, Type, object?, JsonSerializer)
+  nameWithType.vb: BlockedJsonInheritanceConverter.ReadJson(JsonReader, Type, Object, JsonSerializer)
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.ReadJson*
+  name: ReadJson
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.html#JsonApiDotNetCore_OpenApi_Client_NSwag_BlockedJsonInheritanceConverter_ReadJson_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.ReadJson
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.ReadJson
+  nameWithType: BlockedJsonInheritanceConverter.ReadJson
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
+  name: WriteJson(JsonWriter, object?, JsonSerializer)
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.html#JsonApiDotNetCore_OpenApi_Client_NSwag_BlockedJsonInheritanceConverter_WriteJson_Newtonsoft_Json_JsonWriter_System_Object_Newtonsoft_Json_JsonSerializer_
+  commentId: M:JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
+  name.vb: WriteJson(JsonWriter, Object, JsonSerializer)
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter, object?, Newtonsoft.Json.JsonSerializer)
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter, Object, Newtonsoft.Json.JsonSerializer)
+  nameWithType: BlockedJsonInheritanceConverter.WriteJson(JsonWriter, object?, JsonSerializer)
+  nameWithType.vb: BlockedJsonInheritanceConverter.WriteJson(JsonWriter, Object, JsonSerializer)
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.WriteJson*
+  name: WriteJson
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.html#JsonApiDotNetCore_OpenApi_Client_NSwag_BlockedJsonInheritanceConverter_WriteJson_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.WriteJson
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter.WriteJson
+  nameWithType: BlockedJsonInheritanceConverter.WriteJson
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient
+  name: JsonApiClient
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.html
+  commentId: T:JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient
+  nameWithType: JsonApiClient
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.AutoClearTracked
+  name: AutoClearTracked
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.html#JsonApiDotNetCore_OpenApi_Client_NSwag_JsonApiClient_AutoClearTracked
+  commentId: P:JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.AutoClearTracked
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.AutoClearTracked
+  nameWithType: JsonApiClient.AutoClearTracked
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.AutoClearTracked*
+  name: AutoClearTracked
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.html#JsonApiDotNetCore_OpenApi_Client_NSwag_JsonApiClient_AutoClearTracked_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.AutoClearTracked
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.AutoClearTracked
+  nameWithType: JsonApiClient.AutoClearTracked
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.ClearAllTracked
+  name: ClearAllTracked()
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.html#JsonApiDotNetCore_OpenApi_Client_NSwag_JsonApiClient_ClearAllTracked
+  commentId: M:JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.ClearAllTracked
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.ClearAllTracked()
+  nameWithType: JsonApiClient.ClearAllTracked()
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.ClearAllTracked*
+  name: ClearAllTracked
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.html#JsonApiDotNetCore_OpenApi_Client_NSwag_JsonApiClient_ClearAllTracked_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.ClearAllTracked
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.ClearAllTracked
+  nameWithType: JsonApiClient.ClearAllTracked
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.MarkAsTracked(System.ComponentModel.INotifyPropertyChanged,System.String[])
+  name: MarkAsTracked(INotifyPropertyChanged, params string[])
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.html#JsonApiDotNetCore_OpenApi_Client_NSwag_JsonApiClient_MarkAsTracked_System_ComponentModel_INotifyPropertyChanged_System_String___
+  commentId: M:JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.MarkAsTracked(System.ComponentModel.INotifyPropertyChanged,System.String[])
+  name.vb: MarkAsTracked(INotifyPropertyChanged, ParamArray String())
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.MarkAsTracked(System.ComponentModel.INotifyPropertyChanged, params string[])
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.MarkAsTracked(System.ComponentModel.INotifyPropertyChanged, ParamArray String())
+  nameWithType: JsonApiClient.MarkAsTracked(INotifyPropertyChanged, params string[])
+  nameWithType.vb: JsonApiClient.MarkAsTracked(INotifyPropertyChanged, ParamArray String())
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.MarkAsTracked*
+  name: MarkAsTracked
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.html#JsonApiDotNetCore_OpenApi_Client_NSwag_JsonApiClient_MarkAsTracked_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.MarkAsTracked
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.MarkAsTracked
+  nameWithType: JsonApiClient.MarkAsTracked
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.SetSerializerSettingsForJsonApi(Newtonsoft.Json.JsonSerializerSettings)
+  name: SetSerializerSettingsForJsonApi(JsonSerializerSettings)
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.html#JsonApiDotNetCore_OpenApi_Client_NSwag_JsonApiClient_SetSerializerSettingsForJsonApi_Newtonsoft_Json_JsonSerializerSettings_
+  commentId: M:JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.SetSerializerSettingsForJsonApi(Newtonsoft.Json.JsonSerializerSettings)
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.SetSerializerSettingsForJsonApi(Newtonsoft.Json.JsonSerializerSettings)
+  nameWithType: JsonApiClient.SetSerializerSettingsForJsonApi(JsonSerializerSettings)
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.SetSerializerSettingsForJsonApi*
+  name: SetSerializerSettingsForJsonApi
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.html#JsonApiDotNetCore_OpenApi_Client_NSwag_JsonApiClient_SetSerializerSettingsForJsonApi_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.SetSerializerSettingsForJsonApi
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient.SetSerializerSettingsForJsonApi
+  nameWithType: JsonApiClient.SetSerializerSettingsForJsonApi
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet
+  name: NotifyPropertySet
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.html
+  commentId: T:JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet
+  nameWithType: NotifyPropertySet
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs)
+  name: OnPropertyChanged(PropertyChangedEventArgs)
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.html#JsonApiDotNetCore_OpenApi_Client_NSwag_NotifyPropertySet_OnPropertyChanged_System_ComponentModel_PropertyChangedEventArgs_
+  commentId: M:JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs)
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs)
+  nameWithType: NotifyPropertySet.OnPropertyChanged(PropertyChangedEventArgs)
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.OnPropertyChanged*
+  name: OnPropertyChanged
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.html#JsonApiDotNetCore_OpenApi_Client_NSwag_NotifyPropertySet_OnPropertyChanged_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.OnPropertyChanged
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.OnPropertyChanged
+  nameWithType: NotifyPropertySet.OnPropertyChanged
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.PropertyChanged
+  name: PropertyChanged
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.html#JsonApiDotNetCore_OpenApi_Client_NSwag_NotifyPropertySet_PropertyChanged
+  commentId: E:JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.PropertyChanged
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.PropertyChanged
+  nameWithType: NotifyPropertySet.PropertyChanged
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.RaisePropertyChanged(System.String)
+  name: RaisePropertyChanged(string?)
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.html#JsonApiDotNetCore_OpenApi_Client_NSwag_NotifyPropertySet_RaisePropertyChanged_System_String_
+  commentId: M:JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.RaisePropertyChanged(System.String)
+  name.vb: RaisePropertyChanged(String)
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.RaisePropertyChanged(string?)
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.RaisePropertyChanged(String)
+  nameWithType: NotifyPropertySet.RaisePropertyChanged(string?)
+  nameWithType.vb: NotifyPropertySet.RaisePropertyChanged(String)
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.RaisePropertyChanged*
+  name: RaisePropertyChanged
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.html#JsonApiDotNetCore_OpenApi_Client_NSwag_NotifyPropertySet_RaisePropertyChanged_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.RaisePropertyChanged
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.RaisePropertyChanged
+  nameWithType: NotifyPropertySet.RaisePropertyChanged
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.SetProperty*
+  name: SetProperty
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.html#JsonApiDotNetCore_OpenApi_Client_NSwag_NotifyPropertySet_SetProperty_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.SetProperty
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.SetProperty
+  nameWithType: NotifyPropertySet.SetProperty
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.SetProperty``1(``0@,``0,System.String)
+  name: SetProperty<T>(ref T, T, string?)
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.html#JsonApiDotNetCore_OpenApi_Client_NSwag_NotifyPropertySet_SetProperty__1___0____0_System_String_
+  commentId: M:JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.SetProperty``1(``0@,``0,System.String)
+  name.vb: SetProperty(Of T)(T, T, String)
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.SetProperty<T>(ref T, T, string?)
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet.SetProperty(Of T)(T, T, String)
+  nameWithType: NotifyPropertySet.SetProperty<T>(ref T, T, string?)
+  nameWithType.vb: NotifyPropertySet.SetProperty(Of T)(T, T, String)
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor`1
+  name: TrackChangesFor<T>
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor-1.html
+  commentId: T:JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor`1
+  name.vb: TrackChangesFor(Of T)
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor<T>
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor(Of T)
+  nameWithType: TrackChangesFor<T>
+  nameWithType.vb: TrackChangesFor(Of T)
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor`1.#ctor(JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient)
+  name: TrackChangesFor(JsonApiClient)
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor-1.html#JsonApiDotNetCore_OpenApi_Client_NSwag_TrackChangesFor_1__ctor_JsonApiDotNetCore_OpenApi_Client_NSwag_JsonApiClient_
+  commentId: M:JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor`1.#ctor(JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient)
+  name.vb: New(JsonApiClient)
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor<T>.TrackChangesFor(JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient)
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor(Of T).New(JsonApiDotNetCore.OpenApi.Client.NSwag.JsonApiClient)
+  nameWithType: TrackChangesFor<T>.TrackChangesFor(JsonApiClient)
+  nameWithType.vb: TrackChangesFor(Of T).New(JsonApiClient)
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor`1.#ctor*
+  name: TrackChangesFor
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor-1.html#JsonApiDotNetCore_OpenApi_Client_NSwag_TrackChangesFor_1__ctor_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor`1.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor<T>.TrackChangesFor
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor(Of T).New
+  nameWithType: TrackChangesFor<T>.TrackChangesFor
+  nameWithType.vb: TrackChangesFor(Of T).New
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor`1.Initializer
+  name: Initializer
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor-1.html#JsonApiDotNetCore_OpenApi_Client_NSwag_TrackChangesFor_1_Initializer
+  commentId: P:JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor`1.Initializer
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor<T>.Initializer
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor(Of T).Initializer
+  nameWithType: TrackChangesFor<T>.Initializer
+  nameWithType.vb: TrackChangesFor(Of T).Initializer
+- uid: JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor`1.Initializer*
+  name: Initializer
+  href: api/JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor-1.html#JsonApiDotNetCore_OpenApi_Client_NSwag_TrackChangesFor_1_Initializer_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor`1.Initializer
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor<T>.Initializer
+  fullName.vb: JsonApiDotNetCore.OpenApi.Client.NSwag.TrackChangesFor(Of T).Initializer
+  nameWithType: TrackChangesFor<T>.Initializer
+  nameWithType.vb: TrackChangesFor(Of T).Initializer
+- uid: JsonApiDotNetCore.OpenApi.Swashbuckle
+  name: JsonApiDotNetCore.OpenApi.Swashbuckle
+  href: api/JsonApiDotNetCore.OpenApi.Swashbuckle.html
+  commentId: N:JsonApiDotNetCore.OpenApi.Swashbuckle
+  fullName: JsonApiDotNetCore.OpenApi.Swashbuckle
+  nameWithType: JsonApiDotNetCore.OpenApi.Swashbuckle
+- uid: JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions
+  name: ServiceCollectionExtensions
+  href: api/JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions.html
+  commentId: T:JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions
+  fullName: JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions
+  nameWithType: ServiceCollectionExtensions
+- uid: JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions.AddOpenApiForJsonApi(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenOptions})
+  name: AddOpenApiForJsonApi(IServiceCollection, Action<SwaggerGenOptions>?)
+  href: api/JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions.html#JsonApiDotNetCore_OpenApi_Swashbuckle_ServiceCollectionExtensions_AddOpenApiForJsonApi_Microsoft_Extensions_DependencyInjection_IServiceCollection_System_Action_Swashbuckle_AspNetCore_SwaggerGen_SwaggerGenOptions__
+  commentId: M:JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions.AddOpenApiForJsonApi(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenOptions})
+  name.vb: AddOpenApiForJsonApi(IServiceCollection, Action(Of SwaggerGenOptions))
+  fullName: JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions.AddOpenApiForJsonApi(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenOptions>?)
+  fullName.vb: JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions.AddOpenApiForJsonApi(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action(Of Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenOptions))
+  nameWithType: ServiceCollectionExtensions.AddOpenApiForJsonApi(IServiceCollection, Action<SwaggerGenOptions>?)
+  nameWithType.vb: ServiceCollectionExtensions.AddOpenApiForJsonApi(IServiceCollection, Action(Of SwaggerGenOptions))
+- uid: JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions.AddOpenApiForJsonApi*
+  name: AddOpenApiForJsonApi
+  href: api/JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions.html#JsonApiDotNetCore_OpenApi_Swashbuckle_ServiceCollectionExtensions_AddOpenApiForJsonApi_
+  commentId: Overload:JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions.AddOpenApiForJsonApi
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions.AddOpenApiForJsonApi
+  nameWithType: ServiceCollectionExtensions.AddOpenApiForJsonApi
 - uid: JsonApiDotNetCore.Queries
   name: JsonApiDotNetCore.Queries
   href: api/JsonApiDotNetCore.Queries.html

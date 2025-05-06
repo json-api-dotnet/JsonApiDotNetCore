@@ -2,16 +2,16 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Example requests </title>
+      <title>Example projects </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Example requests ">
+      <meta name="title" content="Example projects ">
       
       
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
       <meta name="docfx:navrel" content="../toc.html">
-      <meta name="docfx:tocrel" content="toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
       
       
       
@@ -37,6 +37,13 @@
         document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
       </script>
 
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-78GTGF1FM2"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-78GTGF1FM2');
+      </script>
   </head>
 
   <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
@@ -44,7 +51,7 @@
       <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
         <div class="container-xxl flex-nowrap">
           <a class="navbar-brand" href="../index.html">
-            <img id="logo" class="svg" src="../logo.svg" alt="">
+            <img id="logo" class="svg" src="../styles/img/favicon.png" alt="">
             
           </a>
           <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,15 +74,34 @@
         </div>
 
         <article data-uid="">
-<h1 id="example-requests">Example requests</h1>
+<h1 id="example-projects">Example projects</h1>
 
-<p>These requests have been generated against the &quot;GettingStarted&quot; application and are updated on every deployment.</p>
-<p>All of these requests have been created using out-of-the-box features.</p>
+<p>Runnable example projects can be found <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples">here</a>:</p>
+<ul>
+<li>GettingStarted: A simple project with minimal configuration to develop a runnable project in minutes.</li>
+<li>JsonApiDotNetCoreExample: Showcases commonly-used features, such as resource definitions, atomic operations, and OpenAPI.
+<ul>
+<li>OpenApiNSwagClientExample: Uses <a href="https://github.com/RicoSuter/NSwag">NSwag</a> to generate a typed OpenAPI client.</li>
+<li>OpenApiKiotaClientExample: Uses <a href="https://learn.microsoft.com/en-us/openapi/kiota/">Kiota</a> to generate a typed OpenAPI client.</li>
+</ul>
+</li>
+<li>MultiDbContextExample: Shows how to use multiple <code>DbContext</code> classes, for connecting to multiple databases.</li>
+<li>DatabasePerTenantExample: Uses a different database per tenant. See <a href="../usage/advanced/multi-tenancy.html">here</a> for using multiple tenants in the same database.</li>
+<li>NoEntityFrameworkExample: Uses a read-only in-memory repository, instead of a real database.</li>
+<li>DapperExample: Uses <a href="https://github.com/DapperLib/Dapper">Dapper</a> to execute SQL queries.</li>
+<li>ReportsExample: Uses a resource service that returns aggregated data.</li>
+</ul>
+<div class="NOTE">
+<h5>Note</h5>
+<p>The example projects only cover highly-requested features. More advanced use cases can be found <a href="../usage/advanced/index.html">here</a>.</p>
+</div>
+<h1 id="example-requests">Example requests</h1>
+<p>The following requests are automatically generated against the &quot;GettingStarted&quot; application on every deployment.</p>
 <div class="NOTE">
 <h5>Note</h5>
 <p>curl requires &quot;[&quot; and &quot;]&quot; in URLs to be escaped.</p>
 </div>
-<h1 id="reading-data">Reading data</h1>
+<h2 id="reading-data">Reading data</h2>
 <h3 id="get-all">Get all</h3>
 <pre><code class="lang-ps" name="REQUEST">#Requires -Version 7.3
 
@@ -507,7 +533,7 @@ curl -s -f &quot;http://localhost:14141/api/books?page%5Bsize%5D=1&amp;page%5Bnu
     &quot;total&quot;: 3
   }
 }
-</code></pre><h1 id="writing-data">Writing data</h1>
+</code></pre><h2 id="writing-data">Writing data</h2>
 <h3 id="create-resource">Create resource</h3>
 <pre><code class="lang-ps" name="REQUEST">#Requires -Version 7.3
 

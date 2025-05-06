@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>API </title>
+      <title>Public API surface </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="API ">
+      <meta name="title" content="Public API surface ">
       
       
       <link rel="icon" href="../favicon.ico">
@@ -37,6 +37,13 @@
         document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
       </script>
 
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-78GTGF1FM2"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-78GTGF1FM2');
+      </script>
   </head>
 
   <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
@@ -44,7 +51,7 @@
       <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
         <div class="container-xxl flex-nowrap">
           <a class="navbar-brand" href="../index.html">
-            <img id="logo" class="svg" src="../logo.svg" alt="">
+            <img id="logo" class="svg" src="../styles/img/favicon.png" alt="">
             
           </a>
           <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,14 +88,179 @@
         </div>
 
         <article data-uid="">
-<h1 id="api">API</h1>
+<h1 id="public-api-surface">Public API surface</h1>
 
-<p>This section documents the package API and is generated from the XML source comments.</p>
-<h2 id="common-apis">Common APIs</h2>
+<p>This topic documents the public API, which is generated from the triple-slash XML documentation comments in source code.
+Commonly used types are listed in the following sections.</p>
+<h2 id="setup">Setup</h2>
 <ul>
-<li><a href="JsonApiDotNetCore.Configuration.JsonApiOptions.html"><code>JsonApiOptions</code></a></li>
-<li><a href="JsonApiDotNetCore.Configuration.IResourceGraph.html"><code>IResourceGraph</code></a></li>
-<li><a href="JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html"><code>JsonApiResourceDefinition&lt;TResource, TId&gt;</code></a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Configuration.JsonApiOptions.html">JsonApiOptions</a> implements <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html">IJsonApiOptions</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceGraph.html">ResourceGraph</a> implements <a class="xref" href="JsonApiDotNetCore.Configuration.IResourceGraph.html">IResourceGraph</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Resources.Identifiable-1.html">Identifiable&lt;TId&gt;</a> implements <a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable-1.html">IIdentifiable&lt;TId&gt;</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceAttribute.html">ResourceAttribute</a> and <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.NoResourceAttribute.html">NoResourceAttribute</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceLinksAttribute.html">ResourceLinksAttribute</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.AttrAttribute.html">AttrAttribute</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html">HasOneAttribute</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html">HasManyAttribute</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.EagerLoadAttribute.html">EagerLoadAttribute</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="xref" href="JsonApiDotNetCore.Configuration.ServiceCollectionExtensions.html">ServiceCollectionExtensions</a>, <a class="xref" href="JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions.html">ServiceCollectionExtensions</a> (OpenAPI)</li>
+<li><a class="xref" href="JsonApiDotNetCore.Configuration.ApplicationBuilderExtensions.html">ApplicationBuilderExtensions</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.html">JsonApiRoutingConvention</a> implements <a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiRoutingConvention.html">IJsonApiRoutingConvention</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Controllers.Annotations.DisableRoutingConventionAttribute.html">DisableRoutingConventionAttribute</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Controllers.Annotations.DisableQueryStringAttribute.html">DisableQueryStringAttribute</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="query-strings">Query strings</h2>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Middleware.AsyncQueryStringActionFilter.html">AsyncQueryStringActionFilter</a> implements <a class="xref" href="JsonApiDotNetCore.Middleware.IAsyncQueryStringActionFilter.html">IAsyncQueryStringActionFilter</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.QueryStrings.QueryStringReader.html">QueryStringReader</a> implements <a class="xref" href="JsonApiDotNetCore.QueryStrings.IQueryStringReader.html">IQueryStringReader</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.QueryStrings.IQueryStringParameterReader.html">IQueryStringParameterReader</a> and <a class="xref" href="JsonApiDotNetCore.Queries.IQueryConstraintProvider.html">IQueryConstraintProvider</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.QueryStrings.IncludeQueryStringParameterReader.html">IncludeQueryStringParameterReader</a> implements <a class="xref" href="JsonApiDotNetCore.QueryStrings.IIncludeQueryStringParameterReader.html">IIncludeQueryStringParameterReader</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Queries.Parsing.IncludeParser.html">IncludeParser</a> implements <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.IIncludeParser.html">IIncludeParser</a></li>
+</ul>
+</li>
+<li><a class="xref" href="JsonApiDotNetCore.QueryStrings.FilterQueryStringParameterReader.html">FilterQueryStringParameterReader</a> implements <a class="xref" href="JsonApiDotNetCore.QueryStrings.IFilterQueryStringParameterReader.html">IFilterQueryStringParameterReader</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Queries.Parsing.FilterParser.html">FilterParser</a> implements <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.IFilterParser.html">IFilterParser</a></li>
+</ul>
+</li>
+<li><a class="xref" href="JsonApiDotNetCore.QueryStrings.SortQueryStringParameterReader.html">SortQueryStringParameterReader</a> implements <a class="xref" href="JsonApiDotNetCore.QueryStrings.ISortQueryStringParameterReader.html">ISortQueryStringParameterReader</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Queries.Parsing.SortParser.html">SortParser</a> implements <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.ISortParser.html">ISortParser</a></li>
+</ul>
+</li>
+<li><a class="xref" href="JsonApiDotNetCore.QueryStrings.PaginationQueryStringParameterReader.html">PaginationQueryStringParameterReader</a> implements <a class="xref" href="JsonApiDotNetCore.QueryStrings.IPaginationQueryStringParameterReader.html">IPaginationQueryStringParameterReader</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Queries.Parsing.PaginationParser.html">PaginationParser</a> implements <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.IPaginationParser.html">IPaginationParser</a></li>
+</ul>
+</li>
+<li><a class="xref" href="JsonApiDotNetCore.QueryStrings.SparseFieldSetQueryStringParameterReader.html">SparseFieldSetQueryStringParameterReader</a> implements <a class="xref" href="JsonApiDotNetCore.QueryStrings.ISparseFieldSetQueryStringParameterReader.html">ISparseFieldSetQueryStringParameterReader</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Queries.Parsing.SparseFieldSetParser.html">SparseFieldSetParser</a> implements <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.ISparseFieldSetParser.html">ISparseFieldSetParser</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="xref" href="JsonApiDotNetCore.Queries.QueryLayer.html">QueryLayer</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Queries.FieldSelection.html">FieldSelection</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpression.html">QueryExpression</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeExpression.html">IncludeExpression</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html">FilterExpression</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.SortExpression.html">SortExpression</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.PaginationExpression.html">PaginationExpression</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.html">SparseFieldSetExpression</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder.html">QueryableBuilder</a> implements <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder.html">IQueryableBuilder</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.IncludeClauseBuilder.html">IncludeClauseBuilder</a> implements <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.IIncludeClauseBuilder.html">IIncludeClauseBuilder</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.WhereClauseBuilder.html">WhereClauseBuilder</a> implements <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.IWhereClauseBuilder.html">IWhereClauseBuilder</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.OrderClauseBuilder.html">OrderClauseBuilder</a> implements <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.IOrderClauseBuilder.html">IOrderClauseBuilder</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.SkipTakeClauseBuilder.html">SkipTakeClauseBuilder</a> implements <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.ISkipTakeClauseBuilder.html">ISkipTakeClauseBuilder</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.SelectClauseBuilder.html">SelectClauseBuilder</a> implements <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.ISelectClauseBuilder.html">ISelectClauseBuilder</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="request-pipeline">Request pipeline</h2>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiController-2.html">JsonApiController&lt;TResource, TId&gt;</a> implements <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html">BaseJsonApiController&lt;TResource, TId&gt;</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiQueryController-2.html">JsonApiQueryController&lt;TResource, TId&gt;</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiCommandController-2.html">JsonApiCommandController&lt;TResource, TId&gt;</a></li>
+</ul>
+</li>
+<li><a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiOperationsController.html">JsonApiOperationsController</a> implements <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.html">BaseJsonApiOperationsController</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.AtomicOperations.OperationsProcessor.html">OperationsProcessor</a> implements <a class="xref" href="JsonApiDotNetCore.AtomicOperations.IOperationsProcessor.html">IOperationsProcessor</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.AtomicOperations.Processors.IOperationProcessor.html">IOperationProcessor</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor-2.html">CreateProcessor&lt;TResource, TId&gt;</a> implements <a class="xref" href="JsonApiDotNetCore.AtomicOperations.Processors.ICreateProcessor-2.html">ICreateProcessor&lt;TResource, TId&gt;</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor-2.html">UpdateProcessor&lt;TResource, TId&gt;</a> implements <a class="xref" href="JsonApiDotNetCore.AtomicOperations.Processors.IUpdateProcessor-2.html">IUpdateProcessor&lt;TResource, TId&gt;</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor-2.html">DeleteProcessor&lt;TResource, TId&gt;</a> implements <a class="xref" href="JsonApiDotNetCore.AtomicOperations.Processors.IDeleteProcessor-2.html">IDeleteProcessor&lt;TResource, TId&gt;</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor-2.html">SetRelationshipProcessor&lt;TResource, TId&gt;</a> implements <a class="xref" href="JsonApiDotNetCore.AtomicOperations.Processors.ISetRelationshipProcessor-2.html">ISetRelationshipProcessor&lt;TResource, TId&gt;</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor-2.html">AddToRelationshipProcessor&lt;TResource, TId&gt;</a> implements <a class="xref" href="JsonApiDotNetCore.AtomicOperations.Processors.IAddToRelationshipProcessor-2.html">IAddToRelationshipProcessor&lt;TResource, TId&gt;</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor-2.html">RemoveFromRelationshipProcessor&lt;TResource, TId&gt;</a> implements <a class="xref" href="JsonApiDotNetCore.AtomicOperations.Processors.IRemoveFromRelationshipProcessor-2.html">IRemoveFromRelationshipProcessor&lt;TResource, TId&gt;</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiMiddleware.html">JsonApiMiddleware</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiRequest.html">JsonApiRequest</a> implements <a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiRequest.html">IJsonApiRequest</a></li>
+</ul>
+</li>
+<li><a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-2.html">JsonApiResourceService&lt;TResource, TId&gt;</a> implements <a class="xref" href="JsonApiDotNetCore.Services.IResourceService-2.html">IResourceService&lt;TResource, TId&gt;</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Queries.QueryLayerComposer.html">QueryLayerComposer</a> implements <a class="xref" href="JsonApiDotNetCore.Queries.IQueryLayerComposer.html">IQueryLayerComposer</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html">JsonApiResourceDefinition&lt;TResource, TId&gt;</a> implements <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html">IResourceDefinition&lt;TResource, TId&gt;</a></li>
+</ul>
+</li>
+<li><a class="xref" href="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html">EntityFrameworkCoreRepository&lt;TResource, TId&gt;</a> implements <a class="xref" href="JsonApiDotNetCore.Repositories.IResourceRepository-2.html">IResourceRepository&lt;TResource, TId&gt;</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Repositories.IResourceReadRepository-2.html">IResourceReadRepository&lt;TResource, TId&gt;</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Repositories.IResourceWriteRepository-2.html">IResourceWriteRepository&lt;TResource, TId&gt;</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="serialization">Serialization</h2>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiInputFormatter.html">JsonApiInputFormatter</a> implements <a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiInputFormatter.html">IJsonApiInputFormatter</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Serialization.Request.JsonApiReader.html">JsonApiReader</a> implements <a class="xref" href="JsonApiDotNetCore.Serialization.Request.IJsonApiReader.html">IJsonApiReader</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Serialization.Request.Adapters.DocumentAdapter.html">DocumentAdapter</a> implements <a class="xref" href="JsonApiDotNetCore.Serialization.Request.Adapters.IDocumentAdapter.html">IDocumentAdapter</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Resources.TargetedFields.html">TargetedFields</a> implements <a class="xref" href="JsonApiDotNetCore.Resources.ITargetedFields.html">ITargetedFields</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiOutputFormatter.html">JsonApiOutputFormatter</a> implements <a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiOutputFormatter.html">IJsonApiOutputFormatter</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Serialization.Response.JsonApiWriter.html">JsonApiWriter</a> implements <a class="xref" href="JsonApiDotNetCore.Serialization.Response.IJsonApiWriter.html">IJsonApiWriter</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Serialization.Response.ResponseModelAdapter.html">ResponseModelAdapter</a> implements <a class="xref" href="JsonApiDotNetCore.Serialization.Response.IResponseModelAdapter.html">IResponseModelAdapter</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.Document.html">Document</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.html">IEvaluatedIncludeCache</a></li>
+<li><a class="xref" href="JsonApiDotNetCore.Queries.SparseFieldSetCache.html">SparseFieldSetCache</a> implements <a class="xref" href="JsonApiDotNetCore.Queries.ISparseFieldSetCache.html">ISparseFieldSetCache</a></li>
+</ul>
+<h2 id="error-handling">Error handling</h2>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Middleware.AsyncJsonApiExceptionFilter.html">AsyncJsonApiExceptionFilter</a> implements <a class="xref" href="JsonApiDotNetCore.Middleware.IAsyncJsonApiExceptionFilter.html">IAsyncJsonApiExceptionFilter</a>
+<ul>
+<li><a class="xref" href="JsonApiDotNetCore.Middleware.ExceptionHandler.html">ExceptionHandler</a> implements <a class="xref" href="JsonApiDotNetCore.Middleware.IExceptionHandler.html">IExceptionHandler</a></li>
+</ul>
+</li>
 </ul>
 
 </article>
