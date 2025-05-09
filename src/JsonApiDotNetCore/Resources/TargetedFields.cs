@@ -7,10 +7,16 @@ namespace JsonApiDotNetCore.Resources;
 [PublicAPI]
 public sealed class TargetedFields : ITargetedFields
 {
-    IReadOnlySet<AttrAttribute> ITargetedFields.Attributes => Attributes.AsReadOnly();
+    /// <inheritdoc />
+    IReadOnlySet<ITargetedAttributeTree> ITargetedFields.Attributes => Attributes.Cast<ITargetedAttributeTree>().ToHashSet().AsReadOnly();
+
+    /// <inheritdoc />
     IReadOnlySet<RelationshipAttribute> ITargetedFields.Relationships => Relationships.AsReadOnly();
 
-    public HashSet<AttrAttribute> Attributes { get; } = [];
+    /// <inheritdoc cref="ITargetedFields.Attributes" />
+    public HashSet<TargetedAttributeTree> Attributes { get; } = [];
+
+    /// <inheritdoc cref="ITargetedFields.Relationships" />
     public HashSet<RelationshipAttribute> Relationships { get; } = [];
 
     /// <inheritdoc />
@@ -20,8 +26,22 @@ public sealed class TargetedFields : ITargetedFields
 
         Clear();
 
-        Attributes.UnionWith(other.Attributes);
+        CopyTargetedAttributesFrom(other.Attributes);
         Relationships.UnionWith(other.Relationships);
+    }
+
+    private void CopyTargetedAttributesFrom(IReadOnlySet<ITargetedAttributeTree> otherTargets)
+    {
+        foreach (ITargetedAttributeTree otherTarget in otherTargets)
+        {
+            TargetedAttributeTree thisTarget = ToMutable(otherTarget);
+            Attributes.Add(thisTarget);
+        }
+    }
+
+    private static TargetedAttributeTree ToMutable(ITargetedAttributeTree target)
+    {
+        return new TargetedAttributeTree(target.Attribute, target.Children.Select(ToMutable).ToHashSet());
     }
 
     public void Clear()

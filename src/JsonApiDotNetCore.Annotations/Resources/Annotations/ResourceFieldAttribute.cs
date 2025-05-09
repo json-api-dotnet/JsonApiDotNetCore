@@ -53,6 +53,7 @@ public abstract class ResourceFieldAttribute : Attribute
     /// </summary>
     public ResourceType Type
     {
+        // TODO: This is null for the children of a compound attribute.
         get => _type!;
         internal set
         {
@@ -68,7 +69,7 @@ public abstract class ResourceFieldAttribute : Attribute
     public object? GetValue(object resource)
     {
         ArgumentNullException.ThrowIfNull(resource);
-        AssertIsIdentifiable(resource);
+        AssertIsIdentifiableOrAttribute(resource);
 
         if (Property.GetMethod == null)
         {
@@ -94,7 +95,7 @@ public abstract class ResourceFieldAttribute : Attribute
     public virtual void SetValue(object resource, object? newValue)
     {
         ArgumentNullException.ThrowIfNull(resource);
-        AssertIsIdentifiable(resource);
+        AssertIsIdentifiableOrAttribute(resource);
 
         if (Property.SetMethod == null)
         {
@@ -113,8 +114,13 @@ public abstract class ResourceFieldAttribute : Attribute
         }
     }
 
-    protected void AssertIsIdentifiable(object? resource)
+    protected void AssertIsIdentifiableOrAttribute(object? resource)
     {
+        if (GetType() == typeof(AttrAttribute))
+        {
+            return;
+        }
+
         if (resource is not null and not IIdentifiable)
         {
 #pragma warning disable CA1062 // Validate arguments of public methods

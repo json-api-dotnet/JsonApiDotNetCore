@@ -11,4 +11,7 @@ public sealed class AttrAttribute : ResourceFieldAttribute
 {
     /// <summary />
     public AttrCapabilities Capabilities { get; set; }
+
+    /// <summary />
+    public bool IsCompound { get; set; }
 }

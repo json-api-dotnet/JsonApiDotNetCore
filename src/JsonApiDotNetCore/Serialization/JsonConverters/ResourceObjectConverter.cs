@@ -91,7 +91,8 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
                         {
                             if (resourceType != null)
                             {
-                                resourceObject.Attributes = ReadAttributes(ref reader, options, resourceType);
+                                var container = new FieldContainer(resourceType, null);
+                                resourceObject.Attributes = ReadAttributes(ref reader, options, container);
                             }
                             else
                             {
@@ -168,8 +169,14 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
         return null;
     }
 
-    private Dictionary<string, object?> ReadAttributes(ref Utf8JsonReader reader, JsonSerializerOptions options, ResourceType resourceType)
+    private Dictionary<string, object?>? ReadAttributes(ref Utf8JsonReader reader, JsonSerializerOptions options, FieldContainer container)
     {
+        if (reader.TokenType == JsonTokenType.Null)
+        {
+            // TODO: Produce proper error downstream (or silently ignore), add test.
+            return null;
+        }
+
         var attributes = new Dictionary<string, object?>();
 
         while (reader.Read())
@@ -192,12 +199,16 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
                         string extensionNamespace = attributeName[..extensionSeparatorIndex];
                         string extensionName = attributeName[(extensionSeparatorIndex + 1)..];
 
-                        ValidateExtensionInAttributes(extensionNamespace, extensionName, resourceType, reader);
-                        reader.Skip();
-                        continue;
+                        // TODO: How do compound attributes affect OpenAPI?
+                        if (container.Type != null)
+                        {
+                            ValidateExtensionInAttributes(extensionNamespace, extensionName, container.Type, reader);
+                            reader.Skip();
+                            continue;
+                        }
                     }
 
-                    AttrAttribute? attribute = resourceType.FindAttributeByPublicName(attributeName);
+                    AttrAttribute? attribute = container.FindAttributeByPublicName(attributeName);
                     PropertyInfo? property = attribute?.Property;
 
                     if (property != null)
@@ -212,7 +223,9 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
                         {
                             try
                             {
-                                attributeValue = JsonSerializer.Deserialize(ref reader, property.PropertyType, options);
+                                attributeValue = attribute!.Kind is AttrKind.CollectionOfPrimitive or AttrKind.CollectionOfCompound
+                                    ? ReadCollectionAttribute(ref reader, options, attribute)
+                                    : ReadAttributeValue(ref reader, options, attribute, property.PropertyType);
                             }
                             catch (JsonException exception)
                             {
@@ -242,6 +255,60 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
         throw GetEndOfStreamError();
     }
 
+    private List<object?>? ReadCollectionAttribute(ref Utf8JsonReader reader, JsonSerializerOptions options, AttrAttribute attribute)
+    {
+        if (reader.TokenType == JsonTokenType.Null)
+        {
+            return null;
+        }
+
+        List<object?> collection = [];
+
+        do
+        {
+            switch (reader.TokenType)
+            {
+                case JsonTokenType.EndArray:
+                {
+                    return collection;
+                }
+                case JsonTokenType.StartObject:
+                case JsonTokenType.PropertyName:
+                case JsonTokenType.String:
+                case JsonTokenType.Number:
+                case JsonTokenType.True:
+                case JsonTokenType.False:
+                case JsonTokenType.Null:
+                {
+                    var elementContainer = new FieldContainer(null, attribute);
+                    object? attributeValue = ReadAttributeValue(ref reader, options, attribute, elementContainer.ClrType);
+                    collection.Add(attributeValue);
+                    break;
+                }
+            }
+        }
+        while (reader.Read());
+
+        throw GetEndOfStreamError();
+    }
+
+    private object? ReadAttributeValue(ref Utf8JsonReader reader, JsonSerializerOptions options, AttrAttribute attribute, Type clrType)
+    {
+        if (attribute.Kind is AttrKind.Primitive)
+        {
+            return JsonSerializer.Deserialize(ref reader, clrType, options);
+        }
+
+        if (attribute.Kind is AttrKind.CollectionOfPrimitive)
+        {
+            Type elementType = CollectionConverter.Instance.FindCollectionElementType(clrType) ?? clrType;
+            return JsonSerializer.Deserialize(ref reader, elementType, options);
+        }
+
+        var container = new FieldContainer(null, attribute);
+        return ReadAttributes(ref reader, options, container);
+    }
+
     // Currently exposed for internal use only, so we don't need a breaking change when adding support for multiple extensions.
     // ReSharper disable once UnusedParameter.Global
     private protected virtual void ValidateExtensionInAttributes(string extensionNamespace, string extensionName, ResourceType resourceType,
@@ -250,8 +317,14 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
         throw new JsonException($"Unsupported usage of JSON:API extension '{extensionNamespace}' in attributes.");
     }
 
-    private Dictionary<string, RelationshipObject?> ReadRelationships(ref Utf8JsonReader reader, JsonSerializerOptions options, ResourceType resourceType)
+    private Dictionary<string, RelationshipObject?>? ReadRelationships(ref Utf8JsonReader reader, JsonSerializerOptions options, ResourceType resourceType)
     {
+        if (reader.TokenType == JsonTokenType.Null)
+        {
+            // TODO: Produce proper error downstream (or silently ignore), add test.
+            return null;
+        }
+
         var relationships = new Dictionary<string, RelationshipObject?>();
 
         while (reader.Read())

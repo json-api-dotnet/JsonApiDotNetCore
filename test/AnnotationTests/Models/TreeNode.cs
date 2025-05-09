@@ -11,7 +11,7 @@ namespace AnnotationTests.Models;
     GenerateControllerEndpoints = JsonApiEndpoints.Query)]
 public sealed class TreeNode : Identifiable<long>
 {
-    [Attr(PublicName = "name", Capabilities = AttrCapabilities.AllowSort)]
+    [Attr(PublicName = "name", Capabilities = AttrCapabilities.AllowSort, IsCompound = false)]
     public string? DisplayName { get; set; }
 
     [HasOne(PublicName = "orders", Capabilities = HasOneCapabilities.AllowView | HasOneCapabilities.AllowInclude, Links = LinkTypes.All)]

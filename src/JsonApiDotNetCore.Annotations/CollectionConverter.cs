@@ -40,6 +40,21 @@ internal sealed class CollectionConverter
         ArgumentNullException.ThrowIfNull(collectionType);
 
         Type concreteCollectionType = ToConcreteCollectionType(collectionType);
+
+        if (concreteCollectionType.IsArray)
+        {
+            Type elementType = concreteCollectionType.GetElementType()!;
+            Type listType = typeof(List<>).MakeGenericType(elementType);
+            dynamic listInstance = Activator.CreateInstance(listType)!;
+
+            foreach (object item in source)
+            {
+                listInstance.Add((dynamic)item);
+            }
+
+            return listInstance.ToArray();
+        }
+
         dynamic concreteCollectionInstance = Activator.CreateInstance(concreteCollectionType)!;
 
         foreach (object item in source)
@@ -104,24 +119,36 @@ internal sealed class CollectionConverter
     /// </summary>
     public Type? FindCollectionElementType(Type? type)
     {
-        if (type != null)
+        if (type == null || !IsCollectionType(type))
         {
-            Type? enumerableClosedType = IsEnumerableClosedType(type) ? type : null;
-            enumerableClosedType ??= type.GetInterfaces().FirstOrDefault(IsEnumerableClosedType);
-
-            if (enumerableClosedType != null)
-            {
-                return enumerableClosedType.GenericTypeArguments[0];
-            }
+            return null;
         }
 
-        return null;
+        if (type.IsArray)
+        {
+            return type.GetElementType();
+        }
+
+        Type? enumerableClosedType = IsEnumerableClosedType(type) ? type : null;
+        enumerableClosedType ??= type.GetInterfaces().FirstOrDefault(IsEnumerableClosedType);
+        return enumerableClosedType?.GenericTypeArguments[0];
     }
 
     private static bool IsEnumerableClosedType(Type type)
     {
         bool isClosedType = type is { IsGenericType: true, ContainsGenericParameters: false };
         return isClosedType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>);
+    }
+
+    /// <summary>
+    /// Indicates whether the specified type is a collection.
+    /// </summary>
+    /// <param name="type">
+    /// The type to inspect.
+    /// </param>
+    public bool IsCollectionType(Type type)
+    {
+        return type != typeof(string) && type != typeof(byte[]) && type.IsAssignableTo(typeof(IEnumerable));
     }
 
     /// <summary>

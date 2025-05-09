@@ -245,6 +245,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
         var attrMap = new Dictionary<string, object?>(resourceType.Attributes.Count);
 
+        // TODO: Descend into nested attributes?
         foreach (AttrAttribute attr in resourceType.Attributes)
         {
             if (!fieldSet.Contains(attr) || attr.Property.Name == nameof(Identifiable<>.Id))

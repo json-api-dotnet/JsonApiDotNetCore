@@ -252,9 +252,9 @@ public sealed partial class DapperRepository<TResource, TId> : IResourceReposito
             relationship.SetValue(resourceInDatabase, rightValueEvaluated);
         }
 
-        foreach (AttrAttribute attribute in _targetedFields.Attributes)
+        foreach (ITargetedAttributeTree target in _targetedFields.Attributes)
         {
-            attribute.SetValue(resourceInDatabase, attribute.GetValue(resourceFromRequest));
+            target.Apply(resourceFromRequest, resourceInDatabase);
         }
     }
 

@@ -8,8 +8,26 @@ namespace GettingStarted.Models;
 [Resource]
 public sealed class Person : Identifiable<long>
 {
+    // TODO: See if we can use "required" throughout the codebase, instead of null! suppression.
+
     [Attr]
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
+
+    [Attr(IsCompound = true)]
+    public required Address LivingAddress { get; set; }
+
+    [Attr(IsCompound = true)]
+    public Address? MailAddress { get; set; }
+
+    // OwnsMany with nullable element type is unsupported by EF Core.
+    [Attr(IsCompound = true)]
+    public List<Address>? Addresses { get; set; }
+
+    [Attr]
+    public List<string?> NamesOfChildren { get; set; } = [];
+
+    [Attr]
+    public List<int?> AgesOfChildren { get; set; } = [];
 
     [HasMany]
     public ICollection<Book> Books { get; set; } = new List<Book>();

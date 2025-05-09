@@ -186,7 +186,10 @@ public sealed class AtomicTraceLoggingTests : IClassFixture<IntegrationTestConte
                 },
                 "TargetedFields": {
                   "Attributes": [
-                    "genre"
+                    {
+                      "Attribute": "genre",
+                      "Children": []
+                    }
                   ],
                   "Relationships": [
                     "lyric",

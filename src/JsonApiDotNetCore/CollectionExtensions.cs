@@ -59,42 +59,6 @@ internal static class CollectionExtensions
         }
     }
 
-    public static bool DictionaryEqual<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue>? first, IReadOnlyDictionary<TKey, TValue>? second,
-        IEqualityComparer<TValue>? valueComparer = null)
-    {
-        if (ReferenceEquals(first, second))
-        {
-            return true;
-        }
-
-        if (first == null || second == null)
-        {
-            return false;
-        }
-
-        if (first.Count != second.Count)
-        {
-            return false;
-        }
-
-        IEqualityComparer<TValue> effectiveValueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
-
-        foreach ((TKey firstKey, TValue firstValue) in first)
-        {
-            if (!second.TryGetValue(firstKey, out TValue? secondValue))
-            {
-                return false;
-            }
-
-            if (!effectiveValueComparer.Equals(firstValue, secondValue))
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T>? source)
     {
         return source ?? Array.Empty<T>();

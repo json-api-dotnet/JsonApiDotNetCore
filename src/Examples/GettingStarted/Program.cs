@@ -64,30 +64,77 @@ static async Task CreateSampleDataAsync(SampleDbContext dbContext)
     // Note: The generate-examples.ps1 script (to create example requests in documentation) depends on these.
 
     dbContext.Books.AddRange(new Book
-    {
-        Title = "Frankenstein",
-        PublishYear = 1818,
-        Author = new Person
         {
-            Name = "Mary Shelley"
+            Title = "Frankenstein",
+            PublishYear = 1818,
+            Author = new Person
+            {
+                Name = "Mary Shelley",
+                LivingAddress = new Address
+                {
+                    Street = "SomeStreet",
+                    PostalCode = "1234 AB",
+                    Country = "The Netherlands",
+                    NotExposed = "NotExposed"
+                },
+                MailAddress = new Address
+                {
+                    Street = "MailStreet",
+                    PostalCode = "MailPostalCode",
+                    Country = "MailCountry",
+                    NotExposed = "MailNotExposed"
+                },
+                Addresses =
+                [
+                    new Address
+                    {
+                        Street = "Street1",
+                        PostalCode = "PostalCode1",
+                        Country = "Country1",
+                        NotExposed = "NotExposed1"
+                    },
+                    new Address
+                    {
+                        Street = "Street2",
+                        PostalCode = "PostalCode2",
+                        Country = "Country2",
+                        NotExposed = "NotExposed2"
+                    }
+                ],
+                NamesOfChildren =
+                [
+                    "John",
+                    "Jack",
+                    "Joe",
+                    null
+                ],
+                AgesOfChildren =
+                [
+                    10,
+                    20,
+                    30,
+                    null
+                ]
+            }
         }
-    }, new Book
-    {
-        Title = "Robinson Crusoe",
-        PublishYear = 1719,
-        Author = new Person
+        /*, new Book
         {
-            Name = "Daniel Defoe"
-        }
-    }, new Book
-    {
-        Title = "Gulliver's Travels",
-        PublishYear = 1726,
-        Author = new Person
+            Title = "Robinson Crusoe",
+            PublishYear = 1719,
+            Author = new Person
+            {
+                Name = "Daniel Defoe"
+            }
+        }, new Book
         {
-            Name = "Jonathan Swift"
-        }
-    });
+            Title = "Gulliver's Travels",
+            PublishYear = 1726,
+            Author = new Person
+            {
+                Name = "Jonathan Swift"
+            }
+        }*/
+    );
 
     await dbContext.SaveChangesAsync();
 }

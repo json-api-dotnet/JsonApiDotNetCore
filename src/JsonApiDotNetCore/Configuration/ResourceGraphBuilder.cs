@@ -269,7 +269,7 @@ public partial class ResourceGraphBuilder
     {
         ClientIdGenerationMode? clientIdGeneration = GetClientIdGeneration(resourceClrType);
 
-        Dictionary<string, AttrAttribute>.ValueCollection attributes = GetAttributes(resourceClrType);
+        ReadOnlyDictionary<string, AttrAttribute>.ValueCollection attributes = GetAttributes(resourceClrType, true).Values;
         Dictionary<string, RelationshipAttribute>.ValueCollection relationships = GetRelationships(resourceClrType);
         ReadOnlyCollection<EagerLoadAttribute> eagerLoads = GetEagerLoads(resourceClrType);
 
@@ -289,19 +289,25 @@ public partial class ResourceGraphBuilder
         return resourceAttribute?.NullableClientIdGeneration;
     }
 
-    private Dictionary<string, AttrAttribute>.ValueCollection GetAttributes(Type resourceClrType)
+    private ReadOnlyDictionary<string, AttrAttribute> GetAttributes(Type containerClrType, bool isTopLevel)
     {
+        if (!isTopLevel && containerClrType.IsAbstract)
+        {
+            // There is no way to indicate the derived type in JSON:API.
+            throw new InvalidConfigurationException("Resource inheritance is not supported on compound attributes.");
+        }
+
         var attributesByName = new Dictionary<string, AttrAttribute>();
 
-        foreach (PropertyInfo property in resourceClrType.GetProperties())
+        foreach (PropertyInfo property in containerClrType.GetProperties())
         {
             var attribute = property.GetCustomAttribute<AttrAttribute>(true);
 
             if (attribute == null)
             {
-                if (property.Name == nameof(Identifiable<>.Id))
+                if (isTopLevel && property.Name == nameof(Identifiable<>.Id))
                 {
-                    // Although strictly not correct, 'id' is added to the list of attributes for convenience.
+                    // Although strictly not correct, 'id' is added to the list of resource attributes for convenience.
                     // For example, it enables to filter on ID, without the need to special-case existing logic.
                     // And when using sparse fieldsets, it silently adds 'id' to the set of attributes to retrieve.
 
@@ -318,18 +324,45 @@ public partial class ResourceGraphBuilder
 
             if (!attribute.HasExplicitCapabilities)
             {
+                // TODO: Do capabilities of a nested attribute have any meaning?
                 attribute.Capabilities = _options.DefaultAttrCapabilities;
             }
 
             IncludeField(attributesByName, attribute);
+
+            var container = new FieldContainer(null, attribute);
+            bool isCollection = CollectionConverter.Instance.IsCollectionType(container.ClrType);
+            attribute.Kind = ToAttrKind(attribute.IsCompound, isCollection);
+
+            if (attribute.Kind == AttrKind.Compound)
+            {
+                attribute.Children = GetAttributes(container.ClrType, false);
+            }
+            else if (attribute.Kind == AttrKind.CollectionOfCompound)
+            {
+                Type elementType = CollectionConverter.Instance.FindCollectionElementType(container.ClrType)!;
+                attribute.Children = GetAttributes(elementType, false);
+            }
         }
 
-        if (attributesByName.Count < 2)
+        bool hasAttributes = isTopLevel ? attributesByName.Count > 1 : attributesByName.Count > 0;
+
+        if (!hasAttributes)
         {
-            LogResourceTypeHasNoAttributes(resourceClrType);
+            LogContainerTypeHasNoAttributes(containerClrType);
         }
 
-        return attributesByName.Values;
+        return attributesByName.AsReadOnly();
+    }
+
+    private static AttrKind ToAttrKind(bool isCompound, bool isCollection)
+    {
+        if (isCompound)
+        {
+            return isCollection ? AttrKind.CollectionOfCompound : AttrKind.Compound;
+        }
+
+        return isCollection ? AttrKind.CollectionOfPrimitive : AttrKind.Primitive;
     }
 
     private Dictionary<string, RelationshipAttribute>.ValueCollection GetRelationships(Type resourceClrType)
@@ -505,6 +538,6 @@ public partial class ResourceGraphBuilder
         Message = "Skipping: Type '{ResourceType}' does not implement '{InterfaceType}'. Add [NoResource] to suppress this warning.")]
     private partial void LogResourceTypeDoesNotImplementInterface(Type resourceType, string interfaceType);
 
-    [LoggerMessage(Level = LogLevel.Warning, Message = "Type '{ResourceType}' does not contain any attributes.")]
-    private partial void LogResourceTypeHasNoAttributes(Type resourceType);
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Type '{ContainerType}' does not contain any attributes.")]
+    private partial void LogContainerTypeHasNoAttributes(Type containerType);
 }

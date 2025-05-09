@@ -148,7 +148,7 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
     {
         IReadOnlyEntityType entityType = entityModel.GetEntityTypes().Single(type => type.ClrType == elementType);
 
-        foreach (IReadOnlyProperty property in entityType.GetProperties().Where(property => !property.IsShadowProperty()))
+        foreach (IReadOnlyPropertyBase property in GetEntityProperties(entityType))
         {
             var propertySelector = new PropertySelector(property.PropertyInfo!);
             IncludeWritableProperty(propertySelector, propertySelectors);
@@ -160,6 +160,21 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
             var propertySelector = new PropertySelector(navigation.PropertyInfo!);
             IncludeWritableProperty(propertySelector, propertySelectors);
         }
+    }
+
+    private static IEnumerable<IReadOnlyPropertyBase> GetEntityProperties(IReadOnlyEntityType entityType)
+    {
+        // @formatter:wrap_chained_method_calls chop_always
+        // @formatter:wrap_before_first_method_call true
+
+        return entityType
+            .GetProperties()
+            .Cast<IReadOnlyPropertyBase>()
+            .Concat(entityType.GetComplexProperties())
+            .Where(property => !property.IsShadowProperty());
+
+        // @formatter:wrap_before_first_method_call restore
+        // @formatter:wrap_chained_method_calls restore
     }
 
     private static void IncludeFields(FieldSelectors fieldSelectors, Dictionary<PropertyInfo, PropertySelector> propertySelectors)

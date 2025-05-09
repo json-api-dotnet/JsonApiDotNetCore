@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Resources.Annotations;
@@ -9,6 +10,8 @@ namespace JsonApiDotNetCore.Resources.Annotations;
 [AttributeUsage(AttributeTargets.Property)]
 public sealed class AttrAttribute : ResourceFieldAttribute
 {
+    private static readonly ReadOnlyDictionary<string, AttrAttribute> EmptyChildren = new Dictionary<string, AttrAttribute>().AsReadOnly();
+
     private AttrCapabilities? _capabilities;
 
     internal bool HasExplicitCapabilities => _capabilities != null;
@@ -31,6 +34,21 @@ public sealed class AttrAttribute : ResourceFieldAttribute
         set => _capabilities = value;
     }
 
+    /// <summary>
+    /// Indicates whether this attribute contains nested attributes. <c>false</c> by default.
+    /// </summary>
+    public bool IsCompound { get; set; }
+
+    /// <summary>
+    /// Gets the kind of this attribute.
+    /// </summary>
+    public AttrKind Kind { get; internal set; }
+
+    /// <summary>
+    /// Gets the nested attributes by name, if this is a compound attribute.
+    /// </summary>
+    public IReadOnlyDictionary<string, AttrAttribute> Children { get; internal set; } = EmptyChildren;
+
     /// <inheritdoc />
     public override bool Equals(object? obj)
     {
@@ -46,12 +64,14 @@ public sealed class AttrAttribute : ResourceFieldAttribute
 
         var other = (AttrAttribute)obj;
 
-        return Capabilities == other.Capabilities && base.Equals(other);
+        return Capabilities == other.Capabilities && Kind == other.Kind && Children.DictionaryEqual(other.Children) && base.Equals(other);
     }
 
     /// <inheritdoc />
     public override int GetHashCode()
     {
-        return HashCode.Combine(Capabilities, base.GetHashCode());
+        // ReSharper disable NonReadonlyMemberInGetHashCode
+        return HashCode.Combine(Capabilities, Kind, Children, base.GetHashCode());
+        // ReSharper restore NonReadonlyMemberInGetHashCode
     }
 }

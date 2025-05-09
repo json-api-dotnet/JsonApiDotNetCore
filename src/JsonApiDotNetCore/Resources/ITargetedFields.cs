@@ -10,7 +10,7 @@ public interface ITargetedFields
     /// <summary>
     /// The set of attributes that are targeted by a request.
     /// </summary>
-    IReadOnlySet<AttrAttribute> Attributes { get; }
+    IReadOnlySet<ITargetedAttributeTree> Attributes { get; }
 
     /// <summary>
     /// The set of relationships that are targeted by a request.
