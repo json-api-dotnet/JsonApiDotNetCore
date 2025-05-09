@@ -1,5 +1,6 @@
 using System.Text;
-using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.QueryStrings.FieldChains;
 
@@ -32,17 +33,22 @@ internal sealed class MatchError
 
     public static MatchError CreateForBrokenFieldChain(FieldChainFormatException exception)
     {
+        ArgumentNullException.ThrowIfNull(exception);
+
         return new MatchError(exception.Message, exception.Position, true);
     }
 
-    public static MatchError CreateForUnknownField(int position, ResourceType? resourceType, string publicName, bool allowDerivedTypes)
+    public static MatchError CreateForUnknownField(int position, FieldContainer container, string publicName, bool allowDerivedTypes)
     {
-        bool hasDerivedTypes = allowDerivedTypes && resourceType is { DirectlyDerivedTypes.Count: > 0 };
+        ArgumentNullException.ThrowIfNull(container);
+        ArgumentNullException.ThrowIfNull(publicName);
+
+        bool hasDerivedTypes = allowDerivedTypes && container.Type is { DirectlyDerivedTypes.Count: > 0 };
 
         var builder = new MessageBuilder();
 
         builder.WriteDoesNotExist(publicName);
-        builder.WriteResourceType(resourceType);
+        builder.WriteContainer(container);
         builder.WriteOrDerivedTypes(hasDerivedTypes);
         builder.WriteEnd();
 
@@ -50,18 +56,23 @@ internal sealed class MatchError
         return new MatchError(message, position, true);
     }
 
-    public static MatchError CreateForMultipleDerivedTypes(int position, ResourceType resourceType, string publicName)
+    public static MatchError CreateForMultipleDerivedTypes(int position, FieldContainer container, string publicName)
     {
-        string message = $"Field '{publicName}' is defined on multiple types that derive from resource type '{resourceType}'.";
+        ArgumentNullException.ThrowIfNull(container);
+        ArgumentNullException.ThrowIfNull(publicName);
+
+        string message = $"Field '{publicName}' is defined on multiple types that derive from {container}.";
         return new MatchError(message, position, true);
     }
 
-    public static MatchError CreateForFieldTypeMismatch(int position, ResourceType? resourceType, FieldTypes choices)
+    public static MatchError CreateForFieldTypeMismatch(int position, FieldContainer container, FieldTypes choices)
     {
+        ArgumentNullException.ThrowIfNull(container);
+
         var builder = new MessageBuilder();
 
         builder.WriteChoices(choices);
-        builder.WriteResourceType(resourceType);
+        builder.WriteContainer(container);
         builder.WriteExpected();
         builder.WriteEnd();
 
@@ -69,7 +80,7 @@ internal sealed class MatchError
         return new MatchError(message, position, false);
     }
 
-    public static MatchError CreateForTooMuchInput(int position, ResourceType? resourceType, FieldTypes choices)
+    public static MatchError CreateForTooMuchInput(int position, FieldContainer? container, FieldTypes choices)
     {
         var builder = new MessageBuilder();
 
@@ -79,7 +90,7 @@ internal sealed class MatchError
         {
             builder.WriteOr();
             builder.WriteChoices(choices);
-            builder.WriteResourceType(resourceType);
+            builder.WriteContainer(container);
         }
 
         builder.WriteExpected();
@@ -132,11 +143,14 @@ internal sealed class MatchError
             }
         }
 
-        public void WriteResourceType(ResourceType? resourceType)
+        public void WriteContainer(FieldContainer? container)
         {
-            if (resourceType != null)
+            if (container != null)
             {
-                _builder.Append($" on resource type '{resourceType}'");
+                if (container.Attribute == null || container.Attribute.Kind == AttrKind.Compound || container.Attribute.Kind == AttrKind.CollectionOfCompound)
+                {
+                    _builder.Append($" on {container}");
+                }
             }
         }
 

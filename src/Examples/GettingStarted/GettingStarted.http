@@ -1,85 +1,149 @@
-@hostAddress = http://localhost:14141
+@hostname=localhost
+@port=14141
 
-### Get all books with their authors.
+### Get all
 
-GET {{hostAddress}}/api/books?include=author
+GET http://{{hostname}}:{{port}}/api/people
 
-### Get the first two books.
+### Get all with include
 
-GET {{hostAddress}}/api/books?page[size]=2
+GET http://{{hostname}}:{{port}}/api/people?include=books
 
-### Filter books whose title contains whitespace, sort descending by publication year.
+### Filter inside compound attribute
 
-GET {{hostAddress}}/api/books?filter=contains(title,'%20')&sort=-publishYear
+GET http://{{hostname}}:{{port}}/api/people?filter=startsWith(livingAddress.country,'T')
 
-### Get only the titles of all books.
+### TODO: Test filters descending into compound attribute (requires an expression that has child scope: "has").
+### TODO: Consider supporting to-many filters on collections: "has", "any", "count"
+###         Requires to act on parent Attr instead of ResourceType, which likely requires major breaking change.
 
-GET {{hostAddress}}/api/books?fields[books]=title
 
-### Get the names of all people.
+### Patch string collection attribute
 
-GET {{hostAddress}}/api/people?fields[people]=name
-
-### Create a new person.
-
-POST {{hostAddress}}/api/people
+PATCH http://{{hostname}}:{{port}}/api/people/1
 Content-Type: application/vnd.api+json
 
 {
-  "data": {
-    "type": "people",
-    "attributes": {
-      "name": "Alice"
-    }
-  }
-}
-
-### Create a new book, authored by the created person.
-
-POST {{hostAddress}}/api/books
-Content-Type: application/vnd.api+json
-
-{
-  "data": {
-    "type": "books",
-    "attributes": {
-      "title": "Getting started with JSON:API",
-      "publishYear": 2000
-    },
-    "relationships": {
-      "author": {
-        "data": {
-          "type": "people",
-          "id": "4"
+    "data": {
+        "type": "people",
+        "id": "1",
+        "attributes": {
+            "namesOfChildren": ["Mary", "Ann", null]
         }
-      }
     }
-  }
 }
 
-### Change the publication year and author of the book with ID 1.
+### Patch int collection attribute
 
-PATCH {{hostAddress}}/api/books/1
+PATCH http://{{hostname}}:{{port}}/api/people/1
 Content-Type: application/vnd.api+json
 
 {
-  "data": {
-    "type": "books",
-    "id": "1",
-    "attributes": {
-      "publishYear": 1820
-    },
-    "relationships": {
-      "author": {
-        "data": {
-          "type": "people",
-          "id": "4"
+    "data": {
+        "type": "people",
+        "id": "1",
+        "attributes": {
+            "agesOfChildren": [15, 25, null]
         }
-      }
     }
-  }
 }
 
-### Delete the book with ID 1.
+### Patch members of compound attribute
 
-DELETE {{hostAddress}}/api/books/1
+PATCH http://{{hostname}}:{{port}}/api/people/1
+Content-Type: application/vnd.api+json
+
+{
+    "data": {
+        "type": "people",
+        "id": "1",
+        "attributes": {
+            "livingAddress": {
+                "country": "Germany",
+                 "street": "OtherStreet"
+            }
+        }
+    }
+}
+
+### Patch members of compound attribute, setting them to null
+
+PATCH http://{{hostname}}:{{port}}/api/people/1
+Content-Type: application/vnd.api+json
+
+{
+    "data": {
+        "type": "people",
+        "id": "1",
+        "attributes": {
+            "livingAddress": {
+                "country": null,
+                 "street": null
+            }
+        }
+    }
+}
+
+### Patch compound attribute to empty object (must be a no-op)
+
+PATCH http://{{hostname}}:{{port}}/api/people/1
+Content-Type: application/vnd.api+json
+
+{
+    "data": {
+        "type": "people",
+        "id": "1",
+        "attributes": {
+            "mailAddress": {}
+        }
+    }
+}
+
+### Patch compound attribute to null
+
+PATCH http://{{hostname}}:{{port}}/api/people/1
+Content-Type: application/vnd.api+json
+
+{
+    "data": {
+        "type": "people",
+        "id": "1",
+        "attributes": {
+            "mailAddress": null
+        }
+    }
+}
+
+### Patch compound nullable collection attribute (null element is blocked by EF Core)
+
+PATCH http://{{hostname}}:{{port}}/api/people/1
+Content-Type: application/vnd.api+json
+
+{
+    "data": {
+        "type": "people",
+        "id": "1",
+        "attributes": {
+            "addresses": [{
+                    "country": "Germany"
+                }, {
+                    "street": "SomeStreet"
+                }, {
+                }
+            ]
+        }
+    }
+}
+
+### Patch relationships to null - SHOULD THIS FAIL OR NO-OP?
+
+PATCH http://{{hostname}}:{{port}}/api/people/1
+Content-Type: application/vnd.api+json
+
+{
+    "data": {
+        "type": "people",
+        "id": "1",
+        "relationships": null
+    }
+}

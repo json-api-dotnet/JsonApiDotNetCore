@@ -20,6 +20,7 @@ public sealed class FieldChainPatternMatchTests : IDisposable
     private const string T = "resources";
     private const string X = "unknown";
     private const string A = "name";
+    private const string CA = "compound.value";
     private const string O = "parent";
     private const string M = "children";
 
@@ -48,6 +49,7 @@ public sealed class FieldChainPatternMatchTests : IDisposable
     [InlineData("R", O)]
     [InlineData("R", M)]
     [InlineData("A", A)]
+    [InlineData("A+", CA)] // TODO: Add way more test cases...
     [InlineData("F", A)]
     [InlineData("F", O)]
     [InlineData("F", M)]
@@ -415,10 +417,20 @@ public sealed class FieldChainPatternMatchTests : IDisposable
         [Attr]
         public string? Name { get; set; }
 
+        [Attr(IsCompound = true)]
+        public Compound Compound { get; set; } = new();
+
         [HasOne]
         public Resource? Parent { get; set; }
 
         [HasMany]
         public ISet<Resource> Children { get; set; } = new HashSet<Resource>();
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class Compound
+    {
+        [Attr]
+        public string? Value { get; set; }
     }
 }

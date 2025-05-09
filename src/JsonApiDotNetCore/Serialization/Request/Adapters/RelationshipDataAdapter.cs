@@ -92,17 +92,14 @@ public sealed class RelationshipDataAdapter : BaseAdapter, IRelationshipDataAdap
     {
         AssertDataHasManyValue(data, state);
 
-        int arrayIndex = 0;
         List<IIdentifiable> rightResources = [];
 
         foreach (ResourceIdentifierObject resourceIdentifierObject in data.ManyValue!)
         {
-            using IDisposable _ = state.Position.PushArrayIndex(arrayIndex);
+            using IDisposable _ = state.Position.PushArrayIndex(rightResources.Count);
 
             IIdentifiable rightResource = _resourceIdentifierObjectAdapter.Convert(resourceIdentifierObject, requirements, state);
             rightResources.Add(rightResource);
-
-            arrayIndex++;
         }
 
         if (useToManyElementType)

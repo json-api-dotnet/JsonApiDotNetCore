@@ -71,7 +71,8 @@ internal sealed class JsonApiValidationFilter : IPropertyValidationFilter
 
     private static bool IsFieldTargeted(ValidationEntry entry, ITargetedFields targetedFields)
     {
-        return targetedFields.Attributes.Any(attribute => attribute.Property.Name == entry.Key) ||
+        // TODO: Consider compound attributes, ensure proper source pointer.
+        return targetedFields.Attributes.Any(target => target.Attribute.Property.Name == entry.Key) ||
             targetedFields.Relationships.Any(relationship => relationship.Property.Name == entry.Key);
     }
 }

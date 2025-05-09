@@ -38,7 +38,7 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
     {
         ArgumentNullException.ThrowIfNull(resource);
 
-        _requestAttributeValues = CreateAttributeDictionary(resource, _targetedFields.Attributes);
+        _requestAttributeValues = CreateAttributeDictionary(resource, _targetedFields.Attributes.Select(target => target.Attribute));
     }
 
     /// <inheritdoc />
@@ -51,9 +51,11 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
 
     private Dictionary<string, object?> CreateAttributeDictionary(TResource resource, IEnumerable<AttrAttribute> attributes)
     {
+        // TODO: Handle compound attributes.
+
         var result = new Dictionary<string, object?>();
 
-        foreach (AttrAttribute attribute in attributes)
+        foreach (AttrAttribute attribute in attributes.Where(attribute => attribute.Kind == AttrKind.Primitive))
         {
             object? value = attribute.GetValue(resource);
             result.Add(attribute.PublicName, value);
@@ -65,6 +67,13 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
     /// <inheritdoc />
     public bool HasImplicitChanges()
     {
+        // TODO: Handle compound attributes.
+
+        if (_targetedFields.Attributes.Any(target => target.Attribute.Kind != AttrKind.Primitive))
+        {
+            return true;
+        }
+
         if (_initiallyStoredAttributeValues != null && _requestAttributeValues != null && _finallyStoredAttributeValues != null)
         {
             foreach (string key in _initiallyStoredAttributeValues.Keys)

@@ -101,7 +101,7 @@ public sealed class HasManyAttribute : RelationshipAttribute
                 throw new InvalidOperationException("Resource collection must not contain null values.");
             }
 
-            AssertIsIdentifiable(element);
+            AssertIsIdentifiableOrAttribute(element);
         }
     }
 
