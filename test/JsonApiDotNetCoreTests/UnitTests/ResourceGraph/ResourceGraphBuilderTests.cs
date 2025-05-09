@@ -164,6 +164,20 @@ public sealed class ResourceGraphBuilderTests
     }
 
     [Fact]
+    public void Cannot_add_resource_with_abstract_compound_attribute()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+
+        // Act
+        Action action = () => builder.Add(typeof(ResourceWithAbstractCompoundType));
+
+        // Assert
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage("Resource inheritance is not supported on compound attributes.");
+    }
+
+    [Fact]
     public void Cannot_build_graph_with_missing_related_HasOne_resource()
     {
         // Arrange
@@ -267,6 +281,7 @@ public sealed class ResourceGraphBuilderTests
         IReadOnlyList<string> logLines = loggerProvider.GetLines();
         logLines.Should().HaveCount(1);
 
+        // TODO: Can [NoResource] be used on compound types to suppress warning?
         logLines[0].Should().Be(
             $"[WARNING] Skipping: Type '{typeof(NonResource)}' does not implement 'IIdentifiable'. Add [NoResource] to suppress this warning.");
     }
@@ -305,6 +320,25 @@ public sealed class ResourceGraphBuilderTests
         logLines.Should().HaveCount(1);
 
         logLines[0].Should().Be($"[WARNING] Type '{typeof(ResourceWithHasOneRelationship)}' does not contain any attributes.");
+    }
+
+    [Fact]
+    public void Logs_warning_when_adding_compound_attribute_that_has_no_attributes()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        using var loggerProvider = new CapturingLoggerProvider(LogLevel.Warning);
+        using var loggerFactory = new LoggerFactory([loggerProvider]);
+        var builder = new ResourceGraphBuilder(options, loggerFactory);
+
+        // Act
+        builder.Add<ResourceWithCompoundTypeThatHasNoAttributes, int>();
+
+        // Assert
+        IReadOnlyList<string> logLines = loggerProvider.GetLines();
+        logLines.Should().HaveCount(1);
+
+        logLines[0].Should().Be($"[WARNING] Type '{typeof(CompoundTypeWithoutAttributes)}' does not contain any attributes.");
     }
 
     [Fact]
@@ -430,6 +464,24 @@ public sealed class ResourceGraphBuilderTests
         public string? StringId { get; set; }
         public string? LocalId { get; set; }
     }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ResourceWithCompoundTypeThatHasNoAttributes : Identifiable<int>
+    {
+        [Attr(IsCompound = true)]
+        public CompoundTypeWithoutAttributes CompoundType { get; set; } = new();
+    }
+
+    private sealed class CompoundTypeWithoutAttributes;
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    private sealed class ResourceWithAbstractCompoundType : Identifiable<int>
+    {
+        [Attr(IsCompound = true)]
+        public AbstractCompoundType CompoundType { get; set; } = null!;
+    }
+
+    private abstract class AbstractCompoundType;
 
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     private sealed class NonResource;

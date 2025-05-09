@@ -54,17 +54,14 @@ public sealed class DocumentInOperationsRequestAdapter : BaseAdapter, IDocumentI
     private List<OperationContainer> ConvertOperations(IEnumerable<AtomicOperationObject?> atomicOperationObjects, RequestAdapterState state)
     {
         List<OperationContainer> operations = [];
-        int operationIndex = 0;
 
         foreach (AtomicOperationObject? atomicOperationObject in atomicOperationObjects)
         {
-            using IDisposable _ = state.Position.PushArrayIndex(operationIndex);
+            using IDisposable _ = state.Position.PushArrayIndex(operations.Count);
             AssertObjectIsNotNull(atomicOperationObject, state);
 
             OperationContainer operation = _atomicOperationObjectAdapter.Convert(atomicOperationObject, state);
             operations.Add(operation);
-
-            operationIndex++;
         }
 
         return operations;

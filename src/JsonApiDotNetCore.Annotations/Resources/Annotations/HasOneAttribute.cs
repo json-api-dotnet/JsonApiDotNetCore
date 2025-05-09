@@ -67,7 +67,7 @@ public sealed class HasOneAttribute : RelationshipAttribute
     /// <inheritdoc />
     public override void SetValue(object resource, object? newValue)
     {
-        AssertIsIdentifiable(newValue);
+        AssertIsIdentifiableOrAttribute(newValue);
         base.SetValue(resource, newValue);
     }
 

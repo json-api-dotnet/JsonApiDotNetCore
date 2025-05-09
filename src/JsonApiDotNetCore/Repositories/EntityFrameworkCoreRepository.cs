@@ -221,10 +221,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             await UpdateRelationshipAsync(relationship, resourceForDatabase, rightValueEvaluated, cancellationToken);
         }
 
-        foreach (AttrAttribute attribute in _targetedFields.Attributes)
-        {
-            attribute.SetValue(resourceForDatabase, attribute.GetValue(resourceFromRequest));
-        }
+        ApplyTargetedAttributes(_targetedFields.Attributes, resourceFromRequest, resourceForDatabase);
 
         await _resourceDefinitionAccessor.OnWritingAsync(resourceForDatabase, WriteOperationKind.CreateResource, cancellationToken);
 
@@ -302,10 +299,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             await UpdateRelationshipAsync(relationship, resourceFromDatabase, rightValueEvaluated, cancellationToken);
         }
 
-        foreach (AttrAttribute attribute in _targetedFields.Attributes)
-        {
-            attribute.SetValue(resourceFromDatabase, attribute.GetValue(resourceFromRequest));
-        }
+        ApplyTargetedAttributes(_targetedFields.Attributes, resourceFromRequest, resourceFromDatabase);
 
         await _resourceDefinitionAccessor.OnWritingAsync(resourceFromDatabase, WriteOperationKind.UpdateResource, cancellationToken);
 
@@ -646,6 +640,14 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         }
 
         return false;
+    }
+
+    private void ApplyTargetedAttributes(IReadOnlySet<ITargetedAttributeTree> targets, TResource sourceResource, TResource targetResource)
+    {
+        foreach (ITargetedAttributeTree target in targets)
+        {
+            target.Apply(sourceResource, targetResource);
+        }
     }
 
     protected virtual async Task SaveChangesAsync(CancellationToken cancellationToken)

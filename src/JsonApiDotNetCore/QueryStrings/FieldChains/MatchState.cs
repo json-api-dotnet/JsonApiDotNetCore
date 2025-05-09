@@ -1,6 +1,7 @@
 using System.Collections.Immutable;
 using System.Text;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.QueryStrings.FieldChains;
@@ -21,9 +22,9 @@ internal sealed class MatchState
     public FieldChainPattern? Pattern { get; }
 
     /// <summary>
-    /// The resource type to find the next field on.
+    /// The containing resource type or parent attribute to find the next field on.
     /// </summary>
-    public ResourceType? ResourceType { get; }
+    public FieldContainer Container { get; }
 
     /// <summary>
     /// The fields matched against this pattern segment.
@@ -40,11 +41,11 @@ internal sealed class MatchState
     /// </summary>
     public MatchError? Error { get; }
 
-    private MatchState(FieldChainPattern? pattern, ResourceType? resourceType, IImmutableList<ResourceFieldAttribute> fieldsMatched,
+    private MatchState(FieldChainPattern? pattern, FieldContainer container, IImmutableList<ResourceFieldAttribute> fieldsMatched,
         LinkedListNode<string>? fieldsRemaining, MatchError? error, MatchState? parentMatch)
     {
         Pattern = pattern;
-        ResourceType = resourceType;
+        Container = container;
         FieldsMatched = fieldsMatched;
         FieldsRemaining = fieldsRemaining;
         Error = error;
@@ -57,18 +58,20 @@ internal sealed class MatchState
         ArgumentNullException.ThrowIfNull(fieldChainText);
         ArgumentNullException.ThrowIfNull(resourceType);
 
+        var container = new FieldContainer(resourceType, null);
+
         try
         {
             var parser = new FieldChainParser();
             IEnumerable<string> fieldChain = parser.Parse(fieldChainText);
 
             LinkedListNode<string>? remainingHead = new LinkedList<string>(fieldChain).First;
-            return new MatchState(pattern, resourceType, ImmutableArray<ResourceFieldAttribute>.Empty, remainingHead, null, null);
+            return new MatchState(pattern, container, ImmutableArray<ResourceFieldAttribute>.Empty, remainingHead, null, null);
         }
         catch (FieldChainFormatException exception)
         {
             var error = MatchError.CreateForBrokenFieldChain(exception);
-            return new MatchState(pattern, resourceType, ImmutableArray<ResourceFieldAttribute>.Empty, null, error, null);
+            return new MatchState(pattern, container, ImmutableArray<ResourceFieldAttribute>.Empty, null, error, null);
         }
     }
 
@@ -82,9 +85,12 @@ internal sealed class MatchState
 
         IImmutableList<ResourceFieldAttribute> fieldsMatched = FieldsMatched.Add(matchedValue);
         LinkedListNode<string>? fieldsRemaining = FieldsRemaining!.Next;
-        ResourceType? resourceType = matchedValue is RelationshipAttribute relationship ? relationship.RightType : null;
 
-        return new MatchState(Pattern, resourceType, fieldsMatched, fieldsRemaining, null, _parentMatch);
+        ResourceType? resourceType = matchedValue is RelationshipAttribute relationship ? relationship.RightType : null;
+        var parentAttribute = matchedValue as AttrAttribute;
+        var container = new FieldContainer(resourceType, parentAttribute);
+
+        return new MatchState(Pattern, container, fieldsMatched, fieldsRemaining, null, _parentMatch);
     }
 
     /// <summary>
@@ -95,7 +101,7 @@ internal sealed class MatchState
         AssertIsSuccess(this);
         AssertHasPattern();
 
-        return new MatchState(Pattern!.Next, ResourceType, ImmutableArray<ResourceFieldAttribute>.Empty, FieldsRemaining, null, this);
+        return new MatchState(Pattern!.Next, Container, ImmutableArray<ResourceFieldAttribute>.Empty, FieldsRemaining, null, this);
     }
 
     /// <summary>
@@ -103,8 +109,10 @@ internal sealed class MatchState
     /// </summary>
     public MatchState FailureForUnknownField(string publicName, bool allowDerivedTypes)
     {
+        ArgumentNullException.ThrowIfNull(publicName);
+
         int position = GetAbsolutePosition(true);
-        var error = MatchError.CreateForUnknownField(position, ResourceType, publicName, allowDerivedTypes);
+        var error = MatchError.CreateForUnknownField(position, Container, publicName, allowDerivedTypes);
 
         return Failure(error);
     }
@@ -114,10 +122,10 @@ internal sealed class MatchState
     /// </summary>
     public MatchState FailureForMultipleDerivedTypes(string publicName)
     {
-        AssertHasResourceType();
+        ArgumentNullException.ThrowIfNull(publicName);
 
         int position = GetAbsolutePosition(true);
-        var error = MatchError.CreateForMultipleDerivedTypes(position, ResourceType!, publicName);
+        var error = MatchError.CreateForMultipleDerivedTypes(position, Container, publicName);
 
         return Failure(error);
     }
@@ -129,7 +137,7 @@ internal sealed class MatchState
     {
         FieldTypes allChoices = IncludeChoicesFromParentMatch(choices);
         int position = GetAbsolutePosition(chosenFieldType != FieldTypes.None);
-        var error = MatchError.CreateForFieldTypeMismatch(position, ResourceType, allChoices);
+        var error = MatchError.CreateForFieldTypeMismatch(position, Container, allChoices);
 
         return Failure(error);
     }
@@ -174,14 +182,14 @@ internal sealed class MatchState
     {
         FieldTypes parentChoices = IncludeChoicesFromParentMatch(FieldTypes.None);
         int position = GetAbsolutePosition(true);
-        var error = MatchError.CreateForTooMuchInput(position, _parentMatch?.ResourceType, parentChoices);
+        var error = MatchError.CreateForTooMuchInput(position, _parentMatch?.Container, parentChoices);
 
         return Failure(error);
     }
 
     private MatchState Failure(MatchError error)
     {
-        return new MatchState(Pattern, ResourceType, FieldsMatched, FieldsRemaining, error, _parentMatch);
+        return new MatchState(Pattern, Container, FieldsMatched, FieldsRemaining, error, _parentMatch);
     }
 
     private int GetAbsolutePosition(bool hasLeadingDot)
@@ -261,14 +269,6 @@ internal sealed class MatchState
         if (state.Error != null)
         {
             throw new InvalidOperationException($"Internal error: Expected successful match, but found error: {state.Error}");
-        }
-    }
-
-    private void AssertHasResourceType()
-    {
-        if (ResourceType == null)
-        {
-            throw new InvalidOperationException("Internal error: Resource type is unavailable.");
         }
     }
 

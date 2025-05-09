@@ -62,19 +62,6 @@ public sealed class ResourceFieldAttributeTests
     }
 
     [Fact]
-    public void Cannot_get_value_for_primitive_type()
-    {
-        // Arrange
-        var attribute = new AttrAttribute();
-
-        // Act
-        Action action = () => attribute.GetValue(1);
-
-        // Assert
-        action.Should().ThrowExactly<InvalidOperationException>().WithMessage("Resource of type 'System.Int32' does not implement IIdentifiable.");
-    }
-
-    [Fact]
     public void Cannot_get_value_for_write_only_resource_property()
     {
         // Arrange
@@ -141,19 +128,6 @@ public sealed class ResourceFieldAttributeTests
 
         // Assert
         action.Should().ThrowExactly<ArgumentNullException>();
-    }
-
-    [Fact]
-    public void Cannot_set_value_for_primitive_type()
-    {
-        // Arrange
-        var attribute = new AttrAttribute();
-
-        // Act
-        Action action = () => attribute.SetValue(1, "some");
-
-        // Assert
-        action.Should().ThrowExactly<InvalidOperationException>().WithMessage("Resource of type 'System.Int32' does not implement IIdentifiable.");
     }
 
     [Fact]

@@ -12,7 +12,8 @@ internal sealed class DateMustBeInThePastAttribute : ValidationAttribute
     {
         var targetedFields = validationContext.GetRequiredService<ITargetedFields>();
 
-        if (targetedFields.Attributes.Any(attribute => attribute.Property.Name == validationContext.MemberName))
+        // TODO: Adapt for compound properties?
+        if (targetedFields.Attributes.Any(target => target.Attribute.Property.Name == validationContext.MemberName))
         {
             PropertyInfo propertyInfo = validationContext.ObjectType.GetProperty(validationContext.MemberName!)!;
 
