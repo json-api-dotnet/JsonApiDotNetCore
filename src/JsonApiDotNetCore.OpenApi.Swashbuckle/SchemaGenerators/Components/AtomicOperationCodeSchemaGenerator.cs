@@ -1,6 +1,7 @@
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
@@ -19,35 +20,28 @@ internal sealed class AtomicOperationCodeSchemaGenerator
         _schemaIdSelector = schemaIdSelector;
     }
 
-    public OpenApiSchema GenerateSchema(AtomicOperationCode operationCode, SchemaRepository schemaRepository)
+    public OpenApiSchemaReference GenerateSchema(AtomicOperationCode operationCode, SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        string schemaId = _schemaIdSelector.GetAtomicOperationCodeSchemaId(operationCode);
+        var schemaId = _schemaIdSelector.GetAtomicOperationCodeSchemaId(operationCode);
 
         if (schemaRepository.Schemas.ContainsKey(schemaId))
         {
-            return new OpenApiSchema
-            {
-                Reference = new OpenApiReference
-                {
-                    Id = schemaId,
-                    Type = ReferenceType.Schema
-                }
-            };
+            return new OpenApiSchemaReference(schemaId);
         }
 
-        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, operationCode);
+        using var traceScope = _schemaGenerationTracer.TraceStart(this, operationCode);
 
-        string enumValue = operationCode.ToString().ToLowerInvariant();
+        var enumValue = operationCode.ToString().ToLowerInvariant();
 
         var fullSchema = new OpenApiSchema
         {
-            Type = "string",
-            Enum = [new OpenApiString(enumValue)]
+            Type = JsonSchemaType.String,
+            Enum = [enumValue]
         };
 
-        OpenApiSchema referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
+        var referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
 
         traceScope.TraceSucceeded(schemaId);
         return referenceSchema;

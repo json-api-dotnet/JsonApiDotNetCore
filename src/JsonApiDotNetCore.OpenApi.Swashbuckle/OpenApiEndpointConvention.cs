@@ -32,7 +32,7 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
     {
         ArgumentNullException.ThrowIfNull(action);
 
-        JsonApiEndpointWrapper endpoint = JsonApiEndpointWrapper.FromActionModel(action);
+        var endpoint = JsonApiEndpointWrapper.FromActionModel(action);
 
         if (endpoint.IsUnknown)
         {
@@ -42,7 +42,7 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
             return;
         }
 
-        ResourceType? resourceType = _controllerResourceMapping.GetResourceTypeForController(action.Controller.ControllerType);
+        var resourceType = _controllerResourceMapping.GetResourceTypeForController(action.Controller.ControllerType);
 
         if (ShouldSuppressEndpoint(endpoint, resourceType))
         {
@@ -84,7 +84,7 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
 
     private static bool IsEndpointAvailable(JsonApiEndpoints endpoint, ResourceType resourceType)
     {
-        JsonApiEndpoints availableEndpoints = GetGeneratedControllerEndpoints(resourceType);
+        var availableEndpoints = GetGeneratedControllerEndpoints(resourceType);
 
         if (availableEndpoints == JsonApiEndpoints.None)
         {
@@ -162,16 +162,16 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
 
     private void SetResponseMetadata(ActionModel action, JsonApiEndpointWrapper endpoint, ResourceType? resourceType)
     {
-        JsonApiMediaType mediaType = GetMediaTypeForEndpoint(endpoint);
+        var mediaType = GetMediaTypeForEndpoint(endpoint);
         action.Filters.Add(new ProducesAttribute(mediaType.ToString()));
 
-        foreach (HttpStatusCode statusCode in GetSuccessStatusCodesForEndpoint(endpoint))
+        foreach (var statusCode in GetSuccessStatusCodesForEndpoint(endpoint))
         {
             // The return type is set later by JsonApiActionDescriptorCollectionProvider.
             action.Filters.Add(new ProducesResponseTypeAttribute((int)statusCode));
         }
 
-        foreach (HttpStatusCode statusCode in GetErrorStatusCodesForEndpoint(endpoint, resourceType))
+        foreach (var statusCode in GetErrorStatusCodesForEndpoint(endpoint, resourceType))
         {
             action.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResponseDocument), (int)statusCode));
         }
@@ -244,7 +244,7 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
         }
 
         // Condition doesn't apply to atomic operations, because Forbidden is also used when an operation is not accessible.
-        ClientIdGenerationMode clientIdGeneration = resourceType?.ClientIdGeneration ?? _options.ClientIdGeneration;
+        var clientIdGeneration = resourceType?.ClientIdGeneration ?? _options.ClientIdGeneration;
 
         HttpStatusCode[]? statusCodes = null;
 
@@ -304,7 +304,7 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
     {
         if (RequiresRequestBody(endpoint))
         {
-            JsonApiMediaType mediaType = GetMediaTypeForEndpoint(endpoint);
+            var mediaType = GetMediaTypeForEndpoint(endpoint);
             action.Filters.Add(new ConsumesAttribute(mediaType.ToString()));
         }
     }
@@ -336,7 +336,7 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
                 return AtomicOperations;
             }
 
-            JsonApiEndpoints endpoint = EndpointResolver.Instance.GetEndpoint(actionModel.ActionMethod);
+            var endpoint = EndpointResolver.Instance.GetEndpoint(actionModel.ActionMethod);
             return new JsonApiEndpointWrapper(false, endpoint);
         }
 

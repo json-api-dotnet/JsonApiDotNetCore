@@ -1,6 +1,7 @@
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
@@ -19,34 +20,27 @@ internal sealed class RelationshipNameSchemaGenerator
         _schemaIdSelector = schemaIdSelector;
     }
 
-    public OpenApiSchema GenerateSchema(RelationshipAttribute relationship, SchemaRepository schemaRepository)
+    public OpenApiSchemaReference GenerateSchema(RelationshipAttribute relationship, SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(relationship);
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        string schemaId = _schemaIdSelector.GetRelationshipNameSchemaId(relationship);
+        var schemaId = _schemaIdSelector.GetRelationshipNameSchemaId(relationship);
 
         if (schemaRepository.Schemas.ContainsKey(schemaId))
         {
-            return new OpenApiSchema
-            {
-                Reference = new OpenApiReference
-                {
-                    Id = schemaId,
-                    Type = ReferenceType.Schema
-                }
-            };
+            return new OpenApiSchemaReference(schemaId);
         }
 
-        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, relationship);
+        using var traceScope = _schemaGenerationTracer.TraceStart(this, relationship);
 
         var fullSchema = new OpenApiSchema
         {
-            Type = "string",
-            Enum = [new OpenApiString(relationship.PublicName)]
+            Type = JsonSchemaType.String,
+            Enum = [relationship.PublicName]
         };
 
-        OpenApiSchema referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
+        var referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
 
         traceScope.TraceSucceeded(schemaId);
         return referenceSchema;

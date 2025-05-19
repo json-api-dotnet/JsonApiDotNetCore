@@ -16,11 +16,11 @@ internal sealed class ResourceDocumentationReader
     {
         ArgumentNullException.ThrowIfNull(resourceType);
 
-        XPathNavigator? navigator = GetNavigator(resourceType.ClrType.Assembly);
+        var navigator = GetNavigator(resourceType.ClrType.Assembly);
 
         if (navigator != null)
         {
-            string typeMemberName = XmlCommentsNodeNameHelper.GetMemberNameForType(resourceType.ClrType);
+            var typeMemberName = XmlCommentsNodeNameHelper.GetMemberNameForType(resourceType.ClrType);
             return GetSummary(navigator, typeMemberName);
         }
 
@@ -31,11 +31,11 @@ internal sealed class ResourceDocumentationReader
     {
         ArgumentNullException.ThrowIfNull(attribute);
 
-        XPathNavigator? navigator = GetNavigator(attribute.Type.ClrType.Assembly);
+        var navigator = GetNavigator(attribute.Type.ClrType.Assembly);
 
         if (navigator != null)
         {
-            string propertyMemberName = XmlCommentsNodeNameHelper.GetMemberNameForFieldOrProperty(attribute.Property);
+            var propertyMemberName = XmlCommentsNodeNameHelper.GetMemberNameForFieldOrProperty(attribute.Property);
             return GetSummary(navigator, propertyMemberName);
         }
 
@@ -46,11 +46,11 @@ internal sealed class ResourceDocumentationReader
     {
         ArgumentNullException.ThrowIfNull(relationship);
 
-        XPathNavigator? navigator = GetNavigator(relationship.Type.ClrType.Assembly);
+        var navigator = GetNavigator(relationship.Type.ClrType.Assembly);
 
         if (navigator != null)
         {
-            string propertyMemberName = XmlCommentsNodeNameHelper.GetMemberNameForFieldOrProperty(relationship.Property);
+            var propertyMemberName = XmlCommentsNodeNameHelper.GetMemberNameForFieldOrProperty(relationship.Property);
             return GetSummary(navigator, propertyMemberName);
         }
 
@@ -59,13 +59,13 @@ internal sealed class ResourceDocumentationReader
 
     private static XPathNavigator? GetNavigator(Assembly assembly)
     {
-        string assemblyPath = assembly.Location;
+        var assemblyPath = assembly.Location;
 
         if (!string.IsNullOrEmpty(assemblyPath))
         {
             return NavigatorsByAssemblyPath.GetOrAdd(assemblyPath, path =>
             {
-                string documentationPath = Path.ChangeExtension(path, ".xml");
+                var documentationPath = Path.ChangeExtension(path, ".xml");
 
                 if (File.Exists(documentationPath))
                 {
@@ -83,7 +83,7 @@ internal sealed class ResourceDocumentationReader
 
     private string? GetSummary(XPathNavigator navigator, string memberName)
     {
-        XPathNavigator? summaryNode = navigator.SelectSingleNode($"/doc/members/member[@name='{memberName}']/summary");
+        var summaryNode = navigator.SelectSingleNode($"/doc/members/member[@name='{memberName}']/summary");
         return summaryNode != null ? XmlCommentsTextHelper.Humanize(summaryNode.InnerXml) : null;
     }
 }

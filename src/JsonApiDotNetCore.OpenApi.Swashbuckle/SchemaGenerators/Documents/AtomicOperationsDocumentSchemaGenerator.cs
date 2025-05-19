@@ -9,6 +9,8 @@ using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
+using Microsoft.OpenApi.Models.References;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
@@ -68,12 +70,12 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
         return schemaType == typeof(OperationsRequestDocument) || schemaType == typeof(OperationsResponseDocument);
     }
 
-    protected override OpenApiSchema GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository)
+    protected override OpenApiSchemaReference GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(schemaType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        bool isRequestSchema = schemaType == typeof(OperationsRequestDocument);
+        var isRequestSchema = schemaType == typeof(OperationsRequestDocument);
 
         if (isRequestSchema)
         {
@@ -84,39 +86,39 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
             GenerateSchemasForResponseDocument(schemaRepository);
         }
 
-        return _defaultSchemaGenerator.GenerateSchema(schemaType, schemaRepository);
+        return (OpenApiSchemaReference)_defaultSchemaGenerator.GenerateSchema(schemaType, schemaRepository);
     }
 
     private void GenerateSchemasForRequestDocument(SchemaRepository schemaRepository)
     {
         _ = GenerateSchemaForAbstractOperation(schemaRepository);
 
-        foreach (ResourceType resourceType in _resourceGraph.GetResourceTypes().Where(resourceType => resourceType.BaseType == null))
+        foreach (var resourceType in _resourceGraph.GetResourceTypes().Where(resourceType => resourceType.BaseType == null))
         {
             GenerateSchemaForOperation(resourceType, schemaRepository);
         }
     }
 
-    private OpenApiSchema GenerateSchemaForAbstractOperation(SchemaRepository schemaRepository)
+    private OpenApiSchemaReference GenerateSchemaForAbstractOperation(SchemaRepository schemaRepository)
     {
-        if (schemaRepository.TryLookupByType(AtomicOperationAbstractType, out OpenApiSchema? referenceSchema))
+        if (schemaRepository.TryLookupByType(AtomicOperationAbstractType, out var referenceSchema))
         {
             return referenceSchema;
         }
 
-        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, AtomicOperationAbstractType);
+        using var traceScope = _schemaGenerationTracer.TraceStart(this, AtomicOperationAbstractType);
 
-        OpenApiSchema referenceSchemaForMeta = _metaSchemaGenerator.GenerateSchema(schemaRepository);
+        var referenceSchemaForMeta = _metaSchemaGenerator.GenerateSchema(schemaRepository);
 
         var fullSchema = new OpenApiSchema
         {
-            Type = "object",
+            Type = JsonSchemaType.Object,
             Required = new SortedSet<string>([OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName]),
-            Properties = new Dictionary<string, OpenApiSchema>
+            Properties = new Dictionary<string, IOpenApiSchema>
             {
-                [OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName] = new()
+                [OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName] = new OpenApiSchema()
                 {
-                    Type = "string"
+                    Type = JsonSchemaType.String
                 },
                 [referenceSchemaForMeta.Reference.Id] = referenceSchemaForMeta.WrapInExtendedSchema()
             },
@@ -128,11 +130,11 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
             },
             Extensions =
             {
-                ["x-abstract"] = new OpenApiBoolean(true)
+                ["x-abstract"] = new OpenApiAny(true)
             }
         };
 
-        string schemaId = _schemaIdSelector.GetSchemaId(AtomicOperationAbstractType);
+        var schemaId = _schemaIdSelector.GetSchemaId(AtomicOperationAbstractType);
 
         referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
         schemaRepository.RegisterType(AtomicOperationAbstractType, schemaId);
@@ -147,7 +149,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
         GenerateSchemaForResourceOperation(typeof(UpdateOperation<>), resourceType, AtomicOperationCode.Update, schemaRepository);
         GenerateSchemaForResourceOperation(typeof(DeleteOperation<>), resourceType, AtomicOperationCode.Remove, schemaRepository);
 
-        foreach (RelationshipAttribute relationship in GetRelationshipsInTypeHierarchy(resourceType))
+        foreach (var relationship in GetRelationshipsInTypeHierarchy(resourceType))
         {
             if (relationship is HasOneAttribute)
             {
@@ -165,22 +167,22 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
     private void GenerateSchemaForResourceOperation(Type operationOpenType, ResourceType resourceType, AtomicOperationCode operationCode,
         SchemaRepository schemaRepository)
     {
-        WriteOperationKind writeOperation = GetKindOfResourceOperation(operationCode);
+        var writeOperation = GetKindOfResourceOperation(operationCode);
 
         if (IsResourceTypeEnabled(resourceType, writeOperation))
         {
-            Type operationConstructedType = ChangeResourceTypeInSchemaType(operationOpenType, resourceType);
+            var operationConstructedType = ChangeResourceTypeInSchemaType(operationOpenType, resourceType);
 
-            using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, operationConstructedType);
+            using var traceScope = _schemaGenerationTracer.TraceStart(this, operationConstructedType);
 
-            bool needsEmptyDerivedSchema = resourceType.BaseType != null && _atomicOperationFilter.IsEnabled(resourceType.BaseType, writeOperation);
+            var needsEmptyDerivedSchema = resourceType.BaseType != null && _atomicOperationFilter.IsEnabled(resourceType.BaseType, writeOperation);
 
             if (!needsEmptyDerivedSchema)
             {
-                Type identifierSchemaType = typeof(IdentifierInRequest<>).MakeGenericType(resourceType.ClrType);
+                var identifierSchemaType = typeof(IdentifierInRequest<>).MakeGenericType(resourceType.ClrType);
                 _ = _dataSchemaGenerator.GenerateSchema(identifierSchemaType, true, schemaRepository);
 
-                bool hasDataProperty = operationOpenType != typeof(DeleteOperation<>);
+                var hasDataProperty = operationOpenType != typeof(DeleteOperation<>);
 
                 if (hasDataProperty)
                 {
@@ -188,15 +190,15 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
                 }
             }
 
-            OpenApiSchema referenceSchemaForOperation = _defaultSchemaGenerator.GenerateSchema(operationConstructedType, schemaRepository);
-            OpenApiSchema fullSchemaForOperation = schemaRepository.Schemas[referenceSchemaForOperation.Reference.Id];
+            var referenceSchemaForOperation = (OpenApiSchemaReference)_defaultSchemaGenerator.GenerateSchema(operationConstructedType, schemaRepository);
+            var fullSchemaForOperation = (OpenApiSchema)schemaRepository.Schemas[referenceSchemaForOperation.Reference.Id];
             fullSchemaForOperation.AdditionalPropertiesAllowed = false;
-            OpenApiSchema inlineSchemaForOperation = fullSchemaForOperation.UnwrapLastExtendedSchema();
+            var inlineSchemaForOperation = (OpenApiSchema)fullSchemaForOperation.UnwrapLastExtendedSchema();
 
             if (needsEmptyDerivedSchema)
             {
-                Type baseOperationSchemaType = ChangeResourceTypeInSchemaType(operationOpenType, resourceType.BaseType!);
-                OpenApiSchema referenceSchemaForBaseOperation = schemaRepository.LookupByType(baseOperationSchemaType);
+                var baseOperationSchemaType = ChangeResourceTypeInSchemaType(operationOpenType, resourceType.BaseType!);
+                var referenceSchemaForBaseOperation = schemaRepository.LookupByType(baseOperationSchemaType);
 
                 RemoveProperties(inlineSchemaForOperation);
                 fullSchemaForOperation.AllOf[0] = referenceSchemaForBaseOperation;
@@ -206,13 +208,13 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
                 SetOperationCode(inlineSchemaForOperation, operationCode, schemaRepository);
             }
 
-            string discriminatorValue = _schemaIdSelector.GetAtomicOperationDiscriminatorValue(operationCode, resourceType);
+            var discriminatorValue = _schemaIdSelector.GetAtomicOperationDiscriminatorValue(operationCode, resourceType);
             MapInDiscriminator(referenceSchemaForOperation, discriminatorValue, schemaRepository);
 
             traceScope.TraceSucceeded(referenceSchemaForOperation.Reference.Id);
         }
 
-        foreach (ResourceType derivedType in resourceType.DirectlyDerivedTypes)
+        foreach (var derivedType in resourceType.DirectlyDerivedTypes)
         {
             GenerateSchemaForResourceOperation(operationOpenType, derivedType, operationCode, schemaRepository);
         }
@@ -251,7 +253,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
 
     private static void RemoveProperties(OpenApiSchema fullSchema)
     {
-        foreach (string propertyName in fullSchema.Properties.Keys)
+        foreach (var propertyName in fullSchema.Properties.Keys)
         {
             fullSchema.Properties.Remove(propertyName);
             fullSchema.Required.Remove(propertyName);
@@ -260,20 +262,20 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
 
     private void SetOperationCode(OpenApiSchema fullSchema, AtomicOperationCode operationCode, SchemaRepository schemaRepository)
     {
-        OpenApiSchema referenceSchema = _atomicOperationCodeSchemaGenerator.GenerateSchema(operationCode, schemaRepository);
+        var referenceSchema = _atomicOperationCodeSchemaGenerator.GenerateSchema(operationCode, schemaRepository);
         fullSchema.Properties[JsonApiPropertyName.Op] = referenceSchema.WrapInExtendedSchema();
     }
 
-    private static void MapInDiscriminator(OpenApiSchema referenceSchemaForOperation, string discriminatorValue, SchemaRepository schemaRepository)
+    private static void MapInDiscriminator(OpenApiSchemaReference referenceSchemaForOperation, string discriminatorValue, SchemaRepository schemaRepository)
     {
-        OpenApiSchema referenceSchemaForAbstractOperation = schemaRepository.LookupByType(AtomicOperationAbstractType);
-        OpenApiSchema fullSchemaForAbstractOperation = schemaRepository.Schemas[referenceSchemaForAbstractOperation.Reference.Id];
+        var referenceSchemaForAbstractOperation = schemaRepository.LookupByType(AtomicOperationAbstractType);
+        var fullSchemaForAbstractOperation = schemaRepository.Schemas[referenceSchemaForAbstractOperation.Reference.Id];
         fullSchemaForAbstractOperation.Discriminator.Mapping.Add(discriminatorValue, referenceSchemaForOperation.Reference.ReferenceV3);
     }
 
     private static HashSet<RelationshipAttribute> GetRelationshipsInTypeHierarchy(ResourceType baseType)
     {
-        HashSet<RelationshipAttribute> relationships = baseType.Relationships.ToHashSet();
+        var relationships = baseType.Relationships.ToHashSet();
 
         if (baseType.IsPartOfTypeHierarchy())
         {
@@ -285,7 +287,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
 
     private static void IncludeRelationshipsInDirectlyDerivedTypes(ResourceType baseType, HashSet<RelationshipAttribute> relationships)
     {
-        foreach (ResourceType derivedType in baseType.DirectlyDerivedTypes)
+        foreach (var derivedType in baseType.DirectlyDerivedTypes)
         {
             IncludeRelationshipsInDerivedType(derivedType, relationships);
         }
@@ -293,7 +295,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
 
     private static void IncludeRelationshipsInDerivedType(ResourceType derivedType, HashSet<RelationshipAttribute> relationships)
     {
-        foreach (RelationshipAttribute relationshipInDerivedType in derivedType.Relationships)
+        foreach (var relationshipInDerivedType in derivedType.Relationships)
         {
             relationships.Add(relationshipInDerivedType);
         }
@@ -304,22 +306,22 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
     private void GenerateSchemaForRelationshipOperation(Type operationOpenType, RelationshipAttribute relationship, AtomicOperationCode operationCode,
         SchemaRepository schemaRepository)
     {
-        WriteOperationKind writeOperation = GetKindOfRelationshipOperation(operationCode);
+        var writeOperation = GetKindOfRelationshipOperation(operationCode);
 
         if (!IsRelationshipEnabled(relationship, writeOperation))
         {
             return;
         }
 
-        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, operationOpenType, relationship);
+        using var traceScope = _schemaGenerationTracer.TraceStart(this, operationOpenType, relationship);
 
-        RelationshipAttribute? relationshipInAnyBaseResourceType = GetRelationshipEnabledInAnyBase(relationship, writeOperation);
+        var relationshipInAnyBaseResourceType = GetRelationshipEnabledInAnyBase(relationship, writeOperation);
 
-        OpenApiSchema? referenceSchemaForRelationshipIdentifier;
+        OpenApiSchemaReference? referenceSchemaForRelationshipIdentifier;
 
         if (relationshipInAnyBaseResourceType == null)
         {
-            Type rightSchemaType = typeof(IdentifierInRequest<>).MakeGenericType(relationship.RightType.ClrType);
+            var rightSchemaType = typeof(IdentifierInRequest<>).MakeGenericType(relationship.RightType.ClrType);
             _ = _dataSchemaGenerator.GenerateSchema(rightSchemaType, true, schemaRepository);
 
             referenceSchemaForRelationshipIdentifier = _relationshipIdentifierSchemaGenerator.GenerateSchema(relationship, schemaRepository);
@@ -329,19 +331,19 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
             referenceSchemaForRelationshipIdentifier = null;
         }
 
-        Type operationConstructedType = ChangeResourceTypeInSchemaType(operationOpenType, relationship.RightType);
+        var operationConstructedType = ChangeResourceTypeInSchemaType(operationOpenType, relationship.RightType);
         _ = _dataContainerSchemaGenerator.GenerateSchema(operationConstructedType, relationship.RightType, true, false, schemaRepository);
 
         // This complicated implementation that generates a temporary schema stems from the fact that GetSchemaId takes a Type.
         // We could feed it a constructed type with TLeftResource and TRightResource, but there's no way to include
         // the relationship name because there's no runtime Type available for it.
-        string schemaId = _schemaIdSelector.GetRelationshipAtomicOperationSchemaId(relationship, operationCode);
+        var schemaId = _schemaIdSelector.GetRelationshipAtomicOperationSchemaId(relationship, operationCode);
 
-        OpenApiSchema referenceSchemaForOperation = _defaultSchemaGenerator.GenerateSchema(operationConstructedType, schemaRepository);
-        OpenApiSchema fullSchemaForOperation = schemaRepository.Schemas[referenceSchemaForOperation.Reference.Id];
+        var referenceSchemaForOperation = (OpenApiSchemaReference)_defaultSchemaGenerator.GenerateSchema(operationConstructedType, schemaRepository);
+        var fullSchemaForOperation = (OpenApiSchema)schemaRepository.Schemas[referenceSchemaForOperation.Reference.Id];
         fullSchemaForOperation.AdditionalPropertiesAllowed = false;
 
-        OpenApiSchema inlineSchemaForOperation = fullSchemaForOperation.UnwrapLastExtendedSchema();
+        var inlineSchemaForOperation = (OpenApiSchema)fullSchemaForOperation.UnwrapLastExtendedSchema();
         SetOperationCode(inlineSchemaForOperation, operationCode, schemaRepository);
 
         if (referenceSchemaForRelationshipIdentifier != null)
@@ -349,29 +351,23 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
             inlineSchemaForOperation.Properties[JsonApiPropertyName.Ref] = referenceSchemaForRelationshipIdentifier.WrapInExtendedSchema();
         }
 
-        inlineSchemaForOperation.Properties[JsonApiPropertyName.Data].Nullable = _resourceFieldValidationMetadataProvider.IsNullable(relationship);
+        bool isNullable = _resourceFieldValidationMetadataProvider.IsNullable(relationship);
+        ((OpenApiSchema)inlineSchemaForOperation.Properties[JsonApiPropertyName.Data]).SetNullable(isNullable);
 
         schemaRepository.ReplaceSchemaId(operationConstructedType, schemaId);
-        referenceSchemaForOperation.Reference.Id = schemaId;
+        referenceSchemaForOperation = new OpenApiSchemaReference(schemaId);
 
         if (relationshipInAnyBaseResourceType != null)
         {
             RemoveProperties(inlineSchemaForOperation);
 
-            string baseRelationshipSchemaId = _schemaIdSelector.GetRelationshipAtomicOperationSchemaId(relationshipInAnyBaseResourceType, operationCode);
+            var baseRelationshipSchemaId = _schemaIdSelector.GetRelationshipAtomicOperationSchemaId(relationshipInAnyBaseResourceType, operationCode);
             ConsistencyGuard.ThrowIf(!schemaRepository.Schemas.ContainsKey(baseRelationshipSchemaId));
 
-            fullSchemaForOperation.AllOf[0] = new OpenApiSchema
-            {
-                Reference = new OpenApiReference
-                {
-                    Id = baseRelationshipSchemaId,
-                    Type = ReferenceType.Schema
-                }
-            };
+            fullSchemaForOperation.AllOf[0] = new OpenApiSchemaReference(baseRelationshipSchemaId);
         }
 
-        string discriminatorValue = _schemaIdSelector.GetAtomicOperationDiscriminatorValue(operationCode, relationship);
+        var discriminatorValue = _schemaIdSelector.GetAtomicOperationDiscriminatorValue(operationCode, relationship);
         MapInDiscriminator(referenceSchemaForOperation, discriminatorValue, schemaRepository);
 
         traceScope.TraceSucceeded(schemaId);
@@ -454,7 +450,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
 
     private RelationshipAttribute? GetRelationshipEnabledInAnyBase(RelationshipAttribute relationship, WriteOperationKind writeOperation)
     {
-        RelationshipAttribute? relationshipInBaseResourceType = relationship.LeftType.BaseType?.FindRelationshipByPublicName(relationship.PublicName);
+        var relationshipInBaseResourceType = relationship.LeftType.BaseType?.FindRelationshipByPublicName(relationship.PublicName);
 
         while (relationshipInBaseResourceType != null)
         {
@@ -473,7 +469,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
     {
         _ = _dataContainerSchemaGenerator.GenerateSchemaForCommonResourceDataInResponse(schemaRepository);
 
-        foreach (ResourceType resourceType in _resourceGraph.GetResourceTypes())
+        foreach (var resourceType in _resourceGraph.GetResourceTypes())
         {
             if (IsResourceTypeEnabled(resourceType, WriteOperationKind.CreateResource) ||
                 IsResourceTypeEnabled(resourceType, WriteOperationKind.UpdateResource))

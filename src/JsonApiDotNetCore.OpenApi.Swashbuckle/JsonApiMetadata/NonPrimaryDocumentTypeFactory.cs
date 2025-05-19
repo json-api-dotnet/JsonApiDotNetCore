@@ -49,7 +49,7 @@ internal sealed class NonPrimaryDocumentTypeFactory
     {
         // @formatter:nested_ternary_style expanded
 
-        Type documentOpenType = relationship is HasManyAttribute
+        var documentOpenType = relationship is HasManyAttribute
             ? types.ManyDataOpenType
             : _resourceFieldValidationMetadataProvider.IsNullable(relationship)
                 ? types.NullableSingleDataOpenType

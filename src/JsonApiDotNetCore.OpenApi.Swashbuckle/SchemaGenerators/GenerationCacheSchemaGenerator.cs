@@ -1,9 +1,11 @@
 using System.Reflection;
+using System.Text.Json.Nodes;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.Interfaces;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators;
@@ -36,32 +38,31 @@ internal sealed class GenerationCacheSchemaGenerator
     {
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        OpenApiSchema fullSchema = GenerateFullSchema(schemaRepository);
+        var fullSchema = GenerateFullSchema(schemaRepository);
 
-        var hasAtomicOperationsEndpoint = (OpenApiBoolean)fullSchema.Properties[HasAtomicOperationsEndpointPropertyName].Default;
-        return hasAtomicOperationsEndpoint.Value;
+        return (bool)fullSchema.Properties[HasAtomicOperationsEndpointPropertyName].Default;
     }
 
     private OpenApiSchema GenerateFullSchema(SchemaRepository schemaRepository)
     {
-        if (schemaRepository.Schemas.TryGetValue(SchemaId, out OpenApiSchema? fullSchema))
+        if (schemaRepository.Schemas.TryGetValue(SchemaId, out var schema))
         {
-            return fullSchema;
+            return (OpenApiSchema)schema;
         }
 
-        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this);
+        using var traceScope = _schemaGenerationTracer.TraceStart(this);
 
-        bool hasAtomicOperationsEndpoint = EvaluateHasAtomicOperationsEndpoint();
+        var hasAtomicOperationsEndpoint = EvaluateHasAtomicOperationsEndpoint();
 
-        fullSchema = new OpenApiSchema
+        var fullSchema = new OpenApiSchema
         {
-            Type = "object",
-            Properties = new Dictionary<string, OpenApiSchema>
+            Type = JsonSchemaType.Object,
+            Properties = new Dictionary<string, IOpenApiSchema>
             {
-                [HasAtomicOperationsEndpointPropertyName] = new()
+                [HasAtomicOperationsEndpointPropertyName] = new OpenApiSchema()
                 {
-                    Type = "boolean",
-                    Default = new OpenApiBoolean(hasAtomicOperationsEndpoint)
+                    Type = JsonSchemaType.Boolean,
+                    Default = hasAtomicOperationsEndpoint
                 }
             }
         };
@@ -74,13 +75,13 @@ internal sealed class GenerationCacheSchemaGenerator
 
     private bool EvaluateHasAtomicOperationsEndpoint()
     {
-        IEnumerable<ActionDescriptor> actionDescriptors =
+        var actionDescriptors =
             _defaultProvider.ActionDescriptors.Items.Where(JsonApiActionDescriptorCollectionProvider.IsVisibleJsonApiEndpoint);
 
-        foreach (ActionDescriptor actionDescriptor in actionDescriptors)
+        foreach (var actionDescriptor in actionDescriptors)
         {
-            MethodInfo actionMethod = actionDescriptor.GetActionMethod();
-            JsonApiEndpointMetadataContainer endpointMetadataContainer = _jsonApiEndpointMetadataProvider.Get(actionMethod);
+            var actionMethod = actionDescriptor.GetActionMethod();
+            var endpointMetadataContainer = _jsonApiEndpointMetadataProvider.Get(actionMethod);
 
             if (endpointMetadataContainer.RequestMetadata is AtomicOperationsRequestMetadata)
             {

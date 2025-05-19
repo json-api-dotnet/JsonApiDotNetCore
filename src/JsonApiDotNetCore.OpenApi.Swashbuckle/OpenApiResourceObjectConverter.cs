@@ -85,7 +85,7 @@ internal sealed class OpenApiResourceObjectConverter : ResourceObjectConverter
 
     private static void ValidateOpenApiDiscriminatorValue(ResourceType resourceType, string relativeJsonPointer, Utf8JsonReader reader)
     {
-        string? discriminatorValue = reader.GetString();
+        var discriminatorValue = reader.GetString();
 
         if (discriminatorValue != resourceType.PublicName)
         {

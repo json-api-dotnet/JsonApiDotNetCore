@@ -2,6 +2,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
@@ -20,34 +21,34 @@ internal sealed class ResourceTypeSchemaGenerator
         _schemaIdSelector = schemaIdSelector;
     }
 
-    public OpenApiSchema GenerateSchema(ResourceType resourceType, SchemaRepository schemaRepository)
+    public OpenApiSchemaReference GenerateSchema(ResourceType resourceType, SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(resourceType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        if (schemaRepository.TryLookupByType(resourceType.ClrType, out OpenApiSchema? referenceSchema))
+        if (schemaRepository.TryLookupByType(resourceType.ClrType, out var referenceSchema))
         {
             return referenceSchema;
         }
 
-        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, resourceType.ClrType);
+        using var traceScope = _schemaGenerationTracer.TraceStart(this, resourceType.ClrType);
 
         var fullSchema = new OpenApiSchema
         {
-            Type = "string",
-            Enum = resourceType.ClrType.IsAbstract ? [] : [new OpenApiString(resourceType.PublicName)],
+            Type = JsonSchemaType.String,
+            Enum = resourceType.ClrType.IsAbstract ? [] : [resourceType.PublicName],
             Extensions =
             {
-                [StringEnumOrderingFilter.RequiresSortKey] = new OpenApiBoolean(true)
+                [StringEnumOrderingFilter.RequiresSortKey] = new OpenApiAny(true)
             }
         };
 
-        foreach (ResourceType derivedType in resourceType.GetAllConcreteDerivedTypes())
+        foreach (var derivedType in resourceType.GetAllConcreteDerivedTypes())
         {
-            fullSchema.Enum.Add(new OpenApiString(derivedType.PublicName));
+            fullSchema.Enum.Add(derivedType.PublicName);
         }
 
-        string schemaId = _schemaIdSelector.GetResourceTypeSchemaId(resourceType);
+        var schemaId = _schemaIdSelector.GetResourceTypeSchemaId(resourceType);
 
         referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
         schemaRepository.RegisterType(resourceType.ClrType, schemaId);
@@ -56,34 +57,27 @@ internal sealed class ResourceTypeSchemaGenerator
         return referenceSchema;
     }
 
-    public OpenApiSchema GenerateSchema(SchemaRepository schemaRepository)
+    public OpenApiSchemaReference GenerateSchema(SchemaRepository schemaRepository)
     {
-        string schemaId = _schemaIdSelector.GetResourceTypeSchemaId(null);
+        var schemaId = _schemaIdSelector.GetResourceTypeSchemaId(null);
 
         if (schemaRepository.Schemas.ContainsKey(schemaId))
         {
-            return new OpenApiSchema
-            {
-                Reference = new OpenApiReference
-                {
-                    Id = schemaId,
-                    Type = ReferenceType.Schema
-                }
-            };
+            return new OpenApiSchemaReference(schemaId);
         }
 
-        using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this);
+        using var traceScope = _schemaGenerationTracer.TraceStart(this);
 
         var fullSchema = new OpenApiSchema
         {
-            Type = "string",
+            Type = JsonSchemaType.String,
             Extensions =
             {
-                [StringEnumOrderingFilter.RequiresSortKey] = new OpenApiBoolean(true)
+                [StringEnumOrderingFilter.RequiresSortKey] = new OpenApiAny(true)
             }
         };
 
-        OpenApiSchema referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
+        var referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
 
         traceScope.TraceSucceeded(schemaId);
         return referenceSchema;

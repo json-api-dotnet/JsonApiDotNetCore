@@ -53,17 +53,17 @@ internal sealed class OpenApiOperationIdSelector
     {
         ArgumentNullException.ThrowIfNull(endpoint);
 
-        MethodInfo actionMethod = endpoint.ActionDescriptor.GetActionMethod();
-        ResourceType? primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(actionMethod.ReflectedType);
+        var actionMethod = endpoint.ActionDescriptor.GetActionMethod();
+        var primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(actionMethod.ReflectedType);
 
-        string template = GetTemplate(endpoint);
+        var template = GetTemplate(endpoint);
         return ApplyTemplate(template, primaryResourceType, endpoint);
     }
 
     private static string GetTemplate(ApiDescription endpoint)
     {
-        Type bodyType = GetBodyType(endpoint);
-        ConsistencyGuard.ThrowIf(!SchemaOpenTypeToOpenApiOperationIdTemplateMap.TryGetValue(bodyType, out string? template));
+        var bodyType = GetBodyType(endpoint);
+        ConsistencyGuard.ThrowIf(!SchemaOpenTypeToOpenApiOperationIdTemplateMap.TryGetValue(bodyType, out var template));
         return template;
     }
 
@@ -72,8 +72,8 @@ internal sealed class OpenApiOperationIdSelector
         var producesResponseTypeAttribute = endpoint.ActionDescriptor.GetFilterMetadata<ProducesResponseTypeAttribute>();
         ConsistencyGuard.ThrowIf(producesResponseTypeAttribute == null);
 
-        ControllerParameterDescriptor? requestBodyDescriptor = endpoint.ActionDescriptor.GetBodyParameterDescriptor();
-        Type bodyType = (requestBodyDescriptor?.ParameterType ?? producesResponseTypeAttribute.Type).ConstructedToOpenType();
+        var requestBodyDescriptor = endpoint.ActionDescriptor.GetBodyParameterDescriptor();
+        var bodyType = (requestBodyDescriptor?.ParameterType ?? producesResponseTypeAttribute.Type).ConstructedToOpenType();
 
         if (bodyType == typeof(CollectionResponseDocument<>) && endpoint.ParameterDescriptions.Count > 0)
         {
@@ -88,13 +88,13 @@ internal sealed class OpenApiOperationIdSelector
         ConsistencyGuard.ThrowIf(endpoint.RelativePath == null);
         ConsistencyGuard.ThrowIf(endpoint.HttpMethod == null);
 
-        string method = endpoint.HttpMethod.ToLowerInvariant();
-        string relationshipName = openApiOperationIdTemplate.Contains("[RelationshipName]") ? endpoint.RelativePath.Split('/').Last() : string.Empty;
+        var method = endpoint.HttpMethod.ToLowerInvariant();
+        var relationshipName = openApiOperationIdTemplate.Contains("[RelationshipName]") ? endpoint.RelativePath.Split('/').Last() : string.Empty;
 
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string pascalCaseOpenApiOperationId = openApiOperationIdTemplate
+        var pascalCaseOpenApiOperationId = openApiOperationIdTemplate
             .Replace("[Method]", method)
             .Replace("[PrimaryResourceName]", resourceType?.PublicName.Singularize())
             .Replace("[RelationshipName]", relationshipName)
@@ -103,7 +103,7 @@ internal sealed class OpenApiOperationIdSelector
         // @formatter:wrap_before_first_method_call true restore
         // @formatter:wrap_chained_method_calls restore
 
-        JsonNamingPolicy? namingPolicy = _options.SerializerOptions.PropertyNamingPolicy;
+        var namingPolicy = _options.SerializerOptions.PropertyNamingPolicy;
         return namingPolicy != null ? namingPolicy.ConvertName(pascalCaseOpenApiOperationId) : pascalCaseOpenApiOperationId;
     }
 }

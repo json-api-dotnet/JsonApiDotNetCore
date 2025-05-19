@@ -62,11 +62,11 @@ internal sealed partial class SchemaGenerationTracer
 
     private ISchemaGenerationTraceScope InnerTraceStart(object generator, Func<string> getSchemaTypeName)
     {
-        ILogger logger = _loggerFactory.CreateLogger(generator.GetType());
+        var logger = _loggerFactory.CreateLogger(generator.GetType());
 
         if (logger.IsEnabled(LogLevel.Trace))
         {
-            string schemaTypeName = getSchemaTypeName();
+            var schemaTypeName = getSchemaTypeName();
             return new SchemaGenerationTraceScope(logger, schemaTypeName);
         }
 
@@ -77,8 +77,8 @@ internal sealed partial class SchemaGenerationTracer
     {
         if (type.IsConstructedGenericType)
         {
-            string typeArguments = string.Join(',', type.GetGenericArguments().Select(GetSchemaTypeName));
-            int arityIndex = type.Name.IndexOf('`');
+            var typeArguments = string.Join(',', type.GetGenericArguments().Select(GetSchemaTypeName));
+            var arityIndex = type.Name.IndexOf('`');
             return $"{type.Name[..arityIndex]}<{typeArguments}>";
         }
 
