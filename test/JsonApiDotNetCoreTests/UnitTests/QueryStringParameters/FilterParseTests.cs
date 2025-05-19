@@ -236,7 +236,7 @@ public sealed class FilterParseTests : BaseParseTests
 
         // Assert
         action.Should().ThrowExactly<InvalidOperationException>().WithMessage("There is still a resource type in scope after parsing has completed. " +
-            "Verify that Dispose() is called on all return values of InScopeOfResourceType().");
+            "Verify that Dispose() is called on all return values of InScopeOfContainer().");
     }
 
     [Fact]
@@ -260,7 +260,7 @@ public sealed class FilterParseTests : BaseParseTests
         protected override FilterExpression ParseFilter()
         {
             // Forgot to dispose the return value.
-            _ = InScopeOfResourceType(ResourceTypeInScope);
+            _ = InScopeOfContainer(ContainerInScope);
 
             return base.ParseFilter();
         }
@@ -272,7 +272,7 @@ public sealed class FilterParseTests : BaseParseTests
         protected override void Tokenize(string source)
         {
             // There is no resource type in scope yet.
-            _ = ResourceTypeInScope;
+            _ = ContainerInScope;
 
             base.Tokenize(source);
         }

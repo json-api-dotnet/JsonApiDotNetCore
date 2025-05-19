@@ -12,8 +12,8 @@ public sealed class Address
     [Attr]
     public string? PostalCode { get; set; }
 
-    [Attr]
-    public string? Country { get; set; }
+    [Attr(IsCompound = true)]
+    public Country? Country { get; set; }
 
     public string? NotExposed { get; set; }
 }

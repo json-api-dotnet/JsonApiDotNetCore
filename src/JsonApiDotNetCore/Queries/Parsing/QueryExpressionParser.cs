@@ -59,22 +59,23 @@ public abstract class QueryExpressionParser
     /// <summary>
     /// Parses a dot-separated path of field names into a chain of resource fields, while matching it against the specified pattern.
     /// </summary>
-    protected ResourceFieldChainExpression ParseFieldChain(FieldChainPattern pattern, FieldChainPatternMatchOptions options, ResourceType resourceType,
+    protected ResourceFieldChainExpression ParseFieldChain(FieldChainPattern pattern, FieldChainPatternMatchOptions options, IFieldContainer fieldContainer,
         string? alternativeErrorMessage)
     {
         ArgumentNullException.ThrowIfNull(pattern);
-        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(fieldContainer);
 
         int startPosition = GetNextTokenPositionOrEnd();
 
         string path = EatFieldChain(alternativeErrorMessage);
-        PatternMatchResult result = pattern.Match(path, resourceType, options);
+        PatternMatchResult result = pattern.Match(path, fieldContainer, options);
 
         if (!result.IsSuccess)
         {
             string message = result.IsFieldChainError
                 ? result.FailureMessage
-                : $"Field chain on resource type '{resourceType}' failed to match the pattern: {pattern.GetDescription()}. {result.FailureMessage}";
+                // TODO: Update messages to express "type" instead of "resource type".
+                : $"Field chain on resource type '{fieldContainer}' failed to match the pattern: {pattern.GetDescription()}. {result.FailureMessage}";
 
             throw new QueryParseException(message, startPosition + result.FailurePosition);
         }

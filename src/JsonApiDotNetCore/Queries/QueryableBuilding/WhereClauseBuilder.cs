@@ -50,11 +50,16 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
 
         if (expression.Filter != null)
         {
-            ResourceType resourceType = ((HasManyAttribute)expression.TargetCollection.Fields[^1]).RightType;
+            IFieldContainer fieldContainer = expression.TargetCollection.Fields[^1] switch
+            {
+                HasManyAttribute hasManyRelationship => hasManyRelationship.RightType,
+                AttrAttribute { Kind: AttrKind.CollectionOfPrimitive or AttrKind.CollectionOfCompound } attribute => attribute,
+                _ => throw new InvalidOperationException("Field chain must end in a to-many relationship or a collection attribute.")
+            };
 
             using LambdaScope lambdaScope = context.LambdaScopeFactory.CreateScope(elementType);
 
-            var nestedContext = new QueryClauseBuilderContext(property, resourceType, typeof(Enumerable), context.EntityModel, context.LambdaScopeFactory,
+            var nestedContext = new QueryClauseBuilderContext(property, fieldContainer, typeof(Enumerable), context.EntityModel, context.LambdaScopeFactory,
                 lambdaScope, context.QueryableBuilder, context.State);
 
             predicate = GetPredicateLambda(expression.Filter, nestedContext);

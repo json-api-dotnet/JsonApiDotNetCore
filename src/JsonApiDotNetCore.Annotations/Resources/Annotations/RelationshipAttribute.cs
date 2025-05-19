@@ -41,9 +41,14 @@ public abstract class RelationshipAttribute : ResourceFieldAttribute
     public PropertyInfo? InverseNavigationProperty { get; set; }
 
     /// <summary>
-    /// The containing resource type in which this relationship is declared. Identical to <see cref="ResourceFieldAttribute.Type" />.
+    /// The containing resource type in which this field is declared.
     /// </summary>
-    public ResourceType LeftType => Type;
+    public override ResourceType Container => (ResourceType)base.Container;
+
+    /// <summary>
+    /// The containing resource type in which this relationship is declared. Identical to <see cref="ResourceFieldAttribute.Container" />.
+    /// </summary>
+    public ResourceType LeftType => Container;
 
     /// <summary>
     /// The resource type this relationship points to. In the case of a <see cref="HasManyAttribute" /> relationship, this value will be the collection
