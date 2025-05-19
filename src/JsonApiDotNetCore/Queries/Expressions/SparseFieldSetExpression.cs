@@ -38,7 +38,7 @@ public class SparseFieldSetExpression : QueryExpression
 
     public override string ToFullString()
     {
-        return string.Join(".", Fields.Select(field => $"{field.Type.PublicName}:{field.PublicName}").OrderBy(name => name));
+        return string.Join(".", Fields.Select(field => $"{field.Container.PublicName}:{field.PublicName}").OrderBy(name => name));
     }
 
     public override bool Equals(object? obj)

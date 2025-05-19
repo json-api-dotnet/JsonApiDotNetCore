@@ -50,7 +50,7 @@ public class ResourceFieldChainExpression : IdentifierExpression
 
     public override string ToFullString()
     {
-        return string.Join(".", Fields.Select(field => $"{field.Type.PublicName}:{field.PublicName}"));
+        return string.Join(".", Fields.Select(field => $"{field.Container.PublicName}:{field.PublicName}"));
     }
 
     public override bool Equals(object? obj)

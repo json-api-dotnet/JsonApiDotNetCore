@@ -5,6 +5,8 @@ using JsonApiDotNetCore.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
+#pragma warning disable format
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -74,14 +76,22 @@ static async Task CreateSampleDataAsync(SampleDbContext dbContext)
                 {
                     Street = "SomeStreet",
                     PostalCode = "1234 AB",
-                    Country = "The Netherlands",
+                    Country = new Country
+                    {
+                        Code = "NLD",
+                        DisplayName = "The Netherlands"
+                    },
                     NotExposed = "NotExposed"
                 },
                 MailAddress = new Address
                 {
                     Street = "MailStreet",
                     PostalCode = "MailPostalCode",
-                    Country = "MailCountry",
+                    Country = new Country
+                    {
+                        Code = "MailCode",
+                        DisplayName = "MailCountryName"
+                    },
                     NotExposed = "MailNotExposed"
                 },
                 Addresses =
@@ -90,14 +100,22 @@ static async Task CreateSampleDataAsync(SampleDbContext dbContext)
                     {
                         Street = "Street1",
                         PostalCode = "PostalCode1",
-                        Country = "Country1",
+                        Country = new Country
+                        {
+                            Code = "ESP",
+                            DisplayName = "Spain"
+                        },
                         NotExposed = "NotExposed1"
                     },
                     new Address
                     {
                         Street = "Street2",
                         PostalCode = "PostalCode2",
-                        Country = "Country2",
+                        Country = new Country
+                        {
+                            Code = "Country2",
+                            DisplayName = "CountryName2"
+                        },
                         NotExposed = "NotExposed2"
                     }
                 ],
@@ -135,6 +153,7 @@ static async Task CreateSampleDataAsync(SampleDbContext dbContext)
             }
         }*/
     );
+#pragma warning restore format
 
     await dbContext.SaveChangesAsync();
 }

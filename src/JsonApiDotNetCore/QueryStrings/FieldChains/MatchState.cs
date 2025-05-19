@@ -1,7 +1,6 @@
 using System.Collections.Immutable;
 using System.Text;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.QueryStrings.FieldChains;
@@ -24,7 +23,7 @@ internal sealed class MatchState
     /// <summary>
     /// The containing resource type or parent attribute to find the next field on.
     /// </summary>
-    public FieldContainer Container { get; }
+    public IFieldContainer Container { get; }
 
     /// <summary>
     /// The fields matched against this pattern segment.
@@ -41,7 +40,7 @@ internal sealed class MatchState
     /// </summary>
     public MatchError? Error { get; }
 
-    private MatchState(FieldChainPattern? pattern, FieldContainer container, IImmutableList<ResourceFieldAttribute> fieldsMatched,
+    private MatchState(FieldChainPattern? pattern, IFieldContainer container, IImmutableList<ResourceFieldAttribute> fieldsMatched,
         LinkedListNode<string>? fieldsRemaining, MatchError? error, MatchState? parentMatch)
     {
         Pattern = pattern;
@@ -52,13 +51,11 @@ internal sealed class MatchState
         _parentMatch = parentMatch;
     }
 
-    public static MatchState Create(FieldChainPattern pattern, string fieldChainText, ResourceType resourceType)
+    public static MatchState Create(FieldChainPattern pattern, string fieldChainText, IFieldContainer fieldContainer)
     {
         ArgumentNullException.ThrowIfNull(pattern);
         ArgumentNullException.ThrowIfNull(fieldChainText);
-        ArgumentNullException.ThrowIfNull(resourceType);
-
-        var container = new FieldContainer(resourceType, null);
+        ArgumentNullException.ThrowIfNull(fieldContainer);
 
         try
         {
@@ -66,12 +63,12 @@ internal sealed class MatchState
             IEnumerable<string> fieldChain = parser.Parse(fieldChainText);
 
             LinkedListNode<string>? remainingHead = new LinkedList<string>(fieldChain).First;
-            return new MatchState(pattern, container, ImmutableArray<ResourceFieldAttribute>.Empty, remainingHead, null, null);
+            return new MatchState(pattern, fieldContainer, ImmutableArray<ResourceFieldAttribute>.Empty, remainingHead, null, null);
         }
         catch (FieldChainFormatException exception)
         {
             var error = MatchError.CreateForBrokenFieldChain(exception);
-            return new MatchState(pattern, container, ImmutableArray<ResourceFieldAttribute>.Empty, null, error, null);
+            return new MatchState(pattern, fieldContainer, ImmutableArray<ResourceFieldAttribute>.Empty, null, error, null);
         }
     }
 
@@ -86,9 +83,14 @@ internal sealed class MatchState
         IImmutableList<ResourceFieldAttribute> fieldsMatched = FieldsMatched.Add(matchedValue);
         LinkedListNode<string>? fieldsRemaining = FieldsRemaining!.Next;
 
-        ResourceType? resourceType = matchedValue is RelationshipAttribute relationship ? relationship.RightType : null;
-        var parentAttribute = matchedValue as AttrAttribute;
-        var container = new FieldContainer(resourceType, parentAttribute);
+        IFieldContainer? resourceType = matchedValue is RelationshipAttribute relationship ? relationship.RightType : null;
+        IFieldContainer? parentAttribute = matchedValue as AttrAttribute;
+        IFieldContainer? container = resourceType ?? parentAttribute;
+
+        if (container == null)
+        {
+            throw new InvalidOperationException("Internal error: Expected successful match on relationship or attribute.");
+        }
 
         return new MatchState(Pattern, container, fieldsMatched, fieldsRemaining, null, _parentMatch);
     }

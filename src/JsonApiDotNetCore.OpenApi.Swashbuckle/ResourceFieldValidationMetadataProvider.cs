@@ -73,7 +73,7 @@ internal sealed class ResourceFieldValidationMetadataProvider
 
     private bool IsModelStateValidationRequired(ResourceFieldAttribute field)
     {
-        ModelMetadata modelMetadata = _modelMetadataProvider.GetMetadataForProperty(field.Type.ClrType, field.Property.Name);
+        ModelMetadata modelMetadata = _modelMetadataProvider.GetMetadataForProperty(field.Container.ClrType, field.Property.Name);
 
         // Non-nullable reference types are implicitly required, unless SuppressImplicitRequiredAttributeForNonNullableReferenceTypes is set.
         return modelMetadata.ValidatorMetadata.Any(validatorMetadata => validatorMetadata is RequiredAttribute);

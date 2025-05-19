@@ -7,7 +7,7 @@ namespace JsonApiDotNetCore.Configuration;
 /// Metadata about the shape of a JSON:API resource in the resource graph.
 /// </summary>
 [PublicAPI]
-public sealed class ResourceType
+public sealed class ResourceType : IFieldContainer
 {
     private static readonly IReadOnlySet<ResourceType> EmptyResourceTypeSet = new HashSet<ResourceType>().AsReadOnly();
     private static readonly IReadOnlySet<AttrAttribute> EmptyAttributeSet = new HashSet<AttrAttribute>().AsReadOnly();

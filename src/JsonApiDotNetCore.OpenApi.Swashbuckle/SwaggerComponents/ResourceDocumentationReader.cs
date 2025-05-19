@@ -31,7 +31,7 @@ internal sealed class ResourceDocumentationReader
     {
         ArgumentNullException.ThrowIfNull(attribute);
 
-        XPathNavigator? navigator = GetNavigator(attribute.Type.ClrType.Assembly);
+        XPathNavigator? navigator = GetNavigator(attribute.Container.ClrType.Assembly);
 
         if (navigator != null)
         {
@@ -46,7 +46,7 @@ internal sealed class ResourceDocumentationReader
     {
         ArgumentNullException.ThrowIfNull(relationship);
 
-        XPathNavigator? navigator = GetNavigator(relationship.Type.ClrType.Assembly);
+        XPathNavigator? navigator = GetNavigator(relationship.Container.ClrType.Assembly);
 
         if (navigator != null)
         {
