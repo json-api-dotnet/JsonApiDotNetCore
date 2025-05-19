@@ -56,7 +56,21 @@ public partial class ResourceGraphBuilder
     {
         foreach (ResourceFieldAttribute field in resourceGraph.GetResourceTypes().SelectMany(resourceType => resourceType.Fields))
         {
-            field.Type = resourceGraph.GetResourceType(field.Property.ReflectedType!);
+            field.Container = resourceGraph.GetResourceType(field.Property.ReflectedType!);
+
+            if (field is AttrAttribute attribute)
+            {
+                SetFieldTypeInAttributeChildren(attribute);
+            }
+        }
+    }
+
+    private static void SetFieldTypeInAttributeChildren(AttrAttribute attribute)
+    {
+        foreach (AttrAttribute child in attribute.Children.Values)
+        {
+            child.Container = attribute;
+            SetFieldTypeInAttributeChildren(child);
         }
     }
 
@@ -328,21 +342,20 @@ public partial class ResourceGraphBuilder
                 attribute.Capabilities = _options.DefaultAttrCapabilities;
             }
 
-            IncludeField(attributesByName, attribute);
-
-            var container = new FieldContainer(null, attribute);
-            bool isCollection = CollectionConverter.Instance.IsCollectionType(container.ClrType);
+            bool isCollection = CollectionConverter.Instance.IsCollectionType(property.PropertyType);
             attribute.Kind = ToAttrKind(attribute.IsCompound, isCollection);
 
             if (attribute.Kind == AttrKind.Compound)
             {
-                attribute.Children = GetAttributes(container.ClrType, false);
+                attribute.Children = GetAttributes(property.PropertyType, false);
             }
             else if (attribute.Kind == AttrKind.CollectionOfCompound)
             {
-                Type elementType = CollectionConverter.Instance.FindCollectionElementType(container.ClrType)!;
+                Type elementType = CollectionConverter.Instance.FindCollectionElementType(property.PropertyType)!;
                 attribute.Children = GetAttributes(elementType, false);
             }
+
+            IncludeField(attributesByName, attribute);
         }
 
         bool hasAttributes = isTopLevel ? attributesByName.Count > 1 : attributesByName.Count > 0;

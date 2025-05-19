@@ -2,6 +2,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.StringLength;

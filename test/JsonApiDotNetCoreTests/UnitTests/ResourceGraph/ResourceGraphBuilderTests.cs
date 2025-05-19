@@ -330,7 +330,8 @@ public sealed class ResourceGraphBuilderTests
         IReadOnlyList<string> logLines = loggerProvider.GetLines();
         logLines.Should().HaveCount(1);
 
-        // TODO: Can [NoResource] be used on compound types to suppress warning?
+        // TODO: Q: Can [NoResource] be used on compound types to suppress warning?
+        // A: No, a type can't be both a resource and a complex attribute container (it has identity, or it hasn't).
         logLines[0].Should().Be(
             $"[WARNING] Skipping: Type '{typeof(NonResource)}' does not implement 'IIdentifiable'. Add [NoResource] to suppress this warning.");
     }

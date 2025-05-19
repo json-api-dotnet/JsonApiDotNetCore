@@ -16,7 +16,7 @@ public abstract class ResourceFieldAttribute : Attribute
     // These are definitely assigned after building the resource graph, which is why their public equivalents are declared as non-nullable.
     private string? _publicName;
     private PropertyInfo? _property;
-    private ResourceType? _type;
+    private IFieldContainer? _container;
 
     /// <summary>
     /// The publicly exposed name of this JSON:API field. When not explicitly set, the configured naming convention is applied on the property name.
@@ -49,16 +49,15 @@ public abstract class ResourceFieldAttribute : Attribute
     }
 
     /// <summary>
-    /// The containing resource type in which this field is declared.
+    /// The container in which this field is declared.
     /// </summary>
-    public ResourceType Type
+    public virtual IFieldContainer Container
     {
-        // TODO: This is null for the children of a compound attribute.
-        get => _type!;
+        get => _container!;
         internal set
         {
             ArgumentNullException.ThrowIfNull(value);
-            _type = value;
+            _container = value;
         }
     }
 
@@ -137,7 +136,7 @@ public abstract class ResourceFieldAttribute : Attribute
 
     public string ToFullString()
     {
-        return $"{_type?.PublicName}:{ToString()}";
+        return $"{_container?.PublicName}:{ToString()}";
     }
 
     /// <inheritdoc />

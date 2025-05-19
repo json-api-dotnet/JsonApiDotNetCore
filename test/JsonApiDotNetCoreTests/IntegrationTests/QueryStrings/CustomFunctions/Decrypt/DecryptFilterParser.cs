@@ -37,7 +37,7 @@ internal sealed class DecryptFilterParser(IResourceFactory resourceFactory)
         int chainStartPosition = GetNextTokenPositionOrEnd();
 
         ResourceFieldChainExpression targetAttributeChain =
-            ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute, FieldChainPatternMatchOptions.None, ResourceTypeInScope, null);
+            ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute, FieldChainPatternMatchOptions.None, ContainerInScope, null);
 
         ResourceFieldAttribute attribute = targetAttributeChain.Fields[^1];
 

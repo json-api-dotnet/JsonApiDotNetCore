@@ -22,6 +22,7 @@ internal sealed class SumWhereClauseBuilder : WhereClauseBuilder
     {
         Expression collectionPropertyAccess = Visit(expression.TargetToManyRelationship, context);
 
+        // TODO: Allow collection attribute.
         ResourceType selectorResourceType = ((HasManyAttribute)expression.TargetToManyRelationship.Fields.Single()).RightType;
         using LambdaScope lambdaScope = context.LambdaScopeFactory.CreateScope(selectorResourceType.ClrType);
 

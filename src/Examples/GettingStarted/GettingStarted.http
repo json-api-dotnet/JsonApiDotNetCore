@@ -9,14 +9,21 @@ GET http://{{hostname}}:{{port}}/api/people
 
 GET http://{{hostname}}:{{port}}/api/people?include=books
 
-### Filter inside compound attribute
+### Filter inside compound attribute chain
 
-GET http://{{hostname}}:{{port}}/api/people?filter=startsWith(livingAddress.country,'T')
+GET http://{{hostname}}:{{port}}/api/people?filter=startsWith(livingAddress.country.code,'N')
 
-### TODO: Test filters descending into compound attribute (requires an expression that has child scope: "has").
-### TODO: Consider supporting to-many filters on collections: "has", "any", "count"
-###         Requires to act on parent Attr instead of ResourceType, which likely requires major breaking change.
+### Filter on collection attribute with "count" function
 
+GET http://{{hostname}}:{{port}}/api/people?filter=greaterThan(count(namesOfChildren),'2')
+
+### Filter on collection attribute with "has" function
+
+GET http://{{hostname}}:{{port}}/api/people?filter=not(has(addresses))
+
+### Filter on collection attribute with "has" function, taking nested filter
+
+GET http://{{hostname}}:{{port}}/api/people?filter=has(addresses,equals(country.code,'ESP'))
 
 ### Patch string collection attribute
 
@@ -24,13 +31,17 @@ PATCH http://{{hostname}}:{{port}}/api/people/1
 Content-Type: application/vnd.api+json
 
 {
-    "data": {
-        "type": "people",
-        "id": "1",
-        "attributes": {
-            "namesOfChildren": ["Mary", "Ann", null]
-        }
+  "data": {
+    "type": "people",
+    "id": "1",
+    "attributes": {
+      "namesOfChildren": [
+        "Mary",
+        "Ann",
+        null
+      ]
     }
+  }
 }
 
 ### Patch int collection attribute
@@ -39,13 +50,17 @@ PATCH http://{{hostname}}:{{port}}/api/people/1
 Content-Type: application/vnd.api+json
 
 {
-    "data": {
-        "type": "people",
-        "id": "1",
-        "attributes": {
-            "agesOfChildren": [15, 25, null]
-        }
+  "data": {
+    "type": "people",
+    "id": "1",
+    "attributes": {
+      "agesOfChildren": [
+        15,
+        25,
+        null
+      ]
     }
+  }
 }
 
 ### Patch members of compound attribute
@@ -54,16 +69,19 @@ PATCH http://{{hostname}}:{{port}}/api/people/1
 Content-Type: application/vnd.api+json
 
 {
-    "data": {
-        "type": "people",
-        "id": "1",
-        "attributes": {
-            "livingAddress": {
-                "country": "Germany",
-                 "street": "OtherStreet"
-            }
-        }
+  "data": {
+    "type": "people",
+    "id": "1",
+    "attributes": {
+      "livingAddress": {
+        "country": {
+          "code": "ITA",
+          "displayName": "Italy"
+        },
+        "street": "OtherStreet"
+      }
     }
+  }
 }
 
 ### Patch members of compound attribute, setting them to null
@@ -72,16 +90,16 @@ PATCH http://{{hostname}}:{{port}}/api/people/1
 Content-Type: application/vnd.api+json
 
 {
-    "data": {
-        "type": "people",
-        "id": "1",
-        "attributes": {
-            "livingAddress": {
-                "country": null,
-                 "street": null
-            }
-        }
+  "data": {
+    "type": "people",
+    "id": "1",
+    "attributes": {
+      "livingAddress": {
+        "country": null,
+        "street": null
+      }
     }
+  }
 }
 
 ### Patch compound attribute to empty object (must be a no-op)
@@ -90,13 +108,13 @@ PATCH http://{{hostname}}:{{port}}/api/people/1
 Content-Type: application/vnd.api+json
 
 {
-    "data": {
-        "type": "people",
-        "id": "1",
-        "attributes": {
-            "mailAddress": {}
-        }
+  "data": {
+    "type": "people",
+    "id": "1",
+    "attributes": {
+      "mailAddress": {}
     }
+  }
 }
 
 ### Patch compound attribute to null
@@ -105,13 +123,13 @@ PATCH http://{{hostname}}:{{port}}/api/people/1
 Content-Type: application/vnd.api+json
 
 {
-    "data": {
-        "type": "people",
-        "id": "1",
-        "attributes": {
-            "mailAddress": null
-        }
+  "data": {
+    "type": "people",
+    "id": "1",
+    "attributes": {
+      "mailAddress": null
     }
+  }
 }
 
 ### Patch compound nullable collection attribute (null element is blocked by EF Core)
@@ -120,19 +138,24 @@ PATCH http://{{hostname}}:{{port}}/api/people/1
 Content-Type: application/vnd.api+json
 
 {
-    "data": {
-        "type": "people",
-        "id": "1",
-        "attributes": {
-            "addresses": [{
-                    "country": "Germany"
-                }, {
-                    "street": "SomeStreet"
-                }, {
-                }
-            ]
-        }
+  "data": {
+    "type": "people",
+    "id": "1",
+    "attributes": {
+      "addresses": [
+        {
+          "country": {
+            "code": "DEU",
+            "displayName": "Germany"
+          }
+        },
+        {
+          "street": "SomeStreet"
+        },
+        {}
+      ]
     }
+  }
 }
 
 ### Patch relationships to null - SHOULD THIS FAIL OR NO-OP?
@@ -141,9 +164,9 @@ PATCH http://{{hostname}}:{{port}}/api/people/1
 Content-Type: application/vnd.api+json
 
 {
-    "data": {
-        "type": "people",
-        "id": "1",
-        "relationships": null
-    }
+  "data": {
+    "type": "people",
+    "id": "1",
+    "relationships": null
+  }
 }

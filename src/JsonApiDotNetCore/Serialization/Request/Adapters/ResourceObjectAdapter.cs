@@ -35,14 +35,13 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
 
         (IIdentifiable resource, ResourceType resourceType) = ConvertResourceIdentity(resourceObject, requirements, state);
 
-        var container = new FieldContainer(resourceType, null);
-        ConvertAttributes(resourceObject.Attributes, resource, container, state.WritableTargetedFields!.Attributes, state);
+        ConvertAttributes(resourceObject.Attributes, resource, resourceType, state.WritableTargetedFields!.Attributes, state);
         ConvertRelationships(resourceObject.Relationships, resource, resourceType, state);
 
         return (resource, resourceType);
     }
 
-    private void ConvertAttributes(IDictionary<string, object?>? attributeValues, object instance, FieldContainer container,
+    private void ConvertAttributes(IDictionary<string, object?>? attributeValues, object instance, IFieldContainer container,
         HashSet<TargetedAttributeTree> targets, RequestAdapterState state)
     {
         using IDisposable _ = state.Position.PushElement("attributes");
@@ -53,7 +52,7 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         }
     }
 
-    private void ConvertAttribute(string attributeName, object? attributeValue, object instance, FieldContainer container,
+    private void ConvertAttribute(string attributeName, object? attributeValue, object instance, IFieldContainer container,
         HashSet<TargetedAttributeTree> targets, RequestAdapterState state)
     {
         using IDisposable _ = state.Position.PushElement(attributeName);
@@ -107,10 +106,9 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         attr.SetValue(instance, subInstance);
 
         var dictionary = (Dictionary<string, object?>)attributeValue;
-        var subFieldContainer = new FieldContainer(null, attr);
         HashSet<TargetedAttributeTree> subTargets = [];
 
-        ConvertAttributes(dictionary, subInstance, subFieldContainer, subTargets, state);
+        ConvertAttributes(dictionary, subInstance, attr, subTargets, state);
 
         var target = new TargetedAttributeTree(attr, subTargets);
         targets.Add(target);
@@ -146,8 +144,7 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
 
             if (subInstance != null)
             {
-                var subFieldContainer = new FieldContainer(null, attr);
-                ConvertAttributes(subDictionary, subInstance, subFieldContainer, [], state);
+                ConvertAttributes(subDictionary, subInstance, attr, [], state);
             }
         }
 
@@ -158,12 +155,12 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         targets.Add(target);
     }
 
-    private static void AssertIsKnownAttribute([NotNull] AttrAttribute? attr, string attributeName, FieldContainer container, RequestAdapterState state)
+    private static void AssertIsKnownAttribute([NotNull] AttrAttribute? attr, string attributeName, IFieldContainer container, RequestAdapterState state)
     {
         if (attr == null)
         {
             throw new ModelConversionException(state.Position, "Unknown attribute found.",
-                $"Attribute '{attributeName}' does not exist on resource type '{resourceType.PublicName}'.");
+                $"Attribute '{attributeName}' does not exist on resource type '{container.PublicName}'.");
         }
     }
 
@@ -184,34 +181,34 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         }
     }
 
-    private static void AssertSetAttributeInCreateResourceNotBlocked(AttrAttribute attr, FieldContainer container, RequestAdapterState state)
+    private static void AssertSetAttributeInCreateResourceNotBlocked(AttrAttribute attr, IFieldContainer container, RequestAdapterState state)
     {
         if (state.Request.WriteOperation == WriteOperationKind.CreateResource && !attr.Capabilities.HasFlag(AttrCapabilities.AllowCreate))
         {
             throw new ModelConversionException(state.Position, "Attribute value cannot be assigned when creating resource.",
-                container.Type != null
+                container is ResourceType
                     ? $"The attribute '{attr}' on resource type '{container.PublicName}' cannot be assigned to."
                     : $"The attribute '{attr}' on type '{container.PublicName}' cannot be assigned to.");
         }
     }
 
-    private static void AssertSetAttributeInUpdateResourceNotBlocked(AttrAttribute attr, FieldContainer container, RequestAdapterState state)
+    private static void AssertSetAttributeInUpdateResourceNotBlocked(AttrAttribute attr, IFieldContainer container, RequestAdapterState state)
     {
         if (state.Request.WriteOperation == WriteOperationKind.UpdateResource && !attr.Capabilities.HasFlag(AttrCapabilities.AllowChange))
         {
             throw new ModelConversionException(state.Position, "Attribute value cannot be assigned when updating resource.",
-                container.Type != null
+                container is ResourceType
                     ? $"The attribute '{attr}' on resource type '{container.PublicName}' cannot be assigned to."
                     : $"The attribute '{attr}' on type '{container.PublicName}' cannot be assigned to.");
         }
     }
 
-    private static void AssertNotReadOnly(AttrAttribute attr, FieldContainer container, RequestAdapterState state)
+    private static void AssertNotReadOnly(AttrAttribute attr, IFieldContainer container, RequestAdapterState state)
     {
         if (attr.Property.SetMethod == null)
         {
             throw new ModelConversionException(state.Position, "Attribute is read-only.",
-                container.Type != null
+                container is ResourceType
                     ? $"Attribute '{attr}' on resource type '{container.PublicName}' is read-only."
                     : $"Attribute '{attr}' on type '{container.PublicName}' is read-only.");
         }

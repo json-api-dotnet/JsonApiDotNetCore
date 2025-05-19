@@ -29,7 +29,12 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
     {
         ArgumentNullException.ThrowIfNull(selection);
 
-        Expression bodyInitializer = CreateLambdaBodyInitializer(selection, context.ResourceType, false, context);
+        if (context.FieldContainer is not ResourceType resourceType)
+        {
+            throw new InvalidOperationException("TODO: Support sparse fieldsets in compound attributes.");
+        }
+
+        Expression bodyInitializer = CreateLambdaBodyInitializer(selection, resourceType, false, context);
 
         LambdaExpression lambda = Expression.Lambda(bodyInitializer, context.LambdaScope.Parameter);
 

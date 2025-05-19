@@ -1,5 +1,5 @@
 using System.Text;
-using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.QueryStrings.FieldChains;
@@ -38,12 +38,12 @@ internal sealed class MatchError
         return new MatchError(exception.Message, exception.Position, true);
     }
 
-    public static MatchError CreateForUnknownField(int position, FieldContainer container, string publicName, bool allowDerivedTypes)
+    public static MatchError CreateForUnknownField(int position, IFieldContainer container, string publicName, bool allowDerivedTypes)
     {
         ArgumentNullException.ThrowIfNull(container);
         ArgumentNullException.ThrowIfNull(publicName);
 
-        bool hasDerivedTypes = allowDerivedTypes && container.Type is { DirectlyDerivedTypes.Count: > 0 };
+        bool hasDerivedTypes = allowDerivedTypes && container is ResourceType { DirectlyDerivedTypes.Count: > 0 };
 
         var builder = new MessageBuilder();
 
@@ -56,16 +56,16 @@ internal sealed class MatchError
         return new MatchError(message, position, true);
     }
 
-    public static MatchError CreateForMultipleDerivedTypes(int position, FieldContainer container, string publicName)
+    public static MatchError CreateForMultipleDerivedTypes(int position, IFieldContainer container, string publicName)
     {
         ArgumentNullException.ThrowIfNull(container);
         ArgumentNullException.ThrowIfNull(publicName);
 
-        string message = $"Field '{publicName}' is defined on multiple types that derive from {container}.";
+        string message = $"Field '{publicName}' is defined on multiple types that derive from {FormatContainer(container)}.";
         return new MatchError(message, position, true);
     }
 
-    public static MatchError CreateForFieldTypeMismatch(int position, FieldContainer container, FieldTypes choices)
+    public static MatchError CreateForFieldTypeMismatch(int position, IFieldContainer container, FieldTypes choices)
     {
         ArgumentNullException.ThrowIfNull(container);
 
@@ -80,7 +80,7 @@ internal sealed class MatchError
         return new MatchError(message, position, false);
     }
 
-    public static MatchError CreateForTooMuchInput(int position, FieldContainer? container, FieldTypes choices)
+    public static MatchError CreateForTooMuchInput(int position, IFieldContainer? container, FieldTypes choices)
     {
         var builder = new MessageBuilder();
 
@@ -98,6 +98,16 @@ internal sealed class MatchError
 
         string message = builder.ToString();
         return new MatchError(message, position, false);
+    }
+
+    private static string FormatContainer(IFieldContainer container)
+    {
+        return container switch
+        {
+            ResourceType resourceType => $"resource type '{resourceType}'",
+            AttrAttribute attribute => $"attribute '{attribute.PublicName}'",
+            _ => $"{container}"
+        };
     }
 
     public override string ToString()
@@ -143,14 +153,11 @@ internal sealed class MatchError
             }
         }
 
-        public void WriteContainer(FieldContainer? container)
+        public void WriteContainer(IFieldContainer? container)
         {
-            if (container != null)
+            if (container is ResourceType or AttrAttribute { Kind: AttrKind.Compound or AttrKind.CollectionOfCompound })
             {
-                if (container.Attribute == null || container.Attribute.Kind == AttrKind.Compound || container.Attribute.Kind == AttrKind.CollectionOfCompound)
-                {
-                    _builder.Append($" on {container}");
-                }
+                _builder.Append($" on {FormatContainer(container)}");
             }
         }
 

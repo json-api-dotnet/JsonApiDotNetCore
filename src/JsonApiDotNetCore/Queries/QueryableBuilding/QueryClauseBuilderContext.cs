@@ -17,9 +17,9 @@ public sealed class QueryClauseBuilderContext
     public Expression Source { get; }
 
     /// <summary>
-    /// The resource type for <see cref="Source" />.
+    /// The resource type or parent attribute for <see cref="Source" />.
     /// </summary>
-    public ResourceType ResourceType { get; }
+    public IFieldContainer FieldContainer { get; }
 
     /// <summary>
     /// The extension type to generate calls on, typically <see cref="Queryable" /> or <see cref="Enumerable" />.
@@ -51,20 +51,20 @@ public sealed class QueryClauseBuilderContext
     /// </summary>
     public object? State { get; }
 
-    public QueryClauseBuilderContext(Expression source, ResourceType resourceType, Type extensionType, IReadOnlyModel entityModel,
+    public QueryClauseBuilderContext(Expression source, IFieldContainer fieldContainer, Type extensionType, IReadOnlyModel entityModel,
         LambdaScopeFactory lambdaScopeFactory, LambdaScope lambdaScope, IQueryableBuilder queryableBuilder, object? state)
     {
         ArgumentNullException.ThrowIfNull(source);
-        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(fieldContainer);
         ArgumentNullException.ThrowIfNull(extensionType);
         ArgumentNullException.ThrowIfNull(entityModel);
         ArgumentNullException.ThrowIfNull(lambdaScopeFactory);
         ArgumentNullException.ThrowIfNull(lambdaScope);
         ArgumentNullException.ThrowIfNull(queryableBuilder);
-        AssertSameType(source.Type, resourceType);
+        AssertSameType(source.Type, fieldContainer);
 
         Source = source;
-        ResourceType = resourceType;
+        FieldContainer = fieldContainer;
         LambdaScope = lambdaScope;
         EntityModel = entityModel;
         ExtensionType = extensionType;
@@ -73,14 +73,15 @@ public sealed class QueryClauseBuilderContext
         State = state;
     }
 
-    private static void AssertSameType(Type sourceType, ResourceType resourceType)
+    private static void AssertSameType(Type sourceType, IFieldContainer fieldContainer)
     {
         Type? sourceElementType = CollectionConverter.Instance.FindCollectionElementType(sourceType);
+        Type containerElementType = CollectionConverter.Instance.FindCollectionElementType(fieldContainer.ClrType) ?? fieldContainer.ClrType;
 
-        if (sourceElementType != resourceType.ClrType)
+        if (sourceElementType != containerElementType)
         {
             throw new InvalidOperationException(
-                $"Internal error: Mismatch between expression type '{sourceElementType?.Name}' and resource type '{resourceType.ClrType.Name}'.");
+                $"Internal error: Mismatch between expression type '{sourceElementType?.Name}' and resource type '{containerElementType.Name}'.");
         }
     }
 
@@ -88,13 +89,13 @@ public sealed class QueryClauseBuilderContext
     {
         ArgumentNullException.ThrowIfNull(source);
 
-        return new QueryClauseBuilderContext(source, ResourceType, ExtensionType, EntityModel, LambdaScopeFactory, LambdaScope, QueryableBuilder, State);
+        return new QueryClauseBuilderContext(source, FieldContainer, ExtensionType, EntityModel, LambdaScopeFactory, LambdaScope, QueryableBuilder, State);
     }
 
     public QueryClauseBuilderContext WithLambdaScope(LambdaScope lambdaScope)
     {
         ArgumentNullException.ThrowIfNull(lambdaScope);
 
-        return new QueryClauseBuilderContext(Source, ResourceType, ExtensionType, EntityModel, LambdaScopeFactory, lambdaScope, QueryableBuilder, State);
+        return new QueryClauseBuilderContext(Source, FieldContainer, ExtensionType, EntityModel, LambdaScopeFactory, lambdaScope, QueryableBuilder, State);
     }
 }

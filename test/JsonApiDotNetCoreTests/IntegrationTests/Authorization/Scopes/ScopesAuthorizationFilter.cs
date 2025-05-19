@@ -1,5 +1,6 @@
 using System.Net;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -87,9 +88,9 @@ internal sealed class ScopesAuthorizationFilter : IActionFilter
                 {
                     _authScopeSet.Include(relationship, Permission.Read);
                 }
-                else
+                else if (field.Container is ResourceType resourceType)
                 {
-                    _authScopeSet.Include(field.Type, Permission.Read);
+                    _authScopeSet.Include(resourceType, Permission.Read);
                 }
             }
 

@@ -8,8 +8,6 @@ namespace GettingStarted.Models;
 [Resource]
 public sealed class Person : Identifiable<long>
 {
-    // TODO: See if we can use "required" throughout the codebase, instead of null! suppression.
-
     [Attr]
     public required string Name { get; set; }
 

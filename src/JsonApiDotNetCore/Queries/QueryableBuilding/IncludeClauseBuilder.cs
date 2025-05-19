@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,10 @@ public class IncludeClauseBuilder : QueryClauseBuilder, IIncludeClauseBuilder
         // De-duplicate chains coming from derived relationships.
         HashSet<string> propertyPaths = [];
 
-        ApplyEagerLoads(context.ResourceType.EagerLoads, null, propertyPaths);
+        if (context.FieldContainer is ResourceType resourceType)
+        {
+            ApplyEagerLoads(resourceType.EagerLoads, null, propertyPaths);
+        }
 
         foreach (ResourceFieldChainExpression chain in IncludeChainConverter.Instance.GetRelationshipChains(expression))
         {

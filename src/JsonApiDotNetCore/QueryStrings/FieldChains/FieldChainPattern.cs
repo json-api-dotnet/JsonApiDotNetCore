@@ -129,8 +129,8 @@ public sealed class FieldChainPattern
     /// <param name="fieldChain">
     /// The dot-separated chain of resource field names.
     /// </param>
-    /// <param name="resourceType">
-    /// The parent resource type to start matching from.
+    /// <param name="fieldContainer">
+    /// The parent container to start matching from.
     /// </param>
     /// <param name="options">
     /// Match options, defaults to <see cref="FieldChainPatternMatchOptions.None" />.
@@ -141,15 +141,15 @@ public sealed class FieldChainPattern
     /// <returns>
     /// The match result.
     /// </returns>
-    public PatternMatchResult Match(string fieldChain, ResourceType resourceType, FieldChainPatternMatchOptions options = FieldChainPatternMatchOptions.None,
-        ILoggerFactory? loggerFactory = null)
+    public PatternMatchResult Match(string fieldChain, IFieldContainer fieldContainer,
+        FieldChainPatternMatchOptions options = FieldChainPatternMatchOptions.None, ILoggerFactory? loggerFactory = null)
     {
         ArgumentNullException.ThrowIfNull(fieldChain);
-        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(fieldContainer);
 
         ILogger<PatternMatcher> logger = loggerFactory == null ? NullLogger<PatternMatcher>.Instance : loggerFactory.CreateLogger<PatternMatcher>();
         var matcher = new PatternMatcher(this, options, logger);
-        return matcher.Match(fieldChain, resourceType);
+        return matcher.Match(fieldChain, fieldContainer);
     }
 
     /// <summary>

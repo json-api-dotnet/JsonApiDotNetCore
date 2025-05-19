@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Configuration;
 
 namespace JsonApiDotNetCore.Resources.Annotations;
 
@@ -8,7 +9,7 @@ namespace JsonApiDotNetCore.Resources.Annotations;
 /// </summary>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Property)]
-public sealed class AttrAttribute : ResourceFieldAttribute
+public sealed class AttrAttribute : ResourceFieldAttribute, IFieldContainer
 {
     private static readonly ReadOnlyDictionary<string, AttrAttribute> EmptyChildren = new Dictionary<string, AttrAttribute>().AsReadOnly();
 
@@ -48,6 +49,15 @@ public sealed class AttrAttribute : ResourceFieldAttribute
     /// Gets the nested attributes by name, if this is a compound attribute.
     /// </summary>
     public IReadOnlyDictionary<string, AttrAttribute> Children { get; internal set; } = EmptyChildren;
+
+    /// <inheritdoc />
+    public Type ClrType => Property.PropertyType;
+
+    /// <inheritdoc />
+    public AttrAttribute? FindAttributeByPublicName(string publicName)
+    {
+        return Children.GetValueOrDefault(publicName);
+    }
 
     /// <inheritdoc />
     public override bool Equals(object? obj)

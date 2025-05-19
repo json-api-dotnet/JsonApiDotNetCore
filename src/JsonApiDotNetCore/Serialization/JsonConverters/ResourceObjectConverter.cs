@@ -91,8 +91,7 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
                         {
                             if (resourceType != null)
                             {
-                                var container = new FieldContainer(resourceType, null);
-                                resourceObject.Attributes = ReadAttributes(ref reader, options, container);
+                                resourceObject.Attributes = ReadAttributes(ref reader, options, resourceType);
                             }
                             else
                             {
@@ -169,7 +168,7 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
         return null;
     }
 
-    private Dictionary<string, object?>? ReadAttributes(ref Utf8JsonReader reader, JsonSerializerOptions options, FieldContainer container)
+    private Dictionary<string, object?>? ReadAttributes(ref Utf8JsonReader reader, JsonSerializerOptions options, IFieldContainer container)
     {
         if (reader.TokenType == JsonTokenType.Null)
         {
@@ -200,9 +199,9 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
                         string extensionName = attributeName[(extensionSeparatorIndex + 1)..];
 
                         // TODO: How do compound attributes affect OpenAPI?
-                        if (container.Type != null)
+                        if (container is ResourceType resourceType)
                         {
-                            ValidateExtensionInAttributes(extensionNamespace, extensionName, container.Type, reader);
+                            ValidateExtensionInAttributes(extensionNamespace, extensionName, resourceType, reader);
                             reader.Skip();
                             continue;
                         }
@@ -280,8 +279,7 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
                 case JsonTokenType.False:
                 case JsonTokenType.Null:
                 {
-                    var elementContainer = new FieldContainer(null, attribute);
-                    object? attributeValue = ReadAttributeValue(ref reader, options, attribute, elementContainer.ClrType);
+                    object? attributeValue = ReadAttributeValue(ref reader, options, attribute, attribute.ClrType);
                     collection.Add(attributeValue);
                     break;
                 }
@@ -305,8 +303,7 @@ public class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
             return JsonSerializer.Deserialize(ref reader, elementType, options);
         }
 
-        var container = new FieldContainer(null, attribute);
-        return ReadAttributes(ref reader, options, container);
+        return ReadAttributes(ref reader, options, attribute);
     }
 
     // Currently exposed for internal use only, so we don't need a breaking change when adding support for multiple extensions.

@@ -1,5 +1,4 @@
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.Logging;
 
@@ -24,12 +23,12 @@ internal sealed class PatternMatcher
         _allowDerivedTypes = options.HasFlag(FieldChainPatternMatchOptions.AllowDerivedTypes);
     }
 
-    public PatternMatchResult Match(string fieldChain, ResourceType resourceType)
+    public PatternMatchResult Match(string fieldChain, IFieldContainer fieldContainer)
     {
         ArgumentNullException.ThrowIfNull(fieldChain);
-        ArgumentNullException.ThrowIfNull(resourceType);
+        ArgumentNullException.ThrowIfNull(fieldContainer);
 
-        var startState = MatchState.Create(_pattern, fieldChain, resourceType);
+        var startState = MatchState.Create(_pattern, fieldChain, fieldContainer);
 
         if (startState.Error != null)
         {
@@ -185,30 +184,30 @@ internal sealed class PatternMatcher
     /// <summary>
     /// Lookup the specified field in the resource graph.
     /// </summary>
-    private HashSet<ResourceFieldAttribute> LookupFields(FieldContainer container, string publicName)
+    private HashSet<ResourceFieldAttribute> LookupFields(IFieldContainer container, string publicName)
     {
         HashSet<ResourceFieldAttribute> fields = [];
 
-        if (container.Type != null)
+        if (container is ResourceType resourceType)
         {
             if (_allowDerivedTypes)
             {
-                IReadOnlySet<AttrAttribute> attributes = container.Type.GetAttributesInTypeOrDerived(publicName);
+                IReadOnlySet<AttrAttribute> attributes = resourceType.GetAttributesInTypeOrDerived(publicName);
                 fields.UnionWith(attributes);
 
-                IReadOnlySet<RelationshipAttribute> relationships = container.Type.GetRelationshipsInTypeOrDerived(publicName);
+                IReadOnlySet<RelationshipAttribute> relationships = resourceType.GetRelationshipsInTypeOrDerived(publicName);
                 fields.UnionWith(relationships);
             }
             else
             {
-                AttrAttribute? attribute = container.Type.FindAttributeByPublicName(publicName);
+                AttrAttribute? attribute = resourceType.FindAttributeByPublicName(publicName);
 
                 if (attribute != null)
                 {
                     fields.Add(attribute);
                 }
 
-                RelationshipAttribute? relationship = container.Type.FindRelationshipByPublicName(publicName);
+                RelationshipAttribute? relationship = resourceType.FindRelationshipByPublicName(publicName);
 
                 if (relationship != null)
                 {
@@ -216,7 +215,7 @@ internal sealed class PatternMatcher
                 }
             }
         }
-        else if (container.Attribute is { Kind: AttrKind.Compound or AttrKind.CollectionOfCompound })
+        else if (container is AttrAttribute { Kind: AttrKind.Compound or AttrKind.CollectionOfCompound })
         {
             AttrAttribute? attribute = container.FindAttributeByPublicName(publicName);
 
