@@ -11,7 +11,7 @@ param(
 docker container stop jsonapi-postgresql-db
 docker container stop jsonapi-postgresql-management
 
-docker run --pull always --rm --detach --name jsonapi-postgresql-db -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:latest
+docker run --pull always --rm --detach --name jsonapi-postgresql-db -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:latest -N 500
 
 if ($UI) {
     docker run --pull always --rm --detach --name jsonapi-postgresql-management --link jsonapi-postgresql-db:db -e PGADMIN_DEFAULT_EMAIL=admin@admin.com -e PGADMIN_DEFAULT_PASSWORD=postgres -p 5050:80 dpage/pgadmin4:latest

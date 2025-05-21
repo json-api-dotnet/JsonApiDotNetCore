@@ -11,7 +11,7 @@
     <BenchmarkDotNetVersion>0.14.*</BenchmarkDotNetVersion>
     <BlushingPenguinVersion>1.0.*</BlushingPenguinVersion>
     <BogusVersion>35.6.*</BogusVersion>
-    <CodeAnalysisVersion>4.13.*</CodeAnalysisVersion>
+    <CodeAnalysisVersion>4.14.*</CodeAnalysisVersion>
     <CoverletVersion>6.0.*</CoverletVersion>
     <DapperVersion>2.1.*</DapperVersion>
     <FluentAssertionsVersion>7.2.*</FluentAssertionsVersion>
@@ -20,12 +20,12 @@
     <KiotaVersion>1.*</KiotaVersion>
     <MicrosoftApiClientVersion>9.0.*</MicrosoftApiClientVersion>
     <MicrosoftApiServerVersion>9.0.*</MicrosoftApiServerVersion>
-    <NSwagApiClientVersion>14.3.*</NSwagApiClientVersion>
+    <NSwagApiClientVersion>14.4.*</NSwagApiClientVersion>
     <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
-    <ScalarAspNetCoreVersion>2.1.*</ScalarAspNetCoreVersion>
+    <ScalarAspNetCoreVersion>2.3.*</ScalarAspNetCoreVersion>
     <SwashbuckleVersion>8.*-*</SwashbuckleVersion>
     <SystemTextJsonVersion>9.0.*</SystemTextJsonVersion>
-    <TestSdkVersion>17.13.*</TestSdkVersion>
+    <TestSdkVersion>17.14.*</TestSdkVersion>
     <XunitVersion>2.9.*</XunitVersion>
     <XunitVisualStudioVersion>2.8.*</XunitVisualStudioVersion>
   </PropertyGroup>
