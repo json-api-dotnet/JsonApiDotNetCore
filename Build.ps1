@@ -5,8 +5,7 @@ function VerifySuccessExitCode {
 }
 
 Write-Host "$(pwsh --version)"
-Write-Host "Active .NET SDK: $(dotnet --version)"
-Write-Host "Using version suffix: $versionSuffix"
+Write-Host ".NET SDK $(dotnet --version)"
 
 Remove-Item -Recurse -Force artifacts -ErrorAction SilentlyContinue
 Remove-Item -Recurse -Force * -Include coverage.cobertura.xml
