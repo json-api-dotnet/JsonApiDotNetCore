@@ -13,7 +13,7 @@ public static class BuiltInPatterns
     // - C = collection (attribute or to-many)
     // - M = (obsolete)
 
-    public static FieldChainPattern SingleField { get; } = FieldChainPattern.Parse("F");
+    public static FieldChainPattern SingleField { get; } = FieldChainPattern.Parse("F+"); // TODO: This isn't entirely correct.
     public static FieldChainPattern ToOneChain { get; } = FieldChainPattern.Parse("O+");
     public static FieldChainPattern ToOneChainEndingInAttribute { get; } = FieldChainPattern.Parse("O*A+");
     public static FieldChainPattern ToOneChainEndingInAttributeOrToOne { get; } = FieldChainPattern.Parse("O*[OA]+"); // TODO: This isn't entirely correct.

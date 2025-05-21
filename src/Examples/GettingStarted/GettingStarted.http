@@ -25,6 +25,12 @@ GET http://{{hostname}}:{{port}}/api/people?filter=not(has(addresses))
 
 GET http://{{hostname}}:{{port}}/api/people?filter=has(addresses,equals(country.code,'ESP'))
 
+### Sparse fieldset inside compound attribute chain
+
+GET http://{{hostname}}:{{port}}/api/people?fields[people]=livingAddress.street
+
+
+
 ### Patch string collection attribute
 
 PATCH http://{{hostname}}:{{port}}/api/people/1
