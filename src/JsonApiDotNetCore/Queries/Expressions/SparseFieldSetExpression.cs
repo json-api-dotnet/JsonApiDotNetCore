@@ -14,6 +14,8 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 [PublicAPI]
 public class SparseFieldSetExpression : QueryExpression
 {
+    // TODO: How do compound attributes affect sparse fieldsets?
+
     /// <summary>
     /// The set of JSON:API fields to include. Chain format: a single field.
     /// </summary>
@@ -62,7 +64,7 @@ public class SparseFieldSetExpression : QueryExpression
     {
         var hashCode = new HashCode();
 
-        foreach (ResourceFieldAttribute field in Fields)
+        foreach (var field in Fields)
         {
             hashCode.Add(field);
         }
