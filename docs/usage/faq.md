@@ -1,8 +1,7 @@
 # Frequently Asked Questions
 
 #### Where can I find documentation and examples?
-While the [documentation](~/usage/resources/index.md) covers basic features and a few runnable example projects are available [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples),
-many more advanced use cases are available as integration tests [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/test/JsonApiDotNetCoreTests/IntegrationTests), so be sure to check them out!
+The [documentation](~/usage/resources/index.md) covers basic features, as well as [advanced use cases](~/usage/advanced/index.md). Several runnable example projects are available [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples).
 
 #### Why don't you use the built-in OpenAPI support in ASP.NET Core?
 The structure of JSON:API request and response bodies differs significantly from the signature of JsonApiDotNetCore controllers.
@@ -48,7 +47,7 @@ Aside from debugging, you can get more info by:
       options.SerializerOptions.WriteIndented = true;
   });
   ```
-- Turning on verbose logging and logging of executed SQL statements, by adding the following to your `appsettings.Development.json`:
+- Turning on trace logging, or/and logging of executed SQL statements, by adding the following to your `appsettings.Development.json`:
 
   ```json
   {
@@ -56,11 +55,12 @@ Aside from debugging, you can get more info by:
       "LogLevel": {
         "Default": "Warning",
         "Microsoft.EntityFrameworkCore.Database.Command": "Information",
-        "JsonApiDotNetCore": "Verbose"
+        "JsonApiDotNetCore": "Trace"
       }
     }
   }
   ```
+- Activate debug logging of LINQ expressions by adding a NuGet reference to [AgileObjects.ReadableExpressions](https://www.nuget.org/packages/AgileObjects.ReadableExpressions) in your project.
 
 #### What if my JSON:API resources do not exactly match the shape of my database tables?
 We often find users trying to write custom code to solve that. They usually get it wrong or incomplete, and it may not perform well.
