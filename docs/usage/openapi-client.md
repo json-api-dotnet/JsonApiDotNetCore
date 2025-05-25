@@ -340,8 +340,8 @@ demonstrates how to use them. It uses local IDs to:
 | --- | --- | --- |
 | Properties are always nullable | - | https://github.com/microsoft/kiota/issues/3911 |
 | JSON:API query strings are inaccessible | Use `SetQueryStringHttpMessageHandler.CreateScope` from `JsonApiDotNetCore.OpenApi.Client.Kiota` package | https://github.com/microsoft/kiota/issues/3800 |
-| Properties set to `null` are sent twice | - | https://github.com/microsoft/kiota-dotnet/issues/535 |
 | HTTP 304 (Not Modified) is not properly recognized | Catch `ApiException` and inspect the response status code | https://github.com/microsoft/kiota/issues/4190, https://github.com/microsoft/kiota-dotnet/issues/531 |
+| No `Accept` header sent when only error responses define `Content-Type` | `JsonApiDotNetCore.OpenApi.Swashbuckle` package contains workaround | https://github.com/microsoft/kiota/issues/6572 |
 | Generator warns about unsupported formats | Use `JsonApiDotNetCore.OpenApi.Client.Kiota` package | https://github.com/microsoft/kiota/issues/4227 |
 | `Stream` response for HEAD request | - | https://github.com/microsoft/kiota/issues/4245 |
 | Unhelpful exception messages | - | https://github.com/microsoft/kiota/issues/4349 |
