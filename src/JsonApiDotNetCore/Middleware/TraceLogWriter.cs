@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -5,6 +6,8 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.QueryableBuilding;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.Logging;
@@ -204,9 +207,45 @@ internal sealed partial class TraceLogWriter<T>(ILoggerFactory loggerFactory) : 
         }
     }
 
+    public void LogDebug(QueryLayer queryLayer)
+    {
+        ArgumentNullException.ThrowIfNull(queryLayer);
+
+        LogQueryLayer(queryLayer);
+    }
+
+    public void LogDebug(Expression expression)
+    {
+        ArgumentNullException.ThrowIfNull(expression);
+
+        if (_logger.IsEnabled(LogLevel.Debug))
+        {
+            string? text = ExpressionTreeFormatter.Instance.GetText(expression);
+
+            if (text != null)
+            {
+                LogExpression(text);
+            }
+            else
+            {
+                LogReadableExpressionsAssemblyUnavailable();
+            }
+        }
+    }
+
     [LoggerMessage(Level = LogLevel.Trace, SkipEnabledCheck = true, Message = "Entering {MemberName}({ParameterValues})")]
     private partial void LogEnteringMemberWithParameters(string memberName, string parameterValues);
 
     [LoggerMessage(Level = LogLevel.Trace, SkipEnabledCheck = true, Message = "Entering {MemberName}()")]
     private partial void LogEnteringMember(string memberName);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "QueryLayer: {queryLayer}")]
+    private partial void LogQueryLayer(QueryLayer queryLayer);
+
+    [LoggerMessage(Level = LogLevel.Debug, SkipEnabledCheck = true, Message = "Expression tree: {expression}")]
+    private partial void LogExpression(string expression);
+
+    [LoggerMessage(Level = LogLevel.Debug, SkipEnabledCheck = true,
+        Message = "Failed to load assembly. To log expression trees, add a NuGet reference to 'AgileObjects.ReadableExpressions' in your project.")]
+    private partial void LogReadableExpressionsAssemblyUnavailable();
 }
