@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
@@ -19,6 +19,8 @@ internal sealed class ServerDocumentFilter : IDocumentFilter
 
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
+        swaggerDoc.Servers ??= [];
+
         if (swaggerDoc.Servers.Count == 0 && _httpContextAccessor.HttpContext != null)
         {
             HttpRequest httpRequest = _httpContextAccessor.HttpContext.Request;
