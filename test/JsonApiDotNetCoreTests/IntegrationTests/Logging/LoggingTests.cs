@@ -152,9 +152,9 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Should().BeEmpty();
 
-        IReadOnlyList<string> logLines = loggerProvider.GetLines();
+        string[] traceLines = loggerProvider.GetMessages().Where(message => message.LogLevel == LogLevel.Trace).Select(message => message.ToString()).ToArray();
 
-        logLines.Should().BeEquivalentTo(new[]
+        traceLines.Should().BeEquivalentTo(new[]
         {
             $$"""
             [TRACE] Received POST request at 'http://localhost/fruitBowls/{{existingBowl.StringId}}/relationships/fruits' with body: <<{
@@ -215,6 +215,7 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
               {
                 "Color": "Yellow",
                 "LengthInCentimeters": {{existingBanana.LengthInCentimeters.ToString(CultureInfo.InvariantCulture)}},
+                "WeightInKilograms": {{existingBanana.WeightInKilograms.ToString(CultureInfo.InvariantCulture)}},
                 "Id": {{existingBanana.Id}},
                 "StringId": "{{existingBanana.StringId}}"
               }
@@ -262,9 +263,9 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
 
         responseDocument.Should().BeEmpty();
 
-        IReadOnlyList<string> logLines = loggerProvider.GetLines();
+        string[] traceLines = loggerProvider.GetMessages().Where(message => message.LogLevel == LogLevel.Trace).Select(message => message.ToString()).ToArray();
 
-        logLines.Should().BeEquivalentTo(new[]
+        traceLines.Should().BeEquivalentTo(new[]
         {
             $$"""
             [TRACE] Received POST request at 'http://localhost/fruitBowls/{{existingBowl.StringId}}/relationships/fruits' with body: <<{
@@ -281,6 +282,7 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
               {
                 "Color": "Red/Yellow",
                 "DiameterInCentimeters": 0,
+                "WeightInKilograms": 0,
                 "Id": {{existingPeach.Id}},
                 "StringId": "{{existingPeach.StringId}}"
               }
@@ -291,6 +293,7 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
               {
                 "Color": "Red/Yellow",
                 "DiameterInCentimeters": 0,
+                "WeightInKilograms": 0,
                 "Id": {{existingPeach.Id}},
                 "StringId": "{{existingPeach.StringId}}"
               }
@@ -329,11 +332,102 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
               {
                 "Color": "Red/Yellow",
                 "DiameterInCentimeters": 0,
+                "WeightInKilograms": 0,
                 "Id": {{existingPeach.Id}},
                 "StringId": "{{existingPeach.StringId}}"
               }
             ])
             """
         }, options => options.Using(IgnoreLineEndingsComparer.Instance).WithStrictOrdering());
+    }
+
+    [Fact]
+    public async Task Logs_query_layer_and_expression_at_Debug_level()
+    {
+        // Arrange
+        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
+        loggerProvider.Clear();
+
+        var bowl = new FruitBowl();
+        bowl.Fruits.Add(_fakers.Peach.GenerateOne());
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.FruitBowls.Add(bowl);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/fruitBowls/{bowl.StringId}/fruits?filter=greaterThan(weightInKilograms,'0.1')&fields[peaches]=color&sort=-id";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Should().NotBeEmpty();
+
+        LogMessage queryLayerMessage = loggerProvider.GetMessages().Should()
+            .ContainSingle(message => message.LogLevel == LogLevel.Debug && message.Text.StartsWith("QueryLayer:", StringComparison.Ordinal)).Subject;
+
+        queryLayerMessage.Text.Should().Be($$"""
+            QueryLayer: QueryLayer<FruitBowl>
+            {
+              Include: fruits
+              Filter: equals(id,'{{bowl.StringId}}')
+              Selection
+              {
+                FieldSelectors<FruitBowl>
+                {
+                  id
+                  fruits: QueryLayer<Fruit>
+                  {
+                    Filter: greaterThan(weightInKilograms,'0.1')
+                    Sort: -id
+                    Pagination: Page number: 1, size: 10
+                    Selection
+                    {
+                      FieldSelectors<Peach>
+                      {
+                        color
+                        id
+                      }
+                    }
+                  }
+                }
+              }
+            }
+
+            """);
+
+        LogMessage expressionMessage = loggerProvider.GetMessages().Should().ContainSingle(message =>
+            message.LogLevel == LogLevel.Debug && message.Text.StartsWith("Expression tree:", StringComparison.Ordinal)).Subject;
+
+        expressionMessage.Text.Should().Be("""
+            Expression tree: [Microsoft.EntityFrameworkCore.Query.EntityQueryRootExpression]
+                .AsNoTrackingWithIdentityResolution()
+                .Include("Fruits")
+                .Where(fruitBowl => fruitBowl.Id == value)
+                .Select(
+                    fruitBowl => new FruitBowl
+                    {
+                        Id = fruitBowl.Id,
+                        Fruits = fruitBowl.Fruits
+                            .Where(fruit => fruit.WeightInKilograms > value)
+                            .OrderByDescending(fruit => fruit.Id)
+                            .Take(value)
+                            .Select(
+                                fruit => (fruit.GetType() == value)
+                                    ? (Fruit)new Peach
+                                    {
+                                        Id = fruit.Id,
+                                        WeightInKilograms = fruit.WeightInKilograms,
+                                        DiameterInCentimeters = ((Peach)fruit).DiameterInCentimeters,
+                                        Id = fruit.Id
+                                    }
+                                    : fruit)
+                            .ToHashSet()
+                    })
+            """);
     }
 }

@@ -10,4 +10,7 @@ public abstract class Fruit : Identifiable<long>
 {
     [Attr]
     public abstract string Color { get; }
+
+    [Attr]
+    public double WeightInKilograms { get; set; }
 }

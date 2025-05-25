@@ -160,7 +160,7 @@ If there's no LINQ provider available, the example [here](https://github.com/jso
 which produces SQL and uses [Dapper](https://github.com/DapperLib/Dapper) for data access.
 
 > [!TIP]
-> [ExpressionTreeVisualizer](https://github.com/zspitz/ExpressionTreeVisualizer) is very helpful in trying to debug LINQ expression trees!
+> [ReadableExpressions](https://github.com/agileobjects/ReadableExpressions) is very helpful in trying to debug LINQ expression trees!
 
 #### I love JsonApiDotNetCore! How can I support the team?
 The best way to express your gratitude is by starring our repository.

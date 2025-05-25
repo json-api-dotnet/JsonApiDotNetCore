@@ -22,7 +22,7 @@ public sealed class AtomicTraceLoggingTests : IClassFixture<IntegrationTestConte
         testContext.ConfigureLogging(options =>
         {
             var loggerProvider = new CapturingLoggerProvider((category, level) =>
-                level >= LogLevel.Trace && category.StartsWith("JsonApiDotNetCore.", StringComparison.Ordinal));
+                level == LogLevel.Trace && category.StartsWith("JsonApiDotNetCore.", StringComparison.Ordinal));
 
             options.AddProvider(loggerProvider);
             options.SetMinimumLevel(LogLevel.Trace);
