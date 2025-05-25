@@ -1,4 +1,4 @@
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 
@@ -9,22 +9,23 @@ internal static class OpenApiSchemaExtensions
         ArgumentNullException.ThrowIfNull(fullSchema);
         ArgumentNullException.ThrowIfNull(propertyNamesInOrder);
 
-        var propertiesInOrder = new Dictionary<string, OpenApiSchema>();
+        var propertiesInOrder = new Dictionary<string, IOpenApiSchema>();
 
         foreach (string propertyName in propertyNamesInOrder)
         {
-            if (fullSchema.Properties.TryGetValue(propertyName, out OpenApiSchema? schema))
+            if (fullSchema.Properties != null && fullSchema.Properties.TryGetValue(propertyName, out IOpenApiSchema? schema))
             {
                 propertiesInOrder.Add(propertyName, schema);
             }
         }
 
+        ConsistencyGuard.ThrowIf(fullSchema.Properties == null);
         ConsistencyGuard.ThrowIf(fullSchema.Properties.Count != propertiesInOrder.Count);
 
         fullSchema.Properties = propertiesInOrder;
     }
 
-    public static OpenApiSchema WrapInExtendedSchema(this OpenApiSchema source)
+    public static OpenApiSchema WrapInExtendedSchema(this IOpenApiSchema source)
     {
         ArgumentNullException.ThrowIfNull(source);
 
@@ -34,11 +35,11 @@ internal static class OpenApiSchemaExtensions
         };
     }
 
-    public static OpenApiSchema UnwrapLastExtendedSchema(this OpenApiSchema source)
+    public static IOpenApiSchema UnwrapLastExtendedSchema(this IOpenApiSchema source)
     {
         ArgumentNullException.ThrowIfNull(source);
 
-        if (source.AllOf is { Count: > 0 })
+        if (source is OpenApiSchema && source.AllOf is { Count: > 0 })
         {
             return source.AllOf.Last();
         }

@@ -38,11 +38,15 @@
   <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0'">
     <!-- Published dependencies (only update on major version change) -->
     <EntityFrameworkCoreFrozenVersion>10.0.*-*</EntityFrameworkCoreFrozenVersion>
+    <SwashbuckleFrozenVersion>10.0.0-pr.3283.*</SwashbuckleFrozenVersion>
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
     <AspNetCoreVersion>10.0.*-*</AspNetCoreVersion>
+    <SwashbuckleVersion>10.0.0-pr.3283.*</SwashbuckleVersion>
+    <MicrosoftOpenApiVersion>2.3.*</MicrosoftOpenApiVersion>
+    <MicrosoftApiServerVersion>10.0.*-*</MicrosoftApiServerVersion>
     <EntityFrameworkCoreVersion>10.0.*-*</EntityFrameworkCoreVersion>
-    <EntityFrameworkCorePomeloVersion>9.0.*-*</EntityFrameworkCorePomeloVersion>
+    <EntityFrameworkCorePomeloVersion>9.0.*</EntityFrameworkCorePomeloVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
@@ -52,6 +56,7 @@
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
     <AspNetCoreVersion>9.0.*</AspNetCoreVersion>
     <EntityFrameworkCoreVersion>9.0.*</EntityFrameworkCoreVersion>
+    <EntityFrameworkCorePomeloVersion>9.0.*</EntityFrameworkCorePomeloVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
@@ -61,5 +66,6 @@
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
     <AspNetCoreVersion>8.0.*</AspNetCoreVersion>
     <EntityFrameworkCoreVersion>8.0.*</EntityFrameworkCoreVersion>
+    <EntityFrameworkCorePomeloVersion>8.0.*</EntityFrameworkCorePomeloVersion>
   </PropertyGroup>
 </Project>
