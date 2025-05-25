@@ -20,7 +20,7 @@ internal sealed class ResourceDocumentationReader
 
         if (navigator != null)
         {
-            string typeMemberName = XmlCommentsNodeNameHelper.GetMemberNameForType(resourceType.ClrType);
+            string? typeMemberName = XmlCommentsNodeNameHelper.GetMemberNameForType(resourceType.ClrType);
             return GetSummary(navigator, typeMemberName);
         }
 
@@ -35,7 +35,7 @@ internal sealed class ResourceDocumentationReader
 
         if (navigator != null)
         {
-            string propertyMemberName = XmlCommentsNodeNameHelper.GetMemberNameForFieldOrProperty(attribute.Property);
+            string? propertyMemberName = XmlCommentsNodeNameHelper.GetMemberNameForFieldOrProperty(attribute.Property);
             return GetSummary(navigator, propertyMemberName);
         }
 
@@ -50,7 +50,7 @@ internal sealed class ResourceDocumentationReader
 
         if (navigator != null)
         {
-            string propertyMemberName = XmlCommentsNodeNameHelper.GetMemberNameForFieldOrProperty(relationship.Property);
+            string? propertyMemberName = XmlCommentsNodeNameHelper.GetMemberNameForFieldOrProperty(relationship.Property);
             return GetSummary(navigator, propertyMemberName);
         }
 
