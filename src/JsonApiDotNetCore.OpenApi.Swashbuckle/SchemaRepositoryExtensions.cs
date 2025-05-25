@@ -1,5 +1,5 @@
 using System.Reflection;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
@@ -28,12 +28,12 @@ internal static class SchemaRepositoryExtensions
         return field;
     }
 
-    public static OpenApiSchema LookupByType(this SchemaRepository schemaRepository, Type schemaType)
+    public static OpenApiSchemaReference LookupByType(this SchemaRepository schemaRepository, Type schemaType)
     {
         ArgumentNullException.ThrowIfNull(schemaRepository);
         ArgumentNullException.ThrowIfNull(schemaType);
 
-        if (!schemaRepository.TryLookupByType(schemaType, out OpenApiSchema? referenceSchema))
+        if (!schemaRepository.TryLookupByType(schemaType, out OpenApiSchemaReference? referenceSchema))
         {
             throw new InvalidOperationException($"Reference schema for '{schemaType.Name}' does not exist.");
         }
@@ -47,11 +47,11 @@ internal static class SchemaRepositoryExtensions
         ArgumentNullException.ThrowIfNull(oldSchemaType);
         ArgumentException.ThrowIfNullOrEmpty(newSchemaId);
 
-        if (schemaRepository.TryLookupByType(oldSchemaType, out OpenApiSchema? referenceSchema))
+        if (schemaRepository.TryLookupByType(oldSchemaType, out OpenApiSchemaReference? referenceSchema))
         {
-            string oldSchemaId = referenceSchema.Reference.Id;
+            string oldSchemaId = referenceSchema.Reference.Id!;
 
-            OpenApiSchema fullSchema = schemaRepository.Schemas[oldSchemaId];
+            IOpenApiSchema? fullSchema = schemaRepository.Schemas[oldSchemaId];
 
             schemaRepository.Schemas.Remove(oldSchemaId);
             schemaRepository.Schemas.Add(newSchemaId, fullSchema);

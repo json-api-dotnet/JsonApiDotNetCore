@@ -1,9 +1,7 @@
 using System.Diagnostics;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Services;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
@@ -21,6 +19,8 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
         ArgumentNullException.ThrowIfNull(document);
         ArgumentNullException.ThrowIfNull(context);
 
+        document.Components ??= new OpenApiComponents();
+        document.Components.Schemas ??= new Dictionary<string, IOpenApiSchema>();
         document.Components.Schemas.Remove(GenerationCacheSchemaGenerator.SchemaId);
 
         HashSet<string> unusedSchemaIds = GetUnusedSchemaIds(document);
@@ -50,6 +50,8 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
     {
         foreach (string schemaId in unusedSchemaIds)
         {
+            document.Components ??= new OpenApiComponents();
+            document.Components.Schemas ??= new Dictionary<string, IOpenApiSchema>();
             document.Components.Schemas.Remove(schemaId);
         }
     }
@@ -78,11 +80,11 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
         {
             public HashSet<string> ReachableSchemaIds { get; } = [];
 
-            public override void Visit(IOpenApiReferenceable referenceable)
+            public override void Visit(IOpenApiReferenceHolder referenceHolder)
             {
                 if (!PathString.StartsWith(ComponentSchemaPrefix, StringComparison.Ordinal))
                 {
-                    if (referenceable is OpenApiSchema schema)
+                    if (referenceHolder is OpenApiSchemaReference { Reference.Id: not null } schema)
                     {
                         ReachableSchemaIds.Add(schema.Reference.Id);
                     }
@@ -93,13 +95,16 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
 
     private sealed class ComponentSchemaUsageCollector
     {
-        private readonly IDictionary<string, OpenApiSchema> _componentSchemas;
+        private static readonly Dictionary<string, IOpenApiSchema>.ValueCollection EmptyValueCollection = new(new Dictionary<string, IOpenApiSchema>());
+        private readonly IDictionary<string, IOpenApiSchema> _componentSchemas;
         private readonly HashSet<string> _schemaIdsInUse = [];
 
         public ComponentSchemaUsageCollector(OpenApiDocument document)
         {
             ArgumentNullException.ThrowIfNull(document);
 
+            document.Components ??= new OpenApiComponents();
+            document.Components.Schemas ??= new Dictionary<string, IOpenApiSchema>();
             _componentSchemas = document.Components.Schemas;
         }
 
@@ -117,18 +122,18 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
             return unusedSchemaIds;
         }
 
-        private void WalkSchemaId(string schemaId)
+        private void WalkSchemaId(string? schemaId)
         {
-            if (_schemaIdsInUse.Add(schemaId))
+            if (schemaId != null && _schemaIdsInUse.Add(schemaId))
             {
-                if (_componentSchemas.TryGetValue(schemaId, out OpenApiSchema? schema))
+                if (_componentSchemas.TryGetValue(schemaId, out IOpenApiSchema? schema))
                 {
                     WalkSchema(schema);
                 }
             }
         }
 
-        private void WalkSchema(OpenApiSchema? schema)
+        private void WalkSchema(IOpenApiSchema? schema)
         {
             if (schema != null)
             {
@@ -137,22 +142,22 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
                 WalkSchema(schema.Items);
                 WalkSchema(schema.Not);
 
-                foreach (OpenApiSchema? subSchema in schema.AllOf)
+                foreach (IOpenApiSchema subSchema in schema.AllOf ?? [])
                 {
                     WalkSchema(subSchema);
                 }
 
-                foreach (OpenApiSchema? subSchema in schema.AnyOf)
+                foreach (IOpenApiSchema subSchema in schema.AnyOf ?? [])
                 {
                     WalkSchema(subSchema);
                 }
 
-                foreach (OpenApiSchema? subSchema in schema.OneOf)
+                foreach (IOpenApiSchema subSchema in schema.OneOf ?? [])
                 {
                     WalkSchema(subSchema);
                 }
 
-                foreach (OpenApiSchema? subSchema in schema.Properties.Values)
+                foreach (IOpenApiSchema subSchema in schema.Properties?.Values ?? EmptyValueCollection)
                 {
                     WalkSchema(subSchema);
                 }
@@ -162,22 +167,18 @@ internal sealed class UnusedComponentSchemaCleaner : IDocumentFilter
             }
         }
 
-        private void VisitSchema(OpenApiSchema schema)
+        private void VisitSchema(IOpenApiSchema schema)
         {
-            if (schema.Reference is { Type: ReferenceType.Schema, IsExternal: false })
+            if (schema is OpenApiSchemaReference { Reference: { Type: ReferenceType.Schema, IsExternal: false } } refSchema)
             {
-                WalkSchemaId(schema.Reference.Id);
+                WalkSchemaId(refSchema.Reference.Id);
             }
 
-            if (schema.Discriminator != null)
+            if (schema.Discriminator is { Mapping: not null })
             {
-                foreach (string mappingValue in schema.Discriminator.Mapping.Values)
+                foreach (OpenApiSchemaReference mappingValue in schema.Discriminator.Mapping.Values)
                 {
-                    if (mappingValue.StartsWith(ComponentSchemaPrefix, StringComparison.Ordinal))
-                    {
-                        string schemaId = mappingValue[ComponentSchemaPrefix.Length..];
-                        WalkSchemaId(schemaId);
-                    }
+                    WalkSchemaId(mappingValue.Reference.Id);
                 }
             }
         }

@@ -2,7 +2,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Documents;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 using JsonApiDotNetCore.Serialization.Objects;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
@@ -34,27 +34,28 @@ internal sealed class ErrorResponseDocumentSchemaGenerator : DocumentSchemaGener
         return schemaType == typeof(ErrorResponseDocument);
     }
 
-    protected override OpenApiSchema GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository)
+    protected override OpenApiSchemaReference GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(schemaType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        OpenApiSchema referenceSchemaForErrorObject = GenerateSchemaForErrorObject(schemaRepository);
-        OpenApiSchema fullSchemaForErrorObject = schemaRepository.Schemas[referenceSchemaForErrorObject.Reference.Id];
+        OpenApiSchemaReference referenceSchemaForErrorObject = GenerateSchemaForErrorObject(schemaRepository);
+        var fullSchemaForErrorObject = (OpenApiSchema)schemaRepository.Schemas[referenceSchemaForErrorObject.Reference.Id!];
 
-        OpenApiSchema referenceSchemaForMeta = _metaSchemaGenerator.GenerateSchema(schemaRepository);
+        OpenApiSchemaReference referenceSchemaForMeta = _metaSchemaGenerator.GenerateSchema(schemaRepository);
+        fullSchemaForErrorObject.Properties ??= new Dictionary<string, IOpenApiSchema>();
         fullSchemaForErrorObject.Properties[JsonApiPropertyName.Meta] = referenceSchemaForMeta.WrapInExtendedSchema();
 
-        return _defaultSchemaGenerator.GenerateSchema(schemaType, schemaRepository);
+        return (OpenApiSchemaReference)_defaultSchemaGenerator.GenerateSchema(schemaType, schemaRepository);
     }
 
-    private OpenApiSchema GenerateSchemaForErrorObject(SchemaRepository schemaRepository)
+    private OpenApiSchemaReference GenerateSchemaForErrorObject(SchemaRepository schemaRepository)
     {
         using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, ErrorObjectType);
 
-        OpenApiSchema referenceSchema = _defaultSchemaGenerator.GenerateSchema(ErrorObjectType, schemaRepository);
+        var referenceSchema = (OpenApiSchemaReference)_defaultSchemaGenerator.GenerateSchema(ErrorObjectType, schemaRepository);
 
-        traceScope.TraceSucceeded(referenceSchema.Reference.Id);
+        traceScope.TraceSucceeded(referenceSchema.Reference.Id!);
         return referenceSchema;
     }
 }

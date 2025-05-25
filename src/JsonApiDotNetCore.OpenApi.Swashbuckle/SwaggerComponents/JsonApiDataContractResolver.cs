@@ -33,7 +33,7 @@ internal sealed class JsonApiDataContractResolver : ISerializerDataContractResol
             return DataContract.ForDynamic(typeof(object));
         }
 
-        DataContract dataContract = _dataContractResolver.GetDataContractForType(type);
+        DataContract? dataContract = _dataContractResolver.GetDataContractForType(type);
 
         IList<DataProperty>? replacementProperties = null;
 
@@ -61,7 +61,7 @@ internal sealed class JsonApiDataContractResolver : ISerializerDataContractResol
         ResourceType resourceType = _resourceGraph.GetResourceType(resourceClrType);
         List<DataProperty> dataProperties = [];
 
-        foreach (DataProperty property in dataContract.ObjectProperties)
+        foreach (DataProperty? property in dataContract.ObjectProperties)
         {
             if (property.MemberInfo.Name == nameof(Identifiable<object>.Id))
             {

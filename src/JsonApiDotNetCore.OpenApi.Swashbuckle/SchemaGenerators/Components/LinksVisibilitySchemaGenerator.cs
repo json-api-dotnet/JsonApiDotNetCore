@@ -4,7 +4,7 @@ using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Relationships;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 using JsonApiDotNetCore.Resources.Annotations;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
@@ -110,32 +110,32 @@ internal sealed class LinksVisibilitySchemaGenerator
     private void UpdateLinksProperty(OpenApiSchema fullSchemaForLinksContainer, LinkTypes visibleLinkTypes, LinkTypes possibleLinkTypes,
         SchemaRepository schemaRepository)
     {
-        OpenApiSchema referenceSchemaForLinks = fullSchemaForLinksContainer.Properties[JsonApiPropertyName.Links].UnwrapLastExtendedSchema();
+        var referenceSchemaForLinks = (OpenApiSchemaReference)fullSchemaForLinksContainer.Properties![JsonApiPropertyName.Links].UnwrapLastExtendedSchema();
 
         if ((visibleLinkTypes & possibleLinkTypes) == 0)
         {
-            fullSchemaForLinksContainer.Required.Remove(JsonApiPropertyName.Links);
+            fullSchemaForLinksContainer.Required?.Remove(JsonApiPropertyName.Links);
             fullSchemaForLinksContainer.Properties.Remove(JsonApiPropertyName.Links);
 
-            schemaRepository.Schemas.Remove(referenceSchemaForLinks.Reference.Id);
+            schemaRepository.Schemas.Remove(referenceSchemaForLinks.Reference.Id!);
         }
         else if (visibleLinkTypes != possibleLinkTypes)
         {
-            string linksSchemaId = referenceSchemaForLinks.Reference.Id;
+            string linksSchemaId = referenceSchemaForLinks.Reference.Id!;
 
-            if (schemaRepository.Schemas.TryGetValue(linksSchemaId, out OpenApiSchema? fullSchemaForLinks))
+            if (schemaRepository.Schemas.TryGetValue(linksSchemaId, out IOpenApiSchema? fullSchemaForLinks))
             {
                 UpdateLinkProperties(fullSchemaForLinks, visibleLinkTypes);
             }
         }
     }
 
-    private void UpdateLinkProperties(OpenApiSchema fullSchemaForLinks, LinkTypes availableLinkTypes)
+    private void UpdateLinkProperties(IOpenApiSchema fullSchemaForLinks, LinkTypes availableLinkTypes)
     {
         foreach (string propertyName in LinkTypeToPropertyNamesMap.Where(pair => !availableLinkTypes.HasFlag(pair.Key)).SelectMany(pair => pair.Value))
         {
-            fullSchemaForLinks.Required.Remove(propertyName);
-            fullSchemaForLinks.Properties.Remove(propertyName);
+            fullSchemaForLinks.Required?.Remove(propertyName);
+            fullSchemaForLinks.Properties?.Remove(propertyName);
         }
     }
 

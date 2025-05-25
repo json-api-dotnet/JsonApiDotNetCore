@@ -105,7 +105,7 @@ internal sealed class OpenApiOperationIdSelector
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:wrap_before_first_method_call true
 
-        string pascalCaseOpenApiOperationId = openApiOperationIdTemplate
+        string? pascalCaseOpenApiOperationId = openApiOperationIdTemplate
             .Replace("[Method]", method)
             .Replace("[PrimaryResourceName]", resourceType?.PublicName.Singularize())
             .Replace("[RelationshipName]", relationshipName)

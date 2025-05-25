@@ -1,7 +1,7 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
@@ -34,7 +34,7 @@ internal sealed class ResourceOrRelationshipDocumentSchemaGenerator : DocumentSc
         return JsonApiSchemaFacts.IsRequestDocumentSchemaType(schemaType) || JsonApiSchemaFacts.IsResponseDocumentSchemaType(schemaType);
     }
 
-    protected override OpenApiSchema GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository)
+    protected override OpenApiSchemaReference GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(schemaType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
@@ -44,12 +44,13 @@ internal sealed class ResourceOrRelationshipDocumentSchemaGenerator : DocumentSc
 
         _ = _dataContainerSchemaGenerator.GenerateSchema(schemaType, resourceSchemaType.ResourceType, isRequestSchema, !isRequestSchema, schemaRepository);
 
-        OpenApiSchema? referenceSchemaForDocument = _defaultSchemaGenerator.GenerateSchema(schemaType, schemaRepository);
-        OpenApiSchema inlineSchemaForDocument = schemaRepository.Schemas[referenceSchemaForDocument.Reference.Id].UnwrapLastExtendedSchema();
+        var referenceSchemaForDocument = (OpenApiSchemaReference)_defaultSchemaGenerator.GenerateSchema(schemaType, schemaRepository);
+        var inlineSchemaForDocument = (OpenApiSchema)schemaRepository.Schemas[referenceSchemaForDocument.Reference.Id!].UnwrapLastExtendedSchema();
 
         if (JsonApiSchemaFacts.HasNullableDataProperty(resourceSchemaType.SchemaOpenType))
         {
-            inlineSchemaForDocument.Properties[JsonApiPropertyName.Data].Nullable = true;
+            inlineSchemaForDocument.Properties ??= new Dictionary<string, IOpenApiSchema>();
+            ((OpenApiSchema)inlineSchemaForDocument.Properties[JsonApiPropertyName.Data]).SetNullable(true);
         }
 
         return referenceSchemaForDocument;
