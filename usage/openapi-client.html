@@ -493,14 +493,14 @@ demonstrates how to use them. It uses local IDs to:</p>
 <td><a href="https://github.com/microsoft/kiota/issues/3800">https://github.com/microsoft/kiota/issues/3800</a></td>
 </tr>
 <tr>
-<td>Properties set to <code>null</code> are sent twice</td>
-<td>-</td>
-<td><a href="https://github.com/microsoft/kiota-dotnet/issues/535">https://github.com/microsoft/kiota-dotnet/issues/535</a></td>
-</tr>
-<tr>
 <td>HTTP 304 (Not Modified) is not properly recognized</td>
 <td>Catch <code>ApiException</code> and inspect the response status code</td>
 <td><a href="https://github.com/microsoft/kiota/issues/4190">https://github.com/microsoft/kiota/issues/4190</a>, <a href="https://github.com/microsoft/kiota-dotnet/issues/531">https://github.com/microsoft/kiota-dotnet/issues/531</a></td>
+</tr>
+<tr>
+<td>No <code>Accept</code> header sent when only error responses define <code>Content-Type</code></td>
+<td><code>JsonApiDotNetCore.OpenApi.Swashbuckle</code> package contains workaround</td>
+<td><a href="https://github.com/microsoft/kiota/issues/6572">https://github.com/microsoft/kiota/issues/6572</a></td>
 </tr>
 <tr>
 <td>Generator warns about unsupported formats</td>

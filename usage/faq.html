@@ -91,8 +91,7 @@
 <h1 id="frequently-asked-questions">Frequently Asked Questions</h1>
 
 <h4 id="where-can-i-find-documentation-and-examples">Where can I find documentation and examples?</h4>
-<p>While the <a href="resources/index.html">documentation</a> covers basic features and a few runnable example projects are available <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples">here</a>,
-many more advanced use cases are available as integration tests <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/test/JsonApiDotNetCoreTests/IntegrationTests">here</a>, so be sure to check them out!</p>
+<p>The <a href="resources/index.html">documentation</a> covers basic features, as well as <a href="advanced/index.html">advanced use cases</a>. Several runnable example projects are available <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples">here</a>.</p>
 <h4 id="why-dont-you-use-the-built-in-openapi-support-in-aspnet-core">Why don't you use the built-in OpenAPI support in ASP.NET Core?</h4>
 <p>The structure of JSON:API request and response bodies differs significantly from the signature of JsonApiDotNetCore controllers.
 JsonApiDotNetCore provides OpenAPI support using <a href="https://github.com/domaindrivendev/Swashbuckle.AspNetCore">Swashbuckle</a>, a mature and feature-rich library that is highly extensible.
@@ -132,17 +131,19 @@ builder.Services.AddJsonApi&lt;AppDbContext&gt;(options =&gt;
 });
 </code></pre>
 </li>
-<li><p>Turning on verbose logging and logging of executed SQL statements, by adding the following to your <code>appsettings.Development.json</code>:</p>
+<li><p>Turning on trace logging, or/and logging of executed SQL statements, by adding the following to your <code>appsettings.Development.json</code>:</p>
 <pre><code class="lang-json">{
   &quot;Logging&quot;: {
     &quot;LogLevel&quot;: {
       &quot;Default&quot;: &quot;Warning&quot;,
       &quot;Microsoft.EntityFrameworkCore.Database.Command&quot;: &quot;Information&quot;,
-      &quot;JsonApiDotNetCore&quot;: &quot;Verbose&quot;
+      &quot;JsonApiDotNetCore&quot;: &quot;Trace&quot;
     }
   }
 }
 </code></pre>
+</li>
+<li><p>Activate debug logging of LINQ expressions by adding a NuGet reference to <a href="https://www.nuget.org/packages/AgileObjects.ReadableExpressions">AgileObjects.ReadableExpressions</a> in your project.</p>
 </li>
 </ul>
 <h4 id="what-if-my-jsonapi-resources-do-not-exactly-match-the-shape-of-my-database-tables">What if my JSON:API resources do not exactly match the shape of my database tables?</h4>
