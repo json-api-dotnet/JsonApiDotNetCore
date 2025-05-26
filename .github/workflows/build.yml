@@ -10,9 +10,9 @@ name: Build
 
 on:
   push:
-    branches: [ 'master', 'release/**' ]
+    branches: [ 'master', 'release/**', 'net10-preview' ]
   pull_request:
-    branches: [ 'master', 'release/**' ]
+    branches: [ 'master', 'release/**', 'net10-preview' ]
   release:
     types: [published]
 
