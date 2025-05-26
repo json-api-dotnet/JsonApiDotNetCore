@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
   pull_request:
   push:
-    branches: [ 'master', 'release/**' ]
+    branches: [ 'master', 'release/**', 'net10-preview' ]
   release:
     types: [published]
 
