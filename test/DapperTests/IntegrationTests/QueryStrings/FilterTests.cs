@@ -78,7 +78,6 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 FROM "Tags" AS t1
                 LEFT JOIN "RgbColors" AS t2 ON t1."Id" = t2."TagId"
                 WHERE t2."Id" = @p1
-                ORDER BY t1."Id"
                 """));
 
             command.Parameters.Should().HaveCount(1);
@@ -144,7 +143,6 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 FROM "Tags" AS t1
                 LEFT JOIN "RgbColors" AS t2 ON t1."Id" = t2."TagId"
                 WHERE t2."Id" IN (@p1, @p2)
-                ORDER BY t1."Id"
                 """));
 
             command.Parameters.Should().HaveCount(2);
@@ -662,7 +660,6 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 SELECT t1."Id", t1."FirstName", t1."LastName"
                 FROM "People" AS t1
                 WHERE (NOT (t1."FirstName" = @p1)) OR (t1."FirstName" IS NULL)
-                ORDER BY t1."Id"
                 """));
 
             command.Parameters.Should().HaveCount(1);
@@ -867,7 +864,6 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                 SELECT t1."Id", t1."Name"
                 FROM "Tags" AS t1
                 WHERE (t1."Name" LIKE '%A\%%' ESCAPE '\') OR (t1."Name" LIKE '%A\_%' ESCAPE '\') OR (t1."Name" LIKE '%A\\%' ESCAPE '\') OR (t1."Name" LIKE '%A''%') OR (t1."Name" LIKE '%\%\_\\''%' ESCAPE '\')
-                ORDER BY t1."Id"
                 """));
 
             command.Parameters.Should().BeEmpty();
@@ -1177,7 +1173,6 @@ public sealed class FilterTests : IClassFixture<DapperTestContext>
                     LEFT JOIN "People" AS t3 ON t2."AssigneeId" = t3."Id"
                     WHERE (t1."Id" = t2."OwnerId") AND (NOT (t3."Id" IS NULL)) AND (t3."FirstName" IS NULL)
                 )
-                ORDER BY t1."Id"
                 """));
 
             command.Parameters.Should().BeEmpty();

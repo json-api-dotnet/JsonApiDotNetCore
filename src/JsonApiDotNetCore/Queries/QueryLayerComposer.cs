@@ -173,13 +173,20 @@ public class QueryLayerComposer : IQueryLayerComposer
         _paginationContext.PageSize = topPagination.PageSize;
         _paginationContext.PageNumber = topPagination.PageNumber;
 
-        return new QueryLayer(resourceType)
+        var topLayer = new QueryLayer(resourceType)
         {
             Filter = GetFilter(expressionsInTopScope, resourceType),
             Sort = GetSort(expressionsInTopScope, resourceType),
             Pagination = topPagination,
             Selection = GetSelectionForSparseAttributeSet(resourceType)
         };
+
+        if (topLayer is { Pagination.PageSize: not null, Sort: null })
+        {
+            topLayer.Sort = CreateSortById(resourceType);
+        }
+
+        return topLayer;
     }
 
     private IncludeExpression ComposeChildren(QueryLayer topLayer, ImmutableArray<ExpressionInScope> constraints)
@@ -237,7 +244,7 @@ public class QueryLayerComposer : IQueryLayerComposer
                 ResourceType resourceType = includeElement.Relationship.RightType;
                 bool isToManyRelationship = includeElement.Relationship is HasManyAttribute;
 
-                var child = new QueryLayer(resourceType)
+                var subLayer = new QueryLayer(resourceType)
                 {
                     Filter = isToManyRelationship ? GetFilter(expressionsInCurrentScope, resourceType) : null,
                     Sort = isToManyRelationship ? GetSort(expressionsInCurrentScope, resourceType) : null,
@@ -245,9 +252,14 @@ public class QueryLayerComposer : IQueryLayerComposer
                     Selection = GetSelectionForSparseAttributeSet(resourceType)
                 };
 
-                selectors.IncludeRelationship(includeElement.Relationship, child);
+                if (subLayer is { Pagination.PageSize: not null, Sort: null })
+                {
+                    subLayer.Sort = CreateSortById(resourceType);
+                }
 
-                IImmutableSet<IncludeElementExpression> updatedChildren = ProcessIncludeSet(includeElement.Children, child, relationshipChain, constraints);
+                selectors.IncludeRelationship(includeElement.Relationship, subLayer);
+
+                IImmutableSet<IncludeElementExpression> updatedChildren = ProcessIncludeSet(includeElement.Children, subLayer, relationshipChain, constraints);
 
                 if (!ReferenceEquals(includeElement.Children, updatedChildren))
                 {
@@ -256,7 +268,28 @@ public class QueryLayerComposer : IQueryLayerComposer
             }
         }
 
+        EliminateRedundantSelectors(parentLayer);
+
         return updatesInChildren.Count == 0 ? includeElementsEvaluated : ApplyIncludeElementUpdates(includeElementsEvaluated, updatesInChildren);
+    }
+
+    private static void EliminateRedundantSelectors(QueryLayer parentLayer)
+    {
+        if (parentLayer.Selection != null)
+        {
+            foreach ((ResourceType resourceType, FieldSelectors selectors) in parentLayer.Selection.ToArray())
+            {
+                if (selectors.ContainsOnlyRelationships && selectors.Values.OfType<QueryLayer>().All(subLayer => subLayer.IsEmpty))
+                {
+                    parentLayer.Selection.Remove(resourceType);
+                }
+            }
+
+            if (parentLayer.Selection.IsEmpty)
+            {
+                parentLayer.Selection = null;
+            }
+        }
     }
 
     private static ImmutableHashSet<IncludeElementExpression> ApplyIncludeElementUpdates(IImmutableSet<IncludeElementExpression> includeElements,
@@ -507,23 +540,21 @@ public class QueryLayerComposer : IQueryLayerComposer
         return _resourceDefinitionAccessor.OnApplyFilter(resourceType, filter);
     }
 
-    protected virtual SortExpression GetSort(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceType resourceType)
+    protected virtual SortExpression? GetSort(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceType resourceType)
     {
         ArgumentNullException.ThrowIfNull(expressionsInScope);
         ArgumentNullException.ThrowIfNull(resourceType);
 
         SortExpression? sort = expressionsInScope.OfType<SortExpression>().FirstOrDefault();
 
-        sort = _resourceDefinitionAccessor.OnApplySort(resourceType, sort);
+        return _resourceDefinitionAccessor.OnApplySort(resourceType, sort);
+    }
 
-        if (sort == null)
-        {
-            AttrAttribute idAttribute = GetIdAttribute(resourceType);
-            var idAscendingSort = new SortElementExpression(new ResourceFieldChainExpression(idAttribute), true);
-            sort = new SortExpression(ImmutableArray.Create(idAscendingSort));
-        }
-
-        return sort;
+    private SortExpression CreateSortById(ResourceType resourceType)
+    {
+        AttrAttribute idAttribute = GetIdAttribute(resourceType);
+        var idAscendingSort = new SortElementExpression(new ResourceFieldChainExpression(idAttribute), true);
+        return new SortExpression(ImmutableArray.Create(idAscendingSort));
     }
 
     protected virtual PaginationExpression GetPagination(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceType resourceType)
