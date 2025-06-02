@@ -349,7 +349,7 @@ public sealed class SortTests : IClassFixture<DapperTestContext>
                     SELECT COUNT(*)
                     FROM "Tags" AS t3
                     WHERE t2."Id" = t3."TodoItemId"
-                ) DESC, t2."Id", t4."Id"
+                ) DESC, t2."Id"
                 """));
 
             command.Parameters.Should().HaveCount(1);
@@ -415,7 +415,7 @@ public sealed class SortTests : IClassFixture<DapperTestContext>
                 SELECT t1."Id", t1."FirstName", t1."LastName", t2."Id", t2."CreatedAt", t2."Description", t2."DurationInHours", t2."LastModifiedAt", t2."Priority"
                 FROM "People" AS t1
                 LEFT JOIN "TodoItems" AS t2 ON t1."Id" = t2."OwnerId"
-                ORDER BY t1."Id", (
+                ORDER BY (
                     SELECT COUNT(*)
                     FROM "Tags" AS t3
                     WHERE t2."Id" = t3."TodoItemId"

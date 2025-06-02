@@ -246,7 +246,6 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
                 FROM "TodoItems" AS t1
                 LEFT JOIN "Tags" AS t2 ON t1."Id" = t2."TodoItemId"
                 WHERE t1."Id" = @p1
-                ORDER BY t2."Id"
                 """));
 
             command.Parameters.Should().HaveCount(1);
