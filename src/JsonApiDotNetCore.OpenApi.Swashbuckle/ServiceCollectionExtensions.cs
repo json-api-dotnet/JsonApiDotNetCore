@@ -1,4 +1,5 @@
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators;
@@ -23,6 +24,7 @@ public static class ServiceCollectionExtensions
     public static void AddOpenApiForJsonApi(this IServiceCollection services, Action<SwaggerGenOptions>? configureSwaggerGenOptions = null)
     {
         ArgumentNullException.ThrowIfNull(services);
+        AssertHasJsonApi(services);
 
         AddCustomApiExplorer(services);
         AddCustomSwaggerComponents(services);
@@ -36,6 +38,14 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IJsonApiContentNegotiator, OpenApiContentNegotiator>();
         services.TryAddSingleton<IJsonApiRequestAccessor, JsonApiRequestAccessor>();
         services.Replace(ServiceDescriptor.Singleton<IJsonApiApplicationBuilderEvents, OpenApiApplicationBuilderEvents>());
+    }
+
+    private static void AssertHasJsonApi(IServiceCollection services)
+    {
+        if (services.FirstOrDefault(descriptor => descriptor.ServiceType == typeof(IJsonApiOptions)) == null)
+        {
+            throw new InvalidConfigurationException("Call 'services.AddJsonApi()' before calling 'services.AddOpenApiForJsonApi()'.");
+        }
     }
 
     private static void AddCustomApiExplorer(IServiceCollection services)
