@@ -4,11 +4,11 @@
     <CodeAnalysisFrozenVersion>4.1.0</CodeAnalysisFrozenVersion>
     <DemystifierFrozenVersion>0.4.1</DemystifierFrozenVersion>
     <HumanizerFrozenVersion>2.14.1</HumanizerFrozenVersion>
-    <SwashbuckleFrozenVersion>8.0.0</SwashbuckleFrozenVersion>
+    <SwashbuckleFrozenVersion>9.0.1</SwashbuckleFrozenVersion>
     <NewtonsoftJsonFrozenVersion>13.0.3</NewtonsoftJsonFrozenVersion>
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
-    <BenchmarkDotNetVersion>0.14.*</BenchmarkDotNetVersion>
+    <BenchmarkDotNetVersion>0.15.*</BenchmarkDotNetVersion>
     <BlushingPenguinVersion>1.0.*</BlushingPenguinVersion>
     <BogusVersion>35.6.*</BogusVersion>
     <CodeAnalysisVersion>4.14.*</CodeAnalysisVersion>
@@ -23,12 +23,12 @@
     <NSwagApiClientVersion>14.4.*</NSwagApiClientVersion>
     <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
     <ReadableExpressionsVersion>4.1.*</ReadableExpressionsVersion>
-    <ScalarAspNetCoreVersion>2.3.*</ScalarAspNetCoreVersion>
-    <SwashbuckleVersion>8.*-*</SwashbuckleVersion>
+    <ScalarAspNetCoreVersion>2.4.*</ScalarAspNetCoreVersion>
+    <SwashbuckleVersion>9.*-*</SwashbuckleVersion>
     <SystemTextJsonVersion>9.0.*</SystemTextJsonVersion>
     <TestSdkVersion>17.14.*</TestSdkVersion>
     <XunitVersion>2.9.*</XunitVersion>
-    <XunitVisualStudioVersion>2.8.*</XunitVisualStudioVersion>
+    <XunitVisualStudioVersion>3.1.*</XunitVisualStudioVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
