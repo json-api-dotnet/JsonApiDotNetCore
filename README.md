@@ -287,9 +287,20 @@ pwsh Build.ps1
 
 ## Sponsors
 
-We are very grateful to the sponsors below, who have provided us with a no-cost license for their tools.
+We are grateful to the following sponsors, who provide the team with a no-cost license for using their tools.
 
-<a href="https://jb.gg/OpenSourceSupport"><img align="middle" src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="JetBrains Logo" style="width:150px"></a> &nbsp;
-<a href="https://www.araxis.com/buy/open-source"><img align="middle" src="https://jsonapi.net/styles/img/araxis-logo.png" alt="Araxis Logo" style="width:150px"></a>
+<p>
+  <a href="https://www.jetbrains.com/community/opensource">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="docs/home/assets/img/jetbrains-logo-dark.svg">
+      <source media="(prefers-color-scheme: light)" srcset="docs/home/assets/img/jetbrains-logo-light.svg">
+      <img align="middle" alt="JetBrains logo" style="width:150px" src="docs/home/assets/img/jetbrains-logo-light.svg">
+    </picture>
+  </a>
+  &nbsp;&nbsp;&nbsp;
+  <a href="https://www.araxis.com/buy/open-source">
+    <img align="middle" src="docs/home/assets/img/araxis-logo.png" alt="Araxis Logo" style="width:150px">
+  </a>
+<p/>
 
 Do you like this project? Consider to [sponsor](https://github.com/sponsors/json-api-dotnet), or just reward us by giving our repository a star.
