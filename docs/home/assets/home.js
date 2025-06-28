@@ -83,7 +83,7 @@ function initTheme() {
   }
 
   // Sponsor panels linking
-  $('div[sponsor]#jetbrains').on('click', () => navigateExternalTo('https://jb.gg/OpenSourceSupport'));
+  $('div[sponsor]#jetbrains').on('click', () => navigateExternalTo('https://www.jetbrains.com/community/opensource'));
   $('div[sponsor]#araxis').on('click', () => navigateExternalTo('https://www.araxis.com/buy/open-source'));
 
   const navigateExternalTo = (url) => {
