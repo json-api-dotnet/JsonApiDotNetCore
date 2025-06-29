@@ -16,6 +16,8 @@ internal sealed class SetOpenApiServerAtBuildTimeFilter(IHttpContextAccessor htt
     {
         if (_httpContextAccessor.HttpContext == null)
         {
+            swaggerDoc.Servers ??= [];
+
             swaggerDoc.Servers.Add(new OpenApiServer
             {
                 Url = "https://localhost:44340"

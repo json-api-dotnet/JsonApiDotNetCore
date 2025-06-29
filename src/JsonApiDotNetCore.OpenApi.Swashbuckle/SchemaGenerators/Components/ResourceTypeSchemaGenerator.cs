@@ -1,7 +1,9 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models.References;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
@@ -20,12 +22,12 @@ internal sealed class ResourceTypeSchemaGenerator
         _schemaIdSelector = schemaIdSelector;
     }
 
-    public OpenApiSchema GenerateSchema(ResourceType resourceType, SchemaRepository schemaRepository)
+    public OpenApiSchemaReference GenerateSchema(ResourceType resourceType, SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(resourceType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        if (schemaRepository.TryLookupByType(resourceType.ClrType, out OpenApiSchema? referenceSchema))
+        if (schemaRepository.TryLookupByType(resourceType.ClrType, out OpenApiSchemaReference? referenceSchema))
         {
             return referenceSchema;
         }
@@ -34,17 +36,17 @@ internal sealed class ResourceTypeSchemaGenerator
 
         var fullSchema = new OpenApiSchema
         {
-            Type = "string",
-            Enum = resourceType.ClrType.IsAbstract ? [] : [new OpenApiString(resourceType.PublicName)],
-            Extensions =
+            Type = JsonSchemaType.String,
+            Enum = resourceType.ClrType.IsAbstract ? [] : [resourceType.PublicName],
+            Extensions = new Dictionary<string, IOpenApiExtension>
             {
-                [StringEnumOrderingFilter.RequiresSortKey] = new OpenApiBoolean(true)
+                [StringEnumOrderingFilter.RequiresSortKey] = new JsonNodeExtension(true)
             }
         };
 
         foreach (ResourceType derivedType in resourceType.GetAllConcreteDerivedTypes())
         {
-            fullSchema.Enum.Add(new OpenApiString(derivedType.PublicName));
+            fullSchema.Enum.Add(derivedType.PublicName);
         }
 
         string schemaId = _schemaIdSelector.GetResourceTypeSchemaId(resourceType);
@@ -56,34 +58,27 @@ internal sealed class ResourceTypeSchemaGenerator
         return referenceSchema;
     }
 
-    public OpenApiSchema GenerateSchema(SchemaRepository schemaRepository)
+    public OpenApiSchemaReference GenerateSchema(SchemaRepository schemaRepository)
     {
         string schemaId = _schemaIdSelector.GetResourceTypeSchemaId(null);
 
         if (schemaRepository.Schemas.ContainsKey(schemaId))
         {
-            return new OpenApiSchema
-            {
-                Reference = new OpenApiReference
-                {
-                    Id = schemaId,
-                    Type = ReferenceType.Schema
-                }
-            };
+            return new OpenApiSchemaReference(schemaId);
         }
 
         using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this);
 
         var fullSchema = new OpenApiSchema
         {
-            Type = "string",
-            Extensions =
+            Type = JsonSchemaType.String,
+            Extensions = new Dictionary<string, IOpenApiExtension>
             {
-                [StringEnumOrderingFilter.RequiresSortKey] = new OpenApiBoolean(true)
+                [StringEnumOrderingFilter.RequiresSortKey] = new JsonNodeExtension(true)
             }
         };
 
-        OpenApiSchema referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
+        OpenApiSchemaReference? referenceSchema = schemaRepository.AddDefinition(schemaId, fullSchema);
 
         traceScope.TraceSucceeded(schemaId);
         return referenceSchema;
