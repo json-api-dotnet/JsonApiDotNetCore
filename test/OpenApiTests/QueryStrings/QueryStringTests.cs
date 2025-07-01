@@ -46,8 +46,8 @@ public sealed class QueryStringTests : IClassFixture<OpenApiTestContext<OpenApiS
         {
             verbElement.Should().ContainPath("parameters").With(parametersElement =>
             {
-                parametersElement.EnumerateArray().Should().ContainSingle(element => element.GetProperty("in").ValueEquals("query")).Subject.With(
-                    parameterElement =>
+                parametersElement.EnumerateArray().Should().ContainSingle(element => element.GetProperty("in").ValueEquals("query")).Subject
+                    .With(parameterElement =>
                     {
                         parameterElement.Should().HaveProperty("name", "query");
 
