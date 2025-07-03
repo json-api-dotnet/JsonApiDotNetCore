@@ -103,15 +103,15 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<O
 
         response.Included.Should().HaveCount(2);
 
-        response.Included.OfType<DataInDataStreamResponse>().Should().ContainSingle(include => include.Id == existingVideoStream.StringId).Subject.With(
-            include =>
+        response.Included.OfType<DataInDataStreamResponse>().Should().ContainSingle(include => include.Id == existingVideoStream.StringId).Subject
+            .With(include =>
             {
                 include.Attributes.Should().NotBeNull();
                 include.Attributes.BytesTransmitted.Should().Be((long?)existingVideoStream.BytesTransmitted);
             });
 
-        response.Included.OfType<DataInDataStreamResponse>().Should().ContainSingle(include => include.Id == existingAudioStream.StringId).Subject.With(
-            include =>
+        response.Included.OfType<DataInDataStreamResponse>().Should().ContainSingle(include => include.Id == existingAudioStream.StringId).Subject
+            .With(include =>
             {
                 include.Attributes.Should().NotBeNull();
                 include.Attributes.BytesTransmitted.Should().Be((long?)existingAudioStream.BytesTransmitted);
