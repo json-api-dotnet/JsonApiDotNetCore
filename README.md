@@ -290,7 +290,7 @@ pwsh Build.ps1
 We are grateful to the following sponsors, who provide the team with a no-cost license for using their tools.
 
 <p>
-  <a href="https://www.jetbrains.com/community/opensource">
+  <a href="https://jb.gg/OpenSource">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="docs/home/assets/img/jetbrains-logo-dark.svg">
       <source media="(prefers-color-scheme: light)" srcset="docs/home/assets/img/jetbrains-logo-light.svg">
@@ -298,7 +298,7 @@ We are grateful to the following sponsors, who provide the team with a no-cost l
     </picture>
   </a>
   &nbsp;&nbsp;&nbsp;
-  <a href="https://www.araxis.com/buy/open-source">
+  <a href="https://www.araxis.com">
     <img align="middle" src="docs/home/assets/img/araxis-logo.png" alt="Araxis Logo" style="width:150px">
   </a>
 <p/>
