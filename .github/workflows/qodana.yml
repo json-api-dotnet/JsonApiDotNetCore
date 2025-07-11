@@ -1,13 +1,17 @@
-# https://www.jetbrains.com/help/qodana/cloud-forward-reports.html#cloud-forward-reports-github-actions
-
 name: Qodana
 on:
   workflow_dispatch:
   pull_request:
   push:
-    branches:
-      - master
-      - 'release/*'
+    branches: [ 'master', 'release/**' ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
 
 jobs:
   qodana:
@@ -17,17 +21,32 @@ jobs:
       pull-requests: write
       checks: write
     steps:
-    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          8.0.*
+          9.0.*
+    - name: Git checkout
+      uses: actions/checkout@v4
       with:
         ref: ${{ github.event.pull_request.head.sha }}  # to check out the actual pull request commit, not the merge commit
         fetch-depth: 0  # a full history is required for pull request analysis
-    - name: 'Qodana Scan'
-      uses: JetBrains/qodana-action@v2024.1
+    - name: Restore tools
+      run: dotnet tool restore
+    - name: Restore packages
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+    - name: Qodana scan
+      uses: JetBrains/qodana-action@v2025.1
+      with:
+        args: --ide,QDNET,--profile-name,qodana.recommended,--configuration,Release,--apply-fixes
+        push-fixes: pull-request
+        upload-result: true
       env:
         QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
-    - name: Upload results to artifacts on failure
-      if: failure()
-      uses: actions/upload-artifact@v4
+    - name: Upload SARIF report
+      uses: github/codeql-action/upload-sarif@v3
       with:
-        name: qodana_results
-        path: ${{ runner.temp }}/qodana/results
+        sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif.json
