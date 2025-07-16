@@ -101,7 +101,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
             meta = GetExampleMetaData()
         };
 
-        string route = $"/supportTickets";
+        const string route = "/supportTickets";
 
         // Act
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -196,7 +196,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                 type = "supportTickets",
                 attributes = new
                 {
-                    description = existingTicket.Description,
+                    description = existingTicket.Description
                 },
                 relationships = new
                 {
@@ -213,7 +213,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
             meta = GetExampleMetaData()
         };
 
-        string route = $"/supportTickets";
+        const string route = "/supportTickets";
 
         // Act
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -265,7 +265,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            var supportTicketInDatabase = await dbContext.SupportTickets
+            SupportTicket? supportTicketInDatabase = await dbContext.SupportTickets
                 .Include(supportTicket => supportTicket.ProductFamily)
                 .FirstAsync(supportTicket => supportTicket.Id == existingTicket.Id);
 
@@ -310,7 +310,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
             meta = GetExampleMetaData()
         };
 
-        string route = $"/operations";
+        const string route = "/operations";
 
         // Act
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
@@ -351,7 +351,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
             meta = GetExampleMetaData()
         };
 
-        string route = $"/operations";
+        const string route = "/operations";
 
         // Act
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
@@ -396,7 +396,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
             meta = GetExampleMetaData()
         };
 
-        string route = $"/operations";
+        const string route = "/operations";
 
         // Act
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
@@ -471,7 +471,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
                 type = "supportTickets",
                 attributes = new
                 {
-                    description = existingTicket.Description,
+                    description = existingTicket.Description
                 },
                 relationships = new
                 {
@@ -488,7 +488,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
             }
         };
 
-        string route = $"/supportTickets";
+        const string route = "/supportTickets";
 
         // Act
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -500,7 +500,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         store.Document.Data.SingleValue.Should().NotBeNull();
         store.Document.Data.SingleValue.Relationships.Should().NotBeNull();
         store.Document.Data.SingleValue.Relationships.Should().HaveCount(1);
-        store.Document.Data.SingleValue.Relationships.TryGetValue("productFamily", out var relationship).Should().BeTrue();
+        store.Document.Data.SingleValue.Relationships.TryGetValue("productFamily", out RelationshipObject? relationship).Should().BeTrue();
         relationship!.Meta.Should().NotBeNull();
 
         ValidateMetaData(relationship.Meta);
@@ -552,7 +552,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
             }
         };
 
-        string route = "/operations";
+        const string route = "/operations";
 
         // Act
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
@@ -564,16 +564,16 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         store.Document.Operations.Should().NotBeNull();
         store.Document.Operations.Should().HaveCount(1);
 
-        var operation = store.Document.Operations[0];
+        AtomicOperationObject? operation = store.Document.Operations[0];
         operation.Should().NotBeNull();
         operation.Data.Should().NotBeNull();
         operation.Data.SingleValue.Should().NotBeNull();
 
-        var relationships = operation.Data.SingleValue.Relationships;
+        IDictionary<string, RelationshipObject?>? relationships = operation.Data.SingleValue.Relationships;
         relationships.Should().NotBeNull();
         relationships.Should().ContainKey("productFamily");
 
-        var relationship = relationships["productFamily"];
+        RelationshipObject? relationship = relationships["productFamily"];
         relationship.Should().NotBeNull();
         relationship.Meta.Should().NotBeNull();
 
@@ -608,7 +608,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
             }
         };
 
-        string route = $"/operations";
+        const string route = "/operations";
 
         // Act
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
@@ -620,7 +620,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         store.Document.Operations.Should().NotBeNull();
         store.Document.Operations.Should().HaveCount(1);
 
-        var operation = store.Document.Operations[0];
+        AtomicOperationObject? operation = store.Document.Operations[0];
         operation.Should().NotBeNull();
         operation.Data.Should().NotBeNull();
         operation.Data.SingleValue.Should().NotBeNull();
@@ -669,7 +669,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
             }
         };
 
-        string route = "/operations";
+        const string route = "/operations";
 
         // Act
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
@@ -681,7 +681,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         store.Document.Operations.Should().NotBeNull();
         store.Document.Operations.Should().HaveCount(1);
 
-        var operation = store.Document.Operations[0];
+        AtomicOperationObject? operation = store.Document.Operations[0];
         operation.Should().NotBeNull();
         operation.Meta.Should().NotBeNull();
 
@@ -689,15 +689,15 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            var ticketInDatabase = await dbContext.SupportTickets
+            SupportTicket? supportTicketInDatabase = await dbContext.SupportTickets
                 .Include(supportTicket => supportTicket.ProductFamily)
                 .FirstAsync(supportTicket => supportTicket.Id == existingTicket.Id);
 
-            ticketInDatabase.ProductFamily.Should().BeNull();
+            supportTicketInDatabase.ProductFamily.Should().BeNull();
         });
     }
 
-    private static Object GetExampleMetaData()
+    private static object GetExampleMetaData()
     {
         return new
         {
