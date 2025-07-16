@@ -113,6 +113,65 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         ValidateMetaData(store.Document.Meta);
     }
 
+    [Fact]
+    public async Task Accepts_top_level_meta_in_patch_relationship_request()
+    {
+        // Arrange
+        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+
+        SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
+
+        ProductFamily existingProductFamily = _fakers.ProductFamily.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.ProductFamilies.Add(existingProductFamily);
+            dbContext.SupportTickets.Add(existingTicket);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "supportTickets",
+                id = existingTicket.StringId,
+                attributes = new
+                {
+                    description = existingTicket.Description
+                },
+                relationships = new
+                {
+                    productFamily = new
+                    {
+                        data = new
+                        {
+                            type = "productFamilies",
+                            id = existingProductFamily.StringId
+                        }
+                    }
+                }
+            },
+            meta = GetExampleMetaData()
+        };
+
+        string route = $"/supportTickets/{existingTicket.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        store.Document.Should().NotBeNull();
+
+        store.Document.Data.SingleValue.Should().NotBeNull();
+        store.Document.Data.SingleValue.Relationships.Should().NotBeNull();
+        store.Document.Data.SingleValue.Relationships.Should().HaveCount(1);
+
+        ValidateMetaData(store.Document.Meta);
+    }
+
     private static Object GetExampleMetaData()
     {
         return new
