@@ -99,6 +99,11 @@
 <p>and on included resources, for example:</p>
 <pre><code class="lang-http">GET /api/blogs/1/articles?include=revisions&amp;page[size]=10,revisions:5&amp;page[number]=2,revisions:3 HTTP/1.1
 </code></pre>
+<div class="NOTE">
+<h5>Note</h5>
+<p>For optimal performance, pagination links and total meta are not returned for <em>included</em> to-many relationships.
+See <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1738">here</a> for details.</p>
+</div>
 <h2 id="configuring-default-behavior">Configuring Default Behavior</h2>
 <p>You can configure the global default behavior as described <a href="../options.html#pagination">here</a>.</p>
 
