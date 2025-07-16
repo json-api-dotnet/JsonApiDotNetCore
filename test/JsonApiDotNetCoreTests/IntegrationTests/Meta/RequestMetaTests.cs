@@ -412,6 +412,42 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         ValidateMetaData(store.Document.Meta);
     }
 
+    [Fact]
+    public async Task Accepts_meta_in_data_of_post_resource_request()
+    {
+        // Arrange
+        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+
+        SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "supportTickets",
+                attributes = new
+                {
+                    description = existingTicket.Description
+                },
+                meta = GetExampleMetaData()
+            }
+        };
+
+        string route = $"/supportTickets/{existingTicket.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
+
+        store.Document.Should().NotBeNull();
+        store.Document.Data.Should().NotBeNull();
+        store.Document.Data.SingleValue.Should().NotBeNull();
+
+        ValidateMetaData(store.Document.Data.SingleValue.Meta);
+    }
+
     private static Object GetExampleMetaData()
     {
         return new
