@@ -57,31 +57,13 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
             data = new
             {
                 type = "supportTickets",
-                id = existingTicket.StringId
-            },
-            meta = new
-            {
-                category = "bug",
-                priority = 1,
-                components = new[]
+                id = existingTicket.StringId,
+                attributes = new
                 {
-                    "login",
-                    "single-sign-on"
-                },
-                relatedTo = new[]
-                {
-                    new
-                    {
-                        id = 123,
-                        link = "https://www.ticket-system.com/bugs/123"
-                    },
-                    new
-                    {
-                        id = 789,
-                        link = "https://www.ticket-system.com/bugs/789"
-                    }
+                    description = existingTicket.Description
                 }
-            }
+            },
+            meta = GetExampleMetaData()
         };
 
         string route = $"/supportTickets/{existingTicket.StringId}";
@@ -93,57 +75,138 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         store.Document.Should().NotBeNull();
-        store.Document.Meta.Should().HaveCount(4);
 
-        store.Document.Meta.Should().ContainKey("category").WhoseValue.With(value =>
+        ValidateMetaData(store.Document.Meta);
+    }
+
+    [Fact]
+    public async Task Accepts_top_level_meta_in_post_resource_request()
+    {
+        // Arrange
+        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+
+        SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "supportTickets",
+                attributes = new
+                {
+                    description = existingTicket.Description
+                }
+            },
+            meta = GetExampleMetaData()
+        };
+
+        string route = $"/supportTickets";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
+
+        store.Document.Should().NotBeNull();
+
+        ValidateMetaData(store.Document.Meta);
+    }
+
+    private static Object GetExampleMetaData()
+    {
+        return new
+        {
+            category = "bug",
+            priority = 1,
+            urgent = true,
+            components = new[]
+            {
+                "login",
+                "single-sign-on"
+            },
+            relatedTo = new[]
+            {
+                new
+                {
+                    id = 123,
+                    link = "https://www.ticket-system.com/bugs/123"
+                },
+                new
+                {
+                    id = 789,
+                    link = "https://www.ticket-system.com/bugs/789"
+                }
+            },
+            contextInfo = new Dictionary<string, object?>
+            {
+                ["source"] = "form-submission",
+                ["retries"] = 1,
+                ["authenticated"] = false
+            }
+        };
+    }
+
+    private static void ValidateMetaData(IDictionary<string, object?>? meta)
+    {
+        meta.Should().NotBeNull();
+        meta.Should().HaveCount(6);
+
+        meta.Should().ContainKey("category").WhoseValue.With(value =>
         {
             JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
             element.GetString().Should().Be("bug");
         });
 
-        store.Document.Meta.Should().ContainKey("priority").WhoseValue.With(value =>
+        meta.Should().ContainKey("priority").WhoseValue.With(value =>
         {
             JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
             element.GetInt32().Should().Be(1);
         });
 
-        store.Document.Meta.Should().ContainKey("components").WhoseValue.With(value =>
+        meta.Should().ContainKey("components").WhoseValue.With(value =>
         {
             string innerJson = value.Should().BeOfType<JsonElement>().Subject.ToString();
 
             innerJson.Should().BeJson("""
-                [
-                  "login",
-                  "single-sign-on"
-                ]
-                """);
+            [
+              "login",
+              "single-sign-on"
+            ]
+            """);
         });
 
-        store.Document.Meta.Should().ContainKey("relatedTo").WhoseValue.With(value =>
+        meta.Should().ContainKey("relatedTo").WhoseValue.With(value =>
         {
             string innerJson = value.Should().BeOfType<JsonElement>().Subject.ToString();
 
             innerJson.Should().BeJson("""
-                [
-                  {
-                    "id": 123,
-                    "link": "https://www.ticket-system.com/bugs/123"
-                  },
-                  {
-                    "id": 789,
-                    "link": "https://www.ticket-system.com/bugs/789"
-                  }
-                ]
-                """);
+            [
+              {
+                "id": 123,
+                "link": "https://www.ticket-system.com/bugs/123"
+              },
+              {
+                "id": 789,
+                "link": "https://www.ticket-system.com/bugs/789"
+              }
+            ]
+            """);
+        });
+
+        meta.Should().ContainKey("contextInfo").WhoseValue.With(value =>
+        {
+            string innerJson = value.Should().BeOfType<JsonElement>().Subject.ToString();
+
+            innerJson.Should().BeJson("""
+            {
+              "source": "form-submission",
+              "retries": 1,
+              "authenticated": false
+            }
+            """);
         });
     }
-
-    // TODO: Add more tests, creating a mixture of:
-    // - Different endpoints: post resource, patch resource, post relationship, patch relationship, delete relationship, atomic:operations
-    // - Meta at different depths in the request body
-    //     For example, assert on store.Document.Data.SingleValue.Meta
-    //     See IHasMeta usage at https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/openapi/src/JsonApiDotNetCore.OpenApi.Swashbuckle/JsonApiObjects for where meta can occur
-    // - Varying data structures: primitive types such as string/int/bool, arrays, dictionaries, and nested combinations of them
 
     private sealed class CapturingDocumentAdapter : IDocumentAdapter
     {
