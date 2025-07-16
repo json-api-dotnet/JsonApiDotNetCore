@@ -506,6 +506,55 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         ValidateMetaData(relationship.Meta);
     }
 
+    [Fact]
+    public async Task Accepts_meta_in_data_of_atomic_add_resource_operation()
+    {
+        // Arrange
+        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+
+        SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
+
+        var requestBody = new
+        {
+            atomic__operations = new[]
+            {
+                new
+                {
+                    op = "add",
+                    data = new
+                    {
+                        type = "supportTickets",
+                        attributes = new
+                        {
+                            description = existingTicket.Description
+                        },
+                        meta = GetExampleMetaData()
+                    }
+                }
+            }
+        };
+
+        string route = $"/operations";
+
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        store.Document.Should().NotBeNull();
+        store.Document.Operations.Should().NotBeNull();
+        store.Document.Operations.Should().HaveCount(1);
+
+        var operation = store.Document.Operations[0];
+        operation.Should().NotBeNull();
+        operation.Data.Should().NotBeNull();
+        operation.Data.SingleValue.Should().NotBeNull();
+        operation.Data.SingleValue.Meta.Should().NotBeNull();
+
+        ValidateMetaData(operation.Data.SingleValue.Meta);
+    }
+
     private static Object GetExampleMetaData()
     {
         return new
