@@ -104,7 +104,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         string route = $"/supportTickets";
 
         // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
@@ -216,7 +216,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         string route = $"/supportTickets";
 
         // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
@@ -255,7 +255,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         string route = $"/supportTickets/{existingTicket.StringId}/relationships/productFamily";
 
         // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
@@ -313,7 +313,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         string route = $"/operations";
 
         // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
@@ -491,7 +491,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         string route = $"/supportTickets";
 
         // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
@@ -555,7 +555,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         string route = "/operations";
 
         // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
@@ -672,9 +672,9 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         string route = "/operations";
 
         // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
-        // Assert
+        // Assert 
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         store.Document.Should().NotBeNull();
