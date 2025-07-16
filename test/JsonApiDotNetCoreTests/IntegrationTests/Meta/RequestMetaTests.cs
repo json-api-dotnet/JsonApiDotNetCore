@@ -4,6 +4,7 @@ using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Request.Adapters;
 using JsonApiDotNetCore.Serialization.Response;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
@@ -270,6 +271,54 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
             supportTicketInDatabase.ProductFamily.Should().BeNull();
         });
+
+        ValidateMetaData(store.Document.Meta);
+    }
+
+    [Fact]
+    public async Task Accepts_top_level_meta_in_atomic_update_resource_operation()
+    {
+        // Arrange
+        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+
+        SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.SupportTickets.Add(existingTicket);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            atomic__operations = new[]
+            {
+                new
+                {
+                    op = "update",
+                    data = new
+                    {
+                        type = "supportTickets",
+                        id = existingTicket.StringId,
+                        attributes = new
+                        {
+                            description = existingTicket.Description
+                        }
+                    }
+                }
+            },
+            meta = GetExampleMetaData()
+        };
+
+        string route = $"/operations";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        store.Document.Should().NotBeNull();
 
         ValidateMetaData(store.Document.Meta);
     }
