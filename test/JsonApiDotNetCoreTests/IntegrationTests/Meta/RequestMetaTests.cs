@@ -228,6 +228,52 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         ValidateMetaData(store.Document.Meta);
     }
 
+    [Fact]
+    public async Task Accepts_top_level_meta_in_delete_relationship_request()
+    {
+        // Arrange
+        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+
+        SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
+
+        ProductFamily existingProductFamily = _fakers.ProductFamily.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            existingTicket.ProductFamily = existingProductFamily;
+            dbContext.SupportTickets.Add(existingTicket);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = (object?)null,
+            meta = GetExampleMetaData()
+        };
+
+        string route = $"/supportTickets/{existingTicket.StringId}/relationships/productFamily";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        store.Document.Should().NotBeNull();
+        store.Document.Data.SingleValue.Should().BeNull();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            var supportTicketInDatabase = await dbContext.SupportTickets
+                .Include(supportTicket => supportTicket.ProductFamily)
+                .FirstAsync(supportTicket => supportTicket.Id == existingTicket.Id);
+
+            supportTicketInDatabase.ProductFamily.Should().BeNull();
+        });
+
+        ValidateMetaData(store.Document.Meta);
+    }
+
     private static Object GetExampleMetaData()
     {
         return new
