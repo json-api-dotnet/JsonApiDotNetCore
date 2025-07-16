@@ -507,6 +507,80 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
     }
 
     [Fact]
+    public async Task Accepts_meta_in_relationship_of_atomic_add_resource_operation()
+    {
+        // Arrange
+        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+
+        SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
+        ProductFamily existingProductFamily = _fakers.ProductFamily.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.ProductFamilies.Add(existingProductFamily);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            atomic__operations = new[]
+            {
+                new
+                {
+                    op = "add",
+                    data = new
+                    {
+                        type = "supportTickets",
+                        attributes = new
+                        {
+                            description = existingTicket.Description
+                        },
+                        relationships = new
+                        {
+                            productFamily = new
+                            {
+                                data = new
+                                {
+                                    type = "productFamilies",
+                                    id = existingProductFamily.StringId
+                                },
+                                meta = GetExampleMetaData()
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        string route = "/operations";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        store.Document.Should().NotBeNull();
+        store.Document.Operations.Should().NotBeNull();
+        store.Document.Operations.Should().HaveCount(1);
+
+        var operation = store.Document.Operations[0];
+        operation.Should().NotBeNull();
+        operation.Data.Should().NotBeNull();
+        operation.Data.SingleValue.Should().NotBeNull();
+
+        var relationships = operation.Data.SingleValue.Relationships;
+        relationships.Should().NotBeNull();
+        relationships.Should().ContainKey("productFamily");
+
+        var relationship = relationships["productFamily"];
+        relationship.Should().NotBeNull();
+        relationship.Meta.Should().NotBeNull();
+
+        ValidateMetaData(relationship.Meta);
+    }
+
+    [Fact]
     public async Task Accepts_meta_in_data_of_atomic_add_resource_operation()
     {
         // Arrange
@@ -553,6 +627,74 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         operation.Data.SingleValue.Meta.Should().NotBeNull();
 
         ValidateMetaData(operation.Data.SingleValue.Meta);
+    }
+
+    [Fact]
+    public async Task Accepts_meta_in_relationship_of_atomic_update_resource_operation()
+    {
+        // Arrange
+        var store = _testContext.Factory.Services.GetRequiredService<RequestDocumentStore>();
+
+        SupportTicket existingTicket = _fakers.SupportTicket.GenerateOne();
+        ProductFamily existingProductFamily = _fakers.ProductFamily.GenerateOne();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            existingTicket.ProductFamily = existingProductFamily;
+            dbContext.SupportTickets.Add(existingTicket);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            atomic__operations = new[]
+            {
+                new
+                {
+                    op = "update",
+                    data = new
+                    {
+                        type = "supportTickets",
+                        id = existingTicket.StringId,
+                        relationships = new
+                        {
+                            productFamily = new
+                            {
+                                data = (object?)null
+                            }
+                        }
+                    },
+                    meta = GetExampleMetaData()
+                }
+            }
+        };
+
+        string route = "/operations";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        store.Document.Should().NotBeNull();
+        store.Document.Operations.Should().NotBeNull();
+        store.Document.Operations.Should().HaveCount(1);
+
+        var operation = store.Document.Operations[0];
+        operation.Should().NotBeNull();
+        operation.Meta.Should().NotBeNull();
+
+        ValidateMetaData(operation.Meta);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            var ticketInDatabase = await dbContext.SupportTickets
+                .Include(supportTicket => supportTicket.ProductFamily)
+                .FirstAsync(supportTicket => supportTicket.Id == existingTicket.Id);
+
+            ticketInDatabase.ProductFamily.Should().BeNull();
+        });
     }
 
     private static Object GetExampleMetaData()
