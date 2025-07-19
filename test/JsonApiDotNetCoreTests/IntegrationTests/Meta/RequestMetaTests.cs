@@ -265,8 +265,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            SupportTicket? supportTicketInDatabase = await dbContext.SupportTickets
-                .Include(supportTicket => supportTicket.ProductFamily)
+            SupportTicket? supportTicketInDatabase = await dbContext.SupportTickets.Include(supportTicket => supportTicket.ProductFamily)
                 .FirstAsync(supportTicket => supportTicket.Id == existingTicket.Id);
 
             supportTicketInDatabase.ProductFamily.Should().BeNull();
@@ -689,8 +688,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            SupportTicket? supportTicketInDatabase = await dbContext.SupportTickets
-                .Include(supportTicket => supportTicket.ProductFamily)
+            SupportTicket? supportTicketInDatabase = await dbContext.SupportTickets.Include(supportTicket => supportTicket.ProductFamily)
                 .FirstAsync(supportTicket => supportTicket.Id == existingTicket.Id);
 
             supportTicketInDatabase.ProductFamily.Should().BeNull();
@@ -753,11 +751,11 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
             string innerJson = value.Should().BeOfType<JsonElement>().Subject.ToString();
 
             innerJson.Should().BeJson("""
-            [
-              "login",
-              "single-sign-on"
-            ]
-            """);
+                [
+                  "login",
+                  "single-sign-on"
+                ]
+                """);
         });
 
         meta.Should().ContainKey("relatedTo").WhoseValue.With(value =>
@@ -765,17 +763,17 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
             string innerJson = value.Should().BeOfType<JsonElement>().Subject.ToString();
 
             innerJson.Should().BeJson("""
-            [
-              {
-                "id": 123,
-                "link": "https://www.ticket-system.com/bugs/123"
-              },
-              {
-                "id": 789,
-                "link": "https://www.ticket-system.com/bugs/789"
-              }
-            ]
-            """);
+                [
+                  {
+                    "id": 123,
+                    "link": "https://www.ticket-system.com/bugs/123"
+                  },
+                  {
+                    "id": 789,
+                    "link": "https://www.ticket-system.com/bugs/789"
+                  }
+                ]
+                """);
         });
 
         meta.Should().ContainKey("contextInfo").WhoseValue.With(value =>
@@ -783,12 +781,12 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
             string innerJson = value.Should().BeOfType<JsonElement>().Subject.ToString();
 
             innerJson.Should().BeJson("""
-            {
-              "source": "form-submission",
-              "retries": 1,
-              "authenticated": false
-            }
-            """);
+                {
+                  "source": "form-submission",
+                  "retries": 1,
+                  "authenticated": false
+                }
+                """);
         });
     }
 
