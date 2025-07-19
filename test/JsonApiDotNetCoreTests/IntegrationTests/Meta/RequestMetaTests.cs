@@ -265,7 +265,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            SupportTicket? supportTicketInDatabase = await dbContext.SupportTickets.Include(supportTicket => supportTicket.ProductFamily)
+            SupportTicket supportTicketInDatabase = await dbContext.SupportTickets.Include(supportTicket => supportTicket.ProductFamily)
                 .FirstAsync(supportTicket => supportTicket.Id == existingTicket.Id);
 
             supportTicketInDatabase.ProductFamily.Should().BeNull();
@@ -673,7 +673,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
         // Act
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
-        // Assert 
+        // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         store.Document.Should().NotBeNull();
@@ -688,7 +688,7 @@ public sealed class RequestMetaTests : IClassFixture<IntegrationTestContext<Test
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            SupportTicket? supportTicketInDatabase = await dbContext.SupportTickets.Include(supportTicket => supportTicket.ProductFamily)
+            SupportTicket supportTicketInDatabase = await dbContext.SupportTickets.Include(supportTicket => supportTicket.ProductFamily)
                 .FirstAsync(supportTicket => supportTicket.Id == existingTicket.Id);
 
             supportTicketInDatabase.ProductFamily.Should().BeNull();
