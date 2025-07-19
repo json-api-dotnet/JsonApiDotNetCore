@@ -9,9 +9,10 @@
     <AnalysisMode>Recommended</AnalysisMode>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
     <RunSettingsFilePath>$(MSBuildThisFileDirectory)tests.runsettings</RunSettingsFilePath>
-    <JsonApiDotNetCoreVersionPrefix>5.6.1</JsonApiDotNetCoreVersionPrefix>
+    <VersionPrefix>5.7.2</VersionPrefix>
+    <VersionSuffix>pre</VersionSuffix>
+    <OpenApiPreviewNumber>3</OpenApiPreviewNumber>
     <NuGetAuditMode>direct</NuGetAuditMode>
-    <NoWarn>$(NoWarn);NETSDK1215</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>

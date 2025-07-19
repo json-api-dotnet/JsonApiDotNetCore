@@ -122,6 +122,8 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
         ArgumentNullException.ThrowIfNull(queryLayer);
 
+        _traceWriter.LogDebug(queryLayer);
+
         using (CodeTimingSessionManager.Current.Measure("Convert QueryLayer to System.Expression"))
         {
             IQueryable<TResource> source = GetAll();
@@ -150,6 +152,8 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
             var context = QueryableBuilderContext.CreateRoot(source, typeof(Queryable), _dbContext.Model, null);
             Expression expression = builder.ApplyQuery(queryLayer, context);
+
+            _traceWriter.LogDebug(expression);
 
             using (CodeTimingSessionManager.Current.Measure("Convert System.Expression to IQueryable"))
             {

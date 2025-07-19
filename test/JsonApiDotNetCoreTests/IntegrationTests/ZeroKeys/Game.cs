@@ -13,8 +13,8 @@ public sealed class Game : Identifiable<int?>
     [Attr]
     public string Title { get; set; } = null!;
 
-    [NotMapped]
     [Attr]
+    [NotMapped]
     public Guid SessionToken => Guid.NewGuid();
 
     [HasOne]

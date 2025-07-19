@@ -1,0 +1,14 @@
+{% comment %}
+
+    Adapted from https://github.com/RicoSuter/NJsonSchema/blob/v11.1.0/src/NJsonSchema.CodeGeneration.CSharp/Templates/Class.Inheritance.liquid
+    for JsonApiDotNetCore, to intercept when properties are set. This is needed to support partial POST/PATCH to distinguish between sending
+    a property with its default value versus omitting the property.
+
+{% endcomment %}
+﻿{%- if RenderInpc %}
+{% if HasInheritance %} : {{ BaseClassName }}{% else %} : System.ComponentModel.INotifyPropertyChanged{% endif %}
+{%- elsif RenderPrism %}
+{% if HasInheritance %} : {{ BaseClassName }}{% else %} : JsonApiDotNetCore.OpenApi.Client.NSwag.NotifyPropertySet{% endif %}
+{%- else %}
+{% if HasInheritance %} : {{ BaseClassName }}{% endif %}
+{%- endif %}

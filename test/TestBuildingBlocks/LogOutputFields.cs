@@ -8,10 +8,12 @@ public enum LogOutputFields
 {
     None = 0,
     Level = 1,
-    Category = 1 << 1,
-    Message = 1 << 2,
-    Exception = 1 << 3,
-    Scopes = 1 << 4,
+    CategoryName = 1 << 1,
+    CategoryNamespace = 1 << 2,
+    Message = 1 << 3,
+    Exception = 1 << 4,
+    Scopes = 1 << 5,
 
+    Category = CategoryName | CategoryNamespace,
     All = Level | Category | Message | Exception | Scopes
 }

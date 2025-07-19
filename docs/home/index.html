@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>JsonApiDotNetCore documentation</title>
-  <meta content="A framework for building JSON:API compliant REST APIs using .NET Core and Entity Framework Core. Includes support for Atomic Operations." name="description">
+  <meta content="A framework for building JSON:API compliant REST APIs using ASP.NET Core and Entity Framework Core. Includes support for the Atomic Operations extension." name="description">
   <meta content="jsonapidotnetcore jsonapi json:api dotnet asp.net" name="keywords">
   <link href="favicon.ico" rel="icon">
   <link href="favicon.ico" rel="apple-touch-icon">
@@ -12,7 +12,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.0/styles/default.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
   <link href="styles/home.css" rel="stylesheet">
   <link href="styles/icofont.min.css" rel="stylesheet">
@@ -30,6 +30,13 @@
     } else if (theme === "light") {
       darkModeStyleSheet.disabled = true;
     }
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-78GTGF1FM2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-78GTGF1FM2');
   </script>
 </head>
 <body>
@@ -51,11 +58,11 @@
         <div class="col-lg-7 pt-5 pt-lg-0 order-2 order-lg-1">
           <h1>JsonApiDotNetCore</h1>
           <h2>
-            A framework for building <a href="https://jsonapi.org/" target="_blank">JSON:API</a> compliant REST APIs using .NET Core and Entity Framework Core.
-            Includes support for <a href="https://jsonapi.org/ext/atomic/" target="_blank">Atomic Operations</a>.
+            A framework for building <a href="https://jsonapi.org/" target="_blank">JSON:API</a> compliant REST APIs using ASP.NET Core and Entity Framework Core.
+            Includes support for the <a href="https://jsonapi.org/ext/atomic/" target="_blank">Atomic Operations</a> extension.
           </h2>
           <a href="#about" class="btn-get-started scrollto">Read more</a>
-          <a href="../../getting-started/install.html" class="btn-get-started">Getting started</a>
+          <a href="../../getting-started/index.html" class="btn-get-started">Getting started</a>
           <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/" target="_blank" class="btn-get-started">Contribute on GitHub</a>
         </div>
         <div class="col-lg-5 order-1 order-lg-2 hero-img">
@@ -82,7 +89,9 @@
               <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">
                 <i class="bx bxs-package"></i>
                 <h4>Eliminate boilerplate</h4>
-                <p>We strive to eliminate as much boilerplate as possible by offering out-of-the-box features such as sorting, filtering and pagination.</p>
+                <p>
+                  The ultimate goal of this library is to eliminate as much boilerplate as possible by offering out-of-the-box features, such as sorting, filtering, pagination, sparse fieldset selection, and side-loading related resources.
+                </p>
               </div>
               <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
                 <i class="bx bx-category-alt"></i>
@@ -112,7 +121,7 @@
             <div class="icon-box">
               <div class="icon"><i class="bx bx-sort-a-z"></i></div>
               <h4 class="title">Sorting</h4>
-              <p class="description">Order resources on one or multiple attributes using the <code>sort</code> query string parameter</p>
+              <p class="description">Order resources on multiple attributes using the <code>sort</code> query string parameter</p>
             </div>
           </div>
           <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="300" id="pagination">
@@ -174,7 +183,7 @@
               <div class="icon"><i class="bx bx-detail"></i></div>
               <h4 class="title">Resource</h4>
               <pre>
-<code>#nullable enable
+<code class="language-csharp">#nullable enable
 
 public class Article : Identifiable&lt;long&gt;
 {
@@ -213,7 +222,7 @@ public class Article : Identifiable&lt;long&gt;
             <div class="icon-box code-example">
               <div class="icon"><i class="bx bx-message-rounded-detail"></i></div>
               <h4 class="title">Request</h4>
-              <pre><code>GET /articles?filter=contains(summary,'web')&sort=-lastModifiedAt&fields[articles]=title,summary&include=author HTTP/1.1</code></pre>
+              <pre><code class="language-http">GET /articles?filter=contains(summary,'web')&amp;sort=-lastModifiedAt&amp;fields[articles]=title,summary&amp;include=author HTTP/1.1</code></pre>
             </div>
           </div>
         </div>
@@ -223,14 +232,14 @@ public class Article : Identifiable&lt;long&gt;
               <div class="icon"><i class="bx bx-message-rounded-detail bx-flip-horizontal"></i></div>
               <h4 class="title">Response</h4>
               <pre>
-<code>{
+<code class="language-json">{
   "meta": {
     "totalResources": 1
   },
   "links": {
-    "self": "/articles?filter=contains(summary,'web')&sort=-lastModifiedAt&fields%5Barticles%5D=title,summary&include=author",
-    "first": "/articles?filter=contains(summary,'web')&sort=-lastModifiedAt&fields%5Barticles%5D=title,summary&include=author",
-    "last": "/articles?filter=contains(summary,'web')&sort=-lastModifiedAt&fields%5Barticles%5D=title,summary&include=author"
+    "self": "/articles?filter=contains(summary,'web')&amp;sort=-lastModifiedAt&amp;fields%5Barticles%5D=title,summary&amp;include=author",
+    "first": "/articles?filter=contains(summary,'web')&amp;sort=-lastModifiedAt&amp;fields%5Barticles%5D=title,summary&amp;include=author",
+    "last": "/articles?filter=contains(summary,'web')&amp;sort=-lastModifiedAt&amp;fields%5Barticles%5D=title,summary&amp;include=author"
   },
   "data": [
     {
@@ -294,14 +303,14 @@ public class Article : Identifiable&lt;long&gt;
           <div sponsor class="col-md-4 col-lg-3 d-flex align-items-stretch justify-content-center aos-init aos-animate" id="jetbrains">
             <div class="icon-box d-flex align-items-center" data-aos="zoom-in" data-aos-delay="100">
               <div class="icon">
-                <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="JetBrains Logo" style="width:150px">
+                <img class="jetbrains-logo" src="/styles/img/jetbrains-logo-light.svg" alt="JetBrains Logo" style="width:150px">
               </div>
             </div>
           </div>
           <div sponsor class="col-md-4 col-lg-3 d-flex align-items-stretch justify-content-center aos-init aos-animate" id="araxis">
-            <div class="icon-box d-flex align-items-center" style="background-color: rgb(116, 125, 139)" data-aos="zoom-in" data-aos-delay="200">
+            <div class="icon-box d-flex align-items-center" style="background-color: rgb(229, 231, 235)" data-aos="zoom-in" data-aos-delay="200">
               <div class="icon">
-                <img src="https://www.araxis.com/theme/37/img/araxis-logo-lg.svg" alt="Araxis Logo" style="width:150px">
+                <img src="/styles/img/araxis-logo.png" alt="Araxis Logo" style="width:150px">
               </div>
             </div>
           </div>

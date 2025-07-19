@@ -1,0 +1,10 @@
+- name: Filtering
+  href: filtering.md
+- name: Sorting
+  href: sorting.md
+- name: Pagination
+  href: pagination.md
+- name: Sparse Fieldset Selection
+  href: sparse-fieldset-selection.md
+- name: Including Related Resources
+  href: including-relationships.md

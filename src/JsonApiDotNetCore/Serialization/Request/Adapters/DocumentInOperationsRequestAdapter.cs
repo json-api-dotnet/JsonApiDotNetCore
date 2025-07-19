@@ -47,8 +47,7 @@ public sealed class DocumentInOperationsRequestAdapter : BaseAdapter, IDocumentI
         if (atomicOperationObjects.Count > _options.MaximumOperationsPerRequest)
         {
             throw new ModelConversionException(state.Position, "Too many operations in request.",
-                $"The number of operations in this request ({atomicOperationObjects.Count}) is higher " +
-                $"than the maximum of {_options.MaximumOperationsPerRequest}.");
+                $"The number of operations in this request ({atomicOperationObjects.Count}) is higher than the maximum of {_options.MaximumOperationsPerRequest}.");
         }
     }
 

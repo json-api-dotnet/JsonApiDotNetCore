@@ -60,7 +60,7 @@ public class PersonDefinition : JsonApiResourceDefinition<Person, int>
         {
             return new Dictionary<string, object?>
             {
-                ["notice"] = "Check our intranet at http://www.example.com/employees/" +
+                ["notice"] = "Check our intranet at https://www.example.com/employees/" +
                     $"{person.StringId} for personal details."
             };
         }
@@ -80,7 +80,7 @@ public class PersonDefinition : JsonApiResourceDefinition<Person, int>
         ...
       },
       "meta": {
-        "notice": "Check our intranet at http://www.example.com/employees/1 for personal details."
+        "notice": "Check our intranet at https://www.example.com/employees/1 for personal details."
       }
     }
   ]

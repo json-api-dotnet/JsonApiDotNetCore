@@ -96,18 +96,25 @@ public class QueryLayerComposer : IQueryLayerComposer
         // @formatter:wrap_chained_method_calls restore
 
         FilterExpression? primaryFilter = GetFilter(Array.Empty<QueryExpression>(), hasManyRelationship.LeftType);
+
+        if (primaryFilter != null && inverseRelationship is HasOneAttribute)
+        {
+            // We can't lift the field chains in a primary filter, because there's no way for a custom filter expression to express
+            // the scope of its chains. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1671.
+            return null;
+        }
+
         FilterExpression? secondaryFilter = GetFilter(filtersInSecondaryScope, hasManyRelationship.RightType);
+        FilterExpression inverseFilter = GetInverseRelationshipFilter(primaryId, primaryFilter, hasManyRelationship, inverseRelationship);
 
-        FilterExpression inverseFilter = GetInverseRelationshipFilter(primaryId, hasManyRelationship, inverseRelationship);
-
-        return LogicalExpression.Compose(LogicalOperator.And, inverseFilter, primaryFilter, secondaryFilter);
+        return LogicalExpression.Compose(LogicalOperator.And, inverseFilter, secondaryFilter);
     }
 
-    private static FilterExpression GetInverseRelationshipFilter<TId>([DisallowNull] TId primaryId, HasManyAttribute relationship,
-        RelationshipAttribute inverseRelationship)
+    private static FilterExpression GetInverseRelationshipFilter<TId>([DisallowNull] TId primaryId, FilterExpression? primaryFilter,
+        HasManyAttribute relationship, RelationshipAttribute inverseRelationship)
     {
         return inverseRelationship is HasManyAttribute hasManyInverseRelationship
-            ? GetInverseHasManyRelationshipFilter(primaryId, relationship, hasManyInverseRelationship)
+            ? GetInverseHasManyRelationshipFilter(primaryId, primaryFilter, relationship, hasManyInverseRelationship)
             : GetInverseHasOneRelationshipFilter(primaryId, relationship, (HasOneAttribute)inverseRelationship);
     }
 
@@ -120,14 +127,15 @@ public class QueryLayerComposer : IQueryLayerComposer
         return new ComparisonExpression(ComparisonOperator.Equals, idChain, new LiteralConstantExpression(primaryId));
     }
 
-    private static HasExpression GetInverseHasManyRelationshipFilter<TId>([DisallowNull] TId primaryId, HasManyAttribute relationship,
-        HasManyAttribute inverseRelationship)
+    private static HasExpression GetInverseHasManyRelationshipFilter<TId>([DisallowNull] TId primaryId, FilterExpression? primaryFilter,
+        HasManyAttribute relationship, HasManyAttribute inverseRelationship)
     {
         AttrAttribute idAttribute = GetIdAttribute(relationship.LeftType);
         var idChain = new ResourceFieldChainExpression(ImmutableArray.Create<ResourceFieldAttribute>(idAttribute));
         var idComparison = new ComparisonExpression(ComparisonOperator.Equals, idChain, new LiteralConstantExpression(primaryId));
 
-        return new HasExpression(new ResourceFieldChainExpression(inverseRelationship), idComparison);
+        FilterExpression filter = LogicalExpression.Compose(LogicalOperator.And, idComparison, primaryFilter)!;
+        return new HasExpression(new ResourceFieldChainExpression(inverseRelationship), filter);
     }
 
     /// <inheritdoc />
@@ -165,13 +173,20 @@ public class QueryLayerComposer : IQueryLayerComposer
         _paginationContext.PageSize = topPagination.PageSize;
         _paginationContext.PageNumber = topPagination.PageNumber;
 
-        return new QueryLayer(resourceType)
+        var topLayer = new QueryLayer(resourceType)
         {
             Filter = GetFilter(expressionsInTopScope, resourceType),
             Sort = GetSort(expressionsInTopScope, resourceType),
             Pagination = topPagination,
             Selection = GetSelectionForSparseAttributeSet(resourceType)
         };
+
+        if (topLayer is { Pagination.PageSize: not null, Sort: null })
+        {
+            topLayer.Sort = CreateSortById(resourceType);
+        }
+
+        return topLayer;
     }
 
     private IncludeExpression ComposeChildren(QueryLayer topLayer, ImmutableArray<ExpressionInScope> constraints)
@@ -229,7 +244,7 @@ public class QueryLayerComposer : IQueryLayerComposer
                 ResourceType resourceType = includeElement.Relationship.RightType;
                 bool isToManyRelationship = includeElement.Relationship is HasManyAttribute;
 
-                var child = new QueryLayer(resourceType)
+                var subLayer = new QueryLayer(resourceType)
                 {
                     Filter = isToManyRelationship ? GetFilter(expressionsInCurrentScope, resourceType) : null,
                     Sort = isToManyRelationship ? GetSort(expressionsInCurrentScope, resourceType) : null,
@@ -237,9 +252,14 @@ public class QueryLayerComposer : IQueryLayerComposer
                     Selection = GetSelectionForSparseAttributeSet(resourceType)
                 };
 
-                selectors.IncludeRelationship(includeElement.Relationship, child);
+                if (subLayer is { Pagination.PageSize: not null, Sort: null })
+                {
+                    subLayer.Sort = CreateSortById(resourceType);
+                }
 
-                IImmutableSet<IncludeElementExpression> updatedChildren = ProcessIncludeSet(includeElement.Children, child, relationshipChain, constraints);
+                selectors.IncludeRelationship(includeElement.Relationship, subLayer);
+
+                IImmutableSet<IncludeElementExpression> updatedChildren = ProcessIncludeSet(includeElement.Children, subLayer, relationshipChain, constraints);
 
                 if (!ReferenceEquals(includeElement.Children, updatedChildren))
                 {
@@ -248,7 +268,28 @@ public class QueryLayerComposer : IQueryLayerComposer
             }
         }
 
+        EliminateRedundantSelectors(parentLayer);
+
         return updatesInChildren.Count == 0 ? includeElementsEvaluated : ApplyIncludeElementUpdates(includeElementsEvaluated, updatesInChildren);
+    }
+
+    private static void EliminateRedundantSelectors(QueryLayer parentLayer)
+    {
+        if (parentLayer.Selection != null)
+        {
+            foreach ((ResourceType resourceType, FieldSelectors selectors) in parentLayer.Selection.ToArray())
+            {
+                if (selectors.ContainsOnlyRelationships && selectors.Values.OfType<QueryLayer>().All(subLayer => subLayer.IsEmpty))
+                {
+                    parentLayer.Selection.Remove(resourceType);
+                }
+            }
+
+            if (parentLayer.Selection.IsEmpty)
+            {
+                parentLayer.Selection = null;
+            }
+        }
     }
 
     private static ImmutableHashSet<IncludeElementExpression> ApplyIncludeElementUpdates(IImmutableSet<IncludeElementExpression> includeElements,
@@ -499,23 +540,21 @@ public class QueryLayerComposer : IQueryLayerComposer
         return _resourceDefinitionAccessor.OnApplyFilter(resourceType, filter);
     }
 
-    protected virtual SortExpression GetSort(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceType resourceType)
+    protected virtual SortExpression? GetSort(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceType resourceType)
     {
         ArgumentNullException.ThrowIfNull(expressionsInScope);
         ArgumentNullException.ThrowIfNull(resourceType);
 
         SortExpression? sort = expressionsInScope.OfType<SortExpression>().FirstOrDefault();
 
-        sort = _resourceDefinitionAccessor.OnApplySort(resourceType, sort);
+        return _resourceDefinitionAccessor.OnApplySort(resourceType, sort);
+    }
 
-        if (sort == null)
-        {
-            AttrAttribute idAttribute = GetIdAttribute(resourceType);
-            var idAscendingSort = new SortElementExpression(new ResourceFieldChainExpression(idAttribute), true);
-            sort = new SortExpression(ImmutableArray.Create(idAscendingSort));
-        }
-
-        return sort;
+    private SortExpression CreateSortById(ResourceType resourceType)
+    {
+        AttrAttribute idAttribute = GetIdAttribute(resourceType);
+        var idAscendingSort = new SortElementExpression(new ResourceFieldChainExpression(idAttribute), true);
+        return new SortExpression(ImmutableArray.Create(idAscendingSort));
     }
 
     protected virtual PaginationExpression GetPagination(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceType resourceType)

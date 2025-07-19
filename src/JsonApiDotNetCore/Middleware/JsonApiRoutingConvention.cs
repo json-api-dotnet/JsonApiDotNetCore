@@ -101,8 +101,8 @@ public sealed partial class JsonApiRoutingConvention : IJsonApiRoutingConvention
 
                     if (resourceType == null)
                     {
-                        throw new InvalidConfigurationException($"Controller '{controller.ControllerType}' depends on " +
-                            $"resource type '{resourceClrType}', which does not exist in the resource graph.");
+                        throw new InvalidConfigurationException(
+                            $"Controller '{controller.ControllerType}' depends on resource type '{resourceClrType}', which does not exist in the resource graph.");
                     }
 
                     if (_controllerPerResourceTypeMap.TryGetValue(resourceType, out ControllerModel? existingModel))

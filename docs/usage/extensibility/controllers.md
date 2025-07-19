@@ -6,7 +6,7 @@ To expose API endpoints, ASP.NET controllers need to be defined.
 
 _since v5_
 
-Controllers are auto-generated (using [source generators](https://docs.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview)) when you add `[Resource]` on your model class:
+Controllers are auto-generated (using [source generators](https://learn.microsoft.com/dotnet/csharp/roslyn-sdk/#source-generators)) when you add `[Resource]` on your model class:
 
 ```c#
 [Resource] // Generates ArticlesController.g.cs

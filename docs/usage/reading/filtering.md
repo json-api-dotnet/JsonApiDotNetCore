@@ -60,7 +60,7 @@ The next request returns all customers that have orders -or- whose last name is 
 GET /customers?filter=has(orders)&filter=equals(lastName,'Smith') HTTP/1.1
 ```
 
-Aside from filtering on the resource being requested (which would be blogs in /blogs and articles in /blogs/1/articles), 
+Aside from filtering on the resource being requested (which would be blogs in /blogs and articles in /blogs/1/articles),
 filtering on to-many relationships can be done using bracket notation:
 
 ```http

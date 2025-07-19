@@ -31,7 +31,7 @@ public static class CodeTimingSessionManager
     private static bool GetDefaultIsEnabled()
     {
 #if DEBUG
-        return !IsRunningInTest() && !IsRunningInBenchmark();
+        return !IsRunningInTest() && !IsRunningInBenchmark() && !IsGeneratingOpenApiDocumentAtBuildTime();
 #else
         return false;
 #endif
@@ -50,6 +50,12 @@ public static class CodeTimingSessionManager
     private static bool IsRunningInBenchmark()
     {
         return Assembly.GetEntryAssembly()?.GetName().Name == "Benchmarks";
+    }
+
+    // ReSharper disable once UnusedMember.Local
+    private static bool IsGeneratingOpenApiDocumentAtBuildTime()
+    {
+        return Environment.GetCommandLineArgs().Any(argument => argument.Contains("GetDocument.Insider"));
     }
 
     private static void AssertHasActiveSession()

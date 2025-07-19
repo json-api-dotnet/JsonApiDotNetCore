@@ -1,0 +1,19 @@
+{% comment %}
+
+    Adapted from https://github.com/RicoSuter/NJsonSchema/blob/v11.1.0/src/NJsonSchema.CodeGeneration.CSharp/Templates/JsonInheritanceConverter.liquid
+    for JsonApiDotNetCore, to provide alternate OpenAPI inheritance implementation that enables the use of third-party converters.
+
+{% endcomment %}
+[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "{{ ToolchainVersion }}")]
+public class JsonInheritanceConverter : JsonApiDotNetCore.OpenApi.Client.NSwag.BlockedJsonInheritanceConverter
+{
+    public JsonInheritanceConverter()
+        : base()
+    {
+    }
+
+    public JsonInheritanceConverter(string discriminatorName)
+        : base(discriminatorName)
+    {
+    }
+}

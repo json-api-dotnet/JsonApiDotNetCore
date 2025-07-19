@@ -611,3 +611,7 @@ div[sponsor]:hover {
 .btn-theme:active {
   box-shadow: none !important;
 }
+
+.jetbrains-logo {
+  content: url("/styles/img/jetbrains-logo-light.svg");
+}

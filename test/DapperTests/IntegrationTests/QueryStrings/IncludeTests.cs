@@ -165,7 +165,7 @@ public sealed class IncludeTests : IClassFixture<DapperTestContext>
                 INNER JOIN "People" AS t3 ON t1."OwnerId" = t3."Id"
                 LEFT JOIN "TodoItems" AS t4 ON t3."Id" = t4."AssigneeId"
                 LEFT JOIN "Tags" AS t5 ON t1."Id" = t5."TodoItemId"
-                ORDER BY t1."Priority", t1."LastModifiedAt" DESC, t4."Priority", t4."LastModifiedAt" DESC, t5."Id"
+                ORDER BY t1."Priority", t1."LastModifiedAt" DESC, t4."Priority", t4."LastModifiedAt" DESC
                 """));
 
             command.Parameters.Should().BeEmpty();
@@ -231,7 +231,7 @@ public sealed class IncludeTests : IClassFixture<DapperTestContext>
                 FROM "TodoItems" AS t1
                 LEFT JOIN "Tags" AS t2 ON t1."Id" = t2."TodoItemId"
                 LEFT JOIN "RgbColors" AS t3 ON t2."Id" = t3."TagId"
-                ORDER BY t1."Priority", t1."LastModifiedAt" DESC, t2."Id"
+                ORDER BY t1."Priority", t1."LastModifiedAt" DESC
                 """));
 
             command.Parameters.Should().BeEmpty();

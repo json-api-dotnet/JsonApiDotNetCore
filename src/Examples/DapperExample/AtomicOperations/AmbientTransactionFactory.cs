@@ -26,7 +26,7 @@ public sealed class AmbientTransactionFactory : IOperationsTransactionFactory
 
     internal async Task<AmbientTransaction> BeginTransactionAsync(CancellationToken cancellationToken)
     {
-        var instance = (IOperationsTransactionFactory)this;
+        IOperationsTransactionFactory instance = this;
 
         IOperationsTransaction transaction = await instance.BeginTransactionAsync(cancellationToken);
         return (AmbientTransaction)transaction;

@@ -11,6 +11,8 @@ namespace JsonApiDotNetCore.Queries;
 [PublicAPI]
 public sealed class QueryLayer
 {
+    internal bool IsEmpty => Filter == null && Sort == null && Pagination?.PageSize == null && (Selection == null || Selection.IsEmpty);
+
     public ResourceType ResourceType { get; }
 
     public IncludeExpression? Include { get; set; }

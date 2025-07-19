@@ -72,8 +72,8 @@ public partial class ResourceGraphBuilder
 
             if (rightType == null)
             {
-                throw new InvalidConfigurationException($"Resource type '{relationship.LeftType.ClrType}' depends on " +
-                    $"'{rightClrType}', which was not added to the resource graph.");
+                throw new InvalidConfigurationException(
+                    $"Resource type '{relationship.LeftType.ClrType}' depends on '{rightClrType}', which was not added to the resource graph.");
             }
 
             relationship.RightType = rightType;
@@ -129,8 +129,8 @@ public partial class ResourceGraphBuilder
         {
             if (resourceType.FindAttributeByPublicName(attribute.PublicName) == null)
             {
-                throw new InvalidConfigurationException($"Attribute '{attribute.PublicName}' from base type " +
-                    $"'{resourceType.BaseType.ClrType}' does not exist in derived type '{resourceType.ClrType}'.");
+                throw new InvalidConfigurationException(
+                    $"Attribute '{attribute.PublicName}' from base type '{resourceType.BaseType.ClrType}' does not exist in derived type '{resourceType.ClrType}'.");
             }
         }
     }
@@ -141,8 +141,8 @@ public partial class ResourceGraphBuilder
         {
             if (resourceType.FindRelationshipByPublicName(relationship.PublicName) == null)
             {
-                throw new InvalidConfigurationException($"Relationship '{relationship.PublicName}' from base type " +
-                    $"'{resourceType.BaseType.ClrType}' does not exist in derived type '{resourceType.ClrType}'.");
+                throw new InvalidConfigurationException(
+                    $"Relationship '{relationship.PublicName}' from base type '{resourceType.BaseType.ClrType}' does not exist in derived type '{resourceType.ClrType}'.");
             }
         }
     }
@@ -396,8 +396,8 @@ public partial class ResourceGraphBuilder
                 continue;
             }
 
-            Type innerType = TypeOrElementType(property.PropertyType);
-            eagerLoad.Children = GetEagerLoads(innerType, recursionDepth + 1);
+            Type rightType = CollectionConverter.Instance.FindCollectionElementType(property.PropertyType) ?? property.PropertyType;
+            eagerLoad.Children = GetEagerLoads(rightType, recursionDepth + 1);
             eagerLoad.Property = property;
 
             eagerLoads.Add(eagerLoad);
@@ -455,16 +455,8 @@ public partial class ResourceGraphBuilder
     {
         if (recursionDepth >= 500)
         {
-            throw new InvalidOperationException("Infinite recursion detected in eager-load chain.");
+            throw new InvalidConfigurationException("Infinite recursion detected in eager-load chain.");
         }
-    }
-
-    private Type TypeOrElementType(Type type)
-    {
-        Type[] interfaces = type.GetInterfaces().Where(@interface => @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IEnumerable<>))
-            .ToArray();
-
-        return interfaces.Length == 1 ? interfaces.Single().GenericTypeArguments[0] : type;
     }
 
     private string FormatResourceName(Type resourceClrType)

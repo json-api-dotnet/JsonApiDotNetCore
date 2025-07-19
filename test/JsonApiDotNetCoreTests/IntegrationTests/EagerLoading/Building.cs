@@ -14,12 +14,12 @@ public sealed class Building : Identifiable<int>
     [Attr]
     public string Number { get; set; } = null!;
 
-    [NotMapped]
     [Attr]
+    [NotMapped]
     public int WindowCount => Windows.Count;
 
-    [NotMapped]
     [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowChange)]
+    [NotMapped]
     public string PrimaryDoorColor
     {
         get
@@ -50,8 +50,8 @@ public sealed class Building : Identifiable<int>
         }
     }
 
-    [NotMapped]
     [Attr(Capabilities = AttrCapabilities.AllowView)]
+    [NotMapped]
     public string? SecondaryDoorColor => SecondaryDoor?.Color;
 
     [EagerLoad]

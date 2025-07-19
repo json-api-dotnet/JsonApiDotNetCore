@@ -15,8 +15,8 @@ public sealed class WorkItemGroup : Identifiable<Guid>
     [Attr]
     public bool IsPublic { get; set; }
 
-    [NotMapped]
     [Attr]
+    [NotMapped]
     public bool IsDeprecated => !string.IsNullOrEmpty(Name) && Name.StartsWith("DEPRECATED:", StringComparison.OrdinalIgnoreCase);
 
     [HasOne]

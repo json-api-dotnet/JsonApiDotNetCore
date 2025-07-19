@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+  </PropertyGroup>
+
+  <Import Project="..\..\..\package-versions.props" />
+  <Import Project="..\..\JsonApiDotNetCore.OpenApi.Client.Kiota\Build\JsonApiDotNetCore.OpenApi.Client.Kiota.props" />
+  <Import Project="..\..\JsonApiDotNetCore.OpenApi.Client.Kiota\Build\JsonApiDotNetCore.OpenApi.Client.Kiota.targets" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\JsonApiDotNetCore.OpenApi.Client.Kiota\JsonApiDotNetCore.OpenApi.Client.Kiota.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="Microsoft.Kiota.Bundle" Version="$(KiotaVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <KiotaReference Include="../JsonApiDotNetCoreExample/GeneratedSwagger/JsonApiDotNetCoreExample.json">
+      <NamespaceName>$(MSBuildProjectName).GeneratedCode</NamespaceName>
+      <ClassName>ExampleApiClient</ClassName>
+      <OutputPath>./GeneratedCode</OutputPath>
+      <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
+    </KiotaReference>
+  </ItemGroup>
+</Project>

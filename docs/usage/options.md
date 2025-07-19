@@ -122,7 +122,7 @@ Because we copy resource properties into an intermediate object before serializa
 
 ## ModelState Validation
 
-[ASP.NET ModelState validation](https://docs.microsoft.com/en-us/aspnet/core/mvc/models/validation) can be used to validate incoming request bodies when creating and updating resources. Since v5.0, this is enabled by default.
+[ASP.NET ModelState validation](https://learn.microsoft.com/aspnet/web-api/overview/formats-and-model-binding/model-validation-in-aspnet-web-api) can be used to validate incoming request bodies when creating and updating resources. Since v5.0, this is enabled by default.
 When `ValidateModelState` is set to `false`, no model validation is performed.
 
 How nullability affects ModelState validation is described [here](~/usage/resources/nullability.md).

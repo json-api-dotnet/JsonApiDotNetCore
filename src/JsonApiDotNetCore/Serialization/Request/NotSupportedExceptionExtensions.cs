@@ -48,7 +48,7 @@ internal static class NotSupportedExceptionExtensions
                 }
                 else
                 {
-                    error.Source.Pointer = sourcePointer + '/' + error.Source.Pointer;
+                    error.Source.Pointer = $"{sourcePointer}/{error.Source.Pointer}";
                 }
             }
         }

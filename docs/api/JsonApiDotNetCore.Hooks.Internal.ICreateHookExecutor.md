@@ -1,0 +1,3 @@
+---
+redirect_url: JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnWritingAsync__0_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_
+---

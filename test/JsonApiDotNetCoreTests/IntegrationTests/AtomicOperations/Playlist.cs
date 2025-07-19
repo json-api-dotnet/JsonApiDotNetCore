@@ -12,8 +12,8 @@ public sealed class Playlist : Identifiable<long>
     [Attr]
     public string Name { get; set; } = null!;
 
-    [NotMapped]
     [Attr]
+    [NotMapped]
     public bool IsArchived => false;
 
     [HasMany]

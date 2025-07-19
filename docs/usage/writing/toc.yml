@@ -1,0 +1,8 @@
+- name: Creating
+  href: creating.md
+- name: Updating
+  href: updating.md
+- name: Deleting
+  href: deleting.md
+- name: Bulk/Batch
+  href: bulk-batch-operations.md
