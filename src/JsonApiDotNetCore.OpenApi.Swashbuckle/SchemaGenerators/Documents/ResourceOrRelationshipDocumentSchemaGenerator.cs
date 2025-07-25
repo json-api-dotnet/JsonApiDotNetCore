@@ -3,8 +3,7 @@ using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Documents;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Relationships;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.References;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
@@ -73,7 +72,7 @@ internal sealed class ResourceOrRelationshipDocumentSchemaGenerator : DocumentSc
 
         if (JsonApiSchemaFacts.HasNullableDataProperty(resourceSchemaType.SchemaOpenType))
         {
-            inlineSchemaForDocument.Properties ??= [];
+            inlineSchemaForDocument.Properties ??= new Dictionary<string, IOpenApiSchema>();
             ((OpenApiSchema)inlineSchemaForDocument.Properties[JsonApiPropertyName.Data]).SetNullable(true);
         }
 

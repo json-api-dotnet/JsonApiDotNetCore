@@ -7,11 +7,7 @@ using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Models.References;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
@@ -114,7 +110,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
         var fullSchema = new OpenApiSchema
         {
             Type = JsonSchemaType.Object,
-            Required = [OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName],
+            Required = new SortedSet<string>([OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName]),
             Properties = new Dictionary<string, IOpenApiSchema>
             {
                 [OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName] = new OpenApiSchema
@@ -127,9 +123,9 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
             Discriminator = new OpenApiDiscriminator
             {
                 PropertyName = OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName,
-                Mapping = new Dictionary<string, OpenApiSchemaReference>(StringComparer.Ordinal)
+                Mapping = new SortedDictionary<string, OpenApiSchemaReference>(StringComparer.Ordinal)
             },
-            Extensions = new Dictionary<string, IOpenApiExtension>
+            Extensions = new SortedDictionary<string, IOpenApiExtension>
             {
                 ["x-abstract"] = new JsonNodeExtension(true)
             }
@@ -268,7 +264,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
     private void SetOperationCode(OpenApiSchema fullSchema, AtomicOperationCode operationCode, SchemaRepository schemaRepository)
     {
         var referenceSchema = (OpenApiSchemaReference)_atomicOperationCodeSchemaGenerator.GenerateSchema(operationCode, schemaRepository);
-        fullSchema.Properties ??= [];
+        fullSchema.Properties ??= new Dictionary<string, IOpenApiSchema>();
         fullSchema.Properties[JsonApiPropertyName.Op] = referenceSchema.WrapInExtendedSchema();
     }
 
@@ -277,7 +273,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
         OpenApiSchemaReference referenceSchemaForAbstractOperation = schemaRepository.LookupByType(AtomicOperationAbstractType);
         var fullSchemaForAbstractOperation = (OpenApiSchema)schemaRepository.Schemas[referenceSchemaForAbstractOperation.Reference.Id!];
         fullSchemaForAbstractOperation.Discriminator ??= new OpenApiDiscriminator();
-        fullSchemaForAbstractOperation.Discriminator.Mapping ??= [];
+        fullSchemaForAbstractOperation.Discriminator.Mapping ??= new SortedDictionary<string, OpenApiSchemaReference>();
         fullSchemaForAbstractOperation.Discriminator.Mapping.Add(discriminatorValue, referenceSchemaForOperation);
     }
 
@@ -356,7 +352,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
 
         if (referenceSchemaForRelationshipIdentifier != null)
         {
-            inlineSchemaForOperation.Properties ??= [];
+            inlineSchemaForOperation.Properties ??= new Dictionary<string, IOpenApiSchema>();
             inlineSchemaForOperation.Properties[JsonApiPropertyName.Ref] = referenceSchemaForRelationshipIdentifier.WrapInExtendedSchema();
         }
 

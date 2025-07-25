@@ -9,8 +9,7 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Net.Http.Headers;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 #pragma warning disable AV1568 // Parameter value should not be overwritten in method body
@@ -480,7 +479,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         responses ??= new OpenApiResponses();
         OpenApiResponse response = GetOrAddResponse(responses, statusCode);
 
-        response.Headers ??= [];
+        response.Headers ??= new SortedDictionary<string, IOpenApiHeader>();
 
         response.Headers[HeaderNames.ETag] = new OpenApiHeader
         {
@@ -498,7 +497,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         responses ??= new OpenApiResponses();
         OpenApiResponse response = GetOrAddResponse(responses, statusCode);
 
-        response.Headers ??= [];
+        response.Headers ??= new SortedDictionary<string, IOpenApiHeader>();
 
         response.Headers[HeaderNames.ContentLength] = new OpenApiHeader
         {
@@ -517,7 +516,7 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
         responses ??= new OpenApiResponses();
         OpenApiResponse response = GetOrAddResponse(responses, statusCode);
 
-        response.Headers ??= [];
+        response.Headers ??= new SortedDictionary<string, IOpenApiHeader>();
 
         response.Headers[HeaderNames.Location] = new OpenApiHeader
         {

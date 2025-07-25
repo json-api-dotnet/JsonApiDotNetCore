@@ -2,8 +2,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Documents;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 using JsonApiDotNetCore.Serialization.Objects;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.References;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
@@ -44,7 +43,7 @@ internal sealed class ErrorResponseDocumentSchemaGenerator : DocumentSchemaGener
         var fullSchemaForErrorObject = (OpenApiSchema)schemaRepository.Schemas[referenceSchemaForErrorObject.Reference.Id!];
 
         OpenApiSchemaReference referenceSchemaForMeta = _metaSchemaGenerator.GenerateSchema(schemaRepository);
-        fullSchemaForErrorObject.Properties ??= [];
+        fullSchemaForErrorObject.Properties ??= new Dictionary<string, IOpenApiSchema>();
         fullSchemaForErrorObject.Properties[JsonApiPropertyName.Meta] = referenceSchemaForMeta.WrapInExtendedSchema();
 
         return (OpenApiSchemaReference)_defaultSchemaGenerator.GenerateSchema(schemaType, schemaRepository);

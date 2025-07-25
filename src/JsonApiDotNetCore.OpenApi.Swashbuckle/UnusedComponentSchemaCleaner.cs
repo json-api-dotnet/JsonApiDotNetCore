@@ -1,11 +1,7 @@
 using System.Diagnostics;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Models.References;
-using Microsoft.OpenApi.Services;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle;

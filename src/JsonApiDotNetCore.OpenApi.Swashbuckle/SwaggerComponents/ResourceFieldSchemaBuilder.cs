@@ -3,9 +3,7 @@ using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 using JsonApiDotNetCore.Resources.Annotations;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Models.References;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
@@ -48,7 +46,7 @@ internal sealed class ResourceFieldSchemaBuilder
         _schemasForResourceFields = GetFieldSchemas();
     }
 
-    private Dictionary<string, IOpenApiSchema> GetFieldSchemas()
+    private IDictionary<string, IOpenApiSchema> GetFieldSchemas()
     {
         if (!_resourceSchemaRepository.TryLookupByType(_resourceSchemaType.ResourceType.ClrType, out OpenApiSchemaReference? referenceSchemaForResource))
         {
@@ -57,7 +55,7 @@ internal sealed class ResourceFieldSchemaBuilder
         }
 
         IOpenApiSchema inlineSchemaForResource = _resourceSchemaRepository.Schemas[referenceSchemaForResource.Reference.Id!].UnwrapLastExtendedSchema();
-        return inlineSchemaForResource.Properties ?? [];
+        return inlineSchemaForResource.Properties ?? new Dictionary<string, IOpenApiSchema>();
     }
 
     public void SetMembersOfAttributes(OpenApiSchema fullSchemaForAttributes, bool forRequestSchema, SchemaRepository schemaRepository)
@@ -98,14 +96,14 @@ internal sealed class ResourceFieldSchemaBuilder
                     EnsureAttributeSchemaIsExposed(referenceSchemaForAttribute, matchingAttribute, schemaRepository);
                 }
 
-                fullSchemaForAttributes.Properties ??= [];
+                fullSchemaForAttributes.Properties ??= new Dictionary<string, IOpenApiSchema>();
                 fullSchemaForAttributes.Properties.Add(matchingAttribute.PublicName, schemaForResourceField);
 
                 ((OpenApiSchema)schemaForResourceField).SetNullable(_resourceFieldValidationMetadataProvider.IsNullable(matchingAttribute));
 
                 if (IsFieldRequired(matchingAttribute))
                 {
-                    fullSchemaForAttributes.Required ??= [];
+                    fullSchemaForAttributes.Required ??= new SortedSet<string>();
                     fullSchemaForAttributes.Required.Add(matchingAttribute.PublicName);
                 }
 
@@ -207,12 +205,12 @@ internal sealed class ResourceFieldSchemaBuilder
         OpenApiSchema extendedReferenceSchemaForRelationship = referenceSchemaForRelationship.WrapInExtendedSchema();
         extendedReferenceSchemaForRelationship.Description = _resourceDocumentationReader.GetDocumentationForRelationship(relationship);
 
-        fullSchemaForRelationships.Properties ??= [];
+        fullSchemaForRelationships.Properties ??= new Dictionary<string, IOpenApiSchema>();
         fullSchemaForRelationships.Properties.Add(relationship.PublicName, extendedReferenceSchemaForRelationship);
 
         if (IsFieldRequired(relationship))
         {
-            fullSchemaForRelationships.Required ??= [];
+            fullSchemaForRelationships.Required ??= new SortedSet<string>();
             fullSchemaForRelationships.Required.Add(relationship.PublicName);
         }
     }
@@ -238,7 +236,7 @@ internal sealed class ResourceFieldSchemaBuilder
 
         if (JsonApiSchemaFacts.HasNullableDataProperty(relationshipSchemaType))
         {
-            fullSchema.Properties ??= [];
+            fullSchema.Properties ??= new Dictionary<string, IOpenApiSchema>();
             ((OpenApiSchema)fullSchema.Properties[JsonApiPropertyName.Data]).SetNullable(true);
         }
 

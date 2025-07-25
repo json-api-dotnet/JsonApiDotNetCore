@@ -1,11 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using JetBrains.Annotations;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Services;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
@@ -37,7 +33,7 @@ internal sealed class StringEnumOrderingFilter : IDocumentFilter
             schema.Extensions?.Remove(RequiresSortKey);
         }
 
-        private static bool HasSortAnnotation(Dictionary<string, IOpenApiExtension> schemaExtensions)
+        private static bool HasSortAnnotation(IDictionary<string, IOpenApiExtension> schemaExtensions)
         {
             // Order our own enums, but don't touch enums from user-defined resource attributes.
             return schemaExtensions.TryGetValue(RequiresSortKey, out IOpenApiExtension? extension) &&

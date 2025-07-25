@@ -74,7 +74,6 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
         options.DocumentFilter<StringEnumOrderingFilter>();
         options.DocumentFilter<SetSchemaTypeToObjectDocumentFilter>();
         options.DocumentFilter<UnusedComponentSchemaCleaner>();
-        options.DocumentFilter<SortSchemasFilter>();
         options.DocumentFilter<RemoveTagsFilter>();
     }
 

@@ -1,8 +1,7 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.Resources.Annotations;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.References;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
@@ -73,21 +72,21 @@ internal sealed class RelationshipIdentifierSchemaGenerator
     private void SetResourceType(OpenApiSchema fullSchemaForIdentifier, ResourceType resourceType, SchemaRepository schemaRepository)
     {
         OpenApiSchemaReference referenceSchema = _resourceTypeSchemaGenerator.GenerateSchema(resourceType, schemaRepository);
-        fullSchemaForIdentifier.Properties ??= [];
+        fullSchemaForIdentifier.Properties ??= new Dictionary<string, IOpenApiSchema>();
         fullSchemaForIdentifier.Properties[JsonApiPropertyName.Type] = referenceSchema.WrapInExtendedSchema();
     }
 
     private void SetResourceId(OpenApiSchema fullSchemaForResourceData, ResourceType resourceType, SchemaRepository schemaRepository)
     {
         OpenApiSchema idSchema = _resourceIdSchemaGenerator.GenerateSchema(resourceType, schemaRepository);
-        fullSchemaForResourceData.Properties ??= [];
+        fullSchemaForResourceData.Properties ??= new Dictionary<string, IOpenApiSchema>();
         fullSchemaForResourceData.Properties[JsonApiPropertyName.Id] = idSchema;
     }
 
     private void SetRelationship(OpenApiSchema fullSchemaForIdentifier, RelationshipAttribute relationship, SchemaRepository schemaRepository)
     {
         OpenApiSchemaReference referenceSchema = _relationshipNameSchemaGenerator.GenerateSchema(relationship, schemaRepository);
-        fullSchemaForIdentifier.Properties ??= [];
+        fullSchemaForIdentifier.Properties ??= new Dictionary<string, IOpenApiSchema>();
         fullSchemaForIdentifier.Properties[JsonApiPropertyName.Relationship] = referenceSchema.WrapInExtendedSchema();
     }
 }

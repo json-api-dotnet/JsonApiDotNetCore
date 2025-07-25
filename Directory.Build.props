@@ -18,7 +18,7 @@
   <PropertyGroup>
     <!-- .NET 10 Preview -->
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
-    <NoWarn>$(NoWarn);NU1903;NU5104;NU1608</NoWarn>
+    <NoWarn>$(NoWarn);CA1873;NU1903;NU5104;NU1608</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>

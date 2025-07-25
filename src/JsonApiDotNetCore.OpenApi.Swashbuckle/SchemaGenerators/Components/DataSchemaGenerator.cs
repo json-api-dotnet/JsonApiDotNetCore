@@ -7,11 +7,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Models.Interfaces;
-using Microsoft.OpenApi.Models.References;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
@@ -226,7 +222,7 @@ internal sealed class DataSchemaGenerator
         var fullSchema = new OpenApiSchema
         {
             Type = JsonSchemaType.Object,
-            Required = [JsonApiPropertyName.Type],
+            Required = new SortedSet<string>([JsonApiPropertyName.Type]),
             Properties = new Dictionary<string, IOpenApiSchema>
             {
                 [JsonApiPropertyName.Type] = referenceSchemaForResourceType.WrapInExtendedSchema(),
@@ -236,9 +232,9 @@ internal sealed class DataSchemaGenerator
             Discriminator = new OpenApiDiscriminator
             {
                 PropertyName = JsonApiPropertyName.Type,
-                Mapping = new Dictionary<string, OpenApiSchemaReference>(StringComparer.Ordinal)
+                Mapping = new SortedDictionary<string, OpenApiSchemaReference>(StringComparer.Ordinal)
             },
-            Extensions = new Dictionary<string, IOpenApiExtension>
+            Extensions = new SortedDictionary<string, IOpenApiExtension>
             {
                 ["x-abstract"] = new JsonNodeExtension(true)
             }
@@ -302,8 +298,8 @@ internal sealed class DataSchemaGenerator
 
         bool hasAtomicOperationsEndpoint = _generationCacheSchemaGenerator.HasAtomicOperationsEndpoint(schemaRepository);
 
-        Dictionary<string, IOpenApiSchema> fullSchemaProperties = fullSchema.Properties!;
-        HashSet<string> fullSchemaRequired = fullSchema.Required!;
+        IDictionary<string, IOpenApiSchema> fullSchemaProperties = fullSchema.Properties!;
+        ISet<string> fullSchemaRequired = fullSchema.Required!;
 
         if (!hasAtomicOperationsEndpoint)
         {
@@ -461,7 +457,7 @@ internal sealed class DataSchemaGenerator
         var fullSchema = new OpenApiSchema
         {
             Type = JsonSchemaType.Object,
-            Required = [OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName],
+            Required = new SortedSet<string>([OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName]),
             Properties = new Dictionary<string, IOpenApiSchema>
             {
                 [OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName] = referenceSchemaForResourceType.WrapInExtendedSchema()
@@ -470,9 +466,9 @@ internal sealed class DataSchemaGenerator
             Discriminator = new OpenApiDiscriminator
             {
                 PropertyName = OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName,
-                Mapping = new Dictionary<string, OpenApiSchemaReference>(StringComparer.Ordinal)
+                Mapping = new SortedDictionary<string, OpenApiSchemaReference>(StringComparer.Ordinal)
             },
-            Extensions = new Dictionary<string, IOpenApiExtension>
+            Extensions = new SortedDictionary<string, IOpenApiExtension>
             {
                 ["x-abstract"] = new JsonNodeExtension(true)
             }
@@ -504,17 +500,17 @@ internal sealed class DataSchemaGenerator
             inlineSchemaForBase.Discriminator ??= new OpenApiDiscriminator
             {
                 PropertyName = discriminatorPropertyName,
-                Mapping = new Dictionary<string, OpenApiSchemaReference>(StringComparer.Ordinal)
+                Mapping = new SortedDictionary<string, OpenApiSchemaReference>(StringComparer.Ordinal)
             };
 
             if (RepeatDiscriminatorInResponseDerivedTypes && !forRequestSchema)
             {
-                inlineSchemaForBase.Required ??= [];
+                inlineSchemaForBase.Required ??= new SortedSet<string>();
                 inlineSchemaForBase.Required.Add(discriminatorPropertyName);
             }
 
             string publicName = resourceSchemaType.ResourceType.PublicName;
-            inlineSchemaForBase.Discriminator.Mapping ??= [];
+            inlineSchemaForBase.Discriminator.Mapping ??= new SortedDictionary<string, OpenApiSchemaReference>();
 
             if (inlineSchemaForBase.Discriminator.Mapping.TryAdd(publicName, referenceSchemaForDerived) && baseResourceType == null)
             {
