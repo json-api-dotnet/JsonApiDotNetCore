@@ -7,8 +7,7 @@ using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
@@ -68,7 +67,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
         return schemaType == typeof(OperationsRequestDocument) || schemaType == typeof(OperationsResponseDocument);
     }
 
-    protected override OpenApiSchema GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository)
+    protected override OpenApiSchemaReference GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(schemaType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
@@ -84,7 +83,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
             GenerateSchemasForResponseDocument(schemaRepository);
         }
 
-        return _defaultSchemaGenerator.GenerateSchema(schemaType, schemaRepository);
+        return (OpenApiSchemaReference)_defaultSchemaGenerator.GenerateSchema(schemaType, schemaRepository);
     }
 
     private void GenerateSchemasForRequestDocument(SchemaRepository schemaRepository)
@@ -97,38 +96,38 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
         }
     }
 
-    private OpenApiSchema GenerateSchemaForAbstractOperation(SchemaRepository schemaRepository)
+    private OpenApiSchemaReference GenerateSchemaForAbstractOperation(SchemaRepository schemaRepository)
     {
-        if (schemaRepository.TryLookupByType(AtomicOperationAbstractType, out OpenApiSchema? referenceSchema))
+        if (schemaRepository.TryLookupByType(AtomicOperationAbstractType, out OpenApiSchemaReference? referenceSchema))
         {
             return referenceSchema;
         }
 
         using ISchemaGenerationTraceScope traceScope = _schemaGenerationTracer.TraceStart(this, AtomicOperationAbstractType);
 
-        OpenApiSchema referenceSchemaForMeta = _metaSchemaGenerator.GenerateSchema(schemaRepository);
+        OpenApiSchemaReference referenceSchemaForMeta = _metaSchemaGenerator.GenerateSchema(schemaRepository);
 
         var fullSchema = new OpenApiSchema
         {
-            Type = "object",
+            Type = JsonSchemaType.Object,
             Required = new SortedSet<string>([OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName]),
-            Properties = new Dictionary<string, OpenApiSchema>
+            Properties = new Dictionary<string, IOpenApiSchema>
             {
-                [OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName] = new()
+                [OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName] = new OpenApiSchema
                 {
-                    Type = "string"
+                    Type = JsonSchemaType.String
                 },
-                [referenceSchemaForMeta.Reference.Id] = referenceSchemaForMeta.WrapInExtendedSchema()
+                [referenceSchemaForMeta.Reference.Id!] = referenceSchemaForMeta.WrapInExtendedSchema()
             },
             AdditionalPropertiesAllowed = false,
             Discriminator = new OpenApiDiscriminator
             {
                 PropertyName = OpenApiMediaTypeExtension.FullyQualifiedOpenApiDiscriminatorPropertyName,
-                Mapping = new SortedDictionary<string, string>(StringComparer.Ordinal)
+                Mapping = new SortedDictionary<string, OpenApiSchemaReference>(StringComparer.Ordinal)
             },
-            Extensions =
+            Extensions = new SortedDictionary<string, IOpenApiExtension>
             {
-                ["x-abstract"] = new OpenApiBoolean(true)
+                ["x-abstract"] = new JsonNodeExtension(true)
             }
         };
 
@@ -188,17 +187,18 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
                 }
             }
 
-            OpenApiSchema referenceSchemaForOperation = _defaultSchemaGenerator.GenerateSchema(operationConstructedType, schemaRepository);
-            OpenApiSchema fullSchemaForOperation = schemaRepository.Schemas[referenceSchemaForOperation.Reference.Id];
+            var referenceSchemaForOperation = (OpenApiSchemaReference)_defaultSchemaGenerator.GenerateSchema(operationConstructedType, schemaRepository);
+            var fullSchemaForOperation = (OpenApiSchema)schemaRepository.Schemas[referenceSchemaForOperation.Reference.Id!];
             fullSchemaForOperation.AdditionalPropertiesAllowed = false;
-            OpenApiSchema inlineSchemaForOperation = fullSchemaForOperation.UnwrapLastExtendedSchema();
+            var inlineSchemaForOperation = (OpenApiSchema)fullSchemaForOperation.UnwrapLastExtendedSchema();
 
             if (needsEmptyDerivedSchema)
             {
                 Type baseOperationSchemaType = ChangeResourceTypeInSchemaType(operationOpenType, resourceType.BaseType!);
-                OpenApiSchema referenceSchemaForBaseOperation = schemaRepository.LookupByType(baseOperationSchemaType);
+                OpenApiSchemaReference referenceSchemaForBaseOperation = schemaRepository.LookupByType(baseOperationSchemaType);
 
                 RemoveProperties(inlineSchemaForOperation);
+                fullSchemaForOperation.AllOf ??= [];
                 fullSchemaForOperation.AllOf[0] = referenceSchemaForBaseOperation;
             }
             else
@@ -209,7 +209,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
             string discriminatorValue = _schemaIdSelector.GetAtomicOperationDiscriminatorValue(operationCode, resourceType);
             MapInDiscriminator(referenceSchemaForOperation, discriminatorValue, schemaRepository);
 
-            traceScope.TraceSucceeded(referenceSchemaForOperation.Reference.Id);
+            traceScope.TraceSucceeded(referenceSchemaForOperation.Reference.Id!);
         }
 
         foreach (ResourceType derivedType in resourceType.DirectlyDerivedTypes)
@@ -251,24 +251,30 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
 
     private static void RemoveProperties(OpenApiSchema fullSchema)
     {
-        foreach (string propertyName in fullSchema.Properties.Keys)
+        if (fullSchema.Properties != null)
         {
-            fullSchema.Properties.Remove(propertyName);
-            fullSchema.Required.Remove(propertyName);
+            foreach (string propertyName in fullSchema.Properties.Keys)
+            {
+                fullSchema.Properties.Remove(propertyName);
+                fullSchema.Required?.Remove(propertyName);
+            }
         }
     }
 
     private void SetOperationCode(OpenApiSchema fullSchema, AtomicOperationCode operationCode, SchemaRepository schemaRepository)
     {
-        OpenApiSchema referenceSchema = _atomicOperationCodeSchemaGenerator.GenerateSchema(operationCode, schemaRepository);
+        var referenceSchema = (OpenApiSchemaReference)_atomicOperationCodeSchemaGenerator.GenerateSchema(operationCode, schemaRepository);
+        fullSchema.Properties ??= new Dictionary<string, IOpenApiSchema>();
         fullSchema.Properties[JsonApiPropertyName.Op] = referenceSchema.WrapInExtendedSchema();
     }
 
-    private static void MapInDiscriminator(OpenApiSchema referenceSchemaForOperation, string discriminatorValue, SchemaRepository schemaRepository)
+    private static void MapInDiscriminator(OpenApiSchemaReference referenceSchemaForOperation, string discriminatorValue, SchemaRepository schemaRepository)
     {
-        OpenApiSchema referenceSchemaForAbstractOperation = schemaRepository.LookupByType(AtomicOperationAbstractType);
-        OpenApiSchema fullSchemaForAbstractOperation = schemaRepository.Schemas[referenceSchemaForAbstractOperation.Reference.Id];
-        fullSchemaForAbstractOperation.Discriminator.Mapping.Add(discriminatorValue, referenceSchemaForOperation.Reference.ReferenceV3);
+        OpenApiSchemaReference referenceSchemaForAbstractOperation = schemaRepository.LookupByType(AtomicOperationAbstractType);
+        var fullSchemaForAbstractOperation = (OpenApiSchema)schemaRepository.Schemas[referenceSchemaForAbstractOperation.Reference.Id!];
+        fullSchemaForAbstractOperation.Discriminator ??= new OpenApiDiscriminator();
+        fullSchemaForAbstractOperation.Discriminator.Mapping ??= new SortedDictionary<string, OpenApiSchemaReference>();
+        fullSchemaForAbstractOperation.Discriminator.Mapping.Add(discriminatorValue, referenceSchemaForOperation);
     }
 
     private static HashSet<RelationshipAttribute> GetRelationshipsInTypeHierarchy(ResourceType baseType)
@@ -315,7 +321,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
 
         RelationshipAttribute? relationshipInAnyBaseResourceType = GetRelationshipEnabledInAnyBase(relationship, writeOperation);
 
-        OpenApiSchema? referenceSchemaForRelationshipIdentifier;
+        OpenApiSchemaReference? referenceSchemaForRelationshipIdentifier;
 
         if (relationshipInAnyBaseResourceType == null)
         {
@@ -337,22 +343,24 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
         // the relationship name because there's no runtime Type available for it.
         string schemaId = _schemaIdSelector.GetRelationshipAtomicOperationSchemaId(relationship, operationCode);
 
-        OpenApiSchema referenceSchemaForOperation = _defaultSchemaGenerator.GenerateSchema(operationConstructedType, schemaRepository);
-        OpenApiSchema fullSchemaForOperation = schemaRepository.Schemas[referenceSchemaForOperation.Reference.Id];
+        var referenceSchemaForOperation = (OpenApiSchemaReference)_defaultSchemaGenerator.GenerateSchema(operationConstructedType, schemaRepository);
+        var fullSchemaForOperation = (OpenApiSchema)schemaRepository.Schemas[referenceSchemaForOperation.Reference.Id!];
         fullSchemaForOperation.AdditionalPropertiesAllowed = false;
 
-        OpenApiSchema inlineSchemaForOperation = fullSchemaForOperation.UnwrapLastExtendedSchema();
+        var inlineSchemaForOperation = (OpenApiSchema)fullSchemaForOperation.UnwrapLastExtendedSchema();
         SetOperationCode(inlineSchemaForOperation, operationCode, schemaRepository);
 
         if (referenceSchemaForRelationshipIdentifier != null)
         {
+            inlineSchemaForOperation.Properties ??= new Dictionary<string, IOpenApiSchema>();
             inlineSchemaForOperation.Properties[JsonApiPropertyName.Ref] = referenceSchemaForRelationshipIdentifier.WrapInExtendedSchema();
         }
 
-        inlineSchemaForOperation.Properties[JsonApiPropertyName.Data].Nullable = _resourceFieldValidationMetadataProvider.IsNullable(relationship);
+        bool isNullable = _resourceFieldValidationMetadataProvider.IsNullable(relationship);
+        ((OpenApiSchema)inlineSchemaForOperation.Properties![JsonApiPropertyName.Data]).SetNullable(isNullable);
 
         schemaRepository.ReplaceSchemaId(operationConstructedType, schemaId);
-        referenceSchemaForOperation.Reference.Id = schemaId;
+        referenceSchemaForOperation = new OpenApiSchemaReference(schemaId);
 
         if (relationshipInAnyBaseResourceType != null)
         {
@@ -361,14 +369,8 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
             string baseRelationshipSchemaId = _schemaIdSelector.GetRelationshipAtomicOperationSchemaId(relationshipInAnyBaseResourceType, operationCode);
             ConsistencyGuard.ThrowIf(!schemaRepository.Schemas.ContainsKey(baseRelationshipSchemaId));
 
-            fullSchemaForOperation.AllOf[0] = new OpenApiSchema
-            {
-                Reference = new OpenApiReference
-                {
-                    Id = baseRelationshipSchemaId,
-                    Type = ReferenceType.Schema
-                }
-            };
+            fullSchemaForOperation.AllOf ??= [];
+            fullSchemaForOperation.AllOf[0] = new OpenApiSchemaReference(baseRelationshipSchemaId);
         }
 
         string discriminatorValue = _schemaIdSelector.GetAtomicOperationDiscriminatorValue(operationCode, relationship);
