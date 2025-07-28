@@ -78,7 +78,10 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
 
         if (hasHeadVerb)
         {
-            operation.Responses.Clear();
+            foreach (OpenApiResponse response in operation.Responses.Values)
+            {
+                response.Content.Clear();
+            }
         }
 
         MethodInfo actionMethod = context.ApiDescription.ActionDescriptor.GetActionMethod();

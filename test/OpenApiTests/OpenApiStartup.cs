@@ -14,18 +14,18 @@ public class OpenApiStartup<TDbContext> : TestableStartup<TDbContext>
     public override void ConfigureServices(IServiceCollection services)
     {
         base.ConfigureServices(services);
-        services.AddOpenApiForJsonApi(SetupSwaggerGenAction);
+        services.AddOpenApiForJsonApi(ConfigureSwaggerGenOptions);
     }
 
-    protected override void SetJsonApiOptions(JsonApiOptions options)
+    protected override void ConfigureJsonApiOptions(JsonApiOptions options)
     {
-        base.SetJsonApiOptions(options);
+        base.ConfigureJsonApiOptions(options);
 
         options.UseRelativeLinks = true;
         options.IncludeTotalResourceCount = true;
     }
 
-    protected virtual void SetupSwaggerGenAction(SwaggerGenOptions options)
+    protected virtual void ConfigureSwaggerGenOptions(SwaggerGenOptions options)
     {
         string documentationPath = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");
         options.IncludeXmlComments(documentationPath);

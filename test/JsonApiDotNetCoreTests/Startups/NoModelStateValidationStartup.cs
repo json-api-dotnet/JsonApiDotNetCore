@@ -8,9 +8,9 @@ namespace JsonApiDotNetCoreTests.Startups;
 public sealed class NoModelStateValidationStartup<TDbContext> : TestableStartup<TDbContext>
     where TDbContext : TestableDbContext
 {
-    protected override void SetJsonApiOptions(JsonApiOptions options)
+    protected override void ConfigureJsonApiOptions(JsonApiOptions options)
     {
-        base.SetJsonApiOptions(options);
+        base.ConfigureJsonApiOptions(options);
 
         options.ValidateModelState = false;
     }

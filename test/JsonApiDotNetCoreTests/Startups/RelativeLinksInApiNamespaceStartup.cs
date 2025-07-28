@@ -8,9 +8,9 @@ namespace JsonApiDotNetCoreTests.Startups;
 public sealed class RelativeLinksInApiNamespaceStartup<TDbContext> : TestableStartup<TDbContext>
     where TDbContext : TestableDbContext
 {
-    protected override void SetJsonApiOptions(JsonApiOptions options)
+    protected override void ConfigureJsonApiOptions(JsonApiOptions options)
     {
-        base.SetJsonApiOptions(options);
+        base.ConfigureJsonApiOptions(options);
 
         options.Namespace = "api";
         options.UseRelativeLinks = true;

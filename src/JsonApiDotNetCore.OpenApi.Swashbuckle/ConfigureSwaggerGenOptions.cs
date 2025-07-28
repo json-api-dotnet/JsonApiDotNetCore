@@ -1,6 +1,6 @@
-using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata.ActionMethods;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.AtomicOperations;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
@@ -32,6 +32,8 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
         typeof(AddToRelationshipOperation<>),
         typeof(RemoveFromRelationshipOperation<>)
     ];
+
+    private static readonly Func<ApiDescription, IList<string>> DefaultTagsSelector = new SwaggerGeneratorOptions().TagsSelector;
 
     private readonly OpenApiOperationIdSelector _operationIdSelector;
     private readonly JsonApiSchemaIdSelector _schemaIdSelector;
@@ -142,11 +144,27 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
         }
     }
 
-    private static List<string> GetOpenApiOperationTags(ApiDescription description, IControllerResourceMapping controllerResourceMapping)
+    private static IList<string> GetOpenApiOperationTags(ApiDescription description, IControllerResourceMapping controllerResourceMapping)
     {
-        MethodInfo actionMethod = description.ActionDescriptor.GetActionMethod();
-        ResourceType? resourceType = controllerResourceMapping.GetResourceTypeForController(actionMethod.ReflectedType);
+        var actionMethod = OpenApiActionMethod.Create(description.ActionDescriptor);
 
-        return resourceType == null ? ["operations"] : [resourceType.PublicName];
+        switch (actionMethod)
+        {
+            case AtomicOperationsActionMethod:
+            {
+                return ["operations"];
+            }
+            case JsonApiActionMethod jsonApiActionMethod:
+            {
+                ResourceType? resourceType = controllerResourceMapping.GetResourceTypeForController(jsonApiActionMethod.ControllerType);
+                ConsistencyGuard.ThrowIf(resourceType == null);
+
+                return [resourceType.PublicName];
+            }
+            default:
+            {
+                return DefaultTagsSelector(description);
+            }
+        }
     }
 }

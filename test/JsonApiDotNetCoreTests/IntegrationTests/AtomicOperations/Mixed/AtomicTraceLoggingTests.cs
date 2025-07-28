@@ -19,15 +19,15 @@ public sealed class AtomicTraceLoggingTests : IClassFixture<IntegrationTestConte
 
         testContext.UseController<OperationsController>();
 
-        testContext.ConfigureLogging(options =>
+        testContext.ConfigureLogging(builder =>
         {
             var loggerProvider = new CapturingLoggerProvider((category, level) =>
                 level == LogLevel.Trace && category.StartsWith("JsonApiDotNetCore.", StringComparison.Ordinal));
 
-            options.AddProvider(loggerProvider);
-            options.SetMinimumLevel(LogLevel.Trace);
+            builder.AddProvider(loggerProvider);
+            builder.SetMinimumLevel(LogLevel.Trace);
 
-            options.Services.AddSingleton(loggerProvider);
+            builder.Services.AddSingleton(loggerProvider);
         });
     }
 

@@ -9,12 +9,16 @@ public class TestableStartup<TDbContext>
 {
     public virtual void ConfigureServices(IServiceCollection services)
     {
-        IMvcCoreBuilder mvcBuilder = services.AddMvcCore(options => options.MaxModelValidationErrors = 3);
-
-        services.AddJsonApi<TDbContext>(SetJsonApiOptions, mvcBuilder: mvcBuilder);
+        AddJsonApi(services);
     }
 
-    protected virtual void SetJsonApiOptions(JsonApiOptions options)
+    protected virtual void AddJsonApi(IServiceCollection services)
+    {
+        IMvcCoreBuilder mvcBuilder = services.AddMvcCore(options => options.MaxModelValidationErrors = 3);
+        services.AddJsonApi<TDbContext>(ConfigureJsonApiOptions, mvcBuilder: mvcBuilder);
+    }
+
+    protected virtual void ConfigureJsonApiOptions(JsonApiOptions options)
     {
         options.IncludeExceptionStackTraceInErrors = true;
         options.IncludeRequestBodyInErrors = true;

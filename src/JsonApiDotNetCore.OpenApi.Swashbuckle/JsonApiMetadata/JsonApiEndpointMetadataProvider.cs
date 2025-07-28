@@ -1,15 +1,16 @@
-using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata.ActionMethods;
+using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata.Documents;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Documents;
 using JsonApiDotNetCore.Resources.Annotations;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata;
 
 /// <summary>
-/// Provides JsonApiDotNetCore related metadata for an ASP.NET controller action that can only be computed from the <see cref="ResourceGraph" /> at
-/// runtime.
+/// Provides JsonApiDotNetCore related metadata for an ASP.NET action method that can only be computed from the <see cref="ResourceGraph" /> at runtime.
 /// </summary>
 internal sealed class JsonApiEndpointMetadataProvider
 {
@@ -25,28 +26,32 @@ internal sealed class JsonApiEndpointMetadataProvider
         _nonPrimaryDocumentTypeFactory = nonPrimaryDocumentTypeFactory;
     }
 
-    public JsonApiEndpointMetadataContainer Get(MethodInfo controllerAction)
+    public JsonApiEndpointMetadata? Get(ActionDescriptor descriptor)
     {
-        ArgumentNullException.ThrowIfNull(controllerAction);
+        ArgumentNullException.ThrowIfNull(descriptor);
 
-        if (EndpointResolver.Instance.IsAtomicOperationsController(controllerAction))
+        var actionMethod = OpenApiActionMethod.Create(descriptor);
+
+        switch (actionMethod)
         {
-            return new JsonApiEndpointMetadataContainer(AtomicOperationsRequestMetadata.Instance, AtomicOperationsResponseMetadata.Instance);
+            case AtomicOperationsActionMethod:
+            {
+                return new JsonApiEndpointMetadata(AtomicOperationsRequestMetadata.Instance, AtomicOperationsResponseMetadata.Instance);
+            }
+            case JsonApiActionMethod jsonApiActionMethod:
+            {
+                ResourceType? primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(jsonApiActionMethod.ControllerType);
+                ConsistencyGuard.ThrowIf(primaryResourceType == null);
+
+                IJsonApiRequestMetadata? requestMetadata = GetRequestMetadata(jsonApiActionMethod.Endpoint, primaryResourceType);
+                IJsonApiResponseMetadata? responseMetadata = GetResponseMetadata(jsonApiActionMethod.Endpoint, primaryResourceType);
+                return new JsonApiEndpointMetadata(requestMetadata, responseMetadata);
+            }
+            default:
+            {
+                return null;
+            }
         }
-
-        JsonApiEndpoints endpoint = EndpointResolver.Instance.GetEndpoint(controllerAction);
-
-        if (endpoint == JsonApiEndpoints.None)
-        {
-            throw new NotSupportedException($"Unable to provide metadata for non-JSON:API endpoint '{controllerAction.ReflectedType!.FullName}'.");
-        }
-
-        ResourceType? primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(controllerAction.ReflectedType);
-        ConsistencyGuard.ThrowIf(primaryResourceType == null);
-
-        IJsonApiRequestMetadata? requestMetadata = GetRequestMetadata(endpoint, primaryResourceType);
-        IJsonApiResponseMetadata? responseMetadata = GetResponseMetadata(endpoint, primaryResourceType);
-        return new JsonApiEndpointMetadataContainer(requestMetadata, responseMetadata);
     }
 
     private IJsonApiRequestMetadata? GetRequestMetadata(JsonApiEndpoints endpoint, ResourceType primaryResourceType)
@@ -75,14 +80,14 @@ internal sealed class JsonApiEndpointMetadataProvider
         return new PrimaryRequestMetadata(documentType);
     }
 
-    private RelationshipRequestMetadata GetRelationshipRequestMetadata(IEnumerable<RelationshipAttribute> relationships, bool ignoreHasOneRelationships)
+    private RelationshipRequestMetadata GetRelationshipRequestMetadata(IReadOnlyCollection<RelationshipAttribute> relationships, bool ignoreHasOneRelationships)
     {
         IEnumerable<RelationshipAttribute> relationshipsOfEndpoint = ignoreHasOneRelationships ? relationships.OfType<HasManyAttribute>() : relationships;
 
-        IDictionary<string, Type> requestDocumentTypesByRelationshipName = relationshipsOfEndpoint.ToDictionary(relationship => relationship.PublicName,
+        Dictionary<RelationshipAttribute, Type> documentTypesByRelationship = relationshipsOfEndpoint.ToDictionary(relationship => relationship,
             _nonPrimaryDocumentTypeFactory.GetForRelationshipRequest);
 
-        return new RelationshipRequestMetadata(requestDocumentTypesByRelationshipName);
+        return new RelationshipRequestMetadata(documentTypesByRelationship.AsReadOnly());
     }
 
     private IJsonApiResponseMetadata? GetResponseMetadata(JsonApiEndpoints endpoint, ResourceType primaryResourceType)
@@ -91,10 +96,18 @@ internal sealed class JsonApiEndpointMetadataProvider
         {
             JsonApiEndpoints.GetCollection or JsonApiEndpoints.GetSingle or JsonApiEndpoints.Post or JsonApiEndpoints.Patch => GetPrimaryResponseMetadata(
                 primaryResourceType.ClrType, endpoint == JsonApiEndpoints.GetCollection),
+            JsonApiEndpoints.Delete => GetEmptyPrimaryResponseMetadata(),
             JsonApiEndpoints.GetSecondary => GetSecondaryResponseMetadata(primaryResourceType.Relationships),
             JsonApiEndpoints.GetRelationship => GetRelationshipResponseMetadata(primaryResourceType.Relationships),
+            JsonApiEndpoints.PostRelationship or JsonApiEndpoints.PatchRelationship or JsonApiEndpoints.DeleteRelationship =>
+                GetEmptyRelationshipResponseMetadata(primaryResourceType.Relationships, endpoint != JsonApiEndpoints.PatchRelationship),
             _ => null
         };
+    }
+
+    private static PrimaryResponseMetadata GetEmptyPrimaryResponseMetadata()
+    {
+        return new PrimaryResponseMetadata(null);
     }
 
     private static PrimaryResponseMetadata GetPrimaryResponseMetadata(Type resourceClrType, bool endpointReturnsCollection)
@@ -107,17 +120,26 @@ internal sealed class JsonApiEndpointMetadataProvider
 
     private SecondaryResponseMetadata GetSecondaryResponseMetadata(IEnumerable<RelationshipAttribute> relationships)
     {
-        IDictionary<string, Type> responseDocumentTypesByRelationshipName = relationships.ToDictionary(relationship => relationship.PublicName,
+        Dictionary<RelationshipAttribute, Type> documentTypesByRelationship = relationships.ToDictionary(relationship => relationship,
             _nonPrimaryDocumentTypeFactory.GetForSecondaryResponse);
 
-        return new SecondaryResponseMetadata(responseDocumentTypesByRelationshipName);
+        return new SecondaryResponseMetadata(documentTypesByRelationship.AsReadOnly());
     }
 
-    private RelationshipResponseMetadata GetRelationshipResponseMetadata(IEnumerable<RelationshipAttribute> relationships)
+    private RelationshipResponseMetadata GetRelationshipResponseMetadata(IReadOnlyCollection<RelationshipAttribute> relationships)
     {
-        IDictionary<string, Type> responseDocumentTypesByRelationshipName = relationships.ToDictionary(relationship => relationship.PublicName,
+        Dictionary<RelationshipAttribute, Type> documentTypesByRelationship = relationships.ToDictionary(relationship => relationship,
             _nonPrimaryDocumentTypeFactory.GetForRelationshipResponse);
 
-        return new RelationshipResponseMetadata(responseDocumentTypesByRelationshipName);
+        return new RelationshipResponseMetadata(documentTypesByRelationship.AsReadOnly());
+    }
+
+    private static EmptyRelationshipResponseMetadata GetEmptyRelationshipResponseMetadata(IReadOnlyCollection<RelationshipAttribute> relationships,
+        bool ignoreHasOneRelationships)
+    {
+        IReadOnlyCollection<RelationshipAttribute> relationshipsOfEndpoint =
+            ignoreHasOneRelationships ? relationships.OfType<HasManyAttribute>().ToList().AsReadOnly() : relationships;
+
+        return new EmptyRelationshipResponseMetadata(relationshipsOfEndpoint);
     }
 }

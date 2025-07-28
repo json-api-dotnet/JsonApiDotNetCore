@@ -1,6 +1,4 @@
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Documents;
-using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.Relationships;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
 using Microsoft.OpenApi.Models;
@@ -13,26 +11,6 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Documents;
 /// </summary>
 internal sealed class ResourceOrRelationshipDocumentSchemaGenerator : DocumentSchemaGenerator
 {
-    private static readonly Type[] RequestDocumentSchemaTypes =
-    [
-        typeof(CreateRequestDocument<>),
-        typeof(UpdateRequestDocument<>),
-        typeof(ToOneInRequest<>),
-        typeof(NullableToOneInRequest<>),
-        typeof(ToManyInRequest<>)
-    ];
-
-    private static readonly Type[] ResponseDocumentSchemaTypes =
-    [
-        typeof(CollectionResponseDocument<>),
-        typeof(PrimaryResponseDocument<>),
-        typeof(SecondaryResponseDocument<>),
-        typeof(NullableSecondaryResponseDocument<>),
-        typeof(IdentifierResponseDocument<>),
-        typeof(NullableIdentifierResponseDocument<>),
-        typeof(IdentifierCollectionResponseDocument<>)
-    ];
-
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly DataContainerSchemaGenerator _dataContainerSchemaGenerator;
     private readonly IResourceGraph _resourceGraph;
@@ -53,8 +31,7 @@ internal sealed class ResourceOrRelationshipDocumentSchemaGenerator : DocumentSc
 
     public override bool CanGenerate(Type schemaType)
     {
-        Type schemaOpenType = schemaType.ConstructedToOpenType();
-        return RequestDocumentSchemaTypes.Contains(schemaOpenType) || ResponseDocumentSchemaTypes.Contains(schemaOpenType);
+        return JsonApiSchemaFacts.IsRequestDocumentSchemaType(schemaType) || JsonApiSchemaFacts.IsResponseDocumentSchemaType(schemaType);
     }
 
     protected override OpenApiSchema GenerateDocumentSchema(Type schemaType, SchemaRepository schemaRepository)
@@ -63,7 +40,7 @@ internal sealed class ResourceOrRelationshipDocumentSchemaGenerator : DocumentSc
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
         var resourceSchemaType = ResourceSchemaType.Create(schemaType, _resourceGraph);
-        bool isRequestSchema = RequestDocumentSchemaTypes.Contains(resourceSchemaType.SchemaOpenType);
+        bool isRequestSchema = JsonApiSchemaFacts.IsRequestDocumentSchemaType(resourceSchemaType.SchemaOpenType);
 
         _ = _dataContainerSchemaGenerator.GenerateSchema(schemaType, resourceSchemaType.ResourceType, isRequestSchema, !isRequestSchema, schemaRepository);
 

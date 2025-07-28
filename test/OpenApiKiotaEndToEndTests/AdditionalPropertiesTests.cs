@@ -8,6 +8,12 @@ public sealed class AdditionalPropertiesTests
 {
     private static readonly string GeneratedCodeDirectory = $"{Path.DirectorySeparatorChar}GeneratedCode{Path.DirectorySeparatorChar}";
 
+    private static readonly HashSet<string> Whitelist = new([
+        "Meta.cs",
+        "HttpValidationProblemDetails.cs",
+        "HttpValidationProblemDetails_errors.cs"
+    ], StringComparer.OrdinalIgnoreCase);
+
     [Fact]
     public async Task Additional_properties_are_only_allowed_in_meta()
     {
@@ -19,13 +25,17 @@ public sealed class AdditionalPropertiesTests
             RecurseSubdirectories = true
         }))
         {
-            if (path.Contains(GeneratedCodeDirectory, StringComparison.OrdinalIgnoreCase) &&
-                !string.Equals(Path.GetFileName(path), "Meta.cs", StringComparison.OrdinalIgnoreCase))
+            if (path.Contains(GeneratedCodeDirectory, StringComparison.OrdinalIgnoreCase))
             {
-                string content = await File.ReadAllTextAsync(path);
-                bool containsAdditionalData = content.Contains("public IDictionary<string, object> AdditionalData");
+                string fileName = Path.GetFileName(path);
 
-                containsAdditionalData.Should().BeFalse($"file '{path}' should not contain AdditionalData");
+                if (!Whitelist.Contains(fileName))
+                {
+                    string content = await File.ReadAllTextAsync(path);
+                    bool containsAdditionalData = content.Contains("public IDictionary<string, object> AdditionalData");
+
+                    containsAdditionalData.Should().BeFalse($"file '{path}' should not contain AdditionalData");
+                }
             }
         }
     }

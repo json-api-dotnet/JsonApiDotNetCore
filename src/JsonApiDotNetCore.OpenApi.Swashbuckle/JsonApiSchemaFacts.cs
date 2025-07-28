@@ -7,14 +7,24 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 
 internal static class JsonApiSchemaFacts
 {
-    private static readonly Type[] RequestBodySchemaTypes =
+    private static readonly Type[] RequestDocumentSchemaOpenTypes =
     [
         typeof(CreateRequestDocument<>),
         typeof(UpdateRequestDocument<>),
         typeof(ToOneInRequest<>),
         typeof(NullableToOneInRequest<>),
-        typeof(ToManyInRequest<>),
-        typeof(OperationsRequestDocument)
+        typeof(ToManyInRequest<>)
+    ];
+
+    private static readonly Type[] ResponseDocumentSchemaOpenTypes =
+    [
+        typeof(CollectionResponseDocument<>),
+        typeof(PrimaryResponseDocument<>),
+        typeof(SecondaryResponseDocument<>),
+        typeof(NullableSecondaryResponseDocument<>),
+        typeof(IdentifierResponseDocument<>),
+        typeof(NullableIdentifierResponseDocument<>),
+        typeof(IdentifierCollectionResponseDocument<>)
     ];
 
     private static readonly Type[] SchemaTypesHavingNullableDataProperty =
@@ -32,14 +42,26 @@ internal static class JsonApiSchemaFacts
         typeof(NullableToOneInResponse<>)
     ];
 
-    public static bool IsRequestBodySchemaType(Type schemaType)
+    public static bool IsRequestDocumentSchemaType(Type schemaType)
     {
+        ArgumentNullException.ThrowIfNull(schemaType);
+
         Type lookupType = schemaType.ConstructedToOpenType();
-        return RequestBodySchemaTypes.Contains(lookupType);
+        return RequestDocumentSchemaOpenTypes.Contains(lookupType);
+    }
+
+    public static bool IsResponseDocumentSchemaType(Type schemaType)
+    {
+        ArgumentNullException.ThrowIfNull(schemaType);
+
+        Type lookupType = schemaType.ConstructedToOpenType();
+        return ResponseDocumentSchemaOpenTypes.Contains(lookupType);
     }
 
     public static bool HasNullableDataProperty(Type schemaType)
     {
+        ArgumentNullException.ThrowIfNull(schemaType);
+
         // Swashbuckle infers non-nullable because our Data properties are [Required].
 
         Type lookupType = schemaType.ConstructedToOpenType();
@@ -48,6 +70,8 @@ internal static class JsonApiSchemaFacts
 
     public static bool IsRelationshipInResponseType(Type schemaType)
     {
+        ArgumentNullException.ThrowIfNull(schemaType);
+
         Type lookupType = schemaType.ConstructedToOpenType();
         return RelationshipInResponseSchemaTypes.Contains(lookupType);
     }

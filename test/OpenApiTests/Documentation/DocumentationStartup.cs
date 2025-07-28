@@ -11,15 +11,17 @@ namespace OpenApiTests.Documentation;
 public sealed class DocumentationStartup<TDbContext> : OpenApiStartup<TDbContext>
     where TDbContext : TestableDbContext
 {
-    protected override void SetJsonApiOptions(JsonApiOptions options)
+    protected override void ConfigureJsonApiOptions(JsonApiOptions options)
     {
-        base.SetJsonApiOptions(options);
+        base.ConfigureJsonApiOptions(options);
 
         options.ClientIdGeneration = ClientIdGenerationMode.Allowed;
     }
 
-    protected override void SetupSwaggerGenAction(SwaggerGenOptions options)
+    protected override void ConfigureSwaggerGenOptions(SwaggerGenOptions options)
     {
+        base.ConfigureSwaggerGenOptions(options);
+
         options.SwaggerDoc("v1", new OpenApiInfo
         {
             Version = "v1",
@@ -36,7 +38,5 @@ public sealed class DocumentationStartup<TDbContext> : OpenApiStartup<TDbContext
                 Url = new Uri("https://licenses.nuget.org/MIT")
             }
         });
-
-        base.SetupSwaggerGenAction(options);
     }
 }

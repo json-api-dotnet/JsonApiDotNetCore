@@ -1,0 +1,3 @@
+namespace JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata.Documents;
+
+internal interface IJsonApiResponseMetadata;
