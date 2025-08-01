@@ -62,7 +62,7 @@ public static class ServiceCollectionExtensions
 
         AddApiExplorer(services);
 
-        services.AddSingleton<IConfigureOptions<MvcOptions>, ConfigureMvcOptions>();
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IConfigureOptions<MvcOptions>, ConfigureMvcOptions>());
     }
 
     private static void AddApiExplorer(IServiceCollection services)

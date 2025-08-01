@@ -18,6 +18,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace JsonApiDotNetCore.Configuration;
 
@@ -25,14 +26,12 @@ namespace JsonApiDotNetCore.Configuration;
 /// A utility class that builds a JSON:API application. It registers all required services and allows the user to override parts of the startup
 /// configuration.
 /// </summary>
-internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder
+internal sealed class JsonApiApplicationBuilder
 {
     private readonly IServiceCollection _services;
     private readonly IMvcCoreBuilder _mvcBuilder;
     private readonly JsonApiOptions _options = new();
     private readonly ResourceDescriptorAssemblyCache _assemblyCache = new();
-
-    public Action<MvcOptions>? ConfigureMvcOptions { get; set; }
 
     public JsonApiApplicationBuilder(IServiceCollection services, IMvcCoreBuilder mvcBuilder)
     {
@@ -105,15 +104,6 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder
     /// </summary>
     public void ConfigureMvc()
     {
-        _mvcBuilder.AddMvcOptions(options =>
-        {
-            options.EnableEndpointRouting = true;
-            options.Filters.AddService<IAsyncJsonApiExceptionFilter>();
-            options.Filters.AddService<IAsyncQueryStringActionFilter>();
-            options.Filters.AddService<IAsyncConvertEmptyActionResultFilter>();
-            ConfigureMvcOptions?.Invoke(options);
-        });
-
         if (_options.ValidateModelState)
         {
             _mvcBuilder.AddDataAnnotations();
@@ -175,7 +165,6 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder
     private void AddMiddlewareLayer()
     {
         _services.TryAddSingleton<IJsonApiOptions>(_options);
-        _services.TryAddSingleton<IJsonApiApplicationBuilder>(this);
         _services.TryAddSingleton<IExceptionHandler, ExceptionHandler>();
         _services.TryAddScoped<IAsyncJsonApiExceptionFilter, AsyncJsonApiExceptionFilter>();
         _services.TryAddScoped<IAsyncQueryStringActionFilter, AsyncQueryStringActionFilter>();
@@ -183,6 +172,7 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder
         _services.TryAddSingleton<IJsonApiInputFormatter, JsonApiInputFormatter>();
         _services.TryAddSingleton<IJsonApiOutputFormatter, JsonApiOutputFormatter>();
         _services.TryAddSingleton<IJsonApiRoutingConvention, JsonApiRoutingConvention>();
+        _services.TryAddEnumerable(ServiceDescriptor.Singleton<IConfigureOptions<MvcOptions>, ConfigureMvcOptions>());
         _services.TryAddSingleton<IControllerResourceMapping>(provider => provider.GetRequiredService<IJsonApiRoutingConvention>());
         _services.TryAddSingleton<IJsonApiEndpointFilter, AlwaysEnabledJsonApiEndpointFilter>();
         _services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();

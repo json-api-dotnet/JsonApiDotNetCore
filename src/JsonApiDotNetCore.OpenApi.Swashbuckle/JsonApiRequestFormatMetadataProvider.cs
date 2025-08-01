@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Formatters;
 
@@ -10,12 +11,14 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 internal sealed class JsonApiRequestFormatMetadataProvider : IInputFormatter, IApiRequestFormatMetadataProvider
 {
     /// <inheritdoc />
+    [ExcludeFromCodeCoverage]
     public bool CanRead(InputFormatterContext context)
     {
         return false;
     }
 
     /// <inheritdoc />
+    [ExcludeFromCodeCoverage]
     public Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
     {
         throw new UnreachableException();

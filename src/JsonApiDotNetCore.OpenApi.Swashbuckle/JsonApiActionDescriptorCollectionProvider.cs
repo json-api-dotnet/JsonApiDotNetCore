@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Net;
 using System.Reflection;
 using JsonApiDotNetCore.Configuration;
@@ -36,8 +37,10 @@ internal sealed partial class JsonApiActionDescriptorCollectionProvider : IActio
     private readonly JsonApiEndpointMetadataProvider _jsonApiEndpointMetadataProvider;
     private readonly IJsonApiOptions _options;
     private readonly ILogger<JsonApiActionDescriptorCollectionProvider> _logger;
+    private readonly ConcurrentDictionary<int, Lazy<ActionDescriptorCollection>> _versionedActionDescriptorCache = new();
 
-    public ActionDescriptorCollection ActionDescriptors => GetActionDescriptors();
+    public ActionDescriptorCollection ActionDescriptors =>
+        _versionedActionDescriptorCache.GetOrAdd(_defaultProvider.ActionDescriptors.Version, LazyGetActionDescriptors).Value;
 
     public JsonApiActionDescriptorCollectionProvider(IActionDescriptorCollectionProvider defaultProvider, IControllerResourceMapping controllerResourceMapping,
         JsonApiEndpointMetadataProvider jsonApiEndpointMetadataProvider, IJsonApiOptions options, ILogger<JsonApiActionDescriptorCollectionProvider> logger)
@@ -55,7 +58,13 @@ internal sealed partial class JsonApiActionDescriptorCollectionProvider : IActio
         _logger = logger;
     }
 
-    private ActionDescriptorCollection GetActionDescriptors()
+    private Lazy<ActionDescriptorCollection> LazyGetActionDescriptors(int version)
+    {
+        // https://andrewlock.net/making-getoradd-on-concurrentdictionary-thread-safe-using-lazy/
+        return new Lazy<ActionDescriptorCollection>(() => GetActionDescriptors(version), LazyThreadSafetyMode.ExecutionAndPublication);
+    }
+
+    private ActionDescriptorCollection GetActionDescriptors(int version)
     {
         List<ActionDescriptor> descriptors = [];
 
@@ -106,8 +115,7 @@ internal sealed partial class JsonApiActionDescriptorCollectionProvider : IActio
             descriptors.Add(descriptor);
         }
 
-        int descriptorVersion = _defaultProvider.ActionDescriptors.Version;
-        return new ActionDescriptorCollection(descriptors.AsReadOnly(), descriptorVersion);
+        return new ActionDescriptorCollection(descriptors.AsReadOnly(), version);
     }
 
     internal static bool IsVisibleEndpoint(ActionDescriptor descriptor)
@@ -221,9 +229,9 @@ internal sealed partial class JsonApiActionDescriptorCollectionProvider : IActio
     {
         Dictionary<RelationshipAttribute, ActionDescriptor> descriptorsByRelationship = [];
 
-        JsonApiEndpointMetadata? endpointMetadata = _jsonApiEndpointMetadataProvider.Get(descriptor);
+        JsonApiEndpointMetadata endpointMetadata = _jsonApiEndpointMetadataProvider.Get(descriptor);
 
-        switch (endpointMetadata?.RequestMetadata)
+        switch (endpointMetadata.RequestMetadata)
         {
             case AtomicOperationsRequestMetadata atomicOperationsRequestMetadata:
             {
@@ -259,7 +267,7 @@ internal sealed partial class JsonApiActionDescriptorCollectionProvider : IActio
             }
         }
 
-        switch (endpointMetadata?.ResponseMetadata)
+        switch (endpointMetadata.ResponseMetadata)
         {
             case AtomicOperationsResponseMetadata atomicOperationsResponseMetadata:
             {
