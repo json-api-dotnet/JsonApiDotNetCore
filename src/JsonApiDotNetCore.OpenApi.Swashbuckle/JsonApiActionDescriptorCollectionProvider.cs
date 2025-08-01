@@ -221,9 +221,9 @@ internal sealed partial class JsonApiActionDescriptorCollectionProvider : IActio
     {
         Dictionary<RelationshipAttribute, ActionDescriptor> descriptorsByRelationship = [];
 
-        JsonApiEndpointMetadata? endpointMetadata = _jsonApiEndpointMetadataProvider.Get(descriptor);
+        JsonApiEndpointMetadata endpointMetadata = _jsonApiEndpointMetadataProvider.Get(descriptor);
 
-        switch (endpointMetadata?.RequestMetadata)
+        switch (endpointMetadata.RequestMetadata)
         {
             case AtomicOperationsRequestMetadata atomicOperationsRequestMetadata:
             {
@@ -259,7 +259,7 @@ internal sealed partial class JsonApiActionDescriptorCollectionProvider : IActio
             }
         }
 
-        switch (endpointMetadata?.ResponseMetadata)
+        switch (endpointMetadata.ResponseMetadata)
         {
             case AtomicOperationsResponseMetadata atomicOperationsResponseMetadata:
             {

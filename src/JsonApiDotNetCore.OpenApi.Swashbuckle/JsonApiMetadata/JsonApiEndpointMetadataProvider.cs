@@ -26,17 +26,19 @@ internal sealed class JsonApiEndpointMetadataProvider
         _nonPrimaryDocumentTypeFactory = nonPrimaryDocumentTypeFactory;
     }
 
-    public JsonApiEndpointMetadata? Get(ActionDescriptor descriptor)
+    public JsonApiEndpointMetadata Get(ActionDescriptor descriptor)
     {
         ArgumentNullException.ThrowIfNull(descriptor);
 
         var actionMethod = OpenApiActionMethod.Create(descriptor);
+        JsonApiEndpointMetadata? metadata = null;
 
         switch (actionMethod)
         {
             case AtomicOperationsActionMethod:
             {
-                return new JsonApiEndpointMetadata(AtomicOperationsRequestMetadata.Instance, AtomicOperationsResponseMetadata.Instance);
+                metadata = new JsonApiEndpointMetadata(AtomicOperationsRequestMetadata.Instance, AtomicOperationsResponseMetadata.Instance);
+                break;
             }
             case JsonApiActionMethod jsonApiActionMethod:
             {
@@ -45,13 +47,13 @@ internal sealed class JsonApiEndpointMetadataProvider
 
                 IJsonApiRequestMetadata? requestMetadata = GetRequestMetadata(jsonApiActionMethod.Endpoint, primaryResourceType);
                 IJsonApiResponseMetadata? responseMetadata = GetResponseMetadata(jsonApiActionMethod.Endpoint, primaryResourceType);
-                return new JsonApiEndpointMetadata(requestMetadata, responseMetadata);
-            }
-            default:
-            {
-                return null;
+                metadata = new JsonApiEndpointMetadata(requestMetadata, responseMetadata);
+                break;
             }
         }
+
+        ConsistencyGuard.ThrowIf(metadata == null);
+        return metadata;
     }
 
     private IJsonApiRequestMetadata? GetRequestMetadata(JsonApiEndpoints endpoint, ResourceType primaryResourceType)
