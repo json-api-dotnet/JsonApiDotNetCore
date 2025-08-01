@@ -43,7 +43,7 @@ public sealed class SourcePointerInExceptionTests
         Func<Task> action = async () => await reader.ReadAsync(httpContext.Request);
 
         // Assert
-        JsonApiException? exception = (await action.Should().ThrowExactlyAsync<JsonApiException>()).Which;
+        JsonApiException exception = (await action.Should().ThrowExactlyAsync<JsonApiException>()).Which;
 
         exception.StackTrace.Should().Contain(nameof(ThrowingResourceObjectConverter));
         exception.Errors.Should().HaveCount(1);
@@ -71,7 +71,7 @@ public sealed class SourcePointerInExceptionTests
         Func<Task> action = async () => await reader.ReadAsync(httpContext.Request);
 
         // Assert
-        JsonApiException? exception = (await action.Should().ThrowExactlyAsync<JsonApiException>()).Which;
+        JsonApiException exception = (await action.Should().ThrowExactlyAsync<JsonApiException>()).Which;
 
         exception.StackTrace.Should().Contain(nameof(ThrowingResourceObjectConverter));
         exception.Errors.Should().HaveCount(1);

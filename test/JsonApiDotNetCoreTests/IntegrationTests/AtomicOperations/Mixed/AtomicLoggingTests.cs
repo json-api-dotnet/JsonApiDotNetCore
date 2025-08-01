@@ -19,13 +19,12 @@ public sealed class AtomicLoggingTests : IClassFixture<IntegrationTestContext<Te
 
         testContext.UseController<OperationsController>();
 
-        testContext.ConfigureLogging(options =>
+        testContext.ConfigureLogging(builder =>
         {
             var loggerProvider = new CapturingLoggerProvider(LogLevel.Information);
-            options.AddProvider(loggerProvider);
-            options.SetMinimumLevel(LogLevel.Information);
+            builder.AddProvider(loggerProvider);
 
-            options.Services.AddSingleton(loggerProvider);
+            builder.Services.AddSingleton(loggerProvider);
         });
 
         testContext.ConfigureServices(services => services.AddSingleton<IOperationsTransactionFactory, ThrowingOperationsTransactionFactory>());

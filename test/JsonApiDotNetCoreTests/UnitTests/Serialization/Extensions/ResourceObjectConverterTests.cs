@@ -188,7 +188,7 @@ public sealed class ResourceObjectConverterTests
         };
 
         // Assert
-        JsonApiException? exception = action.Should().ThrowExactly<NotSupportedException>().WithInnerExceptionExactly<JsonApiException>().Which;
+        JsonApiException exception = action.Should().ThrowExactly<NotSupportedException>().WithInnerExceptionExactly<JsonApiException>().Which;
 
         exception.StackTrace.Should().Contain(nameof(ExtensionAwareResourceObjectConverter));
         exception.Errors.Should().HaveCount(1);
@@ -229,7 +229,7 @@ public sealed class ResourceObjectConverterTests
         };
 
         // Assert
-        JsonApiException? exception = action.Should().ThrowExactly<NotSupportedException>().WithInnerExceptionExactly<JsonApiException>().Which;
+        JsonApiException exception = action.Should().ThrowExactly<NotSupportedException>().WithInnerExceptionExactly<JsonApiException>().Which;
 
         exception.StackTrace.Should().Contain(nameof(ExtensionAwareResourceObjectConverter));
         exception.Errors.Should().HaveCount(1);

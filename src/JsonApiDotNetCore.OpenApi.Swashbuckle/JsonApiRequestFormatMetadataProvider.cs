@@ -1,15 +1,14 @@
 using System.Diagnostics;
-using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.Net.Http.Headers;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 
+/// <summary>
+/// Determines the Content-Type used in OpenAPI documents for request bodies of JSON:API endpoints.
+/// </summary>
 internal sealed class JsonApiRequestFormatMetadataProvider : IInputFormatter, IApiRequestFormatMetadataProvider
 {
-    private static readonly string DefaultMediaType = JsonApiMediaType.Default.ToString();
-
     /// <inheritdoc />
     public bool CanRead(InputFormatterContext context)
     {
@@ -23,20 +22,10 @@ internal sealed class JsonApiRequestFormatMetadataProvider : IInputFormatter, IA
     }
 
     /// <inheritdoc />
-    public IReadOnlyList<string> GetSupportedContentTypes(string contentType, Type objectType)
+    public IReadOnlyList<string> GetSupportedContentTypes(string? contentType, Type objectType)
     {
-        ArgumentException.ThrowIfNullOrEmpty(contentType);
         ArgumentNullException.ThrowIfNull(objectType);
 
-        if (JsonApiSchemaFacts.IsRequestBodySchemaType(objectType) && MediaTypeHeaderValue.TryParse(contentType, out MediaTypeHeaderValue? headerValue) &&
-            headerValue.MediaType.Equals(DefaultMediaType, StringComparison.OrdinalIgnoreCase))
-        {
-            return new MediaTypeCollection
-            {
-                headerValue
-            };
-        }
-
-        return [];
+        return OpenApiContentTypeProvider.Instance.GetRequestContentTypes(objectType);
     }
 }

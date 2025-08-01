@@ -1,0 +1,47 @@
+@hostAddress = https://localhost:44340
+
+### Gets all high-priority todo-items, including their owner, assignee and tags.
+
+GET {{hostAddress}}/api/todoItems?include=owner,assignee,tags&filter=equals(priority,'High')
+
+### Creates a todo-item, linking it to an existing owner, assignee and tags.
+
+POST {{hostAddress}}/api/todoItems
+Content-Type: application/vnd.api+json
+
+{
+  "data": {
+    "type": "todoItems",
+    "attributes": {
+      "description": "Create release",
+      "priority": "High",
+      "durationInHours": 1
+    },
+    "relationships": {
+      "owner": {
+        "data": {
+          "type": "people",
+          "id": "1"
+        }
+      },
+      "assignee": {
+        "data": {
+          "type": "people",
+          "id": "1"
+        }
+      },
+      "tags": {
+        "data": [
+          {
+            "type": "tags",
+            "id": "1"
+          },
+          {
+            "type": "tags",
+            "id": "2"
+          }
+        ]
+      }
+    }
+  }
+}

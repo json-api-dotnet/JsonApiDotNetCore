@@ -1,5 +1,4 @@
-using System.Reflection;
-using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata;
+using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiMetadata.ActionMethods;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.OpenApi.Any;
@@ -18,18 +17,14 @@ internal sealed class GenerationCacheSchemaGenerator
 
     private readonly SchemaGenerationTracer _schemaGenerationTracer;
     private readonly IActionDescriptorCollectionProvider _defaultProvider;
-    private readonly JsonApiEndpointMetadataProvider _jsonApiEndpointMetadataProvider;
 
-    public GenerationCacheSchemaGenerator(SchemaGenerationTracer schemaGenerationTracer, IActionDescriptorCollectionProvider defaultProvider,
-        JsonApiEndpointMetadataProvider jsonApiEndpointMetadataProvider)
+    public GenerationCacheSchemaGenerator(SchemaGenerationTracer schemaGenerationTracer, IActionDescriptorCollectionProvider defaultProvider)
     {
         ArgumentNullException.ThrowIfNull(schemaGenerationTracer);
         ArgumentNullException.ThrowIfNull(defaultProvider);
-        ArgumentNullException.ThrowIfNull(jsonApiEndpointMetadataProvider);
 
         _schemaGenerationTracer = schemaGenerationTracer;
         _defaultProvider = defaultProvider;
-        _jsonApiEndpointMetadataProvider = jsonApiEndpointMetadataProvider;
     }
 
     public bool HasAtomicOperationsEndpoint(SchemaRepository schemaRepository)
@@ -74,15 +69,13 @@ internal sealed class GenerationCacheSchemaGenerator
 
     private bool EvaluateHasAtomicOperationsEndpoint()
     {
-        IEnumerable<ActionDescriptor> actionDescriptors =
-            _defaultProvider.ActionDescriptors.Items.Where(JsonApiActionDescriptorCollectionProvider.IsVisibleJsonApiEndpoint);
+        IEnumerable<ActionDescriptor> descriptors = _defaultProvider.ActionDescriptors.Items.Where(JsonApiActionDescriptorCollectionProvider.IsVisibleEndpoint);
 
-        foreach (ActionDescriptor actionDescriptor in actionDescriptors)
+        foreach (ActionDescriptor descriptor in descriptors)
         {
-            MethodInfo actionMethod = actionDescriptor.GetActionMethod();
-            JsonApiEndpointMetadataContainer endpointMetadataContainer = _jsonApiEndpointMetadataProvider.Get(actionMethod);
+            var actionMethod = OpenApiActionMethod.Create(descriptor);
 
-            if (endpointMetadataContainer.RequestMetadata is AtomicOperationsRequestMetadata)
+            if (actionMethod is AtomicOperationsActionMethod)
             {
                 return true;
             }

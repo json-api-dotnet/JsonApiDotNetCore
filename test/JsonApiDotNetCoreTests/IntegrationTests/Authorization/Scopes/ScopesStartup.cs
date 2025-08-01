@@ -13,6 +13,6 @@ public sealed class ScopesStartup<TDbContext> : TestableStartup<TDbContext>
     {
         IMvcCoreBuilder mvcBuilder = services.AddMvcCore(options => options.Filters.Add<ScopesAuthorizationFilter>(int.MaxValue));
 
-        services.AddJsonApi<TDbContext>(SetJsonApiOptions, mvcBuilder: mvcBuilder);
+        services.AddJsonApi<TDbContext>(ConfigureJsonApiOptions, mvcBuilder: mvcBuilder);
     }
 }

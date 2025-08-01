@@ -8,9 +8,9 @@ namespace OpenApiTests.ResourceFieldValidation;
 public sealed class MsvOffStartup<TDbContext> : OpenApiStartup<TDbContext>
     where TDbContext : TestableDbContext
 {
-    protected override void SetJsonApiOptions(JsonApiOptions options)
+    protected override void ConfigureJsonApiOptions(JsonApiOptions options)
     {
-        base.SetJsonApiOptions(options);
+        base.ConfigureJsonApiOptions(options);
 
         options.ValidateModelState = false;
     }

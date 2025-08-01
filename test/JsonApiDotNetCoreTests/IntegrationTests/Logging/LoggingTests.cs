@@ -20,15 +20,15 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
         testContext.UseController<AuditEntriesController>();
         testContext.UseController<FruitBowlsController>();
 
-        testContext.ConfigureLogging(options =>
+        testContext.ConfigureLogging(builder =>
         {
             var loggerProvider = new CapturingLoggerProvider((category, level) =>
                 level >= LogLevel.Trace && category.StartsWith("JsonApiDotNetCore.", StringComparison.Ordinal));
 
-            options.AddProvider(loggerProvider);
-            options.SetMinimumLevel(LogLevel.Trace);
+            builder.AddProvider(loggerProvider);
+            builder.SetMinimumLevel(LogLevel.Trace);
 
-            options.Services.AddSingleton(loggerProvider);
+            builder.Services.AddSingleton(loggerProvider);
         });
     }
 
