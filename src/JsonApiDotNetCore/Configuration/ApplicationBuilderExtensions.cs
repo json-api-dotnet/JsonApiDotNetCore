@@ -33,20 +33,6 @@ public static class ApplicationBuilderExtensions
             inverseNavigationResolver.Resolve();
         }
 
-        var jsonApiApplicationBuilder = builder.ApplicationServices.GetRequiredService<IJsonApiApplicationBuilder>();
-
-        jsonApiApplicationBuilder.ConfigureMvcOptions = options =>
-        {
-            var inputFormatter = builder.ApplicationServices.GetRequiredService<IJsonApiInputFormatter>();
-            options.InputFormatters.Insert(0, inputFormatter);
-
-            var outputFormatter = builder.ApplicationServices.GetRequiredService<IJsonApiOutputFormatter>();
-            options.OutputFormatters.Insert(0, outputFormatter);
-
-            var routingConvention = builder.ApplicationServices.GetRequiredService<IJsonApiRoutingConvention>();
-            options.Conventions.Insert(0, routingConvention);
-        };
-
         builder.UseMiddleware<JsonApiMiddleware>();
     }
 
