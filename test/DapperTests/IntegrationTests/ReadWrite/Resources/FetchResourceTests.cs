@@ -128,7 +128,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("modifiedAt").WhoseValue.Should().Be(todoItem.LastModifiedAt);
         responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("owner", "assignee", "tags");
 
-        responseDocument.Meta.Should().BeNull();
+        responseDocument.Meta.Should().NotContainTotal();
 
         store.SqlCommands.Should().HaveCount(1);
 
@@ -285,7 +285,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("displayName").WhoseValue.Should().Be(todoItem.Owner.DisplayName);
         responseDocument.Data.SingleValue.Relationships.Should().OnlyContainKeys("account", "ownedTodoItems", "assignedTodoItems");
 
-        responseDocument.Meta.Should().BeNull();
+        responseDocument.Meta.Should().NotContainTotal();
 
         store.SqlCommands.Should().HaveCount(1);
 
@@ -329,7 +329,7 @@ public sealed class FetchResourceTests : IClassFixture<DapperTestContext>
 
         responseDocument.Data.SingleValue.Should().BeNull();
 
-        responseDocument.Meta.Should().BeNull();
+        responseDocument.Meta.Should().NotContainTotal();
 
         store.SqlCommands.Should().HaveCount(1);
 

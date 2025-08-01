@@ -102,7 +102,7 @@ public sealed class ResponseTests
         // Assert
         response.Jsonapi.Should().BeNull();
         response.Meta.Should().HaveCount(1);
-        response.Meta["total-resources"].Should().Be(documentMetaValue);
+        response.Meta.Should().ContainKey("total-resources").WhoseValue.Should().Be(documentMetaValue);
         response.Links.Self.Should().Be(topLevelLink);
         response.Links.First.Should().Be(topLevelLink);
         response.Links.Last.Should().Be(topLevelLink);
@@ -112,7 +112,7 @@ public sealed class ResponseTests
         flight.Id.Should().Be(flightId);
         flight.Links.Self.Should().Be(flightResourceLink);
         flight.Meta.Should().HaveCount(1);
-        flight.Meta["docs"].Should().Be(flightMetaValue);
+        flight.Meta.Should().ContainKey("docs").WhoseValue.Should().Be(flightMetaValue);
 
         flight.Attributes.FinalDestination.Should().Be(flightDestination);
         flight.Attributes.StopOverDestination.Should().BeNull();
@@ -128,19 +128,19 @@ public sealed class ResponseTests
         flight.Relationships.Purser.Links.Self.Should().Be($"{flightResourceLink}/relationships/purser");
         flight.Relationships.Purser.Links.Related.Should().Be($"{flightResourceLink}/purser");
         flight.Relationships.Purser.Meta.Should().HaveCount(1);
-        flight.Relationships.Purser.Meta["docs"].Should().Be(purserMetaValue);
+        flight.Relationships.Purser.Meta.Should().ContainKey("docs").WhoseValue.Should().Be(purserMetaValue);
 
         flight.Relationships.CabinCrewMembers.Data.Should().BeNull();
         flight.Relationships.CabinCrewMembers.Links.Self.Should().Be($"{flightResourceLink}/relationships/cabin-crew-members");
         flight.Relationships.CabinCrewMembers.Links.Related.Should().Be($"{flightResourceLink}/cabin-crew-members");
         flight.Relationships.CabinCrewMembers.Meta.Should().HaveCount(1);
-        flight.Relationships.CabinCrewMembers.Meta["docs"].Should().Be(cabinCrewMembersMetaValue);
+        flight.Relationships.CabinCrewMembers.Meta.Should().ContainKey("docs").WhoseValue.Should().Be(cabinCrewMembersMetaValue);
 
         flight.Relationships.Passengers.Data.Should().BeNull();
         flight.Relationships.Passengers.Links.Self.Should().Be($"{flightResourceLink}/relationships/passengers");
         flight.Relationships.Passengers.Links.Related.Should().Be($"{flightResourceLink}/passengers");
         flight.Relationships.Passengers.Meta.Should().HaveCount(1);
-        flight.Relationships.Passengers.Meta["docs"].Should().Be(passengersMetaValue);
+        flight.Relationships.Passengers.Meta.Should().ContainKey("docs").WhoseValue.Should().Be(passengersMetaValue);
     }
 
     [Fact]
