@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.Logging;
@@ -87,7 +88,7 @@ internal sealed partial class SchemaGenerationTracer
 
     private sealed partial class SchemaGenerationTraceScope : ISchemaGenerationTraceScope
     {
-        private static readonly AsyncLocal<int> RecursionDepthAsyncLocal = new();
+        private static readonly AsyncLocal<StrongBox<int>> RecursionDepthAsyncLocal = new();
 
         private readonly ILogger _logger;
         private readonly string _schemaTypeName;
@@ -101,8 +102,10 @@ internal sealed partial class SchemaGenerationTracer
             _logger = logger;
             _schemaTypeName = schemaTypeName;
 
-            RecursionDepthAsyncLocal.Value++;
-            LogStarted(RecursionDepthAsyncLocal.Value, _schemaTypeName);
+            RecursionDepthAsyncLocal.Value ??= new StrongBox<int>(0);
+            int depth = Interlocked.Increment(ref RecursionDepthAsyncLocal.Value.Value);
+
+            LogStarted(depth, _schemaTypeName);
         }
 
         public void TraceSucceeded(string schemaId)
@@ -112,16 +115,18 @@ internal sealed partial class SchemaGenerationTracer
 
         public void Dispose()
         {
+            int depth = RecursionDepthAsyncLocal.Value!.Value;
+
             if (_schemaId != null)
             {
-                LogSucceeded(RecursionDepthAsyncLocal.Value, _schemaTypeName, _schemaId);
+                LogSucceeded(depth, _schemaTypeName, _schemaId);
             }
             else
             {
-                LogFailed(RecursionDepthAsyncLocal.Value, _schemaTypeName);
+                LogFailed(depth, _schemaTypeName);
             }
 
-            RecursionDepthAsyncLocal.Value--;
+            Interlocked.Decrement(ref RecursionDepthAsyncLocal.Value.Value);
         }
 
         [LoggerMessage(Level = LogLevel.Trace, SkipEnabledCheck = true, Message = "({Depth:D2}) Started for {SchemaTypeName}.")]
