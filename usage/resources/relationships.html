@@ -260,6 +260,13 @@ CREATE UNIQUE INDEX &quot;IX_Cars_EngineId&quot; ON &quot;Cars&quot; (&quot;Engi
 }
 </code></pre>
 <p>The left side of this relationship is of type <code>Person</code> (public name: &quot;persons&quot;) and the right side is of type <code>TodoItem</code> (public name: &quot;todoItems&quot;).</p>
+<h3 id="disable-pagination">Disable pagination</h3>
+<p><em>since v5.8</em></p>
+<p>Pagination can be turned off per to-many relationship by setting <code>DisablePagination</code> to <code>true</code>.
+When doing so, it overrules the global pagination settings in options, and any pagination used in the query string
+for the relationship.</p>
+<p>This feature exists for cases where the number of <em>related</em> resources is typically small.
+For example, while the number of products is usually high, the number of products <em>in a shopping basket</em> is not.</p>
 <h2 id="hasmanythrough">HasManyThrough</h2>
 <p><em>removed since v5.0</em></p>
 <p>Earlier versions of Entity Framework Core (up to v5) <a href="https://github.com/aspnet/EntityFrameworkCore/issues/1368">did not support</a> many-to-many relationships without a join entity.

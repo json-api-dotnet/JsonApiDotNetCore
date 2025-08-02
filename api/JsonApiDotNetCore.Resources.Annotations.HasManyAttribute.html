@@ -296,7 +296,7 @@ public sealed class HasManyAttribute : RelationshipAttribute</code></pre>
 
   <h3 id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute__ctor" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.#ctor">
   HasManyAttribute()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L53"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L65"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -361,6 +361,45 @@ public sealed class HasManyAttribute : RelationshipAttribute</code></pre>
 
 
 
+  <a id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_DisablePagination_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.DisablePagination*"></a>
+
+  <h3 id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_DisablePagination" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.DisablePagination">
+  DisablePagination
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>When set to <code>true</code>, overrules the default page size, the page size from a resource definition, and the
+<code>
+page[size]
+</code>
+query string parameter by forcibly turning off pagination on the related resources for this relationship.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool DisablePagination { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_DisablePagination_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Caution: only use this when the number of related resources (along with their nested includes) is known to always be small.</p>
+</div>
+
+
+
+
   <h2 class="section" id="methods">Methods
 </h2>
 
@@ -369,7 +408,7 @@ public sealed class HasManyAttribute : RelationshipAttribute</code></pre>
 
   <h3 id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_AddValue_System_Object_JsonApiDotNetCore_Resources_IIdentifiable_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.AddValue(System.Object,JsonApiDotNetCore.Resources.IIdentifiable)">
   AddValue(object, IIdentifiable)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L100"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L112"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds a resource to this to-many relationship on the specified resource instance. Throws if the property is read-only or if the field does not belong
@@ -404,7 +443,7 @@ to the specified resource instance.</p>
 
   <h3 id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_Equals_System_Object_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L119"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L131"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a value that indicates whether this instance is equal to a specified object.</p>
@@ -443,7 +482,7 @@ to the specified resource instance.</p>
 
   <h3 id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_GetHashCode" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L137"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L149"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the hash code for this instance.</p>
@@ -476,7 +515,7 @@ to the specified resource instance.</p>
 
   <h3 id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_SetValue_System_Object_System_Object_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.SetValue(System.Object,System.Object)">
   SetValue(object, object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L70"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L82"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sets the value of this field on the specified resource instance. Throws if the property is read-only or if the field does not belong to the specified

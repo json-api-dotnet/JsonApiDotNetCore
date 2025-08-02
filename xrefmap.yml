@@ -15855,6 +15855,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Capabilities
   nameWithType: HasManyAttribute.Capabilities
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.DisablePagination
+  name: DisablePagination
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_DisablePagination
+  commentId: P:JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.DisablePagination
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.DisablePagination
+  nameWithType: HasManyAttribute.DisablePagination
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.DisablePagination*
+  name: DisablePagination
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_DisablePagination_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.DisablePagination
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.DisablePagination
+  nameWithType: HasManyAttribute.DisablePagination
 - uid: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Equals(System.Object)
   name: Equals(object?)
   href: api/JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_Equals_System_Object_

@@ -128,7 +128,7 @@ Interface IJsonApiOptions  <a class="header-action link-secondary" title="View s
 
   <h3 id="JsonApiDotNetCore_Configuration_IJsonApiOptions_AllowClientGeneratedIds" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowClientGeneratedIds">
   AllowClientGeneratedIds
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L141"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L142"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Whether clients can provide IDs when creating resources. When not allowed, a 403 Forbidden response is returned if a client attempts to create a
@@ -167,7 +167,7 @@ bool AllowClientGeneratedIds { get; }</code></pre>
 
   <h3 id="JsonApiDotNetCore_Configuration_IJsonApiOptions_AllowUnknownFieldsInRequestBody" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowUnknownFieldsInRequestBody">
   AllowUnknownFieldsInRequestBody
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L153"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L154"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Whether to produce an error on unknown attribute and relationship keys in request bodies. <code>false</code> by default.</p>
@@ -199,7 +199,7 @@ bool AllowClientGeneratedIds { get; }</code></pre>
 
   <h3 id="JsonApiDotNetCore_Configuration_IJsonApiOptions_AllowUnknownQueryStringParameters" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowUnknownQueryStringParameters">
   AllowUnknownQueryStringParameters
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L148"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L149"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Whether to produce an error on unknown query string parameters. <code>false</code> by default.</p>
@@ -231,7 +231,7 @@ bool AllowClientGeneratedIds { get; }</code></pre>
 
   <h3 id="JsonApiDotNetCore_Configuration_IJsonApiOptions_ClientIdGeneration" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.ClientIdGeneration">
   ClientIdGeneration
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L131"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L132"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Whether clients are allowed or required to provide IDs when creating resources. <a class="xref" href="JsonApiDotNetCore.Configuration.ClientIdGenerationMode.html#JsonApiDotNetCore_Configuration_ClientIdGenerationMode_Forbidden">Forbidden</a> by default. This
@@ -363,10 +363,11 @@ can be overruled per relationship using <a class="xref" href="JsonApiDotNetCore.
 
   <h3 id="JsonApiDotNetCore_Configuration_IJsonApiOptions_DefaultPageSize" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultPageSize">
   DefaultPageSize
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L110"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L111"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The page size (10 by default) that is used when not specified in query string. Set to <code>null</code> to not use pagination by default.</p>
+  <div class="markdown level1 summary"><p>The page size (10 by default) that is used when not specified in query string. Set to <code>null</code> to not use pagination by default. This setting can
+be overruled per relationship by setting <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_DisablePagination">DisablePagination</a> to <code>true</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -395,7 +396,7 @@ can be overruled per relationship using <a class="xref" href="JsonApiDotNetCore.
 
   <h3 id="JsonApiDotNetCore_Configuration_IJsonApiOptions_EnableLegacyFilterNotation" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.EnableLegacyFilterNotation">
   EnableLegacyFilterNotation
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L158"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L159"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines whether legacy filter notation in query strings (such as =eq:, =like:, and =in:) is enabled. <code>false</code> by default.</p>
@@ -427,7 +428,7 @@ can be overruled per relationship using <a class="xref" href="JsonApiDotNetCore.
 
   <h3 id="JsonApiDotNetCore_Configuration_IJsonApiOptions_Extensions" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.Extensions">
   Extensions
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L187"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L188"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Lists the JSON:API extensions that are turned on. Empty by default, but if your project contains a controller that derives from
@@ -594,7 +595,7 @@ extensions when implementing extension-specific logic.</p>
 
   <h3 id="JsonApiDotNetCore_Configuration_IJsonApiOptions_MaximumIncludeDepth" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumIncludeDepth">
   MaximumIncludeDepth
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L164"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L165"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Controls how many levels deep includes are allowed to be nested. For example, MaximumIncludeDepth=1 would allow ?include=articles but not
@@ -627,7 +628,7 @@ extensions when implementing extension-specific logic.</p>
 
   <h3 id="JsonApiDotNetCore_Configuration_IJsonApiOptions_MaximumOperationsPerRequest" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumOperationsPerRequest">
   MaximumOperationsPerRequest
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L169"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L170"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Limits the maximum number of operations allowed per atomic:operations request. Defaults to 10. Set to <code>null</code> for unlimited.</p>
@@ -659,7 +660,7 @@ extensions when implementing extension-specific logic.</p>
 
   <h3 id="JsonApiDotNetCore_Configuration_IJsonApiOptions_MaximumPageNumber" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumPageNumber">
   MaximumPageNumber
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L120"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L121"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The maximum page number that can be used, or <code>null</code> for unconstrained (default).</p>
@@ -691,7 +692,7 @@ extensions when implementing extension-specific logic.</p>
 
   <h3 id="JsonApiDotNetCore_Configuration_IJsonApiOptions_MaximumPageSize" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumPageSize">
   MaximumPageSize
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L115"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L116"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The maximum page size that can be used, or <code>null</code> for unconstrained (default).</p>
@@ -825,7 +826,7 @@ setting can be overruled per resource type by adding <a class="xref" href="JsonA
 
   <h3 id="JsonApiDotNetCore_Configuration_IJsonApiOptions_SerializerOptions" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.SerializerOptions">
   SerializerOptions
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L199"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L200"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Enables to customize the settings that are used by the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializer">JsonSerializer</a>.</p>
@@ -862,7 +863,7 @@ options.SerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;</cod
 
   <h3 id="JsonApiDotNetCore_Configuration_IJsonApiOptions_SerializerReadOptions" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.SerializerReadOptions">
   SerializerReadOptions
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L204"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L205"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the settings used for deserializing request bodies. This value is based on <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_SerializerOptions">SerializerOptions</a> and is intended for internal use.</p>
@@ -894,7 +895,7 @@ options.SerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;</cod
 
   <h3 id="JsonApiDotNetCore_Configuration_IJsonApiOptions_SerializerWriteOptions" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.SerializerWriteOptions">
   SerializerWriteOptions
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L209"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L210"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the settings used for serializing response bodies. This value is based on <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_SerializerOptions">SerializerOptions</a> and is intended for internal use.</p>
@@ -959,7 +960,7 @@ setting can be overruled per resource type by adding <a class="xref" href="JsonA
 
   <h3 id="JsonApiDotNetCore_Configuration_IJsonApiOptions_TransactionIsolationLevel" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.TransactionIsolationLevel">
   TransactionIsolationLevel
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L175"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L176"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Enables to override the default isolation level for database transactions, enabling to balance between consistency and performance. Defaults to
@@ -1039,7 +1040,7 @@ setting can be overruled per resource type by adding <a class="xref" href="JsonA
 
   <h3 id="JsonApiDotNetCore_Configuration_IJsonApiOptions_ValidateModelState" data-uid="JsonApiDotNetCore.Configuration.IJsonApiOptions.ValidateModelState">
   ValidateModelState
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L125"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IJsonApiOptions.cs/#L126"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Whether ASP.NET ModelState validation is enabled. <code>true</code> by default.</p>

@@ -431,7 +431,8 @@ can be overruled per relationship using <a class="xref" href="JsonApiDotNetCore.
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L62"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The page size (10 by default) that is used when not specified in query string. Set to <code>null</code> to not use pagination by default.</p>
+  <div class="markdown level1 summary"><p>The page size (10 by default) that is used when not specified in query string. Set to <code>null</code> to not use pagination by default. This setting can
+be overruled per relationship by setting <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_DisablePagination">DisablePagination</a> to <code>true</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
