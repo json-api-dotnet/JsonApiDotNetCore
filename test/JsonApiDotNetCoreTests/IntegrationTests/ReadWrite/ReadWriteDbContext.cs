@@ -29,7 +29,7 @@ public sealed class ReadWriteDbContext(DbContextOptions<ReadWriteDbContext> opti
 
         builder.Entity<WorkItemGroup>()
             .HasOne(workItemGroup => workItemGroup.Color)
-            .WithOne(color => color.Group!)
+            .WithOne(color => color.Group)
             .HasForeignKey<RgbColor>("GroupId");
 
         builder.Entity<WorkItem>()

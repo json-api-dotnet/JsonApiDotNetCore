@@ -10,4 +10,7 @@ public sealed class Reminder : Identifiable<int>
 {
     [Attr]
     public DateTime RemindsAt { get; set; }
+
+    [HasOne]
+    public Appointment? Appointment { get; set; }
 }

@@ -20,6 +20,9 @@ public sealed class Appointment : Identifiable<int>
     [Attr]
     public DateTimeOffset EndTime { get; set; }
 
-    [HasMany]
+    [HasOne]
+    public Calendar? Calendar { get; set; }
+
+    [HasMany(DisablePagination = true)]
     public IList<Reminder> Reminders { get; set; } = new List<Reminder>();
 }

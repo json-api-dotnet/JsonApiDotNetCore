@@ -438,7 +438,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(star.Planets.ElementAt(0).StringId);
 
-        responseDocument.Meta.Should().BeNull();
+        responseDocument.Meta.Should().NotContainTotal();
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
@@ -534,7 +534,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         responseDocument.Data.ManyValue.Should().HaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(star.Planets.ElementAt(0).StringId);
 
-        responseDocument.Meta.Should().BeNull();
+        responseDocument.Meta.Should().NotContainTotal();
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {

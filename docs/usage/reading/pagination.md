@@ -25,3 +25,6 @@ GET /api/blogs/1/articles?include=revisions&page[size]=10,revisions:5&page[numbe
 ## Configuring Default Behavior
 
 You can configure the global default behavior as described [here](~/usage/options.md#pagination).
+
+> [!TIP]
+> Since v5.8, pagination can be [turned off per relationship](~/usage/resources/relationships.md#disable-pagination).

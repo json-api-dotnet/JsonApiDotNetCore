@@ -50,6 +50,18 @@ public sealed class HasManyAttribute : RelationshipAttribute
         set => _capabilities = value;
     }
 
+    /// <summary>
+    /// When set to <c>true</c>, overrules the default page size, the page size from a resource definition, and the
+    /// <c>
+    /// page[size]
+    /// </c>
+    /// query string parameter by forcibly turning off pagination on the related resources for this relationship.
+    /// </summary>
+    /// <remarks>
+    /// Caution: only use this when the number of related resources (along with their nested includes) is known to always be small.
+    /// </remarks>
+    public bool DisablePagination { get; set; }
+
     public HasManyAttribute()
     {
         _lazyIsManyToMany = new Lazy<bool>(EvaluateIsManyToMany, LazyThreadSafetyMode.PublicationOnly);

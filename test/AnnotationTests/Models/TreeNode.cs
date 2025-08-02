@@ -17,6 +17,7 @@ public sealed class TreeNode : Identifiable<long>
     [HasOne(PublicName = "orders", Capabilities = HasOneCapabilities.AllowView | HasOneCapabilities.AllowInclude, Links = LinkTypes.All)]
     public TreeNode? Parent { get; set; }
 
-    [HasMany(PublicName = "orders", Capabilities = HasManyCapabilities.AllowView | HasManyCapabilities.AllowFilter, Links = LinkTypes.All)]
+    [HasMany(PublicName = "orders", Capabilities = HasManyCapabilities.AllowView | HasManyCapabilities.AllowFilter, Links = LinkTypes.All,
+        DisablePagination = true)]
     public ISet<TreeNode> Children { get; set; } = new HashSet<TreeNode>();
 }
