@@ -28,7 +28,7 @@ public sealed class QueryStringDbContext(DbContextOptions<QueryStringDbContext> 
     {
         builder.Entity<WebAccount>()
             .HasMany(webAccount => webAccount.Posts)
-            .WithOne(blogPost => blogPost.Author!);
+            .WithOne(blogPost => blogPost.Author);
 
         builder.Entity<Man>()
             .HasOne(man => man.Wife)

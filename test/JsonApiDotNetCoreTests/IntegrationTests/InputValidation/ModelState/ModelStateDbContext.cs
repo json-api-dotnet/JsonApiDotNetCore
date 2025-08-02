@@ -24,7 +24,7 @@ public sealed class ModelStateDbContext(DbContextOptions<ModelStateDbContext> op
 
         builder.Entity<SystemDirectory>()
             .HasMany(systemDirectory => systemDirectory.Subdirectories)
-            .WithOne(systemDirectory => systemDirectory.Parent!);
+            .WithOne(systemDirectory => systemDirectory.Parent);
 
         builder.Entity<SystemDirectory>()
             .HasOne(systemDirectory => systemDirectory.Self)
