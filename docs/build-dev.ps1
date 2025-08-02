@@ -18,6 +18,7 @@ function EnsureHttpServerIsInstalled {
         throw "Unable to find npm in your PATH. please install Node.js first."
     }
 
+    # If this command fails with ENOENT after installing Node.js on Windows, manually create the directory %APPDATA%\npm.
     npm list --depth 1 --global httpserver >$null
 
     if ($LastExitCode -eq 1) {

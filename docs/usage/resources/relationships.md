@@ -213,6 +213,17 @@ public class Person : Identifiable<int>
 
 The left side of this relationship is of type `Person` (public name: "persons") and the right side is of type `TodoItem` (public name: "todoItems").
 
+### Disable pagination
+
+_since v5.8_
+
+Pagination can be turned off per to-many relationship by setting `DisablePagination` to `true`.
+When doing so, it overrules the global pagination settings in options, and any pagination used in the query string
+for the relationship.
+
+This feature exists for cases where the number of *related* resources is typically small.
+For example, while the number of products is usually high, the number of products *in a shopping basket* is not.
+
 ## HasManyThrough
 
 _removed since v5.0_

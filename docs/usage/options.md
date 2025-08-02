@@ -59,6 +59,9 @@ options.IncludeTotalResourceCount = true;
 To retrieve the total number of resources on secondary and relationship endpoints, the reverse of the relationship must to be available. For example, in `GET /customers/1/orders`, both the relationships `[HasMany] Customer.Orders` and `[HasOne] Order.Customer` must be defined.
 If `IncludeTotalResourceCount` is set to `false` (or the inverse relationship is unavailable on a non-primary endpoint), best-effort pagination links are returned instead. This means no `last` link and the `next` link only occurs when the current page is full.
 
+> [!TIP]
+> Since v5.8, pagination can be [turned off per relationship](~/usage/resources/relationships.md#disable-pagination).
+
 ## Relative Links
 
 All links are absolute by default. However, you can configure relative links:

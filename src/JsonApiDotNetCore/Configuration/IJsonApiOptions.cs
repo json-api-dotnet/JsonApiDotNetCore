@@ -105,7 +105,8 @@ public interface IJsonApiOptions
     bool IncludeTotalResourceCount { get; }
 
     /// <summary>
-    /// The page size (10 by default) that is used when not specified in query string. Set to <c>null</c> to not use pagination by default.
+    /// The page size (10 by default) that is used when not specified in query string. Set to <c>null</c> to not use pagination by default. This setting can
+    /// be overruled per relationship by setting <see cref="HasManyAttribute.DisablePagination" /> to <c>true</c>.
     /// </summary>
     PageSize? DefaultPageSize { get; }
 

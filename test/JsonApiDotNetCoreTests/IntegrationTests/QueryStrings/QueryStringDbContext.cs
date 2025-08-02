@@ -35,6 +35,10 @@ public sealed class QueryStringDbContext(DbContextOptions<QueryStringDbContext> 
             .WithOne(woman => woman.Husband)
             .HasForeignKey<Man>();
 
+        builder.Entity<Calendar>()
+            .HasMany<Appointment>(calendar => calendar.Appointments)
+            .WithOne(appointment => appointment.Calendar);
+
         base.OnModelCreating(builder);
     }
 }
