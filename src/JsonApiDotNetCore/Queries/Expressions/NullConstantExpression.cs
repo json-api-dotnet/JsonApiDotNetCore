@@ -35,17 +35,7 @@ public class NullConstantExpression : IdentifierExpression
 
     public override bool Equals(object? obj)
     {
-        if (ReferenceEquals(this, obj))
-        {
-            return true;
-        }
-
-        if (obj is null || GetType() != obj.GetType())
-        {
-            return false;
-        }
-
-        return true;
+        return ReferenceEquals(this, obj);
     }
 
     public override int GetHashCode()
