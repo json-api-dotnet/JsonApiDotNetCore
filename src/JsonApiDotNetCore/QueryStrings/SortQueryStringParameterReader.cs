@@ -6,7 +6,6 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Parsing;
-using JsonApiDotNetCore.QueryStrings.FieldChains;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings;
@@ -72,8 +71,7 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
 
     private ResourceFieldChainExpression? GetScope(string parameterName)
     {
-        QueryStringParameterScopeExpression parameterScope = _scopeParser.Parse(parameterName, RequestResourceType,
-            BuiltInPatterns.RelationshipChainEndingInToMany, FieldChainPatternMatchOptions.None);
+        QueryStringParameterScopeExpression parameterScope = _scopeParser.Parse(parameterName, RequestResourceType);
 
         if (parameterScope.Scope == null)
         {

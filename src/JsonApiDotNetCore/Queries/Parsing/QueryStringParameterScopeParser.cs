@@ -10,25 +10,22 @@ namespace JsonApiDotNetCore.Queries.Parsing;
 public class QueryStringParameterScopeParser : QueryExpressionParser, IQueryStringParameterScopeParser
 {
     /// <inheritdoc />
-    public QueryStringParameterScopeExpression Parse(string source, ResourceType resourceType, FieldChainPattern pattern, FieldChainPatternMatchOptions options)
+    public QueryStringParameterScopeExpression Parse(string source, ResourceType resourceType)
     {
         ArgumentNullException.ThrowIfNull(resourceType);
-        ArgumentNullException.ThrowIfNull(pattern);
 
         Tokenize(source);
 
-        QueryStringParameterScopeExpression expression = ParseQueryStringParameterScope(resourceType, pattern, options);
+        QueryStringParameterScopeExpression expression = ParseQueryStringParameterScope(resourceType);
 
         AssertTokenStackIsEmpty();
 
         return expression;
     }
 
-    protected virtual QueryStringParameterScopeExpression ParseQueryStringParameterScope(ResourceType resourceType, FieldChainPattern pattern,
-        FieldChainPatternMatchOptions options)
+    protected virtual QueryStringParameterScopeExpression ParseQueryStringParameterScope(ResourceType resourceType)
     {
         ArgumentNullException.ThrowIfNull(resourceType);
-        ArgumentNullException.ThrowIfNull(pattern);
 
         int position = GetNextTokenPositionOrEnd();
 
@@ -45,7 +42,7 @@ public class QueryStringParameterScopeParser : QueryExpressionParser, IQueryStri
         {
             TokenStack.Pop();
 
-            scope = ParseFieldChain(pattern, options, resourceType, null);
+            scope = ParseFieldChain(BuiltInPatterns.RelationshipChainEndingInToMany, FieldChainPatternMatchOptions.None, resourceType, null);
 
             EatSingleCharacterToken(TokenKind.CloseBracket);
         }
