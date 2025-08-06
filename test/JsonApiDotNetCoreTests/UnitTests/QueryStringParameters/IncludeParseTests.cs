@@ -85,21 +85,26 @@ public sealed class IncludeParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("includes", "", "")]
-    [InlineData("includes", "owner", "owner")]
-    [InlineData("includes", "posts", "posts")]
-    [InlineData("includes", "owner.posts", "owner.posts")]
-    [InlineData("includes", "posts.author", "posts.author")]
-    [InlineData("includes", "posts.comments", "posts.comments")]
-    [InlineData("includes", "posts,posts.comments", "posts.comments")]
-    [InlineData("includes", "posts,posts.labels,posts.comments", "posts.comments,posts.labels")]
-    [InlineData("includes", "owner.person.children.husband", "owner.person.children.husband,owner.person.children.husband")]
-    [InlineData("includes", "owner.person.wife,owner.person.husband", "owner.person.husband,owner.person.wife")]
-    [InlineData("includes", "owner.person.father.children.wife", "owner.person.father.children.wife,owner.person.father.children.wife")]
-    [InlineData("includes", "owner.person.friends", "owner.person.friends,owner.person.friends")]
-    [InlineData("includes", "owner.person.friends.friends",
-        "owner.person.friends.friends,owner.person.friends.friends,owner.person.friends.friends,owner.person.friends.friends")]
-    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string valueExpected)
+    [InlineData("includes", "", "", "")]
+    [InlineData("includes", "owner", "owner", "blogs:owner")]
+    [InlineData("includes", "posts", "posts", "blogs:posts")]
+    [InlineData("includes", "owner.posts", "owner.posts", "blogs:owner.webAccounts:posts")]
+    [InlineData("includes", "posts.author", "posts.author", "blogs:posts.blogPosts:author")]
+    [InlineData("includes", "posts.comments", "posts.comments", "blogs:posts.blogPosts:comments")]
+    [InlineData("includes", "posts,posts.comments", "posts.comments", "blogs:posts.blogPosts:comments")]
+    [InlineData("includes", "posts,posts.labels,posts.comments", "posts.comments,posts.labels", "blogs:posts.blogPosts:comments,blogs:posts.blogPosts:labels")]
+    [InlineData("includes", "owner.person.children.husband", "owner.person.children.husband",
+        "blogs:owner.webAccounts:person.men:children.women:husband,blogs:owner.webAccounts:person.women:children.women:husband")]
+    [InlineData("includes", "owner.person.wife,owner.person.husband", "owner.person.husband,owner.person.wife",
+        "blogs:owner.webAccounts:person.men:wife,blogs:owner.webAccounts:person.women:husband")]
+    [InlineData("includes", "owner.person.father.children.wife", "owner.person.father.children.wife",
+        "blogs:owner.webAccounts:person.men:father.men:children.men:wife,blogs:owner.webAccounts:person.women:father.men:children.men:wife")]
+    [InlineData("includes", "owner.person.friends", "owner.person.friends",
+        "blogs:owner.webAccounts:person.men:friends,blogs:owner.webAccounts:person.women:friends")]
+    [InlineData("includes", "owner.person.friends.friends", "owner.person.friends.friends",
+        "blogs:owner.webAccounts:person.men:friends.men:friends,blogs:owner.webAccounts:person.men:friends.women:friends," +
+        "blogs:owner.webAccounts:person.women:friends.men:friends,blogs:owner.webAccounts:person.women:friends.women:friends")]
+    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string stringExpected, string fullStringExpected)
     {
         // Act
         _reader.Read(parameterName, parameterValue);
@@ -111,6 +116,7 @@ public sealed class IncludeParseTests : BaseParseTests
         scope.Should().BeNull();
 
         QueryExpression value = constraints.Select(expressionInScope => expressionInScope.Expression).Single();
-        value.ToString().Should().Be(valueExpected);
+        value.ToString().Should().Be(stringExpected);
+        value.ToFullString().Should().Be(fullStringExpected);
     }
 }

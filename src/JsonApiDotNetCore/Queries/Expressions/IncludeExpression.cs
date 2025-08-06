@@ -52,7 +52,7 @@ public class IncludeExpression : QueryExpression
     private string InnerToString(bool toFullString)
     {
         IReadOnlyCollection<ResourceFieldChainExpression> chains = IncludeChainConverter.GetRelationshipChains(this);
-        return string.Join(",", chains.Select(field => toFullString ? field.ToFullString() : field.ToString()).OrderBy(name => name));
+        return string.Join(",", chains.Select(field => toFullString ? field.ToFullString() : field.ToString()).Distinct().OrderBy(name => name));
     }
 
     public override bool Equals(object? obj)
