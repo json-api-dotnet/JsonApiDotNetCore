@@ -29,7 +29,7 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
 
         Tokenize(source);
 
-        IncludeExpression expression = ParseInclude(source, resourceType);
+        IncludeExpression expression = ParseInclude(resourceType);
 
         AssertTokenStackIsEmpty();
         ValidateMaximumIncludeDepth(expression, 0);
@@ -37,9 +37,8 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
         return expression;
     }
 
-    protected virtual IncludeExpression ParseInclude(string source, ResourceType resourceType)
+    protected virtual IncludeExpression ParseInclude(ResourceType resourceType)
     {
-        ArgumentNullException.ThrowIfNull(source);
         ArgumentNullException.ThrowIfNull(resourceType);
 
         var treeRoot = IncludeTreeNode.CreateRoot(resourceType);
@@ -56,13 +55,13 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
                 isAtStart = false;
             }
 
-            ParseRelationshipChain(source, treeRoot);
+            ParseRelationshipChain(treeRoot);
         }
 
         return treeRoot.ToExpression();
     }
 
-    private void ParseRelationshipChain(string source, IncludeTreeNode treeRoot)
+    private void ParseRelationshipChain(IncludeTreeNode treeRoot)
     {
         // A relationship name usually matches a single relationship, even when overridden in derived types.
         // But in the following case, two relationships are matched on GET /shoppingBaskets?include=items:
@@ -90,30 +89,29 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
         // that there's currently no way to include Products without Articles. We could add such optional upcast syntax
         // in the future, if desired.
 
-        ReadOnlyCollection<IncludeTreeNode> children = ParseRelationshipName(source, [treeRoot]);
+        ReadOnlyCollection<IncludeTreeNode> children = ParseRelationshipName([treeRoot]);
 
         while (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Period)
         {
             EatSingleCharacterToken(TokenKind.Period);
 
-            children = ParseRelationshipName(source, children);
+            children = ParseRelationshipName(children);
         }
     }
 
-    private ReadOnlyCollection<IncludeTreeNode> ParseRelationshipName(string source, IReadOnlyCollection<IncludeTreeNode> parents)
+    private ReadOnlyCollection<IncludeTreeNode> ParseRelationshipName(IReadOnlyCollection<IncludeTreeNode> parents)
     {
         int position = GetNextTokenPositionOrEnd();
 
         if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.Text)
         {
-            return LookupRelationshipName(token.Value!, parents, source, position);
+            return LookupRelationshipName(token.Value!, parents, position);
         }
 
         throw new QueryParseException("Relationship name expected.", position);
     }
 
-    private static ReadOnlyCollection<IncludeTreeNode> LookupRelationshipName(string relationshipName, IReadOnlyCollection<IncludeTreeNode> parents,
-        string source, int position)
+    private ReadOnlyCollection<IncludeTreeNode> LookupRelationshipName(string relationshipName, IReadOnlyCollection<IncludeTreeNode> parents, int position)
     {
         List<IncludeTreeNode> children = [];
         HashSet<RelationshipAttribute> relationshipsFound = [];
@@ -135,7 +133,7 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
         }
 
         AssertRelationshipsFound(relationshipsFound, relationshipName, parents, position);
-        AssertAtLeastOneCanBeIncluded(relationshipsFound, relationshipName, source, position);
+        AssertAtLeastOneCanBeIncluded(relationshipsFound, relationshipName, position);
 
         return children.AsReadOnly();
     }
@@ -201,7 +199,7 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
         return builder.ToString();
     }
 
-    private static void AssertAtLeastOneCanBeIncluded(HashSet<RelationshipAttribute> relationshipsFound, string relationshipName, string source, int position)
+    private void AssertAtLeastOneCanBeIncluded(HashSet<RelationshipAttribute> relationshipsFound, string relationshipName, int position)
     {
         if (relationshipsFound.All(relationship => relationship.IsIncludeBlocked()))
         {
@@ -209,7 +207,7 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
             string message = $"Including the relationship '{relationshipName}' on '{resourceType}' is not allowed.";
 
             var exception = new QueryParseException(message, position);
-            string specificMessage = exception.GetMessageWithPosition(source);
+            string specificMessage = exception.GetMessageWithPosition(Source);
 
             throw new InvalidQueryStringParameterException("include", "The specified include is invalid.", specificMessage);
         }

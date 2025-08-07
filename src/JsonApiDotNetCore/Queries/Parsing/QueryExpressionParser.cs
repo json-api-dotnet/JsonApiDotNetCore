@@ -18,8 +18,6 @@ namespace JsonApiDotNetCore.Queries.Parsing;
 [PublicAPI]
 public abstract class QueryExpressionParser
 {
-    private int _endOfSourcePosition;
-
     /// <summary>
     /// Contains the tokens produced from the source text, after <see cref="Tokenize" /> has been called.
     /// </summary>
@@ -27,6 +25,11 @@ public abstract class QueryExpressionParser
     /// The various parsing methods typically pop tokens while producing <see cref="QueryExpression" />s.
     /// </remarks>
     protected Stack<Token> TokenStack { get; private set; } = new();
+
+    /// <summary>
+    /// Contains the source text that tokens were produced from, after <see cref="Tokenize" /> has been called.
+    /// </summary>
+    protected string Source { get; private set; } = string.Empty;
 
     /// <summary>
     /// Enables derived types to throw a <see cref="QueryParseException" /> when usage of a JSON:API field inside a field chain is not permitted.
@@ -45,9 +48,10 @@ public abstract class QueryExpressionParser
     {
         ArgumentNullException.ThrowIfNull(source);
 
+        Source = source;
+
         var tokenizer = new QueryTokenizer(source);
         TokenStack = new Stack<Token>(tokenizer.EnumerateTokens().Reverse());
-        _endOfSourcePosition = source.Length;
     }
 
     /// <summary>
@@ -154,7 +158,7 @@ public abstract class QueryExpressionParser
             return nextToken.Position;
         }
 
-        return _endOfSourcePosition;
+        return Source.Length;
     }
 
     /// <summary>
