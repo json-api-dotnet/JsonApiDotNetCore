@@ -42,7 +42,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Be($"Field '{Unknown.Relationship}' does not exist on resource type 'webAccounts'. {parameterName}");
+        error.Detail.Should().Be($"To-many relationship '{Unknown.Relationship}' does not exist on resource type 'webAccounts'. {parameterName}");
         error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be(parameterName.Text);
     }
@@ -65,7 +65,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Be($"Field '{Unknown.Relationship}' does not exist on resource type 'blogPosts'. {parameterName}");
+        error.Detail.Should().Be($"To-many relationship '{Unknown.Relationship}' does not exist on resource type 'blogPosts'. {parameterName}");
         error.Source.Should().NotBeNull();
         error.Source.Parameter.Should().Be(parameterName.Text);
     }

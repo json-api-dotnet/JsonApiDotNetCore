@@ -2,7 +2,6 @@ using System.Collections.Immutable;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.QueryStrings.FieldChains;
 
 namespace JsonApiDotNetCore.Queries.Parsing;
 
@@ -57,8 +56,7 @@ public class PaginationParser : QueryExpressionParser, IPaginationParser
             return new PaginationElementQueryStringValueExpression(null, number.Value, position);
         }
 
-        ResourceFieldChainExpression scope = ParseFieldChain(BuiltInPatterns.RelationshipChainEndingInToMany, FieldChainPatternMatchOptions.None, resourceType,
-            "Number or relationship name expected.");
+        IncludeExpression scope = ParseRelationshipChainEndingInToMany(resourceType, "Number or relationship name expected.");
 
         EatSingleCharacterToken(TokenKind.Colon);
 

@@ -35,26 +35,7 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
 
     protected virtual IncludeExpression ParseInclude(ResourceType resourceType)
     {
-        ArgumentNullException.ThrowIfNull(resourceType);
-
-        var treeRoot = IncludeTreeNode.CreateRoot(resourceType);
-        bool isAtStart = true;
-
-        while (TokenStack.Count > 0)
-        {
-            if (!isAtStart)
-            {
-                EatSingleCharacterToken(TokenKind.Comma);
-            }
-            else
-            {
-                isAtStart = false;
-            }
-
-            ParseRelationshipChain(treeRoot);
-        }
-
-        return treeRoot.ToExpression();
+        return ParseCommaSeparatedSequenceOfRelationshipChains(resourceType);
     }
 
     private void ValidateMaximumIncludeDepth(IncludeExpression include, int position)

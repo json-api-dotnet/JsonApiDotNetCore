@@ -55,6 +55,7 @@ public sealed class PaginationParseTests : BaseParseTests
 
     [Theory]
     [InlineData("^", "Number or relationship name expected.")]
+    [InlineData("^.", "Number or relationship name expected.")]
     [InlineData("1,^", "Number or relationship name expected.")]
     [InlineData("^(", "Number or relationship name expected.")]
     [InlineData("^ ", "Unexpected whitespace.")]
@@ -66,17 +67,18 @@ public sealed class PaginationParseTests : BaseParseTests
     [InlineData("1^(", ", expected.")]
     [InlineData("posts:-^abc", "Digits expected.")]
     [InlineData("posts:^-1", "Page number cannot be negative or zero.")]
-    [InlineData("posts.^some", "Field 'some' does not exist on resource type 'blogPosts'.")]
-    [InlineData("posts.^id",
-        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
-        "Relationship on resource type 'blogPosts' expected.")]
-    [InlineData("posts.comments.^id",
-        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
-        "Relationship on resource type 'comments' expected.")]
-    [InlineData("posts.author^",
-        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
-        "Relationship on resource type 'webAccounts' expected.")]
-    [InlineData("^some", "Field 'some' does not exist on resource type 'blogs'.")]
+    [InlineData("^unknown", "To-many relationship 'unknown' does not exist on resource type 'blogs'.")]
+    [InlineData("^unknown.other", "Relationship 'unknown' does not exist on resource type 'blogs'.")]
+    [InlineData("posts.^", "To-many relationship name expected.")]
+    [InlineData("posts.^unknown", "To-many relationship 'unknown' does not exist on resource type 'blogPosts'.")]
+    [InlineData("posts.^id", "To-many relationship 'id' does not exist on resource type 'blogPosts'.")]
+    [InlineData("posts.^author", "To-many relationship 'author' does not exist on resource type 'blogPosts'.")]
+    [InlineData("posts.author.^", "To-many relationship name expected.")]
+    [InlineData("posts.comments.^id", "To-many relationship 'id' does not exist on resource type 'comments'.")]
+    [InlineData("owner.person.^unknown", "To-many relationship 'unknown' does not exist on resource type 'humans' or any of its derived types.")]
+    [InlineData("owner.person.^unknown.other", "Relationship 'unknown' does not exist on resource type 'humans' or any of its derived types.")]
+    [InlineData("owner.person.^hasBeard", "To-many relationship 'hasBeard' does not exist on resource type 'humans' or any of its derived types.")]
+    [InlineData("owner.person.^wife", "To-many relationship 'wife' does not exist on resource type 'humans' or any of its derived types.")]
     public void Reader_Read_Page_Number_Fails(string parameterValue, string errorMessage)
     {
         // Arrange
@@ -101,6 +103,7 @@ public sealed class PaginationParseTests : BaseParseTests
 
     [Theory]
     [InlineData("^", "Number or relationship name expected.")]
+    [InlineData("^.", "Number or relationship name expected.")]
     [InlineData("1,^", "Number or relationship name expected.")]
     [InlineData("^(", "Number or relationship name expected.")]
     [InlineData("^ ", "Unexpected whitespace.")]
@@ -112,16 +115,18 @@ public sealed class PaginationParseTests : BaseParseTests
     [InlineData("1^(", ", expected.")]
     [InlineData("posts:-^abc", "Digits expected.")]
     [InlineData("posts:^-1", "Page size cannot be negative.")]
-    [InlineData("posts.^id",
-        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
-        "Relationship on resource type 'blogPosts' expected.")]
-    [InlineData("posts.comments.^id",
-        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
-        "Relationship on resource type 'comments' expected.")]
-    [InlineData("posts.author^",
-        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
-        "Relationship on resource type 'webAccounts' expected.")]
-    [InlineData("^some", "Field 'some' does not exist on resource type 'blogs'.")]
+    [InlineData("^unknown", "To-many relationship 'unknown' does not exist on resource type 'blogs'.")]
+    [InlineData("^unknown.other", "Relationship 'unknown' does not exist on resource type 'blogs'.")]
+    [InlineData("posts.^", "To-many relationship name expected.")]
+    [InlineData("posts.^unknown", "To-many relationship 'unknown' does not exist on resource type 'blogPosts'.")]
+    [InlineData("posts.^id", "To-many relationship 'id' does not exist on resource type 'blogPosts'.")]
+    [InlineData("posts.^author", "To-many relationship 'author' does not exist on resource type 'blogPosts'.")]
+    [InlineData("posts.author.^", "To-many relationship name expected.")]
+    [InlineData("posts.comments.^id", "To-many relationship 'id' does not exist on resource type 'comments'.")]
+    [InlineData("owner.person.^unknown", "To-many relationship 'unknown' does not exist on resource type 'humans' or any of its derived types.")]
+    [InlineData("owner.person.^unknown.other", "Relationship 'unknown' does not exist on resource type 'humans' or any of its derived types.")]
+    [InlineData("owner.person.^hasBeard", "To-many relationship 'hasBeard' does not exist on resource type 'humans' or any of its derived types.")]
+    [InlineData("owner.person.^wife", "To-many relationship 'wife' does not exist on resource type 'humans' or any of its derived types.")]
     public void Reader_Read_Page_Size_Fails(string parameterValue, string errorMessage)
     {
         // Arrange
@@ -155,6 +160,8 @@ public sealed class PaginationParseTests : BaseParseTests
     [InlineData("posts:4,3", "posts:10,20", "|posts", "Page number: 3, size: 20|Page number: 4, size: 10")]
     [InlineData("posts:4,posts.comments:5,3", "posts:10,posts.comments:15,20", "|posts|posts.comments",
         "Page number: 3, size: 20|Page number: 4, size: 10|Page number: 5, size: 15")]
+    [InlineData("owner.person.wife.children:5,2", "owner.person.husband.children:8,3", "|owner.person.husband.children|owner.person.wife.children",
+        "Page number: 2, size: 3|Page number: 1, size: 8|Page number: 5, size: 25")]
     public void Reader_Read_Pagination_Succeeds(string? pageNumber, string? pageSize, string scopeTreesExpected, string valueTreesExpected)
     {
         // Act

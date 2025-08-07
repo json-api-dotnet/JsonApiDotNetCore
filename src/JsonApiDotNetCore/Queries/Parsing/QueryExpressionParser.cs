@@ -193,7 +193,47 @@ public abstract class QueryExpressionParser
         }
     }
 
-    private protected void ParseRelationshipChain(IncludeTreeNode treeRoot)
+    /// <summary>
+    /// Parses a comma-separated sequence of relationship chains, taking relationships on derived types into account.
+    /// </summary>
+    protected IncludeExpression ParseCommaSeparatedSequenceOfRelationshipChains(ResourceType resourceType)
+    {
+        ArgumentNullException.ThrowIfNull(resourceType);
+
+        var treeRoot = IncludeTreeNode.CreateRoot(resourceType);
+        bool isAtStart = true;
+
+        while (TokenStack.Count > 0)
+        {
+            if (!isAtStart)
+            {
+                EatSingleCharacterToken(TokenKind.Comma);
+            }
+            else
+            {
+                isAtStart = false;
+            }
+
+            ParseRelationshipChain(treeRoot, false, null);
+        }
+
+        return treeRoot.ToExpression();
+    }
+
+    /// <summary>
+    /// Parses a relationship chain that ends in a to-many relationship, taking relationships on derived types into account.
+    /// </summary>
+    protected IncludeExpression ParseRelationshipChainEndingInToMany(ResourceType resourceType, string? alternativeErrorMessage)
+    {
+        ArgumentNullException.ThrowIfNull(resourceType);
+
+        var treeRoot = IncludeTreeNode.CreateRoot(resourceType);
+        ParseRelationshipChain(treeRoot, true, alternativeErrorMessage);
+
+        return treeRoot.ToExpression();
+    }
+
+    private void ParseRelationshipChain(IncludeTreeNode treeRoot, bool requireChainEndsInToMany, string? alternativeErrorMessage)
     {
         // A relationship name usually matches a single relationship, even when overridden in derived types.
         // But in the following case, two relationships are matched on GET /shoppingBaskets?include=items:
@@ -221,29 +261,35 @@ public abstract class QueryExpressionParser
         // that there's currently no way to include Products without Articles. We could add such optional upcast syntax
         // in the future, if desired.
 
-        ReadOnlyCollection<IncludeTreeNode> children = ParseRelationshipName([treeRoot]);
+        ReadOnlyCollection<IncludeTreeNode> children = ParseRelationshipName([treeRoot], requireChainEndsInToMany, alternativeErrorMessage);
 
         while (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Period)
         {
             EatSingleCharacterToken(TokenKind.Period);
 
-            children = ParseRelationshipName(children);
+            children = ParseRelationshipName(children, requireChainEndsInToMany, null);
         }
     }
 
-    private ReadOnlyCollection<IncludeTreeNode> ParseRelationshipName(IReadOnlyCollection<IncludeTreeNode> parents)
+    private ReadOnlyCollection<IncludeTreeNode> ParseRelationshipName(IReadOnlyCollection<IncludeTreeNode> parents, bool requireChainEndsInToMany,
+        string? alternativeErrorMessage)
     {
         int position = GetNextTokenPositionOrEnd();
 
         if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.Text)
         {
-            return LookupRelationshipName(token.Value!, parents, position);
+            bool isAtEndOfChain = !TokenStack.TryPeek(out Token? nextToken) || nextToken.Kind != TokenKind.Period;
+            bool requireToMany = requireChainEndsInToMany && isAtEndOfChain;
+
+            return LookupRelationshipName(token.Value!, parents, requireToMany, position);
         }
 
-        throw new QueryParseException("Relationship name expected.", position);
+        string message = alternativeErrorMessage ?? (requireChainEndsInToMany ? "To-many relationship name expected." : "Relationship name expected.");
+        throw new QueryParseException(message, position);
     }
 
-    private ReadOnlyCollection<IncludeTreeNode> LookupRelationshipName(string relationshipName, IReadOnlyCollection<IncludeTreeNode> parents, int position)
+    private ReadOnlyCollection<IncludeTreeNode> LookupRelationshipName(string relationshipName, IReadOnlyCollection<IncludeTreeNode> parents,
+        bool requireToMany, int position)
     {
         List<IncludeTreeNode> children = [];
         HashSet<RelationshipAttribute> relationshipsFound = [];
@@ -252,51 +298,58 @@ public abstract class QueryExpressionParser
         {
             // Depending on the left side of the include chain, we may match relationships anywhere in the resource type hierarchy.
             // This is compensated for when rendering the response, which substitutes relationships on base types with the derived ones.
-            HashSet<RelationshipAttribute> relationships = GetRelationshipsInConcreteTypes(parent.Relationship.RightType, relationshipName);
+            HashSet<RelationshipAttribute> relationships = GetRelationshipsInConcreteTypes(parent.Relationship.RightType, relationshipName, requireToMany);
 
             if (relationships.Count > 0)
             {
                 relationshipsFound.UnionWith(relationships);
 
                 RelationshipAttribute[] relationshipsToInclude = relationships.Where(relationship => !relationship.IsIncludeBlocked()).ToArray();
-                IReadOnlyCollection<IncludeTreeNode> affectedChildren = parent.EnsureChildren(relationshipsToInclude);
+                ReadOnlyCollection<IncludeTreeNode> affectedChildren = parent.EnsureChildren(relationshipsToInclude);
                 children.AddRange(affectedChildren);
             }
         }
 
-        AssertRelationshipsFound(relationshipsFound, relationshipName, parents, position);
+        AssertRelationshipsFound(relationshipsFound, relationshipName, requireToMany, parents, position);
         AssertAtLeastOneCanBeIncluded(relationshipsFound, relationshipName, position);
 
         return children.AsReadOnly();
     }
 
-    private static HashSet<RelationshipAttribute> GetRelationshipsInConcreteTypes(ResourceType resourceType, string relationshipName)
+    private static HashSet<RelationshipAttribute> GetRelationshipsInConcreteTypes(ResourceType resourceType, string relationshipName, bool requireToMany)
     {
         HashSet<RelationshipAttribute> relationshipsToInclude = [];
 
         foreach (RelationshipAttribute relationship in resourceType.GetRelationshipsInTypeOrDerived(relationshipName))
         {
-            if (!relationship.LeftType.ClrType.IsAbstract)
+            if (!requireToMany || relationship is HasManyAttribute)
             {
-                relationshipsToInclude.Add(relationship);
+                if (!relationship.LeftType.ClrType.IsAbstract)
+                {
+                    relationshipsToInclude.Add(relationship);
+                }
             }
 
-            IncludeRelationshipsFromConcreteDerivedTypes(relationship, relationshipsToInclude);
+            IncludeRelationshipsFromConcreteDerivedTypes(relationship, requireToMany, relationshipsToInclude);
         }
 
         return relationshipsToInclude;
     }
 
-    private static void IncludeRelationshipsFromConcreteDerivedTypes(RelationshipAttribute relationship, HashSet<RelationshipAttribute> relationshipsToInclude)
+    private static void IncludeRelationshipsFromConcreteDerivedTypes(RelationshipAttribute relationship, bool requireToMany,
+        HashSet<RelationshipAttribute> relationshipsToInclude)
     {
         foreach (ResourceType derivedType in relationship.LeftType.GetAllConcreteDerivedTypes())
         {
-            RelationshipAttribute relationshipInDerived = derivedType.GetRelationshipByPublicName(relationship.PublicName);
-            relationshipsToInclude.Add(relationshipInDerived);
+            if (!requireToMany || relationship is HasManyAttribute)
+            {
+                RelationshipAttribute relationshipInDerived = derivedType.GetRelationshipByPublicName(relationship.PublicName);
+                relationshipsToInclude.Add(relationshipInDerived);
+            }
         }
     }
 
-    private static void AssertRelationshipsFound(HashSet<RelationshipAttribute> relationshipsFound, string relationshipName,
+    private static void AssertRelationshipsFound(HashSet<RelationshipAttribute> relationshipsFound, string relationshipName, bool requireToMany,
         IReadOnlyCollection<IncludeTreeNode> parents, int position)
     {
         if (relationshipsFound.Count > 0)
@@ -308,13 +361,13 @@ public abstract class QueryExpressionParser
 
         bool hasDerivedTypes = parents.Any(parent => parent.Relationship.RightType.DirectlyDerivedTypes.Count > 0);
 
-        string message = GetErrorMessageForNoneFound(relationshipName, parentResourceTypes, hasDerivedTypes);
+        string message = GetErrorMessageForNoneFound(relationshipName, requireToMany, parentResourceTypes, hasDerivedTypes);
         throw new QueryParseException(message, position);
     }
 
-    private static string GetErrorMessageForNoneFound(string relationshipName, ResourceType[] parentResourceTypes, bool hasDerivedTypes)
+    private static string GetErrorMessageForNoneFound(string relationshipName, bool requireToMany, ResourceType[] parentResourceTypes, bool hasDerivedTypes)
     {
-        var builder = new StringBuilder($"Relationship '{relationshipName}'");
+        var builder = new StringBuilder($"{(requireToMany ? "To-many relationship" : "Relationship")} '{relationshipName}'");
 
         if (parentResourceTypes.Length == 1)
         {
@@ -345,7 +398,7 @@ public abstract class QueryExpressionParser
         }
     }
 
-    internal sealed class IncludeTreeNode
+    private sealed class IncludeTreeNode
     {
         private readonly Dictionary<RelationshipAttribute, IncludeTreeNode> _children = [];
 
@@ -362,7 +415,7 @@ public abstract class QueryExpressionParser
             return new IncludeTreeNode(relationship);
         }
 
-        public IReadOnlyCollection<IncludeTreeNode> EnsureChildren(RelationshipAttribute[] relationships)
+        public ReadOnlyCollection<IncludeTreeNode> EnsureChildren(RelationshipAttribute[] relationships)
         {
             foreach (RelationshipAttribute relationship in relationships)
             {
