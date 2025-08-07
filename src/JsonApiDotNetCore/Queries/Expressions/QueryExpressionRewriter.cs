@@ -205,7 +205,7 @@ public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgume
     public override QueryExpression? VisitQueryStringParameterScope(QueryStringParameterScopeExpression expression, TArgument argument)
     {
         var newParameterName = Visit(expression.ParameterName, argument) as LiteralConstantExpression;
-        ResourceFieldChainExpression? newScope = expression.Scope != null ? Visit(expression.Scope, argument) as ResourceFieldChainExpression : null;
+        IncludeExpression? newScope = expression.Scope != null ? Visit(expression.Scope, argument) as IncludeExpression : null;
 
         if (newParameterName != null)
         {
@@ -226,7 +226,7 @@ public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgume
 
     public override QueryExpression VisitPaginationElementQueryStringValue(PaginationElementQueryStringValueExpression expression, TArgument argument)
     {
-        ResourceFieldChainExpression? newScope = expression.Scope != null ? Visit(expression.Scope, argument) as ResourceFieldChainExpression : null;
+        IncludeExpression? newScope = expression.Scope != null ? Visit(expression.Scope, argument) as IncludeExpression : null;
 
         var newExpression = new PaginationElementQueryStringValueExpression(newScope, expression.Value, expression.Position);
         return newExpression.Equals(expression) ? expression : newExpression;

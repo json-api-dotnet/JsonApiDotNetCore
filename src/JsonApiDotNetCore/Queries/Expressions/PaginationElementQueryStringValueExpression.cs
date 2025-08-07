@@ -10,12 +10,12 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 /// .
 /// </summary>
 [PublicAPI]
-public class PaginationElementQueryStringValueExpression(ResourceFieldChainExpression? scope, int value, int position) : QueryExpression
+public class PaginationElementQueryStringValueExpression(IncludeExpression? scope, int value, int position) : QueryExpression
 {
     /// <summary>
-    /// The relationship this pagination applies to. Chain format: zero or more relationships, followed by a to-many relationship.
+    /// The relationship this pagination applies to. Format: zero or more relationships, followed by a to-many relationship.
     /// </summary>
-    public ResourceFieldChainExpression? Scope { get; } = scope;
+    public IncludeExpression? Scope { get; } = scope;
 
     /// <summary>
     /// The numeric pagination value.

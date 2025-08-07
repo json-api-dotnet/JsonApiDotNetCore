@@ -12,5 +12,6 @@ public static class BuiltInPatterns
     public static FieldChainPattern ToOneChainEndingInAttribute { get; } = FieldChainPattern.Parse("O*A");
     public static FieldChainPattern ToOneChainEndingInAttributeOrToOne { get; } = FieldChainPattern.Parse("O*[OA]");
     public static FieldChainPattern ToOneChainEndingInToMany { get; } = FieldChainPattern.Parse("O*M");
+    // TODO: Consider to remove, no longer used.
     public static FieldChainPattern RelationshipChainEndingInToMany { get; } = FieldChainPattern.Parse("R*M");
 }

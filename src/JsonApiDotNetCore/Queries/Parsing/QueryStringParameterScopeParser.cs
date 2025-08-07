@@ -1,7 +1,6 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.QueryStrings.FieldChains;
 
 namespace JsonApiDotNetCore.Queries.Parsing;
 
@@ -16,14 +15,14 @@ public class QueryStringParameterScopeParser : QueryExpressionParser, IQueryStri
 
         Tokenize(source);
 
-        QueryStringParameterScopeExpression expression = ParseQueryStringParameterScope(resourceType);
+        QueryStringParameterScopeExpression expression = ParseQueryStringParameterScope(source, resourceType);
 
         AssertTokenStackIsEmpty();
 
         return expression;
     }
 
-    protected virtual QueryStringParameterScopeExpression ParseQueryStringParameterScope(ResourceType resourceType)
+    protected virtual QueryStringParameterScopeExpression ParseQueryStringParameterScope(string source, ResourceType resourceType)
     {
         ArgumentNullException.ThrowIfNull(resourceType);
 
@@ -36,13 +35,17 @@ public class QueryStringParameterScopeParser : QueryExpressionParser, IQueryStri
 
         var name = new LiteralConstantExpression(token.Value!);
 
-        ResourceFieldChainExpression? scope = null;
+        IncludeExpression? scope = null;
 
         if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.OpenBracket)
         {
             TokenStack.Pop();
 
-            scope = ParseFieldChain(BuiltInPatterns.RelationshipChainEndingInToMany, FieldChainPatternMatchOptions.None, resourceType, null);
+            // TODO: Ensure chain meets requirement: BuiltInPatterns.RelationshipChainEndingInToMany
+            // scope = ParseFieldChain(BuiltInPatterns.RelationshipChainEndingInToMany, FieldChainPatternMatchOptions.None, resourceType, null);
+            var treeRoot = IncludeTreeNode.CreateRoot(resourceType);
+            ParseRelationshipChain(treeRoot);
+            scope = treeRoot.ToExpression();
 
             EatSingleCharacterToken(TokenKind.CloseBracket);
         }

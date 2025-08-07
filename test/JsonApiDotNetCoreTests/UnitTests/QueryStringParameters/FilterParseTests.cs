@@ -12,6 +12,8 @@ using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
 using Xunit;
 
+// TODO: Add more tests.
+
 namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters;
 
 public sealed class FilterParseTests : BaseParseTests
@@ -59,8 +61,8 @@ public sealed class FilterParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("filter[^", "Field name expected.")]
-    [InlineData("filter[^caption]", "Field 'caption' does not exist on resource type 'blogs'.")]
+    [InlineData("filter[^", "Relationship name expected.")]
+    [InlineData("filter[^caption]", "Relationship 'caption' does not exist on resource type 'blogs'.")]
     [InlineData("filter[posts.^caption]",
         "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
         "Relationship on resource type 'blogPosts' expected.")]

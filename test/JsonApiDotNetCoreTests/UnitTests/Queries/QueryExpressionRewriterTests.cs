@@ -167,7 +167,7 @@ public sealed class QueryExpressionRewriterTests
 
     [Theory]
     [InlineData("2", "PaginationQueryStringValue,PaginationElementQueryStringValue")]
-    [InlineData("posts:3,2", "PaginationQueryStringValue,PaginationElementQueryStringValue,ResourceFieldChain,PaginationElementQueryStringValue")]
+    [InlineData("posts:3,2", "PaginationQueryStringValue,PaginationElementQueryStringValue,Include,IncludeElement,PaginationElementQueryStringValue")]
     public void VisitPagination(string expressionText, string expectedTypes)
     {
         // Arrange
@@ -190,7 +190,7 @@ public sealed class QueryExpressionRewriterTests
 
     [Theory]
     [InlineData("filter", "QueryStringParameterScope,LiteralConstant")]
-    [InlineData("filter[posts.comments]", "QueryStringParameterScope,LiteralConstant,ResourceFieldChain")]
+    [InlineData("filter[posts.comments]", "QueryStringParameterScope,LiteralConstant,Include,IncludeElement,IncludeElement")]
     public void VisitParameterScope(string expressionText, string expectedTypes)
     {
         // Arrange

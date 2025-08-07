@@ -259,7 +259,7 @@ public abstract class QueryExpressionParser
                 relationshipsFound.UnionWith(relationships);
 
                 RelationshipAttribute[] relationshipsToInclude = relationships.Where(relationship => !relationship.IsIncludeBlocked()).ToArray();
-                IReadOnlyCollection<IncludeTreeNode> affectedChildren = parent.EnsureChildren(relationshipsToInclude);
+                ReadOnlyCollection<IncludeTreeNode> affectedChildren = parent.EnsureChildren(relationshipsToInclude);
                 children.AddRange(affectedChildren);
             }
         }
@@ -362,7 +362,8 @@ public abstract class QueryExpressionParser
             return new IncludeTreeNode(relationship);
         }
 
-        public IReadOnlyCollection<IncludeTreeNode> EnsureChildren(RelationshipAttribute[] relationships)
+        // TODO: Revert return type to non-collection if containing type can be made private.
+        public ReadOnlyCollection<IncludeTreeNode> EnsureChildren(RelationshipAttribute[] relationships)
         {
             foreach (RelationshipAttribute relationship in relationships)
             {

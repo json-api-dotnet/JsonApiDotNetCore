@@ -282,7 +282,7 @@ public sealed class QueryExpressionTests
 
         public PaginationElementQueryStringValueExpression PaginationElementQueryStringValue()
         {
-            return new PaginationElementQueryStringValueExpression(ResourceFieldChainForChildren(), 5, 8);
+            return new PaginationElementQueryStringValueExpression(Include(), 5, 8);
         }
 
         public PaginationExpression Pagination()
@@ -305,7 +305,7 @@ public sealed class QueryExpressionTests
 
         public QueryStringParameterScopeExpression QueryStringParameterScope()
         {
-            return new QueryStringParameterScopeExpression(LiteralConstant(), ResourceFieldChainForChildren());
+            return new QueryStringParameterScopeExpression(LiteralConstant(), Include());
         }
 
         public ResourceFieldChainExpression ResourceFieldChainForText()

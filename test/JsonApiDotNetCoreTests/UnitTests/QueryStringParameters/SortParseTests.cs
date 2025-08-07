@@ -10,6 +10,8 @@ using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
 using Xunit;
 
+// TODO: Add more tests.
+
 namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters;
 
 public sealed class SortParseTests : BaseParseTests
@@ -54,8 +56,8 @@ public sealed class SortParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("sort[^", "Field name expected.")]
-    [InlineData("sort[^abc.def]", "Field 'abc' does not exist on resource type 'blogs'.")]
+    [InlineData("sort[^", "Relationship name expected.")]
+    [InlineData("sort[^abc.def]", "Relationship 'abc' does not exist on resource type 'blogs'.")]
     [InlineData("sort[posts.^caption]",
         "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
         "Relationship on resource type 'blogPosts' expected.")]
