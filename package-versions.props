@@ -15,7 +15,7 @@
     <CodeAnalysisVersion>4.14.*</CodeAnalysisVersion>
     <CoverletVersion>6.0.*</CoverletVersion>
     <DapperVersion>2.1.*</DapperVersion>
-    <FluentAssertionsVersion>7.2.*</FluentAssertionsVersion>
+    <FluentAssertionsVersion>8.6.0</FluentAssertionsVersion>
     <GitHubActionsTestLoggerVersion>2.4.*</GitHubActionsTestLoggerVersion>
     <InheritDocVersion>2.0.*</InheritDocVersion>
     <KiotaVersion>1.*</KiotaVersion>
