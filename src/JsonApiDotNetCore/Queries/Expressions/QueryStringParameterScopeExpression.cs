@@ -25,9 +25,9 @@ public class QueryStringParameterScopeExpression : QueryExpression
     /// The scope this parameter value applies to, or <c>null</c> for the URL endpoint scope. Chain format for the filter/sort parameters: an optional list
     /// of relationships, followed by a to-many relationship.
     /// </summary>
-    public ResourceFieldChainExpression? Scope { get; }
+    public IncludeExpression? Scope { get; }
 
-    public QueryStringParameterScopeExpression(LiteralConstantExpression parameterName, ResourceFieldChainExpression? scope)
+    public QueryStringParameterScopeExpression(LiteralConstantExpression parameterName, IncludeExpression? scope)
     {
         ArgumentNullException.ThrowIfNull(parameterName);
 

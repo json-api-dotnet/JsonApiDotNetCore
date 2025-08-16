@@ -54,14 +54,21 @@ public sealed class SortParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("sort[^", "Field name expected.")]
-    [InlineData("sort[^abc.def]", "Field 'abc' does not exist on resource type 'blogs'.")]
-    [InlineData("sort[posts.^caption]",
-        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
-        "Relationship on resource type 'blogPosts' expected.")]
-    [InlineData("sort[posts.author^]",
-        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
-        "Relationship on resource type 'webAccounts' expected.")]
+    [InlineData("sort[^", "To-many relationship name expected.")]
+    [InlineData("sort[^.", "To-many relationship name expected.")]
+    [InlineData("sort[posts.^]", "To-many relationship name expected.")]
+    [InlineData("sort[posts.author.^]", "To-many relationship name expected.")]
+    [InlineData("sort[^unknown]", "To-many relationship 'unknown' does not exist on resource type 'blogs'.")]
+    [InlineData("sort[^unknown.other]", "Relationship 'unknown' does not exist on resource type 'blogs'.")]
+    [InlineData("sort[posts.^caption]", "To-many relationship 'caption' does not exist on resource type 'blogPosts'.")]
+    [InlineData("sort[posts.^author]", "To-many relationship 'author' does not exist on resource type 'blogPosts'.")]
+    [InlineData("sort[posts.comments.^unknown]", "To-many relationship 'unknown' does not exist on resource type 'comments'.")]
+    [InlineData("sort[posts.comments.^text]", "To-many relationship 'text' does not exist on resource type 'comments'.")]
+    [InlineData("sort[posts.comments.^parent]", "To-many relationship 'parent' does not exist on resource type 'comments'.")]
+    [InlineData("sort[owner.person.^unknown]", "To-many relationship 'unknown' does not exist on resource type 'humans' or any of its derived types.")]
+    [InlineData("sort[owner.person.^unknown.other]", "Relationship 'unknown' does not exist on resource type 'humans' or any of its derived types.")]
+    [InlineData("sort[owner.person.^hasBeard]", "To-many relationship 'hasBeard' does not exist on resource type 'humans' or any of its derived types.")]
+    [InlineData("sort[owner.person.^wife]", "To-many relationship 'wife' does not exist on resource type 'humans' or any of its derived types.")]
     public void Reader_Read_ParameterName_Fails(string parameterName, string errorMessage)
     {
         // Arrange
@@ -142,6 +149,7 @@ public sealed class SortParseTests : BaseParseTests
     [InlineData("sort", "-count(posts),id", null)]
     [InlineData("sort[posts]", "count(comments),-id", "posts")]
     [InlineData("sort[owner.posts]", "-caption", "owner.posts")]
+    [InlineData("sort[owner.person.wife.children]", "-name", "owner.person.wife.children")]
     [InlineData("sort[posts]", "author.userName", "posts")]
     [InlineData("sort[posts]", "-caption,-author.userName", "posts")]
     [InlineData("sort[posts]", "caption,author.userName,-id", "posts")]

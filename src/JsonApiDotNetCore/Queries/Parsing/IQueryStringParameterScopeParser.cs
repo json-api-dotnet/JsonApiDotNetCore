@@ -1,12 +1,11 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.QueryStrings.FieldChains;
 
 namespace JsonApiDotNetCore.Queries.Parsing;
 
 /// <summary>
-/// Parses the JSON:API 'sort' and 'filter' query string parameter names, which contain a resource field chain that indicates the scope its query string
-/// parameter value applies to.
+/// Parser for the JSON:API 'sort' and 'filter' query string parameter names, which indicate the scope their query string parameter value applies to. The
+/// value consists of an optional relationship chain ending in a to-many relationship, surrounded by brackets.
 /// </summary>
 public interface IQueryStringParameterScopeParser
 {
@@ -20,11 +19,5 @@ public interface IQueryStringParameterScopeParser
     /// <param name="resourceType">
     /// The resource type used to lookup JSON:API fields that are referenced in <paramref name="source" />.
     /// </param>
-    /// <param name="pattern">
-    /// The pattern that the field chain in <paramref name="source" /> must match.
-    /// </param>
-    /// <param name="options">
-    /// The match options for <paramref name="pattern" />.
-    /// </param>
-    QueryStringParameterScopeExpression Parse(string source, ResourceType resourceType, FieldChainPattern pattern, FieldChainPatternMatchOptions options);
+    QueryStringParameterScopeExpression Parse(string source, ResourceType resourceType);
 }

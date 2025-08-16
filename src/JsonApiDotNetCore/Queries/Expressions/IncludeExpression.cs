@@ -13,8 +13,6 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 [PublicAPI]
 public class IncludeExpression : QueryExpression
 {
-    private static readonly IncludeChainConverter IncludeChainConverter = new();
-
     public static readonly IncludeExpression Empty = new();
 
     /// <summary>
@@ -51,7 +49,7 @@ public class IncludeExpression : QueryExpression
 
     private string InnerToString(bool toFullString)
     {
-        IReadOnlyCollection<ResourceFieldChainExpression> chains = IncludeChainConverter.GetRelationshipChains(this);
+        IReadOnlyCollection<ResourceFieldChainExpression> chains = IncludeChainConverter.Instance.GetRelationshipChains(this);
         return string.Join(",", chains.Select(field => toFullString ? field.ToFullString() : field.ToString()).Distinct().OrderBy(name => name));
     }
 

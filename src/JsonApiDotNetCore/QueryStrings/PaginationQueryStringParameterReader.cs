@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -145,24 +144,42 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
     {
         var paginationState = new PaginationState();
 
-        foreach (PaginationElementQueryStringValueExpression element in _pageSizeConstraint?.Elements ??
-            ImmutableArray<PaginationElementQueryStringValueExpression>.Empty)
+        foreach (PaginationElementQueryStringValueExpression element in _pageSizeConstraint?.Elements ?? [])
         {
-            MutablePaginationEntry entry = paginationState.ResolveEntryInScope(element.Scope);
-            entry.PageSize = element.Value == 0 ? null : new PageSize(element.Value);
-            entry.HasSetPageSize = true;
+            UpdatePageSize(element, paginationState);
         }
 
-        foreach (PaginationElementQueryStringValueExpression element in _pageNumberConstraint?.Elements ??
-            ImmutableArray<PaginationElementQueryStringValueExpression>.Empty)
+        foreach (PaginationElementQueryStringValueExpression element in _pageNumberConstraint?.Elements ?? [])
         {
-            MutablePaginationEntry entry = paginationState.ResolveEntryInScope(element.Scope);
-            entry.PageNumber = new PageNumber(element.Value);
+            UpdatePageNumber(element, paginationState);
         }
 
         paginationState.ApplyOptions(_options);
 
         return paginationState.GetExpressionsInScope();
+    }
+
+    private static void UpdatePageSize(PaginationElementQueryStringValueExpression element, PaginationState paginationState)
+    {
+        foreach (ResourceFieldChainExpression? scopeChain in element.Scope == null
+            ? FieldChainInGlobalScope
+            : IncludeChainConverter.Instance.GetRelationshipChains(element.Scope))
+        {
+            MutablePaginationEntry entry = paginationState.ResolveEntryInScope(scopeChain);
+            entry.PageSize = element.Value == 0 ? null : new PageSize(element.Value);
+            entry.HasSetPageSize = true;
+        }
+    }
+
+    private static void UpdatePageNumber(PaginationElementQueryStringValueExpression element, PaginationState paginationState)
+    {
+        foreach (ResourceFieldChainExpression? scopeChain in element.Scope == null
+            ? FieldChainInGlobalScope
+            : IncludeChainConverter.Instance.GetRelationshipChains(element.Scope))
+        {
+            MutablePaginationEntry entry = paginationState.ResolveEntryInScope(scopeChain);
+            entry.PageNumber = new PageNumber(element.Value);
+        }
     }
 
     private sealed class PaginationState
