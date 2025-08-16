@@ -55,7 +55,7 @@ jobs:
         psql --version
         Write-Host "Active .NET SDK: $(dotnet --version)"
     - name: Git checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     - name: Restore tools
       run: dotnet tool restore
     - name: Restore packages
@@ -160,7 +160,7 @@ jobs:
           8.0.*
           9.0.*
     - name: Git checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     - name: Restore tools
       run: dotnet tool restore
     - name: InspectCode
@@ -219,7 +219,7 @@ jobs:
           8.0.*
           9.0.*
     - name: Git checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         fetch-depth: 2
     - name: Restore tools
