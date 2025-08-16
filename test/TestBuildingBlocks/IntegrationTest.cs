@@ -26,7 +26,7 @@ public abstract class IntegrationTest : IAsyncLifetime
 
     private static SemaphoreSlim GetDefaultThrottleSemaphore()
     {
-        int maxConcurrentTestRuns = OperatingSystem.IsWindows() && Environment.GetEnvironmentVariable("CI") != null ? 32 : 64;
+        int maxConcurrentTestRuns = OperatingSystem.IsWindows() && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VSAPPIDDIR")) ? 32 : 64;
         return new SemaphoreSlim(maxConcurrentTestRuns);
     }
 
