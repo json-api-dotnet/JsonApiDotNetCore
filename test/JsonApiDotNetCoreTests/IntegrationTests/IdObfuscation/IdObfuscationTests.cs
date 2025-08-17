@@ -9,17 +9,18 @@ using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation;
 
-public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext>>
+public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<ObfuscationStartup, ObfuscationDbContext>>
 {
-    private readonly IntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext> _testContext;
+    private readonly IntegrationTestContext<ObfuscationStartup, ObfuscationDbContext> _testContext;
     private readonly ObfuscationFakers _fakers = new();
 
-    public IdObfuscationTests(IntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext> testContext)
+    public IdObfuscationTests(IntegrationTestContext<ObfuscationStartup, ObfuscationDbContext> testContext)
     {
         _testContext = testContext;
 
         testContext.UseController<BankAccountsController>();
         testContext.UseController<DebitCardsController>();
+        testContext.UseController<OperationsController>();
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.UseRelativeLinks = true;
@@ -583,5 +584,112 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         error.StatusCode.Should().Be(HttpStatusCode.NotFound);
         error.Title.Should().Be("The requested resource does not exist.");
         error.Detail.Should().Be($"Resource of type 'bankAccounts' with ID '{stringId}' does not exist.");
+    }
+
+    [Fact]
+    public async Task Can_use_operations()
+    {
+        // Arrange
+        BankAccount newAccount = _fakers.BankAccount.GenerateOne();
+        DebitCard newCard = _fakers.DebitCard.GenerateOne();
+
+        const string accountLocalId = "new-bank-account";
+
+        var requestBody = new
+        {
+            atomic__operations = new object[]
+            {
+                new
+                {
+                    op = "add",
+                    data = new
+                    {
+                        type = "bankAccounts",
+                        lid = accountLocalId,
+                        attributes = new
+                        {
+                            iban = newAccount.Iban
+                        }
+                    }
+                },
+                new
+                {
+                    op = "add",
+                    data = new
+                    {
+                        type = "debitCards",
+                        attributes = new
+                        {
+                            ownerName = newCard.OwnerName,
+                            pinCode = newCard.PinCode
+                        },
+                        relationships = new
+                        {
+                            account = new
+                            {
+                                data = new
+                                {
+                                    type = "bankAccounts",
+                                    lid = accountLocalId
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/operations";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Results.Should().HaveCount(2);
+
+        ResourceObject resultData1 = responseDocument.Results[0].Data.SingleValue.RefShould().NotBeNull().And.Subject;
+        ResourceObject resultData2 = responseDocument.Results[1].Data.SingleValue.RefShould().NotBeNull().And.Subject;
+
+        string newAccountStringId = resultData1.Id.RefShould().NotBeNull().And.Subject;
+        string newCardStringId = resultData2.Id.RefShould().NotBeNull().And.Subject;
+
+        resultData1.Type.Should().Be("bankAccounts");
+        resultData1.Links.RefShould().NotBeNull().And.Subject.Self.Should().Be($"/bankAccounts/{newAccountStringId}");
+
+        resultData1.Relationships.Should().ContainKey("cards").WhoseValue.With(value =>
+        {
+            value.Should().NotBeNull();
+            value.Links.Should().NotBeNull();
+            value.Links.Self.Should().Be($"/bankAccounts/{newAccountStringId}/relationships/cards");
+            value.Links.Related.Should().Be($"/bankAccounts/{newAccountStringId}/cards");
+        });
+
+        resultData2.Type.Should().Be("debitCards");
+        resultData2.Links.RefShould().NotBeNull().And.Subject.Self.Should().Be($"/debitCards/{newCardStringId}");
+
+        resultData2.Relationships.Should().ContainKey("account").WhoseValue.With(value =>
+        {
+            value.Should().NotBeNull();
+            value.Links.Should().NotBeNull();
+            value.Links.Self.Should().Be($"/debitCards/{newCardStringId}/relationships/account");
+            value.Links.Related.Should().Be($"/debitCards/{newCardStringId}/account");
+        });
+
+        long newAccountId = HexadecimalCodec.Instance.Decode(newAccountStringId);
+        long newCardId = HexadecimalCodec.Instance.Decode(newCardStringId);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            DebitCard cardInDatabase = await dbContext.DebitCards.Include(card => card.Account).FirstWithIdAsync(newCardId);
+
+            cardInDatabase.OwnerName.Should().Be(newCard.OwnerName);
+            cardInDatabase.PinCode.Should().Be(newCard.PinCode);
+
+            cardInDatabase.Account.Should().NotBeNull();
+            cardInDatabase.Account.Id.Should().Be(newAccountId);
+            cardInDatabase.Account.Iban.Should().Be(newAccount.Iban);
+        });
     }
 }
