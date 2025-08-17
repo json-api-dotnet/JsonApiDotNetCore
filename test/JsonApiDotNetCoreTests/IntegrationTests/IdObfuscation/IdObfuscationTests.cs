@@ -13,7 +13,6 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
 {
     private readonly IntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext> _testContext;
     private readonly ObfuscationFakers _fakers = new();
-    private readonly HexadecimalCodec _codec = new();
 
     public IdObfuscationTests(IntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext> testContext)
     {
@@ -34,7 +33,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         account.Id = 123;
 
         // Act
-        string? stringId = _codec.Encode(account.Id);
+        string? stringId = HexadecimalCodec.Instance.Encode(account.Id);
 
         // Assert
         stringId.Should().Be(account.StringId);
@@ -48,7 +47,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         account.Id = 123;
 
         // Act
-        int id = _codec.Decode(account.StringId);
+        long id = HexadecimalCodec.Instance.Decode(account.StringId);
 
         // Assert
         id.Should().Be(account.Id);
@@ -123,7 +122,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/bankAccounts?filter=any(id,'{accounts[1].StringId}','{_codec.Encode(Unknown.TypedId.Int32)}')";
+        string route = $"/bankAccounts?filter=any(id,'{accounts[1].StringId}','{HexadecimalCodec.Instance.Encode(Unknown.TypedId.Int64)}')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -362,7 +361,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
             value.Links.Related.Should().Be($"/debitCards/{newCardStringId}/account");
         });
 
-        int newCardId = _codec.Decode(responseDocument.Data.SingleValue.Id);
+        long newCardId = HexadecimalCodec.Instance.Decode(responseDocument.Data.SingleValue.Id);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -568,7 +567,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Cannot_delete_unknown_resource()
     {
         // Arrange
-        string? stringId = _codec.Encode(Unknown.TypedId.Int32);
+        string stringId = HexadecimalCodec.Instance.Encode(Unknown.TypedId.Int64)!;
 
         string route = $"/bankAccounts/{stringId}";
 
