@@ -34,7 +34,7 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
 
         if (parameterInfo is { Name: "id" } && IsJsonApiParameter(parameterInfo))
         {
-            return _resourceIdSchemaGenerator.GenerateSchema(schemaType, schemaRepository);
+            return _resourceIdSchemaGenerator.GenerateSchema(parameterInfo, schemaRepository);
         }
 
         DocumentSchemaGenerator? schemaGenerator = GetDocumentSchemaGenerator(schemaType);
