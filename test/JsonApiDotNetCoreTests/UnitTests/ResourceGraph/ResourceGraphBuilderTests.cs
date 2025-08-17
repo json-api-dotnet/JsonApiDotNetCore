@@ -164,6 +164,55 @@ public sealed class ResourceGraphBuilderTests
     }
 
     [Fact]
+    public void Can_remove_existing_resource_type()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+        builder.Add<ResourceWithHasOneRelationship, int>();
+        builder.Add<ResourceWithAttribute, int>();
+
+        // Act
+        builder.Remove<ResourceWithHasOneRelationship>();
+
+        // Assert
+        IResourceGraph resourceGraph = builder.Build();
+        resourceGraph.GetResourceTypes().Should().ContainSingle().Which.ClrType.Should().Be<ResourceWithAttribute>();
+    }
+
+    [Fact]
+    public void Can_remove_missing_resource_type()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+        builder.Add<ResourceWithAttribute, int>();
+
+        // Act
+        builder.Remove<ResourceWithHasManyRelationship>();
+
+        // Assert
+        IResourceGraph resourceGraph = builder.Build();
+        resourceGraph.GetResourceTypes().Should().ContainSingle().Which.ClrType.Should().Be<ResourceWithAttribute>();
+    }
+
+    [Fact]
+    public void Can_remove_non_resource_type()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+        builder.Add<ResourceWithAttribute, int>();
+
+        // Act
+        builder.Remove(typeof(NonResource));
+
+        // Assert
+        IResourceGraph resourceGraph = builder.Build();
+        resourceGraph.GetResourceTypes().Should().ContainSingle().Which.ClrType.Should().Be<ResourceWithAttribute>();
+    }
+
+    [Fact]
     public void Cannot_build_graph_with_missing_related_HasOne_resource()
     {
         // Arrange

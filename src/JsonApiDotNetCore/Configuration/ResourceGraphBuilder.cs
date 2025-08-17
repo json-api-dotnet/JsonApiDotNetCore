@@ -168,6 +168,32 @@ public partial class ResourceGraphBuilder
     }
 
     /// <summary>
+    /// Removes a JSON:API resource.
+    /// </summary>
+    /// <typeparam name="TResource">
+    /// The resource CLR type.
+    /// </typeparam>
+    public ResourceGraphBuilder Remove<TResource>()
+        where TResource : class, IIdentifiable
+    {
+        return Remove(typeof(TResource));
+    }
+
+    /// <summary>
+    /// Removes a JSON:API resource.
+    /// </summary>
+    /// <param name="resourceClrType">
+    /// The resource CLR type.
+    /// </param>
+    public ResourceGraphBuilder Remove(Type resourceClrType)
+    {
+        ArgumentNullException.ThrowIfNull(resourceClrType);
+
+        _resourceTypesByClrType.Remove(resourceClrType);
+        return this;
+    }
+
+    /// <summary>
     /// Adds a JSON:API resource.
     /// </summary>
     /// <typeparam name="TResource">
