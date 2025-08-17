@@ -1,7 +1,9 @@
 using System.Net;
 using FluentAssertions;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -11,6 +13,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
 {
     private readonly IntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext> _testContext;
     private readonly ObfuscationFakers _fakers = new();
+    private readonly HexadecimalCodec _codec = new();
 
     public IdObfuscationTests(IntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext> testContext)
     {
@@ -18,6 +21,37 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
 
         testContext.UseController<BankAccountsController>();
         testContext.UseController<DebitCardsController>();
+
+        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.UseRelativeLinks = true;
+    }
+
+    [Fact]
+    public void Encodes_resource_ID()
+    {
+        // Arrange
+        BankAccount account = _fakers.BankAccount.GenerateOne();
+        account.Id = 123;
+
+        // Act
+        string? stringId = _codec.Encode(account.Id);
+
+        // Assert
+        stringId.Should().Be(account.StringId);
+    }
+
+    [Fact]
+    public void Decodes_resource_ID()
+    {
+        // Arrange
+        BankAccount account = _fakers.BankAccount.GenerateOne();
+        account.Id = 123;
+
+        // Act
+        int id = _codec.Decode(account.StringId);
+
+        // Assert
+        id.Should().Be(account.Id);
     }
 
     [Fact]
@@ -41,8 +75,16 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[1].StringId);
+        responseDocument.Links.Should().NotBeNull();
+        responseDocument.Links.Self.Should().Be(route);
+        responseDocument.Links.First.Should().Be($"/bankAccounts?filter=equals(id,%27{accounts[1].StringId}%27)");
+
+        responseDocument.Data.ManyValue.Should().ContainSingle().Which.With(resource =>
+        {
+            resource.Id.Should().Be(accounts[1].StringId);
+            resource.Links.Should().NotBeNull();
+            resource.Links.Self.Should().Be($"/bankAccounts/{accounts[1].StringId}");
+        });
     }
 
     [Fact]
@@ -81,8 +123,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
             await dbContext.SaveChangesAsync();
         });
 
-        var codec = new HexadecimalCodec();
-        string route = $"/bankAccounts?filter=any(id,'{accounts[1].StringId}','{codec.Encode(Unknown.TypedId.Int32)}')";
+        string route = $"/bankAccounts?filter=any(id,'{accounts[1].StringId}','{_codec.Encode(Unknown.TypedId.Int32)}')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -90,8 +131,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[1].StringId);
+        responseDocument.Data.ManyValue.Should().ContainSingle().Which.Id.Should().Be(accounts[1].StringId);
     }
 
     [Fact]
@@ -135,8 +175,12 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
+        responseDocument.Links.Should().NotBeNull();
+        responseDocument.Links.Self.Should().Be(route);
+
         responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(card.StringId);
+        responseDocument.Data.SingleValue.Links.RefShould().NotBeNull().And.Subject.Self.Should().Be(route);
     }
 
     [Fact]
@@ -160,9 +204,25 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
+        responseDocument.Links.Should().NotBeNull();
+        responseDocument.Links.Self.Should().Be(route);
+        responseDocument.Links.First.Should().Be(route);
+
         responseDocument.Data.ManyValue.Should().HaveCount(2);
-        responseDocument.Data.ManyValue[0].Id.Should().Be(account.Cards[0].StringId);
-        responseDocument.Data.ManyValue[1].Id.Should().Be(account.Cards[1].StringId);
+
+        responseDocument.Data.ManyValue[0].With(resource =>
+        {
+            resource.Id.Should().Be(account.Cards[0].StringId);
+            resource.Links.Should().NotBeNull();
+            resource.Links.Self.Should().Be($"/debitCards/{account.Cards[0].StringId}");
+        });
+
+        responseDocument.Data.ManyValue[1].With(resource =>
+        {
+            resource.Id.Should().Be(account.Cards[1].StringId);
+            resource.Links.Should().NotBeNull();
+            resource.Links.Self.Should().Be($"/debitCards/{account.Cards[1].StringId}");
+        });
     }
 
     [Fact]
@@ -186,13 +246,31 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
+        responseDocument.Links.Should().NotBeNull();
+        responseDocument.Links.Self.Should().Be(route);
+
         responseDocument.Data.SingleValue.Should().NotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(account.StringId);
 
-        responseDocument.Included.Should().HaveCount(1);
-        responseDocument.Included[0].Id.Should().Be(account.Cards[0].StringId);
-        responseDocument.Included[0].Attributes.Should().HaveCount(1);
-        responseDocument.Included[0].Relationships.Should().BeNull();
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("cards").WhoseValue.With(value =>
+        {
+            value.Should().NotBeNull();
+            value.Data.ManyValue.Should().ContainSingle().Which.Id.Should().Be(account.Cards[0].StringId);
+
+            value.Links.Should().NotBeNull();
+            value.Links.Self.Should().Be($"/bankAccounts/{account.StringId}/relationships/cards");
+            value.Links.Related.Should().Be($"/bankAccounts/{account.StringId}/cards");
+        });
+
+        responseDocument.Included.Should().ContainSingle().Which.With(resource =>
+        {
+            resource.Id.Should().Be(account.Cards[0].StringId);
+            resource.Attributes.Should().HaveCount(1);
+            resource.Relationships.Should().BeNull();
+
+            resource.Links.Should().NotBeNull();
+            resource.Links.Self.Should().Be($"/debitCards/{account.Cards[0].StringId}");
+        });
     }
 
     [Fact]
@@ -216,8 +294,11 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Data.ManyValue.Should().HaveCount(1);
-        responseDocument.Data.ManyValue[0].Id.Should().Be(account.Cards[0].StringId);
+        responseDocument.Links.Should().NotBeNull();
+        responseDocument.Links.Self.Should().Be(route);
+        responseDocument.Links.First.Should().Be(route);
+
+        responseDocument.Data.ManyValue.Should().ContainSingle().Which.Id.Should().Be(account.Cards[0].StringId);
     }
 
     [Fact]
@@ -266,11 +347,22 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.Should().NotBeNull();
+
+        string newCardStringId = responseDocument.Data.SingleValue.Id.RefShould().NotBeNull().And.Subject;
+
+        responseDocument.Data.SingleValue.Links.RefShould().NotBeNull().And.Subject.Self.Should().Be($"/debitCards/{newCardStringId}");
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("ownerName").WhoseValue.Should().Be(newCard.OwnerName);
         responseDocument.Data.SingleValue.Attributes.Should().ContainKey("pinCode").WhoseValue.Should().Be(newCard.PinCode);
 
-        var codec = new HexadecimalCodec();
-        int newCardId = codec.Decode(responseDocument.Data.SingleValue.Id);
+        responseDocument.Data.SingleValue.Relationships.Should().ContainKey("account").WhoseValue.With(value =>
+        {
+            value.Should().NotBeNull();
+            value.Links.Should().NotBeNull();
+            value.Links.Self.Should().Be($"/debitCards/{newCardStringId}/relationships/account");
+            value.Links.Related.Should().Be($"/debitCards/{newCardStringId}/account");
+        });
+
+        int newCardId = _codec.Decode(responseDocument.Data.SingleValue.Id);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -476,8 +568,7 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     public async Task Cannot_delete_unknown_resource()
     {
         // Arrange
-        var codec = new HexadecimalCodec();
-        string? stringId = codec.Encode(Unknown.TypedId.Int32);
+        string? stringId = _codec.Encode(Unknown.TypedId.Int32);
 
         string route = $"/bankAccounts/{stringId}";
 

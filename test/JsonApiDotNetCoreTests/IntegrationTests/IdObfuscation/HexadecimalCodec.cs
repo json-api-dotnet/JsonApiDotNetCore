@@ -8,6 +8,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation;
 
 internal sealed class HexadecimalCodec
 {
+    // This implementation is deliberately simple for demonstration purposes.
+    // Consider using something more robust, such as https://github.com/sqids/sqids-dotnet.
+
     public int Decode(string? value)
     {
         if (value == null)
