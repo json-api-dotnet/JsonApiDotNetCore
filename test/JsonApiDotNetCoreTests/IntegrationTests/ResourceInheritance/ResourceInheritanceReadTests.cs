@@ -2324,6 +2324,132 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     }
 
     [Fact]
+    public async Task Can_filter_in_scope_of_derived_include_at_abstract_endpoint()
+    {
+        // Arrange
+        Bike bike = _fakers.Bike.GenerateOne();
+
+        GasolineEngine carEngine = _fakers.GasolineEngine.GenerateOne();
+        carEngine.Cylinders = _fakers.Cylinder.GenerateSet(2);
+        carEngine.Cylinders.ElementAt(0).SparkPlugCount = 10;
+
+        Car car = _fakers.Car.GenerateOne();
+        car.Engine = carEngine;
+
+        GasolineEngine truckEngine = _fakers.GasolineEngine.GenerateOne();
+        truckEngine.Cylinders = _fakers.Cylinder.GenerateSet(2);
+        truckEngine.Cylinders.ElementAt(0).SparkPlugCount = 12;
+
+        Truck truck = _fakers.Truck.GenerateOne();
+        truck.Engine = truckEngine;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Vehicle>();
+            dbContext.Vehicles.AddRange(bike, car, truck);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/vehicles?include=engine.cylinders&filter[engine.cylinders]=greaterThan(sparkPlugCount,'8')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(3);
+
+        responseDocument.Included.Should().HaveCount(4);
+        responseDocument.Included.Where(resource => resource.Type == "gasolineEngines").Should().HaveCount(2);
+        responseDocument.Included.Where(resource => resource.Type == "cylinders").Should().HaveCount(2);
+    }
+
+    [Fact]
+    public async Task Can_filter_in_scope_of_derived_include_with_type_checks_at_abstract_endpoint()
+    {
+        // Arrange
+        GenericFeature numberFeature = _fakers.GenericFeature.GenerateOne().With(feature =>
+        {
+            NumberProperty numberProperty = _fakers.NumberProperty.GenerateOne();
+            numberProperty.Value = _fakers.NumberValue.GenerateOne();
+            numberProperty.Value.Content = 999;
+
+            feature.Properties.Add(numberProperty);
+        });
+
+        GenericFeature otherNumberFeature = _fakers.GenericFeature.GenerateOne().With(feature =>
+        {
+            NumberProperty numberProperty = _fakers.NumberProperty.GenerateOne();
+            numberProperty.Value = _fakers.NumberValue.GenerateOne();
+
+            feature.Properties.Add(numberProperty);
+        });
+
+        GenericFeature stringFeature = _fakers.GenericFeature.GenerateOne().With(feature =>
+        {
+            StringProperty stringProperty = _fakers.StringProperty.GenerateOne();
+            stringProperty.Value = _fakers.StringValue.GenerateOne();
+            stringProperty.Value.Content = "XXX";
+
+            feature.Properties.Add(stringProperty);
+        });
+
+        GenericFeature otherStringFeature = _fakers.GenericFeature.GenerateOne().With(feature =>
+        {
+            StringProperty stringProperty = _fakers.StringProperty.GenerateOne();
+            stringProperty.Value = _fakers.StringValue.GenerateOne();
+
+            feature.Properties.Add(stringProperty);
+        });
+
+        Bike bike = _fakers.Bike.GenerateOne();
+
+        Tandem tandem = _fakers.Tandem.GenerateOne();
+        tandem.Features.Add(otherNumberFeature);
+        tandem.Features.Add(stringFeature);
+
+        Car car = _fakers.Car.GenerateOne();
+        car.Engine = _fakers.GasolineEngine.GenerateOne();
+        car.Features.Add(numberFeature);
+        car.Features.Add(otherStringFeature);
+
+        Truck truck = _fakers.Truck.GenerateOne();
+        truck.Engine = _fakers.DieselEngine.GenerateOne();
+        truck.Features.Add(otherNumberFeature);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Vehicle>();
+            dbContext.Vehicles.AddRange(bike, tandem, car, truck);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/vehicles?include=features.properties.value&filter[features.properties]=" +
+            "or(isType(,stringProperties,equals(value.content,'XXX')),isType(,numberProperties,equals(value.content,'999')))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(4);
+
+        responseDocument.Included.Should().HaveCount(8);
+
+        responseDocument.Included.Should().ContainSingle(resource => resource.Type == "numberValues").Subject.With(resource =>
+        {
+            resource.Attributes.Should().ContainKey("content").WhoseValue.Should().Be(999);
+        });
+
+        responseDocument.Included.Should().ContainSingle(resource => resource.Type == "stringValues").Subject.With(resource =>
+        {
+            resource.Attributes.Should().ContainKey("content").WhoseValue.Should().Be("XXX");
+        });
+    }
+
+    [Fact]
     public async Task Can_sort_on_derived_attribute_at_abstract_endpoint()
     {
         // Arrange
@@ -2448,6 +2574,76 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
         responseDocument.Data.ManyValue[2].Type.Should().Be("cars");
         responseDocument.Data.ManyValue[2].Id.Should().Be(car2.StringId);
+    }
+
+    [Fact]
+    public async Task Can_sort_in_scope_of_derived_include_at_abstract_endpoint()
+    {
+        // Arrange
+        Bike bike = _fakers.Bike.GenerateOne();
+
+        GasolineEngine carEngine = _fakers.GasolineEngine.GenerateOne();
+        carEngine.Cylinders = _fakers.Cylinder.GenerateSet(3);
+        carEngine.Cylinders.ElementAt(0).SparkPlugCount = 10;
+        carEngine.Cylinders.ElementAt(1).SparkPlugCount = 3;
+        carEngine.Cylinders.ElementAt(2).SparkPlugCount = 8;
+
+        Car car = _fakers.Car.GenerateOne();
+        car.Engine = carEngine;
+
+        GasolineEngine truckEngine = _fakers.GasolineEngine.GenerateOne();
+        truckEngine.Cylinders = _fakers.Cylinder.GenerateSet(3);
+        truckEngine.Cylinders.ElementAt(0).SparkPlugCount = 12;
+        truckEngine.Cylinders.ElementAt(1).SparkPlugCount = 5;
+        truckEngine.Cylinders.ElementAt(2).SparkPlugCount = 18;
+
+        Truck truck = _fakers.Truck.GenerateOne();
+        truck.Engine = truckEngine;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Vehicle>();
+            dbContext.Vehicles.AddRange(bike, car, truck);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/vehicles?include=engine.cylinders&sort[engine.cylinders]=sparkPlugCount";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(3);
+
+        responseDocument.Included.Should().HaveCount(8);
+
+        responseDocument.Included.Should().ContainSingle(resource => resource.Type == "gasolineEngines" && resource.Id == carEngine.StringId).Subject
+            .With(resource =>
+            {
+                resource.Should().NotBeNull();
+
+                RelationshipObject relationship = resource.Relationships.Should().ContainKey("cylinders").WhoseValue.RefShould().NotBeNull().And.Subject;
+                relationship.Data.ManyValue.Should().HaveCount(3);
+
+                relationship.Data.ManyValue[0].Id.Should().Be(carEngine.Cylinders.ElementAt(1).StringId);
+                relationship.Data.ManyValue[1].Id.Should().Be(carEngine.Cylinders.ElementAt(2).StringId);
+                relationship.Data.ManyValue[2].Id.Should().Be(carEngine.Cylinders.ElementAt(0).StringId);
+            });
+
+        responseDocument.Included.Should().ContainSingle(resource => resource.Type == "gasolineEngines" && resource.Id == truckEngine.StringId).Subject
+            .With(resource =>
+            {
+                resource.Should().NotBeNull();
+
+                RelationshipObject relationship = resource.Relationships.Should().ContainKey("cylinders").WhoseValue.RefShould().NotBeNull().And.Subject;
+                relationship.Data.ManyValue.Should().HaveCount(3);
+
+                relationship.Data.ManyValue[0].Id.Should().Be(truckEngine.Cylinders.ElementAt(1).StringId);
+                relationship.Data.ManyValue[1].Id.Should().Be(truckEngine.Cylinders.ElementAt(0).StringId);
+                relationship.Data.ManyValue[2].Id.Should().Be(truckEngine.Cylinders.ElementAt(2).StringId);
+            });
     }
 
     [Fact]
@@ -2610,5 +2806,61 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
         responseDocument.Data.ManyValue[4].Type.Should().Be("carbonWheels");
         responseDocument.Data.ManyValue[4].Id.Should().Be(carbonWheel1.StringId);
+    }
+
+    [Fact]
+    public async Task Can_paginate_in_scope_of_derived_include_at_abstract_endpoint()
+    {
+        // Arrange
+        Bike bike = _fakers.Bike.GenerateOne();
+
+        GasolineEngine carEngine = _fakers.GasolineEngine.GenerateOne();
+        carEngine.Cylinders = _fakers.Cylinder.GenerateSet(3);
+
+        Car car = _fakers.Car.GenerateOne();
+        car.Engine = carEngine;
+
+        GasolineEngine truckEngine = _fakers.GasolineEngine.GenerateOne();
+        truckEngine.Cylinders = _fakers.Cylinder.GenerateSet(3);
+
+        Truck truck = _fakers.Truck.GenerateOne();
+        truck.Engine = truckEngine;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Vehicle>();
+            dbContext.Vehicles.AddRange(bike, car, truck);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/vehicles?include=engine.cylinders&page[size]=engine.cylinders:2";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.Should().HaveCount(3);
+
+        responseDocument.Included.Should().HaveCount(6);
+
+        responseDocument.Included.Should().ContainSingle(resource => resource.Type == "gasolineEngines" && resource.Id == carEngine.StringId).Subject
+            .With(resource =>
+            {
+                resource.Should().NotBeNull();
+
+                RelationshipObject relationship = resource.Relationships.Should().ContainKey("cylinders").WhoseValue.RefShould().NotBeNull().And.Subject;
+                relationship.Data.ManyValue.Should().HaveCount(2);
+            });
+
+        responseDocument.Included.Should().ContainSingle(resource => resource.Type == "gasolineEngines" && resource.Id == truckEngine.StringId).Subject
+            .With(resource =>
+            {
+                resource.Should().NotBeNull();
+
+                RelationshipObject relationship = resource.Relationships.Should().ContainKey("cylinders").WhoseValue.RefShould().NotBeNull().And.Subject;
+                relationship.Data.ManyValue.Should().HaveCount(2);
+            });
     }
 }

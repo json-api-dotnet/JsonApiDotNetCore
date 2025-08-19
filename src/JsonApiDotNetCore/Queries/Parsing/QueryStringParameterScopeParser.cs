@@ -1,7 +1,6 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.QueryStrings.FieldChains;
 
 namespace JsonApiDotNetCore.Queries.Parsing;
 
@@ -10,25 +9,22 @@ namespace JsonApiDotNetCore.Queries.Parsing;
 public class QueryStringParameterScopeParser : QueryExpressionParser, IQueryStringParameterScopeParser
 {
     /// <inheritdoc />
-    public QueryStringParameterScopeExpression Parse(string source, ResourceType resourceType, FieldChainPattern pattern, FieldChainPatternMatchOptions options)
+    public QueryStringParameterScopeExpression Parse(string source, ResourceType resourceType)
     {
         ArgumentNullException.ThrowIfNull(resourceType);
-        ArgumentNullException.ThrowIfNull(pattern);
 
         Tokenize(source);
 
-        QueryStringParameterScopeExpression expression = ParseQueryStringParameterScope(resourceType, pattern, options);
+        QueryStringParameterScopeExpression expression = ParseQueryStringParameterScope(resourceType);
 
         AssertTokenStackIsEmpty();
 
         return expression;
     }
 
-    protected virtual QueryStringParameterScopeExpression ParseQueryStringParameterScope(ResourceType resourceType, FieldChainPattern pattern,
-        FieldChainPatternMatchOptions options)
+    protected virtual QueryStringParameterScopeExpression ParseQueryStringParameterScope(ResourceType resourceType)
     {
         ArgumentNullException.ThrowIfNull(resourceType);
-        ArgumentNullException.ThrowIfNull(pattern);
 
         int position = GetNextTokenPositionOrEnd();
 
@@ -39,13 +35,13 @@ public class QueryStringParameterScopeParser : QueryExpressionParser, IQueryStri
 
         var name = new LiteralConstantExpression(token.Value!);
 
-        ResourceFieldChainExpression? scope = null;
+        IncludeExpression? scope = null;
 
         if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.OpenBracket)
         {
             TokenStack.Pop();
 
-            scope = ParseFieldChain(pattern, options, resourceType, null);
+            scope = ParseRelationshipChainEndingInToMany(resourceType, null);
 
             EatSingleCharacterToken(TokenKind.CloseBracket);
         }

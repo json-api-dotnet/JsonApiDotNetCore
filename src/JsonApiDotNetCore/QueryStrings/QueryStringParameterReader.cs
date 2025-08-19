@@ -11,6 +11,11 @@ public abstract class QueryStringParameterReader
     private readonly IResourceGraph _resourceGraph;
     private readonly bool _isCollectionRequest;
 
+    protected static IReadOnlyCollection<ResourceFieldChainExpression?> FieldChainInGlobalScope { get; } = new[]
+    {
+        (ResourceFieldChainExpression?)null
+    }.AsReadOnly();
+
     protected ResourceType RequestResourceType { get; }
     protected bool IsAtomicOperationsRequest { get; }
 

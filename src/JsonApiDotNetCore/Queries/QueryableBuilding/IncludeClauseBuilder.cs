@@ -10,8 +10,6 @@ namespace JsonApiDotNetCore.Queries.QueryableBuilding;
 [PublicAPI]
 public class IncludeClauseBuilder : QueryClauseBuilder, IIncludeClauseBuilder
 {
-    private static readonly IncludeChainConverter IncludeChainConverter = new();
-
     public virtual Expression ApplyInclude(IncludeExpression include, QueryClauseBuilderContext context)
     {
         ArgumentNullException.ThrowIfNull(include);
@@ -26,7 +24,7 @@ public class IncludeClauseBuilder : QueryClauseBuilder, IIncludeClauseBuilder
 
         ApplyEagerLoads(context.ResourceType.EagerLoads, null, propertyPaths);
 
-        foreach (ResourceFieldChainExpression chain in IncludeChainConverter.GetRelationshipChains(expression))
+        foreach (ResourceFieldChainExpression chain in IncludeChainConverter.Instance.GetRelationshipChains(expression))
         {
             ProcessRelationshipChain(chain, propertyPaths);
         }

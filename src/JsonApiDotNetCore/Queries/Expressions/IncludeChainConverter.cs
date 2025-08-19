@@ -8,6 +8,12 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 /// </summary>
 internal sealed class IncludeChainConverter
 {
+    public static IncludeChainConverter Instance { get; } = new();
+
+    private IncludeChainConverter()
+    {
+    }
+
     /// <summary>
     /// Converts a tree of inclusions into a set of relationship chains.
     /// </summary>

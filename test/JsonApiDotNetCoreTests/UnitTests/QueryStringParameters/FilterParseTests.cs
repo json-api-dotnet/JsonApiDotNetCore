@@ -59,17 +59,21 @@ public sealed class FilterParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("filter[^", "Field name expected.")]
-    [InlineData("filter[^caption]", "Field 'caption' does not exist on resource type 'blogs'.")]
-    [InlineData("filter[posts.^caption]",
-        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
-        "Relationship on resource type 'blogPosts' expected.")]
-    [InlineData("filter[posts.author^]",
-        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
-        "Relationship on resource type 'webAccounts' expected.")]
-    [InlineData("filter[posts.comments.^text]",
-        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
-        "Relationship on resource type 'comments' expected.")]
+    [InlineData("filter[^", "To-many relationship name expected.")]
+    [InlineData("filter[^.", "To-many relationship name expected.")]
+    [InlineData("filter[posts.^]", "To-many relationship name expected.")]
+    [InlineData("filter[posts.author.^]", "To-many relationship name expected.")]
+    [InlineData("filter[^unknown]", "To-many relationship 'unknown' does not exist on resource type 'blogs'.")]
+    [InlineData("filter[^unknown.other]", "Relationship 'unknown' does not exist on resource type 'blogs'.")]
+    [InlineData("filter[posts.^caption]", "To-many relationship 'caption' does not exist on resource type 'blogPosts'.")]
+    [InlineData("filter[posts.^author]", "To-many relationship 'author' does not exist on resource type 'blogPosts'.")]
+    [InlineData("filter[posts.comments.^unknown]", "To-many relationship 'unknown' does not exist on resource type 'comments'.")]
+    [InlineData("filter[posts.comments.^text]", "To-many relationship 'text' does not exist on resource type 'comments'.")]
+    [InlineData("filter[posts.comments.^parent]", "To-many relationship 'parent' does not exist on resource type 'comments'.")]
+    [InlineData("filter[owner.person.^unknown]", "To-many relationship 'unknown' does not exist on resource type 'humans' or any of its derived types.")]
+    [InlineData("filter[owner.person.^unknown.other]", "Relationship 'unknown' does not exist on resource type 'humans' or any of its derived types.")]
+    [InlineData("filter[owner.person.^hasBeard]", "To-many relationship 'hasBeard' does not exist on resource type 'humans' or any of its derived types.")]
+    [InlineData("filter[owner.person.^wife]", "To-many relationship 'wife' does not exist on resource type 'humans' or any of its derived types.")]
     public void Reader_Read_ParameterName_Fails(string parameterName, string errorMessage)
     {
         // Arrange
@@ -179,6 +183,7 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter[posts]", "equals(caption,'this, that & more')", "posts")]
     [InlineData("filter[owner.posts]", "equals(caption,'some')", "owner.posts")]
     [InlineData("filter[posts.comments]", "equals(createdAt,'2000-01-01')", "posts.comments")]
+    [InlineData("filter[owner.person.wife.children]", "not(equals(mother,null))", "owner.person.wife.children")]
     [InlineData("filter", "equals(count(posts),'1')", null)]
     [InlineData("filter", "equals(count(posts),count(owner.posts))", null)]
     [InlineData("filter", "equals(has(posts),'true')", null)]
