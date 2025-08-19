@@ -160,14 +160,15 @@ public static class BuiltInPatterns</code></pre>
 
   <h3 id="JsonApiDotNetCore_QueryStrings_FieldChains_BuiltInPatterns_RelationshipChainEndingInToMany" data-uid="JsonApiDotNetCore.QueryStrings.FieldChains.BuiltInPatterns.RelationshipChainEndingInToMany">
   RelationshipChainEndingInToMany
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryStrings/FieldChains/BuiltInPatterns.cs/#L15"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryStrings/FieldChains/BuiltInPatterns.cs/#L16"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static FieldChainPattern RelationshipChainEndingInToMany { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;This is no longer used and will be removed in a future version. Instead, use: FieldChainPattern.Parse(\&quot;R*M\&quot;)&quot;)]
+public static FieldChainPattern RelationshipChainEndingInToMany { get; }</code></pre>
   </div>
 
 

@@ -92,7 +92,7 @@
 
 
   <h1 id="JsonApiDotNetCore_Queries_Parsing_PaginationParser" data-uid="JsonApiDotNetCore.Queries.Parsing.PaginationParser" class="text-break">
-Class PaginationParser  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/PaginationParser.cs/#L10"><i class="bi bi-code-slash"></i></a>
+Class PaginationParser  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/PaginationParser.cs/#L9"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -136,6 +136,9 @@ public class PaginationParser : QueryExpressionParser, IPaginationParser</code><
       <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_TokenStack">QueryExpressionParser.TokenStack</a>
     </div>
     <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_Source">QueryExpressionParser.Source</a>
+    </div>
+    <div>
       <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_ValidateField_JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_System_Int32_">QueryExpressionParser.ValidateField(ResourceFieldAttribute, int)</a>
     </div>
     <div>
@@ -158,6 +161,12 @@ public class PaginationParser : QueryExpressionParser, IPaginationParser</code><
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_AssertTokenStackIsEmpty">QueryExpressionParser.AssertTokenStackIsEmpty()</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_ParseCommaSeparatedSequenceOfRelationshipChains_JsonApiDotNetCore_Configuration_ResourceType_">QueryExpressionParser.ParseCommaSeparatedSequenceOfRelationshipChains(ResourceType)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_ParseRelationshipChainEndingInToMany_JsonApiDotNetCore_Configuration_ResourceType_System_String_">QueryExpressionParser.ParseRelationshipChainEndingInToMany(ResourceType, string)</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
@@ -195,7 +204,7 @@ public class PaginationParser : QueryExpressionParser, IPaginationParser</code><
 
   <h3 id="JsonApiDotNetCore_Queries_Parsing_PaginationParser_Parse_System_String_JsonApiDotNetCore_Configuration_ResourceType_" data-uid="JsonApiDotNetCore.Queries.Parsing.PaginationParser.Parse(System.String,JsonApiDotNetCore.Configuration.ResourceType)">
   Parse(string, ResourceType)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/PaginationParser.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/PaginationParser.cs/#L13"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Parses the specified source into a <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.html">PaginationQueryStringValueExpression</a>. Throws a <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryParseException.html">QueryParseException</a> if the input is
@@ -241,7 +250,7 @@ that gets converted into <a class="xref" href="JsonApiDotNetCore.Queries.Express
 
   <h3 id="JsonApiDotNetCore_Queries_Parsing_PaginationParser_ParsePagination_JsonApiDotNetCore_Configuration_ResourceType_" data-uid="JsonApiDotNetCore.Queries.Parsing.PaginationParser.ParsePagination(JsonApiDotNetCore.Configuration.ResourceType)">
   ParsePagination(ResourceType)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/PaginationParser.cs/#L27"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/PaginationParser.cs/#L26"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -277,7 +286,7 @@ that gets converted into <a class="xref" href="JsonApiDotNetCore.Queries.Express
 
   <h3 id="JsonApiDotNetCore_Queries_Parsing_PaginationParser_ParsePaginationElement_JsonApiDotNetCore_Configuration_ResourceType_" data-uid="JsonApiDotNetCore.Queries.Parsing.PaginationParser.ParsePaginationElement(JsonApiDotNetCore.Configuration.ResourceType)">
   ParsePaginationElement(ResourceType)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/PaginationParser.cs/#L48"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/PaginationParser.cs/#L47"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -313,7 +322,7 @@ that gets converted into <a class="xref" href="JsonApiDotNetCore.Queries.Express
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/PaginationParser.cs/#L10" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/PaginationParser.cs/#L9" class="edit-link">Edit this page</a>
         </div>
 
 

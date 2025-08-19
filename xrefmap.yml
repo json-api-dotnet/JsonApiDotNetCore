@@ -7968,15 +7968,15 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression
   fullName: JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression
   nameWithType: PaginationElementQueryStringValueExpression
-- uid: JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression,System.Int32,System.Int32)
-  name: PaginationElementQueryStringValueExpression(ResourceFieldChainExpression?, int, int)
-  href: api/JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.html#JsonApiDotNetCore_Queries_Expressions_PaginationElementQueryStringValueExpression__ctor_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_System_Int32_System_Int32_
-  commentId: M:JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression,System.Int32,System.Int32)
-  name.vb: New(ResourceFieldChainExpression, Integer, Integer)
-  fullName: JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.PaginationElementQueryStringValueExpression(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression?, int, int)
-  fullName.vb: JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.New(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression, Integer, Integer)
-  nameWithType: PaginationElementQueryStringValueExpression.PaginationElementQueryStringValueExpression(ResourceFieldChainExpression?, int, int)
-  nameWithType.vb: PaginationElementQueryStringValueExpression.New(ResourceFieldChainExpression, Integer, Integer)
+- uid: JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.IncludeExpression,System.Int32,System.Int32)
+  name: PaginationElementQueryStringValueExpression(IncludeExpression?, int, int)
+  href: api/JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.html#JsonApiDotNetCore_Queries_Expressions_PaginationElementQueryStringValueExpression__ctor_JsonApiDotNetCore_Queries_Expressions_IncludeExpression_System_Int32_System_Int32_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.IncludeExpression,System.Int32,System.Int32)
+  name.vb: New(IncludeExpression, Integer, Integer)
+  fullName: JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.PaginationElementQueryStringValueExpression(JsonApiDotNetCore.Queries.Expressions.IncludeExpression?, int, int)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.New(JsonApiDotNetCore.Queries.Expressions.IncludeExpression, Integer, Integer)
+  nameWithType: PaginationElementQueryStringValueExpression.PaginationElementQueryStringValueExpression(IncludeExpression?, int, int)
+  nameWithType.vb: PaginationElementQueryStringValueExpression.New(IncludeExpression, Integer, Integer)
 - uid: JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.#ctor*
   name: PaginationElementQueryStringValueExpression
   href: api/JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.html#JsonApiDotNetCore_Queries_Expressions_PaginationElementQueryStringValueExpression__ctor_
@@ -9239,15 +9239,15 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression
   fullName: JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression
   nameWithType: QueryStringParameterScopeExpression
-- uid: JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression)
-  name: QueryStringParameterScopeExpression(LiteralConstantExpression, ResourceFieldChainExpression?)
-  href: api/JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.html#JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression__ctor_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_
-  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression)
-  name.vb: New(LiteralConstantExpression, ResourceFieldChainExpression)
-  fullName: JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.QueryStringParameterScopeExpression(JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression, JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression?)
-  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.New(JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression, JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression)
-  nameWithType: QueryStringParameterScopeExpression.QueryStringParameterScopeExpression(LiteralConstantExpression, ResourceFieldChainExpression?)
-  nameWithType.vb: QueryStringParameterScopeExpression.New(LiteralConstantExpression, ResourceFieldChainExpression)
+- uid: JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,JsonApiDotNetCore.Queries.Expressions.IncludeExpression)
+  name: QueryStringParameterScopeExpression(LiteralConstantExpression, IncludeExpression?)
+  href: api/JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.html#JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression__ctor_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_JsonApiDotNetCore_Queries_Expressions_IncludeExpression_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,JsonApiDotNetCore.Queries.Expressions.IncludeExpression)
+  name.vb: New(LiteralConstantExpression, IncludeExpression)
+  fullName: JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.QueryStringParameterScopeExpression(JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression, JsonApiDotNetCore.Queries.Expressions.IncludeExpression?)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.New(JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression, JsonApiDotNetCore.Queries.Expressions.IncludeExpression)
+  nameWithType: QueryStringParameterScopeExpression.QueryStringParameterScopeExpression(LiteralConstantExpression, IncludeExpression?)
+  nameWithType.vb: QueryStringParameterScopeExpression.New(LiteralConstantExpression, IncludeExpression)
 - uid: JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.#ctor*
   name: QueryStringParameterScopeExpression
   href: api/JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.html#JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression__ctor_
@@ -10923,15 +10923,15 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.Parsing.IQueryStringParameterScopeParser
   fullName: JsonApiDotNetCore.Queries.Parsing.IQueryStringParameterScopeParser
   nameWithType: IQueryStringParameterScopeParser
-- uid: JsonApiDotNetCore.Queries.Parsing.IQueryStringParameterScopeParser.Parse(System.String,JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern,JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPatternMatchOptions)
-  name: Parse(string, ResourceType, FieldChainPattern, FieldChainPatternMatchOptions)
-  href: api/JsonApiDotNetCore.Queries.Parsing.IQueryStringParameterScopeParser.html#JsonApiDotNetCore_Queries_Parsing_IQueryStringParameterScopeParser_Parse_System_String_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPattern_JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPatternMatchOptions_
-  commentId: M:JsonApiDotNetCore.Queries.Parsing.IQueryStringParameterScopeParser.Parse(System.String,JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern,JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPatternMatchOptions)
-  name.vb: Parse(String, ResourceType, FieldChainPattern, FieldChainPatternMatchOptions)
-  fullName: JsonApiDotNetCore.Queries.Parsing.IQueryStringParameterScopeParser.Parse(string, JsonApiDotNetCore.Configuration.ResourceType, JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern, JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPatternMatchOptions)
-  fullName.vb: JsonApiDotNetCore.Queries.Parsing.IQueryStringParameterScopeParser.Parse(String, JsonApiDotNetCore.Configuration.ResourceType, JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern, JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPatternMatchOptions)
-  nameWithType: IQueryStringParameterScopeParser.Parse(string, ResourceType, FieldChainPattern, FieldChainPatternMatchOptions)
-  nameWithType.vb: IQueryStringParameterScopeParser.Parse(String, ResourceType, FieldChainPattern, FieldChainPatternMatchOptions)
+- uid: JsonApiDotNetCore.Queries.Parsing.IQueryStringParameterScopeParser.Parse(System.String,JsonApiDotNetCore.Configuration.ResourceType)
+  name: Parse(string, ResourceType)
+  href: api/JsonApiDotNetCore.Queries.Parsing.IQueryStringParameterScopeParser.html#JsonApiDotNetCore_Queries_Parsing_IQueryStringParameterScopeParser_Parse_System_String_JsonApiDotNetCore_Configuration_ResourceType_
+  commentId: M:JsonApiDotNetCore.Queries.Parsing.IQueryStringParameterScopeParser.Parse(System.String,JsonApiDotNetCore.Configuration.ResourceType)
+  name.vb: Parse(String, ResourceType)
+  fullName: JsonApiDotNetCore.Queries.Parsing.IQueryStringParameterScopeParser.Parse(string, JsonApiDotNetCore.Configuration.ResourceType)
+  fullName.vb: JsonApiDotNetCore.Queries.Parsing.IQueryStringParameterScopeParser.Parse(String, JsonApiDotNetCore.Configuration.ResourceType)
+  nameWithType: IQueryStringParameterScopeParser.Parse(string, ResourceType)
+  nameWithType.vb: IQueryStringParameterScopeParser.Parse(String, ResourceType)
 - uid: JsonApiDotNetCore.Queries.Parsing.IQueryStringParameterScopeParser.Parse*
   name: Parse
   href: api/JsonApiDotNetCore.Queries.Parsing.IQueryStringParameterScopeParser.html#JsonApiDotNetCore_Queries_Parsing_IQueryStringParameterScopeParser_Parse_
@@ -11046,15 +11046,12 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Parsing.IncludeParser.Parse
   nameWithType: IncludeParser.Parse
-- uid: JsonApiDotNetCore.Queries.Parsing.IncludeParser.ParseInclude(System.String,JsonApiDotNetCore.Configuration.ResourceType)
-  name: ParseInclude(string, ResourceType)
-  href: api/JsonApiDotNetCore.Queries.Parsing.IncludeParser.html#JsonApiDotNetCore_Queries_Parsing_IncludeParser_ParseInclude_System_String_JsonApiDotNetCore_Configuration_ResourceType_
-  commentId: M:JsonApiDotNetCore.Queries.Parsing.IncludeParser.ParseInclude(System.String,JsonApiDotNetCore.Configuration.ResourceType)
-  name.vb: ParseInclude(String, ResourceType)
-  fullName: JsonApiDotNetCore.Queries.Parsing.IncludeParser.ParseInclude(string, JsonApiDotNetCore.Configuration.ResourceType)
-  fullName.vb: JsonApiDotNetCore.Queries.Parsing.IncludeParser.ParseInclude(String, JsonApiDotNetCore.Configuration.ResourceType)
-  nameWithType: IncludeParser.ParseInclude(string, ResourceType)
-  nameWithType.vb: IncludeParser.ParseInclude(String, ResourceType)
+- uid: JsonApiDotNetCore.Queries.Parsing.IncludeParser.ParseInclude(JsonApiDotNetCore.Configuration.ResourceType)
+  name: ParseInclude(ResourceType)
+  href: api/JsonApiDotNetCore.Queries.Parsing.IncludeParser.html#JsonApiDotNetCore_Queries_Parsing_IncludeParser_ParseInclude_JsonApiDotNetCore_Configuration_ResourceType_
+  commentId: M:JsonApiDotNetCore.Queries.Parsing.IncludeParser.ParseInclude(JsonApiDotNetCore.Configuration.ResourceType)
+  fullName: JsonApiDotNetCore.Queries.Parsing.IncludeParser.ParseInclude(JsonApiDotNetCore.Configuration.ResourceType)
+  nameWithType: IncludeParser.ParseInclude(ResourceType)
 - uid: JsonApiDotNetCore.Queries.Parsing.IncludeParser.ParseInclude*
   name: ParseInclude
   href: api/JsonApiDotNetCore.Queries.Parsing.IncludeParser.html#JsonApiDotNetCore_Queries_Parsing_IncludeParser_ParseInclude_
@@ -11286,6 +11283,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.GetRelativePositionOfLastFieldInChain
   nameWithType: QueryExpressionParser.GetRelativePositionOfLastFieldInChain
+- uid: JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.ParseCommaSeparatedSequenceOfRelationshipChains(JsonApiDotNetCore.Configuration.ResourceType)
+  name: ParseCommaSeparatedSequenceOfRelationshipChains(ResourceType)
+  href: api/JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_ParseCommaSeparatedSequenceOfRelationshipChains_JsonApiDotNetCore_Configuration_ResourceType_
+  commentId: M:JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.ParseCommaSeparatedSequenceOfRelationshipChains(JsonApiDotNetCore.Configuration.ResourceType)
+  fullName: JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.ParseCommaSeparatedSequenceOfRelationshipChains(JsonApiDotNetCore.Configuration.ResourceType)
+  nameWithType: QueryExpressionParser.ParseCommaSeparatedSequenceOfRelationshipChains(ResourceType)
+- uid: JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.ParseCommaSeparatedSequenceOfRelationshipChains*
+  name: ParseCommaSeparatedSequenceOfRelationshipChains
+  href: api/JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_ParseCommaSeparatedSequenceOfRelationshipChains_
+  commentId: Overload:JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.ParseCommaSeparatedSequenceOfRelationshipChains
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.ParseCommaSeparatedSequenceOfRelationshipChains
+  nameWithType: QueryExpressionParser.ParseCommaSeparatedSequenceOfRelationshipChains
 - uid: JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.ParseFieldChain(JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern,JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPatternMatchOptions,JsonApiDotNetCore.Configuration.ResourceType,System.String)
   name: ParseFieldChain(FieldChainPattern, FieldChainPatternMatchOptions, ResourceType, string?)
   href: api/JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_ParseFieldChain_JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPattern_JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPatternMatchOptions_JsonApiDotNetCore_Configuration_ResourceType_System_String_
@@ -11302,6 +11312,35 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.ParseFieldChain
   nameWithType: QueryExpressionParser.ParseFieldChain
+- uid: JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.ParseRelationshipChainEndingInToMany(JsonApiDotNetCore.Configuration.ResourceType,System.String)
+  name: ParseRelationshipChainEndingInToMany(ResourceType, string?)
+  href: api/JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_ParseRelationshipChainEndingInToMany_JsonApiDotNetCore_Configuration_ResourceType_System_String_
+  commentId: M:JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.ParseRelationshipChainEndingInToMany(JsonApiDotNetCore.Configuration.ResourceType,System.String)
+  name.vb: ParseRelationshipChainEndingInToMany(ResourceType, String)
+  fullName: JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.ParseRelationshipChainEndingInToMany(JsonApiDotNetCore.Configuration.ResourceType, string?)
+  fullName.vb: JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.ParseRelationshipChainEndingInToMany(JsonApiDotNetCore.Configuration.ResourceType, String)
+  nameWithType: QueryExpressionParser.ParseRelationshipChainEndingInToMany(ResourceType, string?)
+  nameWithType.vb: QueryExpressionParser.ParseRelationshipChainEndingInToMany(ResourceType, String)
+- uid: JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.ParseRelationshipChainEndingInToMany*
+  name: ParseRelationshipChainEndingInToMany
+  href: api/JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_ParseRelationshipChainEndingInToMany_
+  commentId: Overload:JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.ParseRelationshipChainEndingInToMany
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.ParseRelationshipChainEndingInToMany
+  nameWithType: QueryExpressionParser.ParseRelationshipChainEndingInToMany
+- uid: JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.Source
+  name: Source
+  href: api/JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_Source
+  commentId: P:JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.Source
+  fullName: JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.Source
+  nameWithType: QueryExpressionParser.Source
+- uid: JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.Source*
+  name: Source
+  href: api/JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_Source_
+  commentId: Overload:JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.Source
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.Source
+  nameWithType: QueryExpressionParser.Source
 - uid: JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.TokenStack
   name: TokenStack
   href: api/JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_TokenStack
@@ -11416,15 +11455,15 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser
   fullName: JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser
   nameWithType: QueryStringParameterScopeParser
-- uid: JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.Parse(System.String,JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern,JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPatternMatchOptions)
-  name: Parse(string, ResourceType, FieldChainPattern, FieldChainPatternMatchOptions)
-  href: api/JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.html#JsonApiDotNetCore_Queries_Parsing_QueryStringParameterScopeParser_Parse_System_String_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPattern_JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPatternMatchOptions_
-  commentId: M:JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.Parse(System.String,JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern,JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPatternMatchOptions)
-  name.vb: Parse(String, ResourceType, FieldChainPattern, FieldChainPatternMatchOptions)
-  fullName: JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.Parse(string, JsonApiDotNetCore.Configuration.ResourceType, JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern, JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPatternMatchOptions)
-  fullName.vb: JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.Parse(String, JsonApiDotNetCore.Configuration.ResourceType, JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern, JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPatternMatchOptions)
-  nameWithType: QueryStringParameterScopeParser.Parse(string, ResourceType, FieldChainPattern, FieldChainPatternMatchOptions)
-  nameWithType.vb: QueryStringParameterScopeParser.Parse(String, ResourceType, FieldChainPattern, FieldChainPatternMatchOptions)
+- uid: JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.Parse(System.String,JsonApiDotNetCore.Configuration.ResourceType)
+  name: Parse(string, ResourceType)
+  href: api/JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.html#JsonApiDotNetCore_Queries_Parsing_QueryStringParameterScopeParser_Parse_System_String_JsonApiDotNetCore_Configuration_ResourceType_
+  commentId: M:JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.Parse(System.String,JsonApiDotNetCore.Configuration.ResourceType)
+  name.vb: Parse(String, ResourceType)
+  fullName: JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.Parse(string, JsonApiDotNetCore.Configuration.ResourceType)
+  fullName.vb: JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.Parse(String, JsonApiDotNetCore.Configuration.ResourceType)
+  nameWithType: QueryStringParameterScopeParser.Parse(string, ResourceType)
+  nameWithType.vb: QueryStringParameterScopeParser.Parse(String, ResourceType)
 - uid: JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.Parse*
   name: Parse
   href: api/JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.html#JsonApiDotNetCore_Queries_Parsing_QueryStringParameterScopeParser_Parse_
@@ -11432,12 +11471,12 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.Parse
   nameWithType: QueryStringParameterScopeParser.Parse
-- uid: JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.ParseQueryStringParameterScope(JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern,JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPatternMatchOptions)
-  name: ParseQueryStringParameterScope(ResourceType, FieldChainPattern, FieldChainPatternMatchOptions)
-  href: api/JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.html#JsonApiDotNetCore_Queries_Parsing_QueryStringParameterScopeParser_ParseQueryStringParameterScope_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPattern_JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPatternMatchOptions_
-  commentId: M:JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.ParseQueryStringParameterScope(JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern,JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPatternMatchOptions)
-  fullName: JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.ParseQueryStringParameterScope(JsonApiDotNetCore.Configuration.ResourceType, JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern, JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPatternMatchOptions)
-  nameWithType: QueryStringParameterScopeParser.ParseQueryStringParameterScope(ResourceType, FieldChainPattern, FieldChainPatternMatchOptions)
+- uid: JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.ParseQueryStringParameterScope(JsonApiDotNetCore.Configuration.ResourceType)
+  name: ParseQueryStringParameterScope(ResourceType)
+  href: api/JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.html#JsonApiDotNetCore_Queries_Parsing_QueryStringParameterScopeParser_ParseQueryStringParameterScope_JsonApiDotNetCore_Configuration_ResourceType_
+  commentId: M:JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.ParseQueryStringParameterScope(JsonApiDotNetCore.Configuration.ResourceType)
+  fullName: JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.ParseQueryStringParameterScope(JsonApiDotNetCore.Configuration.ResourceType)
+  nameWithType: QueryStringParameterScopeParser.ParseQueryStringParameterScope(ResourceType)
 - uid: JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.ParseQueryStringParameterScope*
   name: ParseQueryStringParameterScope
   href: api/JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.html#JsonApiDotNetCore_Queries_Parsing_QueryStringParameterScopeParser_ParseQueryStringParameterScope_
@@ -14167,6 +14206,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.AssertIsCollectionRequest
   nameWithType: QueryStringParameterReader.AssertIsCollectionRequest
+- uid: JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.FieldChainInGlobalScope
+  name: FieldChainInGlobalScope
+  href: api/JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_QueryStringParameterReader_FieldChainInGlobalScope
+  commentId: P:JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.FieldChainInGlobalScope
+  fullName: JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.FieldChainInGlobalScope
+  nameWithType: QueryStringParameterReader.FieldChainInGlobalScope
+- uid: JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.FieldChainInGlobalScope*
+  name: FieldChainInGlobalScope
+  href: api/JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_QueryStringParameterReader_FieldChainInGlobalScope_
+  commentId: Overload:JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.FieldChainInGlobalScope
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.FieldChainInGlobalScope
+  nameWithType: QueryStringParameterReader.FieldChainInGlobalScope
 - uid: JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.GetResourceTypeForScope(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression)
   name: GetResourceTypeForScope(ResourceFieldChainExpression?)
   href: api/JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_QueryStringParameterReader_GetResourceTypeForScope_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_

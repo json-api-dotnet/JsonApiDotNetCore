@@ -159,8 +159,8 @@ public class QueryStringParameterScopeExpression : QueryExpression</code></pre>
 
   <a id="JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression__ctor_" data-uid="JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.#ctor*"></a>
 
-  <h3 id="JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression__ctor_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_" data-uid="JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression)">
-  QueryStringParameterScopeExpression(LiteralConstantExpression, ResourceFieldChainExpression?)
+  <h3 id="JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression__ctor_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_JsonApiDotNetCore_Queries_Expressions_IncludeExpression_" data-uid="JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,JsonApiDotNetCore.Queries.Expressions.IncludeExpression)">
+  QueryStringParameterScopeExpression(LiteralConstantExpression, IncludeExpression?)
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/QueryStringParameterScopeExpression.cs/#L30"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -168,14 +168,14 @@ public class QueryStringParameterScopeExpression : QueryExpression</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public QueryStringParameterScopeExpression(LiteralConstantExpression parameterName, ResourceFieldChainExpression? scope)</code></pre>
+    <pre><code class="lang-csharp hljs">public QueryStringParameterScopeExpression(LiteralConstantExpression parameterName, IncludeExpression? scope)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>parameterName</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.html">LiteralConstantExpression</a></dt>
     <dd></dd>
-    <dt><code>scope</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.html">ResourceFieldChainExpression</a></dt>
+    <dt><code>scope</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeExpression.html">IncludeExpression</a></dt>
     <dd></dd>
   </dl>
 
@@ -239,7 +239,7 @@ of relationships, followed by a to-many relationship.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ResourceFieldChainExpression? Scope { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IncludeExpression? Scope { get; }</code></pre>
   </div>
 
 
@@ -248,7 +248,7 @@ of relationships, followed by a to-many relationship.</p>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.html">ResourceFieldChainExpression</a></dt>
+    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeExpression.html">IncludeExpression</a></dt>
     <dd></dd>
   </dl>
 

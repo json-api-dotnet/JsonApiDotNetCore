@@ -155,8 +155,8 @@ public class PaginationElementQueryStringValueExpression : QueryExpression</code
 
   <a id="JsonApiDotNetCore_Queries_Expressions_PaginationElementQueryStringValueExpression__ctor_" data-uid="JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.#ctor*"></a>
 
-  <h3 id="JsonApiDotNetCore_Queries_Expressions_PaginationElementQueryStringValueExpression__ctor_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_System_Int32_System_Int32_" data-uid="JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression,System.Int32,System.Int32)">
-  PaginationElementQueryStringValueExpression(ResourceFieldChainExpression?, int, int)
+  <h3 id="JsonApiDotNetCore_Queries_Expressions_PaginationElementQueryStringValueExpression__ctor_JsonApiDotNetCore_Queries_Expressions_IncludeExpression_System_Int32_System_Int32_" data-uid="JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.IncludeExpression,System.Int32,System.Int32)">
+  PaginationElementQueryStringValueExpression(IncludeExpression?, int, int)
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/PaginationElementQueryStringValueExpression.cs/#L12"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -169,12 +169,12 @@ articles:2
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public PaginationElementQueryStringValueExpression(ResourceFieldChainExpression? scope, int value, int position)</code></pre>
+    <pre><code class="lang-csharp hljs">public PaginationElementQueryStringValueExpression(IncludeExpression? scope, int value, int position)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>scope</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.html">ResourceFieldChainExpression</a></dt>
+    <dt><code>scope</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeExpression.html">IncludeExpression</a></dt>
     <dd></dd>
     <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
     <dd></dd>
@@ -236,12 +236,12 @@ articles:2
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/PaginationElementQueryStringValueExpression.cs/#L18"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The relationship this pagination applies to. Chain format: zero or more relationships, followed by a to-many relationship.</p>
+  <div class="markdown level1 summary"><p>The relationship this pagination applies to. Format: zero or more relationships, followed by a to-many relationship.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ResourceFieldChainExpression? Scope { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IncludeExpression? Scope { get; }</code></pre>
   </div>
 
 
@@ -250,7 +250,7 @@ articles:2
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.html">ResourceFieldChainExpression</a></dt>
+    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeExpression.html">IncludeExpression</a></dt>
     <dd></dd>
   </dl>
 

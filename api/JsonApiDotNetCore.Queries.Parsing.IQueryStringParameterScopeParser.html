@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Interface IQueryStringParameterScopeParser ">
       
-      <meta name="description" content="Parses the JSON:API &#39;sort&#39; and &#39;filter&#39; query string parameter names, which contain a resource field chain that indicates the scope its query string parameter value applies to.">
+      <meta name="description" content="Parser for the JSON:API &#39;sort&#39; and &#39;filter&#39; query string parameter names, which indicate the scope their query string parameter value applies to. The value consists of an optional relationship chain ending in a to-many relationship, surrounded by brackets.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -92,7 +92,7 @@
 
 
   <h1 id="JsonApiDotNetCore_Queries_Parsing_IQueryStringParameterScopeParser" data-uid="JsonApiDotNetCore.Queries.Parsing.IQueryStringParameterScopeParser" class="text-break">
-Interface IQueryStringParameterScopeParser  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/IQueryStringParameterScopeParser.cs/#L11"><i class="bi bi-code-slash"></i></a>
+Interface IQueryStringParameterScopeParser  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/IQueryStringParameterScopeParser.cs/#L10"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -100,8 +100,8 @@ Interface IQueryStringParameterScopeParser  <a class="header-action link-seconda
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Parses the JSON:API 'sort' and 'filter' query string parameter names, which contain a resource field chain that indicates the scope its query string
-parameter value applies to.</p>
+  <div class="markdown summary"><p>Parser for the JSON:API 'sort' and 'filter' query string parameter names, which indicate the scope their query string parameter value applies to. The
+value consists of an optional relationship chain ending in a to-many relationship, surrounded by brackets.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -127,9 +127,9 @@ parameter value applies to.</p>
 
   <a id="JsonApiDotNetCore_Queries_Parsing_IQueryStringParameterScopeParser_Parse_" data-uid="JsonApiDotNetCore.Queries.Parsing.IQueryStringParameterScopeParser.Parse*"></a>
 
-  <h3 id="JsonApiDotNetCore_Queries_Parsing_IQueryStringParameterScopeParser_Parse_System_String_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPattern_JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPatternMatchOptions_" data-uid="JsonApiDotNetCore.Queries.Parsing.IQueryStringParameterScopeParser.Parse(System.String,JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern,JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPatternMatchOptions)">
-  Parse(string, ResourceType, FieldChainPattern, FieldChainPatternMatchOptions)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/IQueryStringParameterScopeParser.cs/#L29"><i class="bi bi-code-slash"></i></a>
+  <h3 id="JsonApiDotNetCore_Queries_Parsing_IQueryStringParameterScopeParser_Parse_System_String_JsonApiDotNetCore_Configuration_ResourceType_" data-uid="JsonApiDotNetCore.Queries.Parsing.IQueryStringParameterScopeParser.Parse(System.String,JsonApiDotNetCore.Configuration.ResourceType)">
+  Parse(string, ResourceType)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/IQueryStringParameterScopeParser.cs/#L22"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Parses the specified source into a <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.html">QueryStringParameterScopeExpression</a>. Throws a <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryParseException.html">QueryParseException</a> if the input is
@@ -138,7 +138,7 @@ invalid.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">QueryStringParameterScopeExpression Parse(string source, ResourceType resourceType, FieldChainPattern pattern, FieldChainPatternMatchOptions options)</code></pre>
+    <pre><code class="lang-csharp hljs">QueryStringParameterScopeExpression Parse(string source, ResourceType resourceType)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -148,12 +148,6 @@ invalid.</p>
 </dd>
     <dt><code>resourceType</code> <a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></dt>
     <dd><p>The resource type used to lookup JSON:API fields that are referenced in <code class="paramref">source</code>.</p>
-</dd>
-    <dt><code>pattern</code> <a class="xref" href="JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern.html">FieldChainPattern</a></dt>
-    <dd><p>The pattern that the field chain in <code class="paramref">source</code> must match.</p>
-</dd>
-    <dt><code>options</code> <a class="xref" href="JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPatternMatchOptions.html">FieldChainPatternMatchOptions</a></dt>
-    <dd><p>The match options for <code class="paramref">pattern</code>.</p>
 </dd>
   </dl>
 
@@ -177,7 +171,7 @@ invalid.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/IQueryStringParameterScopeParser.cs/#L11" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/IQueryStringParameterScopeParser.cs/#L10" class="edit-link">Edit this page</a>
         </div>
 
 
