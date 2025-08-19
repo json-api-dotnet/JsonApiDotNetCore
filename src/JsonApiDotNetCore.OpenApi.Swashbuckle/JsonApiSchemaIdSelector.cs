@@ -120,7 +120,7 @@ internal sealed class JsonApiSchemaIdSelector
 
     private string ApplySchemaTemplate(string schemaTemplate, ResourceType? resourceType, string? relationshipName, AtomicOperationCode? operationCode)
     {
-        string schemaId = schemaTemplate;
+        string? schemaId = schemaTemplate;
 
         schemaId = resourceType != null
             ? schemaId.Replace("[ResourceName]", resourceType.PublicName.Singularize()).Pascalize()
@@ -136,7 +136,7 @@ internal sealed class JsonApiSchemaIdSelector
             schemaId = schemaId.Replace("[OperationCode]", operationCode.Value.ToString().Pascalize());
         }
 
-        string pascalCaseSchemaId = schemaId.Pascalize();
+        string? pascalCaseSchemaId = schemaId.Pascalize();
 
         JsonNamingPolicy? namingPolicy = _options.SerializerOptions.PropertyNamingPolicy;
         return namingPolicy != null ? namingPolicy.ConvertName(pascalCaseSchemaId) : pascalCaseSchemaId;

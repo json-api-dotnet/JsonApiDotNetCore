@@ -2,7 +2,7 @@ using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.OpenApi.Swashbuckle.SwaggerComponents;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.Swashbuckle.SchemaGenerators.Components;
@@ -27,21 +27,21 @@ internal sealed class DataContainerSchemaGenerator
         _resourceGraph = resourceGraph;
     }
 
-    public OpenApiSchema GenerateSchemaForCommonResourceDataInResponse(SchemaRepository schemaRepository)
+    public OpenApiSchemaReference GenerateSchemaForCommonResourceDataInResponse(SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
         return _dataSchemaGenerator.GenerateSchemaForCommonData(typeof(ResourceInResponse), schemaRepository);
     }
 
-    public OpenApiSchema GenerateSchema(Type dataContainerSchemaType, ResourceType resourceType, bool forRequestSchema, bool canIncludeRelated,
+    public IOpenApiSchema GenerateSchema(Type dataContainerSchemaType, ResourceType resourceType, bool forRequestSchema, bool canIncludeRelated,
         SchemaRepository schemaRepository)
     {
         ArgumentNullException.ThrowIfNull(dataContainerSchemaType);
         ArgumentNullException.ThrowIfNull(resourceType);
         ArgumentNullException.ThrowIfNull(schemaRepository);
 
-        if (schemaRepository.TryLookupByType(dataContainerSchemaType, out OpenApiSchema referenceSchemaForData))
+        if (schemaRepository.TryLookupByType(dataContainerSchemaType, out OpenApiSchemaReference? referenceSchemaForData))
         {
             return referenceSchemaForData;
         }
@@ -68,7 +68,7 @@ internal sealed class DataContainerSchemaGenerator
         }
 
         referenceSchemaForData = _dataSchemaGenerator.GenerateSchema(dataConstructedType, forRequestSchema, schemaRepository);
-        traceScope.TraceSucceeded(referenceSchemaForData.Reference.Id);
+        traceScope.TraceSucceeded(referenceSchemaForData.Reference.Id!);
         return referenceSchemaForData;
     }
 
