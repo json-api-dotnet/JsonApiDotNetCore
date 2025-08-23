@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <!-- TargetFrameworks does not work, see https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/2706 -->
     <TargetFramework>net9.0</TargetFramework>
@@ -46,6 +46,12 @@
       <ClassName>%(Name)Client</ClassName>
       <OutputPath>%(ClassName).cs</OutputPath>
       <NSwagWrapResponses>true</NSwagWrapResponses>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\IdObfuscation\GeneratedSwagger\swagger.g.json">
+      <Name>IdObfuscation</Name>
+      <Namespace>$(MSBuildProjectName).%(Name).GeneratedCode</Namespace>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>%(ClassName).cs</OutputPath>
     </OpenApiReference>
     <OpenApiReference Include="..\OpenApiTests\QueryStrings\GeneratedSwagger\swagger.g.json">
       <Name>QueryStrings</Name>

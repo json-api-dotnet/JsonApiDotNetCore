@@ -1,8 +1,9 @@
+using JsonApiDotNetCore.OpenApi.Swashbuckle.Annotations;
 using JsonApiDotNetCore.Resources;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation;
+namespace OpenApiTests.IdObfuscation;
 
-// Tip: Add [HideResourceIdTypeInOpenApi] if you're using OpenAPI with JsonApiDotNetCore.OpenApi.Swashbuckle.
+[HideResourceIdTypeInOpenApi]
 public abstract class ObfuscatedIdentifiable : Identifiable<long>
 {
     protected override string? GetStringId(long value)
