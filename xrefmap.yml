@@ -2345,6 +2345,28 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Build
   nameWithType: ResourceGraphBuilder.Build
+- uid: JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Remove(System.Type)
+  name: Remove(Type)
+  href: api/JsonApiDotNetCore.Configuration.ResourceGraphBuilder.html#JsonApiDotNetCore_Configuration_ResourceGraphBuilder_Remove_System_Type_
+  commentId: M:JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Remove(System.Type)
+  fullName: JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Remove(System.Type)
+  nameWithType: ResourceGraphBuilder.Remove(Type)
+- uid: JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Remove*
+  name: Remove
+  href: api/JsonApiDotNetCore.Configuration.ResourceGraphBuilder.html#JsonApiDotNetCore_Configuration_ResourceGraphBuilder_Remove_
+  commentId: Overload:JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Remove
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Remove
+  nameWithType: ResourceGraphBuilder.Remove
+- uid: JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Remove``1
+  name: Remove<TResource>()
+  href: api/JsonApiDotNetCore.Configuration.ResourceGraphBuilder.html#JsonApiDotNetCore_Configuration_ResourceGraphBuilder_Remove__1
+  commentId: M:JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Remove``1
+  name.vb: Remove(Of TResource)()
+  fullName: JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Remove<TResource>()
+  fullName.vb: JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Remove(Of TResource)()
+  nameWithType: ResourceGraphBuilder.Remove<TResource>()
+  nameWithType.vb: ResourceGraphBuilder.Remove(Of TResource)()
 - uid: JsonApiDotNetCore.Configuration.ResourceType
   name: ResourceType
   href: api/JsonApiDotNetCore.Configuration.ResourceType.html
@@ -6292,6 +6314,18 @@ references:
   commentId: N:JsonApiDotNetCore.OpenApi.Swashbuckle
   fullName: JsonApiDotNetCore.OpenApi.Swashbuckle
   nameWithType: JsonApiDotNetCore.OpenApi.Swashbuckle
+- uid: JsonApiDotNetCore.OpenApi.Swashbuckle.Annotations
+  name: JsonApiDotNetCore.OpenApi.Swashbuckle.Annotations
+  href: api/JsonApiDotNetCore.OpenApi.Swashbuckle.Annotations.html
+  commentId: N:JsonApiDotNetCore.OpenApi.Swashbuckle.Annotations
+  fullName: JsonApiDotNetCore.OpenApi.Swashbuckle.Annotations
+  nameWithType: JsonApiDotNetCore.OpenApi.Swashbuckle.Annotations
+- uid: JsonApiDotNetCore.OpenApi.Swashbuckle.Annotations.HideResourceIdTypeInOpenApiAttribute
+  name: HideResourceIdTypeInOpenApiAttribute
+  href: api/JsonApiDotNetCore.OpenApi.Swashbuckle.Annotations.HideResourceIdTypeInOpenApiAttribute.html
+  commentId: T:JsonApiDotNetCore.OpenApi.Swashbuckle.Annotations.HideResourceIdTypeInOpenApiAttribute
+  fullName: JsonApiDotNetCore.OpenApi.Swashbuckle.Annotations.HideResourceIdTypeInOpenApiAttribute
+  nameWithType: HideResourceIdTypeInOpenApiAttribute
 - uid: JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions
   name: ServiceCollectionExtensions
   href: api/JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions.html

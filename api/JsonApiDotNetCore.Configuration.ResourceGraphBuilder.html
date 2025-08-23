@@ -234,7 +234,7 @@ public class ResourceGraphBuilder</code></pre>
 
   <h3 id="JsonApiDotNetCore_Configuration_ResourceGraphBuilder_Add_System_Type_System_Type_System_String_" data-uid="JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Add(System.Type,System.Type,System.String)">
   Add(Type, Type?, string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ResourceGraphBuilder.cs/#L205"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ResourceGraphBuilder.cs/#L231"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds a JSON:API resource.</p>
@@ -279,7 +279,7 @@ type name.</p>
 
   <h3 id="JsonApiDotNetCore_Configuration_ResourceGraphBuilder_Add__2_System_String_" data-uid="JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Add``2(System.String)">
   Add&lt;TResource, TId&gt;(string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ResourceGraphBuilder.cs/#L184"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ResourceGraphBuilder.cs/#L210"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds a JSON:API resource.</p>
@@ -345,6 +345,82 @@ type name.</p>
     <dd></dd>
   </dl>
 
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Configuration_ResourceGraphBuilder_Remove_" data-uid="JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Remove*"></a>
+
+  <h3 id="JsonApiDotNetCore_Configuration_ResourceGraphBuilder_Remove_System_Type_" data-uid="JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Remove(System.Type)">
+  Remove(Type)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ResourceGraphBuilder.cs/#L188"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Removes a JSON:API resource.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ResourceGraphBuilder Remove(Type resourceClrType)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>resourceClrType</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></dt>
+    <dd><p>The resource CLR type.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceGraphBuilder.html">ResourceGraphBuilder</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Configuration_ResourceGraphBuilder_Remove_" data-uid="JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Remove*"></a>
+
+  <h3 id="JsonApiDotNetCore_Configuration_ResourceGraphBuilder_Remove__1" data-uid="JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Remove``1">
+  Remove&lt;TResource&gt;()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ResourceGraphBuilder.cs/#L176"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Removes a JSON:API resource.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ResourceGraphBuilder Remove&lt;TResource&gt;() where TResource : class, IIdentifiable</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceGraphBuilder.html">ResourceGraphBuilder</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TResource</code></dt>
+    <dd><p>The resource CLR type.</p>
+</dd>
+  </dl>
 
 
 

@@ -1359,6 +1359,26 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Swashbuckle.Annotations.HideResourceIdTypeInOpenApiAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.OpenApi.Swashbuckle.Annotations.HideResourceIdTypeInOpenApiAttribute.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Swashbuckle.Annotations.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.OpenApi.Swashbuckle.Annotations.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.OpenApi.Swashbuckle.ServiceCollectionExtensions.yml",
       "output": {
         ".html": {
