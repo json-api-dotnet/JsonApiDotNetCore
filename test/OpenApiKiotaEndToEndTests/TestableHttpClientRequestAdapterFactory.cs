@@ -2,6 +2,7 @@ using JsonApiDotNetCore.OpenApi.Client.Kiota;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Kiota.Abstractions.Authentication;
 using Microsoft.Kiota.Http.HttpClientLibrary;
+using Microsoft.Kiota.Http.HttpClientLibrary.Middleware;
 using TestBuildingBlocks;
 using Xunit.Abstractions;
 
@@ -9,8 +10,9 @@ namespace OpenApiKiotaEndToEndTests;
 
 internal sealed class TestableHttpClientRequestAdapterFactory : IDisposable
 {
-    private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
+    private readonly HeadersInspectionHandler _headersInspectionHandler = new();
     private readonly SetQueryStringHttpMessageHandler _queryStringMessageHandler = new();
+    private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
 
     public TestableHttpClientRequestAdapterFactory(ITestOutputHelper testOutputHelper)
     {
@@ -24,11 +26,14 @@ internal sealed class TestableHttpClientRequestAdapterFactory : IDisposable
     {
         ArgumentNullException.ThrowIfNull(webApplicationFactory);
 
-        IList<DelegatingHandler> delegatingHandlers = KiotaClientFactory.CreateDefaultHandlers();
-        delegatingHandlers.Add(_queryStringMessageHandler);
-        delegatingHandlers.Add(_logHttpMessageHandler);
-        HttpClient httpClient = webApplicationFactory.CreateDefaultClient(delegatingHandlers.ToArray());
+        DelegatingHandler[] handlers =
+        [
+            _headersInspectionHandler,
+            _queryStringMessageHandler,
+            _logHttpMessageHandler
+        ];
 
+        HttpClient httpClient = webApplicationFactory.CreateDefaultClient(handlers);
         return new HttpClientRequestAdapter(new AnonymousAuthenticationProvider(), httpClient: httpClient);
     }
 

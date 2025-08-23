@@ -44,6 +44,13 @@
       <OutputPath>./%(Name)/GeneratedCode</OutputPath>
       <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
     </KiotaReference>
+    <KiotaReference Include="../OpenApiTests/IdObfuscation/GeneratedSwagger/swagger.g.json">
+      <Name>IdObfuscation</Name>
+      <NamespaceName>$(MSBuildProjectName).%(Name).GeneratedCode</NamespaceName>
+      <ClassName>%(Name)Client</ClassName>
+      <OutputPath>./%(Name)/GeneratedCode</OutputPath>
+      <ExtraArguments>$(JsonApiExtraArguments)</ExtraArguments>
+    </KiotaReference>
     <KiotaReference Include="../OpenApiTests/Links/Enabled/GeneratedSwagger/swagger.g.json">
       <Name>Links</Name>
       <NamespaceName>$(MSBuildProjectName).%(Name).GeneratedCode</NamespaceName>

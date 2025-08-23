@@ -55,8 +55,7 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
         };
 
         // Act
-        await ApiResponse.TranslateAsync(async () =>
-            await apiClient.PatchWriteOnlyChannelUltraHighDefinitionVideoStreamRelationshipAsync(existingChannel.StringId!, requestBody));
+        await apiClient.PatchWriteOnlyChannelUltraHighDefinitionVideoStreamRelationshipAsync(existingChannel.StringId!, requestBody);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -98,8 +97,7 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
         };
 
         // Act
-        await ApiResponse.TranslateAsync(async () =>
-            await apiClient.PatchWriteOnlyChannelUltraHighDefinitionVideoStreamRelationshipAsync(existingChannel.StringId!, requestBody));
+        await apiClient.PatchWriteOnlyChannelUltraHighDefinitionVideoStreamRelationshipAsync(existingChannel.StringId!, requestBody);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -149,8 +147,7 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
         };
 
         // Act
-        await ApiResponse.TranslateAsync(async () =>
-            await apiClient.PatchWriteOnlyChannelAudioStreamsRelationshipAsync(existingChannel.StringId!, requestBody));
+        await apiClient.PatchWriteOnlyChannelAudioStreamsRelationshipAsync(existingChannel.StringId!, requestBody);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -192,8 +189,7 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
         };
 
         // Act
-        await ApiResponse.TranslateAsync(async () =>
-            await apiClient.PatchWriteOnlyChannelAudioStreamsRelationshipAsync(existingChannel.StringId!, requestBody));
+        await apiClient.PatchWriteOnlyChannelAudioStreamsRelationshipAsync(existingChannel.StringId!, requestBody);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -243,7 +239,7 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
         };
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.PostWriteOnlyChannelAudioStreamsRelationshipAsync(existingChannel.StringId!, requestBody));
+        await apiClient.PostWriteOnlyChannelAudioStreamsRelationshipAsync(existingChannel.StringId!, requestBody);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -296,8 +292,7 @@ public sealed class UpdateRelationshipTests : IClassFixture<IntegrationTestConte
         };
 
         // Act
-        await ApiResponse.TranslateAsync(async () =>
-            await apiClient.DeleteWriteOnlyChannelAudioStreamsRelationshipAsync(existingChannel.StringId!, requestBody));
+        await apiClient.DeleteWriteOnlyChannelAudioStreamsRelationshipAsync(existingChannel.StringId!, requestBody);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
