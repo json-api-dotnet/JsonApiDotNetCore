@@ -933,7 +933,7 @@ public sealed class ResourceInheritanceTests
         var apiClient = new NoOperationsInheritanceClient(httpClient);
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.DeleteBuildingAsync(existingMansion.StringId!));
+        await apiClient.DeleteBuildingAsync(existingMansion.StringId!);
 
         // Assert
         await _testContext.RunOnDatabaseAsync(async dbContext =>

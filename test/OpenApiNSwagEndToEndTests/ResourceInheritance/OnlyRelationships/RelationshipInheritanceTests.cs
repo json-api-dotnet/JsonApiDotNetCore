@@ -1,7 +1,6 @@
 using FluentAssertions;
 using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCore.OpenApi.Client.NSwag;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using OpenApiNSwagEndToEndTests.OnlyRelationshipsInheritance.GeneratedCode;
@@ -182,7 +181,7 @@ public sealed class RelationshipInheritanceTests
         };
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.PatchRoomResidenceRelationshipAsync(existingBathroom.StringId!, requestBody));
+        await apiClient.PatchRoomResidenceRelationshipAsync(existingBathroom.StringId!, requestBody);
 
         // Assert
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -225,7 +224,7 @@ public sealed class RelationshipInheritanceTests
         };
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.PatchRoomResidenceRelationshipAsync(existingBathroom.StringId!, requestBody));
+        await apiClient.PatchRoomResidenceRelationshipAsync(existingBathroom.StringId!, requestBody);
 
         // Assert
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -268,7 +267,7 @@ public sealed class RelationshipInheritanceTests
         };
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.PatchBathroomResidenceRelationshipAsync(existingBathroom.StringId!, requestBody));
+        await apiClient.PatchBathroomResidenceRelationshipAsync(existingBathroom.StringId!, requestBody);
 
         // Assert
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -311,7 +310,7 @@ public sealed class RelationshipInheritanceTests
         };
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.PatchBathroomResidenceRelationshipAsync(existingBathroom.StringId!, requestBody));
+        await apiClient.PatchBathroomResidenceRelationshipAsync(existingBathroom.StringId!, requestBody);
 
         // Assert
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -359,7 +358,7 @@ public sealed class RelationshipInheritanceTests
         };
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.PatchResidenceRoomsRelationshipAsync(existingMansion.StringId!, requestBody));
+        await apiClient.PatchResidenceRoomsRelationshipAsync(existingMansion.StringId!, requestBody);
 
         // Assert
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -407,7 +406,7 @@ public sealed class RelationshipInheritanceTests
         };
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.PatchResidenceRoomsRelationshipAsync(existingMansion.StringId!, requestBody));
+        await apiClient.PatchResidenceRoomsRelationshipAsync(existingMansion.StringId!, requestBody);
 
         // Assert
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -455,7 +454,7 @@ public sealed class RelationshipInheritanceTests
         };
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.PatchMansionRoomsRelationshipAsync(existingMansion.StringId!, requestBody));
+        await apiClient.PatchMansionRoomsRelationshipAsync(existingMansion.StringId!, requestBody);
 
         // Assert
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -503,7 +502,7 @@ public sealed class RelationshipInheritanceTests
         };
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.PatchMansionRoomsRelationshipAsync(existingMansion.StringId!, requestBody));
+        await apiClient.PatchMansionRoomsRelationshipAsync(existingMansion.StringId!, requestBody);
 
         // Assert
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -552,7 +551,7 @@ public sealed class RelationshipInheritanceTests
         };
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.PostResidenceRoomsRelationshipAsync(existingMansion.StringId!, requestBody));
+        await apiClient.PostResidenceRoomsRelationshipAsync(existingMansion.StringId!, requestBody);
 
         // Assert
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -602,7 +601,7 @@ public sealed class RelationshipInheritanceTests
         };
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.PostResidenceRoomsRelationshipAsync(existingMansion.StringId!, requestBody));
+        await apiClient.PostResidenceRoomsRelationshipAsync(existingMansion.StringId!, requestBody);
 
         // Assert
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -652,7 +651,7 @@ public sealed class RelationshipInheritanceTests
         };
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.PostMansionRoomsRelationshipAsync(existingMansion.StringId!, requestBody));
+        await apiClient.PostMansionRoomsRelationshipAsync(existingMansion.StringId!, requestBody);
 
         // Assert
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -702,7 +701,7 @@ public sealed class RelationshipInheritanceTests
         };
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.PostMansionRoomsRelationshipAsync(existingMansion.StringId!, requestBody));
+        await apiClient.PostMansionRoomsRelationshipAsync(existingMansion.StringId!, requestBody);
 
         // Assert
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -747,7 +746,7 @@ public sealed class RelationshipInheritanceTests
         };
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.DeleteResidenceRoomsRelationshipAsync(existingMansion.StringId!, requestBody));
+        await apiClient.DeleteResidenceRoomsRelationshipAsync(existingMansion.StringId!, requestBody);
 
         // Assert
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -790,7 +789,7 @@ public sealed class RelationshipInheritanceTests
         };
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.DeleteResidenceRoomsRelationshipAsync(existingMansion.StringId!, requestBody));
+        await apiClient.DeleteResidenceRoomsRelationshipAsync(existingMansion.StringId!, requestBody);
 
         // Assert
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -833,7 +832,7 @@ public sealed class RelationshipInheritanceTests
         };
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.DeleteMansionRoomsRelationshipAsync(existingMansion.StringId!, requestBody));
+        await apiClient.DeleteMansionRoomsRelationshipAsync(existingMansion.StringId!, requestBody);
 
         // Assert
         await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -876,7 +875,7 @@ public sealed class RelationshipInheritanceTests
         };
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.DeleteMansionRoomsRelationshipAsync(existingMansion.StringId!, requestBody));
+        await apiClient.DeleteMansionRoomsRelationshipAsync(existingMansion.StringId!, requestBody);
 
         // Assert
         await _testContext.RunOnDatabaseAsync(async dbContext =>
