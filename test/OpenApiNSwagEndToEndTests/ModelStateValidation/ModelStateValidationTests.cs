@@ -1,3 +1,4 @@
+using System.Net;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.Client.NSwag;
@@ -57,14 +58,17 @@ public sealed class ModelStateValidationTests
         Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
-        ErrorResponseDocument response = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        response.Errors.Should().HaveCount(1);
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
+        exception.StatusCode.Should().Be((int)HttpStatusCode.UnprocessableEntity);
+        exception.Message.Should().Be("HTTP 422: Validation of the request body failed.");
+        exception.Result.Errors.Should().HaveCount(1);
 
-        ErrorObject errorObject = response.Errors.First();
-        errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be("The field FirstName must be a string or collection type with a minimum length of '2' and maximum length of '20'.");
-        errorObject.Source.Should().NotBeNull();
-        errorObject.Source.Pointer.Should().Be("/data/attributes/firstName");
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("422");
+        error.Title.Should().Be("Input validation failed.");
+        error.Detail.Should().Be("The field FirstName must be a string or collection type with a minimum length of '2' and maximum length of '20'.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/firstName");
     }
 
     [Theory]
@@ -94,14 +98,17 @@ public sealed class ModelStateValidationTests
         Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
-        ErrorResponseDocument response = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        response.Errors.Should().HaveCount(1);
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
+        exception.StatusCode.Should().Be((int)HttpStatusCode.UnprocessableEntity);
+        exception.Message.Should().Be("HTTP 422: Validation of the request body failed.");
+        exception.Result.Errors.Should().HaveCount(1);
 
-        ErrorObject errorObject = response.Errors.First();
-        errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be("The field UserName must be a string with a minimum length of 3 and a maximum length of 18.");
-        errorObject.Source.Should().NotBeNull();
-        errorObject.Source.Pointer.Should().Be("/data/attributes/userName");
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("422");
+        error.Title.Should().Be("Input validation failed.");
+        error.Detail.Should().Be("The field UserName must be a string with a minimum length of 3 and a maximum length of 18.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/userName");
     }
 
     [Fact]
@@ -129,14 +136,17 @@ public sealed class ModelStateValidationTests
         Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
-        ErrorResponseDocument response = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        response.Errors.Should().HaveCount(1);
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
+        exception.StatusCode.Should().Be((int)HttpStatusCode.UnprocessableEntity);
+        exception.Message.Should().Be("HTTP 422: Validation of the request body failed.");
+        exception.Result.Errors.Should().HaveCount(1);
 
-        ErrorObject errorObject = response.Errors.First();
-        errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be("Only letters are allowed.");
-        errorObject.Source.Should().NotBeNull();
-        errorObject.Source.Pointer.Should().Be("/data/attributes/userName");
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("422");
+        error.Title.Should().Be("Input validation failed.");
+        error.Detail.Should().Be("Only letters are allowed.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/userName");
     }
 
     [Fact]
@@ -164,14 +174,17 @@ public sealed class ModelStateValidationTests
         Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
-        ErrorResponseDocument response = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        response.Errors.Should().HaveCount(1);
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
+        exception.StatusCode.Should().Be((int)HttpStatusCode.UnprocessableEntity);
+        exception.Message.Should().Be("HTTP 422: Validation of the request body failed.");
+        exception.Result.Errors.Should().HaveCount(1);
 
-        ErrorObject errorObject = response.Errors.First();
-        errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be("The CreditCard field is not a valid credit card number.");
-        errorObject.Source.Should().NotBeNull();
-        errorObject.Source.Pointer.Should().Be("/data/attributes/creditCard");
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("422");
+        error.Title.Should().Be("Input validation failed.");
+        error.Detail.Should().Be("The CreditCard field is not a valid credit card number.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/creditCard");
     }
 
     [Fact]
@@ -199,14 +212,17 @@ public sealed class ModelStateValidationTests
         Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
-        ErrorResponseDocument response = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        response.Errors.Should().HaveCount(1);
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
+        exception.StatusCode.Should().Be((int)HttpStatusCode.UnprocessableEntity);
+        exception.Message.Should().Be("HTTP 422: Validation of the request body failed.");
+        exception.Result.Errors.Should().HaveCount(1);
 
-        ErrorObject errorObject = response.Errors.First();
-        errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be("The Email field is not a valid e-mail address.");
-        errorObject.Source.Should().NotBeNull();
-        errorObject.Source.Pointer.Should().Be("/data/attributes/email");
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("422");
+        error.Title.Should().Be("Input validation failed.");
+        error.Detail.Should().Be("The Email field is not a valid e-mail address.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/email");
     }
 
     [Fact]
@@ -235,16 +251,19 @@ public sealed class ModelStateValidationTests
         Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
-        ErrorResponseDocument response = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        response.Errors.Should().HaveCount(1);
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
+        exception.StatusCode.Should().Be((int)HttpStatusCode.UnprocessableEntity);
+        exception.Message.Should().Be("HTTP 422: Validation of the request body failed.");
+        exception.Result.Errors.Should().HaveCount(1);
 
         const int minCharsInBase64 = SocialMediaAccount.MinPasswordCharsInBase64;
 
-        ErrorObject errorObject = response.Errors.First();
-        errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be($"The field Password must be a string or array type with a minimum length of '{minCharsInBase64}'.");
-        errorObject.Source.Should().NotBeNull();
-        errorObject.Source.Pointer.Should().Be("/data/attributes/password");
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("422");
+        error.Title.Should().Be("Input validation failed.");
+        error.Detail.Should().Be($"The field Password must be a string or array type with a minimum length of '{minCharsInBase64}'.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/password");
     }
 
     [Fact]
@@ -272,16 +291,19 @@ public sealed class ModelStateValidationTests
         Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
-        ErrorResponseDocument response = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        response.Errors.Should().HaveCount(1);
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
+        exception.StatusCode.Should().Be((int)HttpStatusCode.UnprocessableEntity);
+        exception.Message.Should().Be("HTTP 422: Validation of the request body failed.");
+        exception.Result.Errors.Should().HaveCount(1);
 
         const int maxCharsInBase64 = SocialMediaAccount.MaxPasswordCharsInBase64;
 
-        ErrorObject errorObject = response.Errors.First();
-        errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be($"The field Password must be a string or array type with a maximum length of '{maxCharsInBase64}'.");
-        errorObject.Source.Should().NotBeNull();
-        errorObject.Source.Pointer.Should().Be("/data/attributes/password");
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("422");
+        error.Title.Should().Be("Input validation failed.");
+        error.Detail.Should().Be($"The field Password must be a string or array type with a maximum length of '{maxCharsInBase64}'.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/password");
     }
 
     [Theory]
@@ -313,14 +335,17 @@ public sealed class ModelStateValidationTests
         Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
-        ErrorResponseDocument response = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        response.Errors.Should().HaveCount(1);
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
+        exception.StatusCode.Should().Be((int)HttpStatusCode.UnprocessableEntity);
+        exception.Message.Should().Be("HTTP 422: Validation of the request body failed.");
+        exception.Result.Errors.Should().HaveCount(1);
 
-        ErrorObject errorObject = response.Errors.First();
-        errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be($"The field Age must be between {0.1} exclusive and {122.9} exclusive.");
-        errorObject.Source.Should().NotBeNull();
-        errorObject.Source.Pointer.Should().Be("/data/attributes/age");
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("422");
+        error.Title.Should().Be("Input validation failed.");
+        error.Detail.Should().Be($"The field Age must be between {0.1} exclusive and {122.9} exclusive.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/age");
     }
 
     [Fact]
@@ -348,14 +373,17 @@ public sealed class ModelStateValidationTests
         Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
-        ErrorResponseDocument response = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        response.Errors.Should().HaveCount(1);
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
+        exception.StatusCode.Should().Be((int)HttpStatusCode.UnprocessableEntity);
+        exception.Message.Should().Be("HTTP 422: Validation of the request body failed.");
+        exception.Result.Errors.Should().HaveCount(1);
 
-        ErrorObject errorObject = response.Errors.First();
-        errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be("The BackgroundPicture field is not a valid fully-qualified http, https, or ftp URL.");
-        errorObject.Source.Should().NotBeNull();
-        errorObject.Source.Pointer.Should().Be("/data/attributes/backgroundPicture");
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("422");
+        error.Title.Should().Be("Input validation failed.");
+        error.Detail.Should().Be("The BackgroundPicture field is not a valid fully-qualified http, https, or ftp URL.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/backgroundPicture");
     }
 
     [Theory]
@@ -385,14 +413,17 @@ public sealed class ModelStateValidationTests
         Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
-        ErrorResponseDocument response = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        response.Errors.Should().HaveCount(1);
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
+        exception.StatusCode.Should().Be((int)HttpStatusCode.UnprocessableEntity);
+        exception.Message.Should().Be("HTTP 422: Validation of the request body failed.");
+        exception.Result.Errors.Should().HaveCount(1);
 
-        ErrorObject errorObject = response.Errors.First();
-        errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be("The field Tags must be a string or collection type with a minimum length of '1' and maximum length of '10'.");
-        errorObject.Source.Should().NotBeNull();
-        errorObject.Source.Pointer.Should().Be("/data/attributes/tags");
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("422");
+        error.Title.Should().Be("Input validation failed.");
+        error.Detail.Should().Be("The field Tags must be a string or collection type with a minimum length of '1' and maximum length of '10'.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/tags");
     }
 
     [Fact]
@@ -420,14 +451,17 @@ public sealed class ModelStateValidationTests
         Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
-        ErrorResponseDocument response = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        response.Errors.Should().HaveCount(1);
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
+        exception.StatusCode.Should().Be((int)HttpStatusCode.UnprocessableEntity);
+        exception.Message.Should().Be("HTTP 422: Validation of the request body failed.");
+        exception.Result.Errors.Should().HaveCount(1);
 
-        ErrorObject errorObject = response.Errors.First();
-        errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be("The CountryCode field does not equal any of the values specified in AllowedValuesAttribute.");
-        errorObject.Source.Should().NotBeNull();
-        errorObject.Source.Pointer.Should().Be("/data/attributes/countryCode");
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("422");
+        error.Title.Should().Be("Input validation failed.");
+        error.Detail.Should().Be("The CountryCode field does not equal any of the values specified in AllowedValuesAttribute.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/countryCode");
     }
 
     [Fact]
@@ -455,14 +489,17 @@ public sealed class ModelStateValidationTests
         Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
-        ErrorResponseDocument response = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        response.Errors.Should().HaveCount(1);
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
+        exception.StatusCode.Should().Be((int)HttpStatusCode.UnprocessableEntity);
+        exception.Message.Should().Be("HTTP 422: Validation of the request body failed.");
+        exception.Result.Errors.Should().HaveCount(1);
 
-        ErrorObject errorObject = response.Errors.First();
-        errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be("The Planet field equals one of the values specified in DeniedValuesAttribute.");
-        errorObject.Source.Should().NotBeNull();
-        errorObject.Source.Pointer.Should().Be("/data/attributes/planet");
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("422");
+        error.Title.Should().Be("Input validation failed.");
+        error.Detail.Should().Be("The Planet field equals one of the values specified in DeniedValuesAttribute.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/planet");
     }
 
     [Fact]
@@ -490,14 +527,17 @@ public sealed class ModelStateValidationTests
         Func<Task> action = () => apiClient.PostSocialMediaAccountAsync(requestBody);
 
         // Assert
-        ErrorResponseDocument response = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which.Result;
-        response.Errors.Should().HaveCount(1);
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
+        exception.StatusCode.Should().Be((int)HttpStatusCode.UnprocessableEntity);
+        exception.Message.Should().Be("HTTP 422: Validation of the request body failed.");
+        exception.Result.Errors.Should().HaveCount(1);
 
-        ErrorObject errorObject = response.Errors.First();
-        errorObject.Title.Should().Be("Input validation failed.");
-        errorObject.Detail.Should().Be("The field NextRevalidation must be between 01:00:00 and 05:00:00.");
-        errorObject.Source.Should().NotBeNull();
-        errorObject.Source.Pointer.Should().Be("/data/attributes/nextRevalidation");
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("422");
+        error.Title.Should().Be("Input validation failed.");
+        error.Detail.Should().Be("The field NextRevalidation must be between 01:00:00 and 05:00:00.");
+        error.Source.Should().NotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/nextRevalidation");
     }
 
     [Fact]
