@@ -82,15 +82,15 @@ public sealed class SubsetOfOperationsInheritanceTests : ResourceInheritanceTest
     [InlineData("atomicOperation",
         // @formatter:keep_existing_linebreaks true
         "" +
-        "addResidence|updateResidence|" +
-        "addFamilyHome|updateFamilyHome|addToFamilyHomeRooms|" +
-        "addMansion|updateMansion|removeFromMansionRooms|removeFromMansionStaff|" +
-        "addRoom|updateRoomResidence|" +
-        "addBathroom|updateBathroomResidence|" +
-        "addBedroom|updateBedroomResidence|" +
-        "addKitchen|updateKitchenResidence|" +
-        "addLivingRoom|updateLivingRoomResidence|" +
-        "addToilet|updateToiletResidence" +
+        "createResidenceOperation|updateResidenceOperation|" +
+        "createFamilyHomeOperation|updateFamilyHomeOperation|addToFamilyHomeRoomsRelationshipOperation|" +
+        "createMansionOperation|updateMansionOperation|removeFromMansionRoomsRelationshipOperation|removeFromMansionStaffRelationshipOperation|" +
+        "createRoomOperation|updateRoomResidenceRelationshipOperation|" +
+        "createBathroomOperation|updateBathroomResidenceRelationshipOperation|" +
+        "createBedroomOperation|updateBedroomResidenceRelationshipOperation|" +
+        "createKitchenOperation|updateKitchenResidenceRelationshipOperation|" +
+        "createLivingRoomOperation|updateLivingRoomResidenceRelationshipOperation|" +
+        "createToiletOperation|updateToiletResidenceRelationshipOperation" +
         "" +
         "" +
         "" +

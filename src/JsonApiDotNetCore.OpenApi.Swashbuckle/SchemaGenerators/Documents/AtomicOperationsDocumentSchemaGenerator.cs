@@ -206,8 +206,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
                 SetOperationCode(inlineSchemaForOperation, operationCode, schemaRepository);
             }
 
-            string discriminatorValue = _schemaIdSelector.GetAtomicOperationDiscriminatorValue(operationCode, resourceType);
-            MapInDiscriminator(referenceSchemaForOperation, discriminatorValue, schemaRepository);
+            MapInDiscriminator(referenceSchemaForOperation, schemaRepository);
 
             traceScope.TraceSucceeded(referenceSchemaForOperation.Reference.Id);
         }
@@ -264,11 +263,11 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
         fullSchema.Properties[JsonApiPropertyName.Op] = referenceSchema.WrapInExtendedSchema();
     }
 
-    private static void MapInDiscriminator(OpenApiSchema referenceSchemaForOperation, string discriminatorValue, SchemaRepository schemaRepository)
+    private static void MapInDiscriminator(OpenApiSchema referenceSchemaForOperation, SchemaRepository schemaRepository)
     {
         OpenApiSchema referenceSchemaForAbstractOperation = schemaRepository.LookupByType(AtomicOperationAbstractType);
         OpenApiSchema fullSchemaForAbstractOperation = schemaRepository.Schemas[referenceSchemaForAbstractOperation.Reference.Id];
-        fullSchemaForAbstractOperation.Discriminator.Mapping.Add(discriminatorValue, referenceSchemaForOperation.Reference.ReferenceV3);
+        fullSchemaForAbstractOperation.Discriminator.Mapping.Add(referenceSchemaForOperation.Reference.Id, referenceSchemaForOperation.Reference.ReferenceV3);
     }
 
     private static HashSet<RelationshipAttribute> GetRelationshipsInTypeHierarchy(ResourceType baseType)
@@ -371,8 +370,7 @@ internal sealed class AtomicOperationsDocumentSchemaGenerator : DocumentSchemaGe
             };
         }
 
-        string discriminatorValue = _schemaIdSelector.GetAtomicOperationDiscriminatorValue(operationCode, relationship);
-        MapInDiscriminator(referenceSchemaForOperation, discriminatorValue, schemaRepository);
+        MapInDiscriminator(referenceSchemaForOperation, schemaRepository);
 
         traceScope.TraceSucceeded(schemaId);
     }

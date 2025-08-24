@@ -2778,17 +2778,17 @@
         "discriminator": {
           "propertyName": "openapi:discriminator",
           "mapping": {
-            "AddStaffMember": "#/components/schemas/CreateStaffMemberOperation",
-            "AddSupermarket": "#/components/schemas/CreateSupermarketOperation",
-            "AddToSupermarketCashiers": "#/components/schemas/AddToSupermarketCashiersRelationshipOperation",
-            "RemoveFromSupermarketCashiers": "#/components/schemas/RemoveFromSupermarketCashiersRelationshipOperation",
-            "RemoveStaffMember": "#/components/schemas/DeleteStaffMemberOperation",
-            "RemoveSupermarket": "#/components/schemas/DeleteSupermarketOperation",
-            "UpdateStaffMember": "#/components/schemas/UpdateStaffMemberOperation",
-            "UpdateSupermarket": "#/components/schemas/UpdateSupermarketOperation",
-            "UpdateSupermarketBackupStoreManager": "#/components/schemas/UpdateSupermarketBackupStoreManagerRelationshipOperation",
-            "UpdateSupermarketCashiers": "#/components/schemas/UpdateSupermarketCashiersRelationshipOperation",
-            "UpdateSupermarketStoreManager": "#/components/schemas/UpdateSupermarketStoreManagerRelationshipOperation"
+            "AddToSupermarketCashiersRelationshipOperation": "#/components/schemas/AddToSupermarketCashiersRelationshipOperation",
+            "CreateStaffMemberOperation": "#/components/schemas/CreateStaffMemberOperation",
+            "CreateSupermarketOperation": "#/components/schemas/CreateSupermarketOperation",
+            "DeleteStaffMemberOperation": "#/components/schemas/DeleteStaffMemberOperation",
+            "DeleteSupermarketOperation": "#/components/schemas/DeleteSupermarketOperation",
+            "RemoveFromSupermarketCashiersRelationshipOperation": "#/components/schemas/RemoveFromSupermarketCashiersRelationshipOperation",
+            "UpdateStaffMemberOperation": "#/components/schemas/UpdateStaffMemberOperation",
+            "UpdateSupermarketBackupStoreManagerRelationshipOperation": "#/components/schemas/UpdateSupermarketBackupStoreManagerRelationshipOperation",
+            "UpdateSupermarketCashiersRelationshipOperation": "#/components/schemas/UpdateSupermarketCashiersRelationshipOperation",
+            "UpdateSupermarketOperation": "#/components/schemas/UpdateSupermarketOperation",
+            "UpdateSupermarketStoreManagerRelationshipOperation": "#/components/schemas/UpdateSupermarketStoreManagerRelationshipOperation"
           }
         },
         "x-abstract": true

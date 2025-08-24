@@ -15,11 +15,6 @@ internal sealed class JsonApiSchemaIdSelector
     private const string ResourceTypeSchemaIdTemplate = "[ResourceName] Resource Type";
     private const string MetaSchemaIdTemplate = "Meta";
 
-    private const string ResourceAtomicOperationDiscriminatorValueTemplate = "[OperationCode] [ResourceName]";
-    private const string UpdateRelationshipAtomicOperationDiscriminatorValueTemplate = "Update [ResourceName] [RelationshipName]";
-    private const string AddToRelationshipAtomicOperationDiscriminatorValueTemplate = "Add To [ResourceName] [RelationshipName]";
-    private const string RemoveFromRelationshipAtomicOperationDiscriminatorValueTemplate = "Remove From [ResourceName] [RelationshipName]";
-
     private const string UpdateRelationshipAtomicOperationSchemaIdTemplate = "Update [ResourceName] [RelationshipName] Relationship Operation";
     private const string AddToRelationshipAtomicOperationSchemaIdTemplate = "Add To [ResourceName] [RelationshipName] Relationship Operation";
     private const string RemoveFromRelationshipAtomicOperationSchemaIdTemplate = "Remove From [ResourceName] [RelationshipName] Relationship Operation";
@@ -155,27 +150,6 @@ internal sealed class JsonApiSchemaIdSelector
     public string GetAtomicOperationCodeSchemaId(AtomicOperationCode operationCode)
     {
         return ApplySchemaTemplate("[OperationCode] Operation Code", null, null, operationCode);
-    }
-
-    public string GetAtomicOperationDiscriminatorValue(AtomicOperationCode operationCode, ResourceType resourceType)
-    {
-        ArgumentNullException.ThrowIfNull(resourceType);
-
-        return ApplySchemaTemplate(ResourceAtomicOperationDiscriminatorValueTemplate, resourceType, null, operationCode);
-    }
-
-    public string GetAtomicOperationDiscriminatorValue(AtomicOperationCode operationCode, RelationshipAttribute relationship)
-    {
-        ArgumentNullException.ThrowIfNull(relationship);
-
-        string schemaIdTemplate = operationCode switch
-        {
-            AtomicOperationCode.Add => AddToRelationshipAtomicOperationDiscriminatorValueTemplate,
-            AtomicOperationCode.Remove => RemoveFromRelationshipAtomicOperationDiscriminatorValueTemplate,
-            _ => UpdateRelationshipAtomicOperationDiscriminatorValueTemplate
-        };
-
-        return ApplySchemaTemplate(schemaIdTemplate, relationship.LeftType, relationship.PublicName, null);
     }
 
     public string GetRelationshipAtomicOperationSchemaId(RelationshipAttribute relationship, AtomicOperationCode operationCode)

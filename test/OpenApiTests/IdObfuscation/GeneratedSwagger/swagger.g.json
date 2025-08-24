@@ -2302,16 +2302,16 @@
         "discriminator": {
           "propertyName": "openapi:discriminator",
           "mapping": {
-            "addBankAccount": "#/components/schemas/createBankAccountOperation",
-            "addDebitCard": "#/components/schemas/createDebitCardOperation",
-            "addToBankAccountCards": "#/components/schemas/addToBankAccountCardsRelationshipOperation",
-            "removeBankAccount": "#/components/schemas/deleteBankAccountOperation",
-            "removeDebitCard": "#/components/schemas/deleteDebitCardOperation",
-            "removeFromBankAccountCards": "#/components/schemas/removeFromBankAccountCardsRelationshipOperation",
-            "updateBankAccount": "#/components/schemas/updateBankAccountOperation",
-            "updateBankAccountCards": "#/components/schemas/updateBankAccountCardsRelationshipOperation",
-            "updateDebitCard": "#/components/schemas/updateDebitCardOperation",
-            "updateDebitCardAccount": "#/components/schemas/updateDebitCardAccountRelationshipOperation"
+            "addToBankAccountCardsRelationshipOperation": "#/components/schemas/addToBankAccountCardsRelationshipOperation",
+            "createBankAccountOperation": "#/components/schemas/createBankAccountOperation",
+            "createDebitCardOperation": "#/components/schemas/createDebitCardOperation",
+            "deleteBankAccountOperation": "#/components/schemas/deleteBankAccountOperation",
+            "deleteDebitCardOperation": "#/components/schemas/deleteDebitCardOperation",
+            "removeFromBankAccountCardsRelationshipOperation": "#/components/schemas/removeFromBankAccountCardsRelationshipOperation",
+            "updateBankAccountCardsRelationshipOperation": "#/components/schemas/updateBankAccountCardsRelationshipOperation",
+            "updateBankAccountOperation": "#/components/schemas/updateBankAccountOperation",
+            "updateDebitCardAccountRelationshipOperation": "#/components/schemas/updateDebitCardAccountRelationshipOperation",
+            "updateDebitCardOperation": "#/components/schemas/updateDebitCardOperation"
           }
         },
         "x-abstract": true

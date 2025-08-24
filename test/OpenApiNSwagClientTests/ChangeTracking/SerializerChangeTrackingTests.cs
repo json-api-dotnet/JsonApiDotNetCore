@@ -751,7 +751,7 @@ public sealed class SerializerChangeTrackingTests
             {
               "atomic:operations": [
                 {
-                  "openapi:discriminator": "updateStaffMember",
+                  "openapi:discriminator": "updateStaffMemberOperation",
                   "op": "update",
                   "data": {
                     "type": "staffMembers",
@@ -762,7 +762,7 @@ public sealed class SerializerChangeTrackingTests
                   }
                 },
                 {
-                  "openapi:discriminator": "updateStaffMember",
+                  "openapi:discriminator": "updateStaffMemberOperation",
                   "op": "update",
                   "data": {
                     "type": "staffMembers",
@@ -773,7 +773,7 @@ public sealed class SerializerChangeTrackingTests
                   }
                 },
                 {
-                  "openapi:discriminator": "updateSupermarket",
+                  "openapi:discriminator": "updateSupermarketOperation",
                   "op": "update",
                   "data": {
                     "type": "supermarkets",
@@ -784,7 +784,7 @@ public sealed class SerializerChangeTrackingTests
                   }
                 },
                 {
-                  "openapi:discriminator": "updateSupermarket",
+                  "openapi:discriminator": "updateSupermarketOperation",
                   "op": "update",
                   "data": {
                     "type": "supermarkets",
