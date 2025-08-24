@@ -85,16 +85,16 @@ public sealed class OnlyRelationshipsInheritanceTests : ResourceInheritanceTests
     [InlineData("!relationshipsInRoadResponse", null)]
     [InlineData("atomicOperation",
         // @formatter:keep_existing_linebreaks true
-        "addToResidenceRooms|updateResidenceRooms|removeFromResidenceRooms|" +
-        "addToFamilyHomeRooms|updateFamilyHomeRooms|removeFromFamilyHomeRooms|" +
-        "addToMansionRooms|updateMansionRooms|removeFromMansionRooms|addToMansionStaff|updateMansionStaff|removeFromMansionStaff|" +
-        "updateRoomResidence|" +
-        "updateBathroomResidence|" +
-        "updateBedroomResidence|" +
-        "updateKitchenResidence|" +
-        "updateLivingRoomResidence|" +
-        "updateToiletResidence|" +
-        "addToDistrictBuildings|updateDistrictBuildings|removeFromDistrictBuildings|addToDistrictRoads|updateDistrictRoads|removeFromDistrictRoads"
+        "addToResidenceRoomsRelationshipOperation|updateResidenceRoomsRelationshipOperation|removeFromResidenceRoomsRelationshipOperation|" +
+        "addToFamilyHomeRoomsRelationshipOperation|updateFamilyHomeRoomsRelationshipOperation|removeFromFamilyHomeRoomsRelationshipOperation|" +
+        "addToMansionRoomsRelationshipOperation|updateMansionRoomsRelationshipOperation|removeFromMansionRoomsRelationshipOperation|addToMansionStaffRelationshipOperation|updateMansionStaffRelationshipOperation|removeFromMansionStaffRelationshipOperation|" +
+        "updateRoomResidenceRelationshipOperation|" +
+        "updateBathroomResidenceRelationshipOperation|" +
+        "updateBedroomResidenceRelationshipOperation|" +
+        "updateKitchenResidenceRelationshipOperation|" +
+        "updateLivingRoomResidenceRelationshipOperation|" +
+        "updateToiletResidenceRelationshipOperation|" +
+        "addToDistrictBuildingsRelationshipOperation|updateDistrictBuildingsRelationshipOperation|removeFromDistrictBuildingsRelationshipOperation|addToDistrictRoadsRelationshipOperation|updateDistrictRoadsRelationshipOperation|removeFromDistrictRoadsRelationshipOperation"
         // @formatter:keep_existing_linebreaks restore
     )]
     public override async Task Expected_names_appear_in_openapi_discriminator_mapping(string schemaName, string? discriminatorValues)

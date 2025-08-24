@@ -51,16 +51,16 @@ namespace OpenApiKiotaEndToEndTests.IdObfuscation.GeneratedCode.Models
             var mappingValue = parseNode.GetChildNode("openapi:discriminator")?.GetStringValue();
             return mappingValue switch
             {
-                "addBankAccount" => new global::OpenApiKiotaEndToEndTests.IdObfuscation.GeneratedCode.Models.CreateBankAccountOperation(),
-                "addDebitCard" => new global::OpenApiKiotaEndToEndTests.IdObfuscation.GeneratedCode.Models.CreateDebitCardOperation(),
-                "addToBankAccountCards" => new global::OpenApiKiotaEndToEndTests.IdObfuscation.GeneratedCode.Models.AddToBankAccountCardsRelationshipOperation(),
-                "removeBankAccount" => new global::OpenApiKiotaEndToEndTests.IdObfuscation.GeneratedCode.Models.DeleteBankAccountOperation(),
-                "removeDebitCard" => new global::OpenApiKiotaEndToEndTests.IdObfuscation.GeneratedCode.Models.DeleteDebitCardOperation(),
-                "removeFromBankAccountCards" => new global::OpenApiKiotaEndToEndTests.IdObfuscation.GeneratedCode.Models.RemoveFromBankAccountCardsRelationshipOperation(),
-                "updateBankAccount" => new global::OpenApiKiotaEndToEndTests.IdObfuscation.GeneratedCode.Models.UpdateBankAccountOperation(),
-                "updateBankAccountCards" => new global::OpenApiKiotaEndToEndTests.IdObfuscation.GeneratedCode.Models.UpdateBankAccountCardsRelationshipOperation(),
-                "updateDebitCard" => new global::OpenApiKiotaEndToEndTests.IdObfuscation.GeneratedCode.Models.UpdateDebitCardOperation(),
-                "updateDebitCardAccount" => new global::OpenApiKiotaEndToEndTests.IdObfuscation.GeneratedCode.Models.UpdateDebitCardAccountRelationshipOperation(),
+                "addToBankAccountCardsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.IdObfuscation.GeneratedCode.Models.AddToBankAccountCardsRelationshipOperation(),
+                "createBankAccountOperation" => new global::OpenApiKiotaEndToEndTests.IdObfuscation.GeneratedCode.Models.CreateBankAccountOperation(),
+                "createDebitCardOperation" => new global::OpenApiKiotaEndToEndTests.IdObfuscation.GeneratedCode.Models.CreateDebitCardOperation(),
+                "deleteBankAccountOperation" => new global::OpenApiKiotaEndToEndTests.IdObfuscation.GeneratedCode.Models.DeleteBankAccountOperation(),
+                "deleteDebitCardOperation" => new global::OpenApiKiotaEndToEndTests.IdObfuscation.GeneratedCode.Models.DeleteDebitCardOperation(),
+                "removeFromBankAccountCardsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.IdObfuscation.GeneratedCode.Models.RemoveFromBankAccountCardsRelationshipOperation(),
+                "updateBankAccountCardsRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.IdObfuscation.GeneratedCode.Models.UpdateBankAccountCardsRelationshipOperation(),
+                "updateBankAccountOperation" => new global::OpenApiKiotaEndToEndTests.IdObfuscation.GeneratedCode.Models.UpdateBankAccountOperation(),
+                "updateDebitCardAccountRelationshipOperation" => new global::OpenApiKiotaEndToEndTests.IdObfuscation.GeneratedCode.Models.UpdateDebitCardAccountRelationshipOperation(),
+                "updateDebitCardOperation" => new global::OpenApiKiotaEndToEndTests.IdObfuscation.GeneratedCode.Models.UpdateDebitCardOperation(),
                 _ => new global::OpenApiKiotaEndToEndTests.IdObfuscation.GeneratedCode.Models.AtomicOperation(),
             };
         }

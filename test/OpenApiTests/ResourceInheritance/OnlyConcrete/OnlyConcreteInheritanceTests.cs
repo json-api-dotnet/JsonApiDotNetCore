@@ -89,18 +89,18 @@ public sealed class OnlyConcreteInheritanceTests : ResourceInheritanceTests
     [InlineData("!relationshipsInRoadResponse", "cyclePaths")]
     [InlineData("atomicOperation",
         // @formatter:keep_existing_linebreaks true
-        "addResidence|updateResidence|removeResidence|addToResidenceRooms|updateResidenceRooms|removeFromResidenceRooms|" +
-        "addFamilyHome|updateFamilyHome|removeFamilyHome|addToFamilyHomeRooms|updateFamilyHomeRooms|removeFromFamilyHomeRooms|" +
-        "addMansion|updateMansion|removeMansion|addToMansionRooms|updateMansionRooms|removeFromMansionRooms|addToMansionStaff|updateMansionStaff|removeFromMansionStaff|" +
-        "addBathroom|updateBathroom|removeBathroom|updateBathroomResidence|" +
-        "addBedroom|updateBedroom|removeBedroom|updateBedroomResidence|" +
-        "addKitchen|updateKitchen|removeKitchen|updateKitchenResidence|" +
-        "addLivingRoom|updateLivingRoom|removeLivingRoom|updateLivingRoomResidence|" +
-        "addToilet|updateToilet|removeToilet|updateToiletResidence|" +
-        "addDistrict|updateDistrict|removeDistrict|addToDistrictBuildings|updateDistrictBuildings|removeFromDistrictBuildings|addToDistrictRoads|updateDistrictRoads|removeFromDistrictRoads|" +
-        "addRoad|updateRoad|removeRoad|" +
-        "addCyclePath|updateCyclePath|removeCyclePath|" +
-        "addStaffMember|updateStaffMember|removeStaffMember"
+        "createResidenceOperation|updateResidenceOperation|deleteResidenceOperation|addToResidenceRoomsRelationshipOperation|updateResidenceRoomsRelationshipOperation|removeFromResidenceRoomsRelationshipOperation|" +
+        "createFamilyHomeOperation|updateFamilyHomeOperation|deleteFamilyHomeOperation|addToFamilyHomeRoomsRelationshipOperation|updateFamilyHomeRoomsRelationshipOperation|removeFromFamilyHomeRoomsRelationshipOperation|" +
+        "createMansionOperation|updateMansionOperation|deleteMansionOperation|addToMansionRoomsRelationshipOperation|updateMansionRoomsRelationshipOperation|removeFromMansionRoomsRelationshipOperation|addToMansionStaffRelationshipOperation|updateMansionStaffRelationshipOperation|removeFromMansionStaffRelationshipOperation|" +
+        "createBathroomOperation|updateBathroomOperation|deleteBathroomOperation|updateBathroomResidenceRelationshipOperation|" +
+        "createBedroomOperation|updateBedroomOperation|deleteBedroomOperation|updateBedroomResidenceRelationshipOperation|" +
+        "createKitchenOperation|updateKitchenOperation|deleteKitchenOperation|updateKitchenResidenceRelationshipOperation|" +
+        "createLivingRoomOperation|updateLivingRoomOperation|deleteLivingRoomOperation|updateLivingRoomResidenceRelationshipOperation|" +
+        "createToiletOperation|updateToiletOperation|deleteToiletOperation|updateToiletResidenceRelationshipOperation|" +
+        "createDistrictOperation|updateDistrictOperation|deleteDistrictOperation|addToDistrictBuildingsRelationshipOperation|updateDistrictBuildingsRelationshipOperation|removeFromDistrictBuildingsRelationshipOperation|addToDistrictRoadsRelationshipOperation|updateDistrictRoadsRelationshipOperation|removeFromDistrictRoadsRelationshipOperation|" +
+        "createRoadOperation|updateRoadOperation|deleteRoadOperation|" +
+        "createCyclePathOperation|updateCyclePathOperation|deleteCyclePathOperation|" +
+        "createStaffMemberOperation|updateStaffMemberOperation|deleteStaffMemberOperation"
         // @formatter:keep_existing_linebreaks restore
     )]
     public override async Task Expected_names_appear_in_openapi_discriminator_mapping(string schemaName, string? discriminatorValues)

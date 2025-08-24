@@ -589,28 +589,23 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
 
             schemasElement.Should().ContainPath("atomic-operation.discriminator.mapping").With(mappingElement =>
             {
-                mappingElement.Should().ContainPath("add-staff-member").ShouldBeSchemaReferenceId("create-staff-member-operation");
-                mappingElement.Should().ContainPath("add-supermarket").ShouldBeSchemaReferenceId("create-supermarket-operation");
-
-                mappingElement.Should().ContainPath("add-to-supermarket-cashiers")
-                    .ShouldBeSchemaReferenceId("add-to-supermarket-cashiers-relationship-operation");
-
-                mappingElement.Should().ContainPath("remove-from-supermarket-cashiers")
-                    .ShouldBeSchemaReferenceId("remove-from-supermarket-cashiers-relationship-operation");
-
-                mappingElement.Should().ContainPath("remove-staff-member").ShouldBeSchemaReferenceId("delete-staff-member-operation");
-                mappingElement.Should().ContainPath("remove-supermarket").ShouldBeSchemaReferenceId("delete-supermarket-operation");
-                mappingElement.Should().ContainPath("update-staff-member").ShouldBeSchemaReferenceId("update-staff-member-operation");
-                mappingElement.Should().ContainPath("update-supermarket").ShouldBeSchemaReferenceId("update-supermarket-operation");
-
-                mappingElement.Should().ContainPath("update-supermarket-backup-store-manager")
-                    .ShouldBeSchemaReferenceId("update-supermarket-backup-store-manager-relationship-operation");
-
-                mappingElement.Should().ContainPath("update-supermarket-cashiers")
-                    .ShouldBeSchemaReferenceId("update-supermarket-cashiers-relationship-operation");
-
-                mappingElement.Should().ContainPath("update-supermarket-store-manager")
-                    .ShouldBeSchemaReferenceId("update-supermarket-store-manager-relationship-operation");
+                foreach (string discriminator in (string[])
+                [
+                    "create-staff-member-operation",
+                    "create-supermarket-operation",
+                    "add-to-supermarket-cashiers-relationship-operation",
+                    "remove-from-supermarket-cashiers-relationship-operation",
+                    "delete-staff-member-operation",
+                    "delete-supermarket-operation",
+                    "update-staff-member-operation",
+                    "update-supermarket-operation",
+                    "update-supermarket-backup-store-manager-relationship-operation",
+                    "update-supermarket-cashiers-relationship-operation",
+                    "update-supermarket-store-manager-relationship-operation"
+                ])
+                {
+                    mappingElement.Should().ContainPath(discriminator).ShouldBeSchemaReferenceId(discriminator);
+                }
             });
 
             schemasElement.Should().ContainPath("create-supermarket-operation.allOf[1].properties").With(propertiesElement =>
