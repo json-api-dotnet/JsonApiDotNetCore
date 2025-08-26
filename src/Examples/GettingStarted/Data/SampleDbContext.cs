@@ -16,9 +16,13 @@ public class SampleDbContext(DbContextOptions<SampleDbContext> options)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
+        // @formatter:keep_existing_linebreaks true
         builder.Entity<Person>()
-            .OwnsOne(person => person.LivingAddress)
-            .ToJson();
+            .OwnsOne(person => person.LivingAddress, addressBuilder => addressBuilder
+                .OwnsOne(address => address.Country, countryBuilder => countryBuilder
+                    .OwnsMany(country => country.Provinces))
+                .ToJson());
+        // @formatter:keep_existing_linebreaks restore
 
         builder.Entity<Person>()
             .OwnsOne(person => person.MailAddress)

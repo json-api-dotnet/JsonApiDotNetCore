@@ -436,8 +436,8 @@ public sealed class QueryExpressionTests
         public SparseFieldSetExpression SparseFieldSet()
         {
             return new SparseFieldSetExpression([
-                _textAttribute,
-                _childrenRelationship
+                new ResourceFieldChainExpression(_textAttribute),
+                new ResourceFieldChainExpression(_childrenRelationship)
             ]);
         }
 
@@ -497,24 +497,24 @@ public sealed class QueryExpressionTests
                 {
                     [resourceType] = new FieldSelectors
                     {
-                        [textAttribute] = null,
-                        [parentRelationship] = new QueryLayer(resourceType)
+                        [new ResourceFieldChainExpression(textAttribute)] = null,
+                        [new ResourceFieldChainExpression(parentRelationship)] = new QueryLayer(resourceType)
                         {
                             Selection = new FieldSelection
                             {
                                 [resourceType] = new FieldSelectors
                                 {
-                                    [textAttribute] = null
+                                    [new ResourceFieldChainExpression(textAttribute)] = null
                                 }
                             }
                         },
-                        [childrenRelationship] = new QueryLayer(resourceType)
+                        [new ResourceFieldChainExpression(childrenRelationship)] = new QueryLayer(resourceType)
                         {
                             Selection = new FieldSelection
                             {
                                 [resourceType] = new FieldSelectors
                                 {
-                                    [textAttribute] = null
+                                    [new ResourceFieldChainExpression(textAttribute)] = null
                                 }
                             }
                         }

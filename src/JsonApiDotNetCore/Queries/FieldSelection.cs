@@ -69,7 +69,7 @@ public sealed class FieldSelection : Dictionary<ResourceType, FieldSelectors>
     {
         using (writer.Indent())
         {
-            foreach ((ResourceFieldAttribute field, QueryLayer? nextLayer) in GetOrCreateSelectors(type))
+            foreach ((var field, QueryLayer? nextLayer) in GetOrCreateSelectors(type))
             {
                 if (nextLayer == null)
                 {
@@ -77,7 +77,7 @@ public sealed class FieldSelection : Dictionary<ResourceType, FieldSelectors>
                 }
                 else
                 {
-                    string prefix = $"{(toFullString ? field.ToFullString() : field.ToString())}: ";
+                    string prefix = $"{(toFullString ? field.Fields[0].ToFullString() : field.Fields[0].ToString())}: ";
                     nextLayer.WriteLayer(writer, toFullString, prefix);
                 }
             }

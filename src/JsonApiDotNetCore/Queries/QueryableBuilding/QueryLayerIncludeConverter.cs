@@ -60,7 +60,7 @@ public sealed class QueryLayerIncludeConverter : QueryExpressionVisitor<QueryLay
             selectors.IncludeRelationship(relationship, new QueryLayer(relationship.RightType));
         }
 
-        QueryLayer subLayer = selectors[relationship]!;
+        QueryLayer subLayer = selectors[new ResourceFieldChainExpression(relationship)]!;
         EnsureNonEmptySelection(subLayer);
 
         return subLayer;

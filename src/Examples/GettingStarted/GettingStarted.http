@@ -25,11 +25,17 @@ GET http://{{hostname}}:{{port}}/api/people?filter=not(has(addresses))
 
 GET http://{{hostname}}:{{port}}/api/people?filter=has(addresses,equals(country.code,'ESP'))
 
-### Sparse fieldset inside compound attribute chain
+### Filter on collection inside compound attribute chain (DOES NOT WORK)
+
+GET http://{{hostname}}:{{port}}/api/people?filter[livingAddress.country.provinces]=equals(name,'Zuid-Holland')
+
+### Sparse fieldset inside compound attribute chain (DOES NOT WORK)
 
 GET http://{{hostname}}:{{port}}/api/people?fields[people]=livingAddress.street
 
+### Sparse fieldset on compound type (DOES NOT WORK; how would we reference the 'address' type, which has no public name?)
 
+GET http://{{hostname}}:{{port}}/api/people?fields[address]=country
 
 ### Patch string collection attribute
 

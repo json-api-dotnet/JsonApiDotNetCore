@@ -224,7 +224,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
         if (!isRelationship)
         {
-            IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(resourceType);
+            IImmutableSet<ResourceFieldChainExpression> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(resourceType);
 
             resourceObject.Attributes = ConvertAttributes(resource, resourceType, fieldSet);
             resourceObject.Links = _linkBuilder.GetResourceLinks(resourceType, resource);
@@ -237,7 +237,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
 #pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
     protected virtual IDictionary<string, object?>? ConvertAttributes(IIdentifiable resource, ResourceType resourceType,
 #pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
-        IImmutableSet<ResourceFieldAttribute> fieldSet)
+        IImmutableSet<ResourceFieldChainExpression> fieldSet)
     {
         ArgumentNullException.ThrowIfNull(resource);
         ArgumentNullException.ThrowIfNull(resourceType);
@@ -245,10 +245,10 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
         var attrMap = new Dictionary<string, object?>(resourceType.Attributes.Count);
 
-        // TODO: Descend into nested attributes?
+        // TODO: Descend into nested attributes (but look into the SQL query first)
         foreach (AttrAttribute attr in resourceType.Attributes)
         {
-            if (!fieldSet.Contains(attr) || attr.Property.Name == nameof(Identifiable<object>.Id))
+            if (!fieldSet.Any(chain => chain.Fields[0].Equals(attr)) || attr.Property.Name == nameof(Identifiable<object>.Id))
             {
                 continue;
             }
@@ -326,11 +326,11 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
     private void PopulateRelationshipsInResourceObject(ResourceObjectTreeNode treeNode)
     {
-        IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(treeNode.ResourceType);
+        IImmutableSet<ResourceFieldChainExpression> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(treeNode.ResourceType);
 
         foreach (RelationshipAttribute relationship in treeNode.ResourceType.Relationships)
         {
-            if (fieldSet.Contains(relationship))
+            if (fieldSet.Any(chain => chain.Fields[0].Equals(relationship)))
             {
                 PopulateRelationshipInResourceObject(treeNode, relationship);
             }
