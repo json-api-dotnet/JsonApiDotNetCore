@@ -184,9 +184,10 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
 
     private static void IncludeFields(FieldSelectors fieldSelectors, Dictionary<PropertyInfo, PropertySelector> propertySelectors)
     {
-        foreach ((ResourceFieldAttribute resourceField, QueryLayer? nextLayer) in fieldSelectors)
+        foreach ((var resourceField, QueryLayer? nextLayer) in fieldSelectors)
         {
-            var propertySelector = new PropertySelector(resourceField.Property, nextLayer);
+            // TODO: Expand sparse field selection.
+            var propertySelector = new PropertySelector(resourceField.Fields[0].Property, nextLayer);
             IncludeWritableProperty(propertySelector, propertySelectors);
         }
     }

@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries;
@@ -8,7 +9,7 @@ namespace JsonApiDotNetCore.Queries;
 /// contains the nested query constraints.
 /// </summary>
 [PublicAPI]
-public sealed class FieldSelectors : Dictionary<ResourceFieldAttribute, QueryLayer?>
+public sealed class FieldSelectors : Dictionary<ResourceFieldChainExpression, QueryLayer?>
 {
     public bool IsEmpty => Count == 0;
 
@@ -16,7 +17,7 @@ public sealed class FieldSelectors : Dictionary<ResourceFieldAttribute, QueryLay
     {
         get
         {
-            return this.Any(selector => selector.Key is AttrAttribute attribute && attribute.Property.SetMethod == null);
+            return this.Any(selector => selector.Key.Fields[0] is AttrAttribute attribute && attribute.Property.SetMethod == null);
         }
     }
 
@@ -24,7 +25,7 @@ public sealed class FieldSelectors : Dictionary<ResourceFieldAttribute, QueryLay
     {
         get
         {
-            return Count > 0 && this.All(selector => selector.Key is RelationshipAttribute);
+            return Count > 0 && this.All(selector => selector.Key.Fields[0] is RelationshipAttribute);
         }
     }
 
@@ -32,21 +33,21 @@ public sealed class FieldSelectors : Dictionary<ResourceFieldAttribute, QueryLay
     {
         ArgumentNullException.ThrowIfNull(field);
 
-        return ContainsKey(field);
+        return ContainsKey(new ResourceFieldChainExpression(field));
     }
 
-    public void IncludeAttribute(AttrAttribute attribute)
+    public void IncludeAttribute(ResourceFieldChainExpression attribute)
     {
         ArgumentNullException.ThrowIfNull(attribute);
 
         this[attribute] = null;
     }
 
-    public void IncludeAttributes(IEnumerable<AttrAttribute> attributes)
+    public void IncludeAttributes(IEnumerable<ResourceFieldChainExpression> attributes)
     {
         ArgumentNullException.ThrowIfNull(attributes);
 
-        foreach (AttrAttribute attribute in attributes)
+        foreach (var attribute in attributes)
         {
             this[attribute] = null;
         }
@@ -57,14 +58,14 @@ public sealed class FieldSelectors : Dictionary<ResourceFieldAttribute, QueryLay
         ArgumentNullException.ThrowIfNull(relationship);
         ArgumentNullException.ThrowIfNull(queryLayer);
 
-        this[relationship] = queryLayer;
+        this[new ResourceFieldChainExpression(relationship)] = queryLayer;
     }
 
     public void RemoveAttributes()
     {
-        while (this.Any(pair => pair.Key is AttrAttribute))
+        while (this.Any(pair => pair.Key.Fields[0] is AttrAttribute))
         {
-            ResourceFieldAttribute field = this.First(pair => pair.Key is AttrAttribute).Key;
+            var field = this.First(pair => pair.Key.Fields[0] is AttrAttribute).Key;
             Remove(field);
         }
     }

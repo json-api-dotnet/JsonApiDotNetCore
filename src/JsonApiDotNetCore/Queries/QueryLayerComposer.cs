@@ -324,7 +324,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         {
             queryLayer.Selection = new FieldSelection();
             FieldSelectors selectors = queryLayer.Selection.GetOrCreateSelectors(primaryResourceType);
-            selectors.IncludeAttribute(idAttribute);
+            selectors.IncludeAttribute(new ResourceFieldChainExpression(idAttribute));
         }
         else if (fieldSelection == TopFieldSelection.WithAllAttributes && queryLayer.Selection != null)
         {
@@ -353,7 +353,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         var selection = new FieldSelection();
         FieldSelectors selectors = selection.GetOrCreateSelectors(secondaryResourceType);
 
-        IImmutableSet<AttrAttribute> secondaryAttributeSet = _sparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(secondaryResourceType);
+        IImmutableSet<ResourceFieldChainExpression> secondaryAttributeSet = _sparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(secondaryResourceType);
         selectors.IncludeAttributes(secondaryAttributeSet);
 
         return selection;
@@ -378,7 +378,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         var primarySelection = new FieldSelection();
         FieldSelectors primarySelectors = primarySelection.GetOrCreateSelectors(primaryResourceType);
 
-        IImmutableSet<AttrAttribute> primaryAttributeSet = _sparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(primaryResourceType);
+        IImmutableSet<ResourceFieldChainExpression> primaryAttributeSet = _sparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(primaryResourceType);
         primarySelectors.IncludeAttributes(primaryAttributeSet);
         primarySelectors.IncludeRelationship(relationship, secondaryLayer);
 
@@ -489,7 +489,7 @@ public class QueryLayerComposer : IQueryLayerComposer
 
         var selection = new FieldSelection();
         FieldSelectors selectors = selection.GetOrCreateSelectors(relationship.RightType);
-        selectors.IncludeAttribute(rightIdAttribute);
+        selectors.IncludeAttribute(new ResourceFieldChainExpression(rightIdAttribute));
 
         return new QueryLayer(relationship.RightType)
         {
@@ -514,7 +514,7 @@ public class QueryLayerComposer : IQueryLayerComposer
 
         var secondarySelection = new FieldSelection();
         FieldSelectors secondarySelectors = secondarySelection.GetOrCreateSelectors(hasManyRelationship.RightType);
-        secondarySelectors.IncludeAttribute(rightIdAttribute);
+        secondarySelectors.IncludeAttribute(new ResourceFieldChainExpression(rightIdAttribute));
 
         QueryLayer secondaryLayer = new(hasManyRelationship.RightType)
         {
@@ -525,7 +525,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         var primarySelection = new FieldSelection();
         FieldSelectors primarySelectors = primarySelection.GetOrCreateSelectors(hasManyRelationship.LeftType);
         primarySelectors.IncludeRelationship(hasManyRelationship, secondaryLayer);
-        primarySelectors.IncludeAttribute(leftIdAttribute);
+        primarySelectors.IncludeAttribute(new ResourceFieldChainExpression(leftIdAttribute));
 
         return new QueryLayer(hasManyRelationship.LeftType)
         {
@@ -599,20 +599,20 @@ public class QueryLayerComposer : IQueryLayerComposer
 
         foreach (ResourceType nextType in resourceTypes)
         {
-            IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForQuery(nextType);
+            var fieldSet = _sparseFieldSetCache.GetSparseFieldSetForQuery(nextType);
 
             if (fieldSet.Count == 0)
             {
                 continue;
             }
 
-            HashSet<AttrAttribute> attributeSet = fieldSet.OfType<AttrAttribute>().ToHashSet();
+            HashSet<ResourceFieldChainExpression> attributeSet = fieldSet.Where(field => field.Fields[0] is AttrAttribute).ToHashSet();
 
             FieldSelectors selectors = selection.GetOrCreateSelectors(nextType);
             selectors.IncludeAttributes(attributeSet);
 
             AttrAttribute idAttribute = GetIdAttribute(nextType);
-            selectors.IncludeAttribute(idAttribute);
+            selectors.IncludeAttribute(new ResourceFieldChainExpression(idAttribute));
         }
 
         return selection.IsEmpty ? null : selection;

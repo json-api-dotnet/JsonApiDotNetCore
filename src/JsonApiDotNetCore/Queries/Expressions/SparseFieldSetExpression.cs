@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 using JetBrains.Annotations;
-using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Expressions;
 
@@ -14,14 +13,12 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 [PublicAPI]
 public class SparseFieldSetExpression : QueryExpression
 {
-    // TODO: How do compound attributes affect sparse fieldsets?
-
     /// <summary>
     /// The set of JSON:API fields to include. Chain format: a single field.
     /// </summary>
-    public IImmutableSet<ResourceFieldAttribute> Fields { get; }
+    public IImmutableSet<ResourceFieldChainExpression> Fields { get; }
 
-    public SparseFieldSetExpression(IImmutableSet<ResourceFieldAttribute> fields)
+    public SparseFieldSetExpression(IImmutableSet<ResourceFieldChainExpression> fields)
     {
         ArgumentGuard.NotNullNorEmpty(fields);
 

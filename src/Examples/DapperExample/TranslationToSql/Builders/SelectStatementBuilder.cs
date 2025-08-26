@@ -154,9 +154,9 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
             selectedColumns = tableAccessor.Source.Columns.Where(column => column.Type == ColumnType.Scalar).ToHashSet();
         }
 
-        foreach ((ResourceFieldAttribute field, QueryLayer? nextLayer) in selectors.OrderBy(selector => selector.Key.PublicName))
+        foreach ((var field, QueryLayer? nextLayer) in selectors.OrderBy(selector => selector.Key.Fields[0].PublicName))
         {
-            if (field is AttrAttribute attribute)
+            if (field.Fields[0] is AttrAttribute attribute)
             {
                 // Returns null when the set contains an unmapped column, which is silently ignored.
                 ColumnNode? column = tableAccessor.Source.FindColumn(attribute.Property.Name, ColumnType.Scalar, tableAccessor.Source.Alias);
@@ -167,7 +167,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
                 }
             }
 
-            if (field is RelationshipAttribute relationship && nextLayer != null)
+            if (field.Fields[0] is RelationshipAttribute relationship && nextLayer != null)
             {
                 nextLayers.Add(relationship, nextLayer);
             }

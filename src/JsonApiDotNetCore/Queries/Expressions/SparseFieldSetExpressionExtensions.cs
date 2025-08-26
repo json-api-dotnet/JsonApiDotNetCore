@@ -29,12 +29,12 @@ public static class SparseFieldSetExpressionExtensions
 
     private static SparseFieldSetExpression? IncludeField(SparseFieldSetExpression? sparseFieldSet, ResourceFieldAttribute fieldToInclude)
     {
-        if (sparseFieldSet == null || sparseFieldSet.Fields.Contains(fieldToInclude))
+        if (sparseFieldSet == null || sparseFieldSet.Fields.Contains(new ResourceFieldChainExpression(fieldToInclude)))
         {
             return sparseFieldSet;
         }
 
-        IImmutableSet<ResourceFieldAttribute> newSparseFieldSet = sparseFieldSet.Fields.Add(fieldToInclude);
+        var newSparseFieldSet = sparseFieldSet.Fields.Add(new ResourceFieldChainExpression(fieldToInclude));
         return new SparseFieldSetExpression(newSparseFieldSet);
     }
 
@@ -62,12 +62,12 @@ public static class SparseFieldSetExpressionExtensions
         // But later, when serializing the response, the sparse fieldset is first populated with all fields,
         // so then the exclusion will actually be applied and the excluded field is not returned to the client.
 
-        if (sparseFieldSet == null || !sparseFieldSet.Fields.Contains(fieldToExclude))
+        if (sparseFieldSet == null || !sparseFieldSet.Fields.Contains(new ResourceFieldChainExpression(fieldToExclude)))
         {
             return sparseFieldSet;
         }
 
-        IImmutableSet<ResourceFieldAttribute> newSparseFieldSet = sparseFieldSet.Fields.Remove(fieldToExclude);
+        var newSparseFieldSet = sparseFieldSet.Fields.Remove(new ResourceFieldChainExpression(fieldToExclude));
         return new SparseFieldSetExpression(newSparseFieldSet);
     }
 }
