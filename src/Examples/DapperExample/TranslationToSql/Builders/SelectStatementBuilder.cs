@@ -552,7 +552,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
                     throw new JsonApiException(new ErrorObject(HttpStatusCode.BadRequest)
                     {
                         Title = "Sorting or filtering on the requested attribute is unavailable.",
-                        Detail = $"Sorting or filtering on attribute '{attribute.PublicName}' is unavailable because it is unmapped."
+                        Detail = $"Sorting or filtering on attribute '{attribute}' is unavailable because it is unmapped."
                     });
                 }
 

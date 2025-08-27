@@ -76,7 +76,7 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         if (attr == null)
         {
             throw new ModelConversionException(state.Position, "Unknown attribute found.",
-                $"Attribute '{attributeName}' does not exist on resource type '{resourceType.PublicName}'.");
+                $"Attribute '{attributeName}' does not exist on resource type '{resourceType}'.");
         }
     }
 
@@ -101,7 +101,7 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         if (state.Request.WriteOperation == WriteOperationKind.CreateResource && !attr.Capabilities.HasFlag(AttrCapabilities.AllowCreate))
         {
             throw new ModelConversionException(state.Position, "Attribute value cannot be assigned when creating resource.",
-                $"The attribute '{attr.PublicName}' on resource type '{resourceType.PublicName}' cannot be assigned to.");
+                $"The attribute '{attr}' on resource type '{resourceType}' cannot be assigned to.");
         }
     }
 
@@ -110,7 +110,7 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         if (state.Request.WriteOperation == WriteOperationKind.UpdateResource && !attr.Capabilities.HasFlag(AttrCapabilities.AllowChange))
         {
             throw new ModelConversionException(state.Position, "Attribute value cannot be assigned when updating resource.",
-                $"The attribute '{attr.PublicName}' on resource type '{resourceType.PublicName}' cannot be assigned to.");
+                $"The attribute '{attr}' on resource type '{resourceType}' cannot be assigned to.");
         }
     }
 
@@ -119,7 +119,7 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         if (attr.Property.SetMethod == null)
         {
             throw new ModelConversionException(state.Position, "Attribute is read-only.",
-                $"Attribute '{attr.PublicName}' on resource type '{resourceType.PublicName}' is read-only.");
+                $"Attribute '{attr}' on resource type '{resourceType}' is read-only.");
         }
     }
 

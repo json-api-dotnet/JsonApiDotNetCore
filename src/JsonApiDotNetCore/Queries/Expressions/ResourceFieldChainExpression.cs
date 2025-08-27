@@ -45,12 +45,12 @@ public class ResourceFieldChainExpression : IdentifierExpression
 
     public override string ToString()
     {
-        return string.Join('.', Fields.Select(field => field.PublicName));
+        return string.Join('.', Fields.Select(field => field.ToString()));
     }
 
     public override string ToFullString()
     {
-        return string.Join('.', Fields.Select(field => $"{field.Type.PublicName}:{field.PublicName}"));
+        return string.Join('.', Fields.Select(field => field.ToFullString()));
     }
 
     public override bool Equals(object? obj)

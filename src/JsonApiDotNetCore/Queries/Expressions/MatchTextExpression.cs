@@ -72,7 +72,7 @@ public class MatchTextExpression : FilterExpression
 
         builder.Append(toFullString
             ? string.Join(',', TargetAttribute.ToFullString(), TextValue.ToFullString())
-            : string.Join(',', TargetAttribute, TextValue));
+            : string.Join(',', TargetAttribute.ToString(), TextValue.ToString()));
 
         builder.Append(')');
 

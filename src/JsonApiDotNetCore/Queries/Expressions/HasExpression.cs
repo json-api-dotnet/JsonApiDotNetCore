@@ -58,12 +58,12 @@ public class HasExpression : FilterExpression
         var builder = new StringBuilder();
         builder.Append(Keywords.Has);
         builder.Append('(');
-        builder.Append(toFullString ? TargetCollection.ToFullString() : TargetCollection);
+        builder.Append(toFullString ? TargetCollection.ToFullString() : TargetCollection.ToString());
 
         if (Filter != null)
         {
             builder.Append(',');
-            builder.Append(toFullString ? Filter.ToFullString() : Filter);
+            builder.Append(toFullString ? Filter.ToFullString() : Filter.ToString());
         }
 
         builder.Append(')');

@@ -57,7 +57,7 @@ public class IncludeElementExpression : QueryExpression
     private string InnerToString(bool toFullString)
     {
         var builder = new StringBuilder();
-        builder.Append(toFullString ? $"{Relationship.LeftType.PublicName}:{Relationship.PublicName}" : Relationship.PublicName);
+        builder.Append(toFullString ? $"{Relationship.LeftType}:{Relationship}" : Relationship.ToString());
 
         if (Children.Count > 0)
         {
