@@ -62,7 +62,7 @@ public class IncludeElementExpression : QueryExpression
         if (Children.Count > 0)
         {
             builder.Append('{');
-            builder.Append(string.Join(",", Children.Select(child => toFullString ? child.ToFullString() : child.ToString()).OrderBy(name => name)));
+            builder.Append(string.Join(',', Children.Select(child => toFullString ? child.ToFullString() : child.ToString()).OrderBy(name => name)));
             builder.Append('}');
         }
 
