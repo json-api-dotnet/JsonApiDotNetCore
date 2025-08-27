@@ -30,15 +30,25 @@ public sealed class QueryLayer
 
     public override string ToString()
     {
+        return InnerToString(false);
+    }
+
+    public string ToFullString()
+    {
+        return InnerToString(true);
+    }
+
+    private string InnerToString(bool toFullString)
+    {
         var builder = new StringBuilder();
 
         var writer = new IndentingStringWriter(builder);
-        WriteLayer(writer, null);
+        WriteLayer(writer, toFullString, null);
 
         return builder.ToString();
     }
 
-    internal void WriteLayer(IndentingStringWriter writer, string? prefix)
+    internal void WriteLayer(IndentingStringWriter writer, bool toFullString, string? prefix)
     {
         writer.WriteLine($"{prefix}{nameof(QueryLayer)}<{ResourceType.ClrType.Name}>");
 
@@ -46,28 +56,28 @@ public sealed class QueryLayer
         {
             if (Include is { Elements.Count: > 0 })
             {
-                writer.WriteLine($"{nameof(Include)}: {Include}");
+                writer.WriteLine($"{nameof(Include)}: {(toFullString ? Include.ToFullString() : Include.ToString())}");
             }
 
             if (Filter != null)
             {
-                writer.WriteLine($"{nameof(Filter)}: {Filter}");
+                writer.WriteLine($"{nameof(Filter)}: {(toFullString ? Filter.ToFullString() : Filter.ToString())}");
             }
 
             if (Sort != null)
             {
-                writer.WriteLine($"{nameof(Sort)}: {Sort}");
+                writer.WriteLine($"{nameof(Sort)}: {(toFullString ? Sort.ToFullString() : Sort.ToString())}");
             }
 
             if (Pagination != null)
             {
-                writer.WriteLine($"{nameof(Pagination)}: {Pagination}");
+                writer.WriteLine($"{nameof(Pagination)}: {(toFullString ? Pagination.ToFullString() : Pagination.ToString())}");
             }
 
             if (Selection is { IsEmpty: false })
             {
                 writer.WriteLine(nameof(Selection));
-                Selection.WriteSelection(writer);
+                Selection.WriteSelection(writer, toFullString);
             }
         }
     }

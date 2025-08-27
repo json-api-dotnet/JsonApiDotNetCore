@@ -35,27 +35,37 @@ public sealed class FieldSelection : Dictionary<ResourceType, FieldSelectors>
 
     public override string ToString()
     {
+        return InnerToString(false);
+    }
+
+    public string ToFullString()
+    {
+        return InnerToString(true);
+    }
+
+    private string InnerToString(bool toFullString)
+    {
         var builder = new StringBuilder();
 
         var writer = new IndentingStringWriter(builder);
-        WriteSelection(writer);
+        WriteSelection(writer, toFullString);
 
         return builder.ToString();
     }
 
-    internal void WriteSelection(IndentingStringWriter writer)
+    internal void WriteSelection(IndentingStringWriter writer, bool toFullString)
     {
         using (writer.Indent())
         {
             foreach (ResourceType type in GetResourceTypes())
             {
                 writer.WriteLine($"{nameof(FieldSelectors)}<{type.ClrType.Name}>");
-                WriterSelectors(writer, type);
+                WriterSelectors(writer, toFullString, type);
             }
         }
     }
 
-    private void WriterSelectors(IndentingStringWriter writer, ResourceType type)
+    private void WriterSelectors(IndentingStringWriter writer, bool toFullString, ResourceType type)
     {
         using (writer.Indent())
         {
@@ -63,11 +73,12 @@ public sealed class FieldSelection : Dictionary<ResourceType, FieldSelectors>
             {
                 if (nextLayer == null)
                 {
-                    writer.WriteLine(field.ToString());
+                    writer.WriteLine(toFullString ? field.ToFullString() : field.ToString());
                 }
                 else
                 {
-                    nextLayer.WriteLayer(writer, $"{field.PublicName}: ");
+                    string prefix = $"{(toFullString ? field.ToFullString() : field.ToString())}: ";
+                    nextLayer.WriteLayer(writer, toFullString, prefix);
                 }
             }
         }

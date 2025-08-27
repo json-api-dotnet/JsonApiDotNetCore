@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -179,6 +180,104 @@ public sealed class QueryExpressionTests
         right.Accept(EmptyQueryExpressionVisitor.Instance, null).Should().BeNull();
     }
 
+    [Fact]
+    public void Can_convert_QueryLayer_to_string()
+    {
+        // Arrange
+        QueryLayer queryLayer = TestQueryLayerFactory.Instance.Default();
+
+        // Act
+        string text = queryLayer.ToString();
+
+        // Assert
+        text.Should().Be("""
+            QueryLayer<DerivedTestResource>
+            {
+              Include: parent.children
+              Filter: and(contains(text,'example'),not(equals(text,'example')))
+              Sort: -count(children)
+              Pagination: Page number: 2, size: 5
+              Selection
+              {
+                FieldSelectors<DerivedTestResource>
+                {
+                  text
+                  parent: QueryLayer<DerivedTestResource>
+                  {
+                    Selection
+                    {
+                      FieldSelectors<DerivedTestResource>
+                      {
+                        text
+                      }
+                    }
+                  }
+                  children: QueryLayer<DerivedTestResource>
+                  {
+                    Selection
+                    {
+                      FieldSelectors<DerivedTestResource>
+                      {
+                        text
+                      }
+                    }
+                  }
+                }
+              }
+            }
+
+            """);
+    }
+
+    [Fact]
+    public void Can_convert_QueryLayer_to_full_string()
+    {
+        // Arrange
+        QueryLayer queryLayer = TestQueryLayerFactory.Instance.Default();
+
+        // Act
+        string text = queryLayer.ToFullString();
+
+        // Assert
+        text.Should().Be("""
+            QueryLayer<DerivedTestResource>
+            {
+              Include: baseTestResources:parent.baseTestResources:children
+              Filter: and(contains(baseTestResources:text,'example'),not(equals(baseTestResources:text,'example')))
+              Sort: -count(baseTestResources:children)
+              Pagination: Page number: 2, size: 5
+              Selection
+              {
+                FieldSelectors<DerivedTestResource>
+                {
+                  derivedTestResources:text
+                  derivedTestResources:parent: QueryLayer<DerivedTestResource>
+                  {
+                    Selection
+                    {
+                      FieldSelectors<DerivedTestResource>
+                      {
+                        derivedTestResources:text
+                      }
+                    }
+                  }
+                  derivedTestResources:children: QueryLayer<DerivedTestResource>
+                  {
+                    Selection
+                    {
+                      FieldSelectors<DerivedTestResource>
+                      {
+                        derivedTestResources:text
+                      }
+                    }
+                  }
+                }
+              }
+            }
+
+            """);
+    }
+
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     private class BaseTestResource : Identifiable<Guid>
     {
@@ -202,6 +301,7 @@ public sealed class QueryExpressionTests
         private readonly AttrAttribute _textAttribute;
         private readonly RelationshipAttribute _parentRelationship;
         private readonly RelationshipAttribute _childrenRelationship;
+
         public static TestExpressionFactory Instance { get; } = new();
 
         private TestExpressionFactory()
@@ -262,7 +362,7 @@ public sealed class QueryExpressionTests
 
         public LogicalExpression Logical()
         {
-            return new LogicalExpression(LogicalOperator.Or, Comparison(), MatchText());
+            return new LogicalExpression(LogicalOperator.And, MatchText(), Not());
         }
 
         public MatchTextExpression MatchText()
@@ -362,6 +462,65 @@ public sealed class QueryExpressionTests
 
         private EmptyQueryExpressionVisitor()
         {
+        }
+    }
+
+    private sealed class TestQueryLayerFactory
+    {
+        public static TestQueryLayerFactory Instance { get; } = new();
+
+        private TestQueryLayerFactory()
+        {
+        }
+
+        public QueryLayer Default()
+        {
+            var options = new JsonApiOptions();
+
+            var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+            builder.Add<BaseTestResource, Guid>();
+            builder.Add<DerivedTestResource, Guid>();
+            IResourceGraph resourceGraph = builder.Build();
+
+            ResourceType resourceType = resourceGraph.GetResourceType<DerivedTestResource>();
+            AttrAttribute textAttribute = resourceType.GetAttributeByPropertyName(nameof(DerivedTestResource.Text));
+            RelationshipAttribute parentRelationship = resourceType.GetRelationshipByPropertyName(nameof(DerivedTestResource.Parent));
+            RelationshipAttribute childrenRelationship = resourceType.GetRelationshipByPropertyName(nameof(DerivedTestResource.Children));
+
+            return new QueryLayer(resourceType)
+            {
+                Include = TestExpressionFactory.Instance.Include(),
+                Filter = TestExpressionFactory.Instance.Logical(),
+                Sort = TestExpressionFactory.Instance.Sort(),
+                Pagination = TestExpressionFactory.Instance.Pagination(),
+                Selection = new FieldSelection
+                {
+                    [resourceType] = new FieldSelectors
+                    {
+                        [textAttribute] = null,
+                        [parentRelationship] = new QueryLayer(resourceType)
+                        {
+                            Selection = new FieldSelection
+                            {
+                                [resourceType] = new FieldSelectors
+                                {
+                                    [textAttribute] = null
+                                }
+                            }
+                        },
+                        [childrenRelationship] = new QueryLayer(resourceType)
+                        {
+                            Selection = new FieldSelection
+                            {
+                                [resourceType] = new FieldSelectors
+                                {
+                                    [textAttribute] = null
+                                }
+                            }
+                        }
+                    }
+                }
+            };
         }
     }
 }
