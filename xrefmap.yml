@@ -10175,6 +10175,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.FieldSelection.IsEmpty
   nameWithType: FieldSelection.IsEmpty
+- uid: JsonApiDotNetCore.Queries.FieldSelection.ToFullString
+  name: ToFullString()
+  href: api/JsonApiDotNetCore.Queries.FieldSelection.html#JsonApiDotNetCore_Queries_FieldSelection_ToFullString
+  commentId: M:JsonApiDotNetCore.Queries.FieldSelection.ToFullString
+  fullName: JsonApiDotNetCore.Queries.FieldSelection.ToFullString()
+  nameWithType: FieldSelection.ToFullString()
+- uid: JsonApiDotNetCore.Queries.FieldSelection.ToFullString*
+  name: ToFullString
+  href: api/JsonApiDotNetCore.Queries.FieldSelection.html#JsonApiDotNetCore_Queries_FieldSelection_ToFullString_
+  commentId: Overload:JsonApiDotNetCore.Queries.FieldSelection.ToFullString
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.FieldSelection.ToFullString
+  nameWithType: FieldSelection.ToFullString
 - uid: JsonApiDotNetCore.Queries.FieldSelection.ToString
   name: ToString()
   href: api/JsonApiDotNetCore.Queries.FieldSelection.html#JsonApiDotNetCore_Queries_FieldSelection_ToString
@@ -12015,6 +12028,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.QueryLayer.Sort
   nameWithType: QueryLayer.Sort
+- uid: JsonApiDotNetCore.Queries.QueryLayer.ToFullString
+  name: ToFullString()
+  href: api/JsonApiDotNetCore.Queries.QueryLayer.html#JsonApiDotNetCore_Queries_QueryLayer_ToFullString
+  commentId: M:JsonApiDotNetCore.Queries.QueryLayer.ToFullString
+  fullName: JsonApiDotNetCore.Queries.QueryLayer.ToFullString()
+  nameWithType: QueryLayer.ToFullString()
+- uid: JsonApiDotNetCore.Queries.QueryLayer.ToFullString*
+  name: ToFullString
+  href: api/JsonApiDotNetCore.Queries.QueryLayer.html#JsonApiDotNetCore_Queries_QueryLayer_ToFullString_
+  commentId: Overload:JsonApiDotNetCore.Queries.QueryLayer.ToFullString
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.QueryLayer.ToFullString
+  nameWithType: QueryLayer.ToFullString
 - uid: JsonApiDotNetCore.Queries.QueryLayer.ToString
   name: ToString()
   href: api/JsonApiDotNetCore.Queries.QueryLayer.html#JsonApiDotNetCore_Queries_QueryLayer_ToString
@@ -16493,6 +16519,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.SetValue
   nameWithType: ResourceFieldAttribute.SetValue
+- uid: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.ToFullString
+  name: ToFullString()
+  href: api/JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_ToFullString
+  commentId: M:JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.ToFullString
+  fullName: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.ToFullString()
+  nameWithType: ResourceFieldAttribute.ToFullString()
+- uid: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.ToFullString*
+  name: ToFullString
+  href: api/JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_ToFullString_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.ToFullString
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.ToFullString
+  nameWithType: ResourceFieldAttribute.ToFullString
 - uid: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.ToString
   name: ToString()
   href: api/JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_ToString
