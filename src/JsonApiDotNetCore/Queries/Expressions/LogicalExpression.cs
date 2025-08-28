@@ -78,7 +78,7 @@ public class LogicalExpression : FilterExpression
 
         builder.Append(Operator.ToString().Camelize());
         builder.Append('(');
-        builder.Append(string.Join(",", Terms.Select(term => toFullString ? term.ToFullString() : term.ToString())));
+        builder.Append(string.Join(',', Terms.Select(term => toFullString ? term.ToFullString() : term.ToString())));
         builder.Append(')');
 
         return builder.ToString();

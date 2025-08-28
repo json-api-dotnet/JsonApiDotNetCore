@@ -130,7 +130,7 @@ public partial class ResourceGraphBuilder
             if (resourceType.FindAttributeByPublicName(attribute.PublicName) == null)
             {
                 throw new InvalidConfigurationException(
-                    $"Attribute '{attribute.PublicName}' from base type '{resourceType.BaseType.ClrType}' does not exist in derived type '{resourceType.ClrType}'.");
+                    $"Attribute '{attribute}' from base type '{resourceType.BaseType.ClrType}' does not exist in derived type '{resourceType.ClrType}'.");
             }
         }
     }
@@ -142,7 +142,7 @@ public partial class ResourceGraphBuilder
             if (resourceType.FindRelationshipByPublicName(relationship.PublicName) == null)
             {
                 throw new InvalidConfigurationException(
-                    $"Relationship '{relationship.PublicName}' from base type '{resourceType.BaseType.ClrType}' does not exist in derived type '{resourceType.ClrType}'.");
+                    $"Relationship '{relationship}' from base type '{resourceType.BaseType.ClrType}' does not exist in derived type '{resourceType.ClrType}'.");
             }
         }
     }

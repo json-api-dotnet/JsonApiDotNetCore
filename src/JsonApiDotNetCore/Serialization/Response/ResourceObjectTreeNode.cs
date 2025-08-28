@@ -244,7 +244,7 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
         }
         else if (_childrenByRelationship != null)
         {
-            builder.Append($", children: {string.Join(',', _childrenByRelationship.Select(pair => $"{pair.Key.PublicName} ({pair.Value.Count})"))}");
+            builder.Append($", children: {string.Join(',', _childrenByRelationship.Select(pair => $"{pair.Key} ({pair.Value.Count})"))}");
         }
 
         return builder.ToString();

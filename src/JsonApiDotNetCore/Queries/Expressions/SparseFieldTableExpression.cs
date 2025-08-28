@@ -49,9 +49,9 @@ public class SparseFieldTableExpression : QueryExpression
                 builder.Append(',');
             }
 
-            builder.Append(resourceType.PublicName);
+            builder.Append(resourceType);
             builder.Append('(');
-            builder.Append(toFullString ? fieldSet.ToFullString() : fieldSet);
+            builder.Append(toFullString ? fieldSet.ToFullString() : fieldSet.ToString());
             builder.Append(')');
         }
 

@@ -86,8 +86,8 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         if (expected != null && !expected.ClrType.IsAssignableFrom(actual.ClrType))
         {
             string message = relationshipName != null
-                ? $"Type '{actual.PublicName}' is not convertible to type '{expected.PublicName}' of relationship '{relationshipName}'."
-                : $"Type '{actual.PublicName}' is not convertible to type '{expected.PublicName}'.";
+                ? $"Type '{actual}' is not convertible to type '{expected}' of relationship '{relationshipName}'."
+                : $"Type '{actual}' is not convertible to type '{expected}'.";
 
             throw new ModelConversionException(state.Position, "Incompatible resource type found.", message, HttpStatusCode.Conflict);
         }
@@ -245,7 +245,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         if (relationship == null)
         {
             throw new ModelConversionException(state.Position, "Unknown relationship found.",
-                $"Relationship '{relationshipName}' does not exist on resource type '{resourceType.PublicName}'.");
+                $"Relationship '{relationshipName}' does not exist on resource type '{resourceType}'.");
         }
     }
 
@@ -262,7 +262,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
                 ? "Only to-many relationships can be targeted through this operation."
                 : "Only to-many relationships can be targeted through this endpoint.";
 
-            throw new ModelConversionException(state.Position, message, $"Relationship '{relationship.PublicName}' is not a to-many relationship.",
+            throw new ModelConversionException(state.Position, message, $"Relationship '{relationship}' is not a to-many relationship.",
                 HttpStatusCode.Forbidden);
         }
     }
@@ -294,7 +294,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         if (relationship.IsSetBlocked())
         {
             throw new ModelConversionException(state.Position, "Relationship cannot be assigned.",
-                $"The relationship '{relationship.PublicName}' on resource type '{relationship.LeftType.PublicName}' cannot be assigned to.");
+                $"The relationship '{relationship}' on resource type '{relationship.LeftType}' cannot be assigned to.");
         }
     }
 
@@ -303,7 +303,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         if (!relationship.Capabilities.HasFlag(HasManyCapabilities.AllowAdd))
         {
             throw new ModelConversionException(state.Position, "Relationship cannot be added to.",
-                $"The relationship '{relationship.PublicName}' on resource type '{relationship.LeftType.PublicName}' cannot be added to.");
+                $"The relationship '{relationship}' on resource type '{relationship.LeftType}' cannot be added to.");
         }
     }
 
@@ -312,7 +312,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         if (!relationship.Capabilities.HasFlag(HasManyCapabilities.AllowRemove))
         {
             throw new ModelConversionException(state.Position, "Relationship cannot be removed from.",
-                $"The relationship '{relationship.PublicName}' on resource type '{relationship.LeftType.PublicName}' cannot be removed from.");
+                $"The relationship '{relationship}' on resource type '{relationship.LeftType}' cannot be removed from.");
         }
     }
 }

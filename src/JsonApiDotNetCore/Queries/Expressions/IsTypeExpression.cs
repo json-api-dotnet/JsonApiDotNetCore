@@ -71,7 +71,7 @@ public class IsTypeExpression : FilterExpression
 
         if (TargetToOneRelationship != null)
         {
-            builder.Append(toFullString ? TargetToOneRelationship.ToFullString() : TargetToOneRelationship);
+            builder.Append(toFullString ? TargetToOneRelationship.ToFullString() : TargetToOneRelationship.ToString());
         }
 
         builder.Append(',');
@@ -80,7 +80,7 @@ public class IsTypeExpression : FilterExpression
         if (Child != null)
         {
             builder.Append(',');
-            builder.Append(toFullString ? Child.ToFullString() : Child);
+            builder.Append(toFullString ? Child.ToFullString() : Child.ToString());
         }
 
         builder.Append(')');
