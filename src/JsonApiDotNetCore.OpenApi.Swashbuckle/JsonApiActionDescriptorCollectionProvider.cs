@@ -35,7 +35,6 @@ internal sealed partial class JsonApiActionDescriptorCollectionProvider : IActio
     private readonly IActionDescriptorCollectionProvider _defaultProvider;
     private readonly IControllerResourceMapping _controllerResourceMapping;
     private readonly JsonApiEndpointMetadataProvider _jsonApiEndpointMetadataProvider;
-    private readonly IJsonApiOptions _options;
     private readonly ILogger<JsonApiActionDescriptorCollectionProvider> _logger;
     private readonly ConcurrentDictionary<int, Lazy<ActionDescriptorCollection>> _versionedActionDescriptorCache = new();
 
@@ -43,18 +42,16 @@ internal sealed partial class JsonApiActionDescriptorCollectionProvider : IActio
         _versionedActionDescriptorCache.GetOrAdd(_defaultProvider.ActionDescriptors.Version, LazyGetActionDescriptors).Value;
 
     public JsonApiActionDescriptorCollectionProvider(IActionDescriptorCollectionProvider defaultProvider, IControllerResourceMapping controllerResourceMapping,
-        JsonApiEndpointMetadataProvider jsonApiEndpointMetadataProvider, IJsonApiOptions options, ILogger<JsonApiActionDescriptorCollectionProvider> logger)
+        JsonApiEndpointMetadataProvider jsonApiEndpointMetadataProvider, ILogger<JsonApiActionDescriptorCollectionProvider> logger)
     {
         ArgumentNullException.ThrowIfNull(defaultProvider);
         ArgumentNullException.ThrowIfNull(controllerResourceMapping);
         ArgumentNullException.ThrowIfNull(jsonApiEndpointMetadataProvider);
-        ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(logger);
 
         _defaultProvider = defaultProvider;
         _controllerResourceMapping = controllerResourceMapping;
         _jsonApiEndpointMetadataProvider = jsonApiEndpointMetadataProvider;
-        _options = options;
         _logger = logger;
     }
 
@@ -76,37 +73,28 @@ internal sealed partial class JsonApiActionDescriptorCollectionProvider : IActio
                 continue;
             }
 
-            var actionMethod = OpenApiActionMethod.Create(descriptor);
+            var actionMethod = JsonApiActionMethod.TryCreate(descriptor);
 
-            if (actionMethod is CustomJsonApiActionMethod)
-            {
-                // A non-standard action method in a JSON:API controller. Not yet implemented, so skip to prevent downstream crashes.
-                string httpMethods = string.Join(", ", descriptor.EndpointMetadata.OfType<IHttpMethodMetadata>().SelectMany(metadata => metadata.HttpMethods));
-                LogSuppressedActionMethod(httpMethods, descriptor.DisplayName);
-
-                continue;
-            }
-
-            if (actionMethod is BuiltinJsonApiActionMethod builtinActionMethod)
+            if (actionMethod != null)
             {
                 if (!IsVisibleEndpoint(descriptor))
                 {
                     continue;
                 }
 
-                ResourceType? resourceType = _controllerResourceMapping.GetResourceTypeForController(builtinActionMethod.ControllerType);
+                ResourceType? resourceType = _controllerResourceMapping.GetResourceTypeForController(actionMethod.ControllerType);
 
-                if (builtinActionMethod is JsonApiActionMethod jsonApiActionMethod)
+                if (actionMethod is BuiltinResourceActionMethod builtinResourceActionMethod)
                 {
                     ConsistencyGuard.ThrowIf(resourceType == null);
 
-                    if (ShouldSuppressEndpoint(jsonApiActionMethod.Endpoint, resourceType))
+                    if (ShouldSuppressEndpoint(builtinResourceActionMethod.Endpoint, resourceType))
                     {
                         continue;
                     }
                 }
 
-                ActionDescriptor[] replacementDescriptors = SetEndpointMetadata(descriptor, builtinActionMethod, resourceType);
+                ActionDescriptor[] replacementDescriptors = SetEndpointMetadata(descriptor);
                 descriptors.AddRange(replacementDescriptors);
 
                 continue;
@@ -225,7 +213,7 @@ internal sealed partial class JsonApiActionDescriptorCollectionProvider : IActio
             JsonApiEndpoints.PatchRelationship or JsonApiEndpoints.DeleteRelationship;
     }
 
-    private ActionDescriptor[] SetEndpointMetadata(ActionDescriptor descriptor, BuiltinJsonApiActionMethod actionMethod, ResourceType? resourceType)
+    private ActionDescriptor[] SetEndpointMetadata(ActionDescriptor descriptor)
     {
         Dictionary<RelationshipAttribute, ActionDescriptor> descriptorsByRelationship = [];
 
@@ -272,21 +260,27 @@ internal sealed partial class JsonApiActionDescriptorCollectionProvider : IActio
             case AtomicOperationsResponseMetadata atomicOperationsResponseMetadata:
             {
                 SetProduces(descriptor, atomicOperationsResponseMetadata.DocumentType);
-                SetProducesResponseTypes(descriptor, actionMethod, resourceType, atomicOperationsResponseMetadata.DocumentType);
+
+                SetProducesResponseTypes(descriptor, atomicOperationsResponseMetadata.DocumentType, atomicOperationsResponseMetadata.SuccessStatusCodes,
+                    atomicOperationsResponseMetadata.ErrorStatusCodes);
 
                 break;
             }
             case PrimaryResponseMetadata primaryResponseMetadata:
             {
                 SetProduces(descriptor, primaryResponseMetadata.DocumentType);
-                SetProducesResponseTypes(descriptor, actionMethod, resourceType, primaryResponseMetadata.DocumentType);
+
+                SetProducesResponseTypes(descriptor, primaryResponseMetadata.DocumentType, primaryResponseMetadata.SuccessStatusCodes,
+                    primaryResponseMetadata.ErrorStatusCodes);
+
                 break;
             }
             case NonPrimaryResponseMetadata nonPrimaryResponseMetadata:
             {
                 foreach ((RelationshipAttribute relationship, Type documentType) in nonPrimaryResponseMetadata.DocumentTypesByRelationship)
                 {
-                    SetNonPrimaryResponseMetadata(descriptor, actionMethod, resourceType, descriptorsByRelationship, relationship, documentType);
+                    SetNonPrimaryResponseMetadata(descriptor, descriptorsByRelationship, relationship, documentType,
+                        nonPrimaryResponseMetadata.SuccessStatusCodes, nonPrimaryResponseMetadata.ErrorStatusCodes);
                 }
 
                 break;
@@ -295,7 +289,8 @@ internal sealed partial class JsonApiActionDescriptorCollectionProvider : IActio
             {
                 foreach (RelationshipAttribute relationship in emptyRelationshipResponseMetadata.Relationships)
                 {
-                    SetNonPrimaryResponseMetadata(descriptor, actionMethod, resourceType, descriptorsByRelationship, relationship, null);
+                    SetNonPrimaryResponseMetadata(descriptor, descriptorsByRelationship, relationship, null,
+                        emptyRelationshipResponseMetadata.SuccessStatusCodes, emptyRelationshipResponseMetadata.ErrorStatusCodes);
                 }
 
                 break;
@@ -320,7 +315,8 @@ internal sealed partial class JsonApiActionDescriptorCollectionProvider : IActio
 
         if (requestBodyDescriptor == null)
         {
-            MethodInfo actionMethod = descriptor.GetActionMethod();
+            MethodInfo? actionMethod = descriptor.TryGetActionMethod();
+            ConsistencyGuard.ThrowIf(actionMethod == null);
 
             throw new InvalidConfigurationException(
                 $"The action method '{actionMethod}' on type '{actionMethod.ReflectedType?.FullName}' contains no parameter with a [FromBody] attribute.");
@@ -372,9 +368,10 @@ internal sealed partial class JsonApiActionDescriptorCollectionProvider : IActio
         }
     }
 
-    private void SetProducesResponseTypes(ActionDescriptor descriptor, BuiltinJsonApiActionMethod actionMethod, ResourceType? resourceType, Type? documentType)
+    private void SetProducesResponseTypes(ActionDescriptor descriptor, Type? documentType, IReadOnlyCollection<HttpStatusCode> successStatusCodes,
+        IReadOnlyCollection<HttpStatusCode> errorStatusCodes)
     {
-        foreach (HttpStatusCode statusCode in GetSuccessStatusCodesForActionMethod(actionMethod))
+        foreach (HttpStatusCode statusCode in successStatusCodes)
         {
             descriptor.FilterDescriptors.Add(documentType == null || StatusCodeHasNoResponseBody(statusCode)
                 ? new FilterDescriptor(new ProducesResponseTypeAttribute(typeof(void), (int)statusCode), FilterScope)
@@ -390,7 +387,7 @@ internal sealed partial class JsonApiActionDescriptorCollectionProvider : IActio
             errorContentType = errorContentTypes[0];
         }
 
-        foreach (HttpStatusCode statusCode in GetErrorStatusCodesForActionMethod(actionMethod, resourceType))
+        foreach (HttpStatusCode statusCode in errorStatusCodes)
         {
             descriptor.FilterDescriptors.Add(errorContentType != null
                 ? new FilterDescriptor(new ProducesResponseTypeAttribute(ErrorDocumentType, (int)statusCode, errorContentType), FilterScope)
@@ -398,115 +395,14 @@ internal sealed partial class JsonApiActionDescriptorCollectionProvider : IActio
         }
     }
 
-    private static HttpStatusCode[] GetSuccessStatusCodesForActionMethod(BuiltinJsonApiActionMethod actionMethod)
-    {
-        HttpStatusCode[]? statusCodes = null;
-
-        if (actionMethod is AtomicOperationsActionMethod)
-        {
-            statusCodes =
-            [
-                HttpStatusCode.OK,
-                HttpStatusCode.NoContent
-            ];
-        }
-        else if (actionMethod is JsonApiActionMethod jsonApiActionMethod)
-        {
-            statusCodes = jsonApiActionMethod.Endpoint switch
-            {
-                JsonApiEndpoints.GetCollection or JsonApiEndpoints.GetSingle or JsonApiEndpoints.GetSecondary or JsonApiEndpoints.GetRelationship =>
-                [
-                    HttpStatusCode.OK,
-                    HttpStatusCode.NotModified
-                ],
-                JsonApiEndpoints.Post =>
-                [
-                    HttpStatusCode.Created,
-                    HttpStatusCode.NoContent
-                ],
-                JsonApiEndpoints.Patch =>
-                [
-                    HttpStatusCode.OK,
-                    HttpStatusCode.NoContent
-                ],
-                JsonApiEndpoints.Delete or JsonApiEndpoints.PostRelationship or JsonApiEndpoints.PatchRelationship or JsonApiEndpoints.DeleteRelationship =>
-                [
-                    HttpStatusCode.NoContent
-                ],
-                _ => null
-            };
-        }
-
-        ConsistencyGuard.ThrowIf(statusCodes == null);
-        return statusCodes;
-    }
-
     private static bool StatusCodeHasNoResponseBody(HttpStatusCode statusCode)
     {
         return statusCode is HttpStatusCode.NoContent or HttpStatusCode.NotModified;
     }
 
-    private HttpStatusCode[] GetErrorStatusCodesForActionMethod(BuiltinJsonApiActionMethod actionMethod, ResourceType? resourceType)
-    {
-        HttpStatusCode[]? statusCodes = null;
-
-        if (actionMethod is AtomicOperationsActionMethod)
-        {
-            statusCodes =
-            [
-                HttpStatusCode.BadRequest,
-                HttpStatusCode.Forbidden,
-                HttpStatusCode.NotFound,
-                HttpStatusCode.Conflict,
-                HttpStatusCode.UnprocessableEntity
-            ];
-        }
-        else if (actionMethod is JsonApiActionMethod jsonApiActionMethod)
-        {
-            // Condition doesn't apply to atomic operations, because Forbidden is also used when an operation is not accessible.
-            ClientIdGenerationMode clientIdGeneration = resourceType?.ClientIdGeneration ?? _options.ClientIdGeneration;
-
-            statusCodes = jsonApiActionMethod.Endpoint switch
-            {
-                JsonApiEndpoints.GetCollection => [HttpStatusCode.BadRequest],
-                JsonApiEndpoints.GetSingle or JsonApiEndpoints.GetSecondary or JsonApiEndpoints.GetRelationship =>
-                [
-                    HttpStatusCode.BadRequest,
-                    HttpStatusCode.NotFound
-                ],
-                JsonApiEndpoints.Post when clientIdGeneration == ClientIdGenerationMode.Forbidden =>
-                [
-                    HttpStatusCode.BadRequest,
-                    HttpStatusCode.Forbidden,
-                    HttpStatusCode.NotFound,
-                    HttpStatusCode.Conflict,
-                    HttpStatusCode.UnprocessableEntity
-                ],
-                JsonApiEndpoints.Post or JsonApiEndpoints.Patch =>
-                [
-                    HttpStatusCode.BadRequest,
-                    HttpStatusCode.NotFound,
-                    HttpStatusCode.Conflict,
-                    HttpStatusCode.UnprocessableEntity
-                ],
-                JsonApiEndpoints.Delete => [HttpStatusCode.NotFound],
-                JsonApiEndpoints.PostRelationship or JsonApiEndpoints.PatchRelationship or JsonApiEndpoints.DeleteRelationship =>
-                [
-                    HttpStatusCode.BadRequest,
-                    HttpStatusCode.NotFound,
-                    HttpStatusCode.Conflict,
-                    HttpStatusCode.UnprocessableEntity
-                ],
-                _ => null
-            };
-        }
-
-        ConsistencyGuard.ThrowIf(statusCodes == null);
-        return statusCodes;
-    }
-
-    private void SetNonPrimaryResponseMetadata(ActionDescriptor descriptor, BuiltinJsonApiActionMethod actionMethod, ResourceType? resourceType,
-        Dictionary<RelationshipAttribute, ActionDescriptor> descriptorsByRelationship, RelationshipAttribute relationship, Type? documentType)
+    private void SetNonPrimaryResponseMetadata(ActionDescriptor descriptor, Dictionary<RelationshipAttribute, ActionDescriptor> descriptorsByRelationship,
+        RelationshipAttribute relationship, Type? documentType, IReadOnlyCollection<HttpStatusCode> successStatusCodes,
+        IReadOnlyCollection<HttpStatusCode> errorStatusCodes)
     {
         ConsistencyGuard.ThrowIf(descriptor.AttributeRouteInfo == null);
 
@@ -518,7 +414,7 @@ internal sealed partial class JsonApiActionDescriptorCollectionProvider : IActio
 
         ExpandTemplate(relationshipDescriptor.AttributeRouteInfo!, relationship.PublicName);
         SetProduces(relationshipDescriptor, documentType);
-        SetProducesResponseTypes(relationshipDescriptor, actionMethod, resourceType, documentType);
+        SetProducesResponseTypes(relationshipDescriptor, documentType, successStatusCodes, errorStatusCodes);
 
         descriptorsByRelationship[relationship] = relationshipDescriptor;
     }

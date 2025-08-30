@@ -28,24 +28,4 @@ public sealed class LoggingTests : IClassFixture<OpenApiTestContext<MixedControl
             builder.Services.AddSingleton(loggerProvider);
         }));
     }
-
-    [Fact]
-    public async Task Logs_warning_for_unsupported_custom_actions_in_JsonApi_controllers()
-    {
-        // Arrange
-        var loggerProvider = _testContext.Factory.Services.GetRequiredService<CapturingLoggerProvider>();
-
-        // Act
-        await _testContext.GetSwaggerDocumentAsync();
-
-        // Assert
-        IReadOnlyList<string> logLines = loggerProvider.GetLines();
-
-        logLines.Should().BeEquivalentTo(new[]
-        {
-            $"[WARNING] Hiding unsupported custom JSON:API action method [GET] {typeof(CoffeeSummaryController)}.GetSummaryAsync (OpenApiTests) in OpenAPI.",
-            $"[WARNING] Hiding unsupported custom JSON:API action method [HEAD] {typeof(CoffeeSummaryController)}.GetSummaryAsync (OpenApiTests) in OpenAPI.",
-            $"[WARNING] Hiding unsupported custom JSON:API action method [DELETE] {typeof(CoffeeSummaryController)}.DeleteOnlyMilkAsync (OpenApiTests) in OpenAPI."
-        }, options => options.WithStrictOrdering());
-    }
 }

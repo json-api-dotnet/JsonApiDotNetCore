@@ -7,7 +7,7 @@ namespace JsonApiDotNetCore.OpenApi.Swashbuckle;
 
 internal static class ActionDescriptorExtensions
 {
-    public static MethodInfo GetActionMethod(this ActionDescriptor descriptor)
+    public static MethodInfo? TryGetActionMethod(this ActionDescriptor descriptor)
     {
         ArgumentNullException.ThrowIfNull(descriptor);
 
@@ -16,10 +16,7 @@ internal static class ActionDescriptorExtensions
             return controllerActionDescriptor.MethodInfo;
         }
 
-        MethodInfo? methodInfo = descriptor.EndpointMetadata.OfType<MethodInfo>().FirstOrDefault();
-        ConsistencyGuard.ThrowIf(methodInfo == null);
-
-        return methodInfo;
+        return descriptor.EndpointMetadata.OfType<MethodInfo>().FirstOrDefault();
     }
 
     public static ControllerParameterDescriptor? GetBodyParameterDescriptor(this ActionDescriptor descriptor)

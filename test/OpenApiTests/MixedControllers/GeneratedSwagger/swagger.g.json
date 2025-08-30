@@ -10,6 +10,86 @@
     }
   ],
   "paths": {
+    "/coffeeSummaries/summary": {
+      "get": {
+        "tags": [
+          "coffeeSummaries"
+        ],
+        "description": "Summarizes all cups of coffee, indicating their ingredients.",
+        "operationId": "getCoffeeSummary",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/primaryCoffeeSummaryResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "coffeeSummaries"
+        ],
+        "description": "Summarizes all cups of coffee, indicating their ingredients.",
+        "operationId": "headCoffeeSummary",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/coffeeSummaries/only-milk": {
+      "delete": {
+        "tags": [
+          "coffeeSummaries"
+        ],
+        "description": "Deletes all cups of coffee with milk, but no sugar.",
+        "operationId": "deleteCoffeeSummary",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.api+json; ext=openapi": {
+                "schema": {
+                  "$ref": "#/components/schemas/primaryCoffeeSummaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/cupOfCoffees": {
       "get": {
         "tags": [
@@ -457,6 +537,40 @@
   },
   "components": {
     "schemas": {
+      "attributesInCoffeeSummaryResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/attributesInResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "totalCount": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "blackCount": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "onlySugarCount": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "onlyMilkCount": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "sugarWithMilkCount": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
       "attributesInCupOfCoffeeResponse": {
         "allOf": [
           {
@@ -495,6 +609,7 @@
         "discriminator": {
           "propertyName": "openapi:discriminator",
           "mapping": {
+            "coffeeSummaries": "#/components/schemas/attributesInCoffeeSummaryResponse",
             "cupOfCoffees": "#/components/schemas/attributesInCupOfCoffeeResponse"
           }
         },
@@ -534,6 +649,42 @@
             ]
           }
         },
+        "additionalProperties": false
+      },
+      "dataInCoffeeSummaryResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/resourceInResponse"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "type": "string",
+                "format": "int64"
+              },
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/attributesInCoffeeSummaryResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceLinks"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "dataInCupOfCoffeeResponse": {
@@ -773,6 +924,43 @@
           "nullable": true
         }
       },
+      "primaryCoffeeSummaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceTopLevelLinks"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/dataInCoffeeSummaryResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceInResponse"
+            }
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/meta"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
       "resourceCollectionTopLevelLinks": {
         "type": "object",
         "properties": {
@@ -822,6 +1010,7 @@
         "discriminator": {
           "propertyName": "type",
           "mapping": {
+            "coffeeSummaries": "#/components/schemas/dataInCoffeeSummaryResponse",
             "cupOfCoffees": "#/components/schemas/dataInCupOfCoffeeResponse"
           }
         },
@@ -836,8 +1025,21 @@
         },
         "additionalProperties": false
       },
+      "resourceTopLevelLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "resourceType": {
         "enum": [
+          "coffeeSummaries",
           "cupOfCoffees"
         ],
         "type": "string"

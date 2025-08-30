@@ -1,5 +1,4 @@
 using System.Net;
-using System.Reflection;
 using Humanizer;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -84,9 +83,8 @@ internal sealed class DocumentationOpenApiOperationFilter : IOperationFilter
             }
         }
 
-        MethodInfo actionMethod = context.ApiDescription.ActionDescriptor.GetActionMethod();
         string actionName = context.MethodInfo.Name;
-        ResourceType? resourceType = _controllerResourceMapping.GetResourceTypeForController(actionMethod.ReflectedType);
+        ResourceType? resourceType = _controllerResourceMapping.GetResourceTypeForController(context.MethodInfo.ReflectedType);
 
         if (resourceType != null)
         {

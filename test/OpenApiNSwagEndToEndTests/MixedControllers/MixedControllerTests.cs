@@ -27,6 +27,7 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
 
         testContext.UseController<FileTransferController>();
         testContext.UseController<CupOfCoffeesController>();
+        testContext.UseController<CoffeeSummaryController>();
 
         testContext.ConfigureServices(services =>
         {
@@ -308,6 +309,36 @@ public sealed class MixedControllerTests : IClassFixture<IntegrationTestContext<
         exception.Message.Should().Be("HTTP 400: Bad Request");
         exception.Response.Should().BeNull();
     }
+
+    [Fact]
+    public async Task Can_get_coffee_summary()
+    {
+        // Arrange
+        List<CupOfCoffee> cups = _fakers.CupOfCoffee.GenerateList(10);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<CupOfCoffee>();
+            dbContext.CupsOfCoffee.AddRange(cups);
+            await dbContext.SaveChangesAsync();
+        });
+
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        var apiClient = new MixedControllersClient(httpClient);
+
+        // Act
+        PrimaryCoffeeSummaryResponseDocument response = await apiClient.GetCoffeeSummaryAsync();
+
+        // Assert
+        response.Data.Attributes.Should().NotBeNull();
+        response.Data.Attributes.TotalCount.Should().Be(10);
+        response.Data.Attributes.BlackCount.Should().Be(cups.Count(cup => cup.HasMilk != true && cup.HasSugar != true));
+        response.Data.Attributes.OnlySugarCount.Should().Be(cups.Count(cup => cup.HasMilk != true && cup.HasSugar == true));
+        response.Data.Attributes.OnlyMilkCount.Should().Be(cups.Count(cup => cup.HasMilk == true && cup.HasSugar != true));
+        response.Data.Attributes.SugarWithMilkCount.Should().Be(cups.Count(cup => cup.HasMilk == true && cup.HasSugar == true));
+    }
+
+    // TODO: Add test for delete, replicate to kiota.
 
     public void Dispose()
     {
