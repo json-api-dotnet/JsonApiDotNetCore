@@ -613,7 +613,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        string[] meetingIds = [.. meeting.Attendees.Select(attendee => attendee.StringId!).OrderBy(id => id)];
+        string[] meetingIds = [.. meeting.Attendees.Select(attendee => attendee.StringId!).Order()];
 
         responseDocument.Should().BeJson($$"""
             {
